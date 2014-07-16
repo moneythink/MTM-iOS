@@ -16,19 +16,121 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="View 1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Nj-5s-IcO">
-                                <rect key="frame" x="139" y="273" width="51" height="21"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk">
+                                <rect key="frame" x="20" y="120" width="280" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="NDM-NU-Jce"/>
+                                </constraints>
+                                <state key="normal" title="SIGN UP AS STUDENT"/>
+                                <connections>
+                                    <action selector="tapStudentSignupButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="cKP-2w-EVr"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fn-Uc-eMe">
+                                <rect key="frame" x="20" y="178" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="NVZ-ta-BpD"/>
+                                </constraints>
+                                <state key="normal" title="SIGN UP AS MENTOR">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapMentorSignupButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="9j8-nJ-d2I"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lx9-xh-3h8">
+                                <rect key="frame" x="20" y="236" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="50I-zF-WxG"/>
+                                </constraints>
+                                <state key="normal" title="LOGIN">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="tapLoginButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="YVQ-WS-g6j"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="centerX" secondItem="7fn-Uc-eMe" secondAttribute="centerX" id="214-eG-N19"/>
+                            <constraint firstAttribute="trailing" secondItem="Lx9-xh-3h8" secondAttribute="trailing" constant="20" id="9fr-aa-dgd"/>
+                            <constraint firstItem="hXp-YV-vWk" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" symbolic="YES" id="C5H-7A-7ZC"/>
+                            <constraint firstItem="7fn-Uc-eMe" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="FZZ-Ee-F31"/>
+                            <constraint firstItem="Lx9-xh-3h8" firstAttribute="top" secondItem="7fn-Uc-eMe" secondAttribute="bottom" constant="28" id="RVe-SK-5ee"/>
+                            <constraint firstItem="7fn-Uc-eMe" firstAttribute="top" secondItem="hXp-YV-vWk" secondAttribute="bottom" constant="28" id="Tcn-Ea-LK9"/>
+                            <constraint firstItem="Lx9-xh-3h8" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Uox-AQ-yek"/>
+                            <constraint firstAttribute="trailing" secondItem="hXp-YV-vWk" secondAttribute="trailing" constant="20" symbolic="YES" id="WRM-0c-eJ9"/>
+                            <constraint firstAttribute="trailing" secondItem="7fn-Uc-eMe" secondAttribute="trailing" constant="20" id="h9m-Pg-yLL"/>
+                            <constraint firstAttribute="centerX" secondItem="Lx9-xh-3h8" secondAttribute="centerX" id="hjx-vw-gzL"/>
+                            <constraint firstItem="hXp-YV-vWk" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="100" id="ypc-0f-t23"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="buttonLogin" destination="Lx9-xh-3h8" id="owL-h4-InI"/>
+                        <outlet property="buttonSignupMentor" destination="7fn-Uc-eMe" id="exB-RD-1Av"/>
+                        <outlet property="buttonSignupStudent" destination="hXp-YV-vWk" id="PyQ-UO-5xv"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-770" y="89"/>
+        </scene>
+        <!--Sign Up View Controller-->
+        <scene sceneID="HHX-ba-Wva">
+            <objects>
+                <viewController id="8Ue-1k-B9o" customClass="MTSignUpViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="1lY-kM-8mF"/>
+                        <viewControllerLayoutGuide type="bottom" id="T6D-1a-dKb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Vpg-1D-iqc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="tQ1-HJ-LR5">
+                                <rect key="frame" x="112" y="226" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zTA-4O-h2u">
+                                <rect key="frame" x="112" y="269" width="97" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pH0-Md-kqh">
+                                <rect key="frame" x="137" y="307" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GRb-gu-Rra">
+                                <rect key="frame" x="137" y="345" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IfJ-eh-inN">
+                                <rect key="frame" x="137" y="383" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-342" y="98"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

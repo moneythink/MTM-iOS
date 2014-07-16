@@ -3,7 +3,7 @@
 //  moneythink-iosTests
 //
 //  Created by jdburgie on 7/10/14.
-//  Copyright (c) 2014 CauseLabs. All rights reserved.
+//  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>

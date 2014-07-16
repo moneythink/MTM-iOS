@@ -3,20 +3,49 @@
 //  moneythink-ios
 //
 //  Created by jdburgie on 7/10/14.
-//  Copyright (c) 2014 CauseLabs. All rights reserved.
+//  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 
+static NSString *ApplicationId = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+static NSString *ClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+
+static NSString *ApplicationIdProduction = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
+static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [Parse setApplicationId:@"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz"
-                  clientKey:@"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM"];
+    if (YES) { //staging
+        [Parse setApplicationId:ApplicationId
+                      clientKey:ClientKey];
+    } else { //production
+        [Parse setApplicationId:ApplicationIdProduction
+                      clientKey:ClientKeyProduction];
+    }
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+    [ChallengePost registerSubclass];
+    PFQuery *getAllPosts = [PFQuery queryWithClassName:[ChallengePost parseClassName]];
+    
+    NSArray *allPosts = [getAllPosts findObjects];
+    ChallengePost *aPost = [getAllPosts getFirstObject];
+    
+    NSArray *allKeys = [[ChallengePost object] allKeys];
+
+    
+        // Set default ACLs
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+
+//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[DemoTableViewController alloc] init]];
+//    self.window.backgroundColor = [UIColor whiteColor];
+//    [self.window makeKeyAndVisible];
     
     return YES;
 }
