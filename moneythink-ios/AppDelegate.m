@@ -29,13 +29,13 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    [ChallengePost registerSubclass];
-    PFQuery *getAllPosts = [PFQuery queryWithClassName:[ChallengePost parseClassName]];
+    [PFChallengePost registerSubclass];
+    PFQuery *getAllPosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
     
     NSArray *allPosts = [getAllPosts findObjects];
-    ChallengePost *aPost = [getAllPosts getFirstObject];
+    PFChallengePost *aPost = [getAllPosts getFirstObject];
     
-    NSArray *allKeys = [[ChallengePost object] allKeys];
+    NSArray *allKeys = [[PFChallengePost object] allKeys];
 
     
         // Set default ACLs

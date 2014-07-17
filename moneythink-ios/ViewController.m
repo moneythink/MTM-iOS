@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import <Parse/Parse.h>
 #import "UIColor+Palette.h"
-#import "ChallengePost.h"
+#import "PFChallengePost.h"
 
 @interface ViewController ()
 
@@ -23,7 +23,7 @@
 {
     [super viewDidLoad];
     
-    ChallengePost *challengePost = [[ChallengePost alloc] init];
+    PFChallengePost *challengePost = [[PFChallengePost alloc] init];
     
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     

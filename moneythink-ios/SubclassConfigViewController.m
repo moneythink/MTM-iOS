@@ -7,7 +7,7 @@
 //
 
 #import "SubclassConfigViewController.h"
-#import "MyLogInViewController.h"
+#import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
 
 @implementation SubclassConfigViewController
@@ -30,7 +30,7 @@
     // Check if user is logged in
     if (![PFUser currentUser]) {        
         // Customize the Log In View Controller
-        MyLogInViewController *logInViewController = [[MyLogInViewController alloc] init];
+        MTLogInViewController *logInViewController = [[MTLogInViewController alloc] init];
         logInViewController.delegate = self;
         logInViewController.facebookPermissions = @[@"friends_about_me"];
         logInViewController.fields = PFLogInFieldsUsernameAndPassword | PFLogInFieldsTwitter | PFLogInFieldsFacebook | PFLogInFieldsSignUpButton | PFLogInFieldsDismissButton;

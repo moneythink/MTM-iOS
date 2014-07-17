@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChallengePost.h"
+#import "PFChallengePost.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
