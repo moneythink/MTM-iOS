@@ -54,6 +54,33 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
+//    label.textAlignment = NSTextAlignmentCenter;
+//    label.text = @"Using Custom Fonts";
+    
+        // studentSignupButton.png
+    
+    /*
+     Roboto-Thin
+     Roboto-Italic
+     Roboto-BlackItalic
+     Roboto-Light
+     Roboto-BoldItalic
+     Roboto-LightItalic
+     Roboto-ThinItalic
+     Roboto-Black
+     Roboto-Bold
+     Roboto-Regular
+     Roboto-Medium
+     Roboto-MediumItalic
+     */
+    
+//    [self.studentSignUpButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [self.studentSignUpButton setTitle:@"abcdefg" forState:UIControlStateNormal];
+    self.studentSignUpButton.titleLabel.font = [UIFont fontWithName:@"Roboto-BlackItalic" size:32];
+
+
 }
 
 - (void)didReceiveMemoryWarning

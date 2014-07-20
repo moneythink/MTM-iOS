@@ -28,6 +28,40 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
                       clientKey:ClientKeyProduction];
     }
     
+    
+    /*
+     for (NSString* family in [UIFont familyNames])
+     {
+     NSLog(@"%@", family);
+     
+     for (NSString* name in [UIFont fontNamesForFamilyName: family])
+     {
+     NSLog(@"  %@", name);
+     }
+     }
+     
+     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
+     label.textAlignment = NSTextAlignmentCenter;
+     label.text = @"Using Custom Fonts";
+     label.font = [UIFont fontWithName:@"Roboto-Bold" size:20];
+     
+     Roboto
+     Roboto-Thin
+     Roboto-Italic
+     Roboto-BlackItalic
+     Roboto-Light
+     Roboto-BoldItalic
+     Roboto-LightItalic
+     Roboto-ThinItalic
+     Roboto-Black
+     Roboto-Bold
+     Roboto-Regular
+     Roboto-Medium
+     Roboto-MediumItalic
+
+     */
+    
+    
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     [PFChallengeBanner registerSubclass];
