@@ -7,7 +7,12 @@
 //
 
 #import "PFScheduledActivations.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFScheduledActivations
+
++ (NSString *)parseClassName {
+    return @"ScheduledActivations";
+}
 
 @end

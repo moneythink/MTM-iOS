@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFChallengeBanner : NSObject
+@interface PFChallengeBanner : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

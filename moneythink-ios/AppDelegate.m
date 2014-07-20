@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
+#import "MTHomeViewController.h"
 
 static NSString *ApplicationId = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
 static NSString *ClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
@@ -29,21 +30,29 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
+    [PFChallengeBanner registerSubclass];
     [PFChallengePost registerSubclass];
-    PFQuery *getAllPosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
+    [PFChallengePostButtonsClicked registerSubclass];
+    [PFSignupCodes registerSubclass];
+    [PFChallengePost registerSubclass];
+    [PFSignupCodes registerSubclass];
+    [PFChallengePost registerSubclass];
+    [PFSignupCodes registerSubclass];
+    [PFChallengePost registerSubclass];
+    [PFSignupCodes registerSubclass];
+    [PFChallengePost registerSubclass];
+    [PFSignupCodes registerSubclass];
+    [PFStudentPointDetails registerSubclass];
     
-    NSArray *allPosts = [getAllPosts findObjects];
-    PFChallengePost *aPost = [getAllPosts getFirstObject];
-    
-    NSArray *allKeys = [[PFChallengePost object] allKeys];
-
     
         // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
 
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[DemoTableViewController alloc] init]];
+//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[ViewController alloc] init]];
 //    self.window.backgroundColor = [UIColor whiteColor];
 //    [self.window makeKeyAndVisible];
     

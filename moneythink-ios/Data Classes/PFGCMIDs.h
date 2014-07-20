@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFGCMIDs : NSObject
+@interface PFGCMIDs : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

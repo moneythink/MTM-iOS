@@ -7,7 +7,12 @@
 //
 
 #import "PFNotifications.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFNotifications
+
++ (NSString *)parseClassName {
+    return @"Notifications";
+}
 
 @end

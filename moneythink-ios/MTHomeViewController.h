@@ -1,5 +1,5 @@
 //
-//  AppDelegate.h
+//  MTHomeViewController.h
 //  moneythink-ios
 //
 //  Created by jdburgie on 7/10/14.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
-
-@property (strong, nonatomic) UIWindow *window;
+@interface MTHomeViewController : UIViewController
 
 @end

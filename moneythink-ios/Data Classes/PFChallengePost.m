@@ -11,32 +11,8 @@
 
 @implementation PFChallengePost
 
-/*
-- (id) init
-{
-    NSLog(@"hello");
-    
-    self = [[PFChallengePost objectWithClassName:@"PFChallengePost"] init];
-    
-    PFQuery *getAllPosts = [PFQuery queryWithClassName:self.parseClassName];
-    
-    NSArray *allPosts = [getAllPosts findObjects];
-    
-    
-    BOOL isDataAvailable = [self isDataAvailable];
-    
-    NSArray *allKeys = [self allKeys];
-    
-    if (isDataAvailable) {
-    }
-    
-    return self;
-}
-*/
-
 + (NSString *)parseClassName {
-    return @"PFChallengePost";
+    return @"ChallengePost";
 }
-
 
 @end

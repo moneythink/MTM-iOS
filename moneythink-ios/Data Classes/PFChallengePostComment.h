@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFChallengePostComment : NSObject
+@interface PFChallengePostComment : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

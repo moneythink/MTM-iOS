@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFChallengePostButtonsClicked : NSObject
+@interface PFChallengePostButtonsClicked : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

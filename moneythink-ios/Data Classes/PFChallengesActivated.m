@@ -7,7 +7,12 @@
 //
 
 #import "PFChallengesActivated.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFChallengesActivated
+
++ (NSString *)parseClassName {
+    return @"ChallengesActivated";
+}
 
 @end

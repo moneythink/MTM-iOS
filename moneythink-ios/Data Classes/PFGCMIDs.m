@@ -7,7 +7,12 @@
 //
 
 #import "PFGCMIDs.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFGCMIDs
+
++ (NSString *)parseClassName {
+    return @"GCMIDs";
+}
 
 @end

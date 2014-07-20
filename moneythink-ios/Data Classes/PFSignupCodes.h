@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFSignupCodes : NSObject
+@interface PFSignupCodes : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
+
++ (PFSignupCodes *)validSignUpCode:(NSString *)code;
 
 @end

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFNotifications : NSObject
+@interface PFNotifications : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

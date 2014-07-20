@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFScheduledActivations : NSObject
+@interface PFScheduledActivations : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

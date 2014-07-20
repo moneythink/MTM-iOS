@@ -7,7 +7,12 @@
 //
 
 #import "PFChallengeBanner.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFChallengeBanner
+
++ (NSString *)parseClassName {
+    return @"ChallengeBanner";
+}
 
 @end

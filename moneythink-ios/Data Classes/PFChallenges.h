@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-@interface PFChallenges : NSObject
+@interface PFChallenges : PFObject <PFSubclassing>
+
++ (NSString *)parseClassName;
 
 @end

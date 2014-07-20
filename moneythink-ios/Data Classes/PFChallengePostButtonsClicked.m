@@ -7,7 +7,12 @@
 //
 
 #import "PFChallengePostButtonsClicked.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFChallengePostButtonsClicked
+
++ (NSString *)parseClassName {
+    return @"ChallengePostButtonsClicked";
+}
 
 @end

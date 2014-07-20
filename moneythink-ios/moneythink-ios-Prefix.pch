@@ -14,4 +14,21 @@
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
     #import <Parse/Parse.h>
+
+#import "UIColor+Palette.h"
+
+#import "PFClasses.h"
+#import "PFChallengeBanner.h"
+#import "PFChallengePost.h"
+#import "PFChallengePostButtonsClicked.h"
+#import "PFChallengePostComment.h"
+#import "PFChallenges.h"
+#import "PFChallengesActivated.h"
+#import "PFGCMIDs.h"
+#import "PFNotifications.h"
+#import "PFScheduledActivations.h"
+#import "PFSchools.h"
+#import "PFSignupCodes.h"
+#import "PFStudentPointDetails.h"
+
 #endif

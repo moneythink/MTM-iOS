@@ -7,7 +7,12 @@
 //
 
 #import "PFClasses.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFClasses
+
++ (NSString *)parseClassName {
+    return @"Classes";
+}
 
 @end

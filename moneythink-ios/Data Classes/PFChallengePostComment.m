@@ -7,7 +7,11 @@
 //
 
 #import "PFChallengePostComment.h"
+#import <Parse/PFObject+Subclass.h>
 
 @implementation PFChallengePostComment
 
++ (NSString *)parseClassName {
+    return @"ChallengePostComment";
+}
 @end

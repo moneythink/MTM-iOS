@@ -4,80 +4,13 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Home View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3r1-A7-VgW">
-                                <rect key="frame" x="244" y="200" width="281" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="281" id="N5W-T7-gZE"/>
-                                    <constraint firstAttribute="height" constant="30" id="Vcr-mL-IQ5"/>
-                                </constraints>
-                                <state key="normal" title="SIGN UP AS STUDENT"/>
-                                <connections>
-                                    <action selector="tapStudentSignupButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rEp-u6-hgE"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Ep-NC-GO9">
-                                <rect key="frame" x="244" y="257" width="281" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="Yvc-Y5-hu2"/>
-                                    <constraint firstAttribute="width" constant="281" id="cyx-pd-Yur"/>
-                                </constraints>
-                                <state key="normal" title="SIGN UP AS MENTOR">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="tapMentorSignupButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dLS-d9-Jmz"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8bN-ou-bhd">
-                                <rect key="frame" x="244" y="315" width="281" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="281" id="SWm-1X-f08"/>
-                                    <constraint firstAttribute="height" constant="30" id="Ubj-gi-lx2"/>
-                                </constraints>
-                                <state key="normal" title="LOGIN">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="tapLoginButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="XBH-bq-keG"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="0Ep-NC-GO9" firstAttribute="top" secondItem="3r1-A7-VgW" secondAttribute="bottom" constant="27" id="0D2-bL-BQF"/>
-                            <constraint firstItem="8bN-ou-bhd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="244" id="5e4-hz-G6x"/>
-                            <constraint firstItem="8bN-ou-bhd" firstAttribute="top" secondItem="0Ep-NC-GO9" secondAttribute="bottom" constant="28" id="N5y-1C-B3O"/>
-                            <constraint firstAttribute="trailing" secondItem="8bN-ou-bhd" secondAttribute="trailing" constant="243" id="Ure-sv-8dN"/>
-                            <constraint firstAttribute="trailing" secondItem="3r1-A7-VgW" secondAttribute="trailing" constant="243" id="iW3-fk-kG3"/>
-                            <constraint firstItem="3r1-A7-VgW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="244" id="lnC-eg-uSf"/>
-                            <constraint firstItem="0Ep-NC-GO9" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="244" id="mXl-lg-BiL"/>
-                            <constraint firstItem="3r1-A7-VgW" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="180" id="p94-dB-xDt"/>
-                            <constraint firstAttribute="trailing" secondItem="0Ep-NC-GO9" secondAttribute="trailing" constant="243" id="zcp-wh-m6C"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="buttonLogin" destination="8bN-ou-bhd" id="hDC-Dj-554"/>
-                        <outlet property="buttonSignupMentor" destination="0Ep-NC-GO9" id="LwG-QG-qpB"/>
-                        <outlet property="buttonSignupStudent" destination="3r1-A7-VgW" id="7dV-mw-thD"/>
-                    </connections>
-                </viewController>
+                <viewController id="BYZ-38-t0r" customClass="MTHomeViewController" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="-274" y="2"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

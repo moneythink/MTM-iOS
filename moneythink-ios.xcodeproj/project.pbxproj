@@ -11,6 +11,7 @@
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F1197464E7000B3656 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2F0196F2CC900C176EC /* StoreKit.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
+		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4519772D00009BC13C /* PFChallengeBanner.m */; };
 		58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4719772D00009BC13C /* PFChallengePost.m */; };
 		58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */; };
@@ -29,11 +30,10 @@
 		58669F781977334A009BC13C /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58669F721977334A009BC13C /* mentorSignupButton@2x.png */; };
 		58669F791977334A009BC13C /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 58669F731977334A009BC13C /* studentSignupButton.png */; };
 		58669F7A1977334A009BC13C /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58669F741977334A009BC13C /* studentSignupButton@2x.png */; };
-		58676B1F1974273E0070F604 /* DefaultSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1A1974273E0070F604 /* DefaultSettingsViewController.m */; };
+		58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */; };
 		58676B201974273E0070F604 /* MTLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1B1974273E0070F604 /* MTLogInViewController.m */; };
 		58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1C1974273E0070F604 /* MTSignUpViewController.m */; };
-		58676B221974273E0070F604 /* PropertyConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1D1974273E0070F604 /* PropertyConfigViewController.m */; };
-		58676B231974273E0070F604 /* SubclassConfigViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* SubclassConfigViewController.m */; };
+		58676B231974273E0070F604 /* MTUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTUserViewController.m */; };
 		5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
 		5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */; };
 		5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AC196F2C1F00C176EC /* UIKit.framework */; };
@@ -41,7 +41,7 @@
 		5876E2B5196F2C1F00C176EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B4196F2C1F00C176EC /* main.m */; };
 		5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B8196F2C1F00C176EC /* AppDelegate.m */; };
 		5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
-		5876E2C2196F2C1F00C176EC /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2C1196F2C1F00C176EC /* ViewController.m */; };
+		5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */; };
 		5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2C3196F2C1F00C176EC /* Images.xcassets */; };
 		5876E2CB196F2C1F00C176EC /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2CA196F2C1F00C176EC /* XCTest.framework */; };
 		5876E2CC196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
@@ -95,6 +95,8 @@
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
+		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengeBanner.h; sourceTree = "<group>"; };
 		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengeBanner.m; sourceTree = "<group>"; };
 		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengePost.h; sourceTree = "<group>"; };
@@ -125,16 +127,14 @@
 		58669F721977334A009BC13C /* mentorSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mentorSignupButton@2x.png"; sourceTree = "<group>"; };
 		58669F731977334A009BC13C /* studentSignupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = studentSignupButton.png; sourceTree = "<group>"; };
 		58669F741977334A009BC13C /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
-		58676B151974273E0070F604 /* DefaultSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DefaultSettingsViewController.h; sourceTree = "<group>"; };
+		58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFStudentPointDetails.h; sourceTree = "<group>"; };
+		58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFStudentPointDetails.m; sourceTree = "<group>"; };
 		58676B161974273E0070F604 /* MTLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLogInViewController.h; sourceTree = "<group>"; };
 		58676B171974273E0070F604 /* MTSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpViewController.h; sourceTree = "<group>"; };
-		58676B181974273E0070F604 /* PropertyConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PropertyConfigViewController.h; sourceTree = "<group>"; };
-		58676B191974273E0070F604 /* SubclassConfigViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubclassConfigViewController.h; sourceTree = "<group>"; };
-		58676B1A1974273E0070F604 /* DefaultSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultSettingsViewController.m; sourceTree = "<group>"; };
+		58676B191974273E0070F604 /* MTUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserViewController.h; sourceTree = "<group>"; };
 		58676B1B1974273E0070F604 /* MTLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLogInViewController.m; sourceTree = "<group>"; };
 		58676B1C1974273E0070F604 /* MTSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpViewController.m; sourceTree = "<group>"; };
-		58676B1D1974273E0070F604 /* PropertyConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PropertyConfigViewController.m; sourceTree = "<group>"; };
-		58676B1E1974273E0070F604 /* SubclassConfigViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubclassConfigViewController.m; sourceTree = "<group>"; };
+		58676B1E1974273E0070F604 /* MTUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserViewController.m; sourceTree = "<group>"; };
 		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5876E2A8196F2C1F00C176EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -147,8 +147,8 @@
 		5876E2B8196F2C1F00C176EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5876E2BB196F2C1F00C176EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		5876E2BE196F2C1F00C176EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		5876E2C0196F2C1F00C176EC /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = ViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		5876E2C1196F2C1F00C176EC /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MTHomeViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTHomeViewController.m; sourceTree = "<group>"; };
 		5876E2C3196F2C1F00C176EC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5876E2C9196F2C1F00C176EC /* moneythink-iosTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "moneythink-iosTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5876E2CA196F2C1F00C176EC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -343,7 +343,7 @@
 		5890F7F9197705230042AC2F /* icon_students_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_students_add.png; sourceTree = "<group>"; };
 		5890F7FA197705230042AC2F /* icon_students_followed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_students_followed.png; sourceTree = "<group>"; };
 		5890F7FB197705230042AC2F /* icon_students_red_add.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_students_red_add.png; sourceTree = "<group>"; };
-		5890F7FC197705230042AC2F /* logo_actionbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_actionbar.png; sourceTree = "<group>"; };
+		5890F7FC197705230042AC2F /* logo_actionbar_medium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_actionbar_medium.png; sourceTree = "<group>"; };
 		5890F7FE197705230042AC2F /* app_icon_48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_48.png; sourceTree = "<group>"; };
 		5890F7FF197705230042AC2F /* app_icon_512.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_512.png; sourceTree = "<group>"; };
 		5890F800197705230042AC2F /* app_icon_72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_72.png; sourceTree = "<group>"; };
@@ -434,6 +434,8 @@
 				58669F5919772D00009BC13C /* PFSchools.m */,
 				58669F5A19772D00009BC13C /* PFSignupCodes.h */,
 				58669F5B19772D00009BC13C /* PFSignupCodes.m */,
+				58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */,
+				58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */,
 			);
 			path = "Data Classes";
 			sourceTree = "<group>";
@@ -455,50 +457,8 @@
 			isa = PBXGroup;
 			children = (
 				58669F4319772D00009BC13C /* Data Classes */,
-				58676B14197426B70070F604 /* LoginAndSignUp */,
 			);
 			name = Parse;
-			sourceTree = "<group>";
-		};
-		58676B14197426B70070F604 /* LoginAndSignUp */ = {
-			isa = PBXGroup;
-			children = (
-				58676B24197427550070F604 /* Default Settings */,
-				58676B25197427730070F604 /* Property Customization */,
-				58676B261974278A0070F604 /* Subclass Customization */,
-			);
-			name = LoginAndSignUp;
-			sourceTree = "<group>";
-		};
-		58676B24197427550070F604 /* Default Settings */ = {
-			isa = PBXGroup;
-			children = (
-				58676B151974273E0070F604 /* DefaultSettingsViewController.h */,
-				58676B1A1974273E0070F604 /* DefaultSettingsViewController.m */,
-			);
-			name = "Default Settings";
-			sourceTree = "<group>";
-		};
-		58676B25197427730070F604 /* Property Customization */ = {
-			isa = PBXGroup;
-			children = (
-				58676B181974273E0070F604 /* PropertyConfigViewController.h */,
-				58676B1D1974273E0070F604 /* PropertyConfigViewController.m */,
-			);
-			name = "Property Customization";
-			sourceTree = "<group>";
-		};
-		58676B261974278A0070F604 /* Subclass Customization */ = {
-			isa = PBXGroup;
-			children = (
-				58676B161974273E0070F604 /* MTLogInViewController.h */,
-				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
-				58676B171974273E0070F604 /* MTSignUpViewController.h */,
-				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
-				58676B191974273E0070F604 /* SubclassConfigViewController.h */,
-				58676B1E1974273E0070F604 /* SubclassConfigViewController.m */,
-			);
-			name = "Subclass Customization";
 			sourceTree = "<group>";
 		};
 		5876E29C196F2C1F00C176EC = {
@@ -551,8 +511,16 @@
 				5876E2B8196F2C1F00C176EC /* AppDelegate.m */,
 				5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */,
 				5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */,
-				5876E2C0196F2C1F00C176EC /* ViewController.h */,
-				5876E2C1196F2C1F00C176EC /* ViewController.m */,
+				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
+				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
+				58676B161974273E0070F604 /* MTLogInViewController.h */,
+				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
+				58676B171974273E0070F604 /* MTSignUpViewController.h */,
+				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
+				58676B191974273E0070F604 /* MTUserViewController.h */,
+				58676B1E1974273E0070F604 /* MTUserViewController.m */,
+				585093FC197B37DE00EDC969 /* MTChallengesViewController.h */,
+				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
 				58676B131974268E0070F604 /* Parse */,
 				5876E2C3196F2C1F00C176EC /* Images.xcassets */,
 				5890F748197704E20042AC2F /* Assets */,
@@ -811,7 +779,7 @@
 				5890F7F9197705230042AC2F /* icon_students_add.png */,
 				5890F7FA197705230042AC2F /* icon_students_followed.png */,
 				5890F7FB197705230042AC2F /* icon_students_red_add.png */,
-				5890F7FC197705230042AC2F /* logo_actionbar.png */,
+				5890F7FC197705230042AC2F /* logo_actionbar_medium.png */,
 			);
 			path = "Design Pattern Library - Medium-assets";
 			sourceTree = "<group>";
@@ -977,13 +945,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
+				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
-				5876E2C2196F2C1F00C176EC /* ViewController.m in Sources */,
-				58676B221974273E0070F604 /* PropertyConfigViewController.m in Sources */,
+				5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */,
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
+				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
 				58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */,
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
@@ -991,8 +960,7 @@
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58676B201974273E0070F604 /* MTLogInViewController.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
-				58676B231974273E0070F604 /* SubclassConfigViewController.m in Sources */,
-				58676B1F1974273E0070F604 /* DefaultSettingsViewController.m in Sources */,
+				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
 				58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
