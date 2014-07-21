@@ -17,6 +17,24 @@
 
 #import "UIColor+Palette.h"
 
+/*
+ font names
+ 
+ Roboto
+ Roboto-Thin
+ Roboto-Italic
+ Roboto-BlackItalic
+ Roboto-Light
+ Roboto-BoldItalic
+ Roboto-LightItalic
+ Roboto-ThinItalic
+ Roboto-Black
+ Roboto-Bold
+ Roboto-Regular
+ Roboto-Medium
+ Roboto-MediumItalic
+ */
+
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"
 #import "PFChallengePost.h"

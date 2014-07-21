@@ -82,6 +82,7 @@
     [self.mentorSignUpButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
 
+    self.navigationItem.hidesBackButton = YES;
 }
 
 - (void)didReceiveMemoryWarning

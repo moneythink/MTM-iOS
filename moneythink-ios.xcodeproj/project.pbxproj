@@ -107,6 +107,9 @@
 		5890F8E7197711AE0042AC2F /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D7197711AE0042AC2F /* Icon@2x.png */; };
 		5890F8E8197711AE0042AC2F /* iTunesArtwork1024 in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D8197711AE0042AC2F /* iTunesArtwork1024 */; };
 		5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D9197711AE0042AC2F /* iTunesArtwork512 */; };
+		58AB875F197D86F000327E6C /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58AB8759197D86F000327E6C /* libTestFlight.a */; };
+		58AB8760197D86F000327E6C /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 58AB875A197D86F000327E6C /* README.md */; };
+		58AB8761197D86F000327E6C /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 58AB875B197D86F000327E6C /* release_notes.md */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -316,6 +319,12 @@
 		5890F8D7197711AE0042AC2F /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		5890F8D8197711AE0042AC2F /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
 		5890F8D9197711AE0042AC2F /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
+		58AB8759197D86F000327E6C /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		58AB875A197D86F000327E6C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		58AB875B197D86F000327E6C /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		58AB875C197D86F000327E6C /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		58AB875D197D86F000327E6C /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		58AB875E197D86F000327E6C /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -326,6 +335,7 @@
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
 				5806A4F1197464E7000B3656 /* StoreKit.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
+				58AB875F197D86F000327E6C /* libTestFlight.a in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
 				5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */,
 				5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */,
@@ -464,6 +474,7 @@
 		5876E2A7196F2C1F00C176EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58AB8758197D86F000327E6C /* TestFlightSDK3.0.2 */,
 				5806A4F219746655000B3656 /* Accounts.framework */,
 				5806A4EE1974610A000B3656 /* Social.framework */,
 				5806A4EC197460A9000B3656 /* Twitter.framework */,
@@ -700,6 +711,19 @@
 			path = "app icons";
 			sourceTree = "<group>";
 		};
+		58AB8758197D86F000327E6C /* TestFlightSDK3.0.2 */ = {
+			isa = PBXGroup;
+			children = (
+				58AB8759197D86F000327E6C /* libTestFlight.a */,
+				58AB875A197D86F000327E6C /* README.md */,
+				58AB875B197D86F000327E6C /* release_notes.md */,
+				58AB875C197D86F000327E6C /* TestFlight+AsyncLogging.h */,
+				58AB875D197D86F000327E6C /* TestFlight+ManualSessions.h */,
+				58AB875E197D86F000327E6C /* TestFlight.h */,
+			);
+			path = TestFlightSDK3.0.2;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -801,6 +825,7 @@
 				58669F771977334A009BC13C /* mentorSignupButton.png in Resources */,
 				5890F8DE197711AE0042AC2F /* Icon-50.png in Resources */,
 				58509421197B7F9D00EDC969 /* RobotoCondensed-Bold.ttf in Resources */,
+				58AB8761197D86F000327E6C /* release_notes.md in Resources */,
 				5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */,
 				58509418197B7F9D00EDC969 /* Roboto-BoldItalic.ttf in Resources */,
 				58509425197B7F9D00EDC969 /* RobotoCondensed-LightItalic.ttf in Resources */,
@@ -822,6 +847,7 @@
 				5850941E197B7F9D00EDC969 /* Roboto-Regular.ttf in Resources */,
 				5890F8C0197710590042AC2F /* launchImage1536x2048.png in Resources */,
 				5890F8E5197711AE0042AC2F /* Icon-76@2x.png in Resources */,
+				58AB8760197D86F000327E6C /* README.md in Resources */,
 				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
 				5850941F197B7F9D00EDC969 /* Roboto-Thin.ttf in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
@@ -1017,7 +1043,12 @@
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
 				INFOPLIST_FILE = "moneythink-ios/moneythink-ios-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
+				);
 				PRODUCT_NAME = Moneythink;
+				PROVISIONING_PROFILE = "616D1512-C827-49B0-BA03-1F62340A8C2C";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1036,7 +1067,12 @@
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
 				INFOPLIST_FILE = "moneythink-ios/moneythink-ios-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/TestFlightSDK3.0.2",
+				);
 				PRODUCT_NAME = Moneythink;
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

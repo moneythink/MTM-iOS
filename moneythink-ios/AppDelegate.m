@@ -10,41 +10,20 @@
 #import <Parse/Parse.h>
 #import "MTHomeViewController.h"
 
-static NSString *ApplicationId = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-static NSString *ClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-
-static NSString *ApplicationIdProduction = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
-static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+#ifdef DEBUG
+static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+#else
+static NSString *ApplicationId = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
+static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+#endif
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    if (YES) { //staging
-        [Parse setApplicationId:ApplicationId
-                      clientKey:ClientKey];
-    } else { //production
-        [Parse setApplicationId:ApplicationIdProduction
-                      clientKey:ClientKeyProduction];
-    }
-    
-    
-    /*
-     Roboto
-     Roboto-Thin
-     Roboto-Italic
-     Roboto-BlackItalic
-     Roboto-Light
-     Roboto-BoldItalic
-     Roboto-LightItalic
-     Roboto-ThinItalic
-     Roboto-Black
-     Roboto-Bold
-     Roboto-Regular
-     Roboto-Medium
-     Roboto-MediumItalic
-     */
-    
+    [Parse setApplicationId:applicationID
+                  clientKey:clientKey];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -61,7 +40,6 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
     [PFChallengePost registerSubclass];
     [PFSignupCodes registerSubclass];
     [PFStudentPointDetails registerSubclass];
-    
     
         // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];

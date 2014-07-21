@@ -27,11 +27,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    if ([PFUser currentUser]) { // Check if user is logged in
-
-    } else {
-
-    }
 }
 
 
