@@ -12,6 +12,6 @@
 
 + (NSString *)parseClassName;
 
-+ (PFSignupCodes *)validSignUpCode:(NSString *)code;
++ (PFSignupCodes *)validSignUpCode:(NSString *)code type:(NSString *)type;
 
 @end

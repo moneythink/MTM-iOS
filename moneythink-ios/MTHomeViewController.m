@@ -21,20 +21,16 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    if ([PFUser currentUser]) {
-        NSLog(@"Logged in");
-    } else {
-        NSLog(@"Not logged in");
-    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
     if ([PFUser currentUser]) { // Check if user is logged in
-            // Go into classes
+
     } else {
-            // Go to Login/SignUp View
+
     }
 }
 
@@ -43,13 +39,13 @@
 {
     [super viewDidLoad];
     
-//    if ([PFUser currentUser]) {
-//        [self performSegueWithIdentifier:@"challengesView" sender:self];
-//    } else {
-//        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
-//    }
-    
-    [self.view setBackgroundColor:[UIColor lightGrey]];
+    if ([PFUser currentUser]) {
+        NSLog(@"Logged in");
+        [self performSegueWithIdentifier:@"challengesView" sender:self];
+    } else {
+        NSLog(@"Not logged in");
+        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -73,7 +69,7 @@
 
 - (IBAction)exitToHome:(UIStoryboardSegue *)sender
 {
-    NSLog(@"foo");
+    NSLog(@"exitToHome");
 }
 
 

@@ -8,4 +8,15 @@
 
 @interface MTLogInViewController : UIViewController
 
+//@property (strong, nonatomic) IBOutlet UIView *view;
+
+@property (strong, nonatomic) IBOutlet UITextField *email;
+@property (strong, nonatomic) IBOutlet UITextField *password;
+
+@property (strong, nonatomic) IBOutlet UITextField *error;
+
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+
+@property (strong, nonatomic) IBOutlet UIButton *sloginButton;
+
 @end

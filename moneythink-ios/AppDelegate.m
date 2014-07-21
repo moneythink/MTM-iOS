@@ -30,21 +30,6 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
     
     
     /*
-     for (NSString* family in [UIFont familyNames])
-     {
-     NSLog(@"%@", family);
-     
-     for (NSString* name in [UIFont fontNamesForFamilyName: family])
-     {
-     NSLog(@"  %@", name);
-     }
-     }
-     
-     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
-     label.textAlignment = NSTextAlignmentCenter;
-     label.text = @"Using Custom Fonts";
-     label.font = [UIFont fontWithName:@"Roboto-Bold" size:20];
-     
      Roboto
      Roboto-Thin
      Roboto-Italic
@@ -58,7 +43,6 @@ static NSString *ClientKeyProduction = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQ
      Roboto-Regular
      Roboto-Medium
      Roboto-MediumItalic
-
      */
     
     
