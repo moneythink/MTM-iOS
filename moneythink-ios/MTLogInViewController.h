@@ -15,8 +15,9 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
-@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+@property (strong, nonatomic) IBOutlet UISwitch *useStageButton;
 
 @property (strong, nonatomic) IBOutlet UIButton *sloginButton;
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
 @end

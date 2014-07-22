@@ -25,6 +25,15 @@ static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     [Parse setApplicationId:applicationID
                   clientKey:clientKey];
     
+//    if ([PFUser currentUser]) {
+//        [PFUser logOut];
+//    }
+    
+    UIPageControl *pageControl = [UIPageControl appearance];
+    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
+    pageControl.backgroundColor = [UIColor blueColor];
+
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     [PFChallengeBanner registerSubclass];

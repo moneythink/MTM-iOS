@@ -37,21 +37,6 @@
 //    label.textAlignment = NSTextAlignmentCenter;
 //    label.text = @"Using Custom Fonts";
     
-    /*
-     Roboto-Thin
-     Roboto-Italic
-     Roboto-BlackItalic
-     Roboto-Light
-     Roboto-BoldItalic
-     Roboto-LightItalic
-     Roboto-ThinItalic
-     Roboto-Black
-     Roboto-Bold
-     Roboto-Regular
-     Roboto-Medium
-     Roboto-MediumItalic
-     */
-    
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
     [self.studentSignUpButton setTitle:@"SIGN UP AS STUDENT" forState:UIControlStateNormal];
@@ -83,6 +68,7 @@
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
 
     self.navigationItem.hidesBackButton = YES;
+    self.cancelButton.hidden = YES;
 }
 
 - (void)didReceiveMemoryWarning

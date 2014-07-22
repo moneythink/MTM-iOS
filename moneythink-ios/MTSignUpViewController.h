@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Parse. All rights reserved.
 //
 
-@interface MTSignUpViewController : UIViewController
+@interface MTSignUpViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
 
-@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIScrollView *view;
 
 @property (strong, nonatomic) NSString *signUpTitle;
 @property (strong, nonatomic) NSString *signUpType;
@@ -24,5 +24,6 @@
 
 @property (strong, nonatomic) IBOutlet UISwitch *agreeButton;
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
 @end

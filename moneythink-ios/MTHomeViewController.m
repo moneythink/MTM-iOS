@@ -22,6 +22,17 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
+    if ([PFUser currentUser]) {
+        NSLog(@"Logged in");
+        if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+            [self performSegueWithIdentifier:@"studentChallengeRoom" sender:self];
+        } else {
+            [self performSegueWithIdentifier:@"challengesView" sender:self];
+        }
+    } else {
+        NSLog(@"Not logged in");
+        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -34,13 +45,6 @@
 {
     [super viewDidLoad];
     
-    if ([PFUser currentUser]) {
-        NSLog(@"Logged in");
-        [self performSegueWithIdentifier:@"challengesView" sender:self];
-    } else {
-        NSLog(@"Not logged in");
-        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
-    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -34,7 +34,8 @@
     fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:11.0f];
     self.error.textColor = [UIColor redColor];
     self.error.font = fontRoboto;
-    
+
+    self.cancelButton.hidden = YES;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -58,6 +59,8 @@
         if (!error) {
             self.error.text = @"Logged in";
             self.error.textColor = [UIColor primaryOrange];
+            
+            [self.cancelButton sendActionsForControlEvents:UIControlEventTouchUpInside];
         } else {
             self.error.text = errorString;
         }

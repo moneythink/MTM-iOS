@@ -14,7 +14,7 @@
 
 @end
 
-@implementation MTSignUpViewController
+@implementation MTSignUpViewController 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -28,33 +28,30 @@
     self.view.backgroundColor = [UIColor white];
     self.signUpTitleLabel.text = self.signUpTitle;
     
-    /*
-     Roboto-Thin
-     Roboto-Italic
-     Roboto-BlackItalic
-     Roboto-Light
-     Roboto-BoldItalic
-     Roboto-LightItalic
-     Roboto-ThinItalic
-     Roboto-Black
-     Roboto-Bold
-     Roboto-Regular
-     Roboto-Medium
-     Roboto-MediumItalic
-     */
-    
     UIFont *fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:17.0f];
     
-    self.firstName.font = fontRoboto;
-    self.lastName.font = fontRoboto;
-    self.email.font = fontRoboto;
-    self.password.font = fontRoboto;
-    self.registrationCode.font = fontRoboto;
-
+    if ([PFUser currentUser]) {
+        self.error.text = @"You are already logged in.";
+        [self performSegueWithIdentifier:@"signUpToChallenges" sender:self];
+    } else {
+        self.firstName.font = fontRoboto;
+        self.lastName.font = fontRoboto;
+        self.email.font = fontRoboto;
+        self.password.font = fontRoboto;
+        self.registrationCode.font = fontRoboto;
+        
+        [self.firstName setDelegate:self];
+        [self.lastName setDelegate:self];
+        [self.email setDelegate:self];
+        [self.password setDelegate:self];
+        [self.registrationCode setDelegate:self];
+    }
+    
     fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:11.0f];
     self.error.textColor = [UIColor redColor];
     self.error.font = fontRoboto;
-
+    
+    self.cancelButton.hidden = YES;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -75,8 +72,7 @@
 
 - (IBAction)tappedSignUpButton:(id)sender {
     
-    NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", @"student4", @"student"];
-//    NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
+    NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
     
     PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
     
@@ -107,13 +103,13 @@
                     if (!error) {
                             // Hooray! Let them use the app now.
                         NSLog(@"errorString - nil");
-                        [self dismissViewControllerAnimated:YES completion:nil];
+                        [self.cancelButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+//                        [self dismissViewControllerAnimated:YES completion:nil];
                     } else {
                         NSString *errorString = [error userInfo][@"error"];
                         NSLog(@"errorString - %@", errorString);
                             // Show the errorString somewhere and let the user try again.
                         self.error.text = errorString;
-//                        [self.view setNeedsLayout];
                     }
                 }];
             } else {
@@ -125,9 +121,6 @@
         }
     }];
     
-//    PFSignupCodes *validCode = [PFSignupCodes validSignUpCode:@"student4" type:@"student"];
-//    if (validCode) {
-//    }
 }
 
 -(void)dismissKeyboard {
@@ -137,6 +130,77 @@
 
 - (IBAction)tappedCancel:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - UITextFieldDelegate methods
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    NSLog(@"foo");
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    NSLog(@"foo");
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
+    return YES;
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSInteger nextTag = textField.tag + 1;
+        // Try to find next responder
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+            // Found next responder, so set it.
+        [nextResponder becomeFirstResponder];
+    } else {
+            // Not found, so remove keyboard.
+        [textField resignFirstResponder];
+    }
+    return NO; // We do not want UITextField to insert line-breaks.
+}
+
+
+#pragma mark - UITextInputDelegate methods
+
+- (void)selectionWillChange:(id <UITextInput>)textInput
+{
+    NSLog(@"foo");
+}
+
+- (void)selectionDidChange:(id <UITextInput>)textInput
+{
+    NSLog(@"foo");
+}
+
+- (void)textWillChange:(id <UITextInput>)textInput
+{
+    NSLog(@"foo");
+}
+
+- (void)textDidChange:(id <UITextInput>)textInput
+{
+    NSLog(@"foo");
 }
 
 

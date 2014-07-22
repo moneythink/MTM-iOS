@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTChallengesContentViewController.h"
 
-@interface MTChallengesViewController : UIViewController
+@interface MTChallengesViewController : UIViewController <UIPageViewControllerDataSource>
+
+@property (strong, nonatomic) UIPageViewController *pageViewController;
+
+@property (strong, nonatomic) NSArray *pageTitles;
 
 @end
