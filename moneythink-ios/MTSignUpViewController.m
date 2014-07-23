@@ -26,7 +26,6 @@
     [self.view addGestureRecognizer:tap];
     
     self.view.backgroundColor = [UIColor white];
-    self.signUpTitleLabel.text = self.signUpTitle;
     
     UIFont *fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:17.0f];
     
@@ -47,6 +46,23 @@
         [self.registrationCode setDelegate:self];
     }
     
+    
+    
+    
+    fontRoboto = [UIFont fontWithName:@"Roboto-black" size:18.0f];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = fontRoboto;
+    label.textAlignment = NSTextAlignmentCenter;
+    label.textColor = [UIColor whiteColor];
+    label.text = self.signUpTitle;
+    [label sizeToFit];
+    self.navigationItem.titleView = label;
+    
+    
+    
+    
+    
     fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:11.0f];
     self.error.textColor = [UIColor redColor];
     self.error.font = fontRoboto;
@@ -60,6 +76,23 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self dismissKeyboard];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    
 }
 
 
@@ -134,6 +167,30 @@
 
 
 #pragma mark - UITextFieldDelegate methods
+
+- (void) keyboardWasShown:(NSNotification *)nsNotification {
+    CGRect viewFrame = self.view.frame;
+    CGRect fieldsFrame = self.viewFields.frame;
+    
+    NSDictionary *userInfo = [nsNotification userInfo];
+    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGSize kbSize = kbRect.size;
+    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
+    
+    CGRect fieldContentSize = CGRectMake(viewFrame.origin.x ,
+                                            viewFrame.origin.y,
+                                            viewFrame.size.width,
+                                            fieldsFrame.size.height - kbSize.height);
+    
+    self.viewFields.contentSize = viewFrame.size;
+    self.viewFields.frame = fieldContentSize;
+    
+}
+
+- (void)keyboardWasDismissed:(NSNotification *)notification
+{
+    self.viewFields.frame = self.view.frame;
+}
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {

@@ -7,6 +7,7 @@
 //
 
 #import "MTStudentMainViewController.h"
+#import "MTUserInformationViewController.h"
 
 @interface MTStudentMainViewController ()
 
@@ -104,9 +105,26 @@
  - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
  {
      NSLog(@"sender %@", sender);
-     id senderButton = [sender class];
- // Get the new view controller using [segue destinationViewController].
+
+         // Get the new view controller using [segue destinationViewController].
  // Pass the selected object to the new view controller.
+     
+     NSString *segueID = [segue identifier];
+     
+     MTUserInformationViewController *userInfoModal = (MTUserInformationViewController *)segue.destinationViewController;
+     
+     if ([segueID isEqualToString:@"moneyMaker"]) {
+         userInfoModal.labelInfoTitleText = @"Money Maker";
+         userInfoModal.textInfoText = @"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here.";
+
+     } else if ([segueID isEqualToString:@"moneyManager"]) {
+         userInfoModal.labelInfoTitleText = @"Money Manager";
+         userInfoModal.textInfoText = @"Managin money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
+
+     } else {
+         
+     }
+ 
  }
 
 

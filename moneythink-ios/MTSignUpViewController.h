@@ -8,12 +8,11 @@
 
 @interface MTSignUpViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
 
-@property (strong, nonatomic) IBOutlet UIScrollView *view;
+@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
 @property (strong, nonatomic) NSString *signUpTitle;
 @property (strong, nonatomic) NSString *signUpType;
-
-@property (strong, nonatomic) IBOutlet UILabel *signUpTitleLabel;
 
 @property (strong, nonatomic) IBOutlet UITextField *firstName;
 @property (strong, nonatomic) IBOutlet UITextField *lastName;

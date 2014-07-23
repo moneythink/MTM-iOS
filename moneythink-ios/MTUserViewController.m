@@ -92,9 +92,6 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-//    [self presented]
-    UIButton *senderButton = sender;
-    NSString *titleLabel = senderButton.titleLabel.text;
     NSString *segueID = [segue identifier];
     
     MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;

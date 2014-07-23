@@ -27,6 +27,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.labelInfoTitle.text = self.labelInfoTitleText;
+    self.textInfo.text = self.textInfoText;
 }
 
 - (void)didReceiveMemoryWarning

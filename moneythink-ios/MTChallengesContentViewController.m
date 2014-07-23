@@ -32,6 +32,13 @@
     self.challengeTitle.text = self.challengeTitleText;
     self.challengeDescription.text = self.challengeDescriptionText;
     self.challengePoints.text = self.challengePointsText;
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(exploreChallenge)];
+    
+    [self.view addGestureRecognizer:tap];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -40,15 +47,29 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
+-(void)exploreChallenge {
+    [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+}
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    NSString *segueID = [segue identifier];
+    
+//    MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
+//    
+//    if ([segueID isEqualToString:@"studentSignUp"]) {
+//        signUpViewController.signUpTitle = @"Student Signup";
+//        signUpViewController.signUpType = @"student";
+//    } else if ([segueID isEqualToString:@"mentorSignUp"]) {
+//        signUpViewController.signUpTitle = @"Mentor Signup";
+//        signUpViewController.signUpType = @"mentor";
+//    } else {
+//        
+//    }
 }
-*/
 
 @end

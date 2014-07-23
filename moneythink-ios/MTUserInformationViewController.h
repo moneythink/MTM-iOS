@@ -10,4 +10,11 @@
 
 @interface MTUserInformationViewController : UIViewController
 
+@property (nonatomic, strong) IBOutlet UILabel *labelInfoTitle;
+@property (nonatomic, strong) IBOutlet UITextView *textInfo;
+@property (nonatomic, strong) IBOutlet UIButton *buttonInfoDone;
+
+@property (nonatomic, strong) NSString *labelInfoTitleText;
+@property (nonatomic, strong) NSString *textInfoText;
+
 @end
