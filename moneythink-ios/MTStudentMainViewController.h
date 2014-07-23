@@ -8,13 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-//@interface MTStudentMainViewController : UIViewController <UIPageViewControllerDataSource>
 @interface MTStudentMainViewController : UIViewController
 
-//@property (strong, nonatomic) UIPageViewController *pageViewController;
-
-//@property (strong, nonatomic) NSArray *pageTitles;
-
-//- (IBAction)startWalkthrough:(id)sender;
+- (void)tappedButtonItem2:(id)sender;
 
 @end

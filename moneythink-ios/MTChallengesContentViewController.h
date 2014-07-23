@@ -10,9 +10,19 @@
 
 @interface MTChallengesContentViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+@property (weak, nonatomic) IBOutlet UILabel *challengeState;
+@property (weak, nonatomic) IBOutlet UILabel *challengeNumber;
+@property (weak, nonatomic) IBOutlet UILabel *challengeTitle;
+@property (weak, nonatomic) IBOutlet UITextView *challengeDescription;
+@property (weak, nonatomic) IBOutlet UILabel *challengePoints;
 
-@property NSUInteger pageIndex;
-@property NSString *titleText;
+@property (nonatomic) NSUInteger pageIndex;
+@property (nonatomic, strong) IBOutlet UIImageView *challengeIcon;
+
+@property (nonatomic, strong) NSString *challengeStateText;
+@property (nonatomic, strong) NSString *challengeNumberText;
+@property (nonatomic, strong) NSString *challengeTitleText;
+@property (nonatomic, strong) NSString *challengeDescriptionText;
+@property (nonatomic, strong) NSString *challengePointsText;
 
 @end

@@ -14,5 +14,6 @@
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 
 @property (strong, nonatomic) NSArray *pageTitles;
+@property (strong, nonatomic) NSArray *challenges;
 
 @end

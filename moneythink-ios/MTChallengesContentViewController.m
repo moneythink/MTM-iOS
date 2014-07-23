@@ -27,8 +27,11 @@
 {
     [super viewDidLoad];
     
-    self.titleLabel.text = self.titleText;
-
+    self.challengeState.text = self.challengeStateText;
+    self.challengeNumber.text = self.challengeNumberText;
+    self.challengeTitle.text = self.challengeTitleText;
+    self.challengeDescription.text = self.challengeDescriptionText;
+    self.challengePoints.text = self.challengePointsText;
 }
 
 - (void)didReceiveMemoryWarning

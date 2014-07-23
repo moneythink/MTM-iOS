@@ -28,6 +28,7 @@ static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
 //    if ([PFUser currentUser]) {
 //        [PFUser logOut];
 //    }
+
     
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
@@ -49,7 +50,7 @@ static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     [PFChallengePost registerSubclass];
     [PFSignupCodes registerSubclass];
     [PFStudentPointDetails registerSubclass];
-    
+        
         // Set default ACLs
     PFACL *defaultACL = [PFACL ACL];
     [defaultACL setPublicReadAccess:YES];

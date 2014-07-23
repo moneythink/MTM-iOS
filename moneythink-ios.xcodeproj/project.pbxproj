@@ -162,38 +162,38 @@
 		5850943D197C06E400EDC969 /* MTNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationsViewController.m; sourceTree = "<group>"; };
 		5850943F197C386100EDC969 /* MTChallengesContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesContentViewController.h; sourceTree = "<group>"; };
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
-		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengeBanner.h; sourceTree = "<group>"; };
-		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengeBanner.m; sourceTree = "<group>"; };
-		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengePost.h; sourceTree = "<group>"; };
-		58669F4719772D00009BC13C /* PFChallengePost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengePost.m; sourceTree = "<group>"; };
-		58669F4819772D00009BC13C /* PFChallengePostButtonsClicked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengePostButtonsClicked.h; sourceTree = "<group>"; };
-		58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengePostButtonsClicked.m; sourceTree = "<group>"; };
-		58669F4A19772D00009BC13C /* PFChallengePostComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengePostComment.h; sourceTree = "<group>"; };
-		58669F4B19772D00009BC13C /* PFChallengePostComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengePostComment.m; sourceTree = "<group>"; };
-		58669F4C19772D00009BC13C /* PFChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallenges.h; sourceTree = "<group>"; };
-		58669F4D19772D00009BC13C /* PFChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallenges.m; sourceTree = "<group>"; };
-		58669F4E19772D00009BC13C /* PFChallengesActivated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFChallengesActivated.h; sourceTree = "<group>"; };
-		58669F4F19772D00009BC13C /* PFChallengesActivated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFChallengesActivated.m; sourceTree = "<group>"; };
-		58669F5019772D00009BC13C /* PFClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFClasses.h; sourceTree = "<group>"; };
-		58669F5119772D00009BC13C /* PFClasses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFClasses.m; sourceTree = "<group>"; };
-		58669F5219772D00009BC13C /* PFGCMIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFGCMIDs.h; sourceTree = "<group>"; };
-		58669F5319772D00009BC13C /* PFGCMIDs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFGCMIDs.m; sourceTree = "<group>"; };
-		58669F5419772D00009BC13C /* PFNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFNotifications.h; sourceTree = "<group>"; };
-		58669F5519772D00009BC13C /* PFNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFNotifications.m; sourceTree = "<group>"; };
-		58669F5619772D00009BC13C /* PFScheduledActivations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFScheduledActivations.h; sourceTree = "<group>"; };
-		58669F5719772D00009BC13C /* PFScheduledActivations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFScheduledActivations.m; sourceTree = "<group>"; };
-		58669F5819772D00009BC13C /* PFSchools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSchools.h; sourceTree = "<group>"; };
-		58669F5919772D00009BC13C /* PFSchools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFSchools.m; sourceTree = "<group>"; };
-		58669F5A19772D00009BC13C /* PFSignupCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFSignupCodes.h; sourceTree = "<group>"; };
-		58669F5B19772D00009BC13C /* PFSignupCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFSignupCodes.m; sourceTree = "<group>"; };
+		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengeBanner.h; path = "Data Classes/PFChallengeBanner.h"; sourceTree = "<group>"; };
+		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengeBanner.m; path = "Data Classes/PFChallengeBanner.m"; sourceTree = "<group>"; };
+		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePost.h; path = "Data Classes/PFChallengePost.h"; sourceTree = "<group>"; };
+		58669F4719772D00009BC13C /* PFChallengePost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePost.m; path = "Data Classes/PFChallengePost.m"; sourceTree = "<group>"; };
+		58669F4819772D00009BC13C /* PFChallengePostButtonsClicked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostButtonsClicked.h; path = "Data Classes/PFChallengePostButtonsClicked.h"; sourceTree = "<group>"; };
+		58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostButtonsClicked.m; path = "Data Classes/PFChallengePostButtonsClicked.m"; sourceTree = "<group>"; };
+		58669F4A19772D00009BC13C /* PFChallengePostComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostComment.h; path = "Data Classes/PFChallengePostComment.h"; sourceTree = "<group>"; };
+		58669F4B19772D00009BC13C /* PFChallengePostComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostComment.m; path = "Data Classes/PFChallengePostComment.m"; sourceTree = "<group>"; };
+		58669F4C19772D00009BC13C /* PFChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallenges.h; path = "Data Classes/PFChallenges.h"; sourceTree = "<group>"; };
+		58669F4D19772D00009BC13C /* PFChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallenges.m; path = "Data Classes/PFChallenges.m"; sourceTree = "<group>"; };
+		58669F4E19772D00009BC13C /* PFChallengesActivated.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengesActivated.h; path = "Data Classes/PFChallengesActivated.h"; sourceTree = "<group>"; };
+		58669F4F19772D00009BC13C /* PFChallengesActivated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengesActivated.m; path = "Data Classes/PFChallengesActivated.m"; sourceTree = "<group>"; };
+		58669F5019772D00009BC13C /* PFClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFClasses.h; path = "Data Classes/PFClasses.h"; sourceTree = "<group>"; };
+		58669F5119772D00009BC13C /* PFClasses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFClasses.m; path = "Data Classes/PFClasses.m"; sourceTree = "<group>"; };
+		58669F5219772D00009BC13C /* PFGCMIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFGCMIDs.h; path = "Data Classes/PFGCMIDs.h"; sourceTree = "<group>"; };
+		58669F5319772D00009BC13C /* PFGCMIDs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFGCMIDs.m; path = "Data Classes/PFGCMIDs.m"; sourceTree = "<group>"; };
+		58669F5419772D00009BC13C /* PFNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFNotifications.h; path = "Data Classes/PFNotifications.h"; sourceTree = "<group>"; };
+		58669F5519772D00009BC13C /* PFNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFNotifications.m; path = "Data Classes/PFNotifications.m"; sourceTree = "<group>"; };
+		58669F5619772D00009BC13C /* PFScheduledActivations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFScheduledActivations.h; path = "Data Classes/PFScheduledActivations.h"; sourceTree = "<group>"; };
+		58669F5719772D00009BC13C /* PFScheduledActivations.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFScheduledActivations.m; path = "Data Classes/PFScheduledActivations.m"; sourceTree = "<group>"; };
+		58669F5819772D00009BC13C /* PFSchools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFSchools.h; path = "Data Classes/PFSchools.h"; sourceTree = "<group>"; };
+		58669F5919772D00009BC13C /* PFSchools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFSchools.m; path = "Data Classes/PFSchools.m"; sourceTree = "<group>"; };
+		58669F5A19772D00009BC13C /* PFSignupCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFSignupCodes.h; path = "Data Classes/PFSignupCodes.h"; sourceTree = "<group>"; };
+		58669F5B19772D00009BC13C /* PFSignupCodes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFSignupCodes.m; path = "Data Classes/PFSignupCodes.m"; sourceTree = "<group>"; };
 		58669F6F1977334A009BC13C /* loginButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = loginButton.png; sourceTree = "<group>"; };
 		58669F701977334A009BC13C /* loginButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "loginButton@2x.png"; sourceTree = "<group>"; };
 		58669F711977334A009BC13C /* mentorSignupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mentorSignupButton.png; sourceTree = "<group>"; };
 		58669F721977334A009BC13C /* mentorSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mentorSignupButton@2x.png"; sourceTree = "<group>"; };
 		58669F731977334A009BC13C /* studentSignupButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = studentSignupButton.png; sourceTree = "<group>"; };
 		58669F741977334A009BC13C /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
-		58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PFStudentPointDetails.h; sourceTree = "<group>"; };
-		58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PFStudentPointDetails.m; sourceTree = "<group>"; };
+		58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFStudentPointDetails.h; path = "Data Classes/PFStudentPointDetails.h"; sourceTree = "<group>"; };
+		58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFStudentPointDetails.m; path = "Data Classes/PFStudentPointDetails.m"; sourceTree = "<group>"; };
 		58676B161974273E0070F604 /* MTLogInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLogInViewController.h; sourceTree = "<group>"; };
 		58676B171974273E0070F604 /* MTSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpViewController.h; sourceTree = "<group>"; };
 		58676B191974273E0070F604 /* MTUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserViewController.h; sourceTree = "<group>"; };
@@ -388,7 +388,20 @@
 			path = roboto;
 			sourceTree = "<group>";
 		};
-		58669F4319772D00009BC13C /* Data Classes */ = {
+		58669F6819773119009BC13C /* button images */ = {
+			isa = PBXGroup;
+			children = (
+				58669F6F1977334A009BC13C /* loginButton.png */,
+				58669F701977334A009BC13C /* loginButton@2x.png */,
+				58669F711977334A009BC13C /* mentorSignupButton.png */,
+				58669F721977334A009BC13C /* mentorSignupButton@2x.png */,
+				58669F731977334A009BC13C /* studentSignupButton.png */,
+				58669F741977334A009BC13C /* studentSignupButton@2x.png */,
+			);
+			path = "button images";
+			sourceTree = "<group>";
+		};
+		58676B131974268E0070F604 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				58669F4419772D00009BC13C /* PFChallengeBanner.h */,
@@ -418,28 +431,42 @@
 				58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */,
 				58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */,
 			);
-			path = "Data Classes";
+			name = Model;
 			sourceTree = "<group>";
 		};
-		58669F6819773119009BC13C /* button images */ = {
+		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				58669F6F1977334A009BC13C /* loginButton.png */,
-				58669F701977334A009BC13C /* loginButton@2x.png */,
-				58669F711977334A009BC13C /* mentorSignupButton.png */,
-				58669F721977334A009BC13C /* mentorSignupButton@2x.png */,
-				58669F731977334A009BC13C /* studentSignupButton.png */,
-				58669F741977334A009BC13C /* studentSignupButton@2x.png */,
+				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
+				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
+				58676B161974273E0070F604 /* MTLogInViewController.h */,
+				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
+				58676B171974273E0070F604 /* MTSignUpViewController.h */,
+				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
+				58676B191974273E0070F604 /* MTUserViewController.h */,
+				58676B1E1974273E0070F604 /* MTUserViewController.m */,
+				585093FC197B37DE00EDC969 /* MTChallengesViewController.h */,
+				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
+				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
+				58509440197C386100EDC969 /* MTChallengesContentViewController.m */,
+				58509427197C05BD00EDC969 /* MTUserInformationViewController.h */,
+				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
+				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
+				5850942B197C060700EDC969 /* MTStudentMainViewController.m */,
+				5850942D197C062A00EDC969 /* MTStudentInstructionsViewController.h */,
+				5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */,
+				58509430197C063D00EDC969 /* MTStudentChallengeRoomViewController.h */,
+				58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */,
+				58509433197C065E00EDC969 /* MTPostViewController.h */,
+				58509434197C065E00EDC969 /* MTPostViewController.m */,
+				58509436197C068000EDC969 /* MTCommentViewController.h */,
+				58509437197C068000EDC969 /* MTCommentViewController.m */,
+				58509439197C068D00EDC969 /* MTPeerProfileViewController.h */,
+				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
+				5850943C197C06E400EDC969 /* MTNotificationsViewController.h */,
+				5850943D197C06E400EDC969 /* MTNotificationsViewController.m */,
 			);
-			path = "button images";
-			sourceTree = "<group>";
-		};
-		58676B131974268E0070F604 /* Parse */ = {
-			isa = PBXGroup;
-			children = (
-				58669F4319772D00009BC13C /* Data Classes */,
-			);
-			name = Parse;
+			name = "View Controllers";
 			sourceTree = "<group>";
 		};
 		5876E29C196F2C1F00C176EC = {
@@ -492,35 +519,8 @@
 				5876E2B8196F2C1F00C176EC /* AppDelegate.m */,
 				5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */,
 				5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */,
-				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
-				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
-				58676B161974273E0070F604 /* MTLogInViewController.h */,
-				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
-				58676B171974273E0070F604 /* MTSignUpViewController.h */,
-				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
-				58676B191974273E0070F604 /* MTUserViewController.h */,
-				58676B1E1974273E0070F604 /* MTUserViewController.m */,
-				585093FC197B37DE00EDC969 /* MTChallengesViewController.h */,
-				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
-				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
-				58509440197C386100EDC969 /* MTChallengesContentViewController.m */,
-				58509427197C05BD00EDC969 /* MTUserInformationViewController.h */,
-				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
-				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
-				5850942B197C060700EDC969 /* MTStudentMainViewController.m */,
-				5850942D197C062A00EDC969 /* MTStudentInstructionsViewController.h */,
-				5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */,
-				58509430197C063D00EDC969 /* MTStudentChallengeRoomViewController.h */,
-				58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */,
-				58509433197C065E00EDC969 /* MTPostViewController.h */,
-				58509434197C065E00EDC969 /* MTPostViewController.m */,
-				58509436197C068000EDC969 /* MTCommentViewController.h */,
-				58509437197C068000EDC969 /* MTCommentViewController.m */,
-				58509439197C068D00EDC969 /* MTPeerProfileViewController.h */,
-				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
-				5850943C197C06E400EDC969 /* MTNotificationsViewController.h */,
-				5850943D197C06E400EDC969 /* MTNotificationsViewController.m */,
-				58676B131974268E0070F604 /* Parse */,
+				58676B131974268E0070F604 /* Model */,
+				587464B2197EFEA30030D706 /* View Controllers */,
 				5876E2C3196F2C1F00C176EC /* Images.xcassets */,
 				5890F748197704E20042AC2F /* Assets */,
 				5890F7441976DD7E0042AC2F /* Categories */,
