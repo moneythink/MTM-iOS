@@ -27,46 +27,37 @@
     
     self.view.backgroundColor = [UIColor white];
     
-    UIFont *fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:17.0f];
-    
     if ([PFUser currentUser]) {
-        self.error.text = @"You are already logged in.";
         [self performSegueWithIdentifier:@"signUpToChallenges" sender:self];
     } else {
-        self.firstName.font = fontRoboto;
-        self.lastName.font = fontRoboto;
-        self.email.font = fontRoboto;
-        self.password.font = fontRoboto;
-        self.registrationCode.font = fontRoboto;
-        
         [self.firstName setDelegate:self];
         [self.lastName setDelegate:self];
         [self.email setDelegate:self];
         [self.password setDelegate:self];
         [self.registrationCode setDelegate:self];
     }
-    
-    
-    
-    
-    fontRoboto = [UIFont fontWithName:@"Roboto-black" size:18.0f];
+
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
-    label.font = fontRoboto;
     label.textAlignment = NSTextAlignmentCenter;
     label.textColor = [UIColor whiteColor];
     label.text = self.signUpTitle;
     [label sizeToFit];
     self.navigationItem.titleView = label;
     
+	MICheckBox *agreeCheckbox =[[MICheckBox alloc]initWithFrame:self.agreeButton.frame];
+	[agreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[agreeCheckbox setTitle:@"" forState:UIControlStateNormal];
+	[self.viewFields addSubview:agreeCheckbox];
     
+    self.agreeButton.hidden = YES;
+
+    MICheckBox *useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+	[useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+	[self.viewFields addSubview:useStageCheckbox];
     
-    
-    
-    fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:11.0f];
-    self.error.textColor = [UIColor redColor];
-    self.error.font = fontRoboto;
-    
+    self.useStageButton.hidden = YES;
     self.cancelButton.hidden = YES;
 }
 
@@ -177,13 +168,17 @@
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
     
-    CGRect fieldContentSize = CGRectMake(viewFrame.origin.x ,
-                                            viewFrame.origin.y,
-                                            viewFrame.size.width,
-                                            fieldsFrame.size.height - kbSize.height);
+    CGRect fieldFrameSize = CGRectMake(viewFrame.origin.x ,
+                                       viewFrame.origin.y,
+                                       viewFrame.size.width,
+                                       fieldsFrame.size.height - kbSize.height);
+    
+    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
     
     self.viewFields.contentSize = viewFrame.size;
-    self.viewFields.frame = fieldContentSize;
+    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 40.0f);
+    
+    self.viewFields.frame = fieldFrameSize;
     
 }
 

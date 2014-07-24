@@ -6,6 +6,8 @@
 //  Copyright (c) 2013 Parse. All rights reserved.
 //
 
+#import "MICheckBox.h"
+
 @interface MTSignUpViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *view;
@@ -21,7 +23,8 @@
 @property (strong, nonatomic) IBOutlet UITextField *registrationCode;
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
-@property (strong, nonatomic) IBOutlet UISwitch *agreeButton;
+@property (strong, nonatomic) IBOutlet UIButton *agreeButton;
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 

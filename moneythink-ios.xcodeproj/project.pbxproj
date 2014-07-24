@@ -107,6 +107,11 @@
 		5890F8E7197711AE0042AC2F /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D7197711AE0042AC2F /* Icon@2x.png */; };
 		5890F8E8197711AE0042AC2F /* iTunesArtwork1024 in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D8197711AE0042AC2F /* iTunesArtwork1024 */; };
 		5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8D9197711AE0042AC2F /* iTunesArtwork512 */; };
+		58A35687198076720018FC61 /* checkbox_not_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A35683198076720018FC61 /* checkbox_not_ticked.png */; };
+		58A35688198076720018FC61 /* checkbox_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 58A35684198076720018FC61 /* checkbox_ticked.png */; };
+		58A35689198076720018FC61 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A35686198076720018FC61 /* MICheckBox.m */; };
+		58A3568C1980CD520018FC61 /* MTExploreChallengeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */; };
+		58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -316,6 +321,14 @@
 		5890F8D7197711AE0042AC2F /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
 		5890F8D8197711AE0042AC2F /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
 		5890F8D9197711AE0042AC2F /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
+		58A35683198076720018FC61 /* checkbox_not_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_not_ticked.png; sourceTree = "<group>"; };
+		58A35684198076720018FC61 /* checkbox_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_ticked.png; sourceTree = "<group>"; };
+		58A35685198076720018FC61 /* MICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MICheckBox.h; sourceTree = "<group>"; };
+		58A35686198076720018FC61 /* MICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MICheckBox.m; sourceTree = "<group>"; };
+		58A3568A1980CD520018FC61 /* MTExploreChallengeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreChallengeViewController.h; sourceTree = "<group>"; };
+		58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExploreChallengeViewController.m; sourceTree = "<group>"; };
+		58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMyClassChallengePostsViewController.h; sourceTree = "<group>"; };
+		58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassChallengePostsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -449,6 +462,10 @@
 				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
 				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
 				58509440197C386100EDC969 /* MTChallengesContentViewController.m */,
+				58A3568A1980CD520018FC61 /* MTExploreChallengeViewController.h */,
+				58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */,
+				58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */,
+				58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */,
 				58509427197C05BD00EDC969 /* MTUserInformationViewController.h */,
 				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
 				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
@@ -570,6 +587,7 @@
 		5890F748197704E20042AC2F /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				58A35682198076720018FC61 /* MICheckboxUtils */,
 				5890F8C9197711AE0042AC2F /* app icons */,
 				58669F6819773119009BC13C /* button images */,
 				585093FF197B7F9D00EDC969 /* fonts */,
@@ -680,6 +698,7 @@
 		5890F8C9197711AE0042AC2F /* app icons */ = {
 			isa = PBXGroup;
 			children = (
+				58F39CC4198074FE0063DD09 /* New Group */,
 				5890F8CA197711AE0042AC2F /* Icon-29.png */,
 				5890F8CB197711AE0042AC2F /* Icon-29@2x.png */,
 				5890F8CC197711AE0042AC2F /* Icon-40.png */,
@@ -698,6 +717,24 @@
 				5890F8D9197711AE0042AC2F /* iTunesArtwork512 */,
 			);
 			path = "app icons";
+			sourceTree = "<group>";
+		};
+		58A35682198076720018FC61 /* MICheckboxUtils */ = {
+			isa = PBXGroup;
+			children = (
+				58A35683198076720018FC61 /* checkbox_not_ticked.png */,
+				58A35684198076720018FC61 /* checkbox_ticked.png */,
+				58A35685198076720018FC61 /* MICheckBox.h */,
+				58A35686198076720018FC61 /* MICheckBox.m */,
+			);
+			path = MICheckboxUtils;
+			sourceTree = "<group>";
+		};
+		58F39CC4198074FE0063DD09 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -789,6 +826,7 @@
 				58509414197B7F9D00EDC969 /* Apache License.txt in Resources */,
 				58509417197B7F9D00EDC969 /* Roboto-Bold.ttf in Resources */,
 				5890F8E0197711AE0042AC2F /* Icon-60.png in Resources */,
+				58A35688198076720018FC61 /* checkbox_ticked.png in Resources */,
 				58509423197B7F9D00EDC969 /* RobotoCondensed-Italic.ttf in Resources */,
 				5850941A197B7F9D00EDC969 /* Roboto-Light.ttf in Resources */,
 				58669F761977334A009BC13C /* loginButton@2x.png in Resources */,
@@ -825,6 +863,7 @@
 				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
 				5850941F197B7F9D00EDC969 /* Roboto-Thin.ttf in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
+				58A35687198076720018FC61 /* checkbox_not_ticked.png in Resources */,
 				58509426197B7F9D00EDC969 /* RobotoCondensed-Regular.ttf in Resources */,
 				5890F8E6197711AE0042AC2F /* Icon.png in Resources */,
 			);
@@ -863,6 +902,8 @@
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
+				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
+				58A35689198076720018FC61 /* MICheckBox.m in Sources */,
 				58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */,
 				5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
@@ -871,6 +912,7 @@
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
 				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
 				58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */,
+				58A3568C1980CD520018FC61 /* MTExploreChallengeViewController.m in Sources */,
 				5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,

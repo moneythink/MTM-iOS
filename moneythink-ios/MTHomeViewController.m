@@ -23,7 +23,6 @@
     [super viewWillAppear:animated];
     
     if ([PFUser currentUser]) {
-        NSLog(@"Logged in");
         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
             [self performSegueWithIdentifier:@"studentChallengeRoom" sender:self];
         } else {
