@@ -10,6 +10,8 @@
 
 @interface MTChallengesContentViewController : UIViewController
 
+@property (strong, nonatomic) IBOutlet UIView *viewChallengeInfo;
+
 @property (weak, nonatomic) IBOutlet UILabel *challengeState;
 @property (weak, nonatomic) IBOutlet UILabel *challengeNumber;
 @property (weak, nonatomic) IBOutlet UILabel *challengeTitle;

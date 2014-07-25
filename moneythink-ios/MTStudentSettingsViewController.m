@@ -1,18 +1,18 @@
 //
-//  MTPostViewController.m
+//  MTStudentSettingsViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/20/14.
+//  Created by jdburgie on 7/25/14.
 //  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
-#import "MTPostViewController.h"
+#import "MTStudentSettingsViewController.h"
 
-@interface MTPostViewController ()
+@interface MTStudentSettingsViewController ()
 
 @end
 
-@implementation MTPostViewController
+@implementation MTStudentSettingsViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -27,10 +27,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//    self.picker.mediaTypes =
-//    [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
 }
 
 - (void)didReceiveMemoryWarning

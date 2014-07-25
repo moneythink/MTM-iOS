@@ -27,6 +27,8 @@
 {
     [super viewDidLoad];
     
+    self.viewChallengeInfo.layer.cornerRadius = 4.0f;
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(exploreChallenge)];

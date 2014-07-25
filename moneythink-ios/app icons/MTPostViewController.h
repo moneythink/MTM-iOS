@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTPostViewController : UIViewController
+@interface MTPostViewController : UIViewController <UIImagePickerControllerDelegate>
+
+@property (nonatomic, strong) UIImagePickerController *picker;
 
 @end

@@ -32,6 +32,7 @@
     
     self.navigationItem.hidesBackButton = YES;
     
+//    UIButton *barButton
     UIBarButtonItem *button0 = [[UIBarButtonItem alloc]
                                 initWithTitle:@"logo"
                                 style:UIBarButtonItemStyleBordered
@@ -78,25 +79,30 @@
     if ([sender isKindOfClass:[UIButton class]]) {
         UIButton* userInfo = sender;
         
-        if ([userInfo.titleLabel.text isEqualToString:@"Maker"]) {
-            
+        if (userInfo.tag == 1) {
+//        if ([userInfo.titleLabel.text isEqualToString:@"Maker"]) {
+        
             MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
             userInfoModal.delegate = self;
             
             userInfoModal.labelInfoTitleText = @"Money Maker";
             userInfoModal.textInfoText = @"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here.";
             
+            [[[UIAlertView alloc] initWithTitle:@"Money Maker" message:@"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             
-            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
+            
+//            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
 
-        } else if([userInfo.titleLabel.text isEqualToString:@"Manager"]) {
+        } else if(userInfo.tag == 2) {
+//        } else if([userInfo.titleLabel.text isEqualToString:@"Manager"]) {
             MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
             userInfoModal.delegate = self;
 
             userInfoModal.labelInfoTitleText = @"Money Manager";
-            userInfoModal.textInfoText = @"Managin money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
+            userInfoModal.textInfoText = @"Managing money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
+            [[[UIAlertView alloc] initWithTitle:@"Money Manager" message:@"Managing money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             
-            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
+//            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
             
         } else if([userInfo.titleLabel.text isEqualToString:@"Profile"]) {
             
@@ -119,6 +125,8 @@
 - (void)tappedButtonItem2:(id)sender
 {
     [[[UIAlertView alloc] initWithTitle:@"2" message:@"2" delegate:nil cancelButtonTitle:@"2" otherButtonTitles:nil, nil] show];
+//    UIViewController *imagPickerController = [UIViewController alloc] iniadsasdf
+//    UIImagePickerController *takeAPicture = [[UIImagePickerController alloc] initWithRootViewController:imagPickerController];
 }
 
 - (void)tappedButtonItem3:(id)sender

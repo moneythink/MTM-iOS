@@ -21,6 +21,15 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
+    if ([PFUser currentUser]) {
+        if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+            [self performSegueWithIdentifier:@"studentMain" sender:self];
+        } else {
+            [self performSegueWithIdentifier:@"challengesView" sender:self];
+        }
+    } else {
+        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -32,6 +41,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.navigationItem.hidesBackButton = YES;
 
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     

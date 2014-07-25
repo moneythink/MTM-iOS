@@ -88,6 +88,7 @@
                     <navigationItem key="navigationItem" id="QOQ-ud-vJT">
                         <barButtonItem key="backBarButtonItem" title="logo" id="Jhk-Bd-rIP"/>
                     </navigationItem>
+                    <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="cancelButton" destination="Ky4-Do-A2q" id="pYi-yc-sep"/>
@@ -95,12 +96,14 @@
                         <outlet property="mentorSignUpButton" destination="7fn-Uc-eMe" id="Cln-yv-fxk"/>
                         <outlet property="studentSignUpButton" destination="hXp-YV-vWk" id="Cf8-Ol-mD7"/>
                         <outlet property="view" destination="kh9-bI-dsS" id="iGz-ia-ZRN"/>
+                        <segue destination="4W6-dw-LgJ" kind="push" identifier="studentMain" id="zbC-jz-vyG"/>
+                        <segue destination="rLQ-4e-KHB" kind="push" identifier="mentorClassView" id="dvB-ms-pUC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
                 <exit id="WXV-m6-oLv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1288" y="-2119"/>
+            <point key="canvasLocation" x="-2776" y="-2631"/>
         </scene>
         <!--User Information View Controller-->
         <scene sceneID="sK3-ZY-ZbX">
@@ -186,7 +189,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KaB-Vs-W1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="dSU-09-0j2" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-3317" y="-1540"/>
+            <point key="canvasLocation" x="-3323" y="-920"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="MBQ-y5-AQ4">
@@ -223,9 +226,6 @@
                                 <state key="normal" title="studentMain">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="84l-Pq-4rd" kind="push" identifier="studentMain" id="dHM-2w-Ifx"/>
-                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -233,13 +233,10 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="5Pn-zc-haf"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <segue destination="3sp-On-N4c" kind="push" identifier="mentorClassView" id="B1W-AZ-sde"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vkh-1o-7nc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1919" y="-2119"/>
+            <point key="canvasLocation" x="-3329" y="-1935"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="obG-hm-Cy0">
@@ -257,7 +254,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V8A-Se-fiR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1484" y="-800"/>
+            <point key="canvasLocation" x="-111" y="-4816"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="HHX-ba-Wva">
@@ -271,7 +268,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
                                 <rect key="frame" x="20" y="20" width="280" height="528"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
@@ -442,13 +439,13 @@
                         <outlet property="view" destination="Vpg-1D-iqc" id="euh-FL-CVZ"/>
                         <outlet property="viewFields" destination="8cy-cQ-6Iw" id="0wV-ET-uvh"/>
                         <segue destination="tGy-vH-4cW" kind="unwind" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
-                        <segue destination="84l-Pq-4rd" kind="push" identifier="studentSignedUp" id="FF4-S1-xM7"/>
+                        <segue destination="4W6-dw-LgJ" kind="push" identifier="studentSignedUp" id="bdZ-f5-v5h"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-794" y="-2783"/>
+            <point key="canvasLocation" x="-1698" y="-2631"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Wi0-Zj-jXc">
@@ -504,7 +501,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OzH-ei-JDI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-257" y="-2789"/>
+            <point key="canvasLocation" x="-1121" y="-2639"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="K0J-4Z-9Av">
@@ -531,12 +528,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gq4-9H-F8a" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="eXK-Cg-RNq" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="509" y="-800"/>
+            <point key="canvasLocation" x="-1610" y="-5384"/>
         </scene>
-        <!--View Controller-->
+        <!--Notifications View Controller - Notifications-->
         <scene sceneID="KJP-lz-RKE">
             <objects>
-                <viewController storyboardIdentifier="studentNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cg2-Hc-Hb3" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="studentNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cg2-Hc-Hb3" customClass="MTNotificationsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="a8X-OH-Pxd"/>
                         <viewControllerLayoutGuide type="bottom" id="OXw-Fc-4Xk"/>
@@ -544,17 +541,26 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="RdN-k9-iDt">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTNotificationsViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E9Z-b7-ygY">
+                                <rect key="frame" x="44" y="273" width="232" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Notifications" image="action_bar_icon_activity_disabled.png" id="40w-zd-bvq"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tvj-4A-lZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-544" y="-512"/>
+            <point key="canvasLocation" x="-1702" y="-920"/>
         </scene>
-        <!--View Controller-->
+        <!--Student Settings View Controller - Settings-->
         <scene sceneID="vy4-ZF-NeK">
             <objects>
-                <viewController storyboardIdentifier="studentSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IkE-tB-Q2X" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="studentSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IkE-tB-Q2X" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9ui-Xe-K8o"/>
                         <viewControllerLayoutGuide type="bottom" id="nig-6U-oWR"/>
@@ -562,12 +568,23 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="Xsm-IL-l5C">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTStudentSettingsViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XnR-11-D87">
+                                <rect key="frame" x="30" y="273" width="260" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Settings" image="action_bar_icon_post_selected.png" id="rMU-ij-fh5"/>
+                    <navigationItem key="navigationItem" id="33G-JM-pZQ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfF-2e-MR6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-172" y="-512"/>
+            <point key="canvasLocation" x="-1702" y="-254"/>
         </scene>
         <!--My Class Challenge Posts View Controller-->
         <scene sceneID="g3N-X6-i7u">
@@ -624,7 +641,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2336" y="53"/>
+            <point key="canvasLocation" x="84" y="-1194"/>
         </scene>
         <!--Explore Challenge View Controller-->
         <scene sceneID="wfV-5W-5pb">
@@ -681,12 +698,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     </connections>
                 </swipeGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-2820" y="53"/>
+            <point key="canvasLocation" x="-360" y="-1194"/>
         </scene>
-        <!--View Controller-->
+        <!--Comment View Controller-->
         <scene sceneID="8dt-sO-pvz">
             <objects>
-                <viewController storyboardIdentifier="comment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XpV-Kx-YNN" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="postComment" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XpV-Kx-YNN" customClass="MTCommentViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Bu2-B8-inc"/>
                         <viewControllerLayoutGuide type="bottom" id="bWO-uA-FkH"/>
@@ -694,17 +711,25 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="k9s-2f-fqh">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTCommentViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DaN-Xj-U78">
+                                <rect key="frame" x="54" y="273" width="212" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y1L-MY-kNv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1480" y="-960"/>
+            <point key="canvasLocation" x="-380" y="-254"/>
         </scene>
-        <!--View Controller-->
+        <!--Peer Profile View Controller-->
         <scene sceneID="7Dh-8W-twB">
             <objects>
-                <viewController storyboardIdentifier="peerProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z6a-Yr-7ak" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="peerProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="z6a-Yr-7ak" customClass="MTPeerProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hDX-ZF-eG0"/>
                         <viewControllerLayoutGuide type="bottom" id="eys-dO-qgi"/>
@@ -712,17 +737,25 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="Aio-Ei-jaw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L6u-Zm-66A">
+                                <rect key="frame" x="180" y="312" width="42" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="THA-3P-37J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1144" y="244"/>
+            <point key="canvasLocation" x="40" y="-254"/>
         </scene>
-        <!--View Controller-->
+        <!--Student Filter View Controller-->
         <scene sceneID="xq7-jJ-jm7">
             <objects>
-                <viewController storyboardIdentifier="studentFilter" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Mfh-bl-HCW" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="studentFilter" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Mfh-bl-HCW" customClass="MTStudentFilterViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="XYv-PQ-vRe"/>
                         <viewControllerLayoutGuide type="bottom" id="A6Z-Dy-N3t"/>
@@ -730,17 +763,25 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="l0a-3a-d3f">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTStudentFilterViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vd1-gu-5bI">
+                                <rect key="frame" x="43" y="273" width="234" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6e-QX-LZn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-544" y="-1249"/>
+            <point key="canvasLocation" x="-788" y="-254"/>
         </scene>
-        <!--View Controller-->
+        <!--Edit Profile View Controller-->
         <scene sceneID="7Gj-Vh-HvZ">
             <objects>
-                <viewController storyboardIdentifier="editProfile" id="IlW-MR-Ygi" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IlW-MR-Ygi" customClass="MTEditProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="hVb-LV-cJg"/>
                         <viewControllerLayoutGuide type="bottom" id="6IO-kU-TZT"/>
@@ -748,12 +789,22 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" contentMode="scaleToFill" id="YAx-1Q-yv6">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTEditProfileViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hbs-Gh-nkL">
+                                <rect key="frame" x="53" y="273" width="214" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="lLJ-ea-ow7"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-736" y="244"/>
+            <point key="canvasLocation" x="550" y="-1583"/>
         </scene>
         <!--Student Main View Controller - studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -767,44 +818,106 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zg3-aJ-6at">
-                                <rect key="frame" x="239" y="135" width="61" height="30"/>
+                            <containerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="axK-Vh-tPh">
+                                <rect key="frame" x="0.0" y="240" width="320" height="214"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Manager">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="buttonUserInfo:" destination="84l-Pq-4rd" eventType="touchUpInside" id="ob2-i3-qJq"/>
-                                </connections>
-                            </button>
-                            <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="axK-Vh-tPh">
-                                <rect key="frame" x="-3" y="256" width="327" height="292"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
                                     <segue destination="pAN-FU-phU" kind="embed" id="fM9-bL-F9m"/>
                                 </connections>
                             </containerView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QYB-id-6O6">
-                                <rect key="frame" x="20" y="135" width="43" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OdK-ip-5xF">
+                                <rect key="frame" x="120" y="70" width="81" height="81"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Maker">
+                                <state key="normal" backgroundImage="bg_profile_avatar_large.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="IlW-MR-Ygi" kind="modal" id="sFO-vL-w15"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QYB-id-6O6">
+                                <rect key="frame" x="48" y="91" width="24" height="35"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="35" id="Lhj-KH-yGm"/>
+                                    <constraint firstAttribute="width" constant="24" id="tH7-q3-kYM"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="icon_money.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
                                     <action selector="buttonUserInfo:" destination="84l-Pq-4rd" eventType="touchUpInside" id="YmF-0D-oFx"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OdK-ip-5xF">
-                                <rect key="frame" x="139" y="135" width="43" height="30"/>
+                            <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zg3-aJ-6at">
+                                <rect key="frame" x="237" y="91" width="54" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="profile">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="39" id="HsI-XA-Ke0"/>
+                                </constraints>
+                                <state key="normal" backgroundImage="icon_pig.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="buttonUserInfo:" destination="84l-Pq-4rd" eventType="touchUpInside" id="ob2-i3-qJq"/>
+                                </connections>
                             </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Money Maker" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="80" translatesAutoresizingMaskIntoConstraints="NO" id="IVf-Dq-wB2">
+                                <rect key="frame" x="20" y="138" width="80" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Money Manager" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="80" translatesAutoresizingMaskIntoConstraints="NO" id="iD6-9R-E9B">
+                                <rect key="frame" x="220" y="140" width="80" height="42"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Points" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iqB-H7-so3">
+                                <rect key="frame" x="122" y="189" width="77" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="53N-WP-vSy">
+                                <rect key="frame" x="20" y="218" width="280" height="5"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="OdK-ip-5xF" firstAttribute="leading" secondItem="IVf-Dq-wB2" secondAttribute="trailing" constant="20" id="4dh-1E-Y4D"/>
+                            <constraint firstAttribute="bottom" secondItem="axK-Vh-tPh" secondAttribute="bottom" id="6ta-MQ-tY9"/>
+                            <constraint firstItem="53N-WP-vSy" firstAttribute="trailing" secondItem="axK-Vh-tPh" secondAttribute="trailing" constant="-20" id="8YE-Z3-xE2"/>
+                            <constraint firstItem="iqB-H7-so3" firstAttribute="centerX" secondItem="53N-WP-vSy" secondAttribute="centerX" id="9VR-sz-2gw"/>
+                            <constraint firstItem="OdK-ip-5xF" firstAttribute="leading" secondItem="QYB-id-6O6" secondAttribute="trailing" constant="48" id="9q5-z2-5nq"/>
+                            <constraint firstItem="QYB-id-6O6" firstAttribute="top" secondItem="4Xv-go-57J" secondAttribute="top" constant="91" id="CgW-GP-oi3"/>
+                            <constraint firstItem="IVf-Dq-wB2" firstAttribute="leading" secondItem="4Xv-go-57J" secondAttribute="leading" constant="20" symbolic="YES" id="DPC-dt-ukz"/>
+                            <constraint firstItem="QYB-id-6O6" firstAttribute="baseline" secondItem="zg3-aJ-6at" secondAttribute="baseline" constant="-2" id="G0h-iL-xeq"/>
+                            <constraint firstItem="axK-Vh-tPh" firstAttribute="top" secondItem="4Xv-go-57J" secondAttribute="top" constant="240" id="GGp-cU-1Qg"/>
+                            <constraint firstItem="IVf-Dq-wB2" firstAttribute="top" secondItem="QYB-id-6O6" secondAttribute="bottom" constant="12" id="JQH-g7-K6d"/>
+                            <constraint firstItem="iD6-9R-E9B" firstAttribute="leading" secondItem="OdK-ip-5xF" secondAttribute="trailing" constant="19" id="KKC-ws-sES"/>
+                            <constraint firstItem="53N-WP-vSy" firstAttribute="top" secondItem="iqB-H7-so3" secondAttribute="bottom" constant="8" symbolic="YES" id="LZj-dt-YcF"/>
+                            <constraint firstItem="axK-Vh-tPh" firstAttribute="leading" secondItem="53N-WP-vSy" secondAttribute="leading" constant="-20" id="PjB-Rp-tdC"/>
+                            <constraint firstItem="zg3-aJ-6at" firstAttribute="leading" secondItem="OdK-ip-5xF" secondAttribute="trailing" constant="36" id="QKj-m7-VbM"/>
+                            <constraint firstItem="OdK-ip-5xF" firstAttribute="top" secondItem="4Xv-go-57J" secondAttribute="top" constant="70" id="R7i-Ij-pJw"/>
+                            <constraint firstItem="QYB-id-6O6" firstAttribute="centerX" secondItem="IVf-Dq-wB2" secondAttribute="centerX" id="SLE-18-1kb"/>
+                            <constraint firstItem="QYB-id-6O6" firstAttribute="top" secondItem="zg3-aJ-6at" secondAttribute="top" id="e3v-ax-CY4"/>
+                            <constraint firstItem="53N-WP-vSy" firstAttribute="top" secondItem="iD6-9R-E9B" secondAttribute="bottom" constant="36" id="hH0-sk-LaS"/>
+                            <constraint firstItem="IVf-Dq-wB2" firstAttribute="leading" secondItem="53N-WP-vSy" secondAttribute="leading" id="hrv-co-SLl"/>
+                            <constraint firstItem="53N-WP-vSy" firstAttribute="top" secondItem="IVf-Dq-wB2" secondAttribute="bottom" constant="38" id="l0D-eq-sPf"/>
+                            <constraint firstItem="axK-Vh-tPh" firstAttribute="top" secondItem="53N-WP-vSy" secondAttribute="bottom" constant="17" id="l8b-M5-aYZ"/>
+                            <constraint firstItem="iqB-H7-so3" firstAttribute="top" secondItem="OdK-ip-5xF" secondAttribute="bottom" constant="38" id="lFT-iW-mw8"/>
+                            <constraint firstItem="zg3-aJ-6at" firstAttribute="centerY" secondItem="OdK-ip-5xF" secondAttribute="centerY" id="mth-cT-WIK"/>
+                            <constraint firstItem="iD6-9R-E9B" firstAttribute="top" secondItem="zg3-aJ-6at" secondAttribute="bottom" constant="10" id="p02-iu-F9Y"/>
+                            <constraint firstItem="OdK-ip-5xF" firstAttribute="centerX" secondItem="iqB-H7-so3" secondAttribute="centerX" id="qy3-Of-lYn"/>
+                            <constraint firstAttribute="trailing" secondItem="iD6-9R-E9B" secondAttribute="trailing" constant="20" symbolic="YES" id="yc9-Wb-PYW"/>
+                            <constraint firstItem="iD6-9R-E9B" firstAttribute="trailing" secondItem="53N-WP-vSy" secondAttribute="trailing" id="yhZ-NY-ieM"/>
+                        </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Challenges" image="action_bar_icon_challenges_normal.png" id="Sir-1e-8v5"/>
                     <navigationItem key="navigationItem" id="aNp-xq-46h"/>
                     <connections>
                         <outlet property="buttonMoneyMaker" destination="QYB-id-6O6" id="G8J-aZ-aCo"/>
@@ -816,9 +929,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gx6-ze-5rc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="UyF-QV-Aku" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2208" y="-1461"/>
+            <point key="canvasLocation" x="-1702" y="-1575"/>
         </scene>
-        <!--Challenges View Controller-->
+        <!--Challenges View Controller - Item-->
         <scene sceneID="hsn-gt-TQh">
             <objects>
                 <viewController storyboardIdentifier="challengeView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="3sp-On-N4c" customClass="MTChallengesViewController" sceneMemberID="viewController">
@@ -840,6 +953,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" red="1" green="0.80000001192092896" blue="0.40000000596046448" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="8cr-kE-cg8"/>
                     <navigationItem key="navigationItem" id="gUd-Hg-2I5">
                         <barButtonItem key="leftBarButtonItem" title="logo" id="WFA-mZ-pDE">
                             <connections>
@@ -851,7 +965,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="E0d-Ij-hDm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Skc-Zb-Wmv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1102" y="-1354"/>
+            <point key="canvasLocation" x="-1726" y="-4803"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="hLQ-DY-1VV">
@@ -869,7 +983,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lzx-B7-1Na" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="997" y="-800"/>
+            <point key="canvasLocation" x="-1738" y="-4120"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="MEj-oA-KyZ">
@@ -968,14 +1082,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="useStageButton" destination="Qd1-5T-rL2" id="4rt-xi-UfN"/>
                         <outlet property="view" destination="iZQ-Ay-weI" id="OzZ-H8-9Hm"/>
                         <outlet property="viewFields" destination="DtS-a6-r1F" id="Z1R-36-qOc"/>
-                        <segue destination="84l-Pq-4rd" kind="push" identifier="studentLoggedIn" id="0s7-8Y-Dyh"/>
                         <segue destination="a95-sQ-YwX" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="M00-js-Lb5"/>
+                        <segue destination="4W6-dw-LgJ" kind="push" identifier="studentLoggedIn" id="Cj8-lq-2b5"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WJj-xZ-xT9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="a95-sQ-YwX" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-794" y="-2119"/>
+            <point key="canvasLocation" x="-1714" y="-3287"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Rjt-fl-o9h">
@@ -988,12 +1102,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="tXl-do-oCH" kind="relationship" relationship="rootViewController" id="nye-MN-hZP"/>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="jTg-eI-N75"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dsH-oO-S0L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2402" y="-2119"/>
+            <point key="canvasLocation" x="-3323" y="-2639"/>
         </scene>
         <!--Challenges View Controller-->
         <scene sceneID="nih-IU-gmj">
@@ -1004,13 +1118,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="327" height="292"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="214"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m9Q-bI-JMX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2739" y="-1176"/>
+            <point key="canvasLocation" x="-1187" y="-1502"/>
         </scene>
         <!--Challenges Content View Controller-->
         <scene sceneID="3Fg-lF-jK9">
@@ -1024,106 +1138,121 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT3-dc-YCB">
-                                <rect key="frame" x="63" y="24" width="237" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT3-dc-YCB">
+                                <rect key="frame" x="106" y="24" width="194" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="f1S-oV-xOF"/>
+                                    <constraint firstAttribute="width" constant="194" id="5BF-9U-KVD"/>
+                                    <constraint firstAttribute="height" constant="21" id="zmO-IH-sKc"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge points" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwf-vh-1uf">
-                                <rect key="frame" x="63" y="146" width="237" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <bool key="isElement" value="NO"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="qlr-i8-Eth"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xpg-Kc-3Xd">
-                                <rect key="frame" x="63" y="52" width="237" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <bool key="isElement" value="NO"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="AP8-LV-Idf"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qv-kj-lsk">
-                                <rect key="frame" x="20" y="52" width="40" height="120"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <bool key="isElement" value="NO"/>
-                                </accessibility>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="120" id="WT2-dU-VWe"/>
-                                    <constraint firstAttribute="width" constant="40" id="eYy-kU-zlK"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_challenge_completed.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ev2-KZ-Bda">
-                                <rect key="frame" x="20" y="20" width="35" height="29"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_challenge_open.png" highlightedImage="icon_challenge_open.png" translatesAutoresizingMaskIntoConstraints="NO" id="Ev2-KZ-Bda">
+                                <rect key="frame" x="63" y="20" width="35" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="29" id="25r-hZ-ooP"/>
-                                    <constraint firstAttribute="width" constant="35" id="zkn-Tz-Vss"/>
+                                    <constraint firstAttribute="height" constant="29" id="2uF-E9-c4N"/>
+                                    <constraint firstAttribute="width" constant="35" id="U9R-JI-xHF"/>
                                 </constraints>
                             </imageView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Challenge Description" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eu9-lb-6AD">
-                                <rect key="frame" x="63" y="81" width="237" height="57"/>
+                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bjq-xx-n8M">
+                                <rect key="frame" x="20" y="57" width="280" height="201"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <bool key="isElement" value="NO"/>
-                                </accessibility>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Challenge points" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwf-vh-1uf">
+                                        <rect key="frame" x="63" y="160" width="197" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="NO"/>
+                                        </accessibility>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="edo-Je-OHO"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="xpg-Kc-3Xd">
+                                        <rect key="frame" x="63" y="20" width="197" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="NO"/>
+                                        </accessibility>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="21" id="szo-uI-ODl"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="22"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" editable="NO" text="Challenge Description" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eu9-lb-6AD">
+                                        <rect key="frame" x="63" y="49" width="197" height="103"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="NO"/>
+                                        </accessibility>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <view alpha="0.5" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0qE-Zm-YyP">
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="201"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <subviews>
+                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qv-kj-lsk">
+                                                <rect key="frame" x="10" y="72" width="40" height="57"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <accessibility key="accessibilityConfiguration">
+                                                    <bool key="isElement" value="NO"/>
+                                                </accessibility>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="57" id="jsS-oR-m73"/>
+                                                    <constraint firstAttribute="width" constant="40" id="zz0-gp-zmr"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" pointSize="28"/>
+                                                <color key="textColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="leading" secondItem="0qE-Zm-YyP" secondAttribute="leading" constant="10" id="69n-ik-oAr"/>
+                                            <constraint firstAttribute="centerX" secondItem="2Qv-kj-lsk" secondAttribute="centerX" id="AUz-8A-4C1"/>
+                                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="top" secondItem="0qE-Zm-YyP" secondAttribute="top" constant="72" id="D3v-47-njU"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="57" id="yne-yy-WYJ"/>
+                                    <constraint firstItem="Gwf-vh-1uf" firstAttribute="top" secondItem="eu9-lb-6AD" secondAttribute="bottom" constant="8" id="Dug-zw-3N8"/>
+                                    <constraint firstItem="eu9-lb-6AD" firstAttribute="top" secondItem="xpg-Kc-3Xd" secondAttribute="bottom" constant="8" id="R5B-TA-FSp"/>
+                                    <constraint firstAttribute="trailing" secondItem="eu9-lb-6AD" secondAttribute="trailing" constant="20" id="Td0-gU-tKx"/>
+                                    <constraint firstItem="Gwf-vh-1uf" firstAttribute="leading" secondItem="Bjq-xx-n8M" secondAttribute="leading" constant="63" id="UvD-mz-oF0"/>
+                                    <constraint firstItem="xpg-Kc-3Xd" firstAttribute="leading" secondItem="Bjq-xx-n8M" secondAttribute="leading" constant="63" id="gUv-zo-c6N"/>
+                                    <constraint firstAttribute="trailing" secondItem="xpg-Kc-3Xd" secondAttribute="trailing" constant="20" id="iGh-u4-URP"/>
+                                    <constraint firstItem="xpg-Kc-3Xd" firstAttribute="top" secondItem="Bjq-xx-n8M" secondAttribute="top" constant="20" id="oL2-NM-doc"/>
+                                    <constraint firstAttribute="trailing" secondItem="Gwf-vh-1uf" secondAttribute="trailing" constant="20" id="u4Q-xU-0FJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="Gwf-vh-1uf" secondAttribute="bottom" constant="20" id="xgd-5D-iDN"/>
                                 </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                            </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="eu9-lb-6AD" firstAttribute="leading" secondItem="2Qv-kj-lsk" secondAttribute="trailing" constant="3" id="2YG-BV-jAB"/>
-                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="top" secondItem="Ev2-KZ-Bda" secondAttribute="bottom" constant="3" id="5jD-zh-vYc"/>
-                            <constraint firstItem="Ev2-KZ-Bda" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="20" id="6x8-rx-thc"/>
-                            <constraint firstItem="xpg-Kc-3Xd" firstAttribute="top" secondItem="KT3-dc-YCB" secondAttribute="bottom" constant="7" id="Aq0-53-3vE"/>
-                            <constraint firstItem="xpg-Kc-3Xd" firstAttribute="leading" secondItem="2Qv-kj-lsk" secondAttribute="trailing" constant="3" id="DkZ-hf-ate"/>
-                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="20" id="Fe4-TH-M20"/>
-                            <constraint firstAttribute="trailing" secondItem="eu9-lb-6AD" secondAttribute="trailing" constant="20" id="OJ8-Hk-XQB"/>
-                            <constraint firstAttribute="trailing" secondItem="Gwf-vh-1uf" secondAttribute="trailing" constant="20" id="UvX-Kr-noe"/>
-                            <constraint firstItem="eu9-lb-6AD" firstAttribute="top" secondItem="xpg-Kc-3Xd" secondAttribute="bottom" constant="8" id="V79-Sq-itz"/>
-                            <constraint firstItem="Gwf-vh-1uf" firstAttribute="top" secondItem="eu9-lb-6AD" secondAttribute="bottom" constant="8" id="Zha-SA-H9O"/>
-                            <constraint firstItem="KT3-dc-YCB" firstAttribute="leading" secondItem="Ev2-KZ-Bda" secondAttribute="trailing" constant="8" id="aNl-lf-Z34"/>
-                            <constraint firstItem="Gwf-vh-1uf" firstAttribute="leading" secondItem="2Qv-kj-lsk" secondAttribute="trailing" constant="3" id="d8h-Sm-xIA"/>
-                            <constraint firstAttribute="trailing" secondItem="xpg-Kc-3Xd" secondAttribute="trailing" constant="20" id="gie-B6-dEb"/>
-                            <constraint firstItem="Ev2-KZ-Bda" firstAttribute="top" secondItem="p3B-Fz-qmX" secondAttribute="bottom" constant="20" id="pdQ-J0-rCj"/>
-                            <constraint firstItem="KT3-dc-YCB" firstAttribute="top" secondItem="p3B-Fz-qmX" secondAttribute="bottom" constant="24" id="tAG-b6-jVH"/>
-                            <constraint firstAttribute="trailing" secondItem="KT3-dc-YCB" secondAttribute="trailing" constant="20" id="x6x-zt-p9k"/>
+                            <constraint firstItem="Ev2-KZ-Bda" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="63" id="1re-EU-8Lj"/>
+                            <constraint firstItem="Bjq-xx-n8M" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="20" id="5X4-0F-Khr"/>
+                            <constraint firstAttribute="trailing" secondItem="Ev2-KZ-Bda" secondAttribute="trailing" constant="222" id="N1g-aU-88w"/>
+                            <constraint firstAttribute="trailing" secondItem="Bjq-xx-n8M" secondAttribute="trailing" constant="20" id="SRj-99-iqU"/>
+                            <constraint firstItem="KT3-dc-YCB" firstAttribute="leading" secondItem="Ev2-KZ-Bda" secondAttribute="trailing" constant="8" id="Uek-Y6-OBH"/>
+                            <constraint firstItem="Bjq-xx-n8M" firstAttribute="top" secondItem="KT3-dc-YCB" secondAttribute="bottom" constant="12" id="o3f-7U-Mab"/>
+                            <constraint firstItem="KT3-dc-YCB" firstAttribute="top" secondItem="p3B-Fz-qmX" secondAttribute="bottom" constant="24" id="pzf-g1-VEW"/>
+                            <constraint firstItem="Ev2-KZ-Bda" firstAttribute="centerY" secondItem="KT3-dc-YCB" secondAttribute="centerY" id="ryg-lx-rAQ"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
@@ -1138,12 +1267,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="challengePoints" destination="Gwf-vh-1uf" id="wxJ-2P-ucd"/>
                         <outlet property="challengeState" destination="KT3-dc-YCB" id="Pvv-C2-eMf"/>
                         <outlet property="challengeTitle" destination="xpg-Kc-3Xd" id="H2y-Iz-egV"/>
+                        <outlet property="viewChallengeInfo" destination="Bjq-xx-n8M" id="G21-bY-TRV"/>
                         <segue destination="O53-s8-Hqo" kind="push" identifier="exploreChallenge" id="Ygz-IP-E9T"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2820" y="-680"/>
+            <point key="canvasLocation" x="-794" y="-1194"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="P9H-Sj-CNa">
@@ -1155,12 +1285,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flE-gx-sz9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2952" y="-758"/>
+            <point key="canvasLocation" x="-1187" y="-1194"/>
         </scene>
-        <!--View Controller-->
+        <!--Post View Controller-->
         <scene sceneID="2aa-TW-Svi">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="83z-FJ-qxJ" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="challengePost" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="83z-FJ-qxJ" customClass="MTPostViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6Mv-eh-fVj"/>
                         <viewControllerLayoutGuide type="bottom" id="tF0-Zz-tY2"/>
@@ -1168,17 +1298,71 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="pi6-7j-Toa">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTPostViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fhJ-hL-Ulc">
+                                <rect key="frame" x="75" y="273" width="171" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1591" y="-1083"/>
+            <point key="canvasLocation" x="-1187" y="-254"/>
+        </scene>
+        <!--Student Tab Bar View Controller-->
+        <scene sceneID="PIP-Ah-Zib">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="4W6-dw-LgJ" customClass="MTStudentTabBarViewController" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="Mgo-ef-JTc"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="9c4-vn-y25">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="84l-Pq-4rd" kind="relationship" relationship="viewControllers" id="lAj-2P-z9X"/>
+                        <segue destination="Cg2-Hc-Hb3" kind="relationship" relationship="viewControllers" id="GfP-Rb-92I"/>
+                        <segue destination="IkE-tB-Q2X" kind="relationship" relationship="viewControllers" id="FeW-ml-nXJ"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wtg-fA-sCb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2252" y="-920"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="cOg-jY-Cuy">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="rLQ-4e-KHB" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="pBY-lz-cDO"/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="Eo3-Oh-BEB">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="3sp-On-N4c" kind="relationship" relationship="viewControllers" id="fYF-Cp-8wN"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JfZ-bo-TkQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2252" y="-4803"/>
         </scene>
     </scenes>
     <resources>
-        <image name="icon_challenge_completed.png" width="35" height="29"/>
+        <image name="action_bar_icon_activity_disabled.png" width="31" height="31"/>
+        <image name="action_bar_icon_challenges_normal.png" width="38" height="32"/>
+        <image name="action_bar_icon_post_selected.png" width="32" height="32"/>
+        <image name="bg_profile_avatar_large.png" width="173" height="173"/>
+        <image name="icon_challenge_open.png" width="31" height="29"/>
+        <image name="icon_money.png" width="24" height="46"/>
+        <image name="icon_pig.png" width="54" height="39"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -1186,7 +1370,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="qW3-9D-fsj"/>
+        <segue reference="zbC-jz-vyG"/>
         <segue reference="pMW-cZ-HeP"/>
-        <segue reference="0s7-8Y-Dyh"/>
     </inferredMetricsTieBreakers>
 </document>

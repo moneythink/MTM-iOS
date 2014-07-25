@@ -74,6 +74,10 @@
 		580B5AE619820F8A0092AA9C /* app_icon_512.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F7FF197705230042AC2F /* app_icon_512.png */; };
 		580B5AE719820F8A0092AA9C /* app_icon_72.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F800197705230042AC2F /* app_icon_72.png */; };
 		580B5AE819820F8A0092AA9C /* app_icon_96.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F801197705230042AC2F /* app_icon_96.png */; };
+		580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */; };
+		580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */; };
+		580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */; };
+		580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
 		5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942B197C060700EDC969 /* MTStudentMainViewController.m */; };
@@ -158,6 +162,7 @@
 		58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */; };
 		58A356DC198168140018FC61 /* MJPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356D9198168140018FC61 /* MJPopupBackgroundView.m */; };
 		58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356DB198168140018FC61 /* UIViewController+MJPopupViewController.m */; };
+		58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -174,6 +179,14 @@
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
+		580B5AE91982CF690092AA9C /* MTImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTImagePickerViewController.h; sourceTree = "<group>"; };
+		580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTImagePickerViewController.m; sourceTree = "<group>"; };
+		580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTEditProfileViewController.h; sourceTree = "<group>"; };
+		580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTEditProfileViewController.m; sourceTree = "<group>"; };
+		580B5AEF1982EC740092AA9C /* MTStudentSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentSettingsViewController.h; sourceTree = "<group>"; };
+		580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentSettingsViewController.m; sourceTree = "<group>"; };
+		580B5AF21982EDAA0092AA9C /* MTStudentFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentFilterViewController.h; sourceTree = "<group>"; };
+		580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentFilterViewController.m; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
 		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
@@ -360,6 +373,8 @@
 		58A356D9198168140018FC61 /* MJPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPopupBackgroundView.m; sourceTree = "<group>"; };
 		58A356DA198168140018FC61 /* UIViewController+MJPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+MJPopupViewController.h"; sourceTree = "<group>"; };
 		58A356DB198168140018FC61 /* UIViewController+MJPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MJPopupViewController.m"; sourceTree = "<group>"; };
+		58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentTabBarViewController.h; sourceTree = "<group>"; };
+		58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentTabBarViewController.m; sourceTree = "<group>"; };
 		HYXIFWTDXJPPRRMDCEPMDTJH /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SparkInspector.framework; path = "/Applications/Spark Inspector.app/Contents/Resources/Frameworks/SparkInspector.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -450,6 +465,8 @@
 			children = (
 				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
 				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
+				58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */,
+				58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */,
 				58676B161974273E0070F604 /* MTLogInViewController.h */,
 				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
 				58676B171974273E0070F604 /* MTSignUpViewController.h */,
@@ -468,18 +485,26 @@
 				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
 				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
 				5850942B197C060700EDC969 /* MTStudentMainViewController.m */,
+				580B5AEF1982EC740092AA9C /* MTStudentSettingsViewController.h */,
+				580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */,
 				5850942D197C062A00EDC969 /* MTStudentInstructionsViewController.h */,
 				5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */,
 				58509430197C063D00EDC969 /* MTStudentChallengeRoomViewController.h */,
 				58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */,
 				58509433197C065E00EDC969 /* MTPostViewController.h */,
 				58509434197C065E00EDC969 /* MTPostViewController.m */,
+				580B5AF21982EDAA0092AA9C /* MTStudentFilterViewController.h */,
+				580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */,
+				580B5AE91982CF690092AA9C /* MTImagePickerViewController.h */,
+				580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */,
 				58509436197C068000EDC969 /* MTCommentViewController.h */,
 				58509437197C068000EDC969 /* MTCommentViewController.m */,
 				58509439197C068D00EDC969 /* MTPeerProfileViewController.h */,
 				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
 				5850943C197C06E400EDC969 /* MTNotificationsViewController.h */,
 				5850943D197C06E400EDC969 /* MTNotificationsViewController.m */,
+				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
+				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -914,6 +939,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
@@ -926,18 +952,22 @@
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
 				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
+				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
+				580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */,
 				58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */,
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
+				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
 				58A35689198076720018FC61 /* MICheckBox.m in Sources */,
 				58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */,
 				5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */,
+				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
 				58676B201974273E0070F604 /* MTLogInViewController.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
 				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
