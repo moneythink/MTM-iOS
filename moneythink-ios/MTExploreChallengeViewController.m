@@ -41,9 +41,16 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (IBAction)tappedExploreMyClass:(id)sender {
+    
+}
+
 - (IBAction)unwindToExploreChallanges:(UIStoryboardSegue*)sender
 {
     
+}
+- (IBAction)swipeChallengePostsMyClass:(id)sender {
+    [self performSegueWithIdentifier:@"pushMyClass" sender:nil];
 }
 
 #pragma mark - Navigation

@@ -83,7 +83,7 @@
     
     challengeContentViewController.challengeNumberText = [[self.challenges[index] valueForUndefinedKey:@"challenge_number"] stringValue];
     
-    NSArray *allKeys = [self.challenges[index] allKeys];
+//    NSArray *allKeys = [self.challenges[index] allKeys];
     
     challengeContentViewController.challengeDescriptionText = [self.challenges[index] valueForUndefinedKey:@"description"];
     

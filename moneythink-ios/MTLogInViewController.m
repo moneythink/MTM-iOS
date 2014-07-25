@@ -24,18 +24,32 @@
     
     [self.view addGestureRecognizer:tap];
     
+    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+	[self.viewFields addSubview:self.useStageCheckbox];
+    
+    self.useStageButton.hidden = YES;
     self.view.backgroundColor = [UIColor white];
-    
-    UIFont *fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:17.0f];
-    
-    self.email.font = fontRoboto;
-    self.password.font = fontRoboto;
-    
-    fontRoboto = [UIFont fontWithName:@"Roboto-Thin" size:11.0f];
-    self.error.textColor = [UIColor redColor];
-    self.error.font = fontRoboto;
 
-    self.cancelButton.hidden = YES;
+    UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
+    UIButton *logoButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, logoImage.size.width, logoImage.size.height)];
+    
+    [logoButton setBackgroundImage:logoImage forState:UIControlStateNormal];
+    [logoButton setBackgroundImage:logoImage forState:UIControlStateHighlighted];
+        
+    [logoButton addTarget:self action:@selector(touchLogoButton) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithCustomView:logoButton];
+
+    self.navigationItem.leftBarButtonItem = barButtonLogo;
+
+    self.navigationItem.hidesBackButton = NO;
+}
+
+- (IBAction)touchLogoButton
+{
+    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
 }
 
 - (void)viewDidLayoutSubviews {
@@ -48,6 +62,14 @@
 }
 
 - (IBAction)loginTapped:(id)sender {
+    if ([self.useStageCheckbox isChecked]) {
+        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+        
+        [Parse setApplicationId:applicationID
+                      clientKey:clientKey];
+    }
+
     PFUser *user = [PFUser user];
     
     user.username = self.email.text;
@@ -57,12 +79,14 @@
         NSString *errorString = [error userInfo][@"error"];
 
         if (!error) {
-            self.error.text = @"Logged in";
-            self.error.textColor = [UIColor primaryOrange];
-            
-            [self.cancelButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                [self performSegueWithIdentifier:@"studentLoggedIn" sender:self];
+            } else {
+                [self performSegueWithIdentifier:@"mentoroggedIn" sender:self];
+            }
         } else {
             self.error.text = errorString;
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
     }];
 }

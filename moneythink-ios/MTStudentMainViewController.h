@@ -7,9 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTUserInformationViewController.h"
 
-@interface MTStudentMainViewController : UIViewController
+@interface MTStudentMainViewController : UIViewController <MTUserInfoDelegate>
 
-- (void)tappedButtonItem2:(id)sender;
+@property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
+
+@property (strong, nonatomic) IBOutlet UIButton *buttonMoneyMaker;
+@property (strong, nonatomic) IBOutlet UIButton *buttonMoneyManager;
 
 @end

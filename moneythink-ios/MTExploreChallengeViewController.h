@@ -13,3 +13,4 @@
 @property (strong, nonatomic) IBOutlet UISegmentedControl *toggleExploreMyClass;
 
 @end
+

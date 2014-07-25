@@ -7,6 +7,7 @@
 //
 
 #import "MTUserInformationViewController.h"
+#import "UIViewController+MJPopupViewController.h"
 
 @interface MTUserInformationViewController ()
 
@@ -30,6 +31,8 @@
     
     self.labelInfoTitle.text = self.labelInfoTitleText;
     self.textInfo.text = self.textInfoText;
+    
+    self.fieldsView.layer.cornerRadius = 5.0f;
 }
 
 - (void)didReceiveMemoryWarning
@@ -37,6 +40,18 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//- (IBAction)buttonOK:(id)sender {
+//    [self dismissPopupViewControllerWithanimationType:MJPopupViewAnimationFade];
+//}
+
+- (IBAction)closePopup:(id)sender
+{
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cancelButtonClicked:)]) {
+        [self.delegate cancelButtonClicked:self];
+    }
+}
+
 
 /*
 #pragma mark - Navigation

@@ -8,6 +8,7 @@
 
 #import "MTStudentMainViewController.h"
 #import "MTUserInformationViewController.h"
+#import "UIViewController+MJPopupViewController.h"
 
 @interface MTStudentMainViewController ()
 
@@ -69,13 +70,50 @@
 
 - (void)tappedButtonItem0:(id)sender
 {
-    [PFUser logOut];
-//    [self segueForUnwindingToViewController:<#(UIViewController *)#> fromViewController:<#(UIViewController *)#> identifier:<#(NSString *)#>]
+//    [PFUser logOut];
 }
+
+
+- (IBAction)buttonUserInfo:(id)sender {
+    if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton* userInfo = sender;
+        
+        if ([userInfo.titleLabel.text isEqualToString:@"Maker"]) {
+            
+            MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
+            userInfoModal.delegate = self;
+            
+            userInfoModal.labelInfoTitleText = @"Money Maker";
+            userInfoModal.textInfoText = @"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here.";
+            
+            
+            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
+
+        } else if([userInfo.titleLabel.text isEqualToString:@"Manager"]) {
+            MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
+            userInfoModal.delegate = self;
+
+            userInfoModal.labelInfoTitleText = @"Money Manager";
+            userInfoModal.textInfoText = @"Managin money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
+            
+            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
+            
+        } else if([userInfo.titleLabel.text isEqualToString:@"Profile"]) {
+            
+        }
+    }
+}
+
+- (void)cancelButtonClicked:(MTUserInformationViewController *)userInfoModal
+{
+    [self dismissPopupViewControllerWithanimationType:MJPopupViewAnimationFade];
+}
+
 
 - (void)tappedButtonItem1:(id)sender
 {
     [PFUser logOut];
+    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
 }
 
 - (void)tappedButtonItem2:(id)sender
@@ -104,9 +142,7 @@
  // In a storyboard-based application, you will often want to do a little preparation before navigation
  - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
  {
-     NSLog(@"sender %@", sender);
-
-         // Get the new view controller using [segue destinationViewController].
+ // Get the new view controller using [segue destinationViewController].
  // Pass the selected object to the new view controller.
      
      NSString *segueID = [segue identifier];

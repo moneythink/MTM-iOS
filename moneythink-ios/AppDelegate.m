@@ -14,8 +14,8 @@
 static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
 static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
 #else
-static NSString *ApplicationId = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
-static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+static NSString *applicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
+static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
 #endif
 
 @implementation AppDelegate
@@ -24,11 +24,6 @@ static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
 {
     [Parse setApplicationId:applicationID
                   clientKey:clientKey];
-    
-//    if ([PFUser currentUser]) {
-//        [PFUser logOut];
-//    }
-
     
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
@@ -57,10 +52,6 @@ static NSString *ClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
-
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[[ViewController alloc] init]];
-//    self.window.backgroundColor = [UIColor whiteColor];
-//    [self.window makeKeyAndVisible];
     
     return YES;
 }

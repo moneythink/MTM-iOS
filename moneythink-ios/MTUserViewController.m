@@ -33,22 +33,11 @@
 {
     [super viewDidLoad];
 
-//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 60)];
-//    label.textAlignment = NSTextAlignmentCenter;
-//    label.text = @"Using Custom Fonts";
-    
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
     [self.studentSignUpButton setTitle:@"SIGN UP AS STUDENT" forState:UIControlStateNormal];
     [self.mentorSignUpButton setTitle:@"SIGN UP AS MENTOR" forState:UIControlStateNormal];
     [self.loginButton setTitle:@"LOGIN" forState:UIControlStateNormal];
-    
-    
-    UIFont *fontRoboto = [UIFont fontWithName:@"Roboto-Black" size:18.0f];
-
-    self.studentSignUpButton.titleLabel.font = fontRoboto;
-    self.mentorSignUpButton.titleLabel.font = fontRoboto;
-    self.loginButton.titleLabel.font = fontRoboto;
     
     
     CGFloat radius = 4.0f;
@@ -69,6 +58,10 @@
 
     self.navigationItem.hidesBackButton = YES;
     self.cancelButton.hidden = YES;
+    
+    UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
+    UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithImage:logoImage style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.navigationItem.leftBarButtonItem = barButtonLogo;
 }
 
 - (void)didReceiveMemoryWarning
@@ -107,25 +100,9 @@
     }
 }
 
-
-#pragma mark - IBActions
-
-
-- (IBAction)studentSignUpTapped:(id)sender {
-    NSLog(@"studentSignUpTapped");
-}
-
-- (IBAction)mentorSignUpTapped:(id)sender {
-    NSLog(@"mentorSignUpTapped");
-}
-
-- (IBAction)loginTapped:(id)sender {
-//    MTLogInViewController *logInViewController = [[MTLogInViewController alloc] init];
-//    
-//    logInViewController.view.backgroundColor = [UIColor primaryGreen];
-//    
-//        // Present the log in view controller
-//    [self presentViewController:logInViewController animated:YES completion:NULL];
+- (IBAction)unwindToSignUpLogin:(UIStoryboardSegue *)sender
+{
+    NSLog(@"exitToHome");
 }
 
 @end

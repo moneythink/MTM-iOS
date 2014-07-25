@@ -25,6 +25,10 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *agreeButton;
 @property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+
+@property (strong, nonatomic) IBOutlet MICheckBox *agreeCheckbox;
+@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
+
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 

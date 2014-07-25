@@ -6,18 +6,21 @@
 //  Copyright (c) 2013 Parse. All rights reserved.
 //
 
+#import "MICheckBox.h"
+
 @interface MTLogInViewController : UIViewController
 
-//@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
 @property (strong, nonatomic) IBOutlet UITextField *email;
 @property (strong, nonatomic) IBOutlet UITextField *password;
 
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
-@property (strong, nonatomic) IBOutlet UISwitch *useStageButton;
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
-@property (strong, nonatomic) IBOutlet UIButton *sloginButton;
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
 @end

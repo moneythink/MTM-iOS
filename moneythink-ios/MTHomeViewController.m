@@ -24,12 +24,11 @@
     
     if ([PFUser currentUser]) {
         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-            [self performSegueWithIdentifier:@"studentChallengeRoom" sender:self];
+            [self performSegueWithIdentifier:@"studentMain" sender:self];
         } else {
             [self performSegueWithIdentifier:@"challengesView" sender:self];
         }
     } else {
-        NSLog(@"Not logged in");
         [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
     }
 }

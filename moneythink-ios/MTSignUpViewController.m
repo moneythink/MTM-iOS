@@ -45,17 +45,19 @@
     [label sizeToFit];
     self.navigationItem.titleView = label;
     
-	MICheckBox *agreeCheckbox =[[MICheckBox alloc]initWithFrame:self.agreeButton.frame];
-	[agreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[agreeCheckbox setTitle:@"" forState:UIControlStateNormal];
-	[self.viewFields addSubview:agreeCheckbox];
+	self.agreeCheckbox =[[MICheckBox alloc]initWithFrame:self.agreeButton.frame];
+	[self.agreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self.agreeCheckbox setTitle:@"" forState:UIControlStateNormal];
+    self.agreeCheckbox.isChecked = NO;
+	[self.viewFields addSubview:self.agreeCheckbox];
     
     self.agreeButton.hidden = YES;
 
-    MICheckBox *useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-	[useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-	[self.viewFields addSubview:useStageCheckbox];
+    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+    self.useStageCheckbox.isChecked = NO;
+	[self.viewFields addSubview:self.useStageCheckbox];
     
     self.useStageButton.hidden = YES;
     self.cancelButton.hidden = YES;
@@ -95,55 +97,72 @@
 - (IBAction)tappedUseStageButton:(id)sender { }
 
 - (IBAction)tappedSignUpButton:(id)sender {
+    if ([self.useStageCheckbox isChecked]) {
+        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+        
+        [Parse setApplicationId:applicationID
+                      clientKey:clientKey];
+    }
     
-    NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
-    
-    PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
-    
-    [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSArray *codes = objects;
-            
-            if ([codes count] == 1) {
-                PFSignupCodes *code = [codes firstObject];
+    if ([self.agreeCheckbox isChecked]) {
+        NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
+        
+        PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
+        
+        [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                NSArray *codes = objects;
                 
-                PFUser *user = [PFUser user];
-                
-                user.username = self.email.text;
-                user.password = self.password.text;
-                user.email = self.email.text;
-                
-                    // other fields can be set just like with PFObject
-                user[@"first_name"] = self.firstName.text;
-                user[@"last_name"] = self.lastName.text;
-                
-                NSString *aString = (NSString *)[code valueForUndefinedKey:@"class"];
-                user[@"class"] = aString;
-                
-                aString = (NSString *)[code valueForUndefinedKey:@"school"];
-                user[@"school"] = aString;
-                
-                [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (!error) {
-                            // Hooray! Let them use the app now.
-                        NSLog(@"errorString - nil");
-                        [self.cancelButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-//                        [self dismissViewControllerAnimated:YES completion:nil];
-                    } else {
-                        NSString *errorString = [error userInfo][@"error"];
-                        NSLog(@"errorString - %@", errorString);
-                            // Show the errorString somewhere and let the user try again.
-                        self.error.text = errorString;
-                    }
-                }];
+                if ([codes count] == 1) {
+                    PFSignupCodes *code = [codes firstObject];
+                    
+                    PFUser *user = [PFUser user];
+                    
+                    user.username = self.email.text;
+                    user.password = self.password.text;
+                    user.email = self.email.text;
+                    
+                        // other fields can be set just like with PFObject
+                    user[@"first_name"] = self.firstName.text;
+                    user[@"last_name"] = self.lastName.text;
+                    
+                    user[@"type"] = self.signUpType;
+                    
+                    NSString *aString = (NSString *)[code valueForUndefinedKey:@"class"];
+                    user[@"class"] = aString;
+                    
+                    aString = (NSString *)[code valueForUndefinedKey:@"school"];
+                    user[@"school"] = aString;
+                    
+                    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        if (!error) {
+                                // Hooray! Let them use the app now.
+                            
+                            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                                [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
+                            } else {
+                                [self performSegueWithIdentifier:@"mentorSignedUp" sender:self];
+                            }
+                            
+                        } else {
+                            NSString *errorString = [error userInfo][@"error"];
+                                // Show the errorString somewhere and let the user try again.
+                            self.error.text = errorString;
+                            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                        }
+                    }];
+                } else {
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
             } else {
-                
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
-        } else {
-            NSLog(@"error");
-            [self dismissViewControllerAnimated:YES completion:nil];
-        }
-    }];
+        }];
+    } else {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+    }
+
     
 }
 
