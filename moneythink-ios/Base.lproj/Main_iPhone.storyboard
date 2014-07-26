@@ -16,7 +16,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk" userLabel="Student Sign Up">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk" userLabel="Student Sign Up">
                                 <rect key="frame" x="20" y="120" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -28,7 +28,7 @@
                                     <segue destination="8Ue-1k-B9o" kind="push" identifier="studentSignUp" id="Fpc-xj-HcE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fn-Uc-eMe" userLabel="Mentor Sign Up">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fn-Uc-eMe" userLabel="Mentor Sign Up">
                                 <rect key="frame" x="20" y="177" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.50196081400000003" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -42,7 +42,7 @@
                                     <segue destination="8Ue-1k-B9o" kind="push" identifier="mentorSignUp" id="pMW-cZ-HeP"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lx9-xh-3h8" userLabel="Login">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lx9-xh-3h8" userLabel="Login">
                                 <rect key="frame" x="20" y="234" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -55,7 +55,7 @@
                                     <segue destination="iaD-Gq-KZF" kind="push" identifier="login" id="OZO-WW-Y84"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ky4-Do-A2q">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ky4-Do-A2q">
                                 <rect key="frame" x="138" y="281" width="45" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -548,12 +548,23 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yYy-nR-6Bd">
+                                <rect key="frame" x="137" y="235" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="Kj5-9t-Xkd" kind="unwind" unwindAction="unwindToMainMenu:" id="cvu-cl-oWm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Notifications" image="action_bar_icon_activity_disabled.png" id="40w-zd-bvq"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tvj-4A-lZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Kj5-9t-Xkd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1702" y="-920"/>
         </scene>
@@ -576,6 +587,16 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAf-HK-efo">
+                                <rect key="frame" x="137" y="235" width="46" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Button">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="0t4-uc-upF" kind="unwind" unwindAction="unwindToMainMenu:" id="pNb-ZP-GbR"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -583,6 +604,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <navigationItem key="navigationItem" id="33G-JM-pZQ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfF-2e-MR6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0t4-uc-upF" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1702" y="-254"/>
         </scene>
@@ -598,7 +620,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eXZ-Ea-2bR">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eXZ-Ea-2bR">
                                 <rect key="frame" x="20" y="20" width="280" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
@@ -644,6 +666,35 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             <point key="canvasLocation" x="84" y="-1194"/>
         </scene>
         <!--Explore Challenge View Controller-->
+        <scene sceneID="ioo-pF-GmR">
+            <objects>
+                <viewController storyboardIdentifier="MTExploreChallengeViewController2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fmP-GR-I9r" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="pch-Wv-78R"/>
+                        <viewControllerLayoutGuide type="bottom" id="MEh-rg-UtM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="feJ-TN-d2L">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="py7-uQ-np7">
+                                <rect key="frame" x="0.0" y="94" width="320" height="474"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <connections>
+                                    <segue destination="L15-4o-h8K" kind="embed" id="W7C-Kl-7zG"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="iBA-H1-neg"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="XhZ-CG-ow2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-280" y="-1774"/>
+        </scene>
+        <!--Explore Challenge View Controller-->
         <scene sceneID="wfV-5W-5pb">
             <objects>
                 <viewController storyboardIdentifier="challengePostsExplore" useStoryboardIdentifierAsRestorationIdentifier="YES" id="O53-s8-Hqo" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
@@ -655,7 +706,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PXn-hn-s5h">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PXn-hn-s5h">
                                 <rect key="frame" x="20" y="25" width="280" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <segments>
@@ -1244,6 +1295,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </constraints>
                             </view>
                         </subviews>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="Ev2-KZ-Bda" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="63" id="1re-EU-8Lj"/>
                             <constraint firstItem="Bjq-xx-n8M" firstAttribute="leading" secondItem="IUa-lM-ONT" secondAttribute="leading" constant="20" id="5X4-0F-Khr"/>
@@ -1268,7 +1320,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="challengeState" destination="KT3-dc-YCB" id="Pvv-C2-eMf"/>
                         <outlet property="challengeTitle" destination="xpg-Kc-3Xd" id="H2y-Iz-egV"/>
                         <outlet property="viewChallengeInfo" destination="Bjq-xx-n8M" id="G21-bY-TRV"/>
-                        <segue destination="O53-s8-Hqo" kind="push" identifier="exploreChallenge" id="Ygz-IP-E9T"/>
+                        <segue destination="fmP-GR-I9r" kind="push" identifier="exploreChallenge" id="K6b-iX-HZH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1329,9 +1381,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <segue destination="84l-Pq-4rd" kind="relationship" relationship="viewControllers" id="lAj-2P-z9X"/>
                         <segue destination="Cg2-Hc-Hb3" kind="relationship" relationship="viewControllers" id="GfP-Rb-92I"/>
                         <segue destination="IkE-tB-Q2X" kind="relationship" relationship="viewControllers" id="FeW-ml-nXJ"/>
+                        <segue destination="Hgh-h9-1IU" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="pjC-PB-9La"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wtg-fA-sCb" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Hgh-h9-1IU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-2252" y="-920"/>
         </scene>
@@ -1353,6 +1407,83 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JfZ-bo-TkQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-2252" y="-4803"/>
+        </scene>
+        <!--Explore Challenge View Controller - Explore-->
+        <scene sceneID="571-5l-UN7">
+            <objects>
+                <tableViewController id="pJJ-OD-crW" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="dlV-VV-moj">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="CrI-Fr-z4b">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CrI-Fr-z4b" id="2Pl-Jb-H9x">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="pJJ-OD-crW" id="XAe-zH-VGF"/>
+                            <outlet property="delegate" destination="pJJ-OD-crW" id="iBE-U4-dog"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="Explore" id="zRX-62-46D"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oMj-6Z-v7X" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="901" y="-3034"/>
+        </scene>
+        <!--My Class Challenge Posts View Controller - My Class-->
+        <scene sceneID="b2t-xq-UoC">
+            <objects>
+                <tableViewController id="wNm-mA-XFC" customClass="MTMyClassChallengePostsViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Z5C-Z3-zPc">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="rdh-jZ-o4p">
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rdh-jZ-o4p" id="HYd-GJ-6w7">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="wNm-mA-XFC" id="QP5-cc-AJv"/>
+                            <outlet property="delegate" destination="wNm-mA-XFC" id="Kw0-np-Jb6"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="My Class" id="kCu-tO-AWW"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zVp-Jh-5LW" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="901" y="-2404"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="5lu-5w-Kd3">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="L15-4o-h8K" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <nil key="simulatedBottomBarMetrics"/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="LHV-lR-JvD">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="pJJ-OD-crW" kind="relationship" relationship="viewControllers" id="NQZ-2W-RYB"/>
+                        <segue destination="wNm-mA-XFC" kind="relationship" relationship="viewControllers" id="CYm-lp-WQG"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gVF-AH-qYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="357" y="-2404"/>
         </scene>
     </scenes>
     <resources>

@@ -28,7 +28,7 @@
             [self performSegueWithIdentifier:@"challengesView" sender:self];
         }
     } else {
-        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
+//        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
     }
 }
 
@@ -113,7 +113,7 @@
 
 - (IBAction)unwindToSignUpLogin:(UIStoryboardSegue *)sender
 {
-    NSLog(@"exitToHome");
+    NSLog(@"unwindToSignUpLogin");
 }
 
 @end

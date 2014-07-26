@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTStudentTabBarViewController : UITabBarController
+@interface MTStudentTabBarViewController : UITabBarController <UIActionSheetDelegate>
 
 @end

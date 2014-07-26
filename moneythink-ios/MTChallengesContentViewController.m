@@ -26,7 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+        
     self.viewChallengeInfo.layer.cornerRadius = 4.0f;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]

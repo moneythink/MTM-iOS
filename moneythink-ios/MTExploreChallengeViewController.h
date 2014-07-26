@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTExploreChallengeViewController : UIViewController
+@interface MTExploreChallengeViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UISegmentedControl *toggleExploreMyClass;
 
