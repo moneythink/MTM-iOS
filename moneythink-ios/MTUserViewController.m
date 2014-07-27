@@ -116,4 +116,21 @@
     NSLog(@"unwindToSignUpLogin");
 }
 
+- (IBAction)studentSignUpTapped:(id)sender
+{
+    
+}
+
+- (IBAction)mentorSignUpTapped:(id)sender
+{
+    
+}
+
+- (IBAction)loginTapped:(id)sender
+{
+    
+}
+
+
+
 @end

@@ -533,6 +533,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <!--Notifications View Controller - Notifications-->
         <scene sceneID="KJP-lz-RKE">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tvj-4A-lZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="studentNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Cg2-Hc-Hb3" customClass="MTNotificationsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="a8X-OH-Pxd"/>
@@ -548,23 +549,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yYy-nR-6Bd">
-                                <rect key="frame" x="137" y="235" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="Kj5-9t-Xkd" kind="unwind" unwindAction="unwindToMainMenu:" id="cvu-cl-oWm"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <tabBarItem key="tabBarItem" title="Notifications" image="action_bar_icon_activity_disabled.png" id="40w-zd-bvq"/>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Tvj-4A-lZR" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="Kj5-9t-Xkd" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1702" y="-920"/>
         </scene>
@@ -587,16 +576,6 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yAf-HK-efo">
-                                <rect key="frame" x="137" y="235" width="46" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="0t4-uc-upF" kind="unwind" unwindAction="unwindToMainMenu:" id="pNb-ZP-GbR"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -604,152 +583,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <navigationItem key="navigationItem" id="33G-JM-pZQ"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfF-2e-MR6" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="0t4-uc-upF" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-1702" y="-254"/>
-        </scene>
-        <!--My Class Challenge Posts View Controller-->
-        <scene sceneID="g3N-X6-i7u">
-            <objects>
-                <viewController storyboardIdentifier="challengePostsMyClass" useStoryboardIdentifierAsRestorationIdentifier="YES" id="X6Z-zY-32D" customClass="MTMyClassChallengePostsViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="3zO-cv-92e"/>
-                        <viewControllerLayoutGuide type="bottom" id="Giy-Ls-x4w"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="pV1-9i-YYq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="eXZ-Ea-2bR">
-                                <rect key="frame" x="20" y="20" width="280" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="Explore"/>
-                                    <segment title="My Class"/>
-                                </segments>
-                                <connections>
-                                    <action selector="tappedExploreMyClass:" destination="X6Z-zY-32D" eventType="valueChanged" id="Ffe-OO-LVv"/>
-                                    <segue destination="PkW-8v-YAh" kind="unwind" unwindAction="unwindToExploreChallanges:" id="cDg-7y-lMp"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="My class" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1j1-uZ-6iV">
-                                <rect key="frame" x="126" y="273" width="68" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstAttribute="trailing" secondItem="eXZ-Ea-2bR" secondAttribute="trailing" constant="20" symbolic="YES" id="aEx-Wl-8fo"/>
-                            <constraint firstItem="eXZ-Ea-2bR" firstAttribute="leading" secondItem="pV1-9i-YYq" secondAttribute="leading" constant="20" symbolic="YES" id="xUj-Dh-NaZ"/>
-                            <constraint firstItem="eXZ-Ea-2bR" firstAttribute="top" secondItem="3zO-cv-92e" secondAttribute="bottom" constant="20" id="zhM-Cn-7y6"/>
-                        </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="I3Y-MH-zTW" appends="YES" id="b01-Br-2aS"/>
-                        </connections>
-                    </view>
-                    <navigationItem key="navigationItem" id="3l2-9l-oj9"/>
-                    <connections>
-                        <outlet property="toggleExploreMyClass" destination="eXZ-Ea-2bR" id="0he-Ga-BM2"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SUa-pk-WIt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="PkW-8v-YAh" userLabel="Exit" sceneMemberID="exit"/>
-                <swipeGestureRecognizer direction="right" id="I3Y-MH-zTW">
-                    <connections>
-                        <segue destination="PkW-8v-YAh" kind="unwind" unwindAction="unwindToExploreChallanges:" id="qbP-I2-cTz"/>
-                    </connections>
-                </swipeGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="84" y="-1194"/>
-        </scene>
-        <!--Explore Challenge View Controller-->
-        <scene sceneID="ioo-pF-GmR">
-            <objects>
-                <viewController storyboardIdentifier="MTExploreChallengeViewController2" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fmP-GR-I9r" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="pch-Wv-78R"/>
-                        <viewControllerLayoutGuide type="bottom" id="MEh-rg-UtM"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="feJ-TN-d2L">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <containerView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="py7-uQ-np7">
-                                <rect key="frame" x="0.0" y="94" width="320" height="474"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                <connections>
-                                    <segue destination="L15-4o-h8K" kind="embed" id="W7C-Kl-7zG"/>
-                                </connections>
-                            </containerView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="iBA-H1-neg"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XhZ-CG-ow2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-280" y="-1774"/>
-        </scene>
-        <!--Explore Challenge View Controller-->
-        <scene sceneID="wfV-5W-5pb">
-            <objects>
-                <viewController storyboardIdentifier="challengePostsExplore" useStoryboardIdentifierAsRestorationIdentifier="YES" id="O53-s8-Hqo" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="h1g-yq-ese"/>
-                        <viewControllerLayoutGuide type="bottom" id="WE0-6o-llc"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="wwD-Xg-Gqo">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="PXn-hn-s5h">
-                                <rect key="frame" x="20" y="25" width="280" height="29"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <segments>
-                                    <segment title="Explore"/>
-                                    <segment title="My Class"/>
-                                </segments>
-                                <connections>
-                                    <action selector="tappedExploreMyClass:" destination="O53-s8-Hqo" eventType="valueChanged" id="A4t-Pp-CDk"/>
-                                    <segue destination="X6Z-zY-32D" kind="push" identifier="pushMyClass" id="ASL-sv-98V"/>
-                                </connections>
-                            </segmentedControl>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Explore" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uJd-rN-b1l">
-                                <rect key="frame" x="131" y="273" width="58" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
-                        <constraints>
-                            <constraint firstItem="PXn-hn-s5h" firstAttribute="leading" secondItem="wwD-Xg-Gqo" secondAttribute="leading" constant="20" symbolic="YES" id="5Jz-Fg-wNh"/>
-                            <constraint firstItem="PXn-hn-s5h" firstAttribute="top" secondItem="h1g-yq-ese" secondAttribute="bottom" constant="25" id="Rzl-Zb-3Ub"/>
-                            <constraint firstAttribute="trailing" secondItem="PXn-hn-s5h" secondAttribute="trailing" constant="20" symbolic="YES" id="g2X-0M-Hsn"/>
-                        </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="57b-BO-9oV" appends="YES" id="l6f-mr-wE3"/>
-                        </connections>
-                    </view>
-                    <navigationItem key="navigationItem" id="1yO-Rx-sge"/>
-                    <connections>
-                        <outlet property="toggleExploreMyClass" destination="PXn-hn-s5h" id="C0y-9e-EgB"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="XOO-AF-xx8" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <swipeGestureRecognizer direction="left" id="57b-BO-9oV">
-                    <connections>
-                        <action selector="swipeChallengePostsMyClass:" destination="O53-s8-Hqo" id="2zF-Mu-UfA"/>
-                        <outlet property="delegate" destination="PXn-hn-s5h" id="bCy-AF-BnE"/>
-                    </connections>
-                </swipeGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="-360" y="-1194"/>
         </scene>
         <!--Comment View Controller-->
         <scene sceneID="8dt-sO-pvz">
@@ -772,10 +607,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="h53-4N-wd0"/>
+                    <connections>
+                        <segue destination="Phr-lg-Bkk" kind="unwind" unwindAction="unwindToMainMenu:" id="nVl-r6-auh"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y1L-MY-kNv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="Phr-lg-Bkk" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-380" y="-254"/>
+            <point key="canvasLocation" x="1606" y="-1866"/>
         </scene>
         <!--Peer Profile View Controller-->
         <scene sceneID="7Dh-8W-twB">
@@ -801,7 +641,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="THA-3P-37J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="40" y="-254"/>
+            <point key="canvasLocation" x="1606" y="-1194"/>
         </scene>
         <!--Student Filter View Controller-->
         <scene sceneID="xq7-jJ-jm7">
@@ -827,7 +667,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6e-QX-LZn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-788" y="-254"/>
+            <point key="canvasLocation" x="1207" y="-1194"/>
         </scene>
         <!--Edit Profile View Controller-->
         <scene sceneID="7Gj-Vh-HvZ">
@@ -855,7 +695,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="550" y="-1583"/>
+            <point key="canvasLocation" x="2858" y="-1575"/>
         </scene>
         <!--Student Main View Controller - studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -1320,7 +1160,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="challengeState" destination="KT3-dc-YCB" id="Pvv-C2-eMf"/>
                         <outlet property="challengeTitle" destination="xpg-Kc-3Xd" id="H2y-Iz-egV"/>
                         <outlet property="viewChallengeInfo" destination="Bjq-xx-n8M" id="G21-bY-TRV"/>
-                        <segue destination="fmP-GR-I9r" kind="push" identifier="exploreChallenge" id="K6b-iX-HZH"/>
+                        <segue destination="L15-4o-h8K" kind="push" identifier="exploreChallenge" id="KRd-TC-kg7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1357,14 +1197,25 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gzZ-3j-byL">
+                                <rect key="frame" x="126" y="302" width="68" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Comment">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="XpV-Kx-YNN" kind="push" id="kPA-sK-c9z"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="CZe-eJ-ePU"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1187" y="-254"/>
+            <point key="canvasLocation" x="1207" y="-1866"/>
         </scene>
         <!--Student Tab Bar View Controller-->
         <scene sceneID="PIP-Ah-Zib">
@@ -1408,21 +1259,30 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             </objects>
             <point key="canvasLocation" x="-2252" y="-4803"/>
         </scene>
-        <!--Explore Challenge View Controller - Explore-->
+        <!--Explore Challenge View Controller-->
         <scene sceneID="571-5l-UN7">
             <objects>
-                <tableViewController id="pJJ-OD-crW" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MTExploreChallengeViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pJJ-OD-crW" customClass="MTExploreChallengeViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="dlV-VV-moj">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="CrI-Fr-z4b">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="5CA-Jq-Za9" style="IBUITableViewCellStyleDefault" id="CrI-Fr-z4b">
+                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CrI-Fr-z4b" id="2Pl-Jb-H9x">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5CA-Jq-Za9">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -1431,27 +1291,39 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <outlet property="delegate" destination="pJJ-OD-crW" id="iBE-U4-dog"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Explore" id="zRX-62-46D"/>
+                    <navigationItem key="navigationItem" id="sai-eZ-y4K"/>
+                    <connections>
+                        <segue destination="83z-FJ-qxJ" kind="push" identifier="viewPost" id="1wb-Ml-zIQ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oMj-6Z-v7X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="901" y="-3034"/>
+            <point key="canvasLocation" x="757" y="-1866"/>
         </scene>
-        <!--My Class Challenge Posts View Controller - My Class-->
+        <!--My Class Challenge Posts View Controller-->
         <scene sceneID="b2t-xq-UoC">
             <objects>
-                <tableViewController id="wNm-mA-XFC" customClass="MTMyClassChallengePostsViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MTMyClassChallengePostsViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wNm-mA-XFC" customClass="MTMyClassChallengePostsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Z5C-Z3-zPc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="474"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="rdh-jZ-o4p">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" textLabel="dBP-I2-sl1" style="IBUITableViewCellStyleDefault" id="rdh-jZ-o4p">
+                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rdh-jZ-o4p" id="HYd-GJ-6w7">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dBP-I2-sl1">
+                                            <rect key="frame" x="15" y="0.0" width="290" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
@@ -1460,30 +1332,72 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <outlet property="delegate" destination="wNm-mA-XFC" id="Kw0-np-Jb6"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="My Class" id="kCu-tO-AWW"/>
+                    <navigationItem key="navigationItem" id="ZPV-HK-Lvu"/>
+                    <connections>
+                        <segue destination="83z-FJ-qxJ" kind="push" identifier="viewPost" id="1br-Z2-tG0"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zVp-Jh-5LW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="901" y="-2404"/>
+            <point key="canvasLocation" x="757" y="-1194"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="5lu-5w-Kd3">
             <objects>
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="L15-4o-h8K" sceneMemberID="viewController">
                     <toolbarItems/>
+                    <navigationItem key="navigationItem" id="hjs-PP-P8f"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="LHV-lR-JvD">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="pJJ-OD-crW" kind="relationship" relationship="viewControllers" id="NQZ-2W-RYB"/>
-                        <segue destination="wNm-mA-XFC" kind="relationship" relationship="viewControllers" id="CYm-lp-WQG"/>
+                        <segue destination="rQp-nr-GB4" kind="relationship" relationship="viewControllers" id="NQZ-2W-RYB"/>
+                        <segue destination="WNt-nw-Daz" kind="relationship" relationship="viewControllers" id="CYm-lp-WQG"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gVF-AH-qYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="357" y="-2404"/>
+            <point key="canvasLocation" x="-295" y="-1194"/>
+        </scene>
+        <!--Navigation Controller - Explore-->
+        <scene sceneID="xAg-Et-3MM">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="rQp-nr-GB4" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Explore" id="zRX-62-46D"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="CUm-pn-C9A">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="pJJ-OD-crW" kind="relationship" relationship="rootViewController" id="ah8-pe-M8g"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="x9l-CX-BJM" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="231" y="-1866"/>
+        </scene>
+        <!--Navigation Controller - My Class-->
+        <scene sceneID="M4X-P3-PEZ">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="WNt-nw-Daz" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="My Class" id="kCu-tO-AWW"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="mmh-Bk-8eB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="wNm-mA-XFC" kind="relationship" relationship="rootViewController" id="gLo-1d-2Wh"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gkD-Xt-kZk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="231" y="-1194"/>
         </scene>
     </scenes>
     <resources>
@@ -1501,8 +1415,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="pMW-cZ-HeP"/>
         <segue reference="qW3-9D-fsj"/>
         <segue reference="zbC-jz-vyG"/>
-        <segue reference="pMW-cZ-HeP"/>
+        <segue reference="1wb-Ml-zIQ"/>
     </inferredMetricsTieBreakers>
 </document>

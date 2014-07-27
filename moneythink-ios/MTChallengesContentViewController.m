@@ -61,6 +61,20 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSString *segueID = [segue identifier];
+    UIViewController *destinationViewController = segue.destinationViewController;
+    
+//    MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
+//    
+//    if ([segueID isEqualToString:@"studentSignUp"]) {
+//        signUpViewController.signUpTitle = @"Student Signup";
+//        signUpViewController.signUpType = @"student";
+//    } else if ([segueID isEqualToString:@"mentorSignUp"]) {
+//        signUpViewController.signUpTitle = @"Mentor Signup";
+//        signUpViewController.signUpType = @"mentor";
+//    } else {
+//        
+//    }
 
 }
 
