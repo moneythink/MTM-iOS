@@ -13,6 +13,8 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
 
+@property (strong, nonatomic) IBOutlet UINavigationItem *studentMainNavItem;
+
 @property (strong, nonatomic) IBOutlet UIButton *buttonMoneyMaker;
 @property (strong, nonatomic) IBOutlet UIButton *buttonMoneyManager;
 

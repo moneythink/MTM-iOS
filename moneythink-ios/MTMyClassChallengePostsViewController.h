@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMyClassChallengePostsViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+@interface MTMyClassChallengePostsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (strong, nonatomic) IBOutlet UITableView *myClassPostsTableView;
 
-@property (strong, nonatomic) IBOutlet UISegmentedControl *toggleExploreMyClass;
+@property (nonatomic, strong) NSArray *posts;
+@property (nonatomic, assign) NSInteger challengeNumber;
+@property (nonatomic, strong) NSString *class;
 
 @end

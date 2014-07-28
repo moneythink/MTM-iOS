@@ -27,12 +27,40 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
+    PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
+    
+    self.posts = [findChallengePosts findObjects];
+    
+    
+    
+    
+    
+    
+    
+    //    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //        if (!error) {
+    //            NSArray *posts = objects;
+    //        } else {
+    //
+    //        }
+    //    }];
+    
+    
+    
+    
+    NSLog(@"foo");
+    
+    
+    
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     
-    self.toggleExploreMyClass.selectedSegmentIndex = 1;
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,7 +86,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return [self.posts count];
 }
 
     // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -66,15 +94,16 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"challengePostIdent"];
+	UITableViewCell *cell = [self.myClassPostsTableView dequeueReusableCellWithIdentifier:@"challengePostIdent"];
     
     if (cell == nil)
     {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"challengePostIdent"];
     }
     
-    cell.textLabel.text = @"My class";
-    [cell setBackgroundColor:[UIColor blueColor]];
+    PFChallengePost *post = self.posts[indexPath.row];
+    
+    cell.textLabel.text = post.description;
     
     return cell;
 }

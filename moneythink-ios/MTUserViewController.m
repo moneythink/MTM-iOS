@@ -113,7 +113,7 @@
 
 - (IBAction)unwindToSignUpLogin:(UIStoryboardSegue *)sender
 {
-    NSLog(@"unwindToSignUpLogin");
+
 }
 
 - (IBAction)studentSignUpTapped:(id)sender

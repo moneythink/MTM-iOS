@@ -7,6 +7,7 @@
 //
 
 #import "MTExploreChallengeViewController.h"
+#import "MTPostsTabBarViewController.h"
 
 
 @interface MTExploreChallengeViewController ()
@@ -29,15 +30,14 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = 1"];
+    MTPostsTabBarViewController *tbvc = (MTPostsTabBarViewController *)self.parentViewController;
+    
+    self.challengeNumber = tbvc.challengeNumber;
+    
+    NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
     
-    PFChallenges *allChallengePosts = [findChallengePosts findObjects];
-    
-    
-    
-    
-    
+    self.challenges = [findChallengePosts findObjects];
     
     
 //    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -47,14 +47,6 @@
 //
 //        }
 //    }];
-
-    
-    
-    
-        NSLog(@"foo");
-
-    
-    
     
     
 }
@@ -62,7 +54,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     
-    self.toggleExploreMyClass.selectedSegmentIndex = 0;
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,7 +66,7 @@
     
 }
 
-- (IBAction)unwindToExploreChallanges:(UIStoryboardSegue*)sender
+- (IBAction)unwindToExploreChallanges:(UIStoryboardSegue *)sender
 {
     
 }
@@ -97,7 +88,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 1;
+    return [self.challenges count];
 }
 
     // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -105,15 +96,22 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"challengePostIdent"];
+	UITableViewCell *cell = [self.explorePostsTableView dequeueReusableCellWithIdentifier:@"challengePostIdent"];
     
     if (cell == nil)
     {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"challengePostIdent"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"challengePostIdent"];
     }
     
-    cell.textLabel.text = @"Explore";
-    cell.accessoryType = UITableViewCellAccessoryDetailButton;
+    PFChallengePost *post = self.challenges[indexPath.row];
+    
+    cell.textLabel.text = post[@"post_text"];
+    PFUser *poster = post[@"user"];
+    NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [poster objectId]];
+    PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
+    poster = [[findPoster findObjects] firstObject];
+    
+    cell.detailTextLabel.text = [poster username]  ;
     
     return cell;
 }
@@ -303,10 +301,10 @@
     [self performSegueWithIdentifier:@"viewPost" sender:self];
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
-{
-    [self performSegueWithIdentifier:@"viewPost" sender:self];
-}
+//- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
+//{
+//
+//}
 
     // Editing
 

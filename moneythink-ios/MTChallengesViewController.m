@@ -65,10 +65,6 @@
 
 - (MTChallengesContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-//    if (([self.pageTitles count] == 0) || (index >= [self.pageTitles count])) {
-//        return nil;
-//    }
-    
     if (([self.challenges count] == 0) || (index >= [self.challenges count])) {
         return nil;
     }
@@ -119,7 +115,6 @@
     }
     
     index++;
-//    if (index == [self.pageTitles count]) {
     if (index == [self.challenges count]) {
         return nil;
     }
@@ -129,7 +124,6 @@
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
 {
     return [self.challenges count];
-//    return [self.pageTitles count];
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
@@ -150,7 +144,7 @@
 }
 */
 
-- (IBAction)unwindToMainMenu:(UIStoryboardSegue*)sender
+- (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
 {
 
 }

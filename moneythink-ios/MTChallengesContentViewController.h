@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTChallengesContentViewController : UIViewController <UIActionSheetDelegate>
+@interface MTChallengesContentViewController : UIViewController <UIActionSheetDelegate, UITabBarControllerDelegate, UITabBarDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *viewChallengeInfo;
 

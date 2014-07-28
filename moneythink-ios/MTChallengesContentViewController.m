@@ -7,6 +7,7 @@
 //
 
 #import "MTChallengesContentViewController.h"
+#import "MTPostsTabBarViewController.h"
 
 @interface MTChallengesContentViewController ()
 
@@ -62,20 +63,20 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueID = [segue identifier];
-    UIViewController *destinationViewController = segue.destinationViewController;
+    MTPostsTabBarViewController *destinationViewController = segue.destinationViewController;
     
-//    MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
-//    
-//    if ([segueID isEqualToString:@"studentSignUp"]) {
-//        signUpViewController.signUpTitle = @"Student Signup";
-//        signUpViewController.signUpType = @"student";
-//    } else if ([segueID isEqualToString:@"mentorSignUp"]) {
-//        signUpViewController.signUpTitle = @"Mentor Signup";
-//        signUpViewController.signUpType = @"mentor";
-//    } else {
-//        
-//    }
-
+    destinationViewController.challengeNumber = [self.challengeNumberText integerValue];
 }
+
+#pragma mark - UITabBarDelegate methods
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item; // called when a new view is selected by the user (but not programatically)
+{
+    
+}
+
+#pragma mark - UITabBarControllerDelegate methods
+
+
 
 @end

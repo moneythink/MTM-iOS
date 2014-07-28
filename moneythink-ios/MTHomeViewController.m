@@ -66,7 +66,7 @@
 
 - (IBAction)exitToHome:(UIStoryboardSegue *)sender
 {
-    NSLog(@"exitToHome");
+    
 }
 
 

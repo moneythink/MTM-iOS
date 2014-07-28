@@ -82,7 +82,7 @@
             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                 [self performSegueWithIdentifier:@"studentLoggedIn" sender:self];
             } else {
-                [self performSegueWithIdentifier:@"mentoroggedIn" sender:self];
+                [self performSegueWithIdentifier:@"pushMentorLoggedIn" sender:self];
             }
         } else {
             self.error.text = errorString;

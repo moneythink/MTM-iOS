@@ -29,49 +29,6 @@
 {
     [super viewDidLoad];
         // Do any additional setup after loading the view.
-    
-    self.navigationItem.hidesBackButton = YES;
-    
-//    UIButton *barButton
-    UIBarButtonItem *button0 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"logo"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem0:)];
-    
-    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"1"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem1:)];
-    
-    UIBarButtonItem *button2 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"2"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem2:)];
-    
-    UIBarButtonItem *button3 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"3"
-                                style:UIBarButtonItemStyleBordered
-                                target:nil
-                                action:nil];
-    
-    UIBarButtonItem *button4 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"4"
-                                style:UIBarButtonItemStyleBordered
-                                target:nil
-                                action:nil];
-    
-    NSArray *rightBarButtonItems = @[button1, button2, button3, button4];
-    
-    self.navigationItem.rightBarButtonItems = rightBarButtonItems;
-    self.navigationItem.leftBarButtonItem = button0;
-}
-
-- (void)tappedButtonItem0:(id)sender
-{
-//    [PFUser logOut];
 }
 
 
@@ -108,35 +65,6 @@
             
         }
     }
-}
-
-- (void)cancelButtonClicked:(MTUserInformationViewController *)userInfoModal
-{
-    [self dismissPopupViewControllerWithanimationType:MJPopupViewAnimationFade];
-}
-
-
-- (void)tappedButtonItem1:(id)sender
-{
-    [PFUser logOut];
-    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
-}
-
-- (void)tappedButtonItem2:(id)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"2" message:@"2" delegate:nil cancelButtonTitle:@"2" otherButtonTitles:nil, nil] show];
-//    UIViewController *imagPickerController = [UIViewController alloc] iniadsasdf
-//    UIImagePickerController *takeAPicture = [[UIImagePickerController alloc] initWithRootViewController:imagPickerController];
-}
-
-- (void)tappedButtonItem3:(id)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"3" message:@"3" delegate:nil cancelButtonTitle:@"3" otherButtonTitles:nil, nil] show];
-}
-
-- (void)tappedButtonItem4:(id)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"4" message:@"4" delegate:nil cancelButtonTitle:@"4" otherButtonTitles:nil, nil] show];
 }
 
 - (void)didReceiveMemoryWarning
