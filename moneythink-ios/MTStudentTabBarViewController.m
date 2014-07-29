@@ -63,15 +63,9 @@
     
     NSArray *rightBarButtonItems = @[button1, button2, button3, button4];
     
-//    [self navigationController].navigationItem.title = @"nothing";
-//    self.navigationController.navigationItem.rightBarButtonItems = rightBarButtonItems;
-    
     self.navigationItem.rightBarButtonItems = rightBarButtonItems;
     self.navigationItem.leftBarButtonItem = button0;
-    self.navigationItem.title = @"string";
-    
-    NSArray *items = self.navigationController.navigationBar.items;
-    items = self.navigationItem.rightBarButtonItems;
+    self.navigationItem.title = @"Challenges";
 }
 
 - (void)didReceiveMemoryWarning
@@ -87,8 +81,18 @@
 
 - (void)tappedButtonItem1:(id)sender
 {
-    [PFUser logOut];
-    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
+//    [PFUser logOut];
+//    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
+    
+    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", @"Settings", nil];
+    
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [logoutSheet showInView:self.view];
+    } else {
+        [logoutSheet showInView:window];
+    }
+
 }
 
 - (void)tappedButtonItem2:(id)sender
@@ -120,33 +124,6 @@
 
 
 #pragma mark - UIActionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    
-}
-
-    // Called when we cancel a view (eg. the user clicks the Home button). This is not called when the user clicks the cancel button.
-    // If not defined in the delegate, we simulate a click in the cancel button
-- (void)actionSheetCancel:(UIActionSheet *)actionSheet
-{
-    
-}
-
-- (void)willPresentActionSheet:(UIActionSheet *)actionSheet  // before animation and showing view
-{
-    
-}
-
-- (void)didPresentActionSheet:(UIActionSheet *)actionSheet  // after animation
-{
-    
-}
-
-- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex // before animation and hiding view
-{
-    
-}
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {

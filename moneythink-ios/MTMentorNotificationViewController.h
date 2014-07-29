@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMentorNotificationViewController : UIViewController
+@interface MTMentorNotificationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
+
+@property (nonatomic, strong) NSArray *studentsInClass;
+
+@property (strong, nonatomic) IBOutlet UITableView *studentsTableView;
+
 
 @end

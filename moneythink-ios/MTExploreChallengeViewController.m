@@ -8,6 +8,7 @@
 
 #import "MTExploreChallengeViewController.h"
 #import "MTPostsTabBarViewController.h"
+#import "MBProgressHUD.h"
 
 
 @interface MTExploreChallengeViewController ()
@@ -30,25 +31,29 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    MTPostsTabBarViewController *tbvc = (MTPostsTabBarViewController *)self.parentViewController;
-    
-    self.challengeNumber = tbvc.challengeNumber;
+    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
+    self.challengeNumber = postTabBarViewController.challengeNumber;
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
     
-    self.challenges = [findChallengePosts findObjects];
+//    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+//    [activity setCenter:CGPointMake(100.0f, 100.0f)];
+//    [self.view addSubview:activity];
+
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//    [activity startAnimating];
     
-    
-//    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            NSArray *posts = objects;
-//        } else {
-//
-//        }
-//    }];
-    
-    
+    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.challenges = objects;
+            
+            [self.explorePostsTableView reloadData];
+            
+            [MBProgressHUD hideHUDForView:self.view animated:YES];
+//            [activity stopAnimating];
+        }
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -70,6 +75,7 @@
 {
     
 }
+
 - (IBAction)swipeChallengePostsMyClass:(id)sender {
     [self performSegueWithIdentifier:@"pushMyClass" sender:nil];
 }
@@ -88,7 +94,9 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.challenges count];
+    NSInteger rows = [self.challenges count];
+    
+    return rows;
 }
 
     // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
@@ -106,12 +114,13 @@
     PFChallengePost *post = self.challenges[indexPath.row];
     
     cell.textLabel.text = post[@"post_text"];
+    
     PFUser *poster = post[@"user"];
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [poster objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
     poster = [[findPoster findObjects] firstObject];
     
-    cell.detailTextLabel.text = [poster username]  ;
+    cell.detailTextLabel.text = [poster username];
     
     return cell;
 }

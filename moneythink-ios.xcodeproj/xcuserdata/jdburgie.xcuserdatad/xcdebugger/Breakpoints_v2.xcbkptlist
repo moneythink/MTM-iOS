@@ -25,7 +25,7 @@
                   symbolName = "-[MTSignUpViewController tappedSignUpButton:]"
                   moduleName = "Moneythink"
                   urlString = "file:///Users/jdburgie/CauseLabs%20Projects/moneythink-ios/moneythink-ios/MTSignUpViewController.m"
-                  timestampString = "428263523.523561"
+                  timestampString = "428285418.207489"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "113"
@@ -39,7 +39,7 @@
                   symbolName = "__45-[MTSignUpViewController tappedSignUpButton:]_block_invoke"
                   moduleName = "Moneythink"
                   urlString = "file:///Users/jdburgie/CauseLabs%20Projects/moneythink-ios/moneythink-ios/MTSignUpViewController.m"
-                  timestampString = "428263523.523823"
+                  timestampString = "428285418.207689"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "113"
@@ -62,22 +62,6 @@
             startingLineNumber = "84"
             endingLineNumber = "84"
             landmarkName = "-viewControllerAtIndex:"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "moneythink-ios/MTExploreChallengeViewController.m"
-            timestampString = "428184566.412748"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "40"
-            endingLineNumber = "40"
-            landmarkName = "-viewDidLoad"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -174,6 +158,54 @@
             startingLineNumber = "149"
             endingLineNumber = "149"
             landmarkName = "-unwindToMainMenu:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "moneythink-ios/MTStudentTabBarViewController.m"
+            timestampString = "428285357.796722"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "130"
+            endingLineNumber = "130"
+            landmarkName = "-actionSheet:didDismissWithButtonIndex:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "moneythink-ios/MTExploreChallengeViewController.m"
+            timestampString = "428268237.106745"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "71"
+            endingLineNumber = "71"
+            landmarkName = "-tappedExploreMyClass:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "moneythink-ios/MTExploreChallengeViewController.m"
+            timestampString = "428268247.339962"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "80"
+            endingLineNumber = "80"
+            landmarkName = "-swipeChallengePostsMyClass:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

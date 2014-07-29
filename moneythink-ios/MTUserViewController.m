@@ -25,7 +25,7 @@
         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
             [self performSegueWithIdentifier:@"studentMain" sender:self];
         } else {
-            [self performSegueWithIdentifier:@"challengesView" sender:self];
+            [self performSegueWithIdentifier:@"pushMentorNotificatinView" sender:self];
         }
     } else {
 //        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];

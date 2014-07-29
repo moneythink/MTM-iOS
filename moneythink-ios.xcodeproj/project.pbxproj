@@ -90,6 +90,14 @@
 		5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943D197C06E400EDC969 /* MTNotificationsViewController.m */; };
 		58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTChallengesContentViewController.m */; };
 		5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */; };
+		5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF381986D378007D9BB3 /* MBProgressHUD.m */; };
+		5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */; };
+		5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */; };
+		5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */; };
+		5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */; };
+		5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */; };
+		5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */; };
+		5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */; };
 		58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4519772D00009BC13C /* PFChallengeBanner.m */; };
 		58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4719772D00009BC13C /* PFChallengePost.m */; };
 		58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */; };
@@ -214,6 +222,22 @@
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
 		5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorNotificationViewController.h; sourceTree = "<group>"; };
 		5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorNotificationViewController.m; sourceTree = "<group>"; };
+		5860BF371986D378007D9BB3 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		5860BF381986D378007D9BB3 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProfileViewController.h; sourceTree = "<group>"; };
+		5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProfileViewController.m; sourceTree = "<group>"; };
+		5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProgressViewController.h; sourceTree = "<group>"; };
+		5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProgressViewController.m; sourceTree = "<group>"; };
+		5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentFollowViewController.h; sourceTree = "<group>"; };
+		5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentFollowViewController.m; sourceTree = "<group>"; };
+		5860BF4319870CA8007D9BB3 /* MTMentorChallangeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallangeViewController.h; sourceTree = "<group>"; };
+		5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallangeViewController.m; sourceTree = "<group>"; };
+		5860BF461987118F007D9BB3 /* MTMentorInstructionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorInstructionsViewController.h; sourceTree = "<group>"; };
+		5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorInstructionsViewController.m; sourceTree = "<group>"; };
+		5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeRoomViewController.h; sourceTree = "<group>"; };
+		5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallengeRoomViewController.m; sourceTree = "<group>"; };
+		5860BF4C198711BA007D9BB3 /* MTMentorFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorFilterViewController.h; sourceTree = "<group>"; };
+		5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorFilterViewController.m; sourceTree = "<group>"; };
 		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengeBanner.h; path = "Data Classes/PFChallengeBanner.h"; sourceTree = "<group>"; };
 		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengeBanner.m; path = "Data Classes/PFChallengeBanner.m"; sourceTree = "<group>"; };
 		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePost.h; path = "Data Classes/PFChallengePost.h"; sourceTree = "<group>"; };
@@ -484,6 +508,20 @@
 				58676B1E1974273E0070F604 /* MTUserViewController.m */,
 				5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */,
 				5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */,
+				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
+				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
+				5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */,
+				5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */,
+				5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */,
+				5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */,
+				5860BF4319870CA8007D9BB3 /* MTMentorChallangeViewController.h */,
+				5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */,
+				5860BF461987118F007D9BB3 /* MTMentorInstructionsViewController.h */,
+				5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */,
+				5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */,
+				5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */,
+				5860BF4C198711BA007D9BB3 /* MTMentorFilterViewController.h */,
+				5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */,
 				585093FC197B37DE00EDC969 /* MTChallengesViewController.h */,
 				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
 				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
@@ -626,6 +664,8 @@
 		5890F748197704E20042AC2F /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				5860BF371986D378007D9BB3 /* MBProgressHUD.h */,
+				5860BF381986D378007D9BB3 /* MBProgressHUD.m */,
 				58A356D7198168140018FC61 /* MJPopupViewController */,
 				58A35682198076720018FC61 /* MICheckboxUtils */,
 				5890F8C9197711AE0042AC2F /* app icons */,
@@ -957,6 +997,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */,
+				5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
@@ -972,6 +1014,8 @@
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
 				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
+				5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */,
+				5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */,
 				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
 				580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */,
@@ -982,12 +1026,16 @@
 				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
+				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
+				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,
 				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
 				58A35689198076720018FC61 /* MICheckBox.m in Sources */,
 				58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */,
 				5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */,
+				5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */,
+				5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
 				58676B201974273E0070F604 /* MTLogInViewController.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,

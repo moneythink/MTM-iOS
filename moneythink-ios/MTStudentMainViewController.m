@@ -37,8 +37,6 @@
         UIButton* userInfo = sender;
         
         if (userInfo.tag == 1) {
-//        if ([userInfo.titleLabel.text isEqualToString:@"Maker"]) {
-        
             MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
             userInfoModal.delegate = self;
             
@@ -47,11 +45,9 @@
             
             [[[UIAlertView alloc] initWithTitle:@"Money Maker" message:@"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             
-            
 //            [self presentPopupViewController:userInfoModal animationType:MJPopupViewAnimationFade];
 
         } else if(userInfo.tag == 2) {
-//        } else if([userInfo.titleLabel.text isEqualToString:@"Manager"]) {
             MTUserInformationViewController *userInfoModal = [self.storyboard instantiateViewControllerWithIdentifier:@"infoModal"];
             userInfoModal.delegate = self;
 
