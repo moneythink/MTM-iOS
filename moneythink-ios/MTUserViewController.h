@@ -19,6 +19,4 @@
 - (IBAction)mentorSignUpTapped:(id)sender;
 - (IBAction)loginTapped:(id)sender;
 
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
-
 @end

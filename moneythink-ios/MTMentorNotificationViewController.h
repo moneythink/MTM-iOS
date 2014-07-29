@@ -10,9 +10,9 @@
 
 @interface MTMentorNotificationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
 
-@property (nonatomic, strong) NSArray *studentsInClass;
+@property (nonatomic, strong) NSArray *classNotifications;
 
-@property (strong, nonatomic) IBOutlet UITableView *studentsTableView;
+@property (strong, nonatomic) IBOutlet UITableView *notificationsTableView;
 
 
 @end

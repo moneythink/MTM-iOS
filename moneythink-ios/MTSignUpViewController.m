@@ -60,7 +60,6 @@
 	[self.viewFields addSubview:self.useStageCheckbox];
     
     self.useStageButton.hidden = YES;
-    self.cancelButton.hidden = YES;
 }
 
 - (void)viewDidLayoutSubviews {
@@ -171,11 +170,6 @@
 }
 
 
-- (IBAction)tappedCancel:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-
 #pragma mark - UITextFieldDelegate methods
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
@@ -187,15 +181,15 @@
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
     
-    CGRect fieldFrameSize = CGRectMake(viewFrame.origin.x ,
-                                       viewFrame.origin.y,
-                                       viewFrame.size.width,
-                                       fieldsFrame.size.height - kbSize.height);
+    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
+                                       fieldsFrame.origin.y,
+                                       fieldsFrame.size.width,
+                                       fieldsFrame.size.height - kbSize.height + 40.0f);
     
     fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
     
     self.viewFields.contentSize = viewFrame.size;
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 40.0f);
+    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
     
     self.viewFields.frame = fieldFrameSize;
     

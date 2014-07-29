@@ -13,7 +13,7 @@
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk" userLabel="Student Sign Up">
@@ -55,19 +55,6 @@
                                     <segue destination="iaD-Gq-KZF" kind="push" identifier="login" id="OZO-WW-Y84"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ky4-Do-A2q">
-                                <rect key="frame" x="138" y="281" width="45" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="2hI-5p-Ryf"/>
-                                </constraints>
-                                <state key="normal" title="cancel">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <segue destination="WXV-m6-oLv" kind="unwind" unwindAction="exitToHome:" id="R3n-GD-KoZ"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.25098040699958801" green="0.50196081399917603" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -76,9 +63,6 @@
                             <constraint firstItem="Lx9-xh-3h8" firstAttribute="top" secondItem="7fn-Uc-eMe" secondAttribute="bottom" constant="18" id="K6J-8q-CF8"/>
                             <constraint firstAttribute="trailing" secondItem="hXp-YV-vWk" secondAttribute="trailing" constant="20" id="Kx7-qJ-ZRj"/>
                             <constraint firstItem="hXp-YV-vWk" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Ql1-SN-Buc"/>
-                            <constraint firstItem="Ky4-Do-A2q" firstAttribute="top" secondItem="Lx9-xh-3h8" secondAttribute="bottom" constant="8" id="Rh5-Sw-CGP"/>
-                            <constraint firstAttribute="trailing" secondItem="Ky4-Do-A2q" secondAttribute="trailing" constant="137" id="ayc-WD-GQ4"/>
-                            <constraint firstItem="Ky4-Do-A2q" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="138" id="btw-QA-XWO"/>
                             <constraint firstItem="7fn-Uc-eMe" firstAttribute="top" secondItem="hXp-YV-vWk" secondAttribute="bottom" constant="18" id="cgT-L5-es6"/>
                             <constraint firstAttribute="trailing" secondItem="Lx9-xh-3h8" secondAttribute="trailing" constant="20" id="nKt-v9-uTv"/>
                             <constraint firstItem="Lx9-xh-3h8" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="tUi-sf-qBh"/>
@@ -91,19 +75,17 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="cancelButton" destination="Ky4-Do-A2q" id="pYi-yc-sep"/>
                         <outlet property="loginButton" destination="Lx9-xh-3h8" id="eHf-zp-pFP"/>
                         <outlet property="mentorSignUpButton" destination="7fn-Uc-eMe" id="Cln-yv-fxk"/>
                         <outlet property="studentSignUpButton" destination="hXp-YV-vWk" id="Cf8-Ol-mD7"/>
                         <outlet property="view" destination="kh9-bI-dsS" id="iGz-ia-ZRN"/>
                         <segue destination="4W6-dw-LgJ" kind="push" identifier="studentMain" id="zbC-jz-vyG"/>
-                        <segue destination="jsL-Yj-hT5" kind="push" identifier="pushMentorNotificatinView" id="eky-FI-ef0"/>
+                        <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorNotificationView" id="YIE-Gy-hXh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
-                <exit id="WXV-m6-oLv" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2776" y="-2631"/>
+            <point key="canvasLocation" x="-2838" y="-2639"/>
         </scene>
         <!--User Information View Controller-->
         <scene sceneID="sK3-ZY-ZbX">
@@ -114,11 +96,11 @@
                         <viewControllerLayoutGuide type="bottom" id="ACs-mb-9IF"/>
                     </layoutGuides>
                     <view key="view" alpha="0.5" contentMode="scaleToFill" id="ABu-48-4p8">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-8F-SXb">
-                                <rect key="frame" x="20" y="136" width="280" height="284"/>
+                                <rect key="frame" x="20" y="136" width="280" height="196"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Modal info view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDN-Gv-a67">
@@ -135,7 +117,7 @@
                                         </constraints>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48b-eN-MfN">
-                                        <rect key="frame" x="239" y="234" width="30" height="30"/>
+                                        <rect key="frame" x="239" y="146" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="OK">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -145,7 +127,7 @@
                                         </connections>
                                     </button>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b8B-ge-1Rq">
-                                        <rect key="frame" x="11" y="62" width="258" height="164"/>
+                                        <rect key="frame" x="11" y="62" width="258" height="76"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
@@ -200,7 +182,7 @@
                         <viewControllerLayoutGuide type="bottom" id="cbQ-NI-3NM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Xlb-au-mVL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rwn-HW-UyY">
@@ -209,9 +191,6 @@
                                 <state key="normal" title="signup/login">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <connections>
-                                    <segue destination="vXZ-lx-hvc" kind="push" identifier="mtUserViewController" id="qW3-9D-fsj"/>
-                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hoC-LX-NpS">
                                 <rect key="frame" x="137" y="338" width="82" height="30"/>
@@ -247,7 +226,7 @@
                         <viewControllerLayoutGuide type="bottom" id="fK9-tc-yA3"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="V2n-AV-bXw">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -265,7 +244,7 @@
                         <viewControllerLayoutGuide type="bottom" id="T32-DG-Yv0"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7oU-zY-cpS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -283,11 +262,11 @@
                         <viewControllerLayoutGuide type="bottom" id="T6D-1a-dKb"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Vpg-1D-iqc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
-                                <rect key="frame" x="20" y="20" width="280" height="528"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
+                                <rect key="frame" x="20" y="20" width="280" height="440"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="First Name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="tQ1-HJ-LR5">
@@ -356,15 +335,15 @@
                                             <segue destination="z8Z-Rq-rRI" kind="push" id="iSW-sc-15K"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggT-4n-Vtz">
-                                        <rect key="frame" x="20" y="318" width="20" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggT-4n-Vtz">
+                                        <rect key="frame" x="21" y="285" width="20" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Use stage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G82-SE-Zev">
-                                        <rect key="frame" x="48" y="322" width="212" height="21"/>
+                                        <rect key="frame" x="49" y="289" width="212" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="highlightedColor"/>
@@ -382,61 +361,43 @@
                                             <action selector="tappedSignUpButton:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="mu2-kq-a1c"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BSt-hE-oom">
-                                        <rect key="frame" x="118" y="285" width="45" height="29"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="29" id="Vgd-ap-dui"/>
-                                        </constraints>
-                                        <state key="normal" title="cancel">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="tappedCancel:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="7ub-WU-Kev"/>
-                                            <segue destination="tGy-vH-4cW" kind="unwind" unwindAction="exitToHome:" id="fTo-dY-uWS"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="tQ1-HJ-LR5" firstAttribute="leading" secondItem="8cy-cQ-6Iw" secondAttribute="leading" constant="20" id="1YN-YU-LMy"/>
                                     <constraint firstItem="1h9-2q-KfC" firstAttribute="leading" secondItem="iFn-Zo-Rkq" secondAttribute="leading" id="2LG-Cb-QVW"/>
-                                    <constraint firstItem="IfJ-eh-inN" firstAttribute="centerX" secondItem="BSt-hE-oom" secondAttribute="centerX" id="5UZ-I7-PAK"/>
-                                    <constraint firstItem="BSt-hE-oom" firstAttribute="top" secondItem="IfJ-eh-inN" secondAttribute="bottom" constant="8" symbolic="YES" id="9gP-rg-pUa"/>
-                                    <constraint firstItem="nfr-Kf-99I" firstAttribute="trailing" secondItem="G82-SE-Zev" secondAttribute="trailing" constant="1" id="Csu-cR-a77"/>
+                                    <constraint firstItem="nfr-Kf-99I" firstAttribute="trailing" secondItem="G82-SE-Zev" secondAttribute="trailing" id="Csu-cR-a77"/>
                                     <constraint firstItem="tQ1-HJ-LR5" firstAttribute="top" secondItem="8cy-cQ-6Iw" secondAttribute="top" constant="20" symbolic="YES" id="E3q-VL-Ld9"/>
                                     <constraint firstItem="LkN-k0-F1V" firstAttribute="top" secondItem="zTA-4O-h2u" secondAttribute="bottom" constant="8" symbolic="YES" id="EI3-Jh-Ay1"/>
                                     <constraint firstItem="iFn-Zo-Rkq" firstAttribute="trailing" secondItem="nfr-Kf-99I" secondAttribute="trailing" id="LYx-CG-pTF"/>
-                                    <constraint firstAttribute="bottom" secondItem="G82-SE-Zev" secondAttribute="bottom" constant="185" id="LfK-DQ-jFJ"/>
+                                    <constraint firstAttribute="bottom" secondItem="G82-SE-Zev" secondAttribute="bottom" constant="218" id="LfK-DQ-jFJ"/>
                                     <constraint firstItem="zTA-4O-h2u" firstAttribute="top" secondItem="tQ1-HJ-LR5" secondAttribute="bottom" constant="8" symbolic="YES" id="MN8-Gs-NhW"/>
                                     <constraint firstItem="LkN-k0-F1V" firstAttribute="trailing" secondItem="6Cx-TC-ge0" secondAttribute="trailing" id="NIG-NO-6hO"/>
                                     <constraint firstItem="zTA-4O-h2u" firstAttribute="trailing" secondItem="LkN-k0-F1V" secondAttribute="trailing" id="OBe-zn-k1D"/>
                                     <constraint firstItem="IfJ-eh-inN" firstAttribute="top" secondItem="1h9-2q-KfC" secondAttribute="bottom" constant="8" symbolic="YES" id="PWz-ft-rfl"/>
                                     <constraint firstAttribute="trailing" secondItem="IfJ-eh-inN" secondAttribute="trailing" constant="20" id="PpG-aR-mxe"/>
                                     <constraint firstItem="iFn-Zo-Rkq" firstAttribute="top" secondItem="6Cx-TC-ge0" secondAttribute="bottom" constant="8" symbolic="YES" id="U3Z-fq-umf"/>
-                                    <constraint firstItem="BSt-hE-oom" firstAttribute="centerX" secondItem="8cy-cQ-6Iw" secondAttribute="centerX" id="Ub4-KB-qZc"/>
                                     <constraint firstItem="LkN-k0-F1V" firstAttribute="leading" secondItem="zTA-4O-h2u" secondAttribute="leading" id="WC3-oi-c7g"/>
                                     <constraint firstItem="IfJ-eh-inN" firstAttribute="leading" secondItem="8cy-cQ-6Iw" secondAttribute="leading" constant="20" id="ZHA-Ir-AOe"/>
                                     <constraint firstItem="tQ1-HJ-LR5" firstAttribute="leading" secondItem="zTA-4O-h2u" secondAttribute="leading" id="aPG-9B-8R8"/>
                                     <constraint firstItem="nfr-Kf-99I" firstAttribute="leading" secondItem="1h9-2q-KfC" secondAttribute="trailing" constant="8" symbolic="YES" id="akU-u5-C8J"/>
-                                    <constraint firstItem="G82-SE-Zev" firstAttribute="leading" secondItem="nfr-Kf-99I" secondAttribute="leading" id="b5z-3h-UZe"/>
+                                    <constraint firstItem="G82-SE-Zev" firstAttribute="leading" secondItem="nfr-Kf-99I" secondAttribute="leading" constant="1" id="b5z-3h-UZe"/>
                                     <constraint firstItem="ggT-4n-Vtz" firstAttribute="leading" secondItem="1h9-2q-KfC" secondAttribute="leading" id="bAP-n8-ZmO"/>
                                     <constraint firstItem="6Cx-TC-ge0" firstAttribute="leading" secondItem="LkN-k0-F1V" secondAttribute="leading" id="cLG-s3-NQ3"/>
                                     <constraint firstItem="6Cx-TC-ge0" firstAttribute="top" secondItem="LkN-k0-F1V" secondAttribute="bottom" constant="8" symbolic="YES" id="dEo-ZK-DzE"/>
                                     <constraint firstAttribute="trailing" secondItem="tQ1-HJ-LR5" secondAttribute="trailing" constant="19" id="fub-Ug-2ey"/>
-                                    <constraint firstItem="ggT-4n-Vtz" firstAttribute="top" secondItem="IfJ-eh-inN" secondAttribute="bottom" constant="41" id="hml-4R-xpM"/>
+                                    <constraint firstItem="ggT-4n-Vtz" firstAttribute="top" secondItem="IfJ-eh-inN" secondAttribute="bottom" constant="8" id="hml-4R-xpM"/>
                                     <constraint firstItem="6Cx-TC-ge0" firstAttribute="leading" secondItem="iFn-Zo-Rkq" secondAttribute="leading" id="inL-ko-FGy"/>
-                                    <constraint firstItem="G82-SE-Zev" firstAttribute="top" secondItem="BSt-hE-oom" secondAttribute="bottom" constant="8" symbolic="YES" id="kY1-Yp-Nwl"/>
                                     <constraint firstItem="nfr-Kf-99I" firstAttribute="baseline" secondItem="1h9-2q-KfC" secondAttribute="baseline" constant="-2" id="p8C-Rw-6x8"/>
                                     <constraint firstItem="1h9-2q-KfC" firstAttribute="top" secondItem="iFn-Zo-Rkq" secondAttribute="bottom" constant="8" symbolic="YES" id="pIq-7w-sqX"/>
                                     <constraint firstItem="iFn-Zo-Rkq" firstAttribute="trailing" secondItem="6Cx-TC-ge0" secondAttribute="trailing" id="saL-SN-Pjp"/>
                                     <constraint firstItem="G82-SE-Zev" firstAttribute="leading" secondItem="ggT-4n-Vtz" secondAttribute="trailing" constant="8" symbolic="YES" id="uha-kO-xxZ"/>
                                     <constraint firstItem="zTA-4O-h2u" firstAttribute="trailing" secondItem="tQ1-HJ-LR5" secondAttribute="trailing" id="whb-xP-mzv"/>
-                                    <constraint firstAttribute="bottom" secondItem="ggT-4n-Vtz" secondAttribute="bottom" constant="180" id="xDd-F6-Jzp"/>
+                                    <constraint firstAttribute="bottom" secondItem="ggT-4n-Vtz" secondAttribute="bottom" constant="213" id="xDd-F6-Jzp"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="8cy-cQ-6Iw" firstAttribute="top" secondItem="1lY-kM-8mF" secondAttribute="bottom" constant="-44" id="4qI-tV-tRV"/>
+                            <constraint firstItem="8cy-cQ-6Iw" firstAttribute="top" secondItem="1lY-kM-8mF" secondAttribute="bottom" id="4qI-tV-tRV"/>
                             <constraint firstAttribute="trailing" secondItem="8cy-cQ-6Iw" secondAttribute="trailing" constant="20" symbolic="YES" id="Dme-2Q-dMq"/>
                             <constraint firstItem="T6D-1a-dKb" firstAttribute="top" secondItem="8cy-cQ-6Iw" secondAttribute="bottom" constant="20" id="JST-gE-NL0"/>
                             <constraint firstItem="8cy-cQ-6Iw" firstAttribute="leading" secondItem="Vpg-1D-iqc" secondAttribute="leading" constant="20" symbolic="YES" id="Txs-EG-Mre"/>
@@ -446,7 +407,6 @@
                     <keyCommands/>
                     <connections>
                         <outlet property="agreeButton" destination="1h9-2q-KfC" id="Ypr-5H-uIz"/>
-                        <outlet property="cancelButton" destination="BSt-hE-oom" id="9AO-sr-S2J"/>
                         <outlet property="email" destination="LkN-k0-F1V" id="jAp-eF-cLf"/>
                         <outlet property="firstName" destination="tQ1-HJ-LR5" id="Qal-mw-B2I"/>
                         <outlet property="lastName" destination="zTA-4O-h2u" id="4tY-qN-iYG"/>
@@ -458,13 +418,13 @@
                         <outlet property="viewFields" destination="8cy-cQ-6Iw" id="0wV-ET-uvh"/>
                         <segue destination="tGy-vH-4cW" kind="unwind" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
                         <segue destination="4W6-dw-LgJ" kind="push" identifier="studentSignedUp" id="bdZ-f5-v5h"/>
-                        <segue destination="jsL-Yj-hT5" kind="push" identifier="pushMentorSignedUp" id="HTn-xa-v4y"/>
+                        <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorSignedUp" id="ciR-mR-i1Z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1698" y="-2631"/>
+            <point key="canvasLocation" x="-2192" y="-2639"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Wi0-Zj-jXc">
@@ -475,11 +435,11 @@
                         <viewControllerLayoutGuide type="bottom" id="GLU-G9-lNn"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="9xt-gk-ufl">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I74-ab-BBo">
-                                <rect key="frame" x="20" y="20" width="280" height="528"/>
+                                <rect key="frame" x="20" y="20" width="280" height="440"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Statement of Terms and Conditions
@@ -520,9 +480,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OzH-ei-JDI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1121" y="-2639"/>
+            <point key="canvasLocation" x="-1611" y="-2639"/>
         </scene>
-        <!--Mentor Student Progress View Controller - Progress-->
+        <!--Mentor Student Progress View Controller - Item-->
         <scene sceneID="K0J-4Z-9Av">
             <objects>
                 <viewController storyboardIdentifier="mentorStudentProgress" useStoryboardIdentifierAsRestorationIdentifier="YES" id="WcM-gU-a8O" customClass="MTMentorStudentProgressViewController" sceneMemberID="viewController">
@@ -531,18 +491,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="z0w-D1-kzW"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gvY-Cd-lj7">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gyI-PT-6g9">
-                                <rect key="frame" x="0.0" y="20" width="320" height="528"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Progress" id="awp-qS-UwJ"/>
+                    <tabBarItem key="tabBarItem" title="Item" id="awp-qS-UwJ"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="4Hh-Zb-Wl0">
                         <barButtonItem key="leftBarButtonItem" title="Item" id="Ek0-Zz-BCm">
@@ -555,92 +508,61 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gq4-9H-F8a" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="eXK-Cg-RNq" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1052" y="-5586"/>
+            <point key="canvasLocation" x="-1554" y="-4718"/>
         </scene>
-        <!--Mentor Student Follow View Controller - Following-->
-        <scene sceneID="4GZ-zL-RKh">
-            <objects>
-                <viewController storyboardIdentifier="mentorStudentFollow" useStoryboardIdentifierAsRestorationIdentifier="YES" id="c9i-yK-Qkn" customClass="MTMentorStudentFollowViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Eqs-qP-UA1"/>
-                        <viewControllerLayoutGuide type="bottom" id="2eF-0I-9Fg"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="1RW-LU-lEc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Nx6-Ty-PYJ">
-                                <rect key="frame" x="0.0" y="20" width="320" height="528"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Following" id="TRy-xi-Ltf"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Ddm-PK-VwX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-1052" y="-4882"/>
-        </scene>
-        <!--Mentor Challange View Controller-->
+        <!--View Controller-->
         <scene sceneID="Qbn-SB-iVG">
             <objects>
-                <viewController storyboardIdentifier="mentorChallengeView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nq0-FF-iZF" customClass="MTMentorChallangeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mentorChallengeView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Nq0-FF-iZF" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="m6w-g5-xsc"/>
                         <viewControllerLayoutGuide type="bottom" id="0FH-xJ-7wJ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Jfu-eY-i6D">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <connections>
-                        <segue destination="1Bf-ff-N3h" kind="push" identifier="pushChallengeRoomInstructions" id="CIh-Ed-IBY"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WyE-Ce-HrC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-547" y="-5356"/>
+            <point key="canvasLocation" x="902" y="-4910"/>
         </scene>
-        <!--Mentor Challenge Room View Controller - Item-->
+        <!--View Controller-->
         <scene sceneID="wvV-kc-RqW">
             <objects>
-                <viewController storyboardIdentifier="mentorChallengeRoom" useStoryboardIdentifierAsRestorationIdentifier="YES" id="V9O-p1-dRt" customClass="MTMentorChallengeRoomViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mentorChallengeRoom" useStoryboardIdentifierAsRestorationIdentifier="YES" id="V9O-p1-dRt" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qFO-4P-Lir"/>
                         <viewControllerLayoutGuide type="bottom" id="DHR-mU-sad"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="twN-Wb-Lqe">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="K6J-it-uAG"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="we1-CV-eRD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="458" y="-4981"/>
+            <point key="canvasLocation" x="1418" y="-4323"/>
         </scene>
-        <!--Mentor Instructions View Controller - Item-->
+        <!--View Controller-->
         <scene sceneID="yoB-rC-7um">
             <objects>
-                <viewController storyboardIdentifier="mentorInstructions" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ay6-An-9ok" customClass="MTMentorInstructionsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mentorInstructions" useStoryboardIdentifierAsRestorationIdentifier="YES" id="ay6-An-9ok" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="K32-EG-Vpg"/>
                         <viewControllerLayoutGuide type="bottom" id="p6m-RE-LNQ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ptl-T9-6lS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="bb2-YZ-Bga"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fhK-p1-nsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="458" y="-5688"/>
+            <point key="canvasLocation" x="1418" y="-5191"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="a5J-fC-Fv1">
@@ -651,14 +573,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="Rcw-ym-zlL"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="beF-Mq-1lY">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SCT-QO-Ofk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1002" y="-4975"/>
+            <point key="canvasLocation" x="2050" y="-5191"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="4fR-CT-wwS">
@@ -669,14 +591,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="dvf-dY-zz9"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="LHs-S0-WX1">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIt-Sw-Tny" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1454" y="-4975"/>
+            <point key="canvasLocation" x="2670" y="-5191"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="PJ2-1t-F8r">
@@ -687,14 +609,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="vEl-Y7-wLg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="TE6-Ee-lnL">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kGt-Vq-IiW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="878" y="-3295"/>
+            <point key="canvasLocation" x="894" y="-2631"/>
         </scene>
         <!--Notifications View Controller-->
         <scene sceneID="KJP-lz-RKE">
@@ -705,7 +627,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="OXw-Fc-4Xk"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="RdN-k9-iDt">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTNotificationsViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="E9Z-b7-ygY">
@@ -732,7 +654,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="nig-6U-oWR"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Xsm-IL-l5C">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTStudentSettingsViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XnR-11-D87">
@@ -810,7 +732,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="eys-dO-qgi"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Aio-Ei-jaw">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="L6u-Zm-66A">
@@ -860,7 +782,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xvY-UB-ZXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="777" y="-844"/>
+            <point key="canvasLocation" x="1303" y="-895"/>
         </scene>
         <!--Student Filter View Controller-->
         <scene sceneID="xq7-jJ-jm7">
@@ -871,7 +793,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="A6Z-Dy-N3t"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="l0a-3a-d3f">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTStudentFilterViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vd1-gu-5bI">
@@ -897,7 +819,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="6IO-kU-TZT"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="YAx-1Q-yv6">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MTEditProfileViewController" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hbs-Gh-nkL">
@@ -914,7 +836,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3254" y="-1543"/>
+            <point key="canvasLocation" x="-666" y="-1592"/>
         </scene>
         <!--Student Main View Controller - studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -925,11 +847,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="ikJ-Kb-tnX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="4Xv-go-57J">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="axK-Vh-tPh">
-                                <rect key="frame" x="0.0" y="240" width="320" height="277"/>
+                                <rect key="frame" x="0.0" y="240" width="320" height="189"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
                                     <segue destination="pAN-FU-phU" kind="embed" id="fM9-bL-F9m"/>
@@ -1046,7 +968,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             </objects>
             <point key="canvasLocation" x="-1698" y="-1592"/>
         </scene>
-        <!--Mentor Notification View Controller-->
+        <!--Mentor Notification View Controller - Item-->
         <scene sceneID="hLQ-DY-1VV">
             <objects>
                 <viewController storyboardIdentifier="mentorNotificaitonView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="jsL-Yj-hT5" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
@@ -1055,11 +977,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="KKH-TY-xBt"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="7j1-yT-rW4">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Gzd-jD-1FL">
-                                <rect key="frame" x="0.0" y="170" width="320" height="378"/>
+                                <rect key="frame" x="0.0" y="170" width="320" height="290"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -1070,18 +992,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="8qg-VW-lLV"/>
                     <navigationItem key="navigationItem" id="Lp2-FI-b79"/>
                     <connections>
-                        <outlet property="studentsTableView" destination="Gzd-jD-1FL" id="ZfR-lP-c1t"/>
-                        <segue destination="Pk4-FW-8FD" kind="push" identifier="pushMentorStudentProfileView" id="OuW-tn-Shl"/>
-                        <segue destination="QZt-R8-yFt" kind="push" identifier="pushStudentProgressViewController" id="Ba0-Ly-Tku"/>
-                        <segue destination="nMl-OP-uGT" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="NcR-CU-x94"/>
+                        <outlet property="notificationsTableView" destination="Gzd-jD-1FL" id="zTl-QF-8H8"/>
+                        <segue destination="rQY-tn-nBa" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="IrN-G4-KJt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lzx-B7-1Na" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="nMl-OP-uGT" userLabel="Exit" sceneMemberID="exit"/>
+                <exit id="rQY-tn-nBa" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2252" y="-4910"/>
+            <point key="canvasLocation" x="-1554" y="-5294"/>
         </scene>
         <!--Mentor Student Profile View Controller-->
         <scene sceneID="Zj4-Oa-28M">
@@ -1092,38 +1013,38 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="Lup-rP-ttr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6an-Ex-hZp">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EU3-Vd-1Ro">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EU3-Vd-1Ro">
                                 <rect key="frame" x="20" y="68" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFz-2M-XDA">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFz-2M-XDA">
                                 <rect key="frame" x="137" y="68" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="POM-rc-7fb">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="POM-rc-7fb">
                                 <rect key="frame" x="254" y="68" width="46" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUq-Ph-7Ev">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VUq-Ph-7Ev">
                                 <rect key="frame" x="20" y="126" width="280" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="x8M-C9-wsX">
-                                <rect key="frame" x="0.0" y="176" width="320" height="372"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="x8M-C9-wsX">
+                                <rect key="frame" x="0.0" y="176" width="320" height="284"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </tableView>
@@ -1134,7 +1055,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gww-XX-vMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1594" y="-4192"/>
+            <point key="canvasLocation" x="-1071" y="-4420"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="MEj-oA-KyZ">
@@ -1145,11 +1066,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="GUY-3I-bq4"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iZQ-Ay-weI">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="DtS-a6-r1F">
-                                <rect key="frame" x="20" y="20" width="280" height="528"/>
+                                <rect key="frame" x="20" y="20" width="280" height="440"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-21-0QJ">
@@ -1235,13 +1156,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="viewFields" destination="DtS-a6-r1F" id="Z1R-36-qOc"/>
                         <segue destination="a95-sQ-YwX" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="M00-js-Lb5"/>
                         <segue destination="4W6-dw-LgJ" kind="push" identifier="studentLoggedIn" id="Cj8-lq-2b5"/>
-                        <segue destination="jsL-Yj-hT5" kind="push" identifier="pushMentorLoggedIn" id="ugm-Bj-rNS"/>
+                        <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorLoggedIn" id="NJ7-mb-QHo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WJj-xZ-xT9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="a95-sQ-YwX" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1714" y="-3287"/>
+            <point key="canvasLocation" x="-2192" y="-3219"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Rjt-fl-o9h">
@@ -1270,15 +1191,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="277"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="189"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m9Q-bI-JMX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-661" y="-1502"/>
+            <point key="canvasLocation" x="-1141" y="-1656"/>
         </scene>
-        <!--Challenges Content View Controller-->
+        <!--Challenges Content View Controller - Item-->
         <scene sceneID="3Fg-lF-jK9">
             <objects>
                 <viewController storyboardIdentifier="ChallengesContentViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="uYl-ew-LGI" customClass="MTChallengesContentViewController" sceneMemberID="viewController">
@@ -1408,6 +1329,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <constraint firstItem="Ev2-KZ-Bda" firstAttribute="centerY" secondItem="KT3-dc-YCB" secondAttribute="centerY" id="ryg-lx-rAQ"/>
                         </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Item" id="oFi-Dp-916"/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -1489,7 +1411,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="Mgo-ef-JTc"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="9c4-vn-y25">
                         <rect key="frame" x="0.0" y="0.0" width="0.0" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1593,44 +1515,26 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             <point key="canvasLocation" x="-1702" y="-920"/>
         </scene>
         <!--Tab Bar Controller-->
-        <scene sceneID="ZvS-II-ro4">
+        <scene sceneID="twS-aw-QAE">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="QZt-R8-yFt" sceneMemberID="viewController">
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="fiu-BG-JtN" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" id="pYs-7F-NYq"/>
+                    <navigationItem key="navigationItem" id="hoo-FK-tSN"/>
                     <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="vmN-vO-KOD">
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="i3B-Om-bZd">
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="WcM-gU-a8O" kind="relationship" relationship="viewControllers" id="jqh-tO-xRt"/>
-                        <segue destination="c9i-yK-Qkn" kind="relationship" relationship="viewControllers" id="Biy-HC-enk"/>
+                        <segue destination="jsL-Yj-hT5" kind="relationship" relationship="viewControllers" id="tO5-bt-0mO"/>
+                        <segue destination="WcM-gU-a8O" kind="relationship" relationship="viewControllers" id="EVq-0I-RSq"/>
+                        <segue destination="wK2-2Y-kG3" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="S8O-YA-oKD"/>
                     </connections>
                 </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uas-px-2vQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5R0-hv-OdN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="wK2-2Y-kG3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1594" y="-5356"/>
-        </scene>
-        <!--Tab Bar Controller-->
-        <scene sceneID="peX-D9-vUV">
-            <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="1Bf-ff-N3h" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="BWa-gZ-O9Y"/>
-                    <nil key="simulatedBottomBarMetrics"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="yng-H4-jsp">
-                        <autoresizingMask key="autoresizingMask"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    </tabBar>
-                    <connections>
-                        <segue destination="ay6-An-9ok" kind="relationship" relationship="viewControllers" id="RH8-eF-btn"/>
-                        <segue destination="V9O-p1-dRt" kind="relationship" relationship="viewControllers" id="QQf-mt-ERz"/>
-                    </connections>
-                </tabBarController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="EQY-k0-8pk" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-82" y="-5356"/>
+            <point key="canvasLocation" x="-2252" y="-4910"/>
         </scene>
     </scenes>
     <resources>
@@ -1644,13 +1548,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination" type="retina4"/>
+        <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qW3-9D-fsj"/>
-        <segue reference="eky-FI-ef0"/>
-        <segue reference="Fpc-xj-HcE"/>
         <segue reference="zbC-jz-vyG"/>
+        <segue reference="YIE-Gy-hXh"/>
+        <segue reference="Fpc-xj-HcE"/>
         <segue reference="jqh-Z7-dSi"/>
     </inferredMetricsTieBreakers>
 </document>

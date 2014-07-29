@@ -30,6 +30,5 @@
 @property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 
 @end

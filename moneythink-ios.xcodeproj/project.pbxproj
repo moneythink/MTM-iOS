@@ -98,6 +98,18 @@
 		5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */; };
 		5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */; };
 		5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */; };
+		5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */; };
+		5860BF601987F889007D9BB3 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF551987F889007D9BB3 /* Default-568h@2x.png */; };
+		5860BF611987F889007D9BB3 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF561987F889007D9BB3 /* Default.png */; };
+		5860BF621987F889007D9BB3 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF571987F889007D9BB3 /* Default@2x.png */; };
+		5860BF631987F889007D9BB3 /* Default~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF581987F889007D9BB3 /* Default~ipad.png */; };
+		5860BF641987F889007D9BB3 /* Default~ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF591987F889007D9BB3 /* Default~ipad@2x.png */; };
+		5860BF651987F889007D9BB3 /* Default~ipad~landscape.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5A1987F889007D9BB3 /* Default~ipad~landscape.png */; };
+		5860BF661987F889007D9BB3 /* Default~ipad~landscape@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5B1987F889007D9BB3 /* Default~ipad~landscape@2x.png */; };
+		5860BF671987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5C1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png */; };
+		5860BF681987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5D1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png */; };
+		5860BF691987F889007D9BB3 /* Default~ipad~nostatusbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5E1987F889007D9BB3 /* Default~ipad~nostatusbar.png */; };
+		5860BF6A1987F889007D9BB3 /* Default~ipad~nostatusbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5860BF5F1987F889007D9BB3 /* Default~ipad~nostatusbar@2x.png */; };
 		58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4519772D00009BC13C /* PFChallengeBanner.m */; };
 		58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4719772D00009BC13C /* PFChallengePost.m */; };
 		58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */; };
@@ -238,6 +250,19 @@
 		5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallengeRoomViewController.m; sourceTree = "<group>"; };
 		5860BF4C198711BA007D9BB3 /* MTMentorFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorFilterViewController.h; sourceTree = "<group>"; };
 		5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorFilterViewController.m; sourceTree = "<group>"; };
+		5860BF5219876023007D9BB3 /* MTStudentProgressTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTabBarViewController.h; sourceTree = "<group>"; };
+		5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTabBarViewController.m; sourceTree = "<group>"; };
+		5860BF551987F889007D9BB3 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default-568h@2x.png"; sourceTree = "<group>"; };
+		5860BF561987F889007D9BB3 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Images.xcassets/LaunchImage.launchimage/Default.png; sourceTree = "<group>"; };
+		5860BF571987F889007D9BB3 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default@2x.png"; sourceTree = "<group>"; };
+		5860BF581987F889007D9BB3 /* Default~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad.png"; sourceTree = "<group>"; };
+		5860BF591987F889007D9BB3 /* Default~ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad@2x.png"; sourceTree = "<group>"; };
+		5860BF5A1987F889007D9BB3 /* Default~ipad~landscape.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~landscape.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~landscape.png"; sourceTree = "<group>"; };
+		5860BF5B1987F889007D9BB3 /* Default~ipad~landscape@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~landscape@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~landscape@2x.png"; sourceTree = "<group>"; };
+		5860BF5C1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~landscape~nostatusbar.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~landscape~nostatusbar.png"; sourceTree = "<group>"; };
+		5860BF5D1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~landscape~nostatusbar@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~landscape~nostatusbar@2x.png"; sourceTree = "<group>"; };
+		5860BF5E1987F889007D9BB3 /* Default~ipad~nostatusbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~nostatusbar.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~nostatusbar.png"; sourceTree = "<group>"; };
+		5860BF5F1987F889007D9BB3 /* Default~ipad~nostatusbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default~ipad~nostatusbar@2x.png"; path = "Images.xcassets/LaunchImage.launchimage/Default~ipad~nostatusbar@2x.png"; sourceTree = "<group>"; };
 		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengeBanner.h; path = "Data Classes/PFChallengeBanner.h"; sourceTree = "<group>"; };
 		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengeBanner.m; path = "Data Classes/PFChallengeBanner.m"; sourceTree = "<group>"; };
 		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePost.h; path = "Data Classes/PFChallengePost.h"; sourceTree = "<group>"; };
@@ -508,6 +533,8 @@
 				58676B1E1974273E0070F604 /* MTUserViewController.m */,
 				5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */,
 				5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */,
+				5860BF5219876023007D9BB3 /* MTStudentProgressTabBarViewController.h */,
+				5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */,
 				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
 				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
 				5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */,
@@ -675,6 +702,17 @@
 				5890F8B9197710590042AC2F /* launchImage640x1136.png */,
 				5890F8BA197710590042AC2F /* launchImage768x1024.png */,
 				5890F8BB197710590042AC2F /* launchImage1536x2048.png */,
+				5860BF551987F889007D9BB3 /* Default-568h@2x.png */,
+				5860BF561987F889007D9BB3 /* Default.png */,
+				5860BF571987F889007D9BB3 /* Default@2x.png */,
+				5860BF581987F889007D9BB3 /* Default~ipad.png */,
+				5860BF591987F889007D9BB3 /* Default~ipad@2x.png */,
+				5860BF5A1987F889007D9BB3 /* Default~ipad~landscape.png */,
+				5860BF5B1987F889007D9BB3 /* Default~ipad~landscape@2x.png */,
+				5860BF5C1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png */,
+				5860BF5D1987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png */,
+				5860BF5E1987F889007D9BB3 /* Default~ipad~nostatusbar.png */,
+				5860BF5F1987F889007D9BB3 /* Default~ipad~nostatusbar@2x.png */,
 				5890F7C1197705230042AC2F /* Design Pattern Library - Medium-assets */,
 				5890F7FD197705230042AC2F /* MoneyThink Icons-assets */,
 			);
@@ -851,9 +889,6 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Moneythink;
 				TargetAttributes = {
-					5876E2A4196F2C1F00C176EC = {
-						DevelopmentTeam = 8V7X4CYMJ6;
-					};
 					5876E2C8196F2C1F00C176EC = {
 						TestTargetID = 5876E2A4196F2C1F00C176EC;
 					};
@@ -886,14 +921,17 @@
 				580B5AB119820F830092AA9C /* action_bar_icon_friends_disabled.png in Resources */,
 				580B5ACE19820F830092AA9C /* bg_progress_white2.png in Resources */,
 				5890F8DD197711AE0042AC2F /* Icon-40@2x.png in Resources */,
+				5860BF651987F889007D9BB3 /* Default~ipad~landscape.png in Resources */,
 				580B5ABE19820F830092AA9C /* bg_money_mananger_3.png in Resources */,
 				580B5AB619820F830092AA9C /* action_bar_icon_post_normal.png in Resources */,
 				5890F8E7197711AE0042AC2F /* Icon@2x.png in Resources */,
+				5860BF671987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png in Resources */,
 				5890F8E4197711AE0042AC2F /* Icon-76.png in Resources */,
 				5890F8DF197711AE0042AC2F /* Icon-50@2x.png in Resources */,
 				5890F8BF197710590042AC2F /* launchImage768x1024.png in Resources */,
 				580B5AE319820F830092AA9C /* icon_students_followed.png in Resources */,
 				580B5AE219820F830092AA9C /* icon_students_add.png in Resources */,
+				5860BF6A1987F889007D9BB3 /* Default~ipad~nostatusbar@2x.png in Resources */,
 				580B5AC419820F830092AA9C /* bg_page_selected.png in Resources */,
 				580B5AC819820F830092AA9C /* bg_progress_green2.png in Resources */,
 				580B5ACD19820F830092AA9C /* bg_progress_white1.png in Resources */,
@@ -913,13 +951,16 @@
 				5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */,
 				5890F8E8197711AE0042AC2F /* iTunesArtwork1024 in Resources */,
 				580B5AAB19820F830092AA9C /* action_bar_icon_activity_disabled.png in Resources */,
+				5860BF691987F889007D9BB3 /* Default~ipad~nostatusbar.png in Resources */,
 				580B5AE619820F8A0092AA9C /* app_icon_512.png in Resources */,
 				580B5AE019820F830092AA9C /* icon_money.png in Resources */,
 				580B5AD119820F830092AA9C /* icon_challenge_completed.png in Resources */,
 				580B5AD519820F830092AA9C /* icon_challenge_open_red.png in Resources */,
 				580B5AD719820F830092AA9C /* icon_checked_normal.png in Resources */,
+				5860BF681987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png in Resources */,
 				580B5AD919820F830092AA9C /* icon_comment.png in Resources */,
 				5890F8DB197711AE0042AC2F /* Icon-29@2x.png in Resources */,
+				5860BF601987F889007D9BB3 /* Default-568h@2x.png in Resources */,
 				580B5ABD19820F830092AA9C /* bg_money_mananger_2.png in Resources */,
 				580B5ADD19820F830092AA9C /* icon_dot_line.png in Resources */,
 				580B5AC919820F830092AA9C /* bg_progress_green3.png in Resources */,
@@ -935,6 +976,7 @@
 				580B5AD219820F830092AA9C /* icon_challenge_completed_red.png in Resources */,
 				5890F8DC197711AE0042AC2F /* Icon-40.png in Resources */,
 				580B5AAD19820F830092AA9C /* action_bar_icon_activity_selected.png in Resources */,
+				5860BF611987F889007D9BB3 /* Default.png in Resources */,
 				580B5AC219820F830092AA9C /* bg_money_mananger_7.png in Resources */,
 				580B5AB819820F830092AA9C /* action_bar_icon_search.png in Resources */,
 				5890F8BC197710590042AC2F /* launchImage320x480.png in Resources */,
@@ -954,6 +996,7 @@
 				580B5AE819820F8A0092AA9C /* app_icon_96.png in Resources */,
 				58669F791977334A009BC13C /* studentSignupButton.png in Resources */,
 				5890F8BE197710590042AC2F /* launchImage640x1136.png in Resources */,
+				5860BF661987F889007D9BB3 /* Default~ipad~landscape@2x.png in Resources */,
 				580B5ABF19820F830092AA9C /* bg_money_mananger_4.png in Resources */,
 				58669F781977334A009BC13C /* mentorSignupButton@2x.png in Resources */,
 				5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */,
@@ -974,11 +1017,14 @@
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
 				58A35687198076720018FC61 /* checkbox_not_ticked.png in Resources */,
 				580B5AB519820F830092AA9C /* action_bar_icon_post_disabled.png in Resources */,
+				5860BF621987F889007D9BB3 /* Default@2x.png in Resources */,
 				580B5ACC19820F830092AA9C /* bg_progress_orange3.png in Resources */,
 				580B5ADF19820F830092AA9C /* icon_like_selected.png in Resources */,
+				5860BF631987F889007D9BB3 /* Default~ipad.png in Resources */,
 				5890F8E6197711AE0042AC2F /* Icon.png in Resources */,
 				580B5ACB19820F830092AA9C /* bg_progress_orange2.png in Resources */,
 				580B5ABB19820F830092AA9C /* bg_money_maker_2.png in Resources */,
+				5860BF641987F889007D9BB3 /* Default~ipad@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -999,6 +1045,7 @@
 			files = (
 				5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */,
 				5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */,
+				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
@@ -1185,6 +1232,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1195,7 +1243,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "F6CE6D29-4D9D-444A-B2D7-C3232459744A";
+				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1207,6 +1255,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1217,7 +1266,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "F6CE6D29-4D9D-444A-B2D7-C3232459744A";
+				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

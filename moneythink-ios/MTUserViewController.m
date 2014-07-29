@@ -9,6 +9,7 @@
 #import "MTUserViewController.h"
 #import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
+#import "MTMentorNotificationViewController.h"
 
 @interface MTUserViewController ()
 
@@ -25,10 +26,8 @@
         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
             [self performSegueWithIdentifier:@"studentMain" sender:self];
         } else {
-            [self performSegueWithIdentifier:@"pushMentorNotificatinView" sender:self];
+            [self performSegueWithIdentifier:@"pushMentorNotificationView" sender:self];
         }
-    } else {
-//        [self performSegueWithIdentifier:@"mtUserViewController" sender:self];
     }
 }
 
@@ -68,7 +67,6 @@
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
 
     self.navigationItem.hidesBackButton = YES;
-    self.cancelButton.hidden = YES;
     
     UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
     UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithImage:logoImage style:UIBarButtonItemStylePlain target:nil action:nil];
@@ -98,16 +96,16 @@
 {
     NSString *segueID = [segue identifier];
     
-    MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
-    
     if ([segueID isEqualToString:@"studentSignUp"]) {
+        MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
         signUpViewController.signUpTitle = @"Student Signup";
         signUpViewController.signUpType = @"student";
     } else if ([segueID isEqualToString:@"mentorSignUp"]) {
+        MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
         signUpViewController.signUpTitle = @"Mentor Signup";
         signUpViewController.signUpType = @"mentor";
-    } else {
-
+    } else if ([segueID isEqualToString:@"pushMentorNotificationView"]) {
+        MTMentorNotificationViewController *notificaitonViewController = (MTMentorNotificationViewController *)segue.destinationViewController;
     }
 }
 

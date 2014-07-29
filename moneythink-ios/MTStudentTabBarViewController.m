@@ -32,7 +32,7 @@
     [self navigationController].navigationItem.hidesBackButton = YES;
     
     UIBarButtonItem *button0 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"zlogo"
+                                initWithTitle:@"logo"
                                 style:UIBarButtonItemStyleBordered
                                 target:self
                                 action:@selector(tappedButtonItem0:)];
@@ -52,14 +52,14 @@
     UIBarButtonItem *button3 = [[UIBarButtonItem alloc]
                                 initWithTitle:@"3"
                                 style:UIBarButtonItemStyleBordered
-                                target:nil
-                                action:nil];
+                                target:self
+                                action:@selector(tappedButtonItem3:)];
     
     UIBarButtonItem *button4 = [[UIBarButtonItem alloc]
                                 initWithTitle:@"4"
                                 style:UIBarButtonItemStyleBordered
-                                target:nil
-                                action:nil];
+                                target:self
+                                action:@selector(tappedButtonItem4:)];
     
     NSArray *rightBarButtonItems = @[button1, button2, button3, button4];
     
@@ -73,6 +73,9 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - Button selectors
 
 - (void)tappedButtonItem0:(id)sender
 {
@@ -97,19 +100,19 @@
 
 - (void)tappedButtonItem2:(id)sender
 {
-    [[[UIAlertView alloc] initWithTitle:@"2" message:@"2" delegate:nil cancelButtonTitle:@"2" otherButtonTitles:nil, nil] show];
+    [[[UIAlertView alloc] initWithTitle:@"Students" message:@"Students" delegate:nil cancelButtonTitle:@"Students" otherButtonTitles:nil, nil] show];
     //    UIViewController *imagPickerController = [UIViewController alloc] iniadsasdf
     //    UIImagePickerController *takeAPicture = [[UIImagePickerController alloc] initWithRootViewController:imagPickerController];
 }
 
 - (void)tappedButtonItem3:(id)sender
 {
-    [[[UIAlertView alloc] initWithTitle:@"3" message:@"3" delegate:nil cancelButtonTitle:@"3" otherButtonTitles:nil, nil] show];
+    [[[UIAlertView alloc] initWithTitle:@"Challenges" message:@"Challenges" delegate:nil cancelButtonTitle:@"Challenges" otherButtonTitles:nil, nil] show];
 }
 
 - (void)tappedButtonItem4:(id)sender
 {
-    [[[UIAlertView alloc] initWithTitle:@"4" message:@"4" delegate:nil cancelButtonTitle:@"4" otherButtonTitles:nil, nil] show];
+    [[[UIAlertView alloc] initWithTitle:@"Notifications" message:@"Notifications" delegate:nil cancelButtonTitle:@"Notifications" otherButtonTitles:nil, nil] show];
 }
 
 
