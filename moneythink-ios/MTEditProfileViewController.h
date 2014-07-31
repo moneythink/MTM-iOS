@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTEditProfileViewController : UIViewController
+@interface MTEditProfileViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextInputDelegate>
 
 @end

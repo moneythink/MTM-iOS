@@ -37,12 +37,7 @@
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
     
-//    UIActivityIndicatorView *activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-//    [activity setCenter:CGPointMake(100.0f, 100.0f)];
-//    [self.view addSubview:activity];
-
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-//    [activity startAnimating];
     
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -51,7 +46,6 @@
             [self.explorePostsTableView reloadData];
             
             [MBProgressHUD hideHUDForView:self.view animated:YES];
-//            [activity stopAnimating];
         }
     }];
 }

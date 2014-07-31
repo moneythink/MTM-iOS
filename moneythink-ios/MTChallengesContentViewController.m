@@ -8,6 +8,7 @@
 
 #import "MTChallengesContentViewController.h"
 #import "MTPostsTabBarViewController.h"
+#import "MTPostsTableViewController.h"
 
 @interface MTChallengesContentViewController ()
 
@@ -62,10 +63,14 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSString *segueID = [segue identifier];
-    MTPostsTabBarViewController *destinationViewController = segue.destinationViewController;
+    id destinationVC = segue.destinationViewController;
     
-    destinationViewController.challengeNumber = [self.challengeNumberText integerValue];
+//    MTPostsTabBarViewController *destination = [[MTPostsTabBarViewController alloc] init];
+    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)destinationVC;
+    
+    destination.challengeNumber = self.challengeNumberText;
+    
+//    destinationVC = destination;
 }
 
 #pragma mark - UITabBarDelegate methods

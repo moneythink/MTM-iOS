@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTExploreChallengeViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface MTExploreChallengeViewController : PFQueryTableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *explorePostsTableView;
 

@@ -74,30 +74,6 @@
 }
 
 
-
-//- (BOOL) startCameraControllerFromViewController: (UIViewController*) controller
-//                                   usingDelegate: (id <UIImagePickerControllerDelegate,
-//                                                   UINavigationControllerDelegate>) delegate {
-//    
-//    if (([UIImagePickerController isSourceTypeAvailable:
-//          UIImagePickerControllerSourceTypeCamera] == NO)
-//        || (delegate == nil)
-//        || (controller == nil))
-//        return NO;
-//    
-//    
-//    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
-//    cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
-//    cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
-//    cameraUI.allowsEditing = YES;
-//    cameraUI.delegate = delegate;
-//    
-//    [controller presentViewController:cameraUI animated:YES completion:nil];
-//    
-//    return YES;
-//}
-
-
 #pragma mark - UIImagePickerControllerDelegate methods
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -108,6 +84,16 @@
         image = [info objectForKey:UIImagePickerControllerEditedImage];
     } else {
         image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }
+    
+    if (image.size.width > 480.0f) {
+        CGFloat scale = 480.0f / image.size.width;
+        CGFloat newHeight = scale * image.size.height;
+        CGSize newSize = CGSizeMake(480.0f, newHeight);
+        UIGraphicsBeginImageContext(newSize);
+        [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
     }
     
     self.anyImage.image = image;

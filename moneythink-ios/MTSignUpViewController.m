@@ -169,9 +169,6 @@
     [self.view endEditing:YES];
 }
 
-
-#pragma mark - UITextFieldDelegate methods
-
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
     CGRect fieldsFrame = self.viewFields.frame;
@@ -199,6 +196,9 @@
 {
     self.viewFields.frame = self.view.frame;
 }
+
+
+#pragma mark - UITextFieldDelegate methods
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {

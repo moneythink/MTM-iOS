@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTPostsTabBarViewController : UITabBarController
+@interface MTPostsTabBarViewController : UITabBarController <UITabBarControllerDelegate, UITabBarDelegate>
 
 @property (nonatomic, strong) NSArray *challenges;
-@property (nonatomic, assign) NSInteger challengeNumber;
+@property (nonatomic, strong) NSString *challengeNumber;
 @property (nonatomic, strong) NSString *class;
 
 @end

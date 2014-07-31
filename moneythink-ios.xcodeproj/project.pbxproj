@@ -146,7 +146,6 @@
 		5876E2CD196F2C1F00C176EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AC196F2C1F00C176EC /* UIKit.framework */; };
 		5876E2D5196F2C1F00C176EC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2D3196F2C1F00C176EC /* InfoPlist.strings */; };
 		5876E2D7196F2C1F00C176EC /* moneythink_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2D6196F2C1F00C176EC /* moneythink_iosTests.m */; };
-		5876E2E1196F2C5900C176EC /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E0196F2C5900C176EC /* Parse.framework */; };
 		5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E2196F2C8500C176EC /* AudioToolbox.framework */; };
 		5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E4196F2C8E00C176EC /* CFNetwork.framework */; };
 		5876E2E7196F2CA000C176EC /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E6196F2CA000C176EC /* CoreLocation.framework */; };
@@ -184,6 +183,9 @@
 		58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */; };
 		58A356DC198168140018FC61 /* MJPopupBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356D9198168140018FC61 /* MJPopupBackgroundView.m */; };
 		58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356DB198168140018FC61 /* UIViewController+MJPopupViewController.m */; };
+		58B59E81198AF60C001E003D /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B59E80198AF60C001E003D /* Parse.framework */; };
+		58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */; };
+		58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */; };
 		58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
 		58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */; };
@@ -322,7 +324,6 @@
 		5876E2D2196F2C1F00C176EC /* moneythink-iosTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "moneythink-iosTests-Info.plist"; sourceTree = "<group>"; };
 		5876E2D4196F2C1F00C176EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5876E2D6196F2C1F00C176EC /* moneythink_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = moneythink_iosTests.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		5876E2E0196F2C5900C176EC /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		5876E2E2196F2C8500C176EC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		5876E2E4196F2C8E00C176EC /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		5876E2E6196F2CA000C176EC /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
@@ -430,6 +431,11 @@
 		58A356D9198168140018FC61 /* MJPopupBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJPopupBackgroundView.m; sourceTree = "<group>"; };
 		58A356DA198168140018FC61 /* UIViewController+MJPopupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+MJPopupViewController.h"; sourceTree = "<group>"; };
 		58A356DB198168140018FC61 /* UIViewController+MJPopupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+MJPopupViewController.m"; sourceTree = "<group>"; };
+		58B59E80198AF60C001E003D /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
+		58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewController.h; sourceTree = "<group>"; };
+		58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTableViewController.m; sourceTree = "<group>"; };
+		58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewCell.h; sourceTree = "<group>"; };
+		58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTableViewCell.m; sourceTree = "<group>"; };
 		58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentTabBarViewController.h; sourceTree = "<group>"; };
 		58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentTabBarViewController.m; sourceTree = "<group>"; };
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
@@ -448,6 +454,7 @@
 				5806A4F1197464E7000B3656 /* StoreKit.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
+				58B59E81198AF60C001E003D /* Parse.framework in Frameworks */,
 				5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */,
 				5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */,
 				5876E2EB196F2CB400C176EC /* MobileCoreServices.framework in Frameworks */,
@@ -457,7 +464,6 @@
 				5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */,
 				5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */,
 				5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */,
-				5876E2E1196F2C5900C176EC /* Parse.framework in Frameworks */,
 				5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -590,6 +596,10 @@
 				5850943D197C06E400EDC969 /* MTNotificationsViewController.m */,
 				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
 				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
+				58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */,
+				58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */,
+				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
+				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -616,6 +626,7 @@
 		5876E2A7196F2C1F00C176EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58B59E80198AF60C001E003D /* Parse.framework */,
 				5806A4F219746655000B3656 /* Accounts.framework */,
 				5806A4EE1974610A000B3656 /* Social.framework */,
 				5806A4EC197460A9000B3656 /* Twitter.framework */,
@@ -624,7 +635,6 @@
 				5876E2EE196F2CC200C176EC /* Security.framework */,
 				5876E2EC196F2CBC00C176EC /* QuartzCore.framework */,
 				5876E2EA196F2CB400C176EC /* MobileCoreServices.framework */,
-				5876E2E0196F2C5900C176EC /* Parse.framework */,
 				5876E2E8196F2CAB00C176EC /* libz.dylib */,
 				5876E2E6196F2CA000C176EC /* CoreLocation.framework */,
 				5876E2E4196F2C8E00C176EC /* CFNetwork.framework */,
@@ -1058,6 +1068,7 @@
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
 				58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */,
+				58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,
@@ -1080,6 +1091,7 @@
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
+				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,
 				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
 				58A35689198076720018FC61 /* MICheckBox.m in Sources */,
