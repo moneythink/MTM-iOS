@@ -46,4 +46,78 @@
 }
 */
 
+
+- (IBAction)buttonImagePickerTouchUp:(id)sender {
+//    [self startCameraControllerFromViewController: self
+//                                    usingDelegate: self];
+    
+    [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+}
+
+- (IBAction)buttonImagePicker2:(id)sender {
+    
+    [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
+}
+
+
+- (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType
+{
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    imagePickerController.sourceType = sourceType;
+    imagePickerController.delegate = self;
+    
+    imagePickerController.allowsEditing = YES;
+        
+    self.imagePickerController = imagePickerController;
+    [self presentViewController:self.imagePickerController animated:YES completion:nil];
+}
+
+
+
+//- (BOOL) startCameraControllerFromViewController: (UIViewController*) controller
+//                                   usingDelegate: (id <UIImagePickerControllerDelegate,
+//                                                   UINavigationControllerDelegate>) delegate {
+//    
+//    if (([UIImagePickerController isSourceTypeAvailable:
+//          UIImagePickerControllerSourceTypeCamera] == NO)
+//        || (delegate == nil)
+//        || (controller == nil))
+//        return NO;
+//    
+//    
+//    UIImagePickerController *cameraUI = [[UIImagePickerController alloc] init];
+//    cameraUI.sourceType = UIImagePickerControllerSourceTypeCamera;
+//    cameraUI.mediaTypes = [NSArray arrayWithObject:(NSString *) kUTTypeImage];
+//    cameraUI.allowsEditing = YES;
+//    cameraUI.delegate = delegate;
+//    
+//    [controller presentViewController:cameraUI animated:YES completion:nil];
+//    
+//    return YES;
+//}
+
+
+#pragma mark - UIImagePickerControllerDelegate methods
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [[UIImage alloc] init];
+    
+    if ([info objectForKey:UIImagePickerControllerEditedImage]) {
+        image = [info objectForKey:UIImagePickerControllerEditedImage];
+    } else {
+        image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    }
+    
+    self.anyImage.image = image;
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    
+}
+
+
 @end

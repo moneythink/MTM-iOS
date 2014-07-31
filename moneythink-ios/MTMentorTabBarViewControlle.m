@@ -1,18 +1,18 @@
 //
-//  MTStudentTabBarViewController.m
+//  MTMentorTabBarViewController.m
 //  moneythink-ios
 //
 //  Created by jdburgie on 7/25/14.
 //  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
-#import "MTStudentTabBarViewController.h"
+#import "MTMentorTabBarViewControlle.h"
 
-@interface MTStudentTabBarViewController ()
+@interface MTMentorTabBarViewController ()
 
 @end
 
-@implementation MTStudentTabBarViewController
+@implementation MTMentorTabBarViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {

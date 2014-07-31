@@ -186,6 +186,7 @@
 		58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356DB198168140018FC61 /* UIViewController+MJPopupViewController.m */; };
 		58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
+		58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -433,6 +434,8 @@
 		58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentTabBarViewController.m; sourceTree = "<group>"; };
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
+		58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorTabBarViewControlle.h; sourceTree = "<group>"; };
+		58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorTabBarViewControlle.m; sourceTree = "<group>"; };
 		HYXIFWTDXJPPRRMDCEPMDTJH /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SparkInspector.framework; path = "/Applications/Spark Inspector.app/Contents/Resources/Frameworks/SparkInspector.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -525,6 +528,8 @@
 				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
 				58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */,
 				58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */,
+				58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */,
+				58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */,
 				58676B161974273E0070F604 /* MTLogInViewController.h */,
 				58676B1B1974273E0070F604 /* MTLogInViewController.m */,
 				58676B171974273E0070F604 /* MTSignUpViewController.h */,
@@ -1052,6 +1057,7 @@
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
+				58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,

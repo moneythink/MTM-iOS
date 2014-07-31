@@ -105,7 +105,7 @@
         signUpViewController.signUpTitle = @"Mentor Signup";
         signUpViewController.signUpType = @"mentor";
     } else if ([segueID isEqualToString:@"pushMentorNotificationView"]) {
-        MTMentorNotificationViewController *notificaitonViewController = (MTMentorNotificationViewController *)segue.destinationViewController;
+//        MTMentorNotificationViewController *notificaitonViewController = (MTMentorNotificationViewController *)segue.destinationViewController;
     }
 }
 

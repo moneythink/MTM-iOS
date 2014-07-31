@@ -31,9 +31,6 @@
     PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
     
     self.challenges = [allChallenges findObjects];
-
-        // Create the data model
-    _pageTitles = @[@"Over 200 Tips and Tricks", @"Discover Hidden Features", @"Bookmark Favorite Tip", @"Free Regular Update", @"Free Regular Update", @"Free Regular Update", @"Free Regular Update", @"Free Regular Update"];
     
         // Create page view controller
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
@@ -43,14 +40,6 @@
     NSArray *viewControllers = @[startingViewController];
     
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    
-        // Change the size of page view controller
-//    self.pageViewController.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height - 30);
-    
-//    UIPageControl *pageControl = [UIPageControl appearance];
-//    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-//    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-//    pageControl.backgroundColor = [UIColor blueColor];
     
     [self addChildViewController:_pageViewController];
     [self.view addSubview:_pageViewController.view];
@@ -78,8 +67,6 @@
     challengeContentViewController.challengeTitleText = [self.challenges[index] valueForUndefinedKey:@"title"];
     
     challengeContentViewController.challengeNumberText = [[self.challenges[index] valueForUndefinedKey:@"challenge_number"] stringValue];
-    
-//    NSArray *allKeys = [self.challenges[index] allKeys];
     
     challengeContentViewController.challengeDescriptionText = [self.challenges[index] valueForUndefinedKey:@"description"];
     

@@ -28,7 +28,6 @@ static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     UIPageControl *pageControl = [UIPageControl appearance];
     pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
     pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-//    pageControl.backgroundColor = [UIColor blueColor];
 
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
