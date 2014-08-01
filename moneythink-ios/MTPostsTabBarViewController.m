@@ -44,8 +44,6 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     
-    id dvc = segue.destinationViewController;
-
     MTPostsTableViewController *destinationViewController = [[MTPostsTableViewController alloc] init];
     destinationViewController.challengeNumber = self.challengeNumber;
     destinationViewController = segue.destinationViewController;

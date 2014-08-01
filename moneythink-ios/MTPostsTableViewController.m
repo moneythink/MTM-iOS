@@ -79,6 +79,7 @@
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
+//    [query includeKey:@"picture"];
     
     return query;
 }
@@ -88,19 +89,25 @@
 // Override to customize the look of a cell representing an object. The default is to display
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *CellIdentifier = @"postCell";
     
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[MTPostsTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell
-    cell.textLabel.text = [object objectForKey:@"post_text"];
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"class: %@", [object objectForKey:@"class"]];
+    PFChallengePost *post = (PFChallengePost *)object;
     
-    PFUser *user = [object objectForKey:@"user"];
-    cell.profileImage = user[@"profile_picture"];
+    PFUser *user = post[@"user"];
+    cell.userName.text = [user username];
+    
+    cell.profileImage.file = user[@"profile_picture"];
+    [cell.profileImage loadInBackground];
+    
+    cell.postText.text = post[@"post_text"];
+    
+    cell.postImage.file = post[@"picture"];
+    [cell.postImage loadInBackground];
     
     return cell;
 }

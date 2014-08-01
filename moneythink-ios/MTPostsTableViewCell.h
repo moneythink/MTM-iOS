@@ -10,11 +10,11 @@
 
 @interface MTPostsTableViewCell : PFTableViewCell
 
-@property (strong, nonatomic) IBOutlet UIImageView *postImage;
-@property (strong, nonatomic) IBOutlet UITextField *postText;
-@property (strong, nonatomic) IBOutlet UITextView *postTextView;
+@property (strong, nonatomic) IBOutlet PFImageView *postImage;
 
-@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
+@property (strong, nonatomic) IBOutlet UITextField *postText;
+
+@property (strong, nonatomic) IBOutlet PFImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UITextField *userName;
 
 @end
