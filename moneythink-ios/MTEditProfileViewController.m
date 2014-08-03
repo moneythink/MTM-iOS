@@ -12,21 +12,31 @@
 
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
-@property (strong, nonatomic) IBOutlet UITextField *email;
-@property (strong, nonatomic) IBOutlet UITextField *password;
+@property (strong, nonatomic) IBOutlet UITextField *userSchool;
+@property (strong, nonatomic) IBOutlet UITextField *userClassName;
 @property (strong, nonatomic) IBOutlet UITextField *firstName;
 @property (strong, nonatomic) IBOutlet UITextField *lastName;
-@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
+@property (strong, nonatomic) IBOutlet UITextField *email;
+@property (strong, nonatomic) IBOutlet UITextField *userPassword;
+
+@property (strong, nonatomic) PFImageView *profileImage;
+@property (strong, nonatomic) UIImage *updatedProfileImage;
+
+@property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
+@property (assign, nonatomic) CGRect oldViewFieldsRect;
+
+@property (nonatomic, strong) PFUser *userCurrent;
+
 @end
 
-@implementation MTEditProfileViewController 
+@implementation MTEditProfileViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -36,14 +46,61 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveChanges:)];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
     
-    self.email = [PFUser currentUser][@"email"];
+    self.userCurrent = [PFUser currentUser];
+    
+    self.userSchool.text = self.userCurrent[@"school"];
+    self.userClassName.text = self.userCurrent[@"class"];
+
+    self.firstName.text = self.userCurrent[@"first_name"];
+    self.lastName.text = self.userCurrent[@"last_name"];
+    self.email.text = self.userCurrent[@"email"];
+    self.userPassword.text = self.userCurrent[@"password"];
+    
+    id something = self.userCurrent[@"profile_picture"];
+    
+    
+    
+    
+    PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+    
+    self.profileImage = [[PFImageView alloc] init];
+    [self.profileImage setFile:profileImageFile];
+    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+        self.buttonUserProfile.imageView.image = self.profileImage.image;
+        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+        
+        [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
+        
+        [self.view setNeedsDisplay];
+        
+    }];
+
+
+    
+    for(UIView *subview in self.view.subviews) {
+        if([subview isKindOfClass: [UIScrollView class]]) {
+            for(UIScrollView *scrollViewSubview in subview.subviews) {
+                if([scrollViewSubview isKindOfClass: [UITextView class]]) {
+                    ((UITextView*)scrollViewSubview).delegate = (id) self;
+                }
+                
+                if([scrollViewSubview isKindOfClass: [UITextField class]]) {
+                    ((UITextField*)scrollViewSubview).delegate = (id) self;
+                }
+            }
+            
+        }
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,6 +111,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSLog(@"size = %f x %f", self.profileImage.frame.size.width, self.profileImage.frame.size.height);
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
@@ -64,12 +122,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+    
+    if (self.profileImage.image) {
+        self.buttonUserProfile.imageView.image = self.profileImage.image;
+        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+        
+        [self.buttonUserProfile setImage:self.self.profileImage.image forState:UIControlStateNormal];
+    }
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    if (self.profileImage.image) {
+        NSLog(@"got image");
+    }
+}
+
+
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
 }
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
+    self.oldViewFieldsRect = self.viewFields.frame;
     CGRect fieldsFrame = self.viewFields.frame;
     
     NSDictionary *userInfo = [nsNotification userInfo];
@@ -77,41 +156,102 @@
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
     
-    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
-                                       fieldsFrame.origin.y,
-                                       fieldsFrame.size.width,
-                                       fieldsFrame.size.height - kbSize.height + 40.0f);
+    CGFloat x = fieldsFrame.origin.x;
+    CGFloat y = fieldsFrame.origin.y;
+    CGFloat w = fieldsFrame.size.width;
+    CGFloat h = fieldsFrame.size.height - kbTop + 180.0f;
     
-    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
+    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
+    CGRect fieldsFrameRect = CGRectMake( x, y, w, fieldsFrame.size.height - kbSize.height);
     
-    self.viewFields.contentSize = viewFrame.size;
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
+    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 180.0f);
     
-    self.viewFields.frame = fieldFrameSize;
+    self.viewFields.contentSize = fieldsContentRect.size;
+    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 150.0f);
+    
+    self.viewFields.frame = fieldsFrameRect;
     
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
 {
-    self.viewFields.frame = self.view.frame;
+    self.viewFields.frame = self.oldViewFieldsRect;
 }
 
+
+#pragma mark - Get and save image
+
+- (void)doThisTest {
+    if (self.firstName.text) {
+        self.userCurrent[@"first_name"] = self.firstName.text;
+    }
+    if (self.lastName.text) {
+        self.userCurrent[@"last_name"] = self.lastName.text;
+    }
+    if (self.self.userPassword.text) {
+        self.userCurrent[@"email"] = self.self.userPassword.text;
+    }
+    self.userCurrent[@"email"] = self.email.text;
+    //    self.userCurrent[@"password"] = self.userPassword.text;
+    
+    if (self.updatedProfileImage) {
+        
+        self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
+//        self.profileImage = [[PFImageView alloc] init];
+        
+//        NSString *fileName = [self.profileImage.file.name stringByAppendingString:@".png"];
+        NSString *fileName = @"profile_image.png";
+        
+        NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.8f);
+        self.profileImage.file = [PFFile fileWithName:fileName data:imageData];
+        
+        if (self.profileImage.file) {
+            self.userCurrent[@"profile_picture"] = self.profileImage.file;
+            [self.profileImage.file saveInBackground];
+        }
+    }
+    
+    [self.userCurrent saveInBackground];
+    
+    NSLog(@">>>> hit perform segue");
+//    [self performSegueWithIdentifier:@"unwindasdfasdf" sender:self];
+    //    [self.delegate editProfileViewControllerDidSave:self];
+}
+- (IBAction)buttonDone:(id)sender {
+    [self doThisTest];
+}
+
+- (IBAction)saveChanges:(id)sender {
+    [self doThisTest];
+}
+
+- (IBAction)editProfileImageButton:(id)sender {
+    UIActionSheet *editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+    
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [editProfileImage showInView:self.view];
+    } else {
+        [editProfileImage showInView:window];
+    }
+}
 
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSLog(@">>>> hit prepareForSegue");
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
 
-- (IBAction)buttonTakePicture:(id)sender {
+- (void)takePicture {
     
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
 }
 
-- (IBAction)buttonChoose:(id)sender {
+- (void)choosePicture {
     
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 }
@@ -127,6 +267,25 @@
     
     self.imagePickerController = imagePickerController;
     [self presentViewController:self.imagePickerController animated:YES completion:nil];
+}
+
+
+#pragma mark - UIACtionSheetDelegate methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
+{
+    switch (buttonIndex) {
+        case 0:
+            [self takePicture];
+            break;
+            
+        case 1:
+            [self choosePicture];
+            break;
+            
+        default:
+            break;
+    }
 }
 
 
@@ -149,8 +308,8 @@
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }
-
-    self.profileImage.image = image;
+    
+    self.updatedProfileImage = image;
     
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -169,7 +328,7 @@
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
-
+    
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
@@ -177,7 +336,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-
+    
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -189,6 +348,7 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self dismissKeyboard];
     return YES;
 }
 

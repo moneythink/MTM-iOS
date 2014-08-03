@@ -9,9 +9,12 @@
 #import "MTUserViewController.h"
 #import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
-#import "MTMentorNotificationViewController.h"
 
 @interface MTUserViewController ()
+
+@property (strong, nonatomic) IBOutlet UIButton *studentSignUpButton;
+@property (strong, nonatomic) IBOutlet UIButton *mentorSignUpButton;
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
 @end
 
@@ -33,7 +36,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
 }
 
 
@@ -41,7 +43,7 @@
 {
     [super viewDidLoad];
     
-    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.backBarButtonItem = nil;;
 
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
@@ -49,28 +51,20 @@
     [self.mentorSignUpButton setTitle:@"SIGN UP AS MENTOR" forState:UIControlStateNormal];
     [self.loginButton setTitle:@"LOGIN" forState:UIControlStateNormal];
     
-    
     CGFloat radius = 4.0f;
 
     self.studentSignUpButton.layer.cornerRadius = radius;
     self.mentorSignUpButton.layer.cornerRadius = radius;
     self.loginButton.layer.cornerRadius = radius;
     
-    
     [self.studentSignUpButton setBackgroundColor:[UIColor mutedOrange]];
     [self.mentorSignUpButton setBackgroundColor:[UIColor mutedGreen]];
     [self.loginButton setBackgroundColor:[UIColor primaryGreen]];
-    
     
     [self.studentSignUpButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.mentorSignUpButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
 
-    self.navigationItem.hidesBackButton = YES;
-    
-    UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
-    UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithImage:logoImage style:UIBarButtonItemStylePlain target:nil action:nil];
-    self.navigationItem.leftBarButtonItem = barButtonLogo;
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,7 +75,6 @@
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
-    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -104,8 +97,6 @@
         MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
         signUpViewController.signUpTitle = @"Mentor Signup";
         signUpViewController.signUpType = @"mentor";
-    } else if ([segueID isEqualToString:@"pushMentorNotificationView"]) {
-//        MTMentorNotificationViewController *notificaitonViewController = (MTMentorNotificationViewController *)segue.destinationViewController;
     }
 }
 
@@ -113,22 +104,6 @@
 {
 
 }
-
-- (IBAction)studentSignUpTapped:(id)sender
-{
-    
-}
-
-- (IBAction)mentorSignUpTapped:(id)sender
-{
-    
-}
-
-- (IBAction)loginTapped:(id)sender
-{
-    
-}
-
 
 
 @end

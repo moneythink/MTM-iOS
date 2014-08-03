@@ -68,7 +68,10 @@
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
     self.challengeNumber = postTabBarViewController.challengeNumber;
     
-    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d", [self.challengeNumber intValue]];
+    self.className = [PFUser currentUser][@"class"];
+    
+    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
+                                    [self.challengeNumber intValue], self.className];
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
@@ -79,11 +82,9 @@
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
-//    [query includeKey:@"picture"];
     
     return query;
 }
-
 
 
 // Override to customize the look of a cell representing an object. The default is to display

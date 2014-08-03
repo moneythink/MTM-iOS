@@ -8,6 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTEditProfileViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextInputDelegate>
+@class MTEditProfileViewController;
+
+@protocol MTEditProfileViewControllerDelegate <NSObject>
+
+- (void)editProfileViewControllerDidSave:(MTEditProfileViewController *)editProfileViewController;
 
 @end
+
+@interface MTEditProfileViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextInputDelegate, UIActionSheetDelegate>
+
+@property (nonatomic, weak) id <MTEditProfileViewControllerDelegate> delegate;
+
+//- (IBAction)saveChanges:(id)sender;
+
+@end
+

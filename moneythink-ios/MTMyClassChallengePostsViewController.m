@@ -10,15 +10,30 @@
 
 @interface MTMyClassChallengePostsViewController ()
 
+@property (nonatomic, strong) NSArray *posts;
+
 @end
 
 @implementation MTMyClassChallengePostsViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aCoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aCoder];
     if (self) {
-        // Custom initialization
+        // Custom the table
+        
+        // The className to query on
+        self.parseClassName = @"ChallengePost";
+        
+        // The key of the PFObject to display in the label of the default cell style
+        self.textKey = @"post_text";
+        
+        // The title for this table in the Navigation Controller.
+        self.title = @"Explore";
+        
+        // Whether the built-in pull-to-refresh is enabled
+        self.pullToRefreshEnabled = YES;
+        
     }
     return self;
 }
@@ -35,17 +50,6 @@
     
     
     
-    
-    
-    
-    
-    //    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    //        if (!error) {
-    //            NSArray *posts = objects;
-    //        } else {
-    //
-    //        }
-    //    }];
     
     
     

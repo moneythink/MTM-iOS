@@ -10,13 +10,4 @@
 
 @interface MTUserViewController : UIViewController
 
-@property (strong, nonatomic) IBOutlet UIButton *studentSignUpButton;
-@property (strong, nonatomic) IBOutlet UIButton *mentorSignUpButton;
-@property (strong, nonatomic) IBOutlet UIButton *loginButton;
-
-
-- (IBAction)studentSignUpTapped:(id)sender;
-- (IBAction)mentorSignUpTapped:(id)sender;
-- (IBAction)loginTapped:(id)sender;
-
 @end

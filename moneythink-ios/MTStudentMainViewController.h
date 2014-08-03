@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "MTUserInformationViewController.h"
+#import "MTEditProfileViewController.h"
 
-@interface MTStudentMainViewController : UIViewController <MTUserInfoDelegate>
+@interface MTStudentMainViewController : UIViewController <MTUserInfoDelegate, MTEditProfileViewControllerDelegate>
 
 @end

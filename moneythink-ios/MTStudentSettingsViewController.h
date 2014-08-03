@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
-@interface MTStudentSettingsViewController : UIViewController
+@interface MTStudentSettingsViewController : UIViewController <MPMediaPickerControllerDelegate>
 
 @end
