@@ -28,17 +28,18 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationItem.backBarButtonItem = nil;;
+    self.navigationController.navigationItem.hidesBackButton = YES;
+    self.navigationItem.hidesBackButton = YES;
 
-    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"1"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem1:)];
-    
-    self.navigationItem.rightBarButtonItem = button1;
+//    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
+//                                initWithTitle:@"1"
+//                                style:UIBarButtonItemStyleBordered
+//                                target:self
+//                                action:@selector(tappedButtonItem1:)];
+//    
+//    self.navigationItem.rightBarButtonItem = button1;
 
-    self.navigationItem.leftBarButtonItem = nil;
+//    self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.title = @"Challenges";
 }
 

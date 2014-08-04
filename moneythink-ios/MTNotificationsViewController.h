@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTNotificationsViewController : UIViewController
+@interface MTNotificationsViewController : PFQueryTableViewController <UITableViewDelegate, UITableViewDelegate>
 
 @end

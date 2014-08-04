@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMentorStudentProgressViewController : UIViewController
+@interface MTMentorStudentProgressViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end

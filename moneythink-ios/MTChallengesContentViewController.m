@@ -12,13 +12,26 @@
 
 @interface MTChallengesContentViewController ()
 
+@property (weak, nonatomic) IBOutlet UILabel *challengeState;
+@property (weak, nonatomic) IBOutlet UILabel *challengeNumber;
+@property (weak, nonatomic) IBOutlet UILabel *challengeTitle;
+@property (weak, nonatomic) IBOutlet UITextView *challengeDescription;
+@property (weak, nonatomic) IBOutlet UILabel *challengePoints;
+
+@property (nonatomic, strong) IBOutlet UIImageView *challengeIcon;
+
+@property (strong, nonatomic) IBOutlet UIView *viewChallengeInfo;
+
+@property (strong, nonatomic) IBOutlet UIView *leftPanel;
+@property (strong, nonatomic) IBOutlet UIView *rightPanel;
+
 @end
 
 @implementation MTChallengesContentViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -28,8 +41,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-        
+    
     self.viewChallengeInfo.layer.cornerRadius = 4.0f;
+    self.leftPanel.backgroundColor = [UIColor mutedOrange];
+    self.rightPanel.backgroundColor = [UIColor primaryOrange];
+    
+    self.challengeDescription.textColor = [UIColor redColor];
+    
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
@@ -44,7 +62,7 @@
     self.challengeTitle.text = self.challengeTitleText;
     self.challengeNumber.text = self.challengeNumberText;
     self.challengeDescription.text = self.challengeDescriptionText;
-    self.challengePoints.text = self.challengePointsText;
+    self.challengePoints.text = [self.challengePointsText stringByAppendingString:@" pts"];
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,6 +72,7 @@
 }
 
 -(void)exploreChallenge {
+//    [self performSegueWithIdentifier:@"exploreChallengeSegmented" sender:self];
     [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
 }
 
@@ -65,12 +84,9 @@
 {
     id destinationVC = segue.destinationViewController;
     
-//    MTPostsTabBarViewController *destination = [[MTPostsTabBarViewController alloc] init];
     MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)destinationVC;
     
     destination.challengeNumber = self.challengeNumberText;
-    
-//    destinationVC = destination;
 }
 
 #pragma mark - UITabBarDelegate methods

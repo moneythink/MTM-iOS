@@ -42,8 +42,11 @@
 {
     [super viewDidLoad];
 
-    self.navigationItem.backBarButtonItem = nil;;
+    self.navigationController.navigationItem.hidesBackButton = YES;
     self.navigationItem.hidesBackButton = YES;
+
+    self.buttonUserProfile.imageView.layer.cornerRadius = 40.0f;
+    self.buttonUserProfile.imageView.layer.masksToBounds = YES;
 
     PFUser *user = [PFUser currentUser];
     
@@ -83,20 +86,17 @@
         self.profileImageView = [[PFImageView alloc] init];
         [self.profileImageView setFile:profileImageFile];
         [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
-            self.profileImage = image;
-            self.buttonUserProfile.imageView.image = self.profileImage;
-            self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-            self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+//            self.profileImage = image;
+//            self.buttonUserProfile.imageView.image = self.profileImage;
+//            self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+//            self.buttonUserProfile.imageView.layer.masksToBounds = YES;
             
-            [self.buttonUserProfile setImage:self.profileImageView.image forState:UIControlStateNormal];
+            [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
             
-            [self.view setNeedsDisplay];
-            [self.view setNeedsLayout];
-
+//            [self.view setNeedsDisplay];
+//            [self.view setNeedsLayout];
         }];
-
     }
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -115,21 +115,21 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    if (self.profileImageView.image) {
-        self.buttonUserProfile.imageView.image = self.profileImageView.image;
-        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-        
-        [self.buttonUserProfile setImage:self.self.profileImageView.image forState:UIControlStateNormal];
-        
-        [self.view setNeedsDisplay];
-    }
+//    if (self.profileImageView.image) {
+//        self.buttonUserProfile.imageView.image = self.profileImageView.image;
+//        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+//        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+//        
+//        [self.buttonUserProfile setImage:self.self.profileImageView.image forState:UIControlStateNormal];
+//        
+//        [self.view setNeedsDisplay];
+//    }
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     if (self.profileImageView.image) {
-        NSLog(@"got image");
+        NSLog(@"foo viewDidLayoutSubviews");
     }
 }
 

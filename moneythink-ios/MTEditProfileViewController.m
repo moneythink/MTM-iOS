@@ -65,11 +65,6 @@
     self.email.text = self.userCurrent[@"email"];
     self.userPassword.text = self.userCurrent[@"password"];
     
-    id something = self.userCurrent[@"profile_picture"];
-    
-    
-    
-    
     PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     
     self.profileImage = [[PFImageView alloc] init];
@@ -125,13 +120,13 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-    if (self.profileImage.image) {
-        self.buttonUserProfile.imageView.image = self.profileImage.image;
-        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-        
-        [self.buttonUserProfile setImage:self.self.profileImage.image forState:UIControlStateNormal];
-    }
+//    if (self.profileImage.image) {
+//        self.buttonUserProfile.imageView.image = self.profileImage.image;
+//        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+//        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+//        
+//        [self.buttonUserProfile setImage:self.self.profileImage.image forState:UIControlStateNormal];
+//    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -199,7 +194,6 @@
         self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
 //        self.profileImage = [[PFImageView alloc] init];
         
-//        NSString *fileName = [self.profileImage.file.name stringByAppendingString:@".png"];
         NSString *fileName = @"profile_image.png";
         
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.8f);
@@ -302,10 +296,11 @@
     }
     
     if (image.size.width > 480.0f) {
-        CGSize newSize = CGSizeMake(480.0f, 480.0f);
-        UIGraphicsBeginImageContext(newSize);
-        [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
-        image = UIGraphicsGetImageFromCurrentImageContext();
+        CGFloat scale = 480.0f / image.size.width;
+        CGFloat heightNew = scale * image.size.height;
+        CGSize sizeNew = CGSizeMake(480.0f, heightNew);
+        UIGraphicsBeginImageContext(sizeNew);
+        [image drawInRect:CGRectMake(0,0,sizeNew.width,sizeNew.height)];
         UIGraphicsEndImageContext();
     }
     

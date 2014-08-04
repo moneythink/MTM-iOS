@@ -10,16 +10,15 @@
 #import "MTPostsTabBarViewController.h"
 #import "MBProgressHUD.h"
 
-
 @interface MTExploreChallengeViewController ()
 
 @end
 
 @implementation MTExploreChallengeViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -32,7 +31,7 @@
     // Do any additional setup after loading the view.
     
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
-    self.challengeNumber = postTabBarViewController.challengeNumber;
+    self.challengeNumber = [postTabBarViewController.challengeNumber intValue];
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];

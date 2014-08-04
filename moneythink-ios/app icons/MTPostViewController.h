@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTPostViewController : UIViewController <UIImagePickerControllerDelegate>
+@interface MTPostViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
 
-@property (nonatomic, strong) UIImagePickerController *picker;
+@property (strong, nonatomic) PFChallengePost *challengePost;
 
 @end

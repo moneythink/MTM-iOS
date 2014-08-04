@@ -88,10 +88,10 @@
     
     if (image.size.width > 480.0f) {
         CGFloat scale = 480.0f / image.size.width;
-        CGFloat newHeight = scale * image.size.height;
-        CGSize newSize = CGSizeMake(480.0f, newHeight);
-        UIGraphicsBeginImageContext(newSize);
-        [image drawInRect:CGRectMake(0,0,newSize.width,newSize.height)];
+        CGFloat heightNew = scale * image.size.height;
+        CGSize sizeNew = CGSizeMake(480.0f, heightNew);
+        UIGraphicsBeginImageContext(sizeNew);
+        [image drawInRect:CGRectMake(0,0,sizeNew.width,sizeNew.height)];
         image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
     }

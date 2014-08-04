@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTChallengePostsViewController : UIViewController
+@interface MTChallengePostsViewController : PFQueryTableViewController
+
+@property (nonatomic, strong) NSString *challengeNumber;
+@property (nonatomic, strong) NSString *className;
 
 @end

@@ -10,15 +10,30 @@
 
 @interface MTPostViewController ()
 
+@property (strong, nonatomic) IBOutlet UILabel *postUsername;
+@property (strong, nonatomic) IBOutlet UILabel *whenPosted;
+
+@property (strong, nonatomic) IBOutlet UIImageView *postImage;
+@property (strong, nonatomic) IBOutlet UITextView *postText;
+
+@property (strong, nonatomic) IBOutlet UIButton *commentPost;
+@property (strong, nonatomic) IBOutlet UITextField *postComment;
+
+@property (strong, nonatomic) IBOutlet UIButton *likePost;
+@property (strong, nonatomic) IBOutlet UILabel *postLikes;
+
+@property (strong, nonatomic) IBOutlet UITableView *commentsLikesTableView;
+
 @end
 
 @implementation MTPostViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        self.postUsername = self.challengePost[@"user"];
+        
     }
     return self;
 }
@@ -28,9 +43,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-//    self.picker.mediaTypes =
-//    [[NSArray alloc] initWithObjects: (NSString *) kUTTypeMovie, nil];
 }
 
 - (void)didReceiveMemoryWarning

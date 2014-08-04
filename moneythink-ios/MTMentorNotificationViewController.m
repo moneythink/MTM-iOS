@@ -193,18 +193,13 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueIdentifier = [segue identifier];
-//    id destinationViewController = [segue destinationViewController];
     
     if ([segueIdentifier isEqualToString:@"pushMentorStudentProfileView"]) {
-        NSLog(@"foo");
-    } else if ([segueIdentifier isEqualToString:@"foo"]) {
-        NSLog(@"foo");
+
     } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
-        NSLog(@"foo");
         MTStudentProgressTabBarViewController *destinationViewController = (MTStudentProgressTabBarViewController *)[segue destinationViewController];
         destinationViewController.mentor = [PFUser currentUser];
     }
-
 }
 
 #pragma mark - UITableViewController delegate methods

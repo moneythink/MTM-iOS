@@ -9,6 +9,7 @@
 #import "MTPostsTableViewController.h"
 #import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewCell.h"
+#import "MTPostViewController.h"
 
 @interface MTPostsTableViewController()
 
@@ -104,38 +105,39 @@
     
     cell.profileImage.file = user[@"profile_picture"];
     [cell.profileImage loadInBackground];
+    [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+        CGRect frame = cell.contentView.frame;
+        
+        if (image.size.width > frame.size.width) {
+            CGFloat scale = frame.size.width / image.size.width;
+            CGFloat heightNew = scale * image.size.height;
+            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
+            UIGraphicsBeginImageContext(sizeNew);
+            [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
+            image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }];
     
     cell.postText.text = post[@"post_text"];
-    
     cell.postImage.file = post[@"picture"];
-    [cell.postImage loadInBackground];
+
+    [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+        CGRect frame = cell.contentView.frame;
+
+        if (image.size.width > frame.size.width) {
+            CGFloat scale = frame.size.width / image.size.width;
+            CGFloat heightNew = scale * image.size.height;
+            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
+            UIGraphicsBeginImageContext(sizeNew);
+            [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
+            image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+        }
+    }];
     
     return cell;
 }
-
-
-/*
- // Override if you need to change the ordering of objects in the table.
- - (PFObject *)objectAtIndex:(NSIndexPath *)indexPath {
- return [objects objectAtIndex:indexPath.row];
- }
- */
-
-// Override to customize the look of the cell that allows the user to load the next page of objects.
-// The default implementation is a UITableViewCellStyleDefault cell with simple labels.
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
-//    static NSString *CellIdentifier = @"NextPage";
-//    
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//    
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-//    }
-//    
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    
-//    return cell;
-//}
 
 
 #pragma mark - Table view delegate
@@ -143,19 +145,29 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    
+    PFObject *whichObject = self.objects[indexPath.row];
+    
+    [self performSegueWithIdentifier:@"pushViewPost" sender:self.objects[indexPath.row]];
+
+//    [self performSegueWithIdentifier:@"pushViewPost" sender:[tableView cellForRowAtIndexPath:indexPath]];
 }
 
 
 
-/*
  #pragma mark - Navigation
  
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString *segueIdentifier = [segue identifier];
+    
+    if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
+        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
+        destinationViewController.challengePost = (PFChallengePost *)sender;
+    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
+
+    }
+}
 
 @end
