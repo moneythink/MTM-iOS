@@ -456,13 +456,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="4xe-Pq-Mah">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="100" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="4xe-Pq-Mah">
                                 <rect key="frame" x="0.0" y="64" width="320" height="455"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorAutoReleaseSwitch" selectionStyle="default" indentationWidth="10" rowHeight="52" id="yMd-M1-80l">
-                                        <rect key="frame" x="0.0" y="65" width="320" height="52"/>
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorAutoReleaseSwitch" selectionStyle="default" indentationWidth="10" rowHeight="52" id="yMd-M1-80l" customClass="MTStudentProgressTableViewCell">
+                                        <rect key="frame" x="0.0" y="74" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yMd-M1-80l" id="ucM-9s-Y9u">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="51"/>
@@ -495,9 +495,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                                 <constraint firstAttribute="bottom" secondItem="pyA-wF-MIO" secondAttribute="bottom" constant="9" id="iSD-fW-bL4"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="autoReleaseSwitch" destination="pyA-wF-MIO" id="7IG-ZM-HEG"/>
+                                            <outlet property="rowZeroLabel" destination="wze-0h-Y2k" id="f2t-7h-E7I"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorViewChallengeSchedule" selectionStyle="default" indentationWidth="10" rowHeight="60" id="nMO-7x-wJc">
-                                        <rect key="frame" x="0.0" y="117" width="320" height="60"/>
+                                        <rect key="frame" x="0.0" y="126" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="TopLeft" tableViewCell="nMO-7x-wJc" id="PVh-2T-M4S">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="59"/>
@@ -528,7 +532,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorStudentProgressCell" selectionStyle="default" indentationWidth="10" rowHeight="93" id="Uq6-kY-xOe">
-                                        <rect key="frame" x="0.0" y="177" width="320" height="93"/>
+                                        <rect key="frame" x="0.0" y="186" width="320" height="93"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uq6-kY-xOe" id="eg7-eF-1pd">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="92"/>
@@ -576,7 +580,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="4xe-Pq-Mah" firstAttribute="top" secondItem="B5K-L9-QKZ" secondAttribute="bottom" id="B8I-k3-FXc"/>
+                            <constraint firstItem="4xe-Pq-Mah" firstAttribute="top" secondItem="gvY-Cd-lj7" secondAttribute="top" constant="64" id="MpF-TQ-3py"/>
                             <constraint firstAttribute="trailing" secondItem="4xe-Pq-Mah" secondAttribute="trailing" id="NPh-pq-qNj"/>
                             <constraint firstItem="z0w-D1-kzW" firstAttribute="top" secondItem="4xe-Pq-Mah" secondAttribute="bottom" id="X1V-RS-xQv"/>
                             <constraint firstItem="4xe-Pq-Mah" firstAttribute="leading" secondItem="gvY-Cd-lj7" secondAttribute="leading" id="XJj-uR-h1t"/>
@@ -1468,7 +1472,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e1L-JL-IwG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1555" y="-5609"/>
+            <point key="canvasLocation" x="-1677" y="-4872"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="jm2-Me-Us7">
@@ -1493,7 +1497,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eyc-5a-6BM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1193" y="-5676"/>
+            <point key="canvasLocation" x="-1172" y="-5080"/>
         </scene>
         <!--Mentor Challenge Room View Controller - Challenges-->
         <scene sceneID="3G4-9e-DuG">
@@ -1521,7 +1525,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rf-mw-xSY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1698" y="-4916"/>
+            <point key="canvasLocation" x="-1689" y="-5570"/>
         </scene>
         <!--Mentor Student Profile View Controller-->
         <scene sceneID="Zj4-Oa-28M">
@@ -1621,7 +1625,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gww-XX-vMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1087" y="-6346"/>
+            <point key="canvasLocation" x="-1217" y="-6346"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="MEj-oA-KyZ">

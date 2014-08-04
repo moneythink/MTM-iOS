@@ -10,4 +10,7 @@
 
 @interface MTStudentProgressTableViewCell : UITableViewCell
 
+@property (strong, nonatomic) IBOutlet UILabel *rowZeroLabel;
+@property (strong, nonatomic) IBOutlet UISwitch *autoReleaseSwitch;
+
 @end

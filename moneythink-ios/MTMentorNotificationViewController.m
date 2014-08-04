@@ -99,7 +99,7 @@
     
     PFNotifications *notification = (PFNotifications *)object;
     
-    cell.textLabel.text = @"testing";
+    cell.textLabel.text = notification[@"challenge_started"];
     
     return cell;
 }

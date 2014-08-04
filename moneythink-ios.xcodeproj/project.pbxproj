@@ -96,6 +96,7 @@
 		5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2EC196F2CBC00C176EC /* QuartzCore.framework */; };
 		5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2EE196F2CC200C176EC /* Security.framework */; };
 		5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */; };
+		5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */; };
 		5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5890F7461976DDAF0042AC2F /* UIColor+Palette.m */; };
 		5890F8BC197710590042AC2F /* launchImage320x480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8B7197710590042AC2F /* launchImage320x480.png */; };
 		5890F8BD197710590042AC2F /* launchImage640x960.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8B8197710590042AC2F /* launchImage640x960.png */; };
@@ -311,6 +312,8 @@
 		5876E2EE196F2CC200C176EC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		5876E2F0196F2CC900C176EC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTableViewController.h; sourceTree = "<group>"; };
+		5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewController.m; sourceTree = "<group>"; };
 		5890F7451976DDAF0042AC2F /* UIColor+Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIColor+Palette.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5890F7461976DDAF0042AC2F /* UIColor+Palette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIColor+Palette.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5890F7FE197705230042AC2F /* app_icon_48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_48.png; sourceTree = "<group>"; };
@@ -504,6 +507,8 @@
 				5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */,
 				5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */,
 				581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */,
+				5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */,
+				5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */,
 				581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */,
 				5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */,
 				5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */,
@@ -984,6 +989,7 @@
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
 				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
 				5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */,
+				5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */,
 				5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */,
 				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
