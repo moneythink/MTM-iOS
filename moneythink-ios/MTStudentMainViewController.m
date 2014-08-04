@@ -19,7 +19,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
 @property (strong, nonatomic) IBOutlet UIButton *buttonMoneyManager;
 
-//@property (strong, nonatomic) UIImageView *profileImageView;
 @property (nonatomic, strong) UIImage *profileImage;
 @property (strong, nonatomic) PFImageView *profileImageView;
 
@@ -42,10 +41,7 @@
 {
     [super viewDidLoad];
 
-    self.navigationController.navigationItem.hidesBackButton = YES;
-    self.navigationItem.hidesBackButton = YES;
-
-    self.buttonUserProfile.imageView.layer.cornerRadius = 40.0f;
+    self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
     self.buttonUserProfile.imageView.layer.masksToBounds = YES;
 
     PFUser *user = [PFUser currentUser];
@@ -53,83 +49,30 @@
     NSString *myPoints = user[@"points"] ? user[@"points"] : @"0";
     self.myPoints.text = [NSString stringWithFormat:@"%@ pts", myPoints];
     
-    if (NO) {
-//        PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-//        
-//        NSString *requestURL = profileImageFile.url; // Save copy of url locally (will not change in block)
-//        NSString *profileImageFileURL = profileImageFile.url; // Save copy of url on the instance
-//        
-//        [profileImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-//            if (!error) {
-//                UIImage *image = [UIImage imageWithData:data];
-//                if ([requestURL isEqualToString:profileImageFileURL]) {
-//                    
-//                    UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-//                    self.profileImageView = imageView;
-//                    
-//                    self.buttonUserProfile.imageView.image = imageView.image;
-//                    self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-//                    self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-//                    
-//                    [self.buttonUserProfile setImage:self.profileImageView.image forState:UIControlStateNormal];
-//                    
-//                    [self.view setNeedsDisplay];
-//                }
-//            } else {
-//                NSLog(@"Error on fetching file");
-//                self.buttonUserProfile.imageView.image = [UIImage imageNamed:@"bg_profile_avatar_small.png"];
-//            }
-//        }];
-    } else {
-        PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+
+    PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
 
         self.profileImageView = [[PFImageView alloc] init];
         [self.profileImageView setFile:profileImageFile];
         [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
-//            self.profileImage = image;
-//            self.buttonUserProfile.imageView.image = self.profileImage;
-//            self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-//            self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-            
             [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
-            
-//            [self.view setNeedsDisplay];
-//            [self.view setNeedsLayout];
         }];
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-//    if (self.profileImageView.image) {
-//        self.buttonUserProfile.imageView.image = self.profileImageView.image;
-//        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-//        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-//    } else {
-//        self.buttonUserProfile.imageView.image = [UIImage imageNamed:@"bg_profile_avatar_small.png"];
-//    }
-//        
-//        [self.view setNeedsDisplay];
+
 }
 
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-//    if (self.profileImageView.image) {
-//        self.buttonUserProfile.imageView.image = self.profileImageView.image;
-//        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-//        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-//        
-//        [self.buttonUserProfile setImage:self.self.profileImageView.image forState:UIControlStateNormal];
-//        
-//        [self.view setNeedsDisplay];
-//    }
 }
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     if (self.profileImageView.image) {
-        NSLog(@"foo viewDidLayoutSubviews");
+
     }
 }
 

@@ -28,18 +28,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationController.navigationItem.hidesBackButton = YES;
     self.navigationItem.hidesBackButton = YES;
 
-//    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-//                                initWithTitle:@"1"
-//                                style:UIBarButtonItemStyleBordered
-//                                target:self
-//                                action:@selector(tappedButtonItem1:)];
-//    
-//    self.navigationItem.rightBarButtonItem = button1;
+    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
+                                initWithTitle:@"x"
+                                style:UIBarButtonItemStyleBordered
+                                target:self
+                                action:@selector(tappedButtonItem1:)];
+    
+    self.navigationItem.rightBarButtonItem = button1;
 
-//    self.navigationItem.leftBarButtonItem = nil;
     self.navigationItem.title = @"Challenges";
 }
 
@@ -62,7 +60,7 @@
 
 - (void)tappedButtonItem1:(id)sender
 {
-    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", @"Settings", nil];
+    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", nil];
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -93,9 +91,6 @@
         case 0:
             [PFUser logOut];
             [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
-            break;
-            
-        case 1:
             break;
             
         default:

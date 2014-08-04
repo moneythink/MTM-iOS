@@ -89,6 +89,9 @@
         cell = [[PFTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
+//    PFNotifications 
+    cell.textLabel.text = @"row";
+    
     return cell;
 }
 

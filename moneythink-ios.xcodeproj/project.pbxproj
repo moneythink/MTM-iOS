@@ -19,6 +19,7 @@
 		580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */; };
 		580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */; };
 		580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */; };
+		581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */; };
 		5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
@@ -188,6 +189,8 @@
 		580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentSettingsViewController.m; sourceTree = "<group>"; };
 		580B5AF21982EDAA0092AA9C /* MTStudentFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentFilterViewController.h; sourceTree = "<group>"; };
 		580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentFilterViewController.m; sourceTree = "<group>"; };
+		581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTStudentProgressTableViewCell.h; path = ../MTStudentProgressTableViewCell.h; sourceTree = "<group>"; };
+		581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTStudentProgressTableViewCell.m; path = ../MTStudentProgressTableViewCell.m; sourceTree = "<group>"; };
 		5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTabBarViewController.h; sourceTree = "<group>"; };
 		5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTabBarViewController.m; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
@@ -500,6 +503,8 @@
 				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
 				5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */,
 				5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */,
+				581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */,
+				581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */,
 				5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */,
 				5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */,
 				5860BF4319870CA8007D9BB3 /* MTMentorChallangeViewController.h */,
@@ -1012,6 +1017,7 @@
 				58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
+				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMentorNotificationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate>
-
+@interface MTMentorNotificationViewController : PFQueryTableViewController
 @property (nonatomic, strong) NSArray *classNotifications;
 
 @property (strong, nonatomic) IBOutlet UITableView *notificationsTableView;

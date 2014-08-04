@@ -18,11 +18,24 @@
 
 @implementation MTMentorNotificationViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+        // Custom the table
+        
+        // The className to query on
+        self.parseClassName = @"Notifications";
+        
+        // The key of the PFObject to display in the label of the default cell style
+        self.textKey = @"challenge_started";
+
+        // The title for this table in the Navigation Controller.
+        self.title = @"Notifications";
+        
+        // Whether the built-in pull-to-refresh is enabled
+        self.pullToRefreshEnabled = YES;
+        
     }
     return self;
 }
@@ -31,113 +44,6 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-//    UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
-//    UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithImage:logoImage style:UIBarButtonItemStylePlain target:nil action:nil];
-//    self.navigationItem.leftBarButtonItem = barButtonLogo;
-    
-    [[self navigationController] setNavigationBarHidden:NO animated:YES];
-    [self navigationController].navigationItem.hidesBackButton = YES;
-    
-    
-    [self tappedSettingsButton:self];
-    
-    
-//    UIImage *imageLogo = [UIImage imageNamed:@"logo_actionbar_medium"];
-//    UIImage *imageChallenges = [UIImage imageNamed:@"action_bar_icon_challenges_normal"];
-//    UIImage *imageStudents = [UIImage imageNamed:@"action_bar_icon_friends_normal"];
-//    UIImage *imageNotification = [UIImage imageNamed:@"action_bar_icon_activity_normal"];
-//    UIImage *imageSettings = [UIImage imageNamed:@"action_bar_icon_post_normal"];
-//    
-//    UIButton *buttonLogo = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [buttonLogo setImage:imageLogo forState:UIControlStateNormal];
-//    [buttonLogo addTarget:self action:@selector(tappedLogoButton:) forControlEvents:UIControlEventTouchUpInside];
-//
-//    UIButton *buttonChallenges = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [buttonChallenges setImage:imageChallenges forState:UIControlStateNormal];
-//    [buttonChallenges addTarget:self action:@selector(tappedChallengesButton:) forControlEvents:UIControlEventTouchUpInside];
-//
-//    UIButton *buttonStudents = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [buttonStudents setImage:imageStudents forState:UIControlStateNormal];
-//    [buttonLogo addTarget:self action:@selector(tappedStudentsButton:) forControlEvents:UIControlEventTouchUpInside];
-//
-//    UIButton *buttonNotifications = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [buttonNotifications setImage:imageNotification forState:UIControlStateNormal];
-//    [buttonNotifications addTarget:self action:@selector(tappedNotificationButton:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    UIButton *buttonSettings = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [buttonSettings setImage:imageSettings forState:UIControlStateNormal];
-//    [buttonSettings addTarget:self action:@selector(tappedSettingsButton:) forControlEvents:UIControlEventTouchUpInside];
-    
-
-    
-
-    
-    
-    
-    
-//    CGRect bounds = CGRectMake( 0, 0, imageLogo.size.width, imageLogo.size.height );
-//    buttonLogo.bounds = bounds;
-//    UIEdgeInsets insets = UIEdgeInsetsZero;
-//    insets = (UIEdgeInsets){.right=-10};
-//    buttonLogo.contentEdgeInsets = insets;
-//    NSLog(@"buttonLogo %@", buttonLogo);
-//    NSLog(@"imageLogo %@", imageLogo);
-    
-//    bounds = CGRectMake( 0, 0, imageLogo.size.width, imageChallenges.size.height );
-//    buttonChallenges.bounds = bounds;
-//    buttonChallenges.contentEdgeInsets = insets;
-//    NSLog(@"buttonChallenges width - %f", buttonChallenges.frame.size.width);
-//    NSLog(@"imageChallenges width - %f", imageChallenges.size.width);
-    
-//    bounds = CGRectMake( 0, 0, imageLogo.size.width, imageStudents.size.height );
-//    buttonStudents.bounds = bounds;
-//    buttonStudents.contentEdgeInsets = insets;
-//    NSLog(@"buttonStudents width - %f", buttonStudents.frame.size.width);
-
-//    bounds = CGRectMake( 0, 0, imageLogo.size.width, imageNotification.size.height );
-//    buttonNotifications.bounds = bounds;
-//    buttonNotifications.contentEdgeInsets = insets;
-//    NSLog(@"buttonNotifications %@", buttonLogo);
-//    NSLog(@"imageNotification %@", imageLogo);
-
-//    bounds = CGRectMake( 0, 0, imageLogo.size.width, imageSettings.size.height );
-//    buttonSettings.bounds = bounds;
-//    buttonSettings.contentEdgeInsets = insets;
-//    NSLog(@"buttonSettings width - %f", buttonSettings.frame.size.width);
-
-    
-    
-    
-    
-    
-    
-//    
-//    NSArray *rightBarButtonItems = @[[[UIBarButtonItem alloc] initWithCustomView:buttonSettings],
-//                                     [[UIBarButtonItem alloc] initWithCustomView:buttonChallenges],
-//                                     [[UIBarButtonItem alloc] initWithCustomView:buttonNotifications],
-//                                     [[UIBarButtonItem alloc] initWithCustomView:buttonStudents]];
-    
-//    self.navigationItem.rightBarButtonItems = rightBarButtonItems;
-//
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:buttonLogo];
-    
-    
-    
-    
-    NSPredicate *findClassNotifications = [NSPredicate predicateWithFormat:@"class = %@", [PFUser currentUser][@"class"]];
-    PFQuery *findNotifications = [PFQuery queryWithClassName:[PFNotifications parseClassName] predicate:findClassNotifications];
-    [findNotifications includeKey:@"user"];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [findNotifications findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.classNotifications = objects;
-            
-            [self.notificationsTableView reloadData];
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
-        }
-    }];
 }
 
 - (void)didReceiveMemoryWarning
@@ -146,44 +52,92 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Button selectors
+#pragma mark - Parse
 
-- (void)tappedLogoButton:(id)sender
-{
-    //    [PFUser logOut];
+- (void)objectsDidLoad:(NSError *)error {
+    [super objectsDidLoad:error];
+    
+    // This method is called every time objects are loaded from Parse via the PFQuery
 }
 
-- (void)tappedSettingsButton:(id)sender
-{
-    //    [PFUser logOut];
-    //    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
+- (void)objectsWillLoad {
+    [super objectsWillLoad];
     
-    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", @"Settings", nil];
+    // This method is called before a PFQuery is fired to get more objects
+}
+
+
+// Override to customize what kind of query to perform on the class. The default is to query for
+// all objects ordered by createdAt descending.
+- (PFQuery *)queryForTable {
+
     
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [logoutSheet showInView:self.view];
-    } else {
-        [logoutSheet showInView:window];
+    PFQuery *query = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    
+    // If no objects are loaded in memory, we look to the cache first to fill the table
+    // and then subsequently do a query against the network.
+    if ([self.objects count] == 0) {
+        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
     
+//    [query includeKey:@"user"];
+//    [query includeKey:@"reference_post"];
+    
+    return query;
 }
 
-- (void)tappedStudentsButton:(id)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"Students" message:@"Students" delegate:nil cancelButtonTitle:@"Students" otherButtonTitles:nil, nil] show];
-    //    UIViewController *imagPickerController = [UIViewController alloc] iniadsasdf
-    //    UIImagePickerController *takeAPicture = [[UIImagePickerController alloc] initWithRootViewController:imagPickerController];
+
+// Override to customize the look of a cell representing an object. The default is to display
+// a UITableViewCellStyleDefault style cell with the label being the first key in the object.
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+    static NSString *CellIdentifier = @"postCell";
+    
+    PFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (cell == nil) {
+        cell = [[PFTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    }
+    
+    PFNotifications *notification = (PFNotifications *)object;
+    
+    cell.textLabel.text = @"testing";
+    
+    return cell;
 }
 
-- (void)tappedChallengesButton:(id)sender
-{
-    [[[UIAlertView alloc] initWithTitle:@"Challenges" message:@"Challenges" delegate:nil cancelButtonTitle:@"Challenges" otherButtonTitles:nil, nil] show];
-}
 
-- (void)tappedNotificationButton:(id)sender
+/*
+ // Override if you need to change the ordering of objects in the table.
+ - (PFObject *)objectAtIndex:(NSIndexPath *)indexPath {
+ return [objects objectAtIndex:indexPath.row];
+ }
+ */
+
+// Override to customize the look of the cell that allows the user to load the next page of objects.
+// The default implementation is a UITableViewCellStyleDefault cell with simple labels.
+//- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
+//    static NSString *CellIdentifier = @"NextPage";
+//
+//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+//
+//    if (cell == nil) {
+//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+//    }
+//
+//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+//
+//    return cell;
+//}
+
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [[[UIAlertView alloc] initWithTitle:@"Notifications" message:@"Notifications" delegate:nil cancelButtonTitle:@"Notifications" otherButtonTitles:nil, nil] show];
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    
+    PFObject *rowObject = self.objects[indexPath.row];
+    
+    [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
 }
 
 
@@ -192,74 +146,10 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSString *segueIdentifier = [segue identifier];
-    
-    if ([segueIdentifier isEqualToString:@"pushMentorStudentProfileView"]) {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+ 
 
-    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
-        MTStudentProgressTabBarViewController *destinationViewController = (MTStudentProgressTabBarViewController *)[segue destinationViewController];
-        destinationViewController.mentor = [PFUser currentUser];
-    }
 }
-
-#pragma mark - UITableViewController delegate methods
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    NSInteger rows = [self.classNotifications count];
-    return rows;
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	UITableViewCell *cell = [self.notificationsTableView dequeueReusableCellWithIdentifier:@"notificationCell"];
-    
-    if (cell == nil)
-    {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"notificationCell"];
-    }
-    
-    PFNotifications *notificationForRow = self.classNotifications[indexPath.row];
-    PFUser *user = [notificationForRow objectForKey:@"user"];
-
-    if (notificationForRow[@"challenge_activated"]) {
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"Challenge activated = %@", notificationForRow[@"challenge_activated"]];
-    }
-    
-    return cell;
-}
-
-
-#pragma mark - UITableViewDelegate methods
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    [self performSegueWithIdentifier:@"pushMentorStudentProfileView" sender:self];
-}
-
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
-{
-    
-}
-
-
-#pragma mark - UIACtionSheetDelegate methods
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
-{
-    switch (buttonIndex) {
-        case 0:
-            [PFUser logOut];
-            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
-            break;
-            
-        case 1:
-            break;
-            
-        default:
-            break;
-    }
-}
-
 
 @end

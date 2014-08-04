@@ -176,7 +176,7 @@
 
 #pragma mark - Get and save image
 
-- (void)doThisTest {
+- (void)saveProfileChanges {
     if (self.firstName.text) {
         self.userCurrent[@"first_name"] = self.firstName.text;
     }
@@ -187,12 +187,12 @@
         self.userCurrent[@"email"] = self.self.userPassword.text;
     }
     self.userCurrent[@"email"] = self.email.text;
+    
     //    self.userCurrent[@"password"] = self.userPassword.text;
     
     if (self.updatedProfileImage) {
         
         self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
-//        self.profileImage = [[PFImageView alloc] init];
         
         NSString *fileName = @"profile_image.png";
         
@@ -207,16 +207,15 @@
     
     [self.userCurrent saveInBackground];
     
-    NSLog(@">>>> hit perform segue");
-//    [self performSegueWithIdentifier:@"unwindasdfasdf" sender:self];
-    //    [self.delegate editProfileViewControllerDidSave:self];
+//    [self.delegate editProfileViewControllerDidSave:self];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 - (IBAction)buttonDone:(id)sender {
-    [self doThisTest];
+    [self saveProfileChanges];
 }
 
 - (IBAction)saveChanges:(id)sender {
-    [self doThisTest];
+    [self saveProfileChanges];
 }
 
 - (IBAction)editProfileImageButton:(id)sender {
@@ -235,7 +234,6 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSLog(@">>>> hit prepareForSegue");
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }

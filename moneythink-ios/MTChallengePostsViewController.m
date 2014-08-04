@@ -148,9 +148,9 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
-    PFObject *whichObject = self.objects[indexPath.row];
+    PFObject *rowObject = self.objects[indexPath.row];
     
-    [self performSegueWithIdentifier:@"asdfasd" sender:self.objects[indexPath.row]];
+    [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
 }
 
 

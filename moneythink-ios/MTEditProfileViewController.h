@@ -20,7 +20,5 @@
 
 @property (nonatomic, weak) id <MTEditProfileViewControllerDelegate> delegate;
 
-//- (IBAction)saveChanges:(id)sender;
-
 @end
 
