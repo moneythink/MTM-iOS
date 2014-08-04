@@ -1,17 +1,17 @@
 //
-//  MTPostsTableViewController.m
+//  MTMyClassTableViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/31/14.
+//  Created by jdburgie on 8/4/14.
 //  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
-#import "MTPostsTableViewController.h"
+#import "MTMyClassTableViewController.h"
 #import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewCell.h"
 #import "MTPostViewController.h"
 
-@interface MTPostsTableViewController()
+@interface MTMyClassTableViewController ()
 
 @property (strong, nonatomic) IBOutlet UITabBarItem *postsTabBarItem;
 
@@ -19,7 +19,7 @@
 
 @end
 
-@implementation MTPostsTableViewController
+@implementation MTMyClassTableViewController
 
 - (id)initWithCoder:(NSCoder *)aCoder {
     self = [super initWithCoder:aCoder];
@@ -49,7 +49,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -81,9 +81,11 @@
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
     self.challengeNumber = postTabBarViewController.challengeNumber;
     
-    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d",
-                       [self.challengeNumber intValue]];
-
+    self.className = [PFUser currentUser][@"class"];
+    
+    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
+                       [self.challengeNumber intValue], self.className];
+    
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
@@ -133,10 +135,10 @@
     
     cell.postText.text = post[@"post_text"];
     cell.postImage.file = post[@"picture"];
-
+    
     [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
         CGRect frame = cell.contentView.frame;
-
+        
         if (image.size.width > frame.size.width) {
             CGFloat scale = frame.size.width / image.size.width;
             CGFloat heightNew = scale * image.size.height;
@@ -161,12 +163,14 @@
     PFObject *rowObject = self.objects[indexPath.row];
     
     [self performSegueWithIdentifier:@"pushViewPost" sender:self.objects[indexPath.row]];
+    
+    //    [self performSegueWithIdentifier:@"pushViewPost" sender:[tableView cellForRowAtIndexPath:indexPath]];
 }
 
 
 
- #pragma mark - Navigation
- 
+#pragma mark - Navigation
+
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -176,8 +180,10 @@
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
     } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
-
+        
     }
 }
+
+
 
 @end

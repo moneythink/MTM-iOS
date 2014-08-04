@@ -11,6 +11,6 @@
 @interface MTPostsTableViewController : PFQueryTableViewController
 
 @property (nonatomic, strong) NSString *challengeNumber;
-@property (nonatomic, strong) NSString *className;
+//@property (nonatomic, strong) NSString *className;
 
 @end

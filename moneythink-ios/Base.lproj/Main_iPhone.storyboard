@@ -461,7 +461,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorAutoReleaseSwitch" selectionStyle="default" indentationWidth="10" rowHeight="52" id="yMd-M1-80l" customClass="MTStudentProgressTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorAutoReleaseSwitch" selectionStyle="default" indentationWidth="10" reuseIdentifier="mentorAutoReleaseSwitch" rowHeight="52" id="yMd-M1-80l" customClass="MTStudentProgressTableViewCell">
                                         <rect key="frame" x="0.0" y="74" width="320" height="52"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="yMd-M1-80l" id="ucM-9s-Y9u">
@@ -500,7 +500,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <outlet property="rowZeroLabel" destination="wze-0h-Y2k" id="f2t-7h-E7I"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorViewChallengeSchedule" selectionStyle="default" indentationWidth="10" rowHeight="60" id="nMO-7x-wJc">
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorViewChallengeSchedule" selectionStyle="default" indentationWidth="10" reuseIdentifier="mentorViewChallengeSchedule" rowHeight="60" id="nMO-7x-wJc">
                                         <rect key="frame" x="0.0" y="126" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="TopLeft" tableViewCell="nMO-7x-wJc" id="PVh-2T-M4S">
@@ -531,7 +531,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorStudentProgressCell" selectionStyle="default" indentationWidth="10" rowHeight="93" id="Uq6-kY-xOe">
+                                    <tableViewCell contentMode="scaleToFill" restorationIdentifier="mentorStudentProgressCell" selectionStyle="default" indentationWidth="10" reuseIdentifier="mentorStudentProgressCell" rowHeight="93" id="Uq6-kY-xOe">
                                         <rect key="frame" x="0.0" y="186" width="320" height="93"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uq6-kY-xOe" id="eg7-eF-1pd">
@@ -823,7 +823,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="5sp-gU-ufP">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5sp-gU-ufP" id="6Sh-RA-kFL">
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
@@ -995,51 +995,6 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="THA-3P-37J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1296" y="-834"/>
-        </scene>
-        <!--My Class Challenge Posts View Controller - My Class-->
-        <scene sceneID="JEG-CI-tfc">
-            <objects>
-                <viewController storyboardIdentifier="MyClassChallengePosts" title="My Class" useStoryboardIdentifierAsRestorationIdentifier="YES" id="2HA-qC-6hx" customClass="MTMyClassChallengePostsViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="aPJ-Jl-otX"/>
-                        <viewControllerLayoutGuide type="bottom" id="xHI-Lh-V3G"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hy0-no-xvC">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="220" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="BpL-dA-rrY">
-                                <rect key="frame" x="0.0" y="20" width="320" height="528"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="myClassPost" rowHeight="220" id="1JO-BG-Xx0">
-                                        <rect key="frame" x="0.0" y="86" width="320" height="220"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="1JO-BG-Xx0" id="pIv-Yq-rmu">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="219"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </prototypes>
-                                <connections>
-                                    <outlet property="dataSource" destination="2HA-qC-6hx" id="dxc-hF-S92"/>
-                                    <outlet property="delegate" destination="2HA-qC-6hx" id="NPS-P6-Eid"/>
-                                </connections>
-                            </tableView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="My Class" id="hNi-g4-TX6"/>
-                    <navigationItem key="navigationItem" id="nZJ-cS-3Ba"/>
-                    <connections>
-                        <outlet property="myClassPostsTableView" destination="BpL-dA-rrY" id="yMk-2n-yNP"/>
-                        <segue destination="83z-FJ-qxJ" kind="push" identifier="viewPost" id="78h-2E-tsp"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="xvY-UB-ZXs" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="351" y="-1299"/>
         </scene>
         <!--Student Filter View Controller-->
         <scene sceneID="xq7-jJ-jm7">
@@ -1465,7 +1420,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <outlet property="delegate" destination="KqN-Fb-evW" id="K29-Bn-tGz"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Notifications" id="LBf-Ek-H3T"/>
+                    <tabBarItem key="tabBarItem" title="Notifications" image="notifications_active.png" id="LBf-Ek-H3T"/>
                     <connections>
                         <outlet property="notificationsTableView" destination="ZzX-eH-N1D" id="jIL-xb-Hlc"/>
                     </connections>
@@ -1959,7 +1914,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </connections>
                             </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PH7-St-mgE">
-                                <rect key="frame" x="106" y="-43" width="280" height="280"/>
+                                <rect key="frame" x="20" y="89" width="280" height="280"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="569-ij-O8X">
@@ -2169,17 +2124,115 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <outlet property="delegate" destination="5xn-4s-NK8" id="0jy-E3-yxS"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Explore" id="JG3-Yb-AHl"/>
+                    <tabBarItem key="tabBarItem" tag="1" title="Explore" image="challenges_active.png" id="JG3-Yb-AHl"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="postsTabBarItem" destination="JG3-Yb-AHl" id="5aO-Ta-JHP"/>
                         <outlet property="tableView" destination="CWg-ej-tw4" id="VdE-w9-j28"/>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="Kh3-fD-GBF"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LKn-xU-EXa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="351" y="-1989"/>
+            <point key="canvasLocation" x="367" y="-1882"/>
+        </scene>
+        <!--My Class Table View Controller - My Class-->
+        <scene sceneID="HKd-jm-JVR">
+            <objects>
+                <tableViewController storyboardIdentifier="MyClassChallengePosts" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wSc-Em-WQ4" customClass="MTMyClassTableViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="396" sectionHeaderHeight="22" sectionFooterHeight="22" id="CjA-Xy-9gz">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCell" rowHeight="396" id="hmU-gH-1l3" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="86" width="320" height="396"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hmU-gH-1l3" id="onZ-tg-5rn">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="395"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VWk-dC-RPZ" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="58" width="280" height="280"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        </imageView>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bjv-PF-9Ce">
+                                            <rect key="frame" x="25" y="346" width="275" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KpO-O7-xUz" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="20" width="30" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        </imageView>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="Wql-9e-YA0">
+                                            <rect key="frame" x="58" y="28" width="170" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cz8-wn-gNF">
+                                            <rect key="frame" x="236" y="28" width="64" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sKp-e6-ElZ">
+                                            <rect key="frame" x="48" y="371" width="36" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ylu-Eo-oQt">
+                                            <rect key="frame" x="120" y="371" width="36" height="14"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <textInputTraits key="textInputTraits"/>
+                                        </textField>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gpP-NG-Lrv" userLabel="Like Button">
+                                            <rect key="frame" x="20" y="370" width="19" height="16"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button" image="like_active.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96E-EQ-y2e" userLabel="Comment Button">
+                                            <rect key="frame" x="92" y="368" width="17" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" image="comment.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="commentBUtton" destination="96E-EQ-y2e" id="l2K-Y0-EEV"/>
+                                    <outlet property="comments" destination="ylu-Eo-oQt" id="UCt-ao-Vs7"/>
+                                    <outlet property="likeButton" destination="gpP-NG-Lrv" id="Mbd-UE-dv2"/>
+                                    <outlet property="likes" destination="sKp-e6-ElZ" id="GeH-sC-utx"/>
+                                    <outlet property="postImage" destination="VWk-dC-RPZ" id="DJJ-5f-Air"/>
+                                    <outlet property="postText" destination="Bjv-PF-9Ce" id="PDp-oO-uIJ"/>
+                                    <outlet property="postedWhen" destination="cz8-wn-gNF" id="gOx-Kj-BaR"/>
+                                    <outlet property="profileImage" destination="KpO-O7-xUz" id="PSA-zs-pbV"/>
+                                    <outlet property="userName" destination="Wql-9e-YA0" id="hNW-rm-bUa"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="wSc-Em-WQ4" id="GoO-Dt-B9d"/>
+                            <outlet property="delegate" destination="wSc-Em-WQ4" id="VoR-Wh-Bmh"/>
+                        </connections>
+                    </tableView>
+                    <tabBarItem key="tabBarItem" title="My Class" image="challenges_active.png" id="vNk-xp-fw5"/>
+                    <connections>
+                        <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MnK-Is-ORV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="374" y="-1226"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="TFU-up-0E5">
@@ -2332,8 +2385,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="5xn-4s-NK8" kind="relationship" relationship="viewControllers" id="Y0d-WE-4nE"/>
-                        <segue destination="2HA-qC-6hx" kind="relationship" relationship="viewControllers" id="vDx-DO-59k"/>
+                        <segue destination="5xn-4s-NK8" kind="relationship" relationship="viewControllers" id="UYm-YU-i7O"/>
+                        <segue destination="wSc-Em-WQ4" kind="relationship" relationship="viewControllers" id="pvb-HA-zLw"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gVF-AH-qYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2355,7 +2408,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <segue destination="wK2-2Y-kG3" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="S8O-YA-oKD"/>
                         <segue destination="WcM-gU-a8O" kind="relationship" relationship="viewControllers" id="EVq-0I-RSq"/>
                         <segue destination="XeE-2P-Kwx" kind="relationship" relationship="viewControllers" id="dPN-Mg-VSg"/>
-                        <segue destination="KqN-Fb-evW" kind="relationship" relationship="viewControllers" id="1JP-RH-FsU"/>
+                        <segue destination="nhy-BA-4w4" kind="relationship" relationship="viewControllers" id="n3i-cp-Ew2"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5R0-hv-OdN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2507,7 +2560,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6eW-GY-8Fb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1217" y="-3873"/>
+            <point key="canvasLocation" x="-1073" y="-3873"/>
         </scene>
     </scenes>
     <resources>
@@ -2528,11 +2581,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="zbC-jz-vyG"/>
         <segue reference="YIE-Gy-hXh"/>
         <segue reference="Fpc-xj-HcE"/>
-        <segue reference="zbC-jz-vyG"/>
-        <segue reference="xIc-fr-roR"/>
-        <segue reference="Kh3-fD-GBF"/>
+        <segue reference="n3i-cp-Ew2"/>
         <segue reference="jcg-as-XMz"/>
+        <segue reference="xIc-fr-roR"/>
+        <segue reference="LS9-Mg-yad"/>
     </inferredMetricsTieBreakers>
 </document>

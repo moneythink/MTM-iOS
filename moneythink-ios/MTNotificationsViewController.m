@@ -7,6 +7,7 @@
 //
 
 #import "MTNotificationsViewController.h"
+#import "MTPostsTabBarViewController.h"
 #import "MTPostViewController.h"
 
 @interface MTNotificationsViewController ()
@@ -75,6 +76,10 @@
     if ([self.objects count] == 0) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
+    
+    [query includeKey:@"comment"];
+    [query includeKey:@"post_liked"];
+    [query includeKey:@"user"];
 
     return query;
 }
@@ -89,8 +94,19 @@
         cell = [[PFTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-//    PFNotifications 
-    cell.textLabel.text = @"row";
+    PFNotifications *notification = (PFNotifications *)object;
+    
+    NSLog(@"notification - %@", notification);
+    NSLog(@"notification[@\"post_liked\"] - %@", notification[@"post_liked"]);
+
+    if (notification[@"post_liked"]) {
+        PFChallengePost *post = notification[@"post_liked"];
+        cell.textLabel.text = post[@"post_text"];
+    } else if (notification[@"challenge_started"]) {
+        cell.textLabel.text = notification[@"challenge_started"];
+    } else {
+        cell.textLabel.text = [NSString stringWithFormat:@"notification #%ld", (long)indexPath.row];
+    }
     
     return cell;
 }
@@ -118,6 +134,10 @@
     if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
+    } else if ([segueIdentifier isEqualToString:@"pushNotificationToPosts"]) {
+        MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)segue.destinationViewController;
+        PFNotifications *notification = (PFNotifications *)sender;
+        destination.challengeNumber = @"1";
     }
 }
 

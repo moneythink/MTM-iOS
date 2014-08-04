@@ -120,13 +120,6 @@
 - (void)viewWillLayoutSubviews {
     [super viewWillLayoutSubviews];
     
-//    if (self.profileImage.image) {
-//        self.buttonUserProfile.imageView.image = self.profileImage.image;
-//        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-//        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-//        
-//        [self.buttonUserProfile setImage:self.self.profileImage.image forState:UIControlStateNormal];
-//    }
 }
 
 - (void)viewDidLayoutSubviews {
@@ -180,13 +173,17 @@
     if (self.firstName.text) {
         self.userCurrent[@"first_name"] = self.firstName.text;
     }
+    
     if (self.lastName.text) {
         self.userCurrent[@"last_name"] = self.lastName.text;
     }
-    if (self.self.userPassword.text) {
-        self.userCurrent[@"email"] = self.self.userPassword.text;
+    
+    if (![self.self.userPassword.text isEqual:@""]) {
+        self.userCurrent[@"password"] = self.userPassword.text;
     }
-    self.userCurrent[@"email"] = self.email.text;
+    
+    [self.userCurrent setEmail:self.email.text];
+    [self.userCurrent setUsername:self.email.text];
     
     //    self.userCurrent[@"password"] = self.userPassword.text;
     
@@ -205,7 +202,13 @@
         }
     }
     
-    [self.userCurrent saveInBackground];
+    [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (!error) {
+            NSLog(@"no error");
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
     
 //    [self.delegate editProfileViewControllerDidSave:self];
     [self.navigationController popViewControllerAnimated:YES];

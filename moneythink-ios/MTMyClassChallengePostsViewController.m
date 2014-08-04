@@ -29,7 +29,7 @@
         self.textKey = @"post_text";
         
         // The title for this table in the Navigation Controller.
-        self.title = @"Explore";
+        self.title = @"My Class";
         
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
@@ -43,22 +43,16 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
+    NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@", self.challengeNumber, [PFUser currentUser][@"class"]];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
     
-    self.posts = [findChallengePosts findObjects];
-    
-    
-    
-    
-    
-    
-    
-    NSLog(@"foo");
-    
-    
-    
-    
+    [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
     
 }
 

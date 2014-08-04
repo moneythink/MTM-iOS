@@ -97,6 +97,7 @@
 		5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2EE196F2CC200C176EC /* Security.framework */; };
 		5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */; };
 		5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */; };
+		5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */; };
 		5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5890F7461976DDAF0042AC2F /* UIColor+Palette.m */; };
 		5890F8BC197710590042AC2F /* launchImage320x480.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8B7197710590042AC2F /* launchImage320x480.png */; };
 		5890F8BD197710590042AC2F /* launchImage640x960.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F8B8197710590042AC2F /* launchImage640x960.png */; };
@@ -314,6 +315,8 @@
 		5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTableViewController.h; sourceTree = "<group>"; };
 		5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewController.m; sourceTree = "<group>"; };
+		5885B3A6198FF94D0079A8D5 /* MTMyClassTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMyClassTableViewController.h; sourceTree = "<group>"; };
+		5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassTableViewController.m; sourceTree = "<group>"; };
 		5890F7451976DDAF0042AC2F /* UIColor+Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIColor+Palette.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5890F7461976DDAF0042AC2F /* UIColor+Palette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIColor+Palette.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5890F7FE197705230042AC2F /* app_icon_48.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app_icon_48.png; sourceTree = "<group>"; };
@@ -558,6 +561,8 @@
 				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
 				58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */,
 				58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */,
+				5885B3A6198FF94D0079A8D5 /* MTMyClassTableViewController.h */,
+				5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
 				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
 			);
@@ -999,6 +1004,7 @@
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
+				5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
