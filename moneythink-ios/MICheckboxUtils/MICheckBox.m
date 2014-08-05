@@ -56,7 +56,15 @@
 		[self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
 
 	}
+}
 
+- (void)setIsChecked:(BOOL)checked {
+    isChecked = checked;
+	if(!isChecked) {
+		[self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+	} else {
+		[self setImage:[UIImage imageNamed:@"checkbox_ticked.png"] forState:UIControlStateNormal];
+	}
 }
 
 @end

@@ -29,6 +29,8 @@
 	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
 	[self.viewFields addSubview:self.useStageCheckbox];
     
+    self.useStageCheckbox.isChecked = YES;
+    
     self.useStageButton.hidden = YES;
     self.view.backgroundColor = [UIColor white];
 

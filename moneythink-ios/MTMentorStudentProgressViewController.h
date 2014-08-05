@@ -11,6 +11,6 @@
 @interface MTMentorStudentProgressViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSMutableArray *classStudents;
+@property (strong, nonatomic) NSArray *classStudents;
 
 @end

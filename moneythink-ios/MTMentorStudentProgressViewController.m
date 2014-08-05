@@ -8,14 +8,11 @@
 
 #import "MTMentorStudentProgressViewController.h"
 #import "MTStudentProgressTableViewCell.h"
+#import "MICheckBox.h"
+#import "MBProgressHUD.h"
+#import "MTMentorStudentProfileViewController.h"
 
 @interface MTMentorStudentProgressViewController ()
-
-//@property (strong, nonatomic) IBOutlet UITableViewCell *rowZeroLabel;
-//@property (strong, nonatomic) IBOutlet UITableViewCell *rowZeroSwitch;
-
-//@property (strong, nonatomic) IBOutlet UILabel *rowOneLabel;
-//@property (strong, nonatomic) IBOutlet UIButton *rowOneButton;
 
 @property (nonatomic, strong) UISwitch *autoReleaseSwitch;
 
@@ -37,14 +34,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    PFQuery *studentsForClass = [[PFQuery alloc] initWithClassName:[PFUser parseClassName]];
-    
-//    [studentsForClass whereKey:@"class" equalTo:[PFUser currentUser][@"class"]];
-
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@", nameClass];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
     
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
@@ -53,7 +48,15 @@
         } else {
             NSLog(@"error - %@", error);
         }
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
     }];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.navigationController.title = @"Students";
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,68 +70,121 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger rows = [self.classStudents count] + 2;
+    NSInteger rows = 0;
+    
+    switch (section) {
+        case 0:
+            rows = 2;
+            break;
+            
+        case 1:
+            rows = [self.classStudents count];
+            break;
+            
+        default:
+            break;
+    }
+    
     return rows;
 }
 
-    // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-    // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
+// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
+// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
+    NSInteger section = indexPath.section;
+    
     NSString *identString = @"mentorStudentProgressCell";
     
-    switch (row) {
+    switch (section) {
         case 0:
         {
-        identString = @"mentorAutoReleaseSwitch";
-        MTStudentProgressTableViewCell *cell = (MTStudentProgressTableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:identString];
-        
-        if (cell == nil)
+        switch (row) {
+            case 0:
             {
-            cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
-            }
-        
-        cell.autoReleaseSwitch = [[UISwitch alloc] init];
-        cell.autoReleaseSwitch.on = NO;
-        
-        cell.textLabel.text = @"Challenge Auto-Release";
-        //            cell.accessoryView = self.autoReleaseSwitch;
-        [cell.accessoryView addSubview:cell.autoReleaseSwitch];
-        
-        return cell;
-        }
-            break;
+            identString = @"plain";
+            UITableViewCell *cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:identString];
             
-        case 1:
-        {
-        identString = @"mentorViewChallengeSchedule";
-        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
-        
-        if (cell == nil)
-            {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
+            if (cell == nil)
+                {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
+                }
+            
+            UISwitch *autoReleaseSwitch = [[UISwitch alloc] init];
+            autoReleaseSwitch.on = NO;
+            
+            cell.textLabel.text = @"Auto-Release";
+            cell.accessoryView = autoReleaseSwitch;
+            
+            return cell;
             }
-        cell.textLabel.text = @"Challenge Schedule";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        
-        return cell;
+                break;
+                
+            default:
+            {
+            identString = @"plain2";
+            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
+            
+            if (cell == nil)
+                {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
+                }
+            cell.textLabel.text = @"Schedule";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            
+            return cell;
+            }
+                break;
+        }
         }
             break;
             
         default:
         {
-        UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
+        MTStudentProgressTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
         if (cell == nil)
             {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
+            cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
             }
-        NSInteger offsetRow = row - 2;
-        PFUser *rowStudent = self.classStudents[offsetRow];
-        cell.textLabel.text = [rowStudent username];
-        cell.detailTextLabel.text = [NSString stringWithFormat:@"row %ld", (long)row];
+        PFUser *rowStudent = self.classStudents[row];
+        cell.user = rowStudent;
         
+        NSString *fullName = rowStudent[@"first_name"];
+        fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent[@"last_name"]];
+        cell.userFullName.text = fullName;
+        
+        NSString *bankAccount = rowStudent[@"bank_account"];
+        
+        if ([bankAccount intValue] == 1) {
+            cell.bankCheckbox.isChecked = YES;
+        } else {
+            cell.bankCheckbox.isChecked = NO;
+        }
+        
+        NSString *resume = rowStudent[@"resume"];
+        
+        if ([resume intValue] == 1) {
+            cell.resumeCheckbox.isChecked = YES;
+        } else {
+            cell.resumeCheckbox.isChecked = NO;
+        }
+        
+        cell.userProfileImage.image = nil;
+        cell.userProfileImage.image = [UIImage imageNamed:@"profile_image.png"];
+        
+        cell.userProfileImage.file = rowStudent[@"profile_picture"];
+        [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {
+            if (!error) {
+                if (image) {
+                    cell.userProfileImage.image = image;
+                }
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+
         return cell;
         }
             break;
@@ -137,28 +193,72 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
 {
-    return 1;
+    return 2;
 }
 
 
 #pragma mark - UITableViewDelegate methods
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSInteger section = indexPath.section;
+    
+    switch (section) {
+        case 1:
+            [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:self];
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    NSString *title = @"";
+    
+    switch (section) {
+        case 0:
+            title = @"CHALLENGES";
+            break;
+            
+        default:
+            title = @"STUDENTS";
+            break;
+    }
+    
+    return title;
+}
 
 
 // Variable height support
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40.0f;
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    
+    switch (section) {
+        case  0:
+            row = 44.0f;
+            break;
+            
+        default:
+            row = 60.0f;
+            break;
+    }
+    
+    return row;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 0.0f;
+    return 32.0f;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return 0.0f;
+    return 1.0f;
 }
 
 
@@ -170,6 +270,12 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    
+    NSString *segueID = [segue identifier];
+    
+    if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
+        MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
+    }
 }
 
 @end
