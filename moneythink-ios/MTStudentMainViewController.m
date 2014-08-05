@@ -40,23 +40,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
     self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-
+    
     PFUser *user = [PFUser currentUser];
     
     NSString *myPoints = user[@"points"] ? user[@"points"] : @"0";
     self.myPoints.text = [NSString stringWithFormat:@"%@ pts", myPoints];
     
-
     PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-
-        self.profileImageView = [[PFImageView alloc] init];
-        [self.profileImageView setFile:profileImageFile];
-        [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
-            [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
-        }];
+    
+    self.profileImageView = [[PFImageView alloc] init];
+    [self.profileImageView setFile:profileImageFile];
+    [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
+        [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated

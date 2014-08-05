@@ -116,7 +116,7 @@
     cell.userName.text = [user username];
     
     cell.profileImage.file = user[@"profile_picture"];
-    [cell.profileImage loadInBackground];
+
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         CGRect frame = cell.contentView.frame;
         

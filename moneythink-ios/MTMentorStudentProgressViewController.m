@@ -39,7 +39,7 @@
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
+    
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
@@ -50,13 +50,13 @@
         }
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
+        
     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.navigationController.title = @"Students";
+    self.parentViewController.navigationItem.title = @"Students";
 }
 
 - (void)didReceiveMemoryWarning
@@ -104,7 +104,7 @@
         switch (row) {
             case 0:
             {
-            identString = @"plain";
+            identString = @"autorelease";
             UITableViewCell *cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:identString];
             
             if (cell == nil)
@@ -112,11 +112,14 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
                 }
             
-            UISwitch *autoReleaseSwitch = [[UISwitch alloc] init];
-            autoReleaseSwitch.on = NO;
+            //            UISwitch *autoReleaseSwitch = [[UISwitch alloc] init];
+            //            autoReleaseSwitch.on = NO;
+            
+            // - future activation dates are nil
+            self.autoReleaseSwitch.on = NO;
             
             cell.textLabel.text = @"Auto-Release";
-            cell.accessoryView = autoReleaseSwitch;
+            cell.accessoryView = self.autoReleaseSwitch;
             
             return cell;
             }
@@ -124,7 +127,7 @@
                 
             default:
             {
-            identString = @"plain2";
+            identString = @"schedule";
             UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
             
             if (cell == nil)
@@ -184,7 +187,7 @@
                 NSLog(@"error - %@", error);
             }
         }];
-
+        
         return cell;
         }
             break;
@@ -204,8 +207,10 @@
     NSInteger section = indexPath.section;
     
     switch (section) {
-        case 1:
-            [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:self];
+        case 1: {
+            PFUser *rowStudent = self.classStudents[indexPath.row];
+            [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:rowStudent];
+        }
             break;
             
         default:
@@ -275,6 +280,8 @@
     
     if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
+        
+        destinationVC.student = sender;
     }
 }
 

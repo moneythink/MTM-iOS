@@ -23,14 +23,26 @@
 {
     // Initialization code
 
-    self.bankCheckbox =[[MICheckBox alloc]initWithFrame:self.bankSwitch.frame];
+    CGRect frame = self.bankSwitch.frame;
+    frame.origin.x += (frame.size.width / 2) - 10.0f;
+    frame.origin.y += (frame.size.height / 2) - 10.0f;
+    frame.size.width = 20.0f;
+    frame.size.height = 20.0f;
+    
+    self.bankCheckbox =[[MICheckBox alloc]initWithFrame:frame];
 	[self.bankCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.bankCheckbox setTitle:@"" forState:UIControlStateNormal];
 	[self addSubview:self.bankCheckbox];
     
     self.bankSwitch.hidden = YES;
 
-    self.resumeCheckbox =[[MICheckBox alloc]initWithFrame:self.resumeSwitch.frame];
+    frame = self.resumeSwitch.frame;
+    frame.origin.x += (frame.size.width / 2) - 10.0f;
+    frame.origin.y += (frame.size.height / 2) - 10.0f;
+    frame.size.width = 20.0f;
+    frame.size.height = 20.0f;
+    
+    self.resumeCheckbox =[[MICheckBox alloc]initWithFrame:frame];
 	[self.resumeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.resumeCheckbox setTitle:@"" forState:UIControlStateNormal];
 	[self addSubview:self.resumeCheckbox];

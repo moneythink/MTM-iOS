@@ -42,8 +42,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.navigationItem.backBarButtonItem = nil;;
 
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     

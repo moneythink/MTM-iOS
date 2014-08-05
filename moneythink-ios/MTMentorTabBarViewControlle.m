@@ -14,9 +14,9 @@
 
 @implementation MTMentorTabBarViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
     }
@@ -29,7 +29,7 @@
     // Do any additional setup after loading the view.
     
     self.navigationItem.hidesBackButton = YES;
-    
+        
     UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
                                 initWithTitle:@"x"
                                 style:UIBarButtonItemStyleBordered

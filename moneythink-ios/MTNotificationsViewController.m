@@ -42,6 +42,11 @@
     }
 }
 
+- (void)viewDidLoad
+{
+    self.parentViewController.navigationItem.title = @"Notifications";
+}
+
 - (void)didReceiveMemoryWarning
 {
     // Releases the view if it doesn't have a superview.

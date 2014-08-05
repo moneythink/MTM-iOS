@@ -9,6 +9,12 @@
 #import "MTLogInViewController.h"
 #import <QuartzCore/QuartzCore.h>
 
+#ifdef DEBUG
+static BOOL useStage = YES;
+#else
+static BOOL useStage = NO;
+#endif
+
 @interface MTLogInViewController ()
 
 @end
@@ -29,7 +35,7 @@
 	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
 	[self.viewFields addSubview:self.useStageCheckbox];
     
-    self.useStageCheckbox.isChecked = YES;
+    self.useStageCheckbox.isChecked = useStage;
     
     self.useStageButton.hidden = YES;
     self.view.backgroundColor = [UIColor white];

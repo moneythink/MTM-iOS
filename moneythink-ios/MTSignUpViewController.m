@@ -10,6 +10,12 @@
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Palette.h"
 
+#ifdef DEBUG
+static BOOL useStage = YES;
+#else
+static BOOL useStage = NO;
+#endif
+
 @interface MTSignUpViewController ()
 
 @end
@@ -51,6 +57,7 @@
     self.agreeCheckbox.isChecked = NO;
 	[self.viewFields addSubview:self.agreeCheckbox];
     
+    self.useStageCheckbox.isChecked = useStage;
     self.agreeButton.hidden = YES;
 
     self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];

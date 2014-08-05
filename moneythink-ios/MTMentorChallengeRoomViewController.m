@@ -27,6 +27,13 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.parentViewController.navigationItem.title = @"Challenges";
 }
 
 - (void)didReceiveMemoryWarning

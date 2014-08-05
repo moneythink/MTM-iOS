@@ -10,4 +10,6 @@
 
 @interface MTMentorStudentProfileViewController : UIViewController
 
+@property (strong, nonatomic) PFUser *student;
+
 @end
