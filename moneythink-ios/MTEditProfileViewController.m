@@ -77,7 +77,6 @@
         [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
         
         [self.view setNeedsDisplay];
-        
     }];
 
 

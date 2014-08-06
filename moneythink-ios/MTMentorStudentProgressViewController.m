@@ -11,6 +11,7 @@
 #import "MICheckBox.h"
 #import "MBProgressHUD.h"
 #import "MTMentorStudentProfileViewController.h"
+#import "MTScheduleTableViewController.h"
 
 @interface MTMentorStudentProgressViewController ()
 
@@ -37,6 +38,7 @@
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@", nameClass];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
+    [studentsForClass orderByAscending:@"last_name"];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
@@ -50,7 +52,6 @@
         }
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-        
     }];
 }
 
@@ -63,6 +64,57 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)cloudCodeSchedule:(id)sender
+{
+    NSLog(@"check point - %@", self.autoReleaseSwitch.on ? @"on" : @"off");
+    
+    if (self.autoReleaseSwitch.on) {
+        PFUser *user = [PFUser currentUser];
+        NSString *userID = [user objectId];
+        
+        [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
+            if (!error) {
+                NSLog(@"not error");
+                
+                [self.tableView reloadData];
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+    } else {
+        UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil message:@"Do you want to put the Challenge schedule on hold? This will not affect open Challenges, and you can resume the schedule at any time from this screen." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        
+        [confirm show];
+    }
+}
+
+
+#pragma mark - UIAlertViewDelegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0: // Cancel
+            self.autoReleaseSwitch.on = YES;
+            break;
+            
+        default: {  // OK
+            PFUser *user = [PFUser currentUser];
+            NSString *userID = [user objectId];
+            
+            [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
+                if (!error) {
+                    NSLog(@"not error");
+                    
+                    [self.tableView reloadData];
+                } else {
+                    NSLog(@"error - %@", error);
+                }
+            }];
+        }
+            break;
+    }
 }
 
 
@@ -112,13 +164,24 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
                 }
             
-            //            UISwitch *autoReleaseSwitch = [[UISwitch alloc] init];
-            //            autoReleaseSwitch.on = NO;
+            self.autoReleaseSwitch = [[UISwitch alloc] init];
             
             // - future activation dates are nil
-            self.autoReleaseSwitch.on = NO;
+            
+            
+            NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date > %@", [NSDate date]];
+            PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+
+            [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                if (!error) {
+                    self.autoReleaseSwitch.on = number > 0;
+                } else {
+                    NSLog(@"check point error - %@", error);
+                }
+            }];
             
             cell.textLabel.text = @"Auto-Release";
+            [self.autoReleaseSwitch addTarget:self action:@selector(cloudCodeSchedule:) forControlEvents:UIControlEventTouchUpInside];
             cell.accessoryView = self.autoReleaseSwitch;
             
             return cell;
@@ -180,9 +243,7 @@
         cell.userProfileImage.file = rowStudent[@"profile_picture"];
         [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
-                if (image) {
-                    cell.userProfileImage.image = image;
-                }
+                
             } else {
                 NSLog(@"error - %@", error);
             }
@@ -204,9 +265,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     
     switch (section) {
+        case 0: {
+            switch (row) {
+                case 1:
+                    [self performSegueWithIdentifier:@"pushScheduleView" sender:self];
+                    break;
+                    
+                default:
+                    break;
+            }
+        }
+            break;
+            
         case 1: {
             PFUser *rowStudent = self.classStudents[indexPath.row];
             [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:rowStudent];
@@ -281,7 +355,11 @@
     if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         
-        destinationVC.student = sender;
+        PFUser *student = sender;
+        destinationVC.student = student;
+        
+    } else if ([segueID isEqualToString:@"pushScheduleView"]) {
+//        MTScheduleTableViewController *destinationVC = (MTScheduleTableViewController *)[segue destinationViewController];
     }
 }
 

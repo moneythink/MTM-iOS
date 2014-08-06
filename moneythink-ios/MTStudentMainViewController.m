@@ -54,7 +54,9 @@
     self.profileImageView = [[PFImageView alloc] init];
     [self.profileImageView setFile:profileImageFile];
     [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
-        [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
+        if (!error) {
+            [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
+        }
     }];
 }
 

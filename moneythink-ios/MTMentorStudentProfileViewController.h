@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMentorStudentProfileViewController : UIViewController
+@interface MTMentorStudentProfileViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) PFUser *student;
+@property (strong, nonatomic) IBOutlet PFImageView *profileImage;
+
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
