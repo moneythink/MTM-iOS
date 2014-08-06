@@ -18,11 +18,20 @@
 
 @implementation MTNotificationsViewController
 
+- (id)init
+{
+    self = [super init];
+//    NSLog(@"MTNotificationsViewController init");
+
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    {
+//    NSLog(@"MTNotificationsViewController initWithCoder");
     self = [super initWithCoder:aDecoder];
     if (self) {
+//        NSLog(@">>>>>> MTNotificationsViewController self");
         // Custom the table
         
         // The className to query on
@@ -37,12 +46,18 @@
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
         
+    } else {
+//        NSLog(@"no self");
     }
     return self;
-    }
 }
 
 - (void)viewDidLoad
+{
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.navigationItem.title = @"Notifications";
 }
@@ -106,7 +121,22 @@
 
     if (notification[@"post_liked"]) {
         PFChallengePost *post = notification[@"post_liked"];
+        
+        
+        // >>>>> Attributed hashtag
         cell.textLabel.text = post[@"post_text"];
+        NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSRange rangeAll = NSMakeRange(0, cell.textLabel.text.length);
+        
+        [hashtags enumerateMatchesInString:cell.textLabel.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.textLabel.text];
+            [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            
+            cell.textLabel.attributedText = hashtag;
+        }];
+        // Attributed hashtag
+        
+        
     } else if (notification[@"challenge_started"]) {
         cell.textLabel.text = notification[@"challenge_started"];
     } else {

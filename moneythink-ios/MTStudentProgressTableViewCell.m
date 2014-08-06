@@ -61,25 +61,35 @@
 }
 
 - (void)checkedResumeBox {
-    self.user[@"resume"] = [NSNumber numberWithBool:self.resumeCheckbox.isChecked];
+    BOOL resume = self.resumeCheckbox.isChecked;
+    self.user[@"resume"] = [NSNumber numberWithBool:resume];
+    id userID = [self.user objectId];
     
-    [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    NSDictionary *resumeDict = @{@"user_id": userID, @"key": @"resume", @"value" : [NSNumber numberWithBool:resume]};
+
+    [PFCloud callFunctionInBackground:@"setOtherStudentData" withParameters:resumeDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"check point no error");
         } else {
-            NSLog(@"check point error - %@", error);
+            self.resumeCheckbox.isChecked = !self.resumeCheckbox.isChecked;
+            [self setNeedsLayout];
+            NSLog(@">>>>> error - %@", error);
         }
     }];
 }
 
 - (void)checkedBankBox {
-    self.user[@"bank_account"] = [NSNumber numberWithBool:self.bankCheckbox.isChecked];
+    BOOL bank = self.bankCheckbox.isChecked;
+    self.user[@"bank_account"] = [NSNumber numberWithBool:bank];
+    id userID = [self.user objectId];
     
-    [self.user saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    NSDictionary *bankDict = @{@"user_id": userID, @"key": @"bank_account", @"value" : [NSNumber numberWithBool:bank]};
+    
+    [PFCloud callFunctionInBackground:@"setOtherStudentData" withParameters:bankDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"check point no error");
         } else {
-            NSLog(@"check point error - %@", error);
+            self.resumeCheckbox.isChecked = !self.resumeCheckbox.isChecked;
+            [self setNeedsLayout];
+            NSLog(@">>>>> error - %@", error);
         }
     }];
 }

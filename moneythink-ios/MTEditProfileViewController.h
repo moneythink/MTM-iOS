@@ -16,7 +16,7 @@
 
 @end
 
-@interface MTEditProfileViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UITextInputDelegate, UIActionSheetDelegate>
+@interface MTEditProfileViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, weak) id <MTEditProfileViewControllerDelegate> delegate;
 

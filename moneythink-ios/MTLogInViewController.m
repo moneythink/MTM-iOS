@@ -30,6 +30,9 @@ static BOOL useStage = NO;
     
     [self.view addGestureRecognizer:tap];
     
+    [self.email setDelegate:self];
+    [self.password setDelegate:self];
+
     self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
 	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
@@ -102,6 +105,54 @@ static BOOL useStage = NO;
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
 }
+
+
+#pragma mark - UITextFieldDelegate methods
+
+//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
+//- (void)textFieldDidBeginEditing:(UITextField *)textField
+//{
+//}
+//
+//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
+//- (void)textFieldDidEndEditing:(UITextField *)textField
+//{
+//}
+//
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+//{
+//    return YES;
+//}
+//
+//- (BOOL)textFieldShouldClear:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSInteger nextTag = textField.tag + 1;
+    // Try to find next responder
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        // Found next responder, so set it.
+        [nextResponder becomeFirstResponder];
+    } else {
+        // Not found, so remove keyboard.
+        [textField resignFirstResponder];
+    }
+    return NO; // We do not want UITextField to insert line-breaks.
+}
+
+
 
 
 @end

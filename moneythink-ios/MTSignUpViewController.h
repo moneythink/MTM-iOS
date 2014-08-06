@@ -8,7 +8,7 @@
 
 #import "MICheckBox.h"
 
-@interface MTSignUpViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
+@interface MTSignUpViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UIView *view;
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;

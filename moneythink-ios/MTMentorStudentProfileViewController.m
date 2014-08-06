@@ -197,7 +197,18 @@
     PFUser *verifier = cell.rowPost[@"verified_by"];
     cell.verified.on = ![[verifier username] isEqualToString:@""];
 
+    // >>>>> Attributed hashtag
     cell.postText.text = cell.rowPost[@"post_text"];
+    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRange rangeAll = NSMakeRange(0, cell.postText.text.length);
+    
+    [hashtags enumerateMatchesInString:cell.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.postText.text];
+        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+        
+        cell.postText.attributedText = hashtag;
+    }];
+    // Attributed hashtag
 
     id likesCount = cell.rowPost[@"likes"];
     if (likesCount > 0) {

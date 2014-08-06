@@ -21,8 +21,17 @@
 
 @implementation MTMentorStudentProgressViewController
 
+- (id)init
+{
+    self = [super init];
+//    NSLog(@"MTMentorStudentProgressViewController init");
+    
+    return self;
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
+//    NSLog(@"MTMentorStudentProgressViewController initWithCoder");
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization

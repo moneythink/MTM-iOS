@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTPostViewController : UIViewController <UITextFieldDelegate, UITextInputDelegate>
+@interface MTPostViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) PFChallengePost *challengePost;
 

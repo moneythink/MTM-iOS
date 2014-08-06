@@ -57,16 +57,16 @@ static BOOL useStage = NO;
     self.agreeCheckbox.isChecked = NO;
 	[self.viewFields addSubview:self.agreeCheckbox];
     
-    self.useStageCheckbox.isChecked = useStage;
     self.agreeButton.hidden = YES;
 
     self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
 	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-    self.useStageCheckbox.isChecked = NO;
 	[self.viewFields addSubview:self.useStageCheckbox];
     
+    self.useStageCheckbox.isChecked = useStage;
     self.useStageButton.hidden = YES;
+    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -196,7 +196,6 @@ static BOOL useStage = NO;
     self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
     
     self.viewFields.frame = fieldFrameSize;
-    
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
@@ -207,36 +206,34 @@ static BOOL useStage = NO;
 
 #pragma mark - UITextFieldDelegate methods
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    return YES;
-}
-
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
-    NSLog(@"foo");
-}
-
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-{
-    return YES;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
-    NSLog(@"foo");
-}
-
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    return YES;
-}
-
-- (BOOL)textFieldShouldClear:(UITextField *)textField
-{
-    return YES;
-}
-
+//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
+//- (void)textFieldDidBeginEditing:(UITextField *)textField
+//{
+//}
+//
+//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
+//- (void)textFieldDidEndEditing:(UITextField *)textField
+//{
+//}
+//
+//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+//{
+//    return YES;
+//}
+//
+//- (BOOL)textFieldShouldClear:(UITextField *)textField
+//{
+//    return YES;
+//}
+//
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;
@@ -250,29 +247,6 @@ static BOOL useStage = NO;
         [textField resignFirstResponder];
     }
     return NO; // We do not want UITextField to insert line-breaks.
-}
-
-
-#pragma mark - UITextInputDelegate methods
-
-- (void)selectionWillChange:(id <UITextInput>)textInput
-{
-    NSLog(@"foo");
-}
-
-- (void)selectionDidChange:(id <UITextInput>)textInput
-{
-    NSLog(@"foo");
-}
-
-- (void)textWillChange:(id <UITextInput>)textInput
-{
-    NSLog(@"foo");
-}
-
-- (void)textDidChange:(id <UITextInput>)textInput
-{
-    NSLog(@"foo");
 }
 
 

@@ -106,8 +106,19 @@
     
     PFChallengePost *post = self.challenges[indexPath.row];
     
+    // >>>>> Attributed hashtag
     cell.textLabel.text = post[@"post_text"];
+    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRange rangeAll = NSMakeRange(0, cell.textLabel.text.length);
     
+    [hashtags enumerateMatchesInString:cell.textLabel.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.textLabel.text];
+        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+        
+        cell.textLabel.attributedText = hashtag;
+    }];
+    // Attributed hashtag
+
     PFUser *poster = post[@"user"];
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [poster objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
@@ -125,12 +136,12 @@
 
 //- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section // fixed font style. use custom view (UILabel) if you want something different
 //{
-//    return @"foo";
+//    return @"";
 //}
 
 //- (NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section
 //{
-//    return @"foo";
+//    return @"";
 //}
 
     // Editing
@@ -318,7 +329,7 @@
 
 //- (NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
 //{
-//    return @"foo";
+//    return @"";
 //}
 
     // Controls whether the background is indented while editing.  If not implemented, the default is YES.  This is unrelated to the indentation level below.  This method only applies to grouped style table views.

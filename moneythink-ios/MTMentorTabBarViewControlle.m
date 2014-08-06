@@ -7,6 +7,10 @@
 //
 
 #import "MTMentorTabBarViewControlle.h"
+#import "MTNotificationsViewController.h"
+#import "MTMentorStudentProgressViewController.h"
+#import "MTMentorChallengeRoomViewController.h"
+#import "MTStudentSettingsViewController.h"
 
 @interface MTMentorTabBarViewController ()
 
@@ -29,7 +33,29 @@
     // Do any additional setup after loading the view.
     
     self.navigationItem.hidesBackButton = YES;
-        
+    
+    
+    self.delegate = self;
+    
+    
+    
+    
+    
+    NSLog(@"%@", self.navigationController.tabBarController.viewControllers);
+
+    self.tabBarController.delegate = self;
+    NSLog(@"%@", self.tabBarController.viewControllers);
+
+    MTNotificationsViewController *notificationVC = [[MTNotificationsViewController alloc] init];
+    MTMentorStudentProgressViewController *studentProgressVC = [[MTMentorStudentProgressViewController alloc] init];
+    MTMentorChallengeRoomViewController *challengeVC = [[MTMentorChallengeRoomViewController alloc] init];
+    MTStudentSettingsViewController *settingsVC = [[MTStudentSettingsViewController alloc] init];
+    NSLog(@"%@", self.tabBarController.viewControllers);
+
+//    NSLog(@"%@", self.tabBar);
+    self.tabBarController.viewControllers = @[studentProgressVC, challengeVC, notificationVC, settingsVC];
+    NSLog(@"%@", self.tabBarController.viewControllers);
+
     UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
                                 initWithTitle:@"x"
                                 style:UIBarButtonItemStyleBordered
@@ -60,6 +86,17 @@
 }
 
 
+#pragma mark = UITabBarControllerDelegate delegate methods
+
+- (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController NS_AVAILABLE_IOS(3_0);
+{
+    return YES;
+}
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+}
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -83,6 +120,40 @@
         default:
             break;
     }
+}
+
+
+
+#pragma mark - UITabBarDelegate delegate methods
+
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item // called when a new view is selected by the user (but not programatically)
+{
+    // check
+}
+
+/* called when user shows or dismisses customize sheet. you can use the 'willEnd' to set up what appears underneath.
+ changed is YES if there was some change to which items are visible or which order they appear. If selectedItem is no longer visible,
+ it will be set to nil.
+ */
+
+- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray *)items // called before customize sheet is shown. items is current item list
+{
+    
+}
+
+- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray *)items // called after customize sheet is shown. items is current item list
+{
+    
+}
+
+- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray *)items changed:(BOOL)changed // called before customize sheet is hidden. items is new item list
+{
+    
+}
+
+- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray *)items changed:(BOOL)changed // called after customize sheet is hidden. items is new item list
+{
+    
 }
 
 

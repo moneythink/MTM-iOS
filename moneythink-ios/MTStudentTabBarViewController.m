@@ -41,6 +41,11 @@
     self.navigationItem.title = @"Challenges";
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.parentViewController.navigationItem.title = @"Challenges";
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

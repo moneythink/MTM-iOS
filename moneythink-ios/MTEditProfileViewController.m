@@ -27,6 +27,7 @@
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
+@property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (nonatomic, strong) PFUser *userCurrent;
 
@@ -105,7 +106,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    NSLog(@"size = %f x %f", self.profileImage.frame.size.width, self.profileImage.frame.size.height);
+    self.parentViewController.navigationItem.title = @"Settings";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
@@ -136,6 +137,8 @@
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
     self.oldViewFieldsRect = self.viewFields.frame;
+    self.oldViewFieldsContentSize = self.viewFields.contentSize;
+    
     CGRect fieldsFrame = self.viewFields.frame;
     
     NSDictionary *userInfo = [nsNotification userInfo];
@@ -146,23 +149,22 @@
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
     CGFloat w = fieldsFrame.size.width;
-    CGFloat h = fieldsFrame.size.height - kbTop + 180.0f;
+    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
     CGRect fieldsContentRect = CGRectMake( x, y, w, h);
-    CGRect fieldsFrameRect = CGRectMake( x, y, w, fieldsFrame.size.height - kbSize.height);
     
     fieldsContentRect   = CGRectMake(x, y, w, kbTop + 180.0f);
     
     self.viewFields.contentSize = fieldsContentRect.size;
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 150.0f);
     
-    self.viewFields.frame = fieldsFrameRect;
+    self.viewFields.frame = fieldsFrame;
     
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
 {
     self.viewFields.frame = self.oldViewFieldsRect;
+    self.viewFields.contentSize = self.oldViewFieldsContentSize;
 }
 
 
@@ -345,29 +347,6 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self dismissKeyboard];
     return YES;
-}
-
-
-#pragma mark - UITextInputDelegate methods
-
-- (void)selectionWillChange:(id <UITextInput>)textInput
-{
-    
-}
-
-- (void)selectionDidChange:(id <UITextInput>)textInput
-{
-    
-}
-
-- (void)textWillChange:(id <UITextInput>)textInput
-{
-    
-}
-
-- (void)textDidChange:(id <UITextInput>)textInput
-{
-    
 }
 
 
