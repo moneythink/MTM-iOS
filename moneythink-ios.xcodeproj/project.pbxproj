@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
-		5806A4F1197464E7000B3656 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2F0196F2CC900C176EC /* StoreKit.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
 		580B5AE519820F8A0092AA9C /* app_icon_48.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F7FE197705230042AC2F /* app_icon_48.png */; };
 		580B5AE619820F8A0092AA9C /* app_icon_512.png in Resources */ = {isa = PBXBuildFile; fileRef = 5890F7FF197705230042AC2F /* app_icon_512.png */; };
@@ -170,6 +169,7 @@
 		58B7C2861992DE630039E238 /* verify_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58B7C25C1992DE630039E238 /* verify_active@2x.png */; };
 		58B7C2871992DE630039E238 /* verify_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 58B7C25D1992DE630039E238 /* verify_normal.png */; };
 		58B7C2881992DE630039E238 /* verify_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 58B7C25E1992DE630039E238 /* verify_normal@2x.png */; };
+		58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */; };
 		58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */; };
 		58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */; };
 		58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */; };
@@ -322,7 +322,6 @@
 		5876E2EA196F2CB400C176EC /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		5876E2EC196F2CBC00C176EC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5876E2EE196F2CC200C176EC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		5876E2F0196F2CC900C176EC /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTableViewController.h; sourceTree = "<group>"; };
 		5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewController.m; sourceTree = "<group>"; };
@@ -410,6 +409,8 @@
 		58B7C25C1992DE630039E238 /* verify_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "verify_active@2x.png"; sourceTree = "<group>"; };
 		58B7C25D1992DE630039E238 /* verify_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = verify_normal.png; sourceTree = "<group>"; };
 		58B7C25E1992DE630039E238 /* verify_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "verify_normal@2x.png"; sourceTree = "<group>"; };
+		58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeInfoViewController.h; sourceTree = "<group>"; };
+		58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallengeInfoViewController.m; sourceTree = "<group>"; };
 		58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewController.h; sourceTree = "<group>"; };
 		58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTableViewController.m; sourceTree = "<group>"; };
 		58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewCell.h; sourceTree = "<group>"; };
@@ -435,7 +436,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
-				5806A4F1197464E7000B3656 /* StoreKit.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
 				58B59E81198AF60C001E003D /* Parse.framework in Frameworks */,
@@ -563,6 +563,8 @@
 				58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */,
 				58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */,
 				58509427197C05BD00EDC969 /* MTUserInformationViewController.h */,
+				58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */,
+				58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */,
 				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
 				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
 				5850942B197C060700EDC969 /* MTStudentMainViewController.m */,
@@ -627,7 +629,6 @@
 				5806A4EE1974610A000B3656 /* Social.framework */,
 				5806A4EC197460A9000B3656 /* Twitter.framework */,
 				5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */,
-				5876E2F0196F2CC900C176EC /* StoreKit.framework */,
 				5876E2EE196F2CC200C176EC /* Security.framework */,
 				5876E2EC196F2CBC00C176EC /* QuartzCore.framework */,
 				5876E2EA196F2CB400C176EC /* MobileCoreServices.framework */,
@@ -883,6 +884,14 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = Moneythink;
 				TargetAttributes = {
+					5876E2A4196F2C1F00C176EC = {
+						DevelopmentTeam = 8V7X4CYMJ6;
+						SystemCapabilities = {
+							com.apple.InAppPurchase = {
+								enabled = 0;
+							};
+						};
+					};
 					5876E2C8196F2C1F00C176EC = {
 						TestTargetID = 5876E2A4196F2C1F00C176EC;
 					};
@@ -1076,6 +1085,7 @@
 				58A356DC198168140018FC61 /* MJPopupBackgroundView.m in Sources */,
 				58A3568C1980CD520018FC61 /* MTExploreChallengeViewController.m in Sources */,
 				5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */,
+				58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */,
 				58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,

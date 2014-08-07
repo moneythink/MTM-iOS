@@ -26,11 +26,18 @@
     [super viewWillAppear:animated];
 
     if ([PFUser currentUser]) {
-        if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-            [self performSegueWithIdentifier:@"studentMain" sender:self];
-        } else {
-            [self performSegueWithIdentifier:@"pushMentorNotificationView" sender:self];
-        }
+        PFUser *user = [PFUser currentUser];
+        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
+            if (!error) {
+                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                    [self performSegueWithIdentifier:@"studentMain" sender:self];
+                } else {
+                    [self performSegueWithIdentifier:@"pushMentorNotificationView" sender:self];
+                }
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
     }
 }
 
