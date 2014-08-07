@@ -53,6 +53,9 @@
     }];
 
     NSString *points = [self.student[@"points"] stringValue];
+    if (!points) {
+        points = @"0";
+    }
     self.userPoints.text = [points stringByAppendingString:@" pts"];
     
     self.profileImage.file = self.student[@"profile_picture"];
@@ -139,22 +142,21 @@
     NSInteger row = indexPath.row;
     
     MTStudentProfileTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"studentPosts"];
-    if (cell == nil)
-        {
+    if (cell == nil) {
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
-        }
+    }
     
     cell.rowPost = self.studentPosts[row];
     
     NSDate *dateObject = [cell.rowPost createdAt];
-
+    
     if (dateObject) {
         cell.timeSince.text = [self dateDiffFromDate:dateObject];
     }
     
     PFUser *verifier = cell.rowPost[@"verified_by"];
     cell.verified.on = ![[verifier username] isEqualToString:@""];
-
+    
     // >>>>> Attributed hashtag
     cell.postText.text = cell.rowPost[@"post_text"];
     NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -189,7 +191,9 @@
             cell.commentCount.text = @"0";
         }
     }];
-
+    
+//    [cell setBackgroundColor:[UIColor greenColor]];
+    
     return cell;
 }
 
@@ -199,53 +203,16 @@
 }
 
 
-#pragma mark - UITableViewDelegate methods
-
-//- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-//{
-//    NSString *title = @"";
-//    
-//    return title;
-//}
-
-
-// Variable height support
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    NSInteger section = indexPath.section;
-//    NSInteger row = indexPath.row;
-//    
-//    switch (section) {
-//        case  0:
-//            row = 44.0f;
-//            break;
-//            
-//        default:
-//            row = 60.0f;
-//            break;
-//    }
-//    
-//    return row;
-//}
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 32.0f;
-//}
-
-//- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    return 1.0f;
-//}
-
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 //    PFChallengePost *rowObject = self.studentPosts[indexPath.row];
 //    [self performSegueWithIdentifier:@"pushProfileToPost" sender:rowObject];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0.0f;
 }
 
 

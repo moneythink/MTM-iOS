@@ -41,32 +41,17 @@ static BOOL button1 = NO;
     self.navigationItem.hidesBackButton = YES;
     
     self.delegate = self;
-    
-    
-    
-    
-    
-
     self.tabBarController.delegate = self;
 
-    MTNotificationsViewController *notificationVC = [[MTNotificationsViewController alloc] init];
-    MTMentorStudentProgressViewController *studentProgressVC = [[MTMentorStudentProgressViewController alloc] init];
-    MTMentorChallengeRoomViewController *challengeVC = [[MTMentorChallengeRoomViewController alloc] init];
-    MTStudentSettingsViewController *settingsVC = [[MTStudentSettingsViewController alloc] init];
-    NSLog(@"%@", self.tabBarController.viewControllers);
-
-
-    self.tabBarController.viewControllers = @[studentProgressVC, challengeVC, notificationVC, settingsVC];
-
-    if (button1) {
-        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-                                    initWithTitle:@"x"
-                                    style:UIBarButtonItemStyleBordered
-                                    target:self
-                                    action:@selector(tappedButtonItem1:)];
-        
-        self.navigationItem.rightBarButtonItem = button1;
-    }
+//    if (button1) {
+//        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
+//                                    initWithTitle:@"x"
+//                                    style:UIBarButtonItemStyleBordered
+//                                    target:self
+//                                    action:@selector(tappedButtonItem1:)];
+//        
+//        self.navigationItem.rightBarButtonItem = button1;
+//    }
 }
 
 - (void)didReceiveMemoryWarning

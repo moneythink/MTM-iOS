@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTActivationTableViewCell.h"
 
 @interface MTScheduleTableViewController : PFQueryTableViewController
 

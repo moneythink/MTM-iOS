@@ -29,6 +29,7 @@
 		580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */; };
 		581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */; };
 		5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */; };
+		5848CC781993E0B7005F95C4 /* MTActivationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
 		5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942B197C060700EDC969 /* MTStudentMainViewController.m */; };
@@ -224,6 +225,8 @@
 		581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewCell.m; sourceTree = "<group>"; };
 		5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTabBarViewController.h; sourceTree = "<group>"; };
 		5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTabBarViewController.m; sourceTree = "<group>"; };
+		5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTActivationTableViewCell.h; sourceTree = "<group>"; };
+		5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTActivationTableViewCell.m; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
 		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
@@ -623,6 +626,8 @@
 				58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */,
 				58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */,
 				58CBD0BC19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m */,
+				5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */,
+				5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */,
 				5876E2AE196F2C1F00C176EC /* moneythink-ios */,
 				5876E2D0196F2C1F00C176EC /* moneythink-iosTests */,
 				5876E2A7196F2C1F00C176EC /* Frameworks */,
@@ -1097,6 +1102,7 @@
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
 				58CBD0BD19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m in Sources */,
+				5848CC781993E0B7005F95C4 /* MTActivationTableViewCell.m in Sources */,
 				58CBD0BA199157230056BE8F /* MTScheduleTableViewController.m in Sources */,
 				5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,

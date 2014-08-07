@@ -69,75 +69,65 @@
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
     
-    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName];
+    PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
     if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
     
-    [query orderByAscending:@"challenge_number"];
+    [queryActivations orderByAscending:@"challenge_number"];
     
-    return query;
+    return queryActivations;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 
 // Override to customize the look of a cell representing an object. The default is to display
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    static NSString *CellIdentifier = @"postCell";
+    NSString *CellIdentifier = @"activationCell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    MTActivationTableViewCell *cell = (MTActivationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[MTActivationTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
     PFScheduledActivations *activation = (PFScheduledActivations *)object;
-    NSString *challengeNumber = activation[@"challenge_number"];
+    id challengeNumber = activation[@"challenge_number"];
     
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:@"Challenges" predicate:challengePredicate];
     
-    [challengeQuery orderByAscending:@"challenge_number"];
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            NSString *cellText = [NSString stringWithFormat:@"%@) %@", challenge[@"challenge_number"], challenge[@"title"]];
-            cell.textLabel.text =cellText ;
+            cell.challengeNumber.text = [challengeNumber stringValue];
+            cell.challengeTitle.text = challenge[@"title"];
+            NSDate *activationDate = activation[@"activation_date"];
+            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+            [dateFormat setDateStyle:NSDateFormatterMediumStyle];
+            [dateFormat setTimeStyle:NSDateFormatterNoStyle];
+            cell.activationDate.text = [dateFormat stringFromDate:activationDate];
+        } else {
+            NSLog(@"error - %@", error);
         }
     }];
+    
+    BOOL activated = [activation[@"activated"] boolValue];
+    
+    if (activated) {
+        [cell setBackgroundColor:[UIColor primaryGreen]];
+    } else {
+        [cell setBackgroundColor:[UIColor white]];
+    }
 
     return cell;
 }
-
-
-/*
- // Override if you need to change the ordering of objects in the table.
- - (PFObject *)objectAtIndex:(NSIndexPath *)indexPath {
- return [objects objectAtIndex:indexPath.row];
- }
- */
-
-// Override to customize the look of the cell that allows the user to load the next page of objects.
-// The default implementation is a UITableViewCellStyleDefault cell with simple labels.
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
-//    static NSString *CellIdentifier = @"NextPage";
-//
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-//    }
-//
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//
-//    return cell;
-//}
 
 
 #pragma mark - Table view delegate
@@ -146,9 +136,7 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
-    PFObject *rowObject = self.objects[indexPath.row];
-    
-    [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 
