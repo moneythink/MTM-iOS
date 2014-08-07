@@ -8,6 +8,11 @@
 
 #import "MTStudentTabBarViewController.h"
 
+#ifdef DEBUG
+static BOOL button1 = YES;
+#else
+static BOOL button1 = NO;
+#endif
 @interface MTStudentTabBarViewController ()
 
 @end
@@ -30,20 +35,23 @@
     
     self.navigationItem.hidesBackButton = YES;
 
-    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"x"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem1:)];
-    
-    self.navigationItem.rightBarButtonItem = button1;
+    self.delegate = self;
 
-    self.navigationItem.title = @"Challenges";
+    if (button1) {
+        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
+                                    initWithTitle:@"x"
+                                    style:UIBarButtonItemStyleBordered
+                                    target:self
+                                    action:@selector(tappedButtonItem1:)];
+        
+        self.navigationItem.rightBarButtonItem = button1;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.parentViewController.navigationItem.title = @"Challenges";
+    self.navigationItem.title = @"Challenges";
+//    self.parentViewController.navigationItem.title = @"Challenges";
 }
 
 - (void)didReceiveMemoryWarning

@@ -12,6 +12,12 @@
 #import "MTMentorChallengeRoomViewController.h"
 #import "MTStudentSettingsViewController.h"
 
+#ifdef DEBUG
+static BOOL button1 = YES;
+#else
+static BOOL button1 = NO;
+#endif
+
 @interface MTMentorTabBarViewController ()
 
 @end
@@ -34,17 +40,14 @@
     
     self.navigationItem.hidesBackButton = YES;
     
-    
     self.delegate = self;
     
     
     
     
     
-    NSLog(@"%@", self.navigationController.tabBarController.viewControllers);
 
     self.tabBarController.delegate = self;
-    NSLog(@"%@", self.tabBarController.viewControllers);
 
     MTNotificationsViewController *notificationVC = [[MTNotificationsViewController alloc] init];
     MTMentorStudentProgressViewController *studentProgressVC = [[MTMentorStudentProgressViewController alloc] init];
@@ -52,17 +55,18 @@
     MTStudentSettingsViewController *settingsVC = [[MTStudentSettingsViewController alloc] init];
     NSLog(@"%@", self.tabBarController.viewControllers);
 
-//    NSLog(@"%@", self.tabBar);
+
     self.tabBarController.viewControllers = @[studentProgressVC, challengeVC, notificationVC, settingsVC];
-    NSLog(@"%@", self.tabBarController.viewControllers);
 
-    UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-                                initWithTitle:@"x"
-                                style:UIBarButtonItemStyleBordered
-                                target:self
-                                action:@selector(tappedButtonItem1:)];
-
-    self.navigationItem.rightBarButtonItem = button1;
+    if (button1) {
+        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
+                                    initWithTitle:@"x"
+                                    style:UIBarButtonItemStyleBordered
+                                    target:self
+                                    action:@selector(tappedButtonItem1:)];
+        
+        self.navigationItem.rightBarButtonItem = button1;
+    }
 }
 
 - (void)didReceiveMemoryWarning

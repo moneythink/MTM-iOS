@@ -69,10 +69,11 @@
 
     [PFCloud callFunctionInBackground:@"setOtherStudentData" withParameters:resumeDict block:^(id object, NSError *error) {
         if (!error) {
+            
         } else {
             self.resumeCheckbox.isChecked = !self.resumeCheckbox.isChecked;
             [self setNeedsLayout];
-            NSLog(@">>>>> error - %@", error);
+            NSLog(@"error - %@", error);
         }
     }];
 }
@@ -86,10 +87,11 @@
     
     [PFCloud callFunctionInBackground:@"setOtherStudentData" withParameters:bankDict block:^(id object, NSError *error) {
         if (!error) {
+            
         } else {
             self.resumeCheckbox.isChecked = !self.resumeCheckbox.isChecked;
             [self setNeedsLayout];
-            NSLog(@">>>>> error - %@", error);
+            NSLog(@"error - %@", error);
         }
     }];
 }

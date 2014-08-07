@@ -95,7 +95,7 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
-    NSUInteger index = ((MTChallengesContentViewController*) viewController).pageIndex;
+    NSUInteger index = ((MTChallengesContentViewController *)viewController).pageIndex;
     
     if (index == NSNotFound) {
         return nil;
@@ -119,8 +119,6 @@
 }
 
 
-
-/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -129,7 +127,6 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
 }
-*/
 
 - (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
 {

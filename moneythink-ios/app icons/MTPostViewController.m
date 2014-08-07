@@ -95,9 +95,6 @@
     NSRange rangeAll = NSMakeRange(0, self.postText.text.length);
     
     [hashtags enumerateMatchesInString:self.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSLog(@"self.postText.text - %@", self.postText.text);
-        NSLog(@"result - %@", result);
-        NSLog(@"hashtag - %@", [self.postText.text substringWithRange:result.range]);
         
         NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:self.postText.text];
         [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
@@ -123,7 +120,11 @@
             UIGraphicsEndImageContext();
         }
     }];
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.title = @"Post";
 }
 
 - (void)didReceiveMemoryWarning

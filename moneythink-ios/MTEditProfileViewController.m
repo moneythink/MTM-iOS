@@ -125,7 +125,6 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     if (self.profileImage.image) {
-        NSLog(@"got image");
     }
 }
 
@@ -205,7 +204,7 @@
     
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
-            NSLog(@"no error");
+
         } else {
             NSLog(@"error - %@", error);
         }

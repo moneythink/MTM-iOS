@@ -24,14 +24,12 @@
 - (id)init
 {
     self = [super init];
-//    NSLog(@"MTMentorStudentProgressViewController init");
     
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-//    NSLog(@"MTMentorStudentProgressViewController initWithCoder");
     self = [super initWithCoder:aDecoder];
     if (self) {
         // Custom initialization
@@ -77,15 +75,12 @@
 
 - (void)cloudCodeSchedule:(id)sender
 {
-    NSLog(@"check point - %@", self.autoReleaseSwitch.on ? @"on" : @"off");
-    
     if (self.autoReleaseSwitch.on) {
         PFUser *user = [PFUser currentUser];
         NSString *userID = [user objectId];
         
         [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
             if (!error) {
-                NSLog(@"not error");
                 
                 [self.tableView reloadData];
             } else {
@@ -114,7 +109,6 @@
             
             [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
                 if (!error) {
-                    NSLog(@"not error");
                     
                     [self.tableView reloadData];
                 } else {
@@ -185,7 +179,7 @@
                 if (!error) {
                     self.autoReleaseSwitch.on = number > 0;
                 } else {
-                    NSLog(@"check point error - %@", error);
+                    NSLog(@"error - %@", error);
                 }
             }];
             

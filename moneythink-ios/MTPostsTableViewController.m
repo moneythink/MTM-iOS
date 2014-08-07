@@ -49,8 +49,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-
+    self.title = @"Explore";
 }
+
 
 - (void)didReceiveMemoryWarning
 {

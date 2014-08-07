@@ -17,7 +17,6 @@
 - (id)init
 {
     self = [super init];
-//    NSLog(@"MTMentorChallengeRoomViewController init");
     
     return self;
 }
@@ -25,7 +24,7 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-//    NSLog(@"MTMentorChallengeRoomViewController initWithNibName");
+
     if (self) {
         // Custom initialization
     }

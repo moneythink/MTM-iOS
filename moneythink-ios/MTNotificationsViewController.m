@@ -21,17 +21,14 @@
 - (id)init
 {
     self = [super init];
-//    NSLog(@"MTNotificationsViewController init");
 
     return self;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-//    NSLog(@"MTNotificationsViewController initWithCoder");
     self = [super initWithCoder:aDecoder];
     if (self) {
-//        NSLog(@">>>>>> MTNotificationsViewController self");
         // Custom the table
         
         // The className to query on
@@ -47,7 +44,7 @@
         self.pullToRefreshEnabled = YES;
         
     } else {
-//        NSLog(@"no self");
+
     }
     return self;
 }
@@ -116,9 +113,6 @@
     
     PFNotifications *notification = (PFNotifications *)object;
     
-    NSLog(@"notification - %@", notification);
-    NSLog(@"notification[@\"post_liked\"] - %@", notification[@"post_liked"]);
-
     if (notification[@"post_liked"]) {
         PFChallengePost *post = notification[@"post_liked"];
         

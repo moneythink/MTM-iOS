@@ -33,7 +33,7 @@
         self.textKey = @"post_text";
         
         // The title for this table in the Navigation Controller.
-        self.title = @"Explore";
+        self.title = @"My Class";
         
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
@@ -49,8 +49,9 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    
+    self.title = @"My Class";
 }
+
 
 - (void)didReceiveMemoryWarning
 {

@@ -62,8 +62,6 @@
     
     [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
-            NSLog(@"not error");
-            
             CGRect frame = self.profileImage.frame;
             
             if (image.size.width > frame.size.width) {
@@ -146,49 +144,9 @@
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
         }
     
-    /*
-     @property (strong, nonatomic) IBOutlet PFImageView *postProfileImage;
-     @property (strong, nonatomic) IBOutlet UILabel *timeSince;
-     @property (strong, nonatomic) IBOutlet UILabel *postText;
-     @property (strong, nonatomic) IBOutlet UISwitch *verified;
-     @property (strong, nonatomic) IBOutlet UIImageView *comment;
-     @property (strong, nonatomic) IBOutlet UILabel *commentCount;
-     @property (strong, nonatomic) IBOutlet UIImageView *likes;
-     @property (strong, nonatomic) IBOutlet UILabel *likeCount;
-     */
-    
     cell.rowPost = self.studentPosts[row];
     
-//    PFFile *postImageFile = rowPost[@"image"];
-//    cell.postProfileImage.file = postImageFile;
-//    [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
-//        if (!error) {
-//            NSLog(@"not error");
-//            
-//            CGRect frame = cell.postProfileImage.frame;
-//            
-//            if (image.size.width > frame.size.width) {
-//                CGFloat scale = frame.size.width / image.size.width;
-//                CGFloat heightNew = scale * image.size.height;
-//                CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-//                UIGraphicsBeginImageContext(sizeNew);
-//                [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-//                image = UIGraphicsGetImageFromCurrentImageContext();
-//                UIGraphicsEndImageContext();
-//                
-//                self.profileImage.image = image;
-//            }
-//        } else {
-//            NSLog(@"error - %@", error);
-//        }
-//    }];
-    
     NSDate *dateObject = [cell.rowPost createdAt];
-//    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-//    [dateFormatter setDateStyle:NSDateFormatterMediumStyle];
-//    [dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-//    NSString *dateString = [dateFormatter stringFromDate:dateObject];
-//    dateString = [dateObject description];
 
     if (dateObject) {
         cell.timeSince.text = [self dateDiffFromDate:dateObject];
@@ -208,8 +166,10 @@
         
         cell.postText.attributedText = hashtag;
     }];
+    
     // Attributed hashtag
-
+    
+    
     id likesCount = cell.rowPost[@"likes"];
     if (likesCount > 0) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
@@ -224,7 +184,6 @@
     [findComments whereKey:@"challenge_post" equalTo:cell.rowPost];
     [findComments countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {
-            NSLog(@"check point - %d", number);
             cell.commentCount.text = [NSString stringWithFormat:@"%d", number];
         } else {
             cell.commentCount.text = @"0";

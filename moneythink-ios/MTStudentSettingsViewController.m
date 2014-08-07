@@ -21,7 +21,6 @@
 - (id)init
 {
     self = [super init];
-//    NSLog(@"MTStudentSettingsViewController init");
 
     return self;
 }
@@ -29,12 +28,11 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-//    NSLog(@"MTStudentSettingsViewController initWithCoder");
+
     if (self) {
-//        NSLog(@">>>>>> MTStudentSettingsViewController self");
         // Custom initialization
     } else {
-//        NSLog(@">>>>>> MTStudentSettingsViewController no self");
+
     }
     return self;
 }

@@ -389,7 +389,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2841" y="-2847"/>
+            <point key="canvasLocation" x="-2996" y="-2967"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="Wi0-Zj-jXc">
@@ -445,7 +445,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OzH-ei-JDI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2322" y="-2863"/>
+            <point key="canvasLocation" x="-2518" y="-2975"/>
         </scene>
         <!--Mentor Student Progress View Controller - Students-->
         <scene sceneID="K0J-4Z-9Av">
@@ -539,7 +539,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gq4-9H-F8a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2337" y="-6092"/>
+            <point key="canvasLocation" x="-2399" y="-5788"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="yoB-rC-7um">
@@ -557,7 +557,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fhK-p1-nsa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="402" y="-5591"/>
+            <point key="canvasLocation" x="886" y="-5755"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="a5J-fC-Fv1">
@@ -575,7 +575,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SCT-QO-Ofk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2050" y="-5191"/>
+            <point key="canvasLocation" x="1338" y="-5755"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="4fR-CT-wwS">
@@ -611,7 +611,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kGt-Vq-IiW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1816" y="-4059"/>
+            <point key="canvasLocation" x="1760" y="-4763"/>
         </scene>
         <!--Notifications View Controller - Notifications-->
         <scene sceneID="cqr-2Q-hPS">
@@ -623,7 +623,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="5sp-gU-ufP">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5sp-gU-ufP" id="6Sh-RA-kFL">
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
@@ -643,7 +643,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kFo-fi-ROC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-547" y="-2011"/>
+            <point key="canvasLocation" x="-897" y="-1691"/>
         </scene>
         <!--View Controller - Item-->
         <scene sceneID="Hsr-ZW-FDP">
@@ -662,7 +662,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KON-p3-1le" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3452" y="-232"/>
+            <point key="canvasLocation" x="-4516" y="-1632"/>
         </scene>
         <!--Student Settings View Controller - Settings-->
         <scene sceneID="vy4-ZF-NeK">
@@ -696,11 +696,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <navigationItem key="navigationItem" id="33G-JM-pZQ"/>
                     <connections>
                         <outlet property="view" destination="Bvb-s4-8M0" id="jEl-zY-myo"/>
+                        <segue destination="IlW-MR-Ygi" kind="push" id="EHr-Gc-3Tg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfF-2e-MR6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1750" y="-2806"/>
+            <point key="canvasLocation" x="-2169" y="-1119"/>
         </scene>
         <!--Comment View Controller-->
         <scene sceneID="8dt-sO-pvz">
@@ -749,7 +750,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y1L-MY-kNv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Phr-lg-Bkk" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1638" y="-2786"/>
+            <point key="canvasLocation" x="1430" y="-3282"/>
         </scene>
         <!--Peer Profile View Controller-->
         <scene sceneID="7Dh-8W-twB">
@@ -775,7 +776,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="THA-3P-37J" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-464" y="-26"/>
+            <point key="canvasLocation" x="320" y="-1574"/>
         </scene>
         <!--Student Filter View Controller-->
         <scene sceneID="xq7-jJ-jm7">
@@ -801,7 +802,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c6e-QX-LZn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-863" y="-26"/>
+            <point key="canvasLocation" x="-79" y="-1574"/>
         </scene>
         <!--Edit Profile View Controller-->
         <scene sceneID="7Gj-Vh-HvZ">
@@ -1031,7 +1032,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="cd1-HY-ACM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1585" y="-518"/>
+            <point key="canvasLocation" x="-1638" y="-1918"/>
         </scene>
         <!--Student Main View Controller - studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -1178,12 +1179,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gx6-ze-5rc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="UyF-QV-Aku" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2322" y="-488"/>
+            <point key="canvasLocation" x="-2169" y="-1918"/>
         </scene>
         <!--Mentor Notification View Controller - Notifications-->
         <scene sceneID="jHP-wv-hx1">
             <objects>
-                <tableViewController storyboardIdentifier="mentorNotificaitonView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KqN-Fb-evW" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="mentorNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="KqN-Fb-evW" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="ZzX-eH-N1D">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1206,11 +1207,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <tabBarItem key="tabBarItem" title="Notifications" image="notifications_active.png" id="LBf-Ek-H3T"/>
                     <connections>
                         <outlet property="notificationsTableView" destination="ZzX-eH-N1D" id="jIL-xb-Hlc"/>
+                        <segue destination="L15-4o-h8K" kind="push" identifier="pushNotificationToPosts" id="aJx-FA-gFh"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e1L-JL-IwG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1317" y="-4640"/>
+            <point key="canvasLocation" x="-1609" y="-4616"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="jm2-Me-Us7">
@@ -1263,7 +1265,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rf-mw-xSY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1963" y="-5106"/>
+            <point key="canvasLocation" x="-2399" y="-5042"/>
         </scene>
         <!--Mentor Student Profile View Controller-->
         <scene sceneID="Zj4-Oa-28M">
@@ -1287,7 +1289,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </constraints>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studentPosts" rowHeight="110" id="Mxf-OF-CNF" customClass="MTStudentProfileTableViewCell">
-                                        <rect key="frame" x="0.0" y="65" width="320" height="110"/>
+                                        <rect key="frame" x="0.0" y="45" width="320" height="110"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mxf-OF-CNF" id="c7y-nf-chN">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="109"/>
@@ -1451,7 +1453,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" customClass="PFImageView">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" customClass="PFImageView">
                                 <rect key="frame" x="115" y="84" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -1459,7 +1461,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <constraint firstAttribute="height" constant="90" id="wmg-An-Twi"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_money.png" translatesAutoresizingMaskIntoConstraints="NO" id="RUv-pg-BkD">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="icon_money.png" translatesAutoresizingMaskIntoConstraints="NO" id="RUv-pg-BkD">
                                 <rect key="frame" x="38" y="128" width="24" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -1467,7 +1469,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <constraint firstAttribute="height" constant="46" id="vgi-dC-7s6"/>
                                 </constraints>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_pig.png" translatesAutoresizingMaskIntoConstraints="NO" id="f83-52-pWz">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="icon_pig.png" translatesAutoresizingMaskIntoConstraints="NO" id="f83-52-pWz">
                                 <rect key="frame" x="243" y="135" width="54" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -1642,7 +1644,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WJj-xZ-xT9" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="a95-sQ-YwX" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2841" y="-3604"/>
+            <point key="canvasLocation" x="-2996" y="-3684"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Rjt-fl-o9h">
@@ -1671,13 +1673,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m9Q-bI-JMX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-997" y="-2648"/>
+            <point key="canvasLocation" x="-1565" y="-2975"/>
         </scene>
         <!--Challenges Content View Controller - Item-->
         <scene sceneID="3Fg-lF-jK9">
@@ -1832,7 +1834,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-542" y="-2770"/>
+            <point key="canvasLocation" x="-816" y="-2935"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="P9H-Sj-CNa">
@@ -1844,7 +1846,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flE-gx-sz9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-951" y="-3398"/>
+            <point key="canvasLocation" x="-1515" y="-2935"/>
         </scene>
         <!--Post View Controller-->
         <scene sceneID="2aa-TW-Svi">
@@ -1997,7 +1999,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ltS-05-clY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1039" y="-2770"/>
+            <point key="canvasLocation" x="902" y="-2935"/>
         </scene>
         <!--Student Tab Bar View Controller-->
         <scene sceneID="PIP-Ah-Zib">
@@ -2016,14 +2018,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <connections>
                         <segue destination="Hgh-h9-1IU" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="pjC-PB-9La"/>
                         <segue destination="84l-Pq-4rd" kind="relationship" relationship="viewControllers" id="pPi-2X-6Fi"/>
-                        <segue destination="nhy-BA-4w4" kind="relationship" relationship="viewControllers" id="xrU-8z-EkZ"/>
-                        <segue destination="IkE-tB-Q2X" kind="relationship" relationship="viewControllers" id="FeW-ml-nXJ"/>
+                        <segue destination="IkE-tB-Q2X" kind="relationship" relationship="viewControllers" id="feq-Fn-Zqv"/>
+                        <segue destination="nhy-BA-4w4" kind="relationship" relationship="viewControllers" id="TkR-Qk-kAl"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wtg-fA-sCb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Hgh-h9-1IU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-3028" y="-1176"/>
+            <point key="canvasLocation" x="-3035" y="-1918"/>
         </scene>
         <!--Posts Table View Controller - Explore-->
         <scene sceneID="nMX-YS-0zK">
@@ -2035,7 +2037,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCell" rowHeight="396" id="XEr-HH-yq3" customClass="MTPostsTableViewCell">
-                                <rect key="frame" x="0.0" y="86" width="320" height="396"/>
+                                <rect key="frame" x="0.0" y="66" width="320" height="396"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XEr-HH-yq3" id="zhZ-pO-WUS">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="395"/>
@@ -2124,7 +2126,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LKn-xU-EXa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="559" y="-2886"/>
+            <point key="canvasLocation" x="353" y="-3282"/>
         </scene>
         <!--My Class Table View Controller - My Class-->
         <scene sceneID="HKd-jm-JVR">
@@ -2136,7 +2138,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCell" rowHeight="396" id="hmU-gH-1l3" customClass="MTPostsTableViewCell">
-                                <rect key="frame" x="0.0" y="86" width="320" height="396"/>
+                                <rect key="frame" x="0.0" y="66" width="320" height="396"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hmU-gH-1l3" id="onZ-tg-5rn">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="395"/>
@@ -2214,14 +2216,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <outlet property="delegate" destination="wSc-Em-WQ4" id="VoR-Wh-Bmh"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="My Class" image="challenges_active.png" id="vNk-xp-fw5"/>
+                    <tabBarItem key="tabBarItem" title="My Class" image="students_normal.png" id="vNk-xp-fw5"/>
                     <connections>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MnK-Is-ORV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="526" y="-2398"/>
+            <point key="canvasLocation" x="353" y="-2523"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="TFU-up-0E5">
@@ -2252,7 +2254,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B8n-lo-hrM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1383" y="-4064"/>
+            <point key="canvasLocation" x="1327" y="-4768"/>
         </scene>
         <!--Challenge Posts View Controller-->
         <scene sceneID="AtT-Jo-ceu">
@@ -2358,7 +2360,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7op-Wf-nw5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="903" y="-4041"/>
+            <point key="canvasLocation" x="847" y="-4745"/>
         </scene>
         <!--Posts Tab Bar View Controller-->
         <scene sceneID="5lu-5w-Kd3">
@@ -2380,7 +2382,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gVF-AH-qYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-43" y="-2770"/>
+            <point key="canvasLocation" x="-317" y="-2935"/>
         </scene>
         <!--Mentor Tab Bar View Controller-->
         <scene sceneID="twS-aw-QAE">
@@ -2397,8 +2399,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <segue destination="wK2-2Y-kG3" kind="unwind" identifier="unwindToSignUpLogin" unwindAction="unwindToSignUpLogin:" id="S8O-YA-oKD"/>
                         <segue destination="WcM-gU-a8O" kind="relationship" relationship="viewControllers" id="EVq-0I-RSq"/>
                         <segue destination="XeE-2P-Kwx" kind="relationship" relationship="viewControllers" id="dPN-Mg-VSg"/>
-                        <segue destination="nhy-BA-4w4" kind="relationship" relationship="viewControllers" id="FbW-jd-ZzM"/>
-                        <segue destination="IkE-tB-Q2X" kind="relationship" relationship="viewControllers" id="wlN-ag-dhc"/>
+                        <segue destination="KqN-Fb-evW" kind="relationship" relationship="viewControllers" id="b74-vW-HI6"/>
+                        <segue destination="nX0-MG-KCI" kind="relationship" relationship="viewControllers" id="gch-OI-C2h"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5R0-hv-OdN" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2409,7 +2411,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <!--Edit Profile View Controller - SETTINGS-->
         <scene sceneID="6au-DA-lxc">
             <objects>
-                <viewController storyboardIdentifier="editProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fZK-Ej-toB" customClass="MTEditProfileViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="editMentorProfile" useStoryboardIdentifierAsRestorationIdentifier="YES" id="fZK-Ej-toB" customClass="MTEditProfileViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="s3E-hl-Afr"/>
                         <viewControllerLayoutGuide type="bottom" id="6Nb-zG-nFN"/>
@@ -2528,7 +2530,45 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6eW-GY-8Fb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-569" y="-5351"/>
+            <point key="canvasLocation" x="-1515" y="-3684"/>
+        </scene>
+        <!--Student Settings View Controller - Settings-->
+        <scene sceneID="TZW-hV-z9p">
+            <objects>
+                <viewController storyboardIdentifier="mentorSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nX0-MG-KCI" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Zq9-8r-dYi"/>
+                        <viewControllerLayoutGuide type="bottom" id="eRv-R0-dKq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RyN-7q-12f">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="w4W-Dv-kLM">
+                                <rect key="frame" x="0.0" y="20" width="320" height="528"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="naO-Zd-8uf"/>
+                                </constraints>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="nX0-MG-KCI" id="cTc-Df-iRG"/>
+                                    <outlet property="delegate" destination="nX0-MG-KCI" id="MMP-lw-Xc2"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Settings" image="settings_active.png" id="b38-k4-Sf8"/>
+                    <navigationItem key="navigationItem" id="pFw-7r-Kbc"/>
+                    <connections>
+                        <outlet property="view" destination="w4W-Dv-kLM" id="2kc-jZ-Q22"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-bg-8xU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2073" y="-3679"/>
         </scene>
     </scenes>
     <resources>
@@ -2553,11 +2593,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
     <inferredMetricsTieBreakers>
         <segue reference="Fpc-xj-HcE"/>
         <segue reference="qYv-0w-I0f"/>
-        <segue reference="FeW-ml-nXJ"/>
-        <segue reference="fM9-bL-F9m"/>
-        <segue reference="0TQ-j3-ME3"/>
-        <segue reference="FbW-jd-ZzM"/>
-        <segue reference="xIc-fr-roR"/>
+        <segue reference="MZw-0r-VG2"/>
+        <segue reference="EHr-Gc-3Tg"/>
+        <segue reference="jcg-as-XMz"/>
+        <segue reference="KRd-TC-kg7"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="M2J-gL-70e"/>
     </inferredMetricsTieBreakers>
