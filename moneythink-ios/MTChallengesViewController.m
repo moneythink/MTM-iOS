@@ -23,6 +23,15 @@
     return self;
 }
 
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        // Custom initialization
+    }
+    return self;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -30,20 +39,44 @@
     
     PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
     
-    self.challenges = [allChallenges findObjects];
-    
+    if (YES) {
+        [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                self.challenges = objects;
+                
+                // Create page view controller
+                self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                self.pageViewController.dataSource = self;
+                
+                MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+                
+                NSArray *viewControllers = @[startingViewController];
+                
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                
+                [self addChildViewController:_pageViewController];
+                [self.view addSubview:_pageViewController.view];
+                [self.pageViewController didMoveToParentViewController:self];
+            }
+        }];
+    } else {
+        self.challenges = [allChallenges findObjects];
+        
         // Create page view controller
-    self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-    self.pageViewController.dataSource = self;
+        self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+        self.pageViewController.dataSource = self;
+        
+        MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+        NSArray *viewControllers = @[startingViewController];
+        
+        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+        
+        [self addChildViewController:_pageViewController];
+        [self.view addSubview:_pageViewController.view];
+        [self.pageViewController didMoveToParentViewController:self];
+    }
     
-    MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-    NSArray *viewControllers = @[startingViewController];
     
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    
-    [self addChildViewController:_pageViewController];
-    [self.view addSubview:_pageViewController.view];
-    [self.pageViewController didMoveToParentViewController:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -58,22 +91,34 @@
         return nil;
     }
     
-        // Create a new view controller and pass suitable data.
+    // Create a new view controller and pass suitable data.
+    BOOL mentor = [[PFUser currentUser][@"type"] isEqualToString:@"student"];
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
-
     
-    challengeContentViewController.challengeStateText = @"OPEN CHALLENGE";
+    PFChallenges *challenge = self.challenges[index];
+    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
+    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
     
-    challengeContentViewController.challengeTitleText = [self.challenges[index] valueForUndefinedKey:@"title"];
+    //        [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+    //            if (!error) {
+    //                challengeContentViewController.challengeStateText = number > 0 ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+    //                NSLog(@"state - %@", challengeContentViewController.challengeStateText);
+    //                [challengeContentViewController.view setNeedsDisplay];
+    //            } else {
+    //                NSLog(@"error - %@", error);
+    //            }
+    //        }];
     
-    challengeContentViewController.challengeNumberText = [[self.challenges[index] valueForUndefinedKey:@"challenge_number"] stringValue];
+    NSInteger count = [queryActivated countObjects];
+    challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
     
-    challengeContentViewController.challengeDescriptionText = [self.challenges[index] valueForUndefinedKey:@"description"];
-    
-    challengeContentViewController.challengePointsText= [[self.challenges[index] valueForUndefinedKey:@"max_points"] stringValue];
-    
+    challengeContentViewController.challengeTitleText = challenge[@"title"];
+    challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
+    challengeContentViewController.challengeDescriptionText = challenge[@"description"];
+    challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     
     challengeContentViewController.pageIndex = index;
+    challengeContentViewController.challenge = challenge;
     
     return challengeContentViewController;
 }
@@ -130,7 +175,7 @@
 
 - (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
 {
-
+    
 }
 
 @end

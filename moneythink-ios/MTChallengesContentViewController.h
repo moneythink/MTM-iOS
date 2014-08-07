@@ -10,6 +10,8 @@
 
 @interface MTChallengesContentViewController : UIViewController <UIActionSheetDelegate, UITabBarControllerDelegate, UITabBarDelegate>
 
+@property (nonatomic, strong) PFChallenges *challenge;
+
 @property (nonatomic) NSUInteger pageIndex;
 
 @property (nonatomic, strong) NSString *challengeStateText;

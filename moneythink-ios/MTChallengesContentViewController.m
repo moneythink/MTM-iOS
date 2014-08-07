@@ -87,6 +87,7 @@
     MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)destinationVC;
     
     destination.challengeNumber = self.challengeNumberText;
+    destination.challenge = self.challenge;
 }
 
 #pragma mark - UITabBarDelegate methods
@@ -95,8 +96,6 @@
 {
     
 }
-
-#pragma mark - UITabBarControllerDelegate methods
 
 
 

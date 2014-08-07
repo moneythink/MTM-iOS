@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTPostsTabBarViewController.h"
 
 @interface MTMentorChallengeInfoViewController : UIViewController
 

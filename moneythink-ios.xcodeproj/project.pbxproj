@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5802EA771993752B00CF5F32 /* bg_progress_green1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */; };
+		5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */; };
+		5802EA791993752B00CF5F32 /* bg_progress_green3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA701993752B00CF5F32 /* bg_progress_green3.png */; };
+		5802EA7A1993752B00CF5F32 /* bg_progress_orange1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA711993752B00CF5F32 /* bg_progress_orange1.png */; };
+		5802EA7B1993752B00CF5F32 /* bg_progress_orange2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA721993752B00CF5F32 /* bg_progress_orange2.png */; };
+		5802EA7C1993752B00CF5F32 /* bg_progress_orange3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA731993752B00CF5F32 /* bg_progress_orange3.png */; };
+		5802EA7D1993752B00CF5F32 /* bg_progress_white1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA741993752B00CF5F32 /* bg_progress_white1.png */; };
+		5802EA7E1993752B00CF5F32 /* bg_progress_white2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA751993752B00CF5F32 /* bg_progress_white2.png */; };
+		5802EA7F1993752B00CF5F32 /* bg_progress_white3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA761993752B00CF5F32 /* bg_progress_white3.png */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -191,6 +200,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green1.png; sourceTree = "<group>"; };
+		5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green2.png; sourceTree = "<group>"; };
+		5802EA701993752B00CF5F32 /* bg_progress_green3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green3.png; sourceTree = "<group>"; };
+		5802EA711993752B00CF5F32 /* bg_progress_orange1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_orange1.png; sourceTree = "<group>"; };
+		5802EA721993752B00CF5F32 /* bg_progress_orange2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_orange2.png; sourceTree = "<group>"; };
+		5802EA731993752B00CF5F32 /* bg_progress_orange3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_orange3.png; sourceTree = "<group>"; };
+		5802EA741993752B00CF5F32 /* bg_progress_white1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_white1.png; sourceTree = "<group>"; };
+		5802EA751993752B00CF5F32 /* bg_progress_white2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_white2.png; sourceTree = "<group>"; };
+		5802EA761993752B00CF5F32 /* bg_progress_white3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_white3.png; sourceTree = "<group>"; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -790,6 +808,15 @@
 		58BE9A13198EDF210035A190 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */,
+				5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */,
+				5802EA701993752B00CF5F32 /* bg_progress_green3.png */,
+				5802EA711993752B00CF5F32 /* bg_progress_orange1.png */,
+				5802EA721993752B00CF5F32 /* bg_progress_orange2.png */,
+				5802EA731993752B00CF5F32 /* bg_progress_orange3.png */,
+				5802EA741993752B00CF5F32 /* bg_progress_white1.png */,
+				5802EA751993752B00CF5F32 /* bg_progress_white2.png */,
+				5802EA761993752B00CF5F32 /* bg_progress_white3.png */,
 				58B7C2351992DE630039E238 /* challenges_active.png */,
 				58B7C2361992DE630039E238 /* challenges_active@2x.png */,
 				58B7C2371992DE630039E238 /* challenges_normal.png */,
@@ -922,6 +949,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5890F8DD197711AE0042AC2F /* Icon-40@2x.png in Resources */,
+				5802EA7F1993752B00CF5F32 /* bg_progress_white3.png in Resources */,
 				5860BF651987F889007D9BB3 /* Default~ipad~landscape.png in Resources */,
 				58B7C27C1992DE630039E238 /* profile_image@2x.png in Resources */,
 				5890F8E7197711AE0042AC2F /* Icon@2x.png in Resources */,
@@ -938,6 +966,7 @@
 				58669F761977334A009BC13C /* loginButton@2x.png in Resources */,
 				58B7C2621992DE630039E238 /* challenges_normal@2x.png in Resources */,
 				58B7C26A1992DE630039E238 /* icon_money@2x.png in Resources */,
+				5802EA7B1993752B00CF5F32 /* bg_progress_orange2.png in Resources */,
 				58B7C2731992DE630039E238 /* moneythink_icon_logo.png in Resources */,
 				58B7C2851992DE630039E238 /* verify_active.png in Resources */,
 				5890F8E1197711AE0042AC2F /* Icon-60@2x.png in Resources */,
@@ -945,6 +974,7 @@
 				5890F8E8197711AE0042AC2F /* iTunesArtwork1024 in Resources */,
 				5860BF691987F889007D9BB3 /* Default~ipad~nostatusbar.png in Resources */,
 				580B5AE619820F8A0092AA9C /* app_icon_512.png in Resources */,
+				5802EA791993752B00CF5F32 /* bg_progress_green3.png in Resources */,
 				5860BF681987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png in Resources */,
 				58B7C25F1992DE630039E238 /* challenges_active.png in Resources */,
 				5890F8DB197711AE0042AC2F /* Icon-29@2x.png in Resources */,
@@ -970,7 +1000,10 @@
 				58B7C2651992DE630039E238 /* icon_challenge_future.png in Resources */,
 				5890F8BC197710590042AC2F /* launchImage320x480.png in Resources */,
 				58669F751977334A009BC13C /* loginButton.png in Resources */,
+				5802EA771993752B00CF5F32 /* bg_progress_green1.png in Resources */,
 				58B7C27F1992DE630039E238 /* settings_normal.png in Resources */,
+				5802EA7D1993752B00CF5F32 /* bg_progress_white1.png in Resources */,
+				5802EA7C1993752B00CF5F32 /* bg_progress_orange3.png in Resources */,
 				580B5AE519820F8A0092AA9C /* app_icon_48.png in Resources */,
 				5890F8E2197711AE0042AC2F /* Icon-72.png in Resources */,
 				5890F8DA197711AE0042AC2F /* Icon-29.png in Resources */,
@@ -980,6 +1013,7 @@
 				58B7C26C1992DE630039E238 /* icon_pig@2x.png in Resources */,
 				58669F791977334A009BC13C /* studentSignupButton.png in Resources */,
 				5890F8BE197710590042AC2F /* launchImage640x1136.png in Resources */,
+				5802EA7E1993752B00CF5F32 /* bg_progress_white2.png in Resources */,
 				58B7C27D1992DE630039E238 /* settings_active.png in Resources */,
 				58B7C2611992DE630039E238 /* challenges_normal.png in Resources */,
 				58B7C2871992DE630039E238 /* verify_normal.png in Resources */,
@@ -988,10 +1022,12 @@
 				5860BF661987F889007D9BB3 /* Default~ipad~landscape@2x.png in Resources */,
 				58B7C2841992DE630039E238 /* students_normal@2x.png in Resources */,
 				58B7C26E1992DE630039E238 /* like_active@2x.png in Resources */,
+				5802EA7A1993752B00CF5F32 /* bg_progress_orange1.png in Resources */,
 				58669F781977334A009BC13C /* mentorSignupButton@2x.png in Resources */,
 				5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */,
 				58B7C2631992DE630039E238 /* comment.png in Resources */,
 				58669F7A1977334A009BC13C /* studentSignupButton@2x.png in Resources */,
+				5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */,
 				580B5AE719820F8A0092AA9C /* app_icon_72.png in Resources */,
 				5890F8C0197710590042AC2F /* launchImage1536x2048.png in Resources */,
 				5890F8E5197711AE0042AC2F /* Icon-76@2x.png in Resources */,
