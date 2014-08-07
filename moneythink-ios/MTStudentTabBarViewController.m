@@ -32,7 +32,9 @@ static BOOL button1 = NO;
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
+
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+
     self.navigationItem.hidesBackButton = YES;
 
     self.delegate = self;

@@ -10,7 +10,7 @@
 
 @interface MTStudentSettingsViewController ()
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
+//@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (strong, nonatomic) IBOutlet UITableViewCell *logout;
 @property (strong, nonatomic) IBOutlet UITableViewCell *editProfile;
@@ -98,7 +98,7 @@
     
     NSString *cellIdent = @"defaultCell";
     
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:cellIdent];
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdent];
     
     if (cell == nil)
         {
@@ -111,6 +111,7 @@
             switch (row) {
                 case 0: {
                     cell.textLabel.text = @"Push Notifications";
+                    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
 
                 }
                     break;
@@ -130,12 +131,13 @@
             
         case 1: {
             cell.textLabel.text = @"Edit Profile";
-
+            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
         }
             break;
             
         default:
             cell.textLabel.text = @"Log Out";
+            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
             break;
     }
 
@@ -210,7 +212,7 @@
             
         case 1: {
 //            cell.textLabel.text = @"Edit Profile";
-            
+            [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
         }
             break;
             

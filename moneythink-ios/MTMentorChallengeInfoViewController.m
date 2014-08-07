@@ -109,7 +109,6 @@
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
-//    UIImage *sourceImage = self;
     UIImage *newImage = nil;
     CGSize imageSize = image.size;
     CGFloat width = imageSize.width;

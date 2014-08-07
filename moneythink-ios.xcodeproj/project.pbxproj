@@ -83,6 +83,8 @@
 		58676B201974273E0070F604 /* MTLogInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1B1974273E0070F604 /* MTLogInViewController.m */; };
 		58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1C1974273E0070F604 /* MTSignUpViewController.m */; };
 		58676B231974273E0070F604 /* MTUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTUserViewController.m */; };
+		5869D451199413850037B517 /* logo_actionbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5869D450199413850037B517 /* logo_actionbar.png */; };
+		5869D453199416900037B517 /* login_banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5869D4521994168F0037B517 /* login_banner.jpg */; };
 		5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
 		5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */; };
 		5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AC196F2C1F00C176EC /* UIKit.framework */; };
@@ -316,6 +318,8 @@
 		58676B1B1974273E0070F604 /* MTLogInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLogInViewController.m; sourceTree = "<group>"; };
 		58676B1C1974273E0070F604 /* MTSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpViewController.m; sourceTree = "<group>"; };
 		58676B1E1974273E0070F604 /* MTUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserViewController.m; sourceTree = "<group>"; };
+		5869D450199413850037B517 /* logo_actionbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_actionbar.png; sourceTree = "<group>"; };
+		5869D4521994168F0037B517 /* login_banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = login_banner.jpg; sourceTree = "<group>"; };
 		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5876E2A8196F2C1F00C176EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -840,8 +844,10 @@
 				58B7C2441992DE630039E238 /* like_active@2x.png */,
 				58B7C2451992DE630039E238 /* like_normal.png */,
 				58B7C2461992DE630039E238 /* like_normal@2x.png */,
+				5869D4521994168F0037B517 /* login_banner.jpg */,
 				58B7C2471992DE630039E238 /* menu_button.png */,
 				58B7C2481992DE630039E238 /* menu_button@2x.png */,
+				5869D450199413850037B517 /* logo_actionbar.png */,
 				58B7C2491992DE630039E238 /* moneythink_icon_logo.png */,
 				58B7C24A1992DE630039E238 /* moneythink_icon_logo@2x.png */,
 				58B7C24B1992DE630039E238 /* notifications_active.png */,
@@ -997,6 +1003,7 @@
 				58B7C26F1992DE630039E238 /* like_normal.png in Resources */,
 				58B7C2801992DE630039E238 /* settings_normal@2x.png in Resources */,
 				58B7C27B1992DE630039E238 /* profile_image.png in Resources */,
+				5869D451199413850037B517 /* logo_actionbar.png in Resources */,
 				5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */,
 				58B7C2691992DE630039E238 /* icon_money.png in Resources */,
 				5890F8DC197711AE0042AC2F /* Icon-40.png in Resources */,
@@ -1030,6 +1037,7 @@
 				5802EA7A1993752B00CF5F32 /* bg_progress_orange1.png in Resources */,
 				58669F781977334A009BC13C /* mentorSignupButton@2x.png in Resources */,
 				5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */,
+				5869D453199416900037B517 /* login_banner.jpg in Resources */,
 				58B7C2631992DE630039E238 /* comment.png in Resources */,
 				58669F7A1977334A009BC13C /* studentSignupButton@2x.png in Resources */,
 				5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */,

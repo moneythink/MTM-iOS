@@ -24,6 +24,8 @@ static BOOL useStage = NO;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -109,34 +111,6 @@ static BOOL useStage = NO;
 
 #pragma mark - UITextFieldDelegate methods
 
-//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
-//- (void)textFieldDidBeginEditing:(UITextField *)textField
-//{
-//}
-//
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
-//- (void)textFieldDidEndEditing:(UITextField *)textField
-//{
-//}
-//
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-//{
-//    return YES;
-//}
-//
-//- (BOOL)textFieldShouldClear:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;
@@ -151,8 +125,6 @@ static BOOL useStage = NO;
     }
     return NO; // We do not want UITextField to insert line-breaks.
 }
-
-
 
 
 @end

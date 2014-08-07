@@ -49,7 +49,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
     [self.studentSignUpButton setTitle:@"SIGN UP AS STUDENT" forState:UIControlStateNormal];

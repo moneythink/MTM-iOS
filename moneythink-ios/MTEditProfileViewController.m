@@ -18,6 +18,10 @@
 @property (strong, nonatomic) IBOutlet UITextField *lastName;
 @property (strong, nonatomic) IBOutlet UITextField *email;
 @property (strong, nonatomic) IBOutlet UITextField *userPassword;
+@property (strong, nonatomic) IBOutlet UITextField *confirmPassword;
+
+@property (strong, nonatomic) IBOutlet UITextField *signUpCode;
+
 
 @property (strong, nonatomic) PFImageView *profileImage;
 @property (strong, nonatomic) UIImage *updatedProfileImage;
@@ -48,6 +52,8 @@
 {
     [super viewDidLoad];
     
+    self.navigationItem.title = @"Edit Profile";
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveChanges:)];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -64,7 +70,17 @@
     self.firstName.text = self.userCurrent[@"first_name"];
     self.lastName.text = self.userCurrent[@"last_name"];
     self.email.text = self.userCurrent[@"email"];
-    self.userPassword.text = self.userCurrent[@"password"];
+    
+    NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", self.userCurrent[@"class"], @"student"];
+    PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+    [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.signUpCode.text = [objects firstObject][@"code"];
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+    
     
     PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     
@@ -128,6 +144,17 @@
     }
 }
 
+#pragma mark - methods
+
+- (IBAction)shareSignUpCode:(id)sender {
+    NSString *signUpCade = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", self.userClassName.text, self.signUpCode.text];
+    NSArray *dataToShare = @[signUpCade];
+    
+    UIActivityViewController *activityViewController =
+    [[UIActivityViewController alloc] initWithActivityItems:dataToShare
+                                      applicationActivities:nil];
+    [self presentViewController:activityViewController animated:YES completion:^{}];
+}
 
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
@@ -152,7 +179,7 @@
     
     CGRect fieldsContentRect = CGRectMake( x, y, w, h);
     
-    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 180.0f);
+    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
     
     self.viewFields.contentSize = fieldsContentRect.size;
     
@@ -170,6 +197,8 @@
 #pragma mark - Get and save image
 
 - (void)saveProfileChanges {
+    
+    
     if (self.firstName.text) {
         self.userCurrent[@"first_name"] = self.firstName.text;
     }
@@ -318,7 +347,6 @@
 
 #pragma mark - UITextFieldDelegate delegate methods
 
-
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     return YES;
 }
@@ -344,22 +372,17 @@
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self dismissKeyboard];
-    return YES;
+    NSInteger nextTag = textField.tag + 1;
+    // Try to find next responder
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        // Found next responder, so set it.
+        [nextResponder becomeFirstResponder];
+    } else {
+        // Not found, so remove keyboard.
+        [textField resignFirstResponder];
+    }
+    return NO; // We do not want UITextField to insert line-breaks.
 }
-
-
-#pragma mark - UINavigationControllerDelegate methods
-
-- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    
-}
-
-- (void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    
-}
-
 
 @end
