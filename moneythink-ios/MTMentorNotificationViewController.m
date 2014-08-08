@@ -29,13 +29,14 @@
         
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"challenge_started";
-
+        
         // The title for this table in the Navigation Controller.
         self.title = @"Notifications";
         
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
         
+        self.paginationEnabled = NO;
     }
     return self;
 }
@@ -44,6 +45,8 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.navigationItem.title = self.title;
 }
 
 - (void)didReceiveMemoryWarning
@@ -67,10 +70,8 @@
 }
 
 
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
-
+    
     
     PFQuery *query = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     
@@ -80,8 +81,13 @@
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
     
-//    [query includeKey:@"user"];
-//    [query includeKey:@"reference_post"];
+    [query orderByDescending:@"createdAt"];
+    
+    [query includeKey:@"comment"];
+    [query includeKey:@"post_liked"];
+    [query includeKey:@"post_verified"];
+    [query includeKey:@"recipient"];
+    [query includeKey:@"user"];
     
     return query;
 }
@@ -99,7 +105,115 @@
     
     PFNotifications *notification = (PFNotifications *)object;
     
-    cell.textLabel.text = notification[@"challenge_started"];
+    NSLog(@"object - %@", object);
+    
+    __block NSString *longText = @"";
+    
+    if (notification[@"comment"]) {
+        NSLog(@"<><><><><><><><>comment - %@", notification[@"comment"]);
+        longText = [longText stringByAppendingString:@", comment: "];
+        PFChallengePost *post = notification[@"comment"];
+        longText = [longText stringByAppendingString:post[@"comment_text"]];
+    }
+    
+    if (notification[@"post_liked"]) {
+        NSLog(@"<><><><><><><><>post_liked - %@", notification[@"post_liked"]);
+        longText = [longText stringByAppendingString:@", post_liked: "];
+        PFChallengePost *post = notification[@"post_liked"];
+        longText = [longText stringByAppendingString:post[@"post_text"]];
+    }
+    
+    if (notification[@"post_verified"]) {
+        NSLog(@"<><><><><><><><>post_verified - %@", notification[@"post_verified"]);
+        longText = [longText stringByAppendingString:@", post_verified: "];
+        PFChallengePost *post = notification[@"post_verified"];
+        longText = [longText stringByAppendingString:post[@"post_text"]];
+    }
+    
+    if (notification[@"recipient"]) {
+        NSLog(@"<><><><><><><><>recipient - %@", notification[@"recipient"]);
+        longText = [longText stringByAppendingString:@", recipient: "];
+        PFUser *user = notification[@"recipient"];
+        longText = [longText stringByAppendingString:[user username]];
+    }
+    
+    if (notification[@"user"]) {
+        NSLog(@"<><><><><><><><>user - %@", notification[@"user"]);
+        longText = [longText stringByAppendingString:@", user: "];
+        PFUser *user = notification[@"user"];
+        longText = [longText stringByAppendingString:[user username]];
+    }
+    
+    if (notification[@"challenge_activated"]) {
+        NSLog(@"<><><><><><><><>challenge_activated - %@", notification[@"challenge_activated"]);
+        longText = [longText stringByAppendingString:@", challenge_activated: "];
+        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
+        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                PFChallenges *challenge = [objects firstObject];
+                longText = [longText stringByAppendingString:challenge[@"title"]];
+            } else {
+                longText = [longText stringByAppendingString:@"error - challenge_activated"];
+            }
+        }];
+    }
+    
+    if (notification[@"challenge_closed"]) {
+        NSLog(@"<><><><><><><><>challenge_closed - %@", notification[@"challenge_closed"]);
+        longText = [longText stringByAppendingString:@", challenge_closed: "];
+        
+        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
+        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                PFChallenges *challenge = [objects firstObject];
+                longText = [longText stringByAppendingString:challenge[@"title"]];
+            } else {
+                longText = [longText stringByAppendingString:@"error - challenge_closed"];
+            }
+        }];
+    }
+    
+    if (notification[@"challenge_completed"]) {
+        NSLog(@"<><><><><><><><>challenge_completed - %@", notification[@"challenge_completed"]);
+        longText = [longText stringByAppendingString:@", challenge_completed: "];
+        
+        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
+        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                PFChallenges *challenge = [objects firstObject];
+                longText = [longText stringByAppendingString:challenge[@"title"]];
+            } else {
+                longText = [longText stringByAppendingString:@"error - challenge_completed"];
+            }
+        }];
+    }
+    
+    if (notification[@"challenge_started"]) {
+        NSLog(@"<><><><><><><><>challenge_started - %@", notification[@"challenge_started"]);
+        longText = [longText stringByAppendingString:@", challenge_started: "];
+        
+        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
+        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                PFChallenges *challenge = [objects firstObject];
+                longText = [longText stringByAppendingString:challenge[@"title"]];
+            } else {
+                longText = [longText stringByAppendingString:@"error - challenge_started"];
+            }
+        }];
+    }
+    
+    if ([cell.textLabel.text isEqualToString:@""]) {
+        longText = [longText stringByAppendingString:@"<><><><><><><><>row - %d"];
+    }
+    
+    NSString *rowString = [NSString stringWithFormat:@"%d", indexPath.row];
+    longText = [rowString stringByAppendingString:longText];
+    cell.textLabel.text = longText;
     
     return cell;
 }
@@ -148,8 +262,8 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
- 
-
+    
+    
 }
 
 @end
