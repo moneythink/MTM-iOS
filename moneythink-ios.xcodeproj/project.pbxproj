@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1083254C1994918A008C0488 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1083254B1994918A008C0488 /* Crashlytics.framework */; };
 		5802EA771993752B00CF5F32 /* bg_progress_green1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */; };
 		5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */; };
 		5802EA791993752B00CF5F32 /* bg_progress_green3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5802EA701993752B00CF5F32 /* bg_progress_green3.png */; };
@@ -205,6 +206,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1083254B1994918A008C0488 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green1.png; sourceTree = "<group>"; };
 		5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green2.png; sourceTree = "<group>"; };
 		5802EA701993752B00CF5F32 /* bg_progress_green3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_progress_green3.png; sourceTree = "<group>"; };
@@ -467,6 +469,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
+				1083254C1994918A008C0488 /* Crashlytics.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
 				58B59E81198AF60C001E003D /* Parse.framework in Frameworks */,
@@ -668,6 +671,7 @@
 		5876E2A7196F2C1F00C176EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1083254B1994918A008C0488 /* Crashlytics.framework */,
 				58B59E80198AF60C001E003D /* Parse.framework */,
 				5806A4F219746655000B3656 /* Accounts.framework */,
 				5806A4EE1974610A000B3656 /* Social.framework */,
@@ -902,6 +906,7 @@
 				5876E2A1196F2C1F00C176EC /* Sources */,
 				5876E2A2196F2C1F00C176EC /* Frameworks */,
 				5876E2A3196F2C1F00C176EC /* Resources */,
+				1083254A19949131008C0488 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1090,6 +1095,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		1083254A19949131008C0488 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Crashlytics.framework/run f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e 4dd59297f9c0e4cf81062b0586870df9e586efd39d4d7de33d380dadbc344f79";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		5876E2A1196F2C1F00C176EC /* Sources */ = {
@@ -1297,8 +1318,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1309,7 +1329,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
+				PROVISIONING_PROFILE = "B1F864DF-1493-4260-96BE-7B9258503B15";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1320,8 +1340,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1332,7 +1351,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
+				PROVISIONING_PROFILE = "3E56FD75-D69D-4E2C-A4D2-FC520C77CAEB";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

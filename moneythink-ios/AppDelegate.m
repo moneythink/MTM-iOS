@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 #import "MTHomeViewController.h"
+#import <Crashlytics/Crashlytics.h>
 
 #ifdef DEBUG
 static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -51,6 +52,8 @@ static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    
+    [Crashlytics startWithAPIKey:@"f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e"];
     
     return YES;
 }
