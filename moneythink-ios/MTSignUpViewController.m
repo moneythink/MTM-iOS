@@ -194,7 +194,7 @@ static BOOL useStage = NO;
     
     fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
     
-    self.viewFields.contentSize = viewFrame.size;
+//    self.viewFields.contentSize = viewFrame.size;
     self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
     
     self.viewFields.frame = fieldFrameSize;
@@ -208,34 +208,6 @@ static BOOL useStage = NO;
 
 #pragma mark - UITextFieldDelegate methods
 
-//- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
-//- (void)textFieldDidBeginEditing:(UITextField *)textField
-//{
-//}
-//
-//- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
-//- (void)textFieldDidEndEditing:(UITextField *)textField
-//{
-//}
-//
-//- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-//{
-//    return YES;
-//}
-//
-//- (BOOL)textFieldShouldClear:(UITextField *)textField
-//{
-//    return YES;
-//}
-//
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;

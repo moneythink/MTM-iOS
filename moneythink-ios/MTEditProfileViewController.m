@@ -239,7 +239,6 @@
         }
     }];
     
-//    [self.delegate editProfileViewControllerDidSave:self];
     [self.navigationController popViewControllerAnimated:YES];
 }
 - (IBAction)buttonDone:(id)sender {
@@ -290,6 +289,7 @@
     imagePickerController.allowsEditing = YES;
     
     self.imagePickerController = imagePickerController;
+
     [self presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 

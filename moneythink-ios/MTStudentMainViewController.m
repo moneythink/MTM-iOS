@@ -132,8 +132,7 @@
         userInfoModal.textInfoText = @"Managin money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
         
     } else if ([segue.identifier isEqualToString:@"pushEditStudentProfile"]) {
-        MTEditProfileViewController *editProfileViewController = segue.destinationViewController;
-        editProfileViewController.delegate = self;
+
     }
 }
 

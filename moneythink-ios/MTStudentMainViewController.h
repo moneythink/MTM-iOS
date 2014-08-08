@@ -10,6 +10,6 @@
 #import "MTUserInformationViewController.h"
 #import "MTEditProfileViewController.h"
 
-@interface MTStudentMainViewController : UIViewController <MTUserInfoDelegate, MTEditProfileViewControllerDelegate>
+@interface MTStudentMainViewController : UIViewController <MTUserInfoDelegate>
 
 @end

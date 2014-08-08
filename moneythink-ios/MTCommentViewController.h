@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTCommentViewController : UIViewController
+@interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 @property (strong, nonatomic) PFChallenges *challenge;
 
