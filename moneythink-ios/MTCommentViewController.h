@@ -10,4 +10,6 @@
 
 @interface MTCommentViewController : UIViewController
 
+@property (strong, nonatomic) PFChallenges *challenge;
+
 @end

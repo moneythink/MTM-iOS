@@ -164,7 +164,7 @@
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
     } else if ([segueIdentifier isEqualToString:@"pushNotificationToPosts"]) {
-        MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)segue.destinationViewController;
+        MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
         PFNotifications *notification = (PFNotifications *)sender;
         destination.challengeNumber = @"1";
     }

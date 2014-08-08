@@ -82,12 +82,12 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    id destinationVC = segue.destinationViewController;
+    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
     
-    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)destinationVC;
-    
+    destination.challenge = self.challenge;
     destination.challengeNumber = self.challengeNumberText;
     destination.challenge = self.challenge;
+    
 }
 
 #pragma mark - UITabBarDelegate methods

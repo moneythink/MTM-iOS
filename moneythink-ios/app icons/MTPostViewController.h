@@ -10,6 +10,7 @@
 
 @interface MTPostViewController : UIViewController <UITextFieldDelegate>
 
+@property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;
 
 @end

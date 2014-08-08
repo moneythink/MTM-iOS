@@ -8,6 +8,7 @@
 
 #import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewController.h"
+#import "MTCommentViewController.h"
 
 @interface MTPostsTabBarViewController ()
 
@@ -30,12 +31,25 @@
     // Do any additional setup after loading the view.
     
     self.tabBarController.delegate = self;
+
+    UIImage *postImage = [UIImage imageNamed:@"post"];
+    UIBarButtonItem *postComment = [[UIBarButtonItem alloc]
+                                    initWithImage:postImage
+                                    style:UIBarButtonItemStyleBordered
+                                    target:self
+                                    action:@selector(postComment)];
+    
+    self.navigationItem.rightBarButtonItem = postComment;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)postComment {
+    [self performSegueWithIdentifier:@"modalComment" sender:self];
 }
 
 #pragma mark - Navigation
@@ -45,11 +59,17 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+    NSString *segueID = [segue identifier];
     
-    MTPostsTableViewController *destinationViewController = [[MTPostsTableViewController alloc] init];
-    destinationViewController.challengeNumber = self.challengeNumber;
-    destinationViewController = segue.destinationViewController;
-
+    if ([segueID isEqualToString:@"modalComment"]) {
+        MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
+        destinationViewController.challenge = self.challenge;
+    } else {
+        MTPostsTableViewController *destinationViewController = (MTPostsTableViewController *)[segue destinationViewController];
+        destinationViewController.challenge = self.challenge;
+        destinationViewController.challengeNumber = self.challengeNumber;
+    }
+    
 }
 
 #pragma mark = UITabBarControllerDelegate delegate methods

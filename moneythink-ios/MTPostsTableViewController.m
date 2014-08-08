@@ -45,11 +45,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.title = @"Explore";
+    self.navigationItem.title = @"Explore";
 }
 
 
@@ -173,6 +174,8 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     PFObject *rowObject = self.objects[indexPath.row];
     
     [self performSegueWithIdentifier:@"pushViewPost" sender:self.objects[indexPath.row]];
@@ -190,6 +193,7 @@
     if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
+        destinationViewController.challenge = self.challenge;
     } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
 
     }

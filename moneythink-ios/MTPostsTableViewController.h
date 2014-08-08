@@ -10,7 +10,7 @@
 
 @interface MTPostsTableViewController : PFQueryTableViewController
 
+@property (strong, nonatomic) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
-//@property (nonatomic, strong) NSString *className;
 
 @end

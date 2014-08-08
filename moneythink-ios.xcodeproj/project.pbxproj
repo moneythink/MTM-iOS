@@ -85,6 +85,8 @@
 		58676B231974273E0070F604 /* MTUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTUserViewController.m */; };
 		5869D451199413850037B517 /* logo_actionbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5869D450199413850037B517 /* logo_actionbar.png */; };
 		5869D453199416900037B517 /* login_banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5869D4521994168F0037B517 /* login_banner.jpg */; };
+		5869D4561994465F0037B517 /* CPFQueryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */; };
+		5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869D459199446D20037B517 /* MTExplorePostCollectionView.m */; };
 		5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
 		5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */; };
 		5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AC196F2C1F00C176EC /* UIKit.framework */; };
@@ -320,6 +322,10 @@
 		58676B1E1974273E0070F604 /* MTUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserViewController.m; sourceTree = "<group>"; };
 		5869D450199413850037B517 /* logo_actionbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_actionbar.png; sourceTree = "<group>"; };
 		5869D4521994168F0037B517 /* login_banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = login_banner.jpg; sourceTree = "<group>"; };
+		5869D4541994465F0037B517 /* CPFQueryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPFQueryCollectionViewController.h; sourceTree = "<group>"; };
+		5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPFQueryCollectionViewController.m; sourceTree = "<group>"; };
+		5869D458199446D20037B517 /* MTExplorePostCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExplorePostCollectionView.h; sourceTree = "<group>"; };
+		5869D459199446D20037B517 /* MTExplorePostCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExplorePostCollectionView.m; sourceTree = "<group>"; };
 		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5876E2A8196F2C1F00C176EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -536,6 +542,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		5869D457199446640037B517 /* Parse Helper */ = {
+			isa = PBXGroup;
+			children = (
+				5869D4541994465F0037B517 /* CPFQueryCollectionViewController.h */,
+				5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */,
+			);
+			name = "Parse Helper";
+			sourceTree = "<group>";
+		};
 		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -619,6 +634,8 @@
 				5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
 				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
+				5869D458199446D20037B517 /* MTExplorePostCollectionView.h */,
+				5869D459199446D20037B517 /* MTExplorePostCollectionView.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -681,6 +698,7 @@
 				5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */,
 				58676B131974268E0070F604 /* Model */,
 				587464B2197EFEA30030D706 /* View Controllers */,
+				5869D457199446640037B517 /* Parse Helper */,
 				5876E2C3196F2C1F00C176EC /* Images.xcassets */,
 				5890F748197704E20042AC2F /* Assets */,
 				5890F7441976DD7E0042AC2F /* Categories */,
@@ -1082,6 +1100,7 @@
 				5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */,
 				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
+				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
@@ -1097,6 +1116,7 @@
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
+				5869D4561994465F0037B517 /* CPFQueryCollectionViewController.m in Sources */,
 				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
 				5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */,
 				5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */,

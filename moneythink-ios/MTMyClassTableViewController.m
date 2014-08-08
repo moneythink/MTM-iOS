@@ -45,11 +45,17 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+}
+
+- (void)postCommentSelector {
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"My Class";
+
 }
 
 
@@ -174,6 +180,8 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     PFObject *rowObject = self.objects[indexPath.row];
     
