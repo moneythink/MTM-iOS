@@ -22,6 +22,20 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        PFUser *user = [PFUser currentUser];
+        
+        PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+        [queryMe whereKey:@"read_by" equalTo:[user objectId]];
+        
+        PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+        [queryNoOne whereKeyDoesNotExist:@"recipient"];
+        
+        PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
+        [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
+            [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+        }];
+        
         // Custom the table
         
         // The className to query on
@@ -49,6 +63,12 @@
     self.navigationItem.title = self.title;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    self.navigationController.parentViewController.navigationItem.title = @"Notifications";
+
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -61,6 +81,22 @@
     [super objectsDidLoad:error];
     
     // This method is called every time objects are loaded from Parse via the PFQuery
+    
+    PFUser *user = [PFUser currentUser];
+    
+    [PFCloud callFunction:@"markAllNotificationsRead" withParameters:@{@"user_id": [user objectId]}];
+    
+    PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryMe whereKey:@"read_by" equalTo:[user objectId]];
+    
+    PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryNoOne whereKeyDoesNotExist:@"recipient"];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
+    [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
+        [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+    }];
 }
 
 - (void)objectsWillLoad {
@@ -71,9 +107,17 @@
 
 
 - (PFQuery *)queryForTable {
+    PFUser *user = [PFUser currentUser];
+    PFQuery *query = [[PFQuery alloc] init];
     
+    PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryMe whereKey:@"read_by" notEqualTo:[user objectId]];
     
-    PFQuery *query = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryMe whereKey:@"recipient" equalTo:user];
+    [queryNoOne whereKeyDoesNotExist:@"recipient"];
+    
+    query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
@@ -110,42 +154,36 @@
     __block NSString *longText = @"";
     
     if (notification[@"comment"]) {
-        NSLog(@"<><><><><><><><>comment - %@", notification[@"comment"]);
         longText = [longText stringByAppendingString:@", comment: "];
         PFChallengePost *post = notification[@"comment"];
         longText = [longText stringByAppendingString:post[@"comment_text"]];
     }
     
     if (notification[@"post_liked"]) {
-        NSLog(@"<><><><><><><><>post_liked - %@", notification[@"post_liked"]);
         longText = [longText stringByAppendingString:@", post_liked: "];
         PFChallengePost *post = notification[@"post_liked"];
         longText = [longText stringByAppendingString:post[@"post_text"]];
     }
     
     if (notification[@"post_verified"]) {
-        NSLog(@"<><><><><><><><>post_verified - %@", notification[@"post_verified"]);
         longText = [longText stringByAppendingString:@", post_verified: "];
         PFChallengePost *post = notification[@"post_verified"];
         longText = [longText stringByAppendingString:post[@"post_text"]];
     }
     
     if (notification[@"recipient"]) {
-        NSLog(@"<><><><><><><><>recipient - %@", notification[@"recipient"]);
         longText = [longText stringByAppendingString:@", recipient: "];
         PFUser *user = notification[@"recipient"];
         longText = [longText stringByAppendingString:[user username]];
     }
     
     if (notification[@"user"]) {
-        NSLog(@"<><><><><><><><>user - %@", notification[@"user"]);
         longText = [longText stringByAppendingString:@", user: "];
         PFUser *user = notification[@"user"];
         longText = [longText stringByAppendingString:[user username]];
     }
     
     if (notification[@"challenge_activated"]) {
-        NSLog(@"<><><><><><><><>challenge_activated - %@", notification[@"challenge_activated"]);
         longText = [longText stringByAppendingString:@", challenge_activated: "];
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
         PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
@@ -160,7 +198,6 @@
     }
     
     if (notification[@"challenge_closed"]) {
-        NSLog(@"<><><><><><><><>challenge_closed - %@", notification[@"challenge_closed"]);
         longText = [longText stringByAppendingString:@", challenge_closed: "];
         
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
@@ -176,7 +213,6 @@
     }
     
     if (notification[@"challenge_completed"]) {
-        NSLog(@"<><><><><><><><>challenge_completed - %@", notification[@"challenge_completed"]);
         longText = [longText stringByAppendingString:@", challenge_completed: "];
         
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
@@ -192,7 +228,6 @@
     }
     
     if (notification[@"challenge_started"]) {
-        NSLog(@"<><><><><><><><>challenge_started - %@", notification[@"challenge_started"]);
         longText = [longText stringByAppendingString:@", challenge_started: "];
         
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
@@ -210,8 +245,8 @@
     if ([cell.textLabel.text isEqualToString:@""]) {
         longText = [longText stringByAppendingString:@"<><><><><><><><>row - %d"];
     }
-    
-    NSString *rowString = [NSString stringWithFormat:@"%d", indexPath.row];
+    NSInteger row = indexPath.row;
+    NSString *rowString = [NSString stringWithFormat:@"%ld", (long)row];
     longText = [rowString stringByAppendingString:longText];
     cell.textLabel.text = longText;
     
@@ -219,37 +254,11 @@
 }
 
 
-/*
- // Override if you need to change the ordering of objects in the table.
- - (PFObject *)objectAtIndex:(NSIndexPath *)indexPath {
- return [objects objectAtIndex:indexPath.row];
- }
- */
-
-// Override to customize the look of the cell that allows the user to load the next page of objects.
-// The default implementation is a UITableViewCellStyleDefault cell with simple labels.
-//- (UITableViewCell *)tableView:(UITableView *)tableView cellForNextPageAtIndexPath:(NSIndexPath *)indexPath {
-//    static NSString *CellIdentifier = @"NextPage";
-//
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-//
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-//    }
-//
-//    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//
-//    return cell;
-//}
-
-
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    
-    PFObject *rowObject = self.objects[indexPath.row];
     
     [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
 }

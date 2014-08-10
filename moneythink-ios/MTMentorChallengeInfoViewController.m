@@ -76,7 +76,10 @@
     
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
+    NSLog(@">>>>> tagline - %@", self.tagline);
     self.tagline.text = challenge[@"student_instructions"];
+    [self.tagline sizeToFit];
+    NSLog(@">>>>> tagline - %@", self.tagline);
     
     [self.levelLabel setTextColor:[UIColor primaryOrange]];
     [self.rewardLabel setTextColor:[UIColor primaryOrange]];

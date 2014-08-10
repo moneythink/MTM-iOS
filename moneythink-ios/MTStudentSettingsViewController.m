@@ -18,13 +18,6 @@
 
 @implementation MTStudentSettingsViewController
 
-- (id)init
-{
-    self = [super init];
-
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -42,7 +35,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.navigationItem.title = @"Settings";
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -151,8 +143,7 @@
     return 3;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section // fixed font style. use custom view (UILabel) if you want something different
-{
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *titleHeader = @"";
     
     switch (section) {

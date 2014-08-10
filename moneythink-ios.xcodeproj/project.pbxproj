@@ -41,6 +41,7 @@
 		5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */; };
 		5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943D197C06E400EDC969 /* MTNotificationsViewController.m */; };
 		58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTChallengesContentViewController.m */; };
+		585E25C4199712CB005A896D /* MTSignUpOrSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */; };
 		5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */; };
 		5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF381986D378007D9BB3 /* MBProgressHUD.m */; };
 		5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */; };
@@ -253,6 +254,8 @@
 		5850943D197C06E400EDC969 /* MTNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationsViewController.m; sourceTree = "<group>"; };
 		5850943F197C386100EDC969 /* MTChallengesContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesContentViewController.h; sourceTree = "<group>"; };
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
+		585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
+		585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
 		5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorNotificationViewController.h; sourceTree = "<group>"; };
 		5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorNotificationViewController.m; sourceTree = "<group>"; };
 		5860BF371986D378007D9BB3 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -646,6 +649,8 @@
 		5876E29C196F2C1F00C176EC = {
 			isa = PBXGroup;
 			children = (
+				585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */,
+				585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */,
 				58CBD0B8199157230056BE8F /* MTScheduleTableViewController.h */,
 				58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */,
 				58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */,
@@ -1123,6 +1128,7 @@
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
+				585E25C4199712CB005A896D /* MTSignUpOrSignInViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
@@ -1318,7 +1324,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1329,7 +1335,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "B1F864DF-1493-4260-96BE-7B9258503B15";
+				PROVISIONING_PROFILE = "F11EB9FB-E85C-438E-A813-6E7E493F459D";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1340,7 +1346,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

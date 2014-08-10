@@ -62,6 +62,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    
+    self.parentViewController.navigationItem.title = @"Challenges";
 
 }
 

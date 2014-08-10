@@ -22,35 +22,11 @@
 
 #pragma mark - UIViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    if ([PFUser currentUser]) {
-        PFUser *user = [PFUser currentUser];
-        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
-            if (!error) {
-                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                    [self performSegueWithIdentifier:@"studentMain" sender:self];
-                } else {
-                    [self performSegueWithIdentifier:@"pushMentorNotificationView" sender:self];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-    }
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
@@ -73,6 +49,19 @@
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
 
 }
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+//    [self.navigationController setNavigationBarHidden:YES animated:YES];
+//    self.navigationController.navigationItem.hidesBackButton = YES;
+    self.navigationItem.hidesBackButton = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
 
 - (void)didReceiveMemoryWarning
 {

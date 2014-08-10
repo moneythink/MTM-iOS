@@ -33,6 +33,8 @@ static BOOL button1 = NO;
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    self.navigationItem.title = @"Challenges";
+
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 
     self.navigationItem.hidesBackButton = YES;
@@ -52,7 +54,7 @@ static BOOL button1 = NO;
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    self.navigationItem.title = @"Challenges";
+//    self.navigationItem.title = @"Challenges";
 //    self.parentViewController.navigationItem.title = @"Challenges";
 }
 
