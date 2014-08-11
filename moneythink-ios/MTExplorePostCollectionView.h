@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "CPFQueryCollectionViewController.h"
 
-@interface MTExplorePostCollectionView : CPFQueryCollectionViewController
+//@interface MTExplorePostCollectionView : CPFQueryCollectionViewController
+@interface MTExplorePostCollectionView : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+
+@property (strong, nonatomic) PFChallenges *challenge;
 
 @end

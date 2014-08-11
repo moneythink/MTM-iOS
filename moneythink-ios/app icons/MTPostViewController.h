@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MICheckBox.h"
 
 @interface MTPostViewController : UIViewController <UITextFieldDelegate>
 

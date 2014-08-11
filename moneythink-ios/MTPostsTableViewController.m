@@ -14,7 +14,6 @@
 @interface MTPostsTableViewController()
 
 @property (strong, nonatomic) IBOutlet UITabBarItem *postsTabBarItem;
-
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
@@ -169,6 +168,10 @@
 
 
 #pragma mark - Table view delegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 60.0f;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

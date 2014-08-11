@@ -31,6 +31,8 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *button1;
 @property (strong, nonatomic) IBOutlet UIButton *button2;
+
+@property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
 @end
 
 @implementation MTPostViewController
@@ -48,23 +50,12 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+                                   initWithTarget:self
+                                   action:@selector(dismissKeyboard)];
     
-    
-    
-    UIImage *postImage = [UIImage imageNamed:@"post"];
-    UIBarButtonItem *postComment = [[UIBarButtonItem alloc]
-                                    initWithImage:postImage
-                                    style:UIBarButtonItemStyleBordered
-                                    target:self
-                                    action:@selector(postCommentSelector)];
-    
-    self.navigationItem.rightBarButtonItem = postComment;
-    
-    
-    
-    
-//    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"asdf = %@", ];
-//    PFQuery *queryChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:challengePredicate];
+    [self.view addGestureRecognizer:tap];
     
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
@@ -127,19 +118,40 @@
     self.postImage.file = self.challengePost[@"picture"];
     
     [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
-        CGRect frame = self.postImage.frame;
-        
-        if (image.size.width > frame.size.width) {
-            CGFloat scale = frame.size.width / image.size.width;
-            CGFloat heightNew = scale * image.size.height;
-            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-            UIGraphicsBeginImageContext(sizeNew);
-            [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-            image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
+//        NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
+//        NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
+//        NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
+//        NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
+        if (!error) {
+            CGRect frame = self.postImage.frame;
+            
+            if (image) {
+                if (image.size.width > frame.size.width) {
+                    CGFloat scale = frame.size.width / image.size.width;
+                    CGFloat heightNew = scale * image.size.height;
+                    CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
+                    UIGraphicsBeginImageContext(sizeNew);
+                    [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
+                    image = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                }
+                
+                self.postImage.image = image;
+            } else {
+                self.postImage.frame = CGRectZero;
+            }
+
+//            NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
+//            NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
+//            NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
+//            NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
+
+//            [self.postImage updateConstraintsIfNeeded];
+//            [self.postImage layoutIfNeeded];
+            
+        } else {
+            NSLog(@"error - %@", error);
         }
-        
-        self.postImage.image = image;
     }];
     
     [[self.button1 layer] setBorderWidth:2.0f];
@@ -157,16 +169,37 @@
     self.title = @"Post";
 }
 
+//- (void)viewWillLayoutSubviews {
+//    NSLog(@"check");
+//    NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
+//    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
+//    NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
+//    NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
+//    
+//    CGRect frame = self.postImage.frame;
+//    frame.size.height = 0.0f;
+//    
+//    self.postImage.frame = frame;
+//    
+//    NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
+//    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
+//    NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
+//    NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
+//    
+////    [self updateViewConstraints];
+//    [self.view layoutIfNeeded];
+//}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)postCommentSelector
-{
-
-}
+//- (void)postCommentSelector
+//{
+//
+//}
 
 
 

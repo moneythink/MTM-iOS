@@ -42,6 +42,8 @@
 		5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943D197C06E400EDC969 /* MTNotificationsViewController.m */; };
 		58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTChallengesContentViewController.m */; };
 		585E25C4199712CB005A896D /* MTSignUpOrSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */; };
+		585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */; };
+		585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */; };
 		5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */; };
 		5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF381986D378007D9BB3 /* MBProgressHUD.m */; };
 		5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */; };
@@ -256,6 +258,10 @@
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
 		585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
 		585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
+		585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreCollectionViewCell.h; sourceTree = "<group>"; };
+		585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExploreCollectionViewCell.m; sourceTree = "<group>"; };
+		585E25C81997F8DC005A896D /* MTCollectionNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCollectionNavigationViewController.h; sourceTree = "<group>"; };
+		585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTCollectionNavigationViewController.m; sourceTree = "<group>"; };
 		5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorNotificationViewController.h; sourceTree = "<group>"; };
 		5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorNotificationViewController.m; sourceTree = "<group>"; };
 		5860BF371986D378007D9BB3 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -640,8 +646,12 @@
 				5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
 				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
+				585E25C81997F8DC005A896D /* MTCollectionNavigationViewController.h */,
+				585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */,
 				5869D458199446D20037B517 /* MTExplorePostCollectionView.h */,
 				5869D459199446D20037B517 /* MTExplorePostCollectionView.m */,
+				585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */,
+				585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -1139,6 +1149,7 @@
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
+				585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */,
 				5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */,
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
@@ -1177,6 +1188,7 @@
 				58676B201974273E0070F604 /* MTLogInViewController.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
 				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
+				585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */,
 				58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */,
 				58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */,
 				58A356DC198168140018FC61 /* MJPopupBackgroundView.m in Sources */,

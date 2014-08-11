@@ -60,7 +60,7 @@
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
     NSString *segueID = [segue identifier];
-    
+//    fffffffff
     if ([segueID isEqualToString:@"modalComment"]) {
         MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
         destinationViewController.challenge = self.challenge;
