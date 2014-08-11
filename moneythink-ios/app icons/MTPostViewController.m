@@ -33,6 +33,11 @@
 @property (strong, nonatomic) IBOutlet UIButton *button2;
 
 @property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
+
+@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
+@property (assign, nonatomic) CGRect oldViewFieldsRect;
+@property (assign, nonatomic) CGSize oldViewFieldsContentSize;
+
 @end
 
 @implementation MTPostViewController
@@ -120,10 +125,6 @@
     self.postImage.file = self.challengePost[@"picture"];
     
     [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
-//        NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
-//        NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//        NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
-//        NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
         if (!error) {
             CGRect frame = self.postImage.frame;
             
@@ -142,15 +143,6 @@
             } else {
                 self.postImage.frame = CGRectZero;
             }
-
-//            NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
-//            NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//            NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
-//            NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
-
-//            [self.postImage updateConstraintsIfNeeded];
-//            [self.postImage layoutIfNeeded];
-            
         } else {
             NSLog(@"error - %@", error);
         }
@@ -186,21 +178,6 @@
 }
 
 
-
-//- (void)viewWillLayoutSubviews {
-//    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//
-//    CGRect frame = self.postImage.frame;
-//    frame.size.height = 0.0f;
-//    
-//    self.postImage.frame = frame;
-//    
-//    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//
-//    [self updateViewConstraints];
-//    [self.view layoutIfNeeded];
-//}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -208,38 +185,86 @@
 }
 
 
+
+
+/*
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
-//    CGRect viewFrame = self.view.frame;
-//    CGRect fieldsFrame = self.viewFields.frame;
-//    
-//    NSDictionary *userInfo = [nsNotification userInfo];
-//    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-//    CGSize kbSize = kbRect.size;
-//    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
-//    
-//    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
-//                                       fieldsFrame.origin.y,
-//                                       fieldsFrame.size.width,
-//                                       fieldsFrame.size.height - kbSize.height + 40.0f);
-//    
-//    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
-//    
-//    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 160.0f);
-//    
-//    self.viewFields.frame = fieldFrameSize;
+    CGRect viewFrame = self.view.frame;
+    CGRect fieldsFrame = self.viewFields.frame;
+    
+    NSDictionary *userInfo = [nsNotification userInfo];
+    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGSize kbSize = kbRect.size;
+    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
+    
+    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
+                                       fieldsFrame.origin.y,
+                                       fieldsFrame.size.width,
+                                       fieldsFrame.size.height - kbSize.height + 40.0f);
+    
+    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
+ 
+    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 180.0f);
+    
+    self.viewFields.frame = fieldFrameSize;
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
 {
-//    self.viewFields.frame = self.view.frame;
+    self.viewFields.frame = self.view.frame;
+}
+ */
+
+- (void) keyboardWasShown:(NSNotification *)nsNotification {
+    CGRect viewFrame = self.view.frame;
+    self.oldViewFieldsRect = self.viewFields.frame;
+    self.oldViewFieldsContentSize = self.viewFields.contentSize;
+    
+    CGRect fieldsFrame = self.viewFields.frame;
+    
+    NSDictionary *userInfo = [nsNotification userInfo];
+    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    CGSize kbSize = kbRect.size;
+    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
+    
+    CGFloat x = fieldsFrame.origin.x;
+    CGFloat y = fieldsFrame.origin.y;
+    CGFloat w = fieldsFrame.size.width;
+    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
+    
+    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
+    
+    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
+    
+    self.viewFields.contentSize = fieldsContentRect.size;
+    
+    self.viewFields.frame = fieldsFrame;
+    
+}
+
+- (void)keyboardWasDismissed:(NSNotification *)notification
+{
+    self.viewFields.frame = self.oldViewFieldsRect;
+    self.viewFields.contentSize = self.oldViewFieldsContentSize;
 }
 
 
 
-#pragma mark - UITextFieldDelegate delegate methods
+#pragma mark - UITextFieldDelegate methods
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    return YES;
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSInteger nextTag = textField.tag + 1;
+    // Try to find next responder
+    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        // Found next responder, so set it.
+        [nextResponder becomeFirstResponder];
+    } else {
+        // Not found, so remove keyboard.
+        [textField resignFirstResponder];
+    }
+    return NO; // We do not want UITextField to insert line-breaks.
 }
 
 

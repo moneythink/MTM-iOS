@@ -90,7 +90,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - methods
+#pragma mark - date dif methods
 
 
 - (NSString *)dateDiffFromDate:(NSDate *)origDate {

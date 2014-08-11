@@ -16,6 +16,7 @@
 @property (strong, nonatomic) NSArray *posts;
 
 @property (strong, nonatomic) IBOutlet UICollectionView *exploreCollectionView;
+@property (assign, nonatomic) BOOL hasButtons;
 
 @end
 
@@ -34,7 +35,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-    
+
+    NSArray *buttons = self.challenge[@"buttons"];
+    self.hasButtons = buttons.count;
+
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
     self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
@@ -50,10 +54,13 @@
         if (!error) {
             self.posts = objects;
             [self.exploreCollectionView reloadData];
+
         } else {
             NSLog(@"error - %@", error);
         }
     }];
+    
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -220,9 +227,18 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     [collectionView deselectItemAtIndexPath:indexPath animated:YES];
     
-    PFObject *rowObject = self.posts[indexPath.row];
+    PFChallengePost *rowObject = self.posts[indexPath.row];
+    UIImage *postImage = rowObject[@"picture"];
     
-    [self.navigationController performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
+    if (self.hasButtons && postImage) {
+        [self.navigationController performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
+    } else if (self.hasButtons) {
+        [self.navigationController performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
+    } else if (postImage) {
+        [self.navigationController performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
+    } else {
+        [self.navigationController performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
+    }
 }
 
 /*

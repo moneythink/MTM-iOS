@@ -167,6 +167,7 @@
     }];
     
     
+    
     // >>>>> Attributed hashtag
     cell.postText.text = post[@"post_text"];
     NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -180,6 +181,7 @@
     }];
     // Attributed hashtag
 
+    
     
     if (postImage) {
         cell.postImage.file = post[@"picture"];
@@ -199,6 +201,36 @@
         }];
     }
 
+    NSDate *dateObject = [post createdAt];
+    
+    if (dateObject) {
+        cell.postedWhen.text = [self dateDiffFromDate:dateObject];
+    }
+    
+    NSInteger likes = [post[@"likes"] intValue];
+    if (likes) {
+        NSString *likesString = [NSString stringWithFormat:@"%ld", (long)likes];
+        cell.likes.text = likesString;
+        if ([likesString isEqualToString:@"0"]) {
+            [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+        } else {
+            [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        }
+    } else {
+        cell.likes.text = @"0";
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+    }
+    
+    PFQuery *commentQuery = [PFQuery queryWithClassName:@"ChallengePostComment"];
+    [commentQuery whereKey:@"challenge_post" equalTo:post];
+    [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (number > 0) {
+            cell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
+        } else {
+            cell.comments.text = @"0";
+        }
+    }];
+
     return cell;
 }
 
@@ -212,10 +244,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
     PFChallengePost *rowObject = self.objects[indexPath.row];
-    
-    if (self.hasButtons) {
+    UIImage *postImage = rowObject[@"picture"];
+
+    if (self.hasButtons && postImage) {
         [self performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
-    } else if (YES) {
+    } else if (self.hasButtons) {
+        [self performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
+    } else if (postImage) {
         [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
     } else {
         [self performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
@@ -234,6 +269,45 @@
     }
     
     return height;
+}
+
+
+#pragma mark - date dif methods
+
+
+- (NSString *)dateDiffFromDate:(NSDate *)origDate {
+    NSDate *todayDate = [NSDate date];
+    
+    double interval     = [origDate timeIntervalSinceDate:todayDate];
+    
+    interval = interval * -1;
+    if(interval < 1) {
+    	return @"";
+    } else 	if (interval < 60) {
+    	return @"less than a minute ago";
+    } else if (interval < 3600) {
+    	int diff = round(interval / 60);
+    	return [NSString stringWithFormat:@"%d minutes ago", diff];
+    } else if (interval < 86400) {
+    	int diff = round(interval / 60 / 60);
+    	return[NSString stringWithFormat:@"%d hours ago", diff];
+    } else if (interval < 604800) {
+    	int diff = round(interval / 60 / 60 / 24);
+    	return[NSString stringWithFormat:@"%d days ago", diff];
+    } else {
+    	int diff = round(interval / 60 / 60 / 24 / 7);
+    	return[NSString stringWithFormat:@"%d wks ago", diff];
+    }
+}
+
+- (NSString *)dateDiffFromString:(NSString *)origDate {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
+    
+    NSDate *convertedDate = [df dateFromString:origDate];
+    
+    return [self dateDiffFromDate:convertedDate];
 }
 
 
@@ -310,11 +384,14 @@
 {
     NSString *segueIdentifier = [segue identifier];
     
+
+    MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
+    destinationViewController.challengePost = (PFChallengePost *)sender;
+
     if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
-        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
-        destinationViewController.challengePost = (PFChallengePost *)sender;
+    } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {
+    } else if ([segueIdentifier isEqualToString:@"pushViewPostNoImage"]) {
     } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
-        
     }
 }
 
