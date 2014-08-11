@@ -57,6 +57,8 @@
     
     [self.view addGestureRecognizer:tap];
     
+    self.postComment.delegate = self;
+    
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
     [queryPostComments includeKey:@"user"];
@@ -167,26 +169,35 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"Post";
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self dismissKeyboard];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+-(void)dismissKeyboard {
+    [self.view endEditing:YES];
+}
+
+
+
 //- (void)viewWillLayoutSubviews {
-//    NSLog(@"check");
-//    NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
 //    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//    NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
-//    NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
-//    
+//
 //    CGRect frame = self.postImage.frame;
 //    frame.size.height = 0.0f;
 //    
 //    self.postImage.frame = frame;
 //    
-//    NSLog(@"post image frame size width - %f", self.postImage.frame.size.width);
 //    NSLog(@"post image frame size height - %f", self.postImage.frame.size.height);
-//    NSLog(@"post image frame origin x - %f", self.postImage.frame.origin.x);
-//    NSLog(@"post image frame origin y - %f", self.postImage.frame.origin.y);
-//    
-////    [self updateViewConstraints];
+//
+//    [self updateViewConstraints];
 //    [self.view layoutIfNeeded];
 //}
 
@@ -196,10 +207,32 @@
     // Dispose of any resources that can be recreated.
 }
 
-//- (void)postCommentSelector
-//{
-//
-//}
+
+- (void) keyboardWasShown:(NSNotification *)nsNotification {
+//    CGRect viewFrame = self.view.frame;
+//    CGRect fieldsFrame = self.viewFields.frame;
+//    
+//    NSDictionary *userInfo = [nsNotification userInfo];
+//    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+//    CGSize kbSize = kbRect.size;
+//    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
+//    
+//    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
+//                                       fieldsFrame.origin.y,
+//                                       fieldsFrame.size.width,
+//                                       fieldsFrame.size.height - kbSize.height + 40.0f);
+//    
+//    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
+//    
+//    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 160.0f);
+//    
+//    self.viewFields.frame = fieldFrameSize;
+}
+
+- (void)keyboardWasDismissed:(NSNotification *)notification
+{
+//    self.viewFields.frame = self.view.frame;
+}
 
 
 

@@ -255,7 +255,7 @@
             
         default: {  // OK
             [PFUser logOut];
-            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
+            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
         }
             break;
     }

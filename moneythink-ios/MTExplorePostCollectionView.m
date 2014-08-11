@@ -119,9 +119,9 @@
             if (image) {
                 CGRect frame = cell.postImage.frame;
                 cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                CGSize size = image.size;
-                frame = cell.postImage.frame;
                 [cell setNeedsDisplay];
+            } else {
+                cell.postImage.image = nil;
             }
         } else {
             NSLog(@"error - %@", error);
@@ -137,8 +137,9 @@
             if (image) {
                 CGRect frame = cell.postUserImage.frame;
                 cell.postUserImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                
                 [self.view setNeedsDisplay];
+            } else {
+                cell.postImage.image = nil;
             }
         } else {
             NSLog(@"error - %@", error);
@@ -212,7 +213,6 @@
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
     
-    CGSize size = image.size;
     return newImage;
 }
 

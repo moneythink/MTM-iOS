@@ -139,7 +139,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-
+/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -150,5 +150,6 @@
  
 
 }
+ */
 
 @end

@@ -45,24 +45,6 @@ static BOOL useStage = NO;
     self.useStageButton.hidden = YES;
     self.view.backgroundColor = [UIColor white];
 
-//    UIImage *logoImage = [UIImage imageNamed:@"logo_actionbar_medium"];
-//    UIButton *logoButton = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, logoImage.size.width, logoImage.size.height)];
-//    
-//    [logoButton setBackgroundImage:logoImage forState:UIControlStateNormal];
-//    [logoButton setBackgroundImage:logoImage forState:UIControlStateHighlighted];
-//        
-//    [logoButton addTarget:self action:@selector(touchLogoButton) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    UIBarButtonItem *barButtonLogo = [[UIBarButtonItem alloc] initWithCustomView:logoButton];
-//
-//    self.navigationItem.leftBarButtonItem = barButtonLogo;
-//
-//    self.navigationItem.hidesBackButton = NO;
-}
-
-- (IBAction)touchLogoButton
-{
-    [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
 }
 
 - (void)viewDidLayoutSubviews {

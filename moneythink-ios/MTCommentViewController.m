@@ -156,6 +156,9 @@
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (IBAction)commentCancelButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 
 - (IBAction)commentDoneButton:(id)sender {
     if (![self.postText.text isEqualToString:@""]) {

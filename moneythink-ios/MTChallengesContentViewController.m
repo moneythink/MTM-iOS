@@ -72,7 +72,6 @@
 }
 
 -(void)exploreChallenge {
-//    [self performSegueWithIdentifier:@"exploreChallengeSegmented" sender:self];
     [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
 }
 

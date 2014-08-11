@@ -66,9 +66,11 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+/*
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
 }
+ */
 
 @end
