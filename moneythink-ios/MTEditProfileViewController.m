@@ -207,8 +207,13 @@
         self.userCurrent[@"last_name"] = self.lastName.text;
     }
     
-    if (![self.self.userPassword.text isEqual:@""]) {
-        self.userCurrent[@"password"] = self.userPassword.text;
+    BOOL passwordsMatch = [self.userPassword.text isEqualToString:self.confirmPassword.text];
+    if (![self.self.userPassword.text isEqual:@""] && passwordsMatch) {
+        self.userCurrent.password = self.userPassword.text;
+    } else {
+        UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Password error" message:@"Passwords do not match." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [noMatch show];
+        return;
     }
     
     [self.userCurrent setEmail:self.email.text];
