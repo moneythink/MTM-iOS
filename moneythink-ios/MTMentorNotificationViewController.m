@@ -260,7 +260,7 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
-    [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
+//    [self performSegueWithIdentifier:@"pushNotificationToPosts" sender:self.objects[indexPath.row]];
 }
 
 /*

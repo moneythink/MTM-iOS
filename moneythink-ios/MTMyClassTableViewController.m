@@ -47,6 +47,8 @@
 {
     [super viewDidLoad];
     
+    self.parentViewController.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Good Buy, Bad Buy" style:UIBarButtonItemStylePlain target:nil action:nil];
+
     NSInteger challengNumber = [self.challengeNumber intValue];
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
@@ -387,6 +389,7 @@
 
     MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
     destinationViewController.challengePost = (PFChallengePost *)sender;
+    destinationViewController.challenge = self.challenge;
 
     if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
     } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {

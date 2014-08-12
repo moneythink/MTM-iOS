@@ -39,43 +39,25 @@
     
     PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
     
-    if (YES) {
-        [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                self.challenges = objects;
-                
-                // Create page view controller
-                self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-                self.pageViewController.dataSource = self;
-                
-                MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-                
-                NSArray *viewControllers = @[startingViewController];
-                
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-                
-                [self addChildViewController:_pageViewController];
-                [self.view addSubview:_pageViewController.view];
-                [self.pageViewController didMoveToParentViewController:self];
-            }
-        }];
-    } else {
-        self.challenges = [allChallenges findObjects];
-        
-        // Create page view controller
-        self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-        self.pageViewController.dataSource = self;
-        
-        MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-        NSArray *viewControllers = @[startingViewController];
-        
-        [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-        
-        [self addChildViewController:_pageViewController];
-        [self.view addSubview:_pageViewController.view];
-        [self.pageViewController didMoveToParentViewController:self];
-    }
-    
+    [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.challenges = objects;
+            
+            // Create page view controller
+            self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+            self.pageViewController.dataSource = self;
+            
+            MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+            
+            NSArray *viewControllers = @[startingViewController];
+            
+            [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            
+            [self addChildViewController:_pageViewController];
+            [self.view addSubview:_pageViewController.view];
+            [self.pageViewController didMoveToParentViewController:self];
+        }
+    }];
     
 }
 
@@ -98,16 +80,6 @@
     PFChallenges *challenge = self.challenges[index];
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
-    
-    //        [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-    //            if (!error) {
-    //                challengeContentViewController.challengeStateText = number > 0 ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
-    //                NSLog(@"state - %@", challengeContentViewController.challengeStateText);
-    //                [challengeContentViewController.view setNeedsDisplay];
-    //            } else {
-    //                NSLog(@"error - %@", error);
-    //            }
-    //        }];
     
     NSInteger count = [queryActivated countObjects];
     challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";

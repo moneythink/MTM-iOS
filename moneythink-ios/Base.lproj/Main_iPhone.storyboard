@@ -609,7 +609,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <scene sceneID="cqr-2Q-hPS">
             <objects>
                 <tableViewController storyboardIdentifier="studentNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nhy-BA-4w4" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cCf-Wn-SQm">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="cCf-Wn-SQm">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -659,7 +659,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <!--Student Settings View Controller - Settings-->
         <scene sceneID="vy4-ZF-NeK">
             <objects>
-                <viewController storyboardIdentifier="studentSettings" autoresizesArchivedViewToFullSize="NO" title="Settings" extendedLayoutIncludesOpaqueBars="YES" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IkE-tB-Q2X" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="studentSettings" autoresizesArchivedViewToFullSize="NO" title="Settings" extendedLayoutIncludesOpaqueBars="YES" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IkE-tB-Q2X" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="9ui-Xe-K8o"/>
                         <viewControllerLayoutGuide type="bottom" id="nig-6U-oWR"/>
@@ -668,12 +668,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" translatesAutoresizingMaskIntoConstraints="NO" id="Bvb-s4-8M0">
-                                <rect key="frame" x="0.0" y="20" width="320" height="464"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="Bvb-s4-8M0">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="484"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="464" id="nbM-S1-3tg"/>
+                                    <constraint firstAttribute="height" constant="484" id="nbM-S1-3tg"/>
                                     <constraint firstAttribute="width" constant="320" id="qJA-CI-YfB"/>
                                 </constraints>
                                 <prototypes>
@@ -695,7 +695,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="Bvb-s4-8M0" firstAttribute="top" secondItem="9ui-Xe-K8o" secondAttribute="bottom" constant="20" id="KrN-1q-rTO"/>
+                            <constraint firstItem="Bvb-s4-8M0" firstAttribute="top" secondItem="9ui-Xe-K8o" secondAttribute="bottom" id="KrN-1q-rTO"/>
                             <constraint firstItem="Bvb-s4-8M0" firstAttribute="leading" secondItem="Xsm-IL-l5C" secondAttribute="leading" id="V4N-zl-KbR"/>
                             <constraint firstItem="nig-6U-oWR" firstAttribute="top" secondItem="Bvb-s4-8M0" secondAttribute="bottom" constant="-29" id="uld-jf-2h5"/>
                         </constraints>
@@ -1532,7 +1532,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <!--Mentor Challenge Room View Controller - Challenges-->
         <scene sceneID="3G4-9e-DuG">
             <objects>
-                <viewController id="XeE-2P-Kwx" customClass="MTMentorChallengeRoomViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mentorChallengeRoom" useStoryboardIdentifierAsRestorationIdentifier="YES" id="XeE-2P-Kwx" customClass="MTMentorChallengeRoomViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="60P-p5-feM"/>
                         <viewControllerLayoutGuide type="bottom" id="FGl-dw-MP2"/>
@@ -2000,7 +2000,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
@@ -2430,7 +2430,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             <objects>
                 <tableViewController storyboardIdentifier="MyClassChallengePosts" autoresizesArchivedViewToFullSize="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wSc-Em-WQ4" customClass="MTMyClassTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="CjA-Xy-9gz">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="519"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -2453,19 +2453,24 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                                 <constraint firstAttribute="width" constant="30" id="kQr-Fe-8du"/>
                                             </constraints>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gpP-NG-Lrv" userLabel="Like Button">
+                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gpP-NG-Lrv" userLabel="Like Button">
                                             <rect key="frame" x="20" y="370" width="19" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="19" id="IY8-Vc-eZC"/>
+                                                <constraint firstAttribute="height" constant="16" id="oDi-P5-eRs"/>
                                             </constraints>
                                             <state key="normal" title="Button" image="like_normal.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96E-EQ-y2e" userLabel="Comment Button">
-                                            <rect key="frame" x="92" y="368" width="17" height="20"/>
+                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="96E-EQ-y2e" userLabel="Comment Button">
+                                            <rect key="frame" x="68" y="368" width="17" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="17" id="gIM-P9-Ixo"/>
+                                                <constraint firstAttribute="height" constant="20" id="yGF-cL-faB"/>
+                                            </constraints>
                                             <state key="normal" image="comment.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -2491,15 +2496,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJy-15-av8">
-                                            <rect key="frame" x="48" y="371" width="36" height="14"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="12" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kJy-15-av8">
+                                            <rect key="frame" x="47" y="371" width="13" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zd-61-sE1">
-                                            <rect key="frame" x="125" y="371" width="36" height="14"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="12" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Zd-61-sE1">
+                                            <rect key="frame" x="93" y="371" width="13" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2508,8 +2513,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="KpO-O7-xUz" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="20" symbolic="YES" id="0I7-sR-5ia"/>
+                                        <constraint firstAttribute="bottom" secondItem="gpP-NG-Lrv" secondAttribute="bottom" constant="9" id="0O6-gV-SaJ"/>
+                                        <constraint firstItem="kJy-15-av8" firstAttribute="centerX" secondItem="gpP-NG-Lrv" secondAttribute="centerX" constant="24" id="38B-cd-pBI"/>
                                         <constraint firstItem="KpO-O7-xUz" firstAttribute="leading" secondItem="VWk-dC-RPZ" secondAttribute="leading" id="8vw-d8-PPR"/>
                                         <constraint firstAttribute="bottom" secondItem="96E-EQ-y2e" secondAttribute="bottom" constant="7" id="Kn0-8M-JdF"/>
+                                        <constraint firstItem="kJy-15-av8" firstAttribute="centerX" secondItem="3Zd-61-sE1" secondAttribute="centerX" constant="-46" id="QYQ-ms-pGj"/>
+                                        <constraint firstItem="kJy-15-av8" firstAttribute="centerX" secondItem="96E-EQ-y2e" secondAttribute="centerX" constant="-23" id="XBw-q4-5hb"/>
                                         <constraint firstItem="VWk-dC-RPZ" firstAttribute="top" secondItem="KpO-O7-xUz" secondAttribute="bottom" constant="8" symbolic="YES" id="og3-qa-0QW"/>
                                         <constraint firstItem="KpO-O7-xUz" firstAttribute="leading" secondItem="onZ-tg-5rn" secondAttribute="leading" constant="20" symbolic="YES" id="sea-rc-foY"/>
                                         <constraint firstItem="VWk-dC-RPZ" firstAttribute="leading" secondItem="gpP-NG-Lrv" secondAttribute="leading" id="xRw-A0-6K5"/>
@@ -2542,19 +2551,24 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                                 <constraint firstAttribute="width" constant="30" id="zAf-6o-Vv2"/>
                                             </constraints>
                                         </imageView>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUJ-bW-Rmw" userLabel="Like Button">
+                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUJ-bW-Rmw" userLabel="Like Button">
                                             <rect key="frame" x="20" y="81" width="19" height="16"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="19" id="TYo-Qv-hKP"/>
+                                                <constraint firstAttribute="height" constant="16" id="YNT-iC-ehF"/>
                                             </constraints>
                                             <state key="normal" title="Button" image="like_normal.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJx-A5-cNc" userLabel="Comment Button">
-                                            <rect key="frame" x="92" y="79" width="17" height="20"/>
+                                        <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJx-A5-cNc" userLabel="Comment Button">
+                                            <rect key="frame" x="69" y="79" width="17" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="20" id="3cM-Ud-RvB"/>
+                                                <constraint firstAttribute="width" constant="17" id="TEB-XV-qCS"/>
+                                            </constraints>
                                             <state key="normal" image="comment.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -2580,15 +2594,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hX-kv-FGC">
-                                            <rect key="frame" x="48" y="82" width="36" height="14"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2hX-kv-FGC">
+                                            <rect key="frame" x="48" y="82" width="13" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gq7-MJ-Eej">
-                                            <rect key="frame" x="125" y="82" width="36" height="14"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="12" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gq7-MJ-Eej">
+                                            <rect key="frame" x="94" y="82" width="13" height="14"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -2596,9 +2610,16 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="gq7-MJ-Eej" firstAttribute="centerY" secondItem="vUJ-bW-Rmw" secondAttribute="centerY" id="2Ri-bJ-Xar"/>
+                                        <constraint firstAttribute="bottom" secondItem="vUJ-bW-Rmw" secondAttribute="bottom" constant="22" id="9gb-mL-146"/>
+                                        <constraint firstItem="2hX-kv-FGC" firstAttribute="leading" secondItem="vUJ-bW-Rmw" secondAttribute="trailing" constant="9" id="IZz-vA-P6f"/>
+                                        <constraint firstItem="gq7-MJ-Eej" firstAttribute="centerY" secondItem="2hX-kv-FGC" secondAttribute="centerY" id="OcD-yi-br9"/>
+                                        <constraint firstItem="gq7-MJ-Eej" firstAttribute="leading" secondItem="sJx-A5-cNc" secondAttribute="trailing" constant="8" id="QYP-Fz-9LT"/>
                                         <constraint firstItem="vUJ-bW-Rmw" firstAttribute="leading" secondItem="8Wv-vT-FfS" secondAttribute="leading" constant="20" id="Sil-Pm-V32"/>
                                         <constraint firstItem="DTw-x6-ZdE" firstAttribute="leading" secondItem="8Wv-vT-FfS" secondAttribute="leading" constant="20" id="czh-Fp-D87"/>
-                                        <constraint firstAttribute="bottom" secondItem="sJx-A5-cNc" secondAttribute="bottom" constant="20" id="eQt-lH-Uey"/>
+                                        <constraint firstItem="gq7-MJ-Eej" firstAttribute="centerY" secondItem="sJx-A5-cNc" secondAttribute="centerY" id="jDd-he-gn4"/>
+                                        <constraint firstItem="sJx-A5-cNc" firstAttribute="centerY" secondItem="vUJ-bW-Rmw" secondAttribute="centerY" id="tZ3-0i-Ca8"/>
+                                        <constraint firstItem="sJx-A5-cNc" firstAttribute="leading" secondItem="2hX-kv-FGC" secondAttribute="trailing" constant="8" id="taK-z0-XoI"/>
                                         <constraint firstItem="DTw-x6-ZdE" firstAttribute="top" secondItem="8Wv-vT-FfS" secondAttribute="top" constant="20" symbolic="YES" id="vl0-lN-BHj"/>
                                     </constraints>
                                 </tableViewCellContentView>
@@ -2623,7 +2644,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <tabBarItem key="tabBarItem" tag="1" title="My  Class" image="students_normal.png" id="AR4-Aa-txF"/>
                     <navigationItem key="navigationItem" id="aWv-Qc-T0C"/>
                     <nil key="simulatedStatusBarMetrics"/>
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="700"/>
                     <connections>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
@@ -3400,16 +3421,22 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Z3l-Nl-KJ9">
                                         <rect key="frame" x="36" y="391" width="120" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Good Buy">
+                                        <state key="normal" title="button 1">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="button1Tapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="gPR-bt-kzR"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iZ3-xf-1Uv">
                                         <rect key="frame" x="164" y="391" width="120" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Bad Buy">
+                                        <state key="normal" title="button 2">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="button2Tapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="Cw1-3Q-jwQ"/>
+                                        </connections>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l3T-OP-Tet">
                                         <rect key="frame" x="156" y="426" width="42" height="15"/>
@@ -3427,6 +3454,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </subviews>
                             </scrollView>
                         </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
@@ -3541,16 +3569,22 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sFj-cj-UFM">
                                 <rect key="frame" x="36" y="66" width="120" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Good Buy">
+                                <state key="normal" title="button 1">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="button1Tapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="Uf6-sv-A9C"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bcH-7G-Mp9">
                                 <rect key="frame" x="164" y="66" width="120" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Bad Buy">
+                                <state key="normal" title="button 2">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="button2Tapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="fpi-u2-lr0"/>
+                                </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="54B-a6-ehw">
                                 <rect key="frame" x="156" y="101" width="42" height="15"/>
@@ -3575,6 +3609,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="button1" destination="sFj-cj-UFM" id="1bK-zT-o0q"/>
+                        <outlet property="button2" destination="bcH-7G-Mp9" id="PHO-TQ-41v"/>
                         <outlet property="comment" destination="KGp-cu-W6E" id="cX2-x1-sIq"/>
                         <outlet property="commentCount" destination="ZyL-nK-pRq" id="wl0-3E-THF"/>
                         <outlet property="commentPost" destination="Gmg-Oh-OO3" id="STF-Kt-S1x"/>
@@ -3625,15 +3661,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="3av-NC-tBU"/>
         <segue reference="0Hm-VR-maT"/>
+        <segue reference="3av-NC-tBU"/>
         <segue reference="Fpc-xj-HcE"/>
-        <segue reference="fM9-bL-F9m"/>
+        <segue reference="7JS-73-w9v"/>
         <segue reference="Pqy-YU-1Il"/>
-        <segue reference="5KW-O2-h9I"/>
+        <segue reference="VFk-5D-gdp"/>
         <segue reference="KRd-TC-kg7"/>
-        <segue reference="1CK-gQ-zH4"/>
-        <segue reference="t5m-aZ-wca"/>
-        <segue reference="OaC-xo-Vq0"/>
+        <segue reference="0tX-EG-lkN"/>
+        <segue reference="3vf-te-PYL"/>
+        <segue reference="LS9-Mg-yad"/>
     </inferredMetricsTieBreakers>
 </document>

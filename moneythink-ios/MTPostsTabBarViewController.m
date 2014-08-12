@@ -30,6 +30,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.title = self.challenge[@"title"];
+
     self.tabBarController.delegate = self;
 
     UIImage *postImage = [UIImage imageNamed:@"post"];
