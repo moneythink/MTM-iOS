@@ -7,12 +7,31 @@
 //
 
 #import "MTSignUpOrSignInViewController.h"
+#import "MTStudentTabBarViewController.h"
+#import "MTUserViewController.h"
 
 @interface MTSignUpOrSignInViewController ()
 
 @end
 
 @implementation MTSignUpOrSignInViewController
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+
+    }
+    return self;
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    id parent = self.parentViewController;
+    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
+}
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -40,14 +59,6 @@
 }
 
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    [self.view setBackgroundColor:[UIColor primaryGreen]];
-    
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -70,13 +81,5 @@
 {
     
 }
-
-
-/*
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    
-}
- */
 
 @end

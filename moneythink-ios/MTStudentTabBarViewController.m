@@ -8,11 +8,12 @@
 
 #import "MTStudentTabBarViewController.h"
 
-#ifdef DEBUG
-static BOOL button1 = YES;
-#else
-static BOOL button1 = NO;
-#endif
+//#ifdef DEBUG
+//static BOOL button1 = YES;
+//#else
+//static BOOL button1 = NO;
+//#endif
+
 @interface MTStudentTabBarViewController ()
 
 @end
@@ -77,7 +78,7 @@ static BOOL button1 = NO;
 
 - (void)tappedButtonItem1:(id)sender
 {
-    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", nil];
+    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -97,6 +98,7 @@ static BOOL button1 = NO;
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+ 
 }
 */
 
@@ -106,12 +108,16 @@ static BOOL button1 = NO;
 {
     switch (buttonIndex) {
         case 0:
+            break;
+            
+        case 1: {
             [PFUser logOut];
             [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
             break;
             
         default:
             break;
+        }
     }
 }
 

@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MediaPlayer/MediaPlayer.h>
 
-@interface MTStudentSettingsViewController : UIViewController <UITabBarControllerDelegate, UITableViewDataSource, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface MTStudentSettingsViewController : UIViewController <UITabBarControllerDelegate, UITableViewDataSource, UIActionSheetDelegate>
 
 @end

@@ -8,6 +8,8 @@
 
 #import "MTLogInViewController.h"
 #import <QuartzCore/QuartzCore.h>
+#import "MTStudentTabBarViewController.h"
+#import "MTMentorTabBarViewControlle.h"
 
 #ifdef DEBUG
 static BOOL useStage = YES;
@@ -24,6 +26,9 @@ static BOOL useStage = NO;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    id parent = self.parentViewController;
+    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
+
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]

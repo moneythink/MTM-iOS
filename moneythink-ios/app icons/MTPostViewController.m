@@ -128,8 +128,6 @@
     
     [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
-            CGRect frame = self.postImage.frame;
-
             if (image) {
                 CGRect frame = self.postImage.frame;
                 self.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
@@ -155,11 +153,13 @@
     NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
 
-    NSString *button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-    [self.button1 setTitle:button1Title forState:UIControlStateNormal];
-
-    NSString *button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
-    [self.button2 setTitle:button2Title forState:UIControlStateNormal];
+    if (buttonTitles.count > 0) {
+        NSString *button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+        [self.button1 setTitle:button1Title forState:UIControlStateNormal];
+        
+        NSString *button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        [self.button2 setTitle:button2Title forState:UIControlStateNormal];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -174,6 +174,10 @@
 {
     [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (IBAction)likeButtonTapped:(id)sender {
+    // PFCloud code here
 }
 
 - (IBAction)button1Tapped:(id)sender {

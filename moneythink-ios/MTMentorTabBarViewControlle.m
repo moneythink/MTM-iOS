@@ -12,11 +12,11 @@
 #import "MTMentorChallengeRoomViewController.h"
 #import "MTStudentSettingsViewController.h"
 
-#ifdef DEBUG
-static BOOL button1 = YES;
-#else
-static BOOL button1 = NO;
-#endif
+//#ifdef DEBUG
+//static BOOL button1 = YES;
+//#else
+//static BOOL button1 = NO;
+//#endif
 
 @interface MTMentorTabBarViewController ()
 
@@ -64,7 +64,7 @@ static BOOL button1 = NO;
 
 - (void)tappedButtonItem1:(id)sender
 {
-    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", nil];
+    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {

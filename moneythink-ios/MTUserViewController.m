@@ -9,6 +9,7 @@
 #import "MTUserViewController.h"
 #import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
+#import "MTStudentTabBarViewController.h"
 
 @interface MTUserViewController ()
 
@@ -20,11 +21,47 @@
 
 @implementation MTUserViewController
 
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+
+    }
+    return self;
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    id parent = self.parentViewController;
+    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
+
+    if ([PFUser currentUser]) {
+        PFUser *user = [PFUser currentUser];
+        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
+            if (!error) {
+                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                    [self performSegueWithIdentifier:@"studentMain" sender:self];
+                } else {
+                    [self performSegueWithIdentifier:@"pushMentorNotificationView" sender:self];
+                }
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+//    } else {
+//        [self performSegueWithIdentifier:@"signUpSignIn" sender:self];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
     
     [self.view setBackgroundColor:[UIColor primaryGreen]];
     
@@ -33,7 +70,7 @@
     [self.loginButton setTitle:@"LOGIN" forState:UIControlStateNormal];
     
     CGFloat radius = 4.0f;
-
+    
     self.studentSignUpButton.layer.cornerRadius = radius;
     self.mentorSignUpButton.layer.cornerRadius = radius;
     self.loginButton.layer.cornerRadius = radius;
@@ -45,13 +82,6 @@
     [self.studentSignUpButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.mentorSignUpButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
     [self.loginButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
-
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self.navigationController setNavigationBarHidden:YES animated:YES];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -94,7 +124,7 @@
 
 - (IBAction)unwindToSignUpLogin:(UIStoryboardSegue *)sender
 {
-
+    [self reloadInputViews];
 }
 
 

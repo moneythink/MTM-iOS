@@ -7,6 +7,7 @@
 //
 
 #import "MTStudentSettingsViewController.h"
+#import "MTStudentTabBarViewController.h"
 
 @interface MTStudentSettingsViewController ()
 
@@ -208,7 +209,7 @@
             break;
             
         default: {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Logout", nil];
+            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:self.view]) {
@@ -221,23 +222,23 @@
     }
 }
 
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
-{
-    
-}
-
-
 #pragma mark - UIActionSheetDelegate methods
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
+    //unwindMTUserViewController
+    //unwindMTSignUpOrSignInViewController
+    MTStudentTabBarViewController *parent = (MTStudentTabBarViewController *)self.parentViewController;
+    
     switch (buttonIndex) {
-        case 0: {
-            UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil message:@"Log out?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        case 0: 
+            break;
             
-            [confirm show];
+        case 1: {
+            [PFUser logOut];
+            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
+//            [self performSegueWithIdentifier:@"unwindToSignInOrSignUpLogin" sender:self];
         }
-
             break;
             
         default:
@@ -245,34 +246,5 @@
     }
 }
 
-
-#pragma mark - UIAlertViewDelegate methods
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case 0: // Cancel
-            break;
-            
-        default: {  // OK
-            [PFUser logOut];
-            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
-//            [self performSegueWithIdentifier:@"unwindToSignInOrSignUpLogin" sender:self];
-        }
-            break;
-    }
-}
-
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    
-}
- */
 
 @end

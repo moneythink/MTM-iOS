@@ -9,6 +9,8 @@
 #import "MTSignUpViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Palette.h"
+#import "MTStudentTabBarViewController.h"
+#import "MTMentorTabBarViewControlle.h"
 
 #ifdef DEBUG
 static BOOL useStage = YES;
@@ -29,15 +31,20 @@ static BOOL useStage = NO;
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
 @property (strong, nonatomic) IBOutlet UIButton *agreeButton;
+@property (strong, nonatomic) IBOutlet UIButton *mentorAgreeButton;
 @property (strong, nonatomic) IBOutlet UIButton *useStageButton;
 
 @property (strong, nonatomic) IBOutlet MICheckBox *agreeCheckbox;
+@property (strong, nonatomic) IBOutlet MICheckBox *mentorAgreeCheckbox;
 @property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
 
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
 @property (strong, nonatomic) IBOutlet UITextField *className;
+
+@property (assign, nonatomic) CGRect oldViewFieldsRect;
+@property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @end
 
@@ -64,6 +71,8 @@ static BOOL useStage = NO;
         [self.email setDelegate:self];
         [self.password setDelegate:self];
         [self.registrationCode setDelegate:self];
+        [self.schoolName setDelegate:self];
+        [self.className setDelegate:self];
     }
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -81,6 +90,14 @@ static BOOL useStage = NO;
 	[self.viewFields addSubview:self.agreeCheckbox];
     
     self.agreeButton.hidden = YES;
+    
+	self.mentorAgreeCheckbox =[[MICheckBox alloc]initWithFrame:self.mentorAgreeButton.frame];
+	[self.mentorAgreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+	[self.mentorAgreeCheckbox setTitle:@"" forState:UIControlStateNormal];
+    self.mentorAgreeCheckbox.isChecked = NO;
+	[self.viewFields addSubview:self.mentorAgreeCheckbox];
+    
+    self.mentorAgreeButton.hidden = YES;
     
     self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
 	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
@@ -123,19 +140,6 @@ static BOOL useStage = NO;
 - (IBAction)schoolNameButton:(id)sender {
     PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
     [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-    
-    //    [querySchools findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    //        if (!error) {
-    //        }
-    //        UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"name", nil];
-    //
-    //        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    //        if ([window.subviews containsObject:self.view]) {
-    //            [logoutSheet showInView:self.view];
-    //        } else {
-    //            [logoutSheet showInView:window];
-    //        }
-    //    }];
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
@@ -163,6 +167,32 @@ static BOOL useStage = NO;
 }
 
 - (IBAction)classNameButton:(id)sender {
+    PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes"];
+    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+}
+
+- (void)classesSheet:(NSArray *)objects error:(NSError *)error {
+    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        [names addObject:object[@"name"]];
+    }
+    
+    NSArray *classNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    
+    for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+        [classSheet addButtonWithTitle:classNames[buttonItem]];
+    }
+    
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [classSheet showInView:self.view];
+    } else {
+        [classSheet showInView:window];
+    }
 }
 
 - (IBAction)tappedSignUpButton:(id)sender {
@@ -174,7 +204,7 @@ static BOOL useStage = NO;
                       clientKey:clientKey];
     }
     
-    if ([self.agreeCheckbox isChecked]) {
+    if ([self.agreeCheckbox isChecked] && [self.mentorAgreeCheckbox isChecked]) {
         NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
         
         PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
@@ -231,9 +261,23 @@ static BOOL useStage = NO;
     } else {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
     }
-    
-    
 }
+
+#pragma mark - UIActionSheetDelegate methods
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
+{
+    if (buttonIndex > 0) {
+        NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+        NSString *title = [actionSheet title];
+        if ([title isEqualToString:@"Choose School"]) {
+            self.schoolName.text = buttonTitle;
+        } else if ([title isEqualToString:@"Choose Class"]) {
+            self.className.text = buttonTitle;
+        }
+    }
+}
+
 
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
@@ -241,6 +285,9 @@ static BOOL useStage = NO;
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
+    self.oldViewFieldsRect = self.viewFields.frame;
+    self.oldViewFieldsContentSize = self.viewFields.contentSize;
+    
     CGRect fieldsFrame = self.viewFields.frame;
     
     NSDictionary *userInfo = [nsNotification userInfo];
@@ -248,22 +295,25 @@ static BOOL useStage = NO;
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
     
-    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
-                                       fieldsFrame.origin.y,
-                                       fieldsFrame.size.width,
-                                       fieldsFrame.size.height - kbSize.height + 40.0f);
+    CGFloat x = fieldsFrame.origin.x;
+    CGFloat y = fieldsFrame.origin.y;
+    CGFloat w = fieldsFrame.size.width;
+    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
-    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
+    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
     
-    //    self.viewFields.contentSize = viewFrame.size;
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
+    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
     
-    self.viewFields.frame = fieldFrameSize;
+    self.viewFields.contentSize = fieldsContentRect.size;
+    
+    self.viewFields.frame = fieldsFrame;
+    
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
 {
-    self.viewFields.frame = self.view.frame;
+    self.viewFields.frame = self.oldViewFieldsRect;
+    self.viewFields.contentSize = self.oldViewFieldsContentSize;
 }
 
 
