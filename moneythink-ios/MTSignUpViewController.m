@@ -18,6 +18,27 @@ static BOOL useStage = NO;
 
 @interface MTSignUpViewController ()
 
+@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
+
+@property (strong, nonatomic) IBOutlet UITextField *firstName;
+@property (strong, nonatomic) IBOutlet UITextField *lastName;
+@property (strong, nonatomic) IBOutlet UITextField *email;
+@property (strong, nonatomic) IBOutlet UITextField *password;
+@property (strong, nonatomic) IBOutlet UITextField *registrationCode;
+@property (strong, nonatomic) IBOutlet UITextField *error;
+
+@property (strong, nonatomic) IBOutlet UIButton *agreeButton;
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+
+@property (strong, nonatomic) IBOutlet MICheckBox *agreeCheckbox;
+@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
+
+@property (strong, nonatomic) IBOutlet UIButton *signUpButton;
+
+@property (strong, nonatomic) IBOutlet UITextField *schoolName;
+@property (strong, nonatomic) IBOutlet UITextField *className;
+
 @end
 
 @implementation MTSignUpViewController 
@@ -99,10 +120,12 @@ static BOOL useStage = NO;
 
 #pragma mark - IBActions
 
-
-- (IBAction)tappedAgreeButton:(id)sender { }
-
-- (IBAction)tappedUseStageButton:(id)sender { }
+- (IBAction)schoolNameButton:(id)sender {
+//    UIPickerView *pickSchool = [[UIPickerView alloc] init];
+    
+}
+- (IBAction)classNameButton:(id)sender {
+}
 
 - (IBAction)tappedSignUpButton:(id)sender {
     if ([self.useStageCheckbox isChecked]) {

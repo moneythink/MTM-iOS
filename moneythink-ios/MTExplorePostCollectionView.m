@@ -47,6 +47,7 @@
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
 
+    [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
 

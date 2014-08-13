@@ -17,11 +17,15 @@
 @property (strong, nonatomic) IBOutlet UITextField *firstName;
 @property (strong, nonatomic) IBOutlet UITextField *lastName;
 @property (strong, nonatomic) IBOutlet UITextField *email;
+
 @property (strong, nonatomic) IBOutlet UITextField *userPassword;
 @property (strong, nonatomic) IBOutlet UITextField *confirmPassword;
 
 @property (strong, nonatomic) IBOutlet UITextField *signUpCode;
+@property (strong, nonatomic) IBOutlet UILabel *signUpCodeLabel;
+@property (strong, nonatomic) IBOutlet UIButton *signUpCodeButton;
 
+@property (assign, nonatomic) BOOL isMentor;
 
 @property (strong, nonatomic) PFImageView *profileImage;
 @property (strong, nonatomic) UIImage *updatedProfileImage;
@@ -52,6 +56,15 @@
 {
     [super viewDidLoad];
     
+    self.isMentor = [PFUser currentUser][@"type"];
+    
+    self.signUpCode.hidden = !self.isMentor;
+    self.signUpCodeLabel.hidden = !self.isMentor;
+    self.signUpCodeButton.hidden = !self.isMentor;
+    
+    self.userSchool.enabled = self.isMentor;
+    self.userClassName.enabled = self.isMentor;
+
     self.navigationItem.title = @"Edit Profile";
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveChanges:)];
@@ -199,6 +212,14 @@
 - (void)saveProfileChanges {
     
     
+    if (self.userClassName.text) {
+        self.userCurrent[@"class"] = self.userClassName.text;
+    }
+    
+    if (self.firstName.text) {
+        self.userCurrent[@"school"] = self.userSchool.text;
+    }
+    
     if (self.firstName.text) {
         self.userCurrent[@"first_name"] = self.firstName.text;
     }
@@ -210,7 +231,7 @@
     BOOL passwordsMatch = [self.userPassword.text isEqualToString:self.confirmPassword.text];
     if (![self.self.userPassword.text isEqual:@""] && passwordsMatch) {
         self.userCurrent.password = self.userPassword.text;
-    } else {
+    } else if (!passwordsMatch){
         UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Password error" message:@"Passwords do not match." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [noMatch show];
         return;
@@ -245,9 +266,6 @@
     }];
     
     [self.navigationController popViewControllerAnimated:YES];
-}
-- (IBAction)buttonDone:(id)sender {
-    [self saveProfileChanges];
 }
 
 - (IBAction)saveChanges:(id)sender {

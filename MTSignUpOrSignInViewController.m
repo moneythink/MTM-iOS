@@ -66,7 +66,7 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (IBAction)unwindToSignUpLogin:(UIStoryboardSegue *)sender
+- (IBAction)unwindToSignInOrSignUpLogin:(UIStoryboardSegue *)sender
 {
     
 }
