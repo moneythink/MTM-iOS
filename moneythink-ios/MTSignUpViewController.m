@@ -1,10 +1,10 @@
-    //
-    //  MTSignUpViewController.m
-    //  LogInAndSignUpDemo
-    //
-    //  Created by Mattieu Gamache-Asselin on 6/15/12.
-    //  Copyright (c) 2013 Parse. All rights reserved.
-    //
+//
+//  MTSignUpViewController.m
+//  LogInAndSignUpDemo
+//
+//  Created by Mattieu Gamache-Asselin on 6/15/12.
+//  Copyright (c) 2013 Parse. All rights reserved.
+//
 
 #import "MTSignUpViewController.h"
 #import <QuartzCore/QuartzCore.h>
@@ -41,13 +41,13 @@ static BOOL useStage = NO;
 
 @end
 
-@implementation MTSignUpViewController 
+@implementation MTSignUpViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self.navigationController setNavigationBarHidden:NO animated:YES];
-
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -65,7 +65,7 @@ static BOOL useStage = NO;
         [self.password setDelegate:self];
         [self.registrationCode setDelegate:self];
     }
-
+    
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
@@ -81,7 +81,7 @@ static BOOL useStage = NO;
 	[self.viewFields addSubview:self.agreeCheckbox];
     
     self.agreeButton.hidden = YES;
-
+    
     self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
 	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
 	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
@@ -121,9 +121,47 @@ static BOOL useStage = NO;
 #pragma mark - IBActions
 
 - (IBAction)schoolNameButton:(id)sender {
-//    UIPickerView *pickSchool = [[UIPickerView alloc] init];
+    PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
+    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
     
+    //    [querySchools findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //        if (!error) {
+    //        }
+    //        UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"name", nil];
+    //
+    //        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    //        if ([window.subviews containsObject:self.view]) {
+    //            [logoutSheet showInView:self.view];
+    //        } else {
+    //            [logoutSheet showInView:window];
+    //        }
+    //    }];
 }
+
+- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
+    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        [names addObject:object[@"name"]];
+    }
+    
+    NSArray *schoolNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    
+    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+        [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
+    }
+    
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [schoolSheet showInView:self.view];
+    } else {
+        [schoolSheet showInView:window];
+    }
+}
+
 - (IBAction)classNameButton:(id)sender {
 }
 
@@ -154,7 +192,7 @@ static BOOL useStage = NO;
                     user.password = self.password.text;
                     user.email = self.email.text;
                     
-                        // other fields can be set just like with PFObject
+                    // other fields can be set just like with PFObject
                     user[@"first_name"] = self.firstName.text;
                     user[@"last_name"] = self.lastName.text;
                     
@@ -168,7 +206,7 @@ static BOOL useStage = NO;
                     
                     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         if (!error) {
-                                // Hooray! Let them use the app now.
+                            // Hooray! Let them use the app now.
                             
                             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                                 [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
@@ -178,7 +216,7 @@ static BOOL useStage = NO;
                             
                         } else {
                             NSString *errorString = [error userInfo][@"error"];
-                                // Show the errorString somewhere and let the user try again.
+                            // Show the errorString somewhere and let the user try again.
                             self.error.text = errorString;
                             [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                         }
@@ -193,7 +231,7 @@ static BOOL useStage = NO;
     } else {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
     }
-
+    
     
 }
 
@@ -217,7 +255,7 @@ static BOOL useStage = NO;
     
     fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
     
-//    self.viewFields.contentSize = viewFrame.size;
+    //    self.viewFields.contentSize = viewFrame.size;
     self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 60.0f);
     
     self.viewFields.frame = fieldFrameSize;
@@ -234,13 +272,13 @@ static BOOL useStage = NO;
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;
-        // Try to find next responder
+    // Try to find next responder
     UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
     if (nextResponder) {
-            // Found next responder, so set it.
+        // Found next responder, so set it.
         [nextResponder becomeFirstResponder];
     } else {
-            // Not found, so remove keyboard.
+        // Not found, so remove keyboard.
         [textField resignFirstResponder];
     }
     return NO; // We do not want UITextField to insert line-breaks.
