@@ -33,6 +33,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *button2;
 
 @property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
+@property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
@@ -160,6 +161,9 @@
         NSString *button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
         [self.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
+    
+    self.verfiedLabel.hidden = YES;
+    self.verifiedCheckBox.hidden = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated

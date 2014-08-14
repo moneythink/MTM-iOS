@@ -155,17 +155,19 @@
     cell.profileImage.file = user[@"profile_picture"];
     [cell.profileImage loadInBackground];
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-        CGRect frame = cell.contentView.frame;
-        
-        if (image.size.width > frame.size.width) {
-            CGFloat scale = frame.size.width / image.size.width;
-            CGFloat heightNew = scale * image.size.height;
-            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-            UIGraphicsBeginImageContext(sizeNew);
-            [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-            image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
+
+        if (!error) {
+            if (image) {
+                CGRect frame = cell.contentView.frame;
+                image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
+                [cell setNeedsDisplay];
+            } else {
+                image = nil;
+            }
+        } else {
+            NSLog(@"error - %@", error);
         }
+
     }];
     
     
@@ -273,46 +275,6 @@
     return height;
 }
 
-
-#pragma mark - date diff methods
-
-
-- (NSString *)dateDiffFromDate:(NSDate *)origDate {
-    NSDate *todayDate = [NSDate date];
-    
-    double interval     = [origDate timeIntervalSinceDate:todayDate];
-    
-    interval = interval * -1;
-    if(interval < 1) {
-    	return @"";
-    } else 	if (interval < 60) {
-    	return @"less than a minute ago";
-    } else if (interval < 3600) {
-    	int diff = round(interval / 60);
-    	return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (interval < 86400) {
-    	int diff = round(interval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (interval < 604800) {
-    	int diff = round(interval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
-    	int diff = round(interval / 60 / 60 / 24 / 7);
-    	return[NSString stringWithFormat:@"%d wks ago", diff];
-    }
-}
-
-- (NSString *)dateDiffFromString:(NSString *)origDate {
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
-    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
-    
-    NSDate *convertedDate = [df dateFromString:origDate];
-    
-    return [self dateDiffFromDate:convertedDate];
-}
-
-
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
     UIImage *newImage = nil;
@@ -378,6 +340,46 @@
     
     return newImage;
 }
+
+
+#pragma mark - date diff methods
+
+
+- (NSString *)dateDiffFromDate:(NSDate *)origDate {
+    NSDate *todayDate = [NSDate date];
+    
+    double interval     = [origDate timeIntervalSinceDate:todayDate];
+    
+    interval = interval * -1;
+    if(interval < 1) {
+    	return @"";
+    } else 	if (interval < 60) {
+    	return @"less than a minute ago";
+    } else if (interval < 3600) {
+    	int diff = round(interval / 60);
+    	return [NSString stringWithFormat:@"%d minutes ago", diff];
+    } else if (interval < 86400) {
+    	int diff = round(interval / 60 / 60);
+    	return[NSString stringWithFormat:@"%d hours ago", diff];
+    } else if (interval < 604800) {
+    	int diff = round(interval / 60 / 60 / 24);
+    	return[NSString stringWithFormat:@"%d days ago", diff];
+    } else {
+    	int diff = round(interval / 60 / 60 / 24 / 7);
+    	return[NSString stringWithFormat:@"%d wks ago", diff];
+    }
+}
+
+- (NSString *)dateDiffFromString:(NSString *)origDate {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
+    
+    NSDate *convertedDate = [df dateFromString:origDate];
+    
+    return [self dateDiffFromDate:convertedDate];
+}
+
 
 #pragma mark - Navigation
 

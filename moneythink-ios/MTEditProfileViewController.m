@@ -58,9 +58,9 @@
     
     self.isMentor = [PFUser currentUser][@"type"];
     
-    self.signUpCode.hidden = !self.isMentor;
-    self.signUpCodeLabel.hidden = !self.isMentor;
-    self.signUpCodeButton.hidden = !self.isMentor;
+//    self.signUpCode.hidden = !self.isMentor;
+//    self.signUpCodeLabel.hidden = !self.isMentor;
+//    self.signUpCodeButton.hidden = !self.isMentor;
     
     self.userSchool.enabled = self.isMentor;
     self.userClassName.enabled = self.isMentor;

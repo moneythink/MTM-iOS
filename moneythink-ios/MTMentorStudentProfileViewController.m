@@ -65,18 +65,12 @@
     
     [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
-            CGRect frame = self.profileImage.frame;
-            
-            if (image.size.width > frame.size.width) {
-                CGFloat scale = frame.size.width / image.size.width;
-                CGFloat heightNew = scale * image.size.height;
-                CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-                UIGraphicsBeginImageContext(sizeNew);
-                [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-                image = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                
-                self.profileImage.image = image;
+            if (image) {
+                CGRect frame = self.profileImage.frame;
+                self.profileImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
+//                [self reloadInputViews];
+            } else {
+                self.profileImage.image = nil;
             }
         } else {
             NSLog(@"error - %@", error);
@@ -89,6 +83,73 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+- (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
+{
+    UIImage *newImage = nil;
+    CGSize imageSize = image.size;
+    CGFloat width = imageSize.width;
+    CGFloat height = imageSize.height;
+    CGFloat targetWidth = targetSize.width;
+    CGFloat targetHeight = targetSize.height;
+    CGFloat scaleFactor = 0.0;
+    CGFloat scaledWidth = targetWidth;
+    CGFloat scaledHeight = targetHeight;
+    CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
+    
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
+        {
+        CGFloat widthFactor = targetWidth / width;
+        CGFloat heightFactor = targetHeight / height;
+        
+        if (widthFactor > heightFactor)
+            {
+            scaleFactor = widthFactor; // scale to fit height
+            }
+        else
+            {
+            scaleFactor = heightFactor; // scale to fit width
+            }
+        
+        scaledWidth  = width * scaleFactor;
+        scaledHeight = height * scaleFactor;
+        
+        // center the image
+        if (widthFactor > heightFactor)
+            {
+            thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
+            }
+        else
+            {
+            if (widthFactor < heightFactor)
+                {
+                thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
+                }
+            }
+        }
+    
+    UIGraphicsBeginImageContext(targetSize); // this will crop
+    
+    CGRect thumbnailRect = CGRectZero;
+    thumbnailRect.origin = thumbnailPoint;
+    thumbnailRect.size.width  = scaledWidth;
+    thumbnailRect.size.height = scaledHeight;
+    
+    [image drawInRect:thumbnailRect];
+    
+    newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    if(newImage == nil)
+        {
+        NSLog(@"could not scale image");
+        }
+    
+    //pop the context to get back to the default
+    UIGraphicsEndImageContext();
+    
+    return newImage;
+}
+
 
 #pragma mark - date diff methods
 
