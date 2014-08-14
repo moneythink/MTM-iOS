@@ -14,9 +14,9 @@
 @interface MTMyClassTableViewController ()
 
 @property (strong, nonatomic) IBOutlet UITabBarItem *postsTabBarItem;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (assign, nonatomic) BOOL hasButtons;
+@property (strong, nonatomic) NSArray *postsLiked;
 
 @end
 
@@ -65,17 +65,14 @@
             NSLog(@"error - %@", error);
         }
     }];
-    
-}
-
-- (void)postCommentSelector {
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"My Class";
 
+    [self queryForTable];
+    [self.tableView reloadData];
 }
 
 
@@ -149,13 +146,19 @@
     if (cell == nil) {
         cell = [[MTPostsTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-    
+
+    if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        cell.deletePost.hidden = NO;
+    } else {
+        cell.deletePost.hidden = YES;
+    }
+
     cell.userName.text = [user username];
+    cell.comments.text = @"";
     
     cell.profileImage.file = user[@"profile_picture"];
     [cell.profileImage loadInBackground];
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-
         if (!error) {
             if (image) {
                 CGRect frame = cell.contentView.frame;
@@ -167,7 +170,6 @@
         } else {
             NSLog(@"error - %@", error);
         }
-
     }];
     
     
@@ -212,26 +214,35 @@
     }
     
     NSInteger likes = [post[@"likes"] intValue];
-    if (likes) {
+    if (likes > 0) {
         NSString *likesString = [NSString stringWithFormat:@"%ld", (long)likes];
         cell.likes.text = likesString;
-        if ([likesString isEqualToString:@"0"]) {
-            [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        } else {
-            [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        }
     } else {
         cell.likes.text = @"0";
+    }
+    
+    self.postsLiked = [PFUser currentUser][@"posts_liked"];
+    NSString *postID = [post objectId];
+    
+    NSInteger index = [self.postsLiked indexOfObject:postID];
+    
+    if (index == NSNotFound) {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+    } else {
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     }
     
     PFQuery *commentQuery = [PFQuery queryWithClassName:@"ChallengePostComment"];
     [commentQuery whereKey:@"challenge_post" equalTo:post];
     [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (number > 0) {
-            cell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
+        if (!error) {
+            if (number > 0) {
+                cell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
+            } else {
+                cell.comments.text = @"0";
+            }
         } else {
-            cell.comments.text = @"0";
+            NSLog(@"error - %@", error);
         }
     }];
 

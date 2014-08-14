@@ -36,9 +36,6 @@
 {
     [super viewDidLoad];
 
-    id parent = self.parentViewController;
-    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
-
     if ([PFUser currentUser]) {
         PFUser *user = [PFUser currentUser];
         [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
@@ -52,8 +49,10 @@
                 NSLog(@"error - %@", error);
             }
         }];
-//    } else {
-//        [self performSegueWithIdentifier:@"signUpSignIn" sender:self];
+    } else {
+        self.studentSignUpButton.hidden = NO;
+        self.mentorSignUpButton.hidden = NO;
+        self.loginButton.hidden = NO;
     }
 }
 

@@ -39,9 +39,6 @@ static BOOL useStage = NO;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    id parent = self.parentViewController;
-    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
-
     [self.navigationController setNavigationBarHidden:NO animated:YES];
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]

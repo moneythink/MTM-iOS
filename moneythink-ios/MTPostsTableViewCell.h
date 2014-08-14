@@ -24,4 +24,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *commentBUtton;
 
+@property (strong, nonatomic) IBOutlet UIButton *deletePost;
+
 @end

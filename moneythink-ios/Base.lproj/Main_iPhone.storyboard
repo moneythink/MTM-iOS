@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk" userLabel="Student Sign Up">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hXp-YV-vWk" userLabel="Student Sign Up">
                                 <rect key="frame" x="20" y="286" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.99215692281723022" green="0.93725496530532837" blue="0.82352948188781738" alpha="1" colorSpace="deviceRGB"/>
@@ -32,7 +32,7 @@
                                     <segue destination="8Ue-1k-B9o" kind="push" identifier="studentSignUp" id="Fpc-xj-HcE"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fn-Uc-eMe" userLabel="Mentor Sign Up">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7fn-Uc-eMe" userLabel="Mentor Sign Up">
                                 <rect key="frame" x="20" y="343" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.63137257099151611" green="0.83137261867523193" blue="0.69019609689712524" alpha="1" colorSpace="deviceRGB"/>
@@ -47,7 +47,7 @@
                                     <segue destination="e6J-bE-0Mw" kind="push" identifier="mentorSignUp" id="7xt-k6-Bhz"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lx9-xh-3h8" userLabel="Login">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lx9-xh-3h8" userLabel="Login">
                                 <rect key="frame" x="20" y="400" width="280" height="39"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
@@ -2181,14 +2181,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </state>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="user" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xyq-JA-kie">
-                                        <rect key="frame" x="52" y="10" width="255" height="14"/>
+                                        <rect key="frame" x="52" y="10" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0w0-Es-3vJ">
-                                        <rect key="frame" x="52" y="26" width="255" height="14"/>
+                                        <rect key="frame" x="52" y="26" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="highlightedColor"/>
@@ -2251,6 +2251,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="verifiedTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="1qM-ta-iW4"/>
                                         </connections>
                                     </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JkI-kY-Efd">
+                                        <rect key="frame" x="280" y="10" width="30" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <state key="normal" title="x">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="Xc5-OS-bmc"/>
+                                            <action selector="deletePostTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="6nf-A4-0ZD"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -2266,6 +2278,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="comment" destination="8vy-wq-dwb" id="gfz-qK-vDP"/>
                         <outlet property="commentCount" destination="tHM-0G-6eD" id="Vrv-EA-njf"/>
                         <outlet property="commentPost" destination="pH7-Pk-ArL" id="lwD-UE-sKh"/>
+                        <outlet property="deletePost" destination="JkI-kY-Efd" id="Rdt-31-38v"/>
                         <outlet property="likePost" destination="XDv-yk-4wG" id="vQR-eE-oib"/>
                         <outlet property="postComment" destination="h7U-gf-nGo" id="JvE-xH-fGu"/>
                         <outlet property="postImage" destination="H2X-td-GLp" id="jmE-FR-ObF"/>
@@ -2487,6 +2500,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADr-4h-mJc">
+                                            <rect key="frame" x="270" y="365" width="30" height="26"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <state key="normal" title="x">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="ln1-eG-NEy"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="KpO-O7-xUz" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="20" symbolic="YES" id="0I7-sR-5ia"/>
@@ -2504,6 +2528,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <connections>
                                     <outlet property="commentBUtton" destination="96E-EQ-y2e" id="U8R-Cq-qAn"/>
                                     <outlet property="comments" destination="3Zd-61-sE1" id="bld-SI-uSN"/>
+                                    <outlet property="deletePost" destination="ADr-4h-mJc" id="yfO-MT-JdO"/>
                                     <outlet property="likeButton" destination="gpP-NG-Lrv" id="WAp-vB-VIP"/>
                                     <outlet property="likes" destination="kJy-15-av8" id="phg-hg-ddu"/>
                                     <outlet property="postImage" destination="VWk-dC-RPZ" id="RwD-tG-BHL"/>
@@ -2585,6 +2610,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwF-lc-hku">
+                                            <rect key="frame" x="270" y="76" width="30" height="26"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <state key="normal" title="x">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="bPx-vX-bCP"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="gq7-MJ-Eej" firstAttribute="centerY" secondItem="vUJ-bW-Rmw" secondAttribute="centerY" id="2Ri-bJ-Xar"/>
@@ -2603,6 +2639,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <connections>
                                     <outlet property="commentBUtton" destination="sJx-A5-cNc" id="Bid-DY-Ecs"/>
                                     <outlet property="comments" destination="gq7-MJ-Eej" id="ktm-kb-bZC"/>
+                                    <outlet property="deletePost" destination="TwF-lc-hku" id="2CC-ZS-Yri"/>
                                     <outlet property="likeButton" destination="vUJ-bW-Rmw" id="vjr-Bi-WJW"/>
                                     <outlet property="likes" destination="2hX-kv-FGC" id="Og6-41-Ipc"/>
                                     <outlet property="postText" destination="c1j-wI-VtQ" id="dkb-X8-ibS"/>
@@ -2624,6 +2661,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="700"/>
                     <connections>
+                        <outlet property="tableView" destination="CjA-Xy-9gz" id="Tud-tM-9Sv"/>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
                         <segue destination="ROD-Uc-uF0" kind="push" identifier="pushViewPostWithButtons" id="0tX-EG-lkN"/>
                         <segue destination="ths-Es-m93" kind="push" identifier="pushViewPostNoImage" id="VFk-5D-gdp"/>
@@ -3087,14 +3125,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </state>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="user" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="reh-os-Q6f">
-                                        <rect key="frame" x="52" y="50" width="255" height="14"/>
+                                        <rect key="frame" x="52" y="50" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5le-uJ-W01">
-                                        <rect key="frame" x="52" y="66" width="255" height="14"/>
+                                        <rect key="frame" x="52" y="66" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="highlightedColor"/>
@@ -3157,6 +3195,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="verifiedTapped:" destination="ths-Es-m93" eventType="touchUpInside" id="oHB-ld-5yF"/>
                                         </connections>
                                     </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="y65-2M-hjF">
+                                        <rect key="frame" x="277" y="50" width="30" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <state key="normal" title="x">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="dCb-MR-Oku"/>
+                                            <action selector="deletePostTapped:" destination="ths-Es-m93" eventType="touchUpInside" id="tkv-UJ-cGu"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -3172,6 +3222,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="comment" destination="Y1i-Yy-cfE" id="JWy-jH-ekn"/>
                         <outlet property="commentCount" destination="rjY-Fx-3OH" id="Fz6-QW-kRJ"/>
                         <outlet property="commentPost" destination="S21-Jn-fbc" id="vvp-HP-BM5"/>
+                        <outlet property="deletePost" destination="y65-2M-hjF" id="Qk3-Gq-l4A"/>
                         <outlet property="likePost" destination="LXp-XX-JIB" id="5bP-IH-bsG"/>
                         <outlet property="postComment" destination="U5C-87-UDV" id="gOV-Ro-MCY"/>
                         <outlet property="postLikes" destination="8tI-3C-72C" id="K7i-DY-3ua"/>
@@ -3219,14 +3270,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </state>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="user" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WgP-dL-URA">
-                                        <rect key="frame" x="53" y="9" width="255" height="14"/>
+                                        <rect key="frame" x="53" y="9" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AVD-gU-phP">
-                                        <rect key="frame" x="53" y="25" width="255" height="14"/>
+                                        <rect key="frame" x="53" y="25" width="215" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="highlightedColor"/>
@@ -3317,6 +3368,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="verifiedTapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="cZc-2e-UYq"/>
                                         </connections>
                                     </button>
+                                    <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XVe-XZ-kRS">
+                                        <rect key="frame" x="281" y="9" width="30" height="26"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                        <state key="normal" title="x">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="4ra-Js-zM9"/>
+                                            <action selector="deletePostTapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="deF-TC-4vG"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -3334,6 +3397,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="comment" destination="Qu9-Fb-tmy" id="SkE-Dn-Ixe"/>
                         <outlet property="commentCount" destination="LSa-0S-4nH" id="jzP-Sn-7WF"/>
                         <outlet property="commentPost" destination="LiG-Lv-74n" id="Qjf-0C-eCR"/>
+                        <outlet property="deletePost" destination="XVe-XZ-kRS" id="h5z-Zk-Doq"/>
                         <outlet property="likePost" destination="Lgr-rB-e1x" id="YeJ-CS-eHh"/>
                         <outlet property="postComment" destination="cs9-wk-k6N" id="8aT-Jd-tAp"/>
                         <outlet property="postImage" destination="akh-qz-Nav" id="aiV-6W-iuZ"/>
@@ -3382,14 +3446,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </state>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="user" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7UB-zb-gl5">
-                                <rect key="frame" x="53" y="10" width="255" height="14"/>
+                                <rect key="frame" x="53" y="10" width="215" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="minutes ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" enabled="NO" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YvM-mz-CuJ">
-                                <rect key="frame" x="53" y="26" width="255" height="14"/>
+                                <rect key="frame" x="53" y="26" width="215" height="14"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                 <nil key="highlightedColor"/>
@@ -3472,6 +3536,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <action selector="verifiedTapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="aV1-p7-1sd"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2h4-8i-Awj">
+                                <rect key="frame" x="278" y="10" width="30" height="26"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="x">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="deletePost:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="xpb-YO-9rq"/>
+                                    <action selector="deletePostTapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="9BT-Qg-xbm"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -3487,6 +3563,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="comment" destination="KGp-cu-W6E" id="cX2-x1-sIq"/>
                         <outlet property="commentCount" destination="ZyL-nK-pRq" id="wl0-3E-THF"/>
                         <outlet property="commentPost" destination="Gmg-Oh-OO3" id="STF-Kt-S1x"/>
+                        <outlet property="deletePost" destination="2h4-8i-Awj" id="bmg-xG-jPu"/>
                         <outlet property="likePost" destination="FC4-iB-8nb" id="Phi-I3-Oze"/>
                         <outlet property="postComment" destination="AtM-NL-NqT" id="fly-yX-ymJ"/>
                         <outlet property="postLikes" destination="xgx-x1-nYo" id="2Ne-VE-bKF"/>
@@ -3970,13 +4047,13 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qYv-0w-I0f"/>
-        <segue reference="ySr-9F-9a4"/>
+        <segue reference="iSW-sc-15K"/>
         <segue reference="MZw-0r-VG2"/>
-        <segue reference="Pqy-YU-1Il"/>
         <segue reference="fM9-bL-F9m"/>
-        <segue reference="0tX-EG-lkN"/>
-        <segue reference="LS9-Mg-yad"/>
+        <segue reference="Pqy-YU-1Il"/>
         <segue reference="VFk-5D-gdp"/>
+        <segue reference="0tX-EG-lkN"/>
         <segue reference="3vf-te-PYL"/>
+        <segue reference="LS9-Mg-yad"/>
     </inferredMetricsTieBreakers>
 </document>

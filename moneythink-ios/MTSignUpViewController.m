@@ -63,17 +63,13 @@ static BOOL useStage = NO;
     
     self.view.backgroundColor = [UIColor white];
     
-    if ([PFUser currentUser]) {
-        [self performSegueWithIdentifier:@"signUpToChallenges" sender:self];
-    } else {
-        [self.firstName setDelegate:self];
-        [self.lastName setDelegate:self];
-        [self.email setDelegate:self];
-        [self.password setDelegate:self];
-        [self.registrationCode setDelegate:self];
-        [self.schoolName setDelegate:self];
-        [self.className setDelegate:self];
-    }
+    [self.firstName setDelegate:self];
+    [self.lastName setDelegate:self];
+    [self.email setDelegate:self];
+    [self.password setDelegate:self];
+    [self.registrationCode setDelegate:self];
+    [self.schoolName setDelegate:self];
+    [self.className setDelegate:self];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];

@@ -29,8 +29,6 @@
 {
     [super viewDidLoad];
     
-    id parent = self.parentViewController;
-    NSLog(@"childviewcontrollers - %@", [parent childViewControllers]);
 }
 
 - (void)viewWillAppear:(BOOL)animated {

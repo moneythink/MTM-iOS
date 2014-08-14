@@ -23,7 +23,10 @@
 @property (strong, nonatomic) IBOutlet UITextField *postComment;
 
 @property (strong, nonatomic) IBOutlet UIButton *likePost;
+@property (strong, nonatomic) NSArray *postsLiked;
+@property (assign, nonatomic) NSInteger postLikesCount;
 @property (strong, nonatomic) IBOutlet UILabel *postLikes;
+@property (assign, nonatomic) BOOL iLike;
 
 @property (strong, nonatomic) IBOutlet UIButton *comment;
 @property (strong, nonatomic) IBOutlet UILabel *commentCount;
@@ -39,6 +42,7 @@
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
+@property (strong, nonatomic) IBOutlet UIButton *deletePost;
 @end
 
 @implementation MTPostViewController
@@ -57,8 +61,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-//    self.challenge = self.parentViewController.
-
+    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -73,6 +78,13 @@
     [queryPostComments countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {
             self.commentsCount = number;
+            if (number > 0) {
+                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)number];
+            } else {
+                self.commentCount.text = @"0";
+            }
+        } else {
+            NSLog(@"error - %@", error);
         }
     }];
     
@@ -169,6 +181,27 @@
     self.verifiedCheckBox.hidden = hideVerifySwitch;
     
     self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
+    
+    self.postsLiked = [PFUser currentUser][@"posts_liked"];
+    NSString *postID = [self.challengePost objectId];
+    NSInteger index = [self.postsLiked indexOfObject:postID];
+    self.iLike = !(index == NSNotFound);
+
+    if (self.iLike) {
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+    } else {
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+    }
+    
+//    PFUser *user = self.challengePost[@"user"];
+    if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        self.deletePost.hidden = NO;
+        self.deletePost.enabled = YES;
+    } else {
+        self.deletePost.hidden = YES;
+        self.deletePost.enabled = NO;
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -179,34 +212,84 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
 
+- (void)viewWillLayoutSubviews {
+    
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (IBAction)deletePostTapped:(id)sender {
+    // call function deletePost
+    PFUser *user = [PFUser currentUser];
+    NSString *userID = [user objectId];
+    
+    NSString *postID = [self.challengePost objectId];
+    
+    [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+        if (!error) {
+            NSLog(@"no error");
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
 
 - (IBAction)verifiedTapped:(id)sender {
-    self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
-
     NSString *postID = [self.challengePost objectId];
     NSString *verifiedBy = [[PFUser currentUser] objectId];
-    if (self.verifiedCheckBox) {
+    
+    if (self.verifiedCheckBox.isChecked) {
         verifiedBy = @"";
     }
 
     [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
         if (error) {
             NSLog(@"error - %@", error);
+        } else {
+            [[PFUser currentUser] refresh];
+            NSLog(@"error");
         }
     }];
+    
+    self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
 }
 
 - (IBAction)likeButtonTapped:(id)sender {
-    // PFCloud code here
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user": [PFUser currentUser], @"post_id" : @"asdf", @"like" : @1} block:^(id object, NSError *error) {
+    NSString *postID = [self.challengePost objectId];
+    NSString *userID = [[PFUser currentUser] objectId];
+    
+
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
         if (!error) {
-            // set like image
+            
+            PFChallengePost *post = self.challengePost;
+            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
+            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
+            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    self.iLike = !self.iLike;
+                    
+                    if (self.iLike) {
+                        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+                        self.postLikesCount += 1;
+                    } else {
+                        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+                        self.postLikesCount -= 1;
+                    }
+                    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+
+                    [(PFChallengePost *)self.challengePost refresh];
+                    [[PFUser currentUser] refresh];
+                    
+                    [self.parentViewController reloadInputViews];
+                    [self reloadInputViews];
+                }
+            }];
         } else {
             NSLog(@"error - %@", error);
         }
@@ -350,37 +433,6 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
-
-
-
-/*
-- (void) keyboardWasShown:(NSNotification *)nsNotification {
-    CGRect viewFrame = self.view.frame;
-    CGRect fieldsFrame = self.viewFields.frame;
-    
-    NSDictionary *userInfo = [nsNotification userInfo];
-    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGSize kbSize = kbRect.size;
-    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
-    
-    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
-                                       fieldsFrame.origin.y,
-                                       fieldsFrame.size.width,
-                                       fieldsFrame.size.height - kbSize.height + 40.0f);
-    
-    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
- 
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 180.0f);
-    
-    self.viewFields.frame = fieldFrameSize;
-}
-
-- (void)keyboardWasDismissed:(NSNotification *)notification
-{
-    self.viewFields.frame = self.view.frame;
-}
- */
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
