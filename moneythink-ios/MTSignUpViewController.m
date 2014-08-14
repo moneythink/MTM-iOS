@@ -107,6 +107,9 @@ static BOOL useStage = NO;
     self.useStageCheckbox.isChecked = useStage;
     self.useStageButton.hidden = YES;
     
+    [[self.signUpButton layer] setBorderWidth:1.0f];
+    [[self.signUpButton layer] setCornerRadius:5.0f];
+    
 }
 
 - (void)viewDidLayoutSubviews {

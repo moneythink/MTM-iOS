@@ -41,6 +41,7 @@
 		5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */; };
 		5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943D197C06E400EDC969 /* MTNotificationsViewController.m */; };
 		58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTChallengesContentViewController.m */; };
+		58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */; };
 		585E25C4199712CB005A896D /* MTSignUpOrSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */; };
 		585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */; };
 		585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */; };
@@ -256,6 +257,8 @@
 		5850943D197C06E400EDC969 /* MTNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationsViewController.m; sourceTree = "<group>"; };
 		5850943F197C386100EDC969 /* MTChallengesContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesContentViewController.h; sourceTree = "<group>"; };
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
+		58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNotificationTableViewCell.h; sourceTree = "<group>"; };
+		58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationTableViewCell.m; sourceTree = "<group>"; };
 		585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
 		585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
 		585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreCollectionViewCell.h; sourceTree = "<group>"; };
@@ -638,6 +641,8 @@
 				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
 				5850943C197C06E400EDC969 /* MTNotificationsViewController.h */,
 				5850943D197C06E400EDC969 /* MTNotificationsViewController.m */,
+				58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */,
+				58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */,
 				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
 				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
 				58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */,
@@ -1198,6 +1203,7 @@
 				58A356DD198168140018FC61 /* UIViewController+MJPopupViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
+				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);

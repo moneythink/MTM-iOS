@@ -274,7 +274,7 @@
 }
 
 
-#pragma mark - date dif methods
+#pragma mark - date diff methods
 
 
 - (NSString *)dateDiffFromDate:(NSDate *)origDate {

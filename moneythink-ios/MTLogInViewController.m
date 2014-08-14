@@ -19,6 +19,19 @@ static BOOL useStage = NO;
 
 @interface MTLogInViewController ()
 
+@property (strong, nonatomic) IBOutlet UIView *view;
+@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
+
+@property (strong, nonatomic) IBOutlet UITextField *email;
+@property (strong, nonatomic) IBOutlet UITextField *password;
+
+@property (strong, nonatomic) IBOutlet UITextField *error;
+
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
+@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
+
+@property (strong, nonatomic) IBOutlet UIButton *loginButton;
+
 @end
 
 @implementation MTLogInViewController
@@ -49,6 +62,9 @@ static BOOL useStage = NO;
     
     self.useStageButton.hidden = YES;
     self.view.backgroundColor = [UIColor white];
+    
+    [[self.loginButton layer] setBorderWidth:1.0f];
+    [[self.loginButton layer] setCornerRadius:5.0f];
 
 }
 
@@ -59,6 +75,12 @@ static BOOL useStage = NO;
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
+- (IBAction)resetTapped:(id)sender {
+    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil message:@"Would you like to receive an email to reset your password?" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+    
+    [confirm show];
 }
 
 - (IBAction)loginTapped:(id)sender {
@@ -89,6 +111,25 @@ static BOOL useStage = NO;
             [[[UIAlertView alloc] initWithTitle:@"Login Error" message:self.error.text delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
     }];
+}
+
+#pragma mark - UIAlertViewDelegate methods
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case 0: // Cancel
+            break;
+            
+        default: // OK
+            [PFUser requestPasswordResetForEmailInBackground:self.email.text block:^(BOOL succeeded, NSError *error) {
+                if (!error) {
+                    NSLog(@"asdf");
+                } else {
+                    NSLog(@"asdf");
+                }
+            }];
+            break;
+    }
 }
 
 -(void)dismissKeyboard {

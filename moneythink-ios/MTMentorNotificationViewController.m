@@ -11,6 +11,7 @@
 #import "MTMentorStudentProfileViewController.h"
 #import "MTMentorStudentProgressViewController.h"
 #import "MTStudentProgressTabBarViewController.h"
+#import "MTNotificationTableViewCell.h"
 
 @interface MTMentorNotificationViewController ()
 
@@ -140,115 +141,90 @@
 // Override to customize the look of a cell representing an object. The default is to display
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
-    static NSString *CellIdentifier = @"postCell";
-    
-    PFTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    static NSString *reuserIdentifier = @"notificationCellView";
+
+    MTNotificationTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuserIdentifier];
     if (cell == nil) {
-        cell = [[PFTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        cell = [[MTNotificationTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuserIdentifier];
     }
     
     PFNotifications *notification = (PFNotifications *)object;
     
-    NSLog(@"object - %@", object);
-    
-    __block NSString *longText = @"";
-    
-    if (notification[@"comment"]) {
-        longText = [longText stringByAppendingString:@", comment: "];
-        PFChallengePost *post = notification[@"comment"];
-        longText = [longText stringByAppendingString:post[@"comment_text"]];
-    }
-    
-    if (notification[@"post_liked"]) {
-        longText = [longText stringByAppendingString:@", post_liked: "];
-        PFChallengePost *post = notification[@"post_liked"];
-        longText = [longText stringByAppendingString:post[@"post_text"]];
-    }
-    
-    if (notification[@"post_verified"]) {
-        longText = [longText stringByAppendingString:@", post_verified: "];
-        PFChallengePost *post = notification[@"post_verified"];
-        longText = [longText stringByAppendingString:post[@"post_text"]];
-    }
-    
-    if (notification[@"recipient"]) {
-        longText = [longText stringByAppendingString:@", recipient: "];
-        PFUser *user = notification[@"recipient"];
-        longText = [longText stringByAppendingString:[user username]];
-    }
-    
     if (notification[@"user"]) {
-        longText = [longText stringByAppendingString:@", user: "];
         PFUser *user = notification[@"user"];
-        longText = [longText stringByAppendingString:[user username]];
+        cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        [cell.userName sizeToFit];
     }
     
-    if (notification[@"challenge_activated"]) {
-        longText = [longText stringByAppendingString:@", challenge_activated: "];
+    cell.agePosted.text = [self dateDiffFromDate:[notification createdAt]];
+    [cell.agePosted sizeToFit];
+    
+    
+    
+     //<><><><><><><><><><> - Challenge
+     // ****************** - Post
+    
+    if (notification[@"comment"]) { // ******************
+        
+        PFChallengePostComment *post = notification[@"comment"];
+        cell.message.text = [NSString stringWithFormat:@"Comment: %@", post[@"comment_text"]];
+        
+    } else if (notification[@"post_liked"]) { // ******************
+        
+        PFChallengePost *post = notification[@"post_liked"];
+        cell.message.text = [NSString stringWithFormat:@"Liked: %@", post[@"post_text"]];
+
+    } else if (notification[@"post_verified"]) { // ******************
+        
+        PFChallengePost *post = notification[@"post_verified"];
+        cell.message.text = [NSString stringWithFormat:@"Verified: %@", post[@"post_text"]];
+        
+    } else if (notification[@"challenge_activated"]) { //<><><><><><><><><><>
+        
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
-        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
-                longText = [longText stringByAppendingString:challenge[@"title"]];
+                cell.message.text = [NSString stringWithFormat:@"Activated: %@", challenge[@"title"]];
             } else {
-                longText = [longText stringByAppendingString:@"error - challenge_activated"];
+
             }
         }];
-    }
-    
-    if (notification[@"challenge_closed"]) {
-        longText = [longText stringByAppendingString:@", challenge_closed: "];
-        
+    } else if (notification[@"challenge_closed"]) { //<><><><><><><><><><>
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
-        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
-                longText = [longText stringByAppendingString:challenge[@"title"]];
+                cell.message.text = [NSString stringWithFormat:@"Closed: %@", challenge[@"title"]];
             } else {
-                longText = [longText stringByAppendingString:@"error - challenge_closed"];
+
             }
         }];
-    }
-    
-    if (notification[@"challenge_completed"]) {
-        longText = [longText stringByAppendingString:@", challenge_completed: "];
-        
+    } else if (notification[@"challenge_completed"]) { //<><><><><><><><><><>
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
-        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
-                longText = [longText stringByAppendingString:challenge[@"title"]];
+                cell.message.text = [NSString stringWithFormat:@"Completed: %@", challenge[@"title"]];
             } else {
-                longText = [longText stringByAppendingString:@"error - challenge_completed"];
+
             }
         }];
-    }
-    
-    if (notification[@"challenge_started"]) {
-        longText = [longText stringByAppendingString:@", challenge_started: "];
-        
+    } else if (notification[@"challenge_started"]) { //<><><><><><><><><><>
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
-        PFQuery *challenge = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challenge findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
-                longText = [longText stringByAppendingString:challenge[@"title"]];
+                cell.message.text = [NSString stringWithFormat:@"Started: %@", challenge[@"title"]];
             } else {
-                longText = [longText stringByAppendingString:@"error - challenge_started"];
+
             }
         }];
     }
-    
-    if ([cell.textLabel.text isEqualToString:@""]) {
-        longText = [longText stringByAppendingString:@"<><><><><><><><>row - %d"];
-    }
-    NSInteger row = indexPath.row;
-    NSString *rowString = [NSString stringWithFormat:@"%ld", (long)row];
-    longText = [rowString stringByAppendingString:longText];
-    cell.textLabel.text = longText;
     
     return cell;
 }
@@ -262,6 +238,46 @@
     
 //    [self performSegueWithIdentifier:@"pushNotificationToPosts" sender:self.objects[indexPath.row]];
 }
+
+#pragma mark - date diff methods
+
+
+- (NSString *)dateDiffFromDate:(NSDate *)origDate {
+    NSDate *todayDate = [NSDate date];
+    
+    double interval     = [origDate timeIntervalSinceDate:todayDate];
+    
+    interval = interval * -1;
+    if(interval < 1) {
+    	return @"";
+    } else 	if (interval < 60) {
+    	return @"less than a minute ago";
+    } else if (interval < 3600) {
+    	int diff = round(interval / 60);
+    	return [NSString stringWithFormat:@"%d minutes ago", diff];
+    } else if (interval < 86400) {
+    	int diff = round(interval / 60 / 60);
+    	return[NSString stringWithFormat:@"%d hours ago", diff];
+    } else if (interval < 604800) {
+    	int diff = round(interval / 60 / 60 / 24);
+    	return[NSString stringWithFormat:@"%d days ago", diff];
+    } else {
+    	int diff = round(interval / 60 / 60 / 24 / 7);
+    	return[NSString stringWithFormat:@"%d wks ago", diff];
+    }
+}
+
+- (NSString *)dateDiffFromString:(NSString *)origDate {
+    NSDateFormatter *df = [[NSDateFormatter alloc] init];
+    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
+    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
+    
+    NSDate *convertedDate = [df dateFromString:origDate];
+    
+    return [self dateDiffFromDate:convertedDate];
+}
+
+
 
 /*
 #pragma mark - Navigation
