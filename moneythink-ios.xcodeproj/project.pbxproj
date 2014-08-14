@@ -235,8 +235,8 @@
 		581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewCell.m; sourceTree = "<group>"; };
 		5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTabBarViewController.h; sourceTree = "<group>"; };
 		5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTabBarViewController.m; sourceTree = "<group>"; };
-		5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTActivationTableViewCell.h; sourceTree = "<group>"; };
-		5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTActivationTableViewCell.m; sourceTree = "<group>"; };
+		5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTActivationTableViewCell.h; path = ../MTActivationTableViewCell.h; sourceTree = "<group>"; };
+		5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTActivationTableViewCell.m; path = ../MTActivationTableViewCell.m; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
 		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
@@ -259,8 +259,8 @@
 		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
 		58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNotificationTableViewCell.h; sourceTree = "<group>"; };
 		58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationTableViewCell.m; sourceTree = "<group>"; };
-		585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
-		585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
+		585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTSignUpOrSignInViewController.h; path = ../MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
+		585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTSignUpOrSignInViewController.m; path = ../MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
 		585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreCollectionViewCell.h; sourceTree = "<group>"; };
 		585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExploreCollectionViewCell.m; sourceTree = "<group>"; };
 		585E25C81997F8DC005A896D /* MTCollectionNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCollectionNavigationViewController.h; sourceTree = "<group>"; };
@@ -464,10 +464,10 @@
 		58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentTabBarViewController.m; sourceTree = "<group>"; };
 		58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProfileTableViewCell.h; sourceTree = "<group>"; };
 		58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProfileTableViewCell.m; sourceTree = "<group>"; };
-		58CBD0B8199157230056BE8F /* MTScheduleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTScheduleTableViewController.h; sourceTree = "<group>"; };
-		58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTScheduleTableViewController.m; sourceTree = "<group>"; };
-		58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentPostsTableViewCell.h; sourceTree = "<group>"; };
-		58CBD0BC19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentPostsTableViewCell.m; sourceTree = "<group>"; };
+		58CBD0B8199157230056BE8F /* MTScheduleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTScheduleTableViewController.h; path = ../MTScheduleTableViewController.h; sourceTree = "<group>"; };
+		58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTScheduleTableViewController.m; path = ../MTScheduleTableViewController.m; sourceTree = "<group>"; };
+		58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTMentorStudentPostsTableViewCell.h; path = ../MTMentorStudentPostsTableViewCell.h; sourceTree = "<group>"; };
+		58CBD0BC19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTMentorStudentPostsTableViewCell.m; path = ../MTMentorStudentPostsTableViewCell.m; sourceTree = "<group>"; };
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
 		58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorTabBarViewControlle.h; sourceTree = "<group>"; };
@@ -569,6 +569,14 @@
 		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */,
+				585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */,
+				58CBD0B8199157230056BE8F /* MTScheduleTableViewController.h */,
+				58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */,
+				58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */,
+				58CBD0BC19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m */,
+				5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */,
+				5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */,
 				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
 				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
 				58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */,
@@ -664,14 +672,6 @@
 		5876E29C196F2C1F00C176EC = {
 			isa = PBXGroup;
 			children = (
-				585E25C2199712CB005A896D /* MTSignUpOrSignInViewController.h */,
-				585E25C3199712CB005A896D /* MTSignUpOrSignInViewController.m */,
-				58CBD0B8199157230056BE8F /* MTScheduleTableViewController.h */,
-				58CBD0B9199157230056BE8F /* MTScheduleTableViewController.m */,
-				58CBD0BB19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.h */,
-				58CBD0BC19917F5E0056BE8F /* MTMentorStudentPostsTableViewCell.m */,
-				5848CC761993E0B6005F95C4 /* MTActivationTableViewCell.h */,
-				5848CC771993E0B7005F95C4 /* MTActivationTableViewCell.m */,
 				5876E2AE196F2C1F00C176EC /* moneythink-ios */,
 				5876E2D0196F2C1F00C176EC /* moneythink-iosTests */,
 				5876E2A7196F2C1F00C176EC /* Frameworks */,
@@ -1343,6 +1343,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1353,7 +1354,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "a0756539-a94e-468c-b68f-5c9647247a52";
+				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1365,6 +1366,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1375,7 +1377,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "a0756539-a94e-468c-b68f-5c9647247a52";
+				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

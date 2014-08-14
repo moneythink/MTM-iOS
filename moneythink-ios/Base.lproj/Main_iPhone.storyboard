@@ -2012,11 +2012,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Bjq-xx-n8M">
-                                <rect key="frame" x="20" y="37" width="280" height="110"/>
+                                <rect key="frame" x="20" y="37" width="280" height="130"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge points" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwf-vh-1uf">
-                                        <rect key="frame" x="53" y="85" width="227" height="21"/>
+                                        <rect key="frame" x="53" y="105" width="227" height="21"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="NO"/>
@@ -2044,25 +2044,25 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Challenge Description" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eu9-lb-6AD">
-                                        <rect key="frame" x="53" y="22" width="227" height="60"/>
+                                        <rect key="frame" x="53" y="22" width="227" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="NO"/>
                                         </accessibility>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="227" id="2bf-gc-hnD"/>
-                                            <constraint firstAttribute="height" constant="60" id="hYY-21-Qkr"/>
+                                            <constraint firstAttribute="height" constant="80" id="hYY-21-Qkr"/>
                                         </constraints>
                                         <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
                                     <view alpha="0.5" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0qE-Zm-YyP">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="110"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="130"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qv-kj-lsk">
-                                                <rect key="frame" x="5" y="26" width="40" height="57"/>
+                                                <rect key="frame" x="5" y="36" width="40" height="57"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <accessibility key="accessibilityConfiguration">
                                                     <bool key="isElement" value="NO"/>
@@ -2078,9 +2078,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="50" id="8eg-92-dVI"/>
-                                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="top" secondItem="0qE-Zm-YyP" secondAttribute="top" constant="26" id="Y6h-L0-39V"/>
+                                            <constraint firstItem="2Qv-kj-lsk" firstAttribute="top" secondItem="0qE-Zm-YyP" secondAttribute="top" constant="36" id="Y6h-L0-39V"/>
                                             <constraint firstItem="2Qv-kj-lsk" firstAttribute="leading" secondItem="0qE-Zm-YyP" secondAttribute="leading" constant="5" id="a8R-BD-zSS"/>
-                                            <constraint firstAttribute="height" constant="110" id="wsV-wd-E81"/>
+                                            <constraint firstAttribute="height" constant="130" id="wsV-wd-E81"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -2091,7 +2091,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <constraint firstAttribute="trailing" secondItem="Gwf-vh-1uf" secondAttribute="trailing" id="Rw3-gK-VBm"/>
                                     <constraint firstAttribute="trailing" secondItem="xpg-Kc-3Xd" secondAttribute="trailing" id="TIR-ZW-dHA"/>
                                     <constraint firstAttribute="trailing" secondItem="eu9-lb-6AD" secondAttribute="trailing" id="Uvq-2X-d6l"/>
-                                    <constraint firstAttribute="height" constant="110" id="Vw4-nE-Syl"/>
+                                    <constraint firstAttribute="height" constant="130" id="Vw4-nE-Syl"/>
                                     <constraint firstItem="xpg-Kc-3Xd" firstAttribute="top" secondItem="Bjq-xx-n8M" secondAttribute="top" id="X6y-M7-5JC"/>
                                     <constraint firstItem="0qE-Zm-YyP" firstAttribute="top" secondItem="Bjq-xx-n8M" secondAttribute="top" id="XVj-Q1-aRG"/>
                                     <constraint firstItem="0qE-Zm-YyP" firstAttribute="leading" secondItem="Bjq-xx-n8M" secondAttribute="leading" id="orz-jq-Gh9"/>
@@ -2241,12 +2241,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jTz-uS-R0X" customClass="MICheckBox">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jTz-uS-R0X" customClass="MICheckBox">
                                         <rect key="frame" x="128" y="400" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="checkbox_ticked.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="verifiedTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="1qM-ta-iW4"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </scrollView>
@@ -3144,12 +3147,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cXy-CC-ugL" customClass="MICheckBox">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cXy-CC-ugL" customClass="MICheckBox">
                                         <rect key="frame" x="127" y="111" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="checkbox_ticked.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="verifiedTapped:" destination="ths-Es-m93" eventType="touchUpInside" id="oHB-ld-5yF"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </scrollView>
@@ -3301,12 +3307,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywS-El-jOg" customClass="MICheckBox">
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ywS-El-jOg" customClass="MICheckBox">
                                         <rect key="frame" x="128" y="424" width="20" height="20"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="checkbox_ticked.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="verifiedTapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="cZc-2e-UYq"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </scrollView>
@@ -3453,12 +3462,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4dv-pI-rzj" customClass="MICheckBox">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4dv-pI-rzj" customClass="MICheckBox">
                                 <rect key="frame" x="128" y="99" width="20" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" image="checkbox_ticked.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="verifiedTapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="aV1-p7-1sd"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

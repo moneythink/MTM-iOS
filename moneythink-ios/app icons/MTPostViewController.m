@@ -162,8 +162,13 @@
         [self.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
     
-    self.verfiedLabel.hidden = YES;
-    self.verifiedCheckBox.hidden = YES;
+    BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    BOOL hideVerifySwitch = !isMentor || autoVerify;
+    self.verfiedLabel.hidden = hideVerifySwitch;
+    self.verifiedCheckBox.hidden = hideVerifySwitch;
+    
+    self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -180,8 +185,32 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+
+- (IBAction)verifiedTapped:(id)sender {
+    self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
+
+    NSString *postID = [self.challengePost objectId];
+    NSString *verifiedBy = [[PFUser currentUser] objectId];
+    if (self.verifiedCheckBox) {
+        verifiedBy = @"";
+    }
+
+    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
+        if (error) {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
+
 - (IBAction)likeButtonTapped:(id)sender {
     // PFCloud code here
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user": [PFUser currentUser], @"post_id" : @"asdf", @"like" : @1} block:^(id object, NSError *error) {
+        if (!error) {
+            // set like image
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
 }
 
 - (IBAction)button1Tapped:(id)sender {

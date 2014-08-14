@@ -185,13 +185,11 @@
             switch (row) {
                 case 0: {
 //                    cell.textLabel.text = @"Push Notifications";
-                    
                 }
                     break;
                     
                 case 1: {
 //                    cell.textLabel.text = @"Vibrate";
-                    
                 }
                     break;
                     
@@ -203,7 +201,6 @@
             break;
             
         case 1: {
-//            cell.textLabel.text = @"Edit Profile";
             [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
         }
             break;
@@ -226,8 +223,6 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
-    //unwindMTUserViewController
-    //unwindMTSignUpOrSignInViewController
     MTStudentTabBarViewController *parent = (MTStudentTabBarViewController *)self.parentViewController;
     
     switch (buttonIndex) {
