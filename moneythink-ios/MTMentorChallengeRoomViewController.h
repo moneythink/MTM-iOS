@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMentorChallengeRoomViewController : UIViewController <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
-
-@property (strong, nonatomic) IBOutlet UIImageView *anyImage;
-
-@property (nonatomic, strong) UIImagePickerController *imagePickerController;
+@interface MTMentorChallengeRoomViewController : UIViewController <UINavigationControllerDelegate>
 
 @end

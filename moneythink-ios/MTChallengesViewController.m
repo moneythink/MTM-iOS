@@ -74,7 +74,7 @@
     }
     
     // Create a new view controller and pass suitable data.
-    BOOL mentor = [[PFUser currentUser][@"type"] isEqualToString:@"student"];
+
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
     
     PFChallenges *challenge = self.challenges[index];

@@ -75,7 +75,6 @@
     [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
 }
 
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -88,14 +87,5 @@
     destination.challenge = self.challenge;
     
 }
-
-#pragma mark - UITabBarDelegate methods
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item; // called when a new view is selected by the user (but not programatically)
-{
-    
-}
-
-
 
 @end

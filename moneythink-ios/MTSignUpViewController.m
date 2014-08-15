@@ -152,9 +152,11 @@ static BOOL useStage = NO;
     NSArray *schoolNames = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
+    names = [NSMutableArray arrayWithArray:schoolNames];
+    [names addObject:@"new school"];
     
-    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-        [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
+    for (NSInteger buttonItem = 0; buttonItem < names.count; buttonItem++) {
+        [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
@@ -270,7 +272,11 @@ static BOOL useStage = NO;
         NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
         NSString *title = [actionSheet title];
         if ([title isEqualToString:@"Choose School"]) {
-            self.schoolName.text = buttonTitle;
+            if ([buttonTitle isEqualToString:@"new school"]) {
+                [self performSegueWithIdentifier:@"addSchool" sender:nil];
+            } else {
+                self.schoolName.text = buttonTitle;
+            }
         } else if ([title isEqualToString:@"Choose Class"]) {
             self.className.text = buttonTitle;
         }

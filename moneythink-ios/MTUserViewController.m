@@ -59,6 +59,16 @@
 - (void)viewWillAppear:(BOOL)animated {
     
     [super viewWillAppear:animated];
+
+    if ([PFUser currentUser]) {
+        self.studentSignUpButton.hidden = YES;
+        self.mentorSignUpButton.hidden = YES;
+        self.loginButton.hidden = YES;
+    } else {
+        self.studentSignUpButton.hidden = NO;
+        self.mentorSignUpButton.hidden = NO;
+        self.loginButton.hidden = NO;
+    }
     
     [self.navigationController setNavigationBarHidden:YES animated:YES];
     

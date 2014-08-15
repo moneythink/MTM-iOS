@@ -13,8 +13,6 @@
 
 @interface MTMyClassTableViewController ()
 
-@property (strong, nonatomic) IBOutlet UITabBarItem *postsTabBarItem;
-
 @property (assign, nonatomic) BOOL hasButtons;
 @property (strong, nonatomic) NSArray *postsLiked;
 
@@ -112,9 +110,8 @@
                        [self.challengeNumber intValue], self.className];
     
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
+    [query orderByDescending:@"createdAt"];
     
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
     if ([self.objects count] == 0) {
         query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
@@ -156,14 +153,15 @@
     cell.userName.text = [user username];
     cell.comments.text = @"";
     
+    cell.profileImage = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];
-    [cell.profileImage loadInBackground];
+
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
                 CGRect frame = cell.contentView.frame;
                 image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                [cell setNeedsDisplay];
+                cell.profileImage.image = image;                [cell setNeedsDisplay];
             } else {
                 image = nil;
             }
@@ -211,6 +209,7 @@
     
     if (dateObject) {
         cell.postedWhen.text = [self dateDiffFromDate:dateObject];
+        [cell.postedWhen sizeToFit];
     }
     
     NSInteger likes = [post[@"likes"] intValue];

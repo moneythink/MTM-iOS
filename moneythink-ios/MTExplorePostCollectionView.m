@@ -139,7 +139,7 @@
     
 
     cell.postUserImage.file = user[@"profile_picture"];
-    [cell.postUserImage loadInBackground];
+
     [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
