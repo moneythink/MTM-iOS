@@ -966,7 +966,7 @@
 				ORGANIZATIONNAME = Moneythink;
 				TargetAttributes = {
 					5876E2A4196F2C1F00C176EC = {
-						DevelopmentTeam = 6VC7HA4L8N;
+						DevelopmentTeam = 8V7X4CYMJ6;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1342,8 +1342,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Jon Burgermeister (6VC7HA4L8N)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1354,7 +1354,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
+				PROVISIONING_PROFILE = "ea77f8a6-0096-4bae-97fd-b8f4b2621c9f";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1365,8 +1365,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Jon Burgermeister (6VC7HA4L8N)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1377,7 +1377,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "831CC209-318B-45D1-BE64-D665A1041478";
+				PROVISIONING_PROFILE = "ea77f8a6-0096-4bae-97fd-b8f4b2621c9f";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
