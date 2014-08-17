@@ -88,7 +88,6 @@
 		58676B231974273E0070F604 /* MTUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTUserViewController.m */; };
 		5869D451199413850037B517 /* logo_actionbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 5869D450199413850037B517 /* logo_actionbar.png */; };
 		5869D453199416900037B517 /* login_banner.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 5869D4521994168F0037B517 /* login_banner.jpg */; };
-		5869D4561994465F0037B517 /* CPFQueryCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */; };
 		5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869D459199446D20037B517 /* MTExplorePostCollectionView.m */; };
 		5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
 		5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */; };
@@ -197,6 +196,9 @@
 		58DE6D98199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */; };
 		58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */; };
 		58DE6D9A199D0ABD00F1534C /* MTSignUpOrSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D96199D0ABD00F1534C /* MTSignUpOrSignInViewController.m */; };
+		58F08AC5199EA0DA009329B6 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC4199EA0DA009329B6 /* Reachability.m */; };
+		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
+		58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -332,8 +334,6 @@
 		58676B1E1974273E0070F604 /* MTUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserViewController.m; sourceTree = "<group>"; };
 		5869D450199413850037B517 /* logo_actionbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_actionbar.png; sourceTree = "<group>"; };
 		5869D4521994168F0037B517 /* login_banner.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = login_banner.jpg; sourceTree = "<group>"; };
-		5869D4541994465F0037B517 /* CPFQueryCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CPFQueryCollectionViewController.h; sourceTree = "<group>"; };
-		5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CPFQueryCollectionViewController.m; sourceTree = "<group>"; };
 		5869D458199446D20037B517 /* MTExplorePostCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExplorePostCollectionView.h; sourceTree = "<group>"; };
 		5869D459199446D20037B517 /* MTExplorePostCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExplorePostCollectionView.m; sourceTree = "<group>"; };
 		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -472,6 +472,12 @@
 		58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTScheduleTableViewController.m; sourceTree = "<group>"; };
 		58DE6D95199D0ABD00F1534C /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
 		58DE6D96199D0ABD00F1534C /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
+		58F08AC3199EA0DA009329B6 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		58F08AC4199EA0DA009329B6 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddSchoolViewController.h; sourceTree = "<group>"; };
+		58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddSchoolViewController.m; sourceTree = "<group>"; };
+		58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddClassViewController.h; sourceTree = "<group>"; };
+		58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddClassViewController.m; sourceTree = "<group>"; };
 		HYXIFWTDXJPPRRMDCEPMDTJH /* SparkInspector.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SparkInspector.framework; path = "/Applications/Spark Inspector.app/Contents/Resources/Frameworks/SparkInspector.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -557,15 +563,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		5869D457199446640037B517 /* Parse Helper */ = {
-			isa = PBXGroup;
-			children = (
-				5869D4541994465F0037B517 /* CPFQueryCollectionViewController.h */,
-				5869D4551994465F0037B517 /* CPFQueryCollectionViewController.m */,
-			);
-			name = "Parse Helper";
-			sourceTree = "<group>";
-		};
 		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -580,6 +577,10 @@
 				58DE6D95199D0ABD00F1534C /* MTSignUpOrSignInViewController.h */,
 				58DE6D96199D0ABD00F1534C /* MTSignUpOrSignInViewController.m */,
 				58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */,
+				58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */,
+				58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */,
+				58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */,
+				58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */,
 				58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */,
 				58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */,
 				58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */,
@@ -722,8 +723,8 @@
 				5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */,
 				58676B131974268E0070F604 /* Model */,
 				587464B2197EFEA30030D706 /* View Controllers */,
-				5869D457199446640037B517 /* Parse Helper */,
 				5876E2C3196F2C1F00C176EC /* Images.xcassets */,
+				58F08AC1199E9EA9009329B6 /* Thrid Party */,
 				5890F748197704E20042AC2F /* Assets */,
 				5890F7441976DD7E0042AC2F /* Categories */,
 				5876E2AF196F2C1F00C176EC /* Supporting Files */,
@@ -773,10 +774,6 @@
 			isa = PBXGroup;
 			children = (
 				58BE9A13198EDF210035A190 /* assets */,
-				5860BF371986D378007D9BB3 /* MBProgressHUD.h */,
-				5860BF381986D378007D9BB3 /* MBProgressHUD.m */,
-				58A356D7198168140018FC61 /* MJPopupViewController */,
-				58A35682198076720018FC61 /* MICheckboxUtils */,
 				5890F8C9197711AE0042AC2F /* app icons */,
 				58669F6819773119009BC13C /* button images */,
 				5890F8B7197710590042AC2F /* launchImage320x480.png */,
@@ -914,6 +911,35 @@
 				58B7C25E1992DE630039E238 /* verify_normal@2x.png */,
 			);
 			path = assets;
+			sourceTree = "<group>";
+		};
+		58F08AC0199E9E9B009329B6 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				5860BF371986D378007D9BB3 /* MBProgressHUD.h */,
+				5860BF381986D378007D9BB3 /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			sourceTree = "<group>";
+		};
+		58F08AC1199E9EA9009329B6 /* Thrid Party */ = {
+			isa = PBXGroup;
+			children = (
+				58F08AC2199E9F08009329B6 /* Reachability */,
+				58F08AC0199E9E9B009329B6 /* MBProgressHUD */,
+				58A356D7198168140018FC61 /* MJPopupViewController */,
+				58A35682198076720018FC61 /* MICheckboxUtils */,
+			);
+			name = "Thrid Party";
+			sourceTree = "<group>";
+		};
+		58F08AC2199E9F08009329B6 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				58F08AC3199EA0DA009329B6 /* Reachability.h */,
+				58F08AC4199EA0DA009329B6 /* Reachability.m */,
+			);
+			name = Reachability;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1142,6 +1168,7 @@
 				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
+				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
@@ -1160,7 +1187,6 @@
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
-				5869D4561994465F0037B517 /* CPFQueryCollectionViewController.m in Sources */,
 				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
 				5860BF391986D378007D9BB3 /* MBProgressHUD.m in Sources */,
 				5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */,
@@ -1178,6 +1204,7 @@
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
+				58F08AC5199EA0DA009329B6 /* Reachability.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,
 				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
@@ -1186,6 +1213,7 @@
 				5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */,
+				58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */,
 				5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */,
 				5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
@@ -1342,8 +1370,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1365,8 +1393,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

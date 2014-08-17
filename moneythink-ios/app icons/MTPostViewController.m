@@ -156,11 +156,11 @@
     
     [[self.button1 layer] setBorderWidth:2.0f];
     [[self.button1 layer] setCornerRadius:5.0f];
-    [[self.button1 layer] setBorderColor:[UIColor greenColor].CGColor];
-    [self.button1 setTintColor:[UIColor greenColor]];
+    [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+    [self.button1 setTintColor:[UIColor primaryGreen]];
 
     [[self.button2 layer] setCornerRadius:5.0f];
-    [[self.button2 layer] setBackgroundColor:[UIColor redColor].CGColor];
+    [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
     [self.button2 setTintColor:[UIColor white]];
 
     NSArray *buttonTitles = self.challenge[@"buttons"];
@@ -501,7 +501,6 @@
 
 - (IBAction)unwindToPostView:(UIStoryboardSegue *)sender
 {
-    
 }
 
 @end

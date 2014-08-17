@@ -18,6 +18,7 @@
     #import <Parse/Parse.h>
 
 #import "UIColor+Palette.h"
+#import "Reachability.h"
 
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"

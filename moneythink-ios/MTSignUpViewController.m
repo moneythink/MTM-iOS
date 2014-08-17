@@ -11,6 +11,8 @@
 #import "UIColor+Palette.h"
 #import "MTStudentTabBarViewController.h"
 #import "MTMentorTabBarViewControlle.h"
+#import "MTAddClassViewController.h"
+#import "MTAddSchoolViewController.h"
 
 #ifdef DEBUG
 static BOOL useStage = YES;
@@ -38,6 +40,8 @@ static BOOL useStage = NO;
 @property (strong, nonatomic) IBOutlet MICheckBox *mentorAgreeCheckbox;
 @property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
+@property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
+@property (strong, nonatomic) IBOutlet UIButton *addClassButton;
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
 
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
@@ -46,6 +50,7 @@ static BOOL useStage = NO;
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
+@property (assign, nonatomic) BOOL reachable;
 @end
 
 @implementation MTSignUpViewController
@@ -103,8 +108,39 @@ static BOOL useStage = NO;
     self.useStageCheckbox.isChecked = useStage;
     self.useStageButton.hidden = YES;
     
+    [[self.addSchoolButton layer] setBorderWidth:1.0f];
+    [[self.addSchoolButton layer] setCornerRadius:5.0f];
+    [[self.addSchoolButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+    
+    [[self.addClassButton layer] setBorderWidth:1.0f];
+    [[self.addClassButton layer] setCornerRadius:5.0f];
+    [[self.addClassButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+
     [[self.signUpButton layer] setBorderWidth:1.0f];
     [[self.signUpButton layer] setCornerRadius:5.0f];
+    [[self.signUpButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.parse.com"];
+    
+    reach.reachableBlock = ^(Reachability * reachability) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.reachable = YES;
+        });
+    };
+
+    reach.unreachableBlock = ^(Reachability * reachability)     {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.reachable = NO;
+        });
+    };
+    
+    [reach startNotifier];
     
 }
 
@@ -137,12 +173,17 @@ static BOOL useStage = NO;
 #pragma mark - IBActions
 
 - (IBAction)schoolNameButton:(id)sender {
-    PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
-    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+    if (self.reachable) {
+        PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
+        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+    } else {
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [reachableAlert show];
+    }
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
+    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
     
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
@@ -152,10 +193,7 @@ static BOOL useStage = NO;
     NSArray *schoolNames = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
-    names = [NSMutableArray arrayWithArray:schoolNames];
-    [names addObject:@"new school"];
-    
-    for (NSInteger buttonItem = 0; buttonItem < names.count; buttonItem++) {
+    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
         [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
     
@@ -168,8 +206,13 @@ static BOOL useStage = NO;
 }
 
 - (IBAction)classNameButton:(id)sender {
-    PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes"];
-    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+    if (self.reachable) {
+        PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes"];
+        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+    } else {
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [reachableAlert show];
+    }
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
@@ -197,70 +240,75 @@ static BOOL useStage = NO;
 }
 
 - (IBAction)tappedSignUpButton:(id)sender {
-    if ([self.useStageCheckbox isChecked]) {
-        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+    if (self.reachable) {
+        if ([self.useStageCheckbox isChecked]) {
+            NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+            NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+            
+            [Parse setApplicationId:applicationID
+                          clientKey:clientKey];
+        }
         
-        [Parse setApplicationId:applicationID
-                      clientKey:clientKey];
-    }
-    
-    if ([self.agreeCheckbox isChecked] && [self.mentorAgreeCheckbox isChecked]) {
-        NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
-        
-        PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
-        
-        [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                NSArray *codes = objects;
-                
-                if ([codes count] == 1) {
-                    PFSignupCodes *code = [codes firstObject];
+        if ([self.agreeCheckbox isChecked] && [self.mentorAgreeCheckbox isChecked]) {
+            NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
+            
+            PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
+            
+            [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    NSArray *codes = objects;
                     
-                    PFUser *user = [PFUser user];
-                    
-                    user.username = self.email.text;
-                    user.password = self.password.text;
-                    user.email = self.email.text;
-                    
-                    // other fields can be set just like with PFObject
-                    user[@"first_name"] = self.firstName.text;
-                    user[@"last_name"] = self.lastName.text;
-                    
-                    user[@"type"] = self.signUpType;
-                    
-                    NSString *aString = (NSString *)[code valueForUndefinedKey:@"class"];
-                    user[@"class"] = aString;
-                    
-                    aString = (NSString *)[code valueForUndefinedKey:@"school"];
-                    user[@"school"] = aString;
-                    
-                    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        if (!error) {
-                            // Hooray! Let them use the app now.
-                            
-                            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
+                    if ([codes count] == 1) {
+                        PFSignupCodes *code = [codes firstObject];
+                        
+                        PFUser *user = [PFUser user];
+                        
+                        user.username = self.email.text;
+                        user.password = self.password.text;
+                        user.email = self.email.text;
+                        
+                        // other fields can be set just like with PFObject
+                        user[@"first_name"] = self.firstName.text;
+                        user[@"last_name"] = self.lastName.text;
+                        
+                        user[@"type"] = self.signUpType;
+                        
+                        NSString *aString = (NSString *)[code valueForUndefinedKey:@"class"];
+                        user[@"class"] = aString;
+                        
+                        aString = (NSString *)[code valueForUndefinedKey:@"school"];
+                        user[@"school"] = aString;
+                        
+                        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (!error) {
+                                // Hooray! Let them use the app now.
+                                
+                                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                                    [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
+                                } else {
+                                    [self performSegueWithIdentifier:@"pushMentorSignedUp" sender:self];
+                                }
+                                
                             } else {
-                                [self performSegueWithIdentifier:@"pushMentorSignedUp" sender:self];
+                                NSString *errorString = [error userInfo][@"error"];
+                                // Show the errorString somewhere and let the user try again.
+                                self.error.text = errorString;
+                                [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                             }
-                            
-                        } else {
-                            NSString *errorString = [error userInfo][@"error"];
-                            // Show the errorString somewhere and let the user try again.
-                            self.error.text = errorString;
-                            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                        }
-                    }];
+                        }];
+                    } else {
+                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    }
                 } else {
-                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                 }
-            } else {
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            }
-        }];
+            }];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
     } else {
-        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [reachableAlert show];
     }
 }
 
@@ -268,18 +316,16 @@ static BOOL useStage = NO;
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
-    if (buttonIndex > 0) {
-        NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-        NSString *title = [actionSheet title];
-        if ([title isEqualToString:@"Choose School"]) {
-            if ([buttonTitle isEqualToString:@"new school"]) {
-                [self performSegueWithIdentifier:@"addSchool" sender:nil];
-            } else {
-                self.schoolName.text = buttonTitle;
-            }
-        } else if ([title isEqualToString:@"Choose Class"]) {
-            self.className.text = buttonTitle;
+    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+    NSString *title = [actionSheet title];
+    if ([title isEqualToString:@"Choose School"]) {
+        if ([buttonTitle isEqualToString:@"New school"]) {
+            [self performSegueWithIdentifier:@"addSchool" sender:nil];
+        } else {
+            self.schoolName.text = buttonTitle;
         }
+    } else if ([title isEqualToString:@"Choose Class"]) {
+        self.className.text = buttonTitle;
     }
 }
 
@@ -305,9 +351,7 @@ static BOOL useStage = NO;
     CGFloat w = fieldsFrame.size.width;
     CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
-    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
-    
-    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
+    CGRect fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
     
     self.viewFields.contentSize = fieldsContentRect.size;
     
@@ -339,5 +383,36 @@ static BOOL useStage = NO;
     return NO; // We do not want UITextField to insert line-breaks.
 }
 
+#pragma mark - Navigation
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    NSString *segueName = [segue identifier];
+    id destinationVC = [segue destinationViewController];
+    if ([segueName isEqualToString:@"addSchool"]) {
+        MTAddSchoolViewController *addSchoolVC = (MTAddSchoolViewController *)destinationVC;
+        addSchoolVC.schoolName = @"test";
+    }
+}
+
+
+#pragma mark Notification
+
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    
+    if([reach isReachable]) {
+        self.reachable = YES;
+    } else {
+        self.reachable = NO;
+    }
+}
+
+#pragma mark - Unwind
+
+- (IBAction)unwindToSignupView:(UIStoryboardSegue *)sender {
+    UIStoryboardSegue *returned = sender;
+    id sourceVC = [returned sourceViewController];
+}
 
 @end

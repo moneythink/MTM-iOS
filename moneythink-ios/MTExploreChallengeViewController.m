@@ -66,7 +66,6 @@
 
 - (IBAction)unwindToExploreChallanges:(UIStoryboardSegue *)sender
 {
-    
 }
 
 - (IBAction)swipeChallengePostsMyClass:(id)sender {

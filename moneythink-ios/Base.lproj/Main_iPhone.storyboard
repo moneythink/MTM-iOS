@@ -208,58 +208,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KaB-Vs-W1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="dSU-09-0j2" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-4018" y="-1918"/>
-        </scene>
-        <!--Sign Up Or Sign In View Controller-->
-        <scene sceneID="5sP-pv-44T">
-            <objects>
-                <viewController id="zGZ-4t-aX2" customClass="MTSignUpOrSignInViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="zrZ-Me-Paj"/>
-                        <viewControllerLayoutGuide type="bottom" id="e5Q-cK-rlc"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="VqY-08-Jy4">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="login_banner.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="UkR-a8-GeJ">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="197"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="197" id="CJu-uf-Oho"/>
-                                    <constraint firstAttribute="width" constant="320" id="jAZ-HH-JGh"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="logo_actionbar.png" translatesAutoresizingMaskIntoConstraints="NO" id="oN9-b0-fNK">
-                                <rect key="frame" x="78" y="243" width="209" height="35"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="35" id="B5s-0i-ipQ"/>
-                                    <constraint firstAttribute="width" constant="209" id="tcn-2e-VpZ"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" image="moneythink_icon_logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="WhY-fl-SZ7">
-                                <rect key="frame" x="34" y="220" width="36" height="58"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="36" id="VsO-Ct-Azq"/>
-                                    <constraint firstAttribute="height" constant="58" id="mhl-vH-skY"/>
-                                </constraints>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" red="0.10196079313755035" green="0.74901962280273438" blue="0.59215688705444336" alpha="1" colorSpace="deviceRGB"/>
-                        <constraints>
-                            <constraint firstItem="oN9-b0-fNK" firstAttribute="top" secondItem="UkR-a8-GeJ" secondAttribute="bottom" constant="46" id="XCh-eF-MC0"/>
-                            <constraint firstItem="WhY-fl-SZ7" firstAttribute="top" secondItem="UkR-a8-GeJ" secondAttribute="bottom" constant="23" id="Zab-eb-t8T"/>
-                            <constraint firstItem="oN9-b0-fNK" firstAttribute="leading" secondItem="WhY-fl-SZ7" secondAttribute="trailing" constant="8" id="ohx-6I-lgF"/>
-                        </constraints>
-                    </view>
-                    <navigationItem key="navigationItem" id="QWP-RD-hY0"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CMT-ii-OvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4341" y="-3652"/>
+            <point key="canvasLocation" x="-3822" y="-1896"/>
         </scene>
         <!--Home View Controller-->
         <scene sceneID="MBQ-y5-AQ4">
@@ -303,7 +252,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vkh-1o-7nc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4075" y="-2023"/>
+            <point key="canvasLocation" x="-3879" y="-2001"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="HHX-ba-Wva">
@@ -387,7 +336,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="z8Z-Rq-rRI" kind="push" id="iSW-sc-15K"/>
+                                            <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="iSW-sc-15K"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ggT-4n-Vtz">
@@ -534,7 +483,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OzH-ei-JDI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2563" y="-3078"/>
+            <point key="canvasLocation" x="-2411" y="-3566"/>
         </scene>
         <!--Mentor Student Progress View Controller - Students-->
         <scene sceneID="K0J-4Z-9Av">
@@ -630,25 +579,6 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
             </objects>
             <point key="canvasLocation" x="-2399" y="-5788"/>
         </scene>
-        <!--View Controller - Item-->
-        <scene sceneID="Hsr-ZW-FDP">
-            <objects>
-                <viewController storyboardIdentifier="ChallengeInstuctions" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Pbp-im-dlC" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="DD7-fl-Y52"/>
-                        <viewControllerLayoutGuide type="bottom" id="lGe-pj-9OG"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8Eg-Qk-Ftk">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="CqD-Nu-UCM"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="KON-p3-1le" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-4516" y="-1632"/>
-        </scene>
         <!--Student Settings View Controller - Settings-->
         <scene sceneID="vy4-ZF-NeK">
             <objects>
@@ -707,7 +637,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jfF-2e-MR6" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="3rb-iD-vjP" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2169" y="-1119"/>
+            <point key="canvasLocation" x="-1577" y="-1380"/>
         </scene>
         <!--Comment View Controller-->
         <scene sceneID="8dt-sO-pvz">
@@ -833,7 +763,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y1L-MY-kNv" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Phr-lg-Bkk" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="253" y="-1948"/>
+            <point key="canvasLocation" x="1161" y="-3287"/>
         </scene>
         <!--Edit Profile View Controller-->
         <scene sceneID="7Gj-Vh-HvZ">
@@ -1007,12 +937,12 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="cd1-HY-ACM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1596" y="-2043"/>
+            <point key="canvasLocation" x="-1004" y="-2304"/>
         </scene>
-        <!--View Controller-->
+        <!--Add School View Controller-->
         <scene sceneID="0Zq-Hb-rfV">
             <objects>
-                <viewController id="zeU-Mr-fxZ" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addSchool" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zeU-Mr-fxZ" customClass="MTAddSchoolViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gVQ-fV-vDL"/>
                         <viewControllerLayoutGuide type="bottom" id="2LR-Wm-vGe"/>
@@ -1022,11 +952,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E02-TH-nAc">
-                                <rect key="frame" x="137" y="197" width="46" height="30"/>
+                                <rect key="frame" x="120" y="197" width="80" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button">
+                                <state key="normal" title="Done">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="doneButtonTapped:" destination="zeU-Mr-fxZ" eventType="touchUpInside" id="EX2-1a-qqk"/>
+                                    <segue destination="hz2-0S-NYE" kind="unwind" identifier="unwindToSignupView" unwindAction="unwindToSignupView:" id="s70-U9-ZS5"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New school" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="X2M-4u-vKh">
                                 <rect key="frame" x="20" y="159" width="280" height="30"/>
@@ -1037,10 +971,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" id="x7l-zv-gJG"/>
+                    <connections>
+                        <outlet property="doneButton" destination="E02-TH-nAc" id="QDx-K4-wPx"/>
+                        <outlet property="schoolName" destination="X2M-4u-vKh" id="eVA-YM-Tp8"/>
+                        <outlet property="schoolNameText" destination="X2M-4u-vKh" id="YyF-qn-d8d"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7AG-gt-3qy" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="hz2-0S-NYE" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2700" y="-1813"/>
+            <point key="canvasLocation" x="-2411" y="-2167"/>
         </scene>
         <!--Student Main View Controller - studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -1058,7 +999,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <rect key="frame" x="0.0" y="313" width="320" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <segue destination="pAN-FU-phU" kind="embed" id="fM9-bL-F9m"/>
+                                    <segue destination="pAN-FU-phU" kind="embed" identifier="challengesScroller" id="fM9-bL-F9m"/>
                                 </connections>
                             </containerView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OdK-ip-5xF" userLabel="Profile Picture Button">
@@ -1187,7 +1128,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gx6-ze-5rc" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="UyF-QV-Aku" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2215" y="-2043"/>
+            <point key="canvasLocation" x="-1623" y="-2304"/>
         </scene>
         <!--Mentor Challenge Info View Controller - Info-->
         <scene sceneID="Lju-RJ-cwN">
@@ -1395,7 +1336,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Kp-sg-W4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="905" y="-1768"/>
+            <point key="canvasLocation" x="1551" y="-3287"/>
         </scene>
         <!--Mentor Challenge Room View Controller - Challenges-->
         <scene sceneID="3G4-9e-DuG">
@@ -1413,7 +1354,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <rect key="frame" x="0.0" y="166" width="320" height="235"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
-                                    <segue destination="pAN-FU-phU" kind="embed" id="7JS-73-w9v"/>
+                                    <segue destination="pAN-FU-phU" kind="embed" identifier="challengesScroller" id="7JS-73-w9v"/>
                                 </connections>
                             </containerView>
                         </subviews>
@@ -1423,7 +1364,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9Rf-mw-xSY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2399" y="-5042"/>
+            <point key="canvasLocation" x="-1487" y="-4296"/>
         </scene>
         <!--Mentor Student Profile View Controller-->
         <scene sceneID="Zj4-Oa-28M">
@@ -1664,7 +1605,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gww-XX-vMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1775" y="-6272"/>
+            <point key="canvasLocation" x="-1887" y="-5788"/>
         </scene>
         <!--Schedule Table View Controller-->
         <scene sceneID="i7i-v0-xVc">
@@ -1732,7 +1673,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1hq-Lo-eOH" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1775" y="-5540"/>
+            <point key="canvasLocation" x="-1439" y="-5900"/>
         </scene>
         <!--Log In View Controller-->
         <scene sceneID="MEj-oA-KyZ">
@@ -1867,7 +1808,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dsH-oO-S0L" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4801" y="-2971"/>
+            <point key="canvasLocation" x="-4121" y="-3071"/>
         </scene>
         <!--Challenges View Controller-->
         <scene sceneID="nih-IU-gmj">
@@ -1878,13 +1819,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m9Q-bI-JMX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1349" y="-2767"/>
+            <point key="canvasLocation" x="-757" y="-3028"/>
         </scene>
         <!--Challenges Content View Controller - Item-->
         <scene sceneID="3Fg-lF-jK9">
@@ -2039,7 +1980,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-816" y="-2935"/>
+            <point key="canvasLocation" x="116" y="-3952"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="P9H-Sj-CNa">
@@ -2051,7 +1992,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </pageViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flE-gx-sz9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1285" y="-2935"/>
+            <point key="canvasLocation" x="-693" y="-3196"/>
         </scene>
         <!--Post View Controller - Post-->
         <scene sceneID="2aa-TW-Svi">
@@ -2205,7 +2146,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ltS-05-clY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2271" y="-3456"/>
+            <point key="canvasLocation" x="2295" y="-3952"/>
         </scene>
         <!--Student Tab Bar View Controller-->
         <scene sceneID="PIP-Ah-Zib">
@@ -2231,7 +2172,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wtg-fA-sCb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="Hgh-h9-1IU" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-3075" y="-1554"/>
+            <point key="canvasLocation" x="-3031" y="-1026"/>
         </scene>
         <!--Explore Post Collection View-->
         <scene sceneID="GWZ-1J-qWr">
@@ -2322,7 +2263,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WSt-C5-4eq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1441" y="-4315"/>
+            <point key="canvasLocation" x="1161" y="-4648"/>
         </scene>
         <!--My Class Table View Controller - My  Class-->
         <scene sceneID="HKd-jm-JVR">
@@ -2580,7 +2521,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MnK-Is-ORV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1431" y="-2643"/>
+            <point key="canvasLocation" x="1551" y="-3952"/>
         </scene>
         <!--Posts Tab Bar View Controller-->
         <scene sceneID="5lu-5w-Kd3">
@@ -2604,7 +2545,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gVF-AH-qYw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="253" y="-2643"/>
+            <point key="canvasLocation" x="573" y="-3952"/>
         </scene>
         <!--Mentor Tab Bar View Controller-->
         <scene sceneID="twS-aw-QAE">
@@ -2683,7 +2624,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-bg-8xU" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="lA1-c1-LwC" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2355" y="-4184"/>
+            <point key="canvasLocation" x="-2327" y="-4296"/>
         </scene>
         <!--Navigation Controller - Notifications-->
         <scene sceneID="k3h-4D-LN7">
@@ -2703,7 +2644,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MuE-w4-X9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1789" y="-4630"/>
+            <point key="canvasLocation" x="-1881" y="-5066"/>
         </scene>
         <!--Navigation Controller - Notifications-->
         <scene sceneID="qtV-MD-tae">
@@ -2722,7 +2663,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2gW-OS-2Wj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1057" y="-2043"/>
+            <point key="canvasLocation" x="-225" y="-2056"/>
         </scene>
         <!--Edit Profile View Controller-->
         <scene sceneID="Vzq-Br-kkx">
@@ -2978,7 +2919,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xZN-J2-nfM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="aKI-a0-7aa" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1631" y="-1134"/>
+            <point key="canvasLocation" x="-1039" y="-1395"/>
         </scene>
         <!--Collection Navigation View Controller - Explore-->
         <scene sceneID="ib3-7f-tUc">
@@ -3002,7 +2943,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="52A-ba-uRy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="911" y="-3867"/>
+            <point key="canvasLocation" x="1161" y="-3952"/>
         </scene>
         <!--Post View Controller - Post-->
         <scene sceneID="fMa-cS-X3X">
@@ -3151,7 +3092,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lzC-2a-6Fe" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="4Qj-qr-n3q" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2729" y="-3456"/>
+            <point key="canvasLocation" x="2653" y="-3952"/>
         </scene>
         <!--Post View Controller - Post-->
         <scene sceneID="mBl-3y-UGG">
@@ -3327,7 +3268,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7v-li-ceb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="xfn-2W-4dD" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2271" y="-2818"/>
+            <point key="canvasLocation" x="2295" y="-3287"/>
         </scene>
         <!--Post View Controller - Post-->
         <scene sceneID="YE4-Pr-c4c">
@@ -3491,7 +3432,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Hh-ZC-D7R" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="85E-kC-AA3" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2729" y="-2818"/>
+            <point key="canvasLocation" x="2653" y="-3287"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="i6e-B5-lOU">
@@ -3506,11 +3447,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cfJ-PC-2Jb">
-                                <rect key="frame" x="20" y="20" width="280" height="528"/>
+                                <rect key="frame" x="0.0" y="20" width="326" height="528"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Preferred First Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="KIH-xy-YyE">
-                                        <rect key="frame" x="20" y="20" width="240" height="30"/>
+                                        <rect key="frame" x="20" y="20" width="286" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="zf7-a5-GnU"/>
@@ -3519,7 +3460,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ORF-qD-pOj">
-                                        <rect key="frame" x="20" y="58" width="240" height="30"/>
+                                        <rect key="frame" x="20" y="58" width="286" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="vOM-we-FgL"/>
@@ -3528,7 +3469,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="School Email" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="871-3R-XVp">
-                                        <rect key="frame" x="20" y="96" width="240" height="30"/>
+                                        <rect key="frame" x="20" y="96" width="286" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="7qf-JT-R87"/>
@@ -3537,7 +3478,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Password" clearsOnBeginEditing="YES" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="wH5-cm-geD">
-                                        <rect key="frame" x="20" y="134" width="240" height="30"/>
+                                        <rect key="frame" x="20" y="134" width="286" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="5nJ-Tw-khN"/>
@@ -3546,7 +3487,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Registration Code" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pPs-AL-Tjs">
-                                        <rect key="frame" x="20" y="172" width="240" height="30"/>
+                                        <rect key="frame" x="20" y="172" width="286" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="ekH-iM-2Pp"/>
@@ -3565,31 +3506,31 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </state>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J55-1d-FvR">
-                                        <rect key="frame" x="49" y="287" width="184" height="27"/>
+                                        <rect key="frame" x="49" y="287" width="257" height="27"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="I agree to the terms &amp; Conditions">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="z8Z-Rq-rRI" kind="push" id="ySr-9F-9a4"/>
+                                            <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="ySr-9F-9a4"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WK2-gJ-hPh">
-                                        <rect key="frame" x="20" y="429" width="20" height="30"/>
+                                        <rect key="frame" x="21" y="419" width="20" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Button">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Use stage" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3dE-g4-ov1">
-                                        <rect key="frame" x="48" y="440" width="183" height="14"/>
+                                        <rect key="frame" x="49" y="430" width="257" height="14"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77F-IV-6l0">
-                                        <rect key="frame" x="34" y="392" width="211" height="29"/>
+                                        <rect key="frame" x="58" y="374" width="211" height="29"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="29" id="Ggf-iD-4xw"/>
@@ -3601,8 +3542,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="tappedSignUpButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="cyK-Ua-uE7"/>
                                         </connections>
                                     </button>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add School Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="vuS-Ey-fNB">
-                                        <rect key="frame" x="21" y="210" width="185" height="30"/>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add School Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="vuS-Ey-fNB">
+                                        <rect key="frame" x="21" y="210" width="217" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="jbr-vO-2k3"/>
@@ -3610,8 +3551,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" returnKeyType="next"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add Class Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yFB-wj-hwM">
-                                        <rect key="frame" x="21" y="248" width="185" height="30"/>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Add Class Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yFB-wj-hwM">
+                                        <rect key="frame" x="21" y="248" width="217" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="6iY-4f-tRZ"/>
@@ -3620,7 +3561,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <textInputTraits key="textInputTraits" returnKeyType="done"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6">
-                                        <rect key="frame" x="214" y="211" width="46" height="30"/>
+                                        <rect key="frame" x="246" y="211" width="60" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="School">
@@ -3631,10 +3572,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CyJ-49-Z5K">
-                                        <rect key="frame" x="214" y="248" width="46" height="30"/>
+                                        <rect key="frame" x="246" y="248" width="60" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="46" id="XoZ-sE-Nf8"/>
+                                            <constraint firstAttribute="width" constant="60" id="XoZ-sE-Nf8"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="Class">
@@ -3645,7 +3586,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0H-vY-jeG">
-                                        <rect key="frame" x="20" y="339" width="20" height="30"/>
+                                        <rect key="frame" x="21" y="329" width="20" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="20" id="EbQ-vE-x9d"/>
@@ -3654,70 +3595,77 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="5Gn-Gs-M5t">
-                                        <rect key="frame" x="48" y="325" width="184" height="57"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="5Gn-Gs-M5t">
+                                        <rect key="frame" x="49" y="322" width="257" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="44" id="cHw-W2-NjR"/>
+                                            <constraint firstAttribute="width" constant="257" id="q4i-57-WIM"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <state key="normal" title="I agree to the Moneythink Mentor Release and Liability Waiver">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="uK7-CR-Ad7" kind="push" id="3fE-kn-Ubn"/>
+                                            <segue destination="uK7-CR-Ad7" kind="push" identifier="agreeVolunteerTerms" id="3fE-kn-Ubn"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="77F-IV-6l0" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="76" id="0cg-U1-d5T"/>
+                                    <constraint firstItem="77F-IV-6l0" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="58" id="0cg-U1-d5T"/>
                                     <constraint firstItem="pPs-AL-Tjs" firstAttribute="top" secondItem="wH5-cm-geD" secondAttribute="bottom" constant="8" symbolic="YES" id="12K-Xk-wQY"/>
                                     <constraint firstItem="vuS-Ey-fNB" firstAttribute="leading" secondItem="yFB-wj-hwM" secondAttribute="leading" id="6Wk-32-p4P"/>
-                                    <constraint firstItem="77F-IV-6l0" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="34" id="7s3-87-uQD"/>
+                                    <constraint firstItem="77F-IV-6l0" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="58" id="7s3-87-uQD"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="leading" secondItem="ORF-qD-pOj" secondAttribute="leading" id="8cr-48-XrP"/>
-                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="d0H-vY-jeG" secondAttribute="trailing" constant="8" symbolic="YES" id="9Yc-SK-PMA"/>
+                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="J55-1d-FvR" secondAttribute="leading" id="8tO-XQ-QBh"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="top" secondItem="yFB-wj-hwM" secondAttribute="top" id="D7P-Eg-dd5"/>
-                                    <constraint firstAttribute="bottom" secondItem="3dE-g4-ov1" secondAttribute="bottom" constant="74" id="Do6-Pk-HLw"/>
+                                    <constraint firstAttribute="bottom" secondItem="3dE-g4-ov1" secondAttribute="bottom" constant="84" id="Do6-Pk-HLw"/>
                                     <constraint firstItem="jiJ-0t-mOo" firstAttribute="leading" secondItem="pPs-AL-Tjs" secondAttribute="leading" constant="1" id="G4y-Ny-SsB"/>
+                                    <constraint firstItem="yFB-wj-hwM" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="21" id="Gt7-KQ-lc9"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="trailing" secondItem="vuS-Ey-fNB" secondAttribute="trailing" id="Hnc-8N-SQJ"/>
                                     <constraint firstAttribute="trailing" secondItem="B4t-0I-SD6" secondAttribute="trailing" constant="20" id="Jrh-pb-KIt"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="leading" secondItem="ORF-qD-pOj" secondAttribute="leading" id="K7P-kl-45B"/>
                                     <constraint firstItem="3dE-g4-ov1" firstAttribute="leading" secondItem="WK2-gJ-hPh" secondAttribute="trailing" constant="8" symbolic="YES" id="KKD-61-Uza"/>
-                                    <constraint firstItem="3dE-g4-ov1" firstAttribute="leading" secondItem="J55-1d-FvR" secondAttribute="leading" constant="-1" id="M0Y-AK-mC6"/>
-                                    <constraint firstItem="WK2-gJ-hPh" firstAttribute="top" secondItem="77F-IV-6l0" secondAttribute="bottom" constant="8" id="NO7-GV-N17"/>
+                                    <constraint firstItem="3dE-g4-ov1" firstAttribute="leading" secondItem="J55-1d-FvR" secondAttribute="leading" id="M0Y-AK-mC6"/>
+                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="top" secondItem="J55-1d-FvR" secondAttribute="bottom" constant="8" symbolic="YES" id="MeY-qe-vq1"/>
+                                    <constraint firstItem="WK2-gJ-hPh" firstAttribute="top" secondItem="77F-IV-6l0" secondAttribute="bottom" constant="16" id="NO7-GV-N17"/>
+                                    <constraint firstAttribute="trailing" secondItem="5Gn-Gs-M5t" secondAttribute="trailing" constant="20" id="Od5-Vk-Kvr"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="leading" secondItem="pPs-AL-Tjs" secondAttribute="leading" id="Oyd-fb-jyC"/>
                                     <constraint firstAttribute="trailing" secondItem="CyJ-49-Z5K" secondAttribute="trailing" constant="20" id="QYH-8f-iBt"/>
                                     <constraint firstItem="B4t-0I-SD6" firstAttribute="leading" secondItem="vuS-Ey-fNB" secondAttribute="trailing" constant="8" id="RBa-cb-nVm"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="top" secondItem="B4t-0I-SD6" secondAttribute="bottom" constant="7" id="RMT-mP-vTA"/>
-                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="baseline" secondItem="d0H-vY-jeG" secondAttribute="baseline" constant="12" id="S7N-9x-ssn"/>
+                                    <constraint firstItem="vuS-Ey-fNB" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="21" id="TBJ-ic-38X"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="20" id="UAJ-HO-QE2"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="trailing" secondItem="KIH-xy-YyE" secondAttribute="trailing" id="WTf-Q5-0BK"/>
+                                    <constraint firstItem="jiJ-0t-mOo" firstAttribute="centerX" secondItem="J55-1d-FvR" secondAttribute="centerX" constant="-146.5" id="Wkr-FJ-l8Y"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="top" secondItem="871-3R-XVp" secondAttribute="bottom" constant="8" symbolic="YES" id="Y63-BN-fIw"/>
-                                    <constraint firstItem="WK2-gJ-hPh" firstAttribute="leading" secondItem="jiJ-0t-mOo" secondAttribute="leading" constant="-1" id="Yoa-3N-N72"/>
+                                    <constraint firstItem="WK2-gJ-hPh" firstAttribute="leading" secondItem="jiJ-0t-mOo" secondAttribute="leading" id="Yoa-3N-N72"/>
                                     <constraint firstItem="jiJ-0t-mOo" firstAttribute="top" secondItem="pPs-AL-Tjs" secondAttribute="bottom" constant="84" id="Z0U-7e-L6I"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="top" secondItem="ORF-qD-pOj" secondAttribute="bottom" constant="8" symbolic="YES" id="cml-jT-SBK"/>
-                                    <constraint firstAttribute="trailing" secondItem="77F-IV-6l0" secondAttribute="trailing" constant="35" id="fwK-1W-seT"/>
+                                    <constraint firstAttribute="trailing" secondItem="77F-IV-6l0" secondAttribute="trailing" constant="57" id="fwK-1W-seT"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="top" secondItem="cfJ-PC-2Jb" secondAttribute="top" constant="20" symbolic="YES" id="hrU-2l-R4w"/>
                                     <constraint firstItem="pPs-AL-Tjs" firstAttribute="trailing" secondItem="wH5-cm-geD" secondAttribute="trailing" id="kOu-XC-tfq"/>
-                                    <constraint firstItem="J55-1d-FvR" firstAttribute="leading" secondItem="jiJ-0t-mOo" secondAttribute="trailing" constant="8" symbolic="YES" id="lUq-Y0-lue"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="bottom" secondItem="yFB-wj-hwM" secondAttribute="bottom" id="lc7-3O-u9s"/>
-                                    <constraint firstItem="d0H-vY-jeG" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="23" id="mdZ-C7-y0c"/>
-                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="3dE-g4-ov1" secondAttribute="leading" id="mhe-6d-6vd"/>
+                                    <constraint firstItem="d0H-vY-jeG" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="13" id="mdZ-C7-y0c"/>
                                     <constraint firstAttribute="trailing" secondItem="KIH-xy-YyE" secondAttribute="trailing" constant="20" id="mm0-hQ-0II"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="leading" secondItem="yFB-wj-hwM" secondAttribute="trailing" constant="8" id="ns4-8o-UNX"/>
+                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="d0H-vY-jeG" secondAttribute="trailing" constant="8" id="p6C-bX-73Z"/>
                                     <constraint firstItem="J55-1d-FvR" firstAttribute="top" secondItem="CyJ-49-Z5K" secondAttribute="bottom" constant="9" id="syz-kQ-T7l"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="leading" secondItem="871-3R-XVp" secondAttribute="leading" id="t5H-6W-R94"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="trailing" secondItem="wH5-cm-geD" secondAttribute="trailing" id="tkt-1Z-mo3"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="top" secondItem="vuS-Ey-fNB" secondAttribute="bottom" constant="8" symbolic="YES" id="uW8-Lk-hDX"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="trailing" secondItem="871-3R-XVp" secondAttribute="trailing" id="w0S-AX-zKx"/>
-                                    <constraint firstItem="pPs-AL-Tjs" firstAttribute="trailing" secondItem="J55-1d-FvR" secondAttribute="trailing" constant="27" id="yEy-7u-oR8"/>
-                                    <constraint firstItem="J55-1d-FvR" firstAttribute="trailing" secondItem="3dE-g4-ov1" secondAttribute="trailing" constant="2" id="yQ5-C2-4dZ"/>
+                                    <constraint firstItem="pPs-AL-Tjs" firstAttribute="trailing" secondItem="J55-1d-FvR" secondAttribute="trailing" id="yEy-7u-oR8"/>
+                                    <constraint firstItem="J55-1d-FvR" firstAttribute="trailing" secondItem="3dE-g4-ov1" secondAttribute="trailing" id="yQ5-C2-4dZ"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="top" secondItem="KIH-xy-YyE" secondAttribute="bottom" constant="8" symbolic="YES" id="yqu-Cz-2qs"/>
                                     <constraint firstItem="J55-1d-FvR" firstAttribute="baseline" secondItem="jiJ-0t-mOo" secondAttribute="baseline" constant="-2" id="ywS-m0-TRr"/>
-                                    <constraint firstAttribute="bottom" secondItem="WK2-gJ-hPh" secondAttribute="bottom" constant="69" id="yzR-Lj-jko"/>
+                                    <constraint firstAttribute="bottom" secondItem="WK2-gJ-hPh" secondAttribute="bottom" constant="79" id="yzR-Lj-jko"/>
                                 </constraints>
                             </scrollView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="cfJ-PC-2Jb" firstAttribute="leading" secondItem="jCH-i6-HSY" secondAttribute="leading" constant="20" symbolic="YES" id="TUR-WB-ws4"/>
-                            <constraint firstAttribute="trailing" secondItem="cfJ-PC-2Jb" secondAttribute="trailing" constant="20" symbolic="YES" id="bH3-tY-Gu8"/>
+                            <constraint firstItem="cfJ-PC-2Jb" firstAttribute="leading" secondItem="jCH-i6-HSY" secondAttribute="leading" id="TUR-WB-ws4"/>
+                            <constraint firstAttribute="trailing" secondItem="cfJ-PC-2Jb" secondAttribute="trailing" constant="-6" id="bH3-tY-Gu8"/>
                             <constraint firstItem="gbv-it-wvs" firstAttribute="top" secondItem="cfJ-PC-2Jb" secondAttribute="bottom" constant="20" id="rtV-Vq-wWG"/>
                             <constraint firstItem="cfJ-PC-2Jb" firstAttribute="top" secondItem="Znw-hi-SfD" secondAttribute="bottom" id="vAK-Bc-Xsy"/>
                         </constraints>
@@ -3725,6 +3673,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     <navigationItem key="navigationItem" id="Mba-lq-s7E"/>
                     <keyCommands/>
                     <connections>
+                        <outlet property="addClassButton" destination="CyJ-49-Z5K" id="DUx-eS-Jtk"/>
+                        <outlet property="addSchoolButton" destination="B4t-0I-SD6" id="6fl-zv-6uq"/>
                         <outlet property="agreeButton" destination="jiJ-0t-mOo" id="fhl-Ed-7Sh"/>
                         <outlet property="className" destination="yFB-wj-hwM" id="6ve-7W-dYB"/>
                         <outlet property="email" destination="871-3R-XVp" id="Ykb-cl-hE9"/>
@@ -3738,8 +3688,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="useStageButton" destination="WK2-gJ-hPh" id="c0q-aD-EUG"/>
                         <outlet property="view" destination="jCH-i6-HSY" id="CR9-Hj-COR"/>
                         <outlet property="viewFields" destination="cfJ-PC-2Jb" id="ZsY-TY-UI0"/>
-                        <segue destination="bhs-34-IGx" kind="unwind" unwindAction="unwindToMainMenu:" id="Cd2-OO-fi7"/>
-                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" id="qnj-hq-VQU"/>
+                        <segue destination="bhs-34-IGx" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="Cd2-OO-fi7"/>
+                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" id="261-Pc-GHx"/>
+                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" id="pVK-gv-AcO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AiL-eG-MFh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3793,7 +3744,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J6W-jL-mjd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2563" y="-2390"/>
+            <point key="canvasLocation" x="-2411" y="-2878"/>
         </scene>
         <!--Mentor Notification View Controller-->
         <scene sceneID="oAQ-3o-3mK">
@@ -3860,7 +3811,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PtW-0y-EHg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1111" y="-4630"/>
+            <point key="canvasLocation" x="-1487" y="-5054"/>
         </scene>
         <!--Mentor Notification View Controller-->
         <scene sceneID="wc5-yf-oBB">
@@ -3927,7 +3878,45 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4S-HT-bsr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-531" y="-2043"/>
+            <point key="canvasLocation" x="149" y="-2056"/>
+        </scene>
+        <!--Add Class View Controller-->
+        <scene sceneID="a8I-4r-BfR">
+            <objects>
+                <viewController storyboardIdentifier="addClass" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hO1-oe-Ce4" customClass="MTAddClassViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="j8o-rY-nRn"/>
+                        <viewControllerLayoutGuide type="bottom" id="kE2-dm-kYq"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="MRs-8Q-nsA">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7c-hC-3iu">
+                                <rect key="frame" x="120" y="197" width="80" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Done">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <segue destination="T4o-US-tP7" kind="unwind" unwindAction="exitToHome:" id="h1O-Kd-NDc"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Class" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="uPQ-0o-epA">
+                                <rect key="frame" x="20" y="159" width="280" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="095-eP-GdC"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FQD-dR-Na2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="T4o-US-tP7" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-2631" y="-1880"/>
         </scene>
     </scenes>
     <resources>
@@ -3958,14 +3947,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="3av-NC-tBU"/>
-        <segue reference="0Hm-VR-maT"/>
+        <segue reference="qYv-0w-I0f"/>
         <segue reference="ySr-9F-9a4"/>
+        <segue reference="MZw-0r-VG2"/>
         <segue reference="Pqy-YU-1Il"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="0tX-EG-lkN"/>
-        <segue reference="VFk-5D-gdp"/>
-        <segue reference="3vf-te-PYL"/>
+        <segue reference="fM9-bL-F9m"/>
+        <segue reference="t5m-aZ-wca"/>
+        <segue reference="1CK-gQ-zH4"/>
+        <segue reference="OaC-xo-Vq0"/>
+        <segue reference="5KW-O2-h9I"/>
     </inferredMetricsTieBreakers>
 </document>

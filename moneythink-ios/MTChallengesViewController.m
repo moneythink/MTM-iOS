@@ -10,6 +10,8 @@
 
 @interface MTChallengesViewController ()
 
+@property (assign, nonatomic) BOOL reachable;
+
 @end
 
 @implementation MTChallengesViewController
@@ -37,27 +39,57 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+    if (self.reachable) {
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Reachable" message:@"Connected." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [reachableAlert show];
+
+        PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+        
+        [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                self.challenges = objects;
+                
+                // Create page view controller
+                self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                self.pageViewController.dataSource = self;
+                
+                MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+                
+                NSArray *viewControllers = @[startingViewController];
+                
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                
+                [self addChildViewController:_pageViewController];
+                [self.view addSubview:_pageViewController.view];
+                [self.pageViewController didMoveToParentViewController:self];
+            }
+        }];
+
+    } else {
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [reachableAlert show];
+    }
     
-    [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.challenges = objects;
-            
-            // Create page view controller
-            self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-            self.pageViewController.dataSource = self;
-            
-            MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-            
-            NSArray *viewControllers = @[startingViewController];
-            
-            [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            
-            [self addChildViewController:_pageViewController];
-            [self.view addSubview:_pageViewController.view];
-            [self.pageViewController didMoveToParentViewController:self];
-        }
-    }];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.parse.com"];
+    
+    reach.reachableBlock = ^(Reachability * reachability) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.reachable = YES;
+        });
+    };
+
+    reach.unreachableBlock = ^(Reachability * reachability)     {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.reachable = NO;
+        });
+    };
+    
+    [reach startNotifier];
     
 }
 
@@ -74,7 +106,7 @@
     }
     
     // Create a new view controller and pass suitable data.
-
+    
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
     
     PFChallenges *challenge = self.challenges[index];
@@ -138,17 +170,32 @@
 
 #pragma mark - Navigation
 /*
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 - (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
 {
     
 }
+
+#pragma mark Notification
+
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    
+    if([reach isReachable]) {
+        self.reachable = YES;
+    } else {
+        self.reachable = NO;
+    }
+}
+
+
 
 @end
