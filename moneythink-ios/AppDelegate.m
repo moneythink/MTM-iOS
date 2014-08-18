@@ -11,13 +11,14 @@
 #import "MTHomeViewController.h"
 #import <Crashlytics/Crashlytics.h>
 
-#ifdef DEBUG
-static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-#else
+//#ifdef DEBUG
+//static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+//static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+//#else
+// production
 static NSString *applicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
 static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
-#endif
+//#endif
 
 @implementation AppDelegate
 
@@ -97,8 +98,6 @@ static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
-    
-    NSLog(@"push");
 }
 
 - (void)application:(UIApplication *)application

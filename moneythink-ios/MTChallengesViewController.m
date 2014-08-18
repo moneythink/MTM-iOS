@@ -7,6 +7,7 @@
 //
 
 #import "MTChallengesViewController.h"
+#import "MBProgressHUD.h"
 
 @interface MTChallengesViewController ()
 
@@ -38,37 +39,25 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    
-    if (self.reachable) {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Reachable" message:@"Connected." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [reachableAlert show];
 
-        PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
-        
-        [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                self.challenges = objects;
-                
-                // Create page view controller
-                self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-                self.pageViewController.dataSource = self;
-                
-                MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-                
-                NSArray *viewControllers = @[startingViewController];
-                
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-                
-                [self addChildViewController:_pageViewController];
-                [self.view addSubview:_pageViewController.view];
-                [self.pageViewController didMoveToParentViewController:self];
-            }
-        }];
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    } else {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [reachableAlert show];
-    }
+//    if (self.reachable) {
+//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Reachable"
+//                                                                 message:@"Connected."
+//                                                                delegate:nil
+//                                                       cancelButtonTitle:@"OK"
+//                                                       otherButtonTitles:nil, nil];
+//        [reachableAlert show];
+//    } else {
+//        NSString *msg = @"Many features of this app require a network connection.";
+//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
+//                                                                 message:msg
+//                                                                delegate:nil
+//                                                       cancelButtonTitle:@"OK"
+//                                                       otherButtonTitles:nil, nil];
+//        [reachableAlert show];
+//    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
@@ -80,12 +69,43 @@
     reach.reachableBlock = ^(Reachability * reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = YES;
+
+            PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+            
+            [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                [MBProgressHUD hideHUDForView:self.view animated:YES];
+                if (!error) {
+                    self.challenges = objects;
+                    
+                    // Create page view controller
+                    self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                    self.pageViewController.dataSource = self;
+                    
+                    MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+                    
+                    NSArray *viewControllers = @[startingViewController];
+                    
+                    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                    
+                    [self addChildViewController:_pageViewController];
+                    [self.view addSubview:_pageViewController.view];
+                    [self.pageViewController didMoveToParentViewController:self];
+                }
+            }];
         });
     };
 
     reach.unreachableBlock = ^(Reachability * reachability)     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = NO;
+
+        NSString *msg = @"Many features of this app require a network connection.";
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
+                                                                 message:msg
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"OK"
+                                                       otherButtonTitles:nil, nil];
+            [reachableAlert show];
         });
     };
     
@@ -109,20 +129,35 @@
     
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
     
-    PFChallenges *challenge = self.challenges[index];
-    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
+
     
-    NSInteger count = [queryActivated countObjects];
-    challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+    if (self.reachable) {
+        PFChallenges *challenge = self.challenges[index];
+        NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
+        PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
+        
+        NSInteger count = [queryActivated countObjects];
+        challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+        
+        challengeContentViewController.challengeTitleText = challenge[@"title"];
+        challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
+        challengeContentViewController.challengeDescriptionText = challenge[@"description"];
+        challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
+        
+        challengeContentViewController.pageIndex = index;
+        challengeContentViewController.challenge = challenge;
+    } else {
+        NSString *msg = @"Many features of this app require a network connection.";
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
+                                                                 message:msg
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"OK"
+                                                       otherButtonTitles:nil, nil];
+        [reachableAlert show];
+    }
     
-    challengeContentViewController.challengeTitleText = challenge[@"title"];
-    challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
-    challengeContentViewController.challengeDescriptionText = challenge[@"description"];
-    challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     
-    challengeContentViewController.pageIndex = index;
-    challengeContentViewController.challenge = challenge;
+    
     
     return challengeContentViewController;
 }

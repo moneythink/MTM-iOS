@@ -153,7 +153,7 @@
     cell.userName.text = [user username];
     cell.comments.text = @"";
     
-    cell.profileImage = [UIImage imageNamed:@"profile_image"];
+    cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];
 
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -273,13 +273,20 @@
 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    PFChallengePost *post = self.objects[indexPath.row];
-    CGFloat height;
-    UIImage *postImage = post[@"picture"];
-    if (!postImage) {
-        height = 120.0f;
+    NSInteger row = indexPath.row;
+    
+    CGFloat height = 0.0f;
+    
+    if (row < self.objects.count) {
+        PFChallengePost *post = self.objects[row];
+        UIImage *postImage = post[@"picture"];
+        if (!postImage) {
+            height = 120.0f;
+        } else {
+            height = 396.0f;
+        }
     } else {
-        height = 396.0f;
+        NSLog(@"out of bounds");
     }
     
     return height;

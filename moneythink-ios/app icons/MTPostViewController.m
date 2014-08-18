@@ -97,7 +97,7 @@
             user = [objects firstObject];
             self.postUsername.text = [user username];
             self.postUserImage.file = user[@"profile_picture"];
-
+            
             [self.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
                 CGRect frame = self.postUserButton.frame;
                 
@@ -134,7 +134,7 @@
         self.postText.attributedText = hashtag;
     }];
     // Attributed hashtag
-
+    
     
     
     self.postImage.file = self.challengePost[@"picture"];
@@ -158,14 +158,14 @@
     [[self.button1 layer] setCornerRadius:5.0f];
     [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
     [self.button1 setTintColor:[UIColor primaryGreen]];
-
+    
     [[self.button2 layer] setCornerRadius:5.0f];
     [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
     [self.button2 setTintColor:[UIColor white]];
-
+    
     NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
-
+    
     if (buttonTitles.count > 0) {
         NSString *button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
         [self.button1 setTitle:button1Title forState:UIControlStateNormal];
@@ -186,14 +186,14 @@
     NSString *postID = [self.challengePost objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     self.iLike = !(index == NSNotFound);
-
+    
     if (self.iLike) {
         [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     } else {
         [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     }
     
-//    PFUser *user = self.challengePost[@"user"];
+    //    PFUser *user = self.challengePost[@"user"];
     if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
         self.deletePost.hidden = NO;
         self.deletePost.enabled = YES;
@@ -201,13 +201,13 @@
         self.deletePost.hidden = YES;
         self.deletePost.enabled = NO;
     }
-
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = self.challenge[@"title"];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
@@ -231,7 +231,7 @@
     
     [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"no error");
+            
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             NSLog(@"error - %@", error);
@@ -246,13 +246,12 @@
     if (self.verifiedCheckBox.isChecked) {
         verifiedBy = @"";
     }
-
+    
     [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
         if (error) {
             NSLog(@"error - %@", error);
         } else {
             [[PFUser currentUser] refresh];
-            NSLog(@"error");
         }
     }];
     
@@ -263,7 +262,7 @@
     NSString *postID = [self.challengePost objectId];
     NSString *userID = [[PFUser currentUser] objectId];
     
-
+    
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
         if (!error) {
             
@@ -282,7 +281,7 @@
                         self.postLikesCount -= 1;
                     }
                     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-
+                    
                     [(PFChallengePost *)self.challengePost refresh];
                     [[PFUser currentUser] refresh];
                     
@@ -300,7 +299,7 @@
     NSDictionary *buttonTappedDict = @{@"user": [[PFUser currentUser] objectId], @"post": [self.challengePost objectId], @"button": @0};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"stop");
+            
         } else {
             NSLog(@"error - %@", error);
         }
@@ -311,7 +310,7 @@
     NSDictionary *buttonTappedDict = @{@"user": [[PFUser currentUser] objectId], @"post": [self.challengePost objectId], @"button": @1};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"stop");
+            
         } else {
             NSLog(@"error - %@", error);
         }
@@ -412,10 +411,9 @@
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     
-    if(newImage == nil)
-        {
+    if(newImage == nil) {
         NSLog(@"could not scale image");
-        }
+    }
     
     //pop the context to get back to the default
     UIGraphicsEndImageContext();

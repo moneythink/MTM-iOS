@@ -25,16 +25,21 @@
     if (self) {
         PFUser *user = [PFUser currentUser];
         
+        
         PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
         [queryMe whereKey:@"read_by" equalTo:[user objectId]];
+        [queryMe whereKeyDoesNotExist:@"challenge_activated"];
         
         PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
         [queryNoOne whereKeyDoesNotExist:@"recipient"];
-        
+        [queryNoOne whereKeyDoesNotExist:@"challenge_activated"];
+
         PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
         [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-            NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
-            [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+            if (number > 0) {
+                NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
+                [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+            }
         }];
         
         // Custom the table
@@ -89,14 +94,19 @@
     
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"read_by" equalTo:[user objectId]];
-    
+    [queryMe whereKeyDoesNotExist:@"challenge_activated"];
+
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryNoOne whereKeyDoesNotExist:@"recipient"];
-    
+    [queryNoOne whereKeyDoesNotExist:@"challenge_activated"];
+
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
     [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
-        [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+        if (number > 0) {
+            NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
+            [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+
+        }
     }];
 }
 

@@ -7,6 +7,7 @@
 //
 
 #import "MTEditProfileViewController.h"
+#import "Reachability.h"
 
 @interface MTEditProfileViewController ()
 
@@ -31,6 +32,7 @@
 @property (strong, nonatomic) UIImage *updatedProfileImage;
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
+@property (strong, nonatomic) IBOutlet UILabel *profileImageLabel;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
@@ -38,6 +40,8 @@
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (nonatomic, strong) PFUser *userCurrent;
+
+@property (assign, nonatomic) BOOL reachable;
 
 @end
 
@@ -56,11 +60,11 @@
 {
     [super viewDidLoad];
     
-    self.isMentor = [PFUser currentUser][@"type"];
+    self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
     
-//    self.signUpCode.hidden = !self.isMentor;
-//    self.signUpCodeLabel.hidden = !self.isMentor;
-//    self.signUpCodeButton.hidden = !self.isMentor;
+    self.signUpCode.hidden = !self.isMentor;
+    self.signUpCodeLabel.hidden = !self.isMentor;
+    self.signUpCodeButton.hidden = !self.isMentor;
     
     self.userSchool.enabled = self.isMentor;
     self.userClassName.enabled = self.isMentor;
@@ -84,33 +88,112 @@
     self.lastName.text = self.userCurrent[@"last_name"];
     self.email.text = self.userCurrent[@"email"];
     
-    NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", self.userCurrent[@"class"], @"student"];
-    PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-    [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.signUpCode.text = [objects firstObject][@"code"];
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
     
     
-    PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     
-    self.profileImage = [[PFImageView alloc] init];
-    [self.profileImage setFile:profileImageFile];
-    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-        self.buttonUserProfile.imageView.image = self.profileImage.image;
-        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-        
-        [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
-        
-        [self.view setNeedsDisplay];
-    }];
-
+    
+    
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityChanged:)
+                                                 name:kReachabilityChangedNotification
+                                               object:nil];
+    
+    Reachability * reach = [Reachability reachabilityWithHostname:@"www.parse.com"];
+    
+    [reach startNotifier];
+    
 
     
+    if (NO) {
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", self.userCurrent[@"class"], @"student"];
+        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                self.signUpCode.text = [objects firstObject][@"code"];
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+        
+        PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+        
+        self.profileImage = [[PFImageView alloc] init];
+        [self.profileImage setFile:profileImageFile];
+        [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+            self.buttonUserProfile.imageView.image = self.profileImage.image;
+            self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+            self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+            
+            [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
+            
+            [self.view setNeedsDisplay];
+        }];
+        
+    } else {
+        reach.reachableBlock = ^(Reachability * reachability) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.reachable = YES;
+                
+                NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", self.userCurrent[@"class"], @"student"];
+                PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+                [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                    if (!error) {
+                        self.signUpCode.text = [objects firstObject][@"code"];
+                    } else {
+                        NSLog(@"error - %@", error);
+                    }
+                }];
+                
+                
+                PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+                
+                self.profileImage = [[PFImageView alloc] init];
+                [self.profileImage setFile:profileImageFile];
+                [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+                if (!error) {
+                    if (image) {
+                        self.profileImageLabel.text = @"Edit Photo";
+                        self.profileImage.image = image;
+                    } else {
+                        self.profileImageLabel.text = @"Add Photo";
+                        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+                    }
+                } else {
+                    self.profileImageLabel.text = @"Add Photo";
+                    self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+                }
+                    self.buttonUserProfile.imageView.image = self.profileImage.image;
+                    self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+                    self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+                    
+                    [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
+                    
+                    [self.view setNeedsDisplay];
+                }];
+                
+                
+                
+                
+                
+            });
+        };
+        
+        reach.unreachableBlock = ^(Reachability * reachability)     {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.reachable = NO;
+            });
+        };
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+
     for(UIView *subview in self.view.subviews) {
         if([subview isKindOfClass: [UIScrollView class]]) {
             for(UIScrollView *scrollViewSubview in subview.subviews) {
@@ -409,5 +492,20 @@
     }
     return NO; // We do not want UITextField to insert line-breaks.
 }
+
+
+#pragma mark Notification
+
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    
+    if([reach isReachable]) {
+        self.reachable = YES;
+    } else {
+        self.reachable = NO;
+    }
+}
+
 
 @end

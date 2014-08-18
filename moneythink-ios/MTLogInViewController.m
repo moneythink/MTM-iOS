@@ -62,6 +62,7 @@ static BOOL useStage = NO;
     
     [[self.loginButton layer] setBorderWidth:1.0f];
     [[self.loginButton layer] setCornerRadius:5.0f];
+    [[self.loginButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 
 }
 
@@ -120,9 +121,9 @@ static BOOL useStage = NO;
         default: // OK
             [PFUser requestPasswordResetForEmailInBackground:self.email.text block:^(BOOL succeeded, NSError *error) {
                 if (!error) {
-                    NSLog(@"asdf");
+
                 } else {
-                    NSLog(@"asdf");
+
                 }
             }];
             break;

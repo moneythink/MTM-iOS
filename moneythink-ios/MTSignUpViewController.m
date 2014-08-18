@@ -249,7 +249,12 @@ static BOOL useStage = NO;
                           clientKey:clientKey];
         }
         
-        if ([self.agreeCheckbox isChecked] && [self.mentorAgreeCheckbox isChecked]) {
+        BOOL agreed = [self.agreeCheckbox isChecked];
+        if ([self.signUpType isEqualToString:@"mentor"]) {
+            agreed &= [self.mentorAgreeCheckbox isChecked];
+        }
+        
+        if (agreed) {
             NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
             
             PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
@@ -281,8 +286,6 @@ static BOOL useStage = NO;
                         
                         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
-                                // Hooray! Let them use the app now.
-                                
                                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                                     [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
                                 } else {
@@ -291,7 +294,6 @@ static BOOL useStage = NO;
                                 
                             } else {
                                 NSString *errorString = [error userInfo][@"error"];
-                                // Show the errorString somewhere and let the user try again.
                                 self.error.text = errorString;
                                 [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                             }

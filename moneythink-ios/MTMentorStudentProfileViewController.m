@@ -17,6 +17,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *userPoints;
 @property (strong, nonatomic) NSArray *studentPosts;
 
+@property (strong, nonatomic) IBOutlet UIImageView *managerProgress;
+@property (strong, nonatomic) IBOutlet UIImageView *makerProgress;
+
 @end
 
 @implementation MTMentorStudentProfileViewController
@@ -68,7 +71,6 @@
             if (image) {
                 CGRect frame = self.profileImage.frame;
                 self.profileImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-//                [self reloadInputViews];
             } else {
                 self.profileImage.image = nil;
             }
@@ -76,6 +78,35 @@
             NSLog(@"error - %@", error);
         }
     }];
+    
+    NSInteger managerProgressValue = [self.student[@"money_manager"] intValue];
+    NSInteger makerProgressValue = [self.student[@"money_maker"] intValue];
+    
+    if (makerProgressValue == 100) {
+        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_2"];
+    } else if (makerProgressValue >= 50) {
+        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_1"];
+    } else {
+        self.makerProgress.image = nil;
+    }
+
+    if (managerProgressValue == 100) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_7"];
+    } else if (managerProgressValue >= 85) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_6"];
+    } else if (managerProgressValue >= 70) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_5"];
+    } else if (managerProgressValue >= 55) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_4"];
+    } else if (managerProgressValue >= 40) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_3"];
+    } else if (managerProgressValue >= 25) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_2"];
+    } else if (managerProgressValue >= 10) {
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
+    } else {
+        self.managerProgress.image = nil;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -243,17 +274,11 @@
     }
     [cell.likeCount sizeToFit];
     
-    PFQuery *findComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
-    [findComments whereKey:@"challenge_post" equalTo:cell.rowPost];
-    [findComments countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            cell.commentCount.text = [NSString stringWithFormat:@"%d", number];
-        } else {
-            cell.commentCount.text = @"0";
-        }
-    }];
-    
-//    [cell setBackgroundColor:[UIColor greenColor]];
+    if (cell.rowPost[@"verified_by"]) {
+        cell.verifiedCheckbox.isChecked = YES;
+    } else {
+        cell.verifiedCheckbox.isChecked = NO;
+    }
     
     return cell;
 }

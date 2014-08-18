@@ -10,6 +10,7 @@
 #import "MTUserInformationViewController.h"
 #import "UIViewController+MJPopupViewController.h"
 #import "MTEditProfileViewController.h"
+#import "MBProgressHUD.h"
 
 @interface MTStudentMainViewController ()
 
@@ -79,6 +80,12 @@
     }
 }
 
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
 
 - (IBAction)buttonUserInfo:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
@@ -105,12 +112,6 @@
             
         }
     }
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Navigation

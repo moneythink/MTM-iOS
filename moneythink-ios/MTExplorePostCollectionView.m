@@ -35,10 +35,10 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
-
+    
     NSArray *buttons = self.challenge[@"buttons"];
     self.hasButtons = buttons.count;
-
+    
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
     self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
@@ -46,16 +46,16 @@
                                              challengNumber];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-
+    
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
-
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.posts = objects;
             [self.exploreCollectionView reloadData];
-
+            
         } else {
             NSLog(@"error - %@", error);
         }
@@ -76,7 +76,7 @@
     self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
     NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d",
-                                    challengNumber];
+                                             challengNumber];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
     
@@ -96,7 +96,7 @@
 }
 
 - (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-    return nil; 
+    return nil;
 }
 
 
@@ -104,7 +104,7 @@
 
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     NSInteger itemCount = self.posts.count;
-
+    
     return itemCount;
 }
 
@@ -114,7 +114,7 @@
     
     PFChallengePost *post = self.posts[indexPath.row];
     PFUser *user = post[@"user"];
-
+    
     cell.postText.text = post[@"post_text"];
     cell.postUser.text = [user username];
     
@@ -135,11 +135,11 @@
             NSLog(@"error - %@", error);
         }
     }];
-
     
-
+    
+    
     cell.postUserImage.file = user[@"profile_picture"];
-
+    
     [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
@@ -153,7 +153,7 @@
             NSLog(@"error - %@", error);
         }
     }];
-
+    
     
     return cell;
 }
@@ -213,10 +213,9 @@
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     
-    if(newImage == nil)
-        {
+    if(newImage == nil) {
         NSLog(@"could not scale image");
-        }
+    }
     
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
@@ -243,13 +242,13 @@
 }
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect
+ {
+ // Drawing code
+ }
+ */
 
 #pragma mark - Navigation
 

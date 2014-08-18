@@ -30,6 +30,15 @@
 		580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */; };
 		581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */; };
 		5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */; };
+		5829B00C19A283920054BEC6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00319A283910054BEC6 /* bg_money_maker_1.png */; };
+		5829B00D19A283920054BEC6 /* bg_money_maker_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00419A283910054BEC6 /* bg_money_maker_2.png */; };
+		5829B00E19A283920054BEC6 /* bg_money_mananger_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00519A283910054BEC6 /* bg_money_mananger_1.png */; };
+		5829B00F19A283920054BEC6 /* bg_money_mananger_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00619A283910054BEC6 /* bg_money_mananger_2.png */; };
+		5829B01019A283920054BEC6 /* bg_money_mananger_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00719A283910054BEC6 /* bg_money_mananger_3.png */; };
+		5829B01119A283920054BEC6 /* bg_money_mananger_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00819A283920054BEC6 /* bg_money_mananger_4.png */; };
+		5829B01219A283920054BEC6 /* bg_money_mananger_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00919A283920054BEC6 /* bg_money_mananger_5.png */; };
+		5829B01319A283920054BEC6 /* bg_money_mananger_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */; };
+		5829B01419A283920054BEC6 /* bg_money_mananger_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
 		5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942B197C060700EDC969 /* MTStudentMainViewController.m */; };
@@ -237,6 +246,15 @@
 		581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewCell.m; sourceTree = "<group>"; };
 		5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTabBarViewController.h; sourceTree = "<group>"; };
 		5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTabBarViewController.m; sourceTree = "<group>"; };
+		5829B00319A283910054BEC6 /* bg_money_maker_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_maker_1.png; sourceTree = "<group>"; };
+		5829B00419A283910054BEC6 /* bg_money_maker_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_maker_2.png; sourceTree = "<group>"; };
+		5829B00519A283910054BEC6 /* bg_money_mananger_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_1.png; sourceTree = "<group>"; };
+		5829B00619A283910054BEC6 /* bg_money_mananger_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_2.png; sourceTree = "<group>"; };
+		5829B00719A283910054BEC6 /* bg_money_mananger_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_3.png; sourceTree = "<group>"; };
+		5829B00819A283920054BEC6 /* bg_money_mananger_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_4.png; sourceTree = "<group>"; };
+		5829B00919A283920054BEC6 /* bg_money_mananger_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_5.png; sourceTree = "<group>"; };
+		5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_6.png; sourceTree = "<group>"; };
+		5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_7.png; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
 		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
@@ -856,6 +874,15 @@
 		58BE9A13198EDF210035A190 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				5829B00319A283910054BEC6 /* bg_money_maker_1.png */,
+				5829B00419A283910054BEC6 /* bg_money_maker_2.png */,
+				5829B00519A283910054BEC6 /* bg_money_mananger_1.png */,
+				5829B00619A283910054BEC6 /* bg_money_mananger_2.png */,
+				5829B00719A283910054BEC6 /* bg_money_mananger_3.png */,
+				5829B00819A283920054BEC6 /* bg_money_mananger_4.png */,
+				5829B00919A283920054BEC6 /* bg_money_mananger_5.png */,
+				5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */,
+				5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */,
 				5802EA6E1993752B00CF5F32 /* bg_progress_green1.png */,
 				5802EA6F1993752B00CF5F32 /* bg_progress_green2.png */,
 				5802EA701993752B00CF5F32 /* bg_progress_green3.png */,
@@ -1034,6 +1061,7 @@
 				58B7C27C1992DE630039E238 /* profile_image@2x.png in Resources */,
 				5890F8E7197711AE0042AC2F /* Icon@2x.png in Resources */,
 				5860BF671987F889007D9BB3 /* Default~ipad~landscape~nostatusbar.png in Resources */,
+				5829B00C19A283920054BEC6 /* bg_money_maker_1.png in Resources */,
 				5890F8E4197711AE0042AC2F /* Icon-76.png in Resources */,
 				58B7C2681992DE630039E238 /* icon_challenge_open@2x.png in Resources */,
 				58B7C2671992DE630039E238 /* icon_challenge_open.png in Resources */,
@@ -1056,6 +1084,7 @@
 				580B5AE619820F8A0092AA9C /* app_icon_512.png in Resources */,
 				5802EA791993752B00CF5F32 /* bg_progress_green3.png in Resources */,
 				5860BF681987F889007D9BB3 /* Default~ipad~landscape~nostatusbar@2x.png in Resources */,
+				5829B00D19A283920054BEC6 /* bg_money_maker_2.png in Resources */,
 				58B7C25F1992DE630039E238 /* challenges_active.png in Resources */,
 				5890F8DB197711AE0042AC2F /* Icon-29@2x.png in Resources */,
 				5860BF601987F889007D9BB3 /* Default-568h@2x.png in Resources */,
@@ -1065,6 +1094,7 @@
 				58B7C2831992DE630039E238 /* students_normal.png in Resources */,
 				58B7C2661992DE630039E238 /* icon_challenge_future@2x.png in Resources */,
 				58B7C2641992DE630039E238 /* comment@2x.png in Resources */,
+				5829B00F19A283920054BEC6 /* bg_money_mananger_2.png in Resources */,
 				58B7C27E1992DE630039E238 /* settings_active@2x.png in Resources */,
 				58B7C26B1992DE630039E238 /* icon_pig.png in Resources */,
 				58669F771977334A009BC13C /* mentorSignupButton.png in Resources */,
@@ -1108,13 +1138,18 @@
 				5890F8E9197711AE0042AC2F /* iTunesArtwork512 in Resources */,
 				5869D453199416900037B517 /* login_banner.jpg in Resources */,
 				58B7C2631992DE630039E238 /* comment.png in Resources */,
+				5829B01119A283920054BEC6 /* bg_money_mananger_4.png in Resources */,
+				5829B01419A283920054BEC6 /* bg_money_mananger_7.png in Resources */,
+				5829B00E19A283920054BEC6 /* bg_money_mananger_1.png in Resources */,
 				58669F7A1977334A009BC13C /* studentSignupButton@2x.png in Resources */,
 				5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */,
 				580B5AE719820F8A0092AA9C /* app_icon_72.png in Resources */,
 				5890F8C0197710590042AC2F /* launchImage1536x2048.png in Resources */,
 				5890F8E5197711AE0042AC2F /* Icon-76@2x.png in Resources */,
+				5829B01219A283920054BEC6 /* bg_money_mananger_5.png in Resources */,
 				58B7C2861992DE630039E238 /* verify_active@2x.png in Resources */,
 				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
+				5829B01319A283920054BEC6 /* bg_money_mananger_6.png in Resources */,
 				58B7C2811992DE630039E238 /* students_active.png in Resources */,
 				58B7C2721992DE630039E238 /* menu_button@2x.png in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
@@ -1128,6 +1163,7 @@
 				58B7C2761992DE630039E238 /* notifications_active@2x.png in Resources */,
 				5890F8E6197711AE0042AC2F /* Icon.png in Resources */,
 				58B7C2781992DE630039E238 /* notifications_normal@2x.png in Resources */,
+				5829B01019A283920054BEC6 /* bg_money_mananger_3.png in Resources */,
 				5860BF641987F889007D9BB3 /* Default~ipad@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
