@@ -43,7 +43,8 @@
     // Do any additional setup after loading the view.
     
     NSString *nameClass = [PFUser currentUser][@"class"];
-    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@", nameClass];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", nameClass, nameSchool];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
     [studentsForClass orderByAscending:@"last_name"];
     

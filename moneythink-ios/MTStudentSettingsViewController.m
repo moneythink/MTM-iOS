@@ -16,7 +16,9 @@
 @property (strong, nonatomic) IBOutlet UITableViewCell *logout;
 @property (strong, nonatomic) IBOutlet UITableViewCell *editProfile;
 
+@property (assign, nonatomic) BOOL signupOn;
 @property (assign, nonatomic) BOOL notificationsOn;
+@property (strong, nonatomic) NSArray *sections;
 
 @end
 
@@ -40,6 +42,21 @@
     // Do any additional setup after loading the view.
     
     self.notificationsOn = NO;
+    PFUser *user = [PFUser currentUser];
+    self.signupOn = [user[@"type"] isEqualToString:@"mentor"];
+    
+    self.sections = @[@"PROFILE", @""];
+    if (self.notificationsOn) {
+        if (self.signupOn) {
+            self.sections = @[@"NOTIFICATION", @"PROFILE", @"SIGN UP CODE", @""];
+        } else {
+            self.sections = @[@"NOTIFICATION", @"PROFILE", @""];
+        }
+    } else {
+        if (self.signupOn) {
+            self.sections = @[@"PROFILE", @"SIGN UP CODE", @""];
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -54,31 +71,19 @@
 }
 
 
-
-
 #pragma mark - UITableViewController delegate methods
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger rows = 0;
-    switch (section) {
-        case 0: { // notifications
-            rows = 1;
-        }
-            break;
-            
-        case 1: { //profile
-            rows = 1;
-        }
-            break;
-            
-        case 2: { //signup code
-            rows = 1;
-        }
-            break;
-            
-        default:
-            break;
+    NSInteger rows = 1;
+    if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
+        rows = 1;
+    } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
+        rows = 1;
+    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
+        rows = 1;
+    } else {
+        rows = 1;
     }
     return rows;
 }
@@ -89,10 +94,6 @@
     NSInteger row = indexPath.row;
     NSInteger section = indexPath.section;
     
-    if (self.notificationsOn == NO) {
-        section += 1;
-    }
-    
     NSString *cellIdent = @"defaultCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellIdent];
@@ -102,107 +103,56 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent];
         }
     
-
-    switch (section) {
-        case 0: {
-            switch (row) {
-                case 0: {
-                    cell.textLabel.text = @"Push Notifications";
-                    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
-                }
-                    break;
-                    
-                case 1: {
-                    cell.textLabel.text = @"Vibrate";
-
-                }
-                    break;
-                    
-                default:
-                    cell.textLabel.text = @"Sound";
-                    break;
+    if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
+        switch (row) {
+            case 0: {
+                cell.textLabel.text = @"Push Notifications";
+                [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             }
+                break;
+            case 1: {
+                cell.textLabel.text = @"Vibrate";
+            }
+                break;
+            default:
+                cell.textLabel.text = @"Sound";
+                break;
         }
-            break;
-            
-        case 1: {
-            cell.textLabel.text = @"Edit Profile";
-            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
-        }
-            break;
-            
-        case 2: {
-            PFUser *mentor = [PFUser currentUser];
-            NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@", mentor[@"class"]];
-            PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-            [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    cell.textLabel.text = [objects firstObject][@"code"];
-                } else {
-                    NSLog(@"error - %@", error);
-                }
-            }];
-
-            cell.textLabel.text = @"Signup Code";
-            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
-        }
-            break;
-            
-        default:
-            cell.textLabel.text = @"Log Out";
-            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
-            break;
+    } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
+        cell.textLabel.text = @"Edit Profile";
+        [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
+        PFUser *mentor = [PFUser currentUser];
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@", mentor[@"class"]];
+        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                cell.textLabel.text = [objects firstObject][@"code"];
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+        
+        cell.textLabel.text = @"Signup Code";
+        [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+    } else {
+        cell.textLabel.text = @"Log Out";
+        [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
 
-
-    
     return cell;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
 {
-    NSInteger sections = 4;
-    
-    if (self.notificationsOn == NO) {
-        sections -= 1;
-    }
+    NSInteger sections = self.sections.count;
     
     return sections;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSString *titleHeader = @"";
+    NSString *titleHeader = self.sections[section];
 
-    if (self.notificationsOn == NO) {
-        section += 1;
-    }
-    
-
-    switch (section) {
-        case 0: {
-            titleHeader = @"NOTIFICATIONS";
-        }
-            break;
-            
-        case 1: {
-            titleHeader = @"PROFILE";
-        }
-            break;
-            
-        case 2: {
-            titleHeader = @"SIGNUP CODE";
-        }
-            break;
-            
-        case 3: {
-            titleHeader = @"";
-        }
-            break;
-            
-        default:
-            break;
-    }
     return titleHeader;
 }
 
@@ -217,51 +167,35 @@
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    if (self.notificationsOn == NO) {
-        section += 1;
-    }
-    
-    switch (section) {
-        case 0: {
-            switch (row) {
-                case 0: {
+    if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
+        switch (row) {
+            case 0: {
 //                    cell.textLabel.text = @"Push Notifications";
-                }
-                    break;
-                    
-                case 1: {
+            }
+                break;
+                
+            case 1: {
 //                    cell.textLabel.text = @"Vibrate";
-                }
-                    break;
-                    
-                default:
+            }
+                break;
+                
+            default:
 //                    cell.textLabel.text = @"Sound";
-                    break;
-            }
+                break;
         }
-            break;
-            
-        case 1: {
-            [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
+    } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
+        [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
+    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
+        NSLog(@"share code");
+    } else {
+        UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [logoutSheet showInView:self.view];
+        } else {
+            [logoutSheet showInView:window];
         }
-            break;
-            
-        case 2: {
-            NSLog(@"share code");
-        }
-            break;
-            
-        default: {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:self.view]) {
-                [logoutSheet showInView:self.view];
-            } else {
-                [logoutSheet showInView:window];
-            }
-        }
-            break;
     }
 }
 

@@ -30,27 +30,36 @@ static BOOL useStage = NO;
 @property (strong, nonatomic) IBOutlet UITextField *email;
 @property (strong, nonatomic) IBOutlet UITextField *password;
 @property (strong, nonatomic) IBOutlet UITextField *registrationCode;
+
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
 @property (strong, nonatomic) IBOutlet UIButton *agreeButton;
 @property (strong, nonatomic) IBOutlet UIButton *mentorAgreeButton;
-@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
 
 @property (strong, nonatomic) IBOutlet MICheckBox *agreeCheckbox;
 @property (strong, nonatomic) IBOutlet MICheckBox *mentorAgreeCheckbox;
+
+@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
 @property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
+@property (strong, nonatomic) IBOutlet UILabel *useStageLabel;
 
 @property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
-@property (strong, nonatomic) IBOutlet UIButton *addClassButton;
-@property (strong, nonatomic) IBOutlet UIButton *signUpButton;
-
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
+@property (strong, nonatomic) PFSchools *school;
+@property (strong, nonatomic) UIActionSheet *schoolSheet;
+
+@property (strong, nonatomic) IBOutlet UIButton *addClassButton;
 @property (strong, nonatomic) IBOutlet UITextField *className;
+@property (strong, nonatomic) PFClasses *class;
+@property (strong, nonatomic) UIActionSheet *classSheet;
+
+@property (strong, nonatomic) IBOutlet UIButton *signUpButton;
 
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (assign, nonatomic) BOOL reachable;
+
 @end
 
 @implementation MTSignUpViewController
@@ -100,12 +109,14 @@ static BOOL useStage = NO;
     
     self.mentorAgreeButton.hidden = YES;
     
-    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-	[self.viewFields addSubview:self.useStageCheckbox];
-    
-    self.useStageCheckbox.isChecked = useStage;
+    if (useStage) {
+        self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+        [self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+        [self.viewFields addSubview:self.useStageCheckbox];
+        
+        self.useStageCheckbox.isChecked = useStage;
+    }
     self.useStageButton.hidden = YES;
     
     [[self.addSchoolButton layer] setBorderWidth:1.0f];
@@ -175,15 +186,30 @@ static BOOL useStage = NO;
 - (IBAction)schoolNameButton:(id)sender {
     if (self.reachable) {
         PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+        if (NO) {
+            [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+        } else {
+            [querySchools findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                NSLog(@"stop");
+                if (!error) {
+                    [self performSelector:@selector(schoolsSheet:) withObject:objects];
+                }
+            }];
+        }
     } else {
         UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [reachableAlert show];
     }
 }
 
+- (void)schoolsSheet:(NSArray *)objects {
+    [self schoolsSheet:objects error:nil];
+}
+
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
+    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
+    
+    schoolSheet.delegate = self;
     
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
@@ -196,19 +222,30 @@ static BOOL useStage = NO;
     for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
         [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
-    
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [schoolSheet showInView:self.view];
+
+    if (YES) {
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [schoolSheet showInView:self.view];
+        } else {
+            [schoolSheet showInView:window];
+        }
     } else {
-        [schoolSheet showInView:window];
+        [schoolSheet showInView:self.view];
     }
+
 }
 
 - (IBAction)classNameButton:(id)sender {
     if (self.reachable) {
-        PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes"];
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+        if ([self.schoolName.text isEqualToString:@""]) {
+            UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selectiing a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            [chooseSchoolAlert show];
+        } else {
+            NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
+            PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes" predicate:classesForSchool];
+            [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+        }
     } else {
         UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [reachableAlert show];
@@ -216,8 +253,8 @@ static BOOL useStage = NO;
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:nil, nil];
-    
+    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -241,7 +278,7 @@ static BOOL useStage = NO;
 
 - (IBAction)tappedSignUpButton:(id)sender {
     if (self.reachable) {
-        if ([self.useStageCheckbox isChecked]) {
+        if (useStage && [self.useStageCheckbox isChecked]) {
             NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
             NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
             
@@ -316,6 +353,14 @@ static BOOL useStage = NO;
 
 #pragma mark - UIActionSheetDelegate methods
 
+- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex {
+
+}
+
+- (void)actionSheetCancel:(UIActionSheet *)actionSheet {
+    
+}
+
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
@@ -331,6 +376,20 @@ static BOOL useStage = NO;
     }
 }
 
+- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
+    NSString *title = [actionSheet title];
+    if ([title isEqualToString:@"Choose School"]) {
+        if ([buttonTitle isEqualToString:@"New school"]) {
+            [self performSegueWithIdentifier:@"addSchool" sender:nil];
+        } else {
+            self.schoolName.text = buttonTitle;
+        }
+    } else if ([title isEqualToString:@"Choose Class"]) {
+        self.className.text = buttonTitle;
+    }
+}
 
 -(void)dismissKeyboard {
     [self.view endEditing:YES];

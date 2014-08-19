@@ -39,6 +39,8 @@
             if (number > 0) {
                 NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
                 [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
+            } else {
+                [self.navigationController.tabBarItem setBadgeValue:nil];
             }
         }];
         
@@ -105,7 +107,8 @@
         if (number > 0) {
             NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
             [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
-
+        } else {
+            [self.navigationController.tabBarItem setBadgeValue:nil];
         }
     }];
 }

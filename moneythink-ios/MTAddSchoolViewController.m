@@ -56,6 +56,10 @@
 
 - (IBAction)doneButtonTapped:(id)sender {
     self.schoolName = self.schoolNameText.text;
+    PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
+    createSchool[@"name"] = self.schoolName;
+    [createSchool save];
+    
     [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
 }
 
