@@ -7,10 +7,6 @@
 //
 
 #import "MTUserViewController.h"
-#import "MTLogInViewController.h"
-#import "MTSignUpViewController.h"
-#import "MTStudentTabBarViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTUserViewController ()
 
@@ -131,9 +127,9 @@
         signUpViewController.signUpTitle = @"Student Signup";
         signUpViewController.signUpType = @"student";
     } else if ([segueID isEqualToString:@"mentorSignUp"]) {
-        MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
-        signUpViewController.signUpTitle = @"Mentor Signup";
-        signUpViewController.signUpType = @"mentor";
+        self.signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
+        self.signUpViewController.signUpTitle = @"Mentor Signup";
+        self.signUpViewController.signUpType = @"mentor";
     }
 }
 

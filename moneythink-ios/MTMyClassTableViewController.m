@@ -87,8 +87,6 @@
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
     
-    // This method is called every time objects are loaded from Parse via the PFQuery
-    
 }
 
 - (void)objectsWillLoad {
@@ -108,6 +106,21 @@
     
     NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
                        [self.challengeNumber intValue], self.className];
+    
+    
+    /*
+     self.schoolName = [PFUser currentUser][@"school"];
+     
+     NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
+     [self.challengeNumber intValue], self.className];
+     
+     challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d",
+     [self.challengeNumber intValue]];
+     
+     challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@ AND school = %@",
+     [self.challengeNumber intValue], self.className, self.schoolName];
+     */
+    
     
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
     [query orderByDescending:@"createdAt"];

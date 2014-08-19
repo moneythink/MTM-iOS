@@ -76,7 +76,7 @@ static BOOL useStage = NO;
     [self.view addGestureRecognizer:tap];
     
     self.view.backgroundColor = [UIColor white];
-    
+
     [self.firstName setDelegate:self];
     [self.lastName setDelegate:self];
     [self.email setDelegate:self];
@@ -159,10 +159,6 @@ static BOOL useStage = NO;
     [super viewDidLayoutSubviews];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
@@ -186,16 +182,7 @@ static BOOL useStage = NO;
 - (IBAction)schoolNameButton:(id)sender {
     if (self.reachable) {
         PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
-        if (NO) {
-            [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-        } else {
-            [querySchools findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                NSLog(@"stop");
-                if (!error) {
-                    [self performSelector:@selector(schoolsSheet:) withObject:objects];
-                }
-            }];
-        }
+        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
     } else {
         UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [reachableAlert show];
@@ -208,9 +195,7 @@ static BOOL useStage = NO;
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
     UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-    
-    schoolSheet.delegate = self;
-    
+
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -223,17 +208,12 @@ static BOOL useStage = NO;
         [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
 
-    if (YES) {
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [schoolSheet showInView:self.view];
-        } else {
-            [schoolSheet showInView:window];
-        }
-    } else {
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
         [schoolSheet showInView:self.view];
+    } else {
+        [schoolSheet showInView:window];
     }
-
 }
 
 - (IBAction)classNameButton:(id)sender {
@@ -253,7 +233,7 @@ static BOOL useStage = NO;
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
@@ -353,14 +333,6 @@ static BOOL useStage = NO;
 
 #pragma mark - UIActionSheetDelegate methods
 
-- (void)actionSheet:(UIActionSheet *)actionSheet willDismissWithButtonIndex:(NSInteger)buttonIndex {
-
-}
-
-- (void)actionSheetCancel:(UIActionSheet *)actionSheet {
-    
-}
-
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
@@ -376,20 +348,8 @@ static BOOL useStage = NO;
     }
 }
 
-- (void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
-    NSString *title = [actionSheet title];
-    if ([title isEqualToString:@"Choose School"]) {
-        if ([buttonTitle isEqualToString:@"New school"]) {
-            [self performSegueWithIdentifier:@"addSchool" sender:nil];
-        } else {
-            self.schoolName.text = buttonTitle;
-        }
-    } else if ([title isEqualToString:@"Choose Class"]) {
-        self.className.text = buttonTitle;
-    }
-}
+
+#pragma mark - Keyboard methods
 
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
@@ -410,9 +370,9 @@ static BOOL useStage = NO;
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
     CGFloat w = fieldsFrame.size.width;
-    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
+    CGFloat h = kbTop + 320.0f;
     
-    CGRect fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
+    CGRect fieldsContentRect   = CGRectMake(x, y, w, h);
     
     self.viewFields.contentSize = fieldsContentRect.size;
     

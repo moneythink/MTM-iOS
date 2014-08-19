@@ -7,7 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTLogInViewController.h"
+#import "MTSignUpViewController.h"
+#import "MTStudentTabBarViewController.h"
+#import "MBProgressHUD.h"
 
-@interface MTUserViewController : UIViewController
+@interface MTUserViewController : UIViewController <UINavigationControllerDelegate>
+
+@property (strong, nonatomic) MTSignUpViewController *signUpViewController;
 
 @end

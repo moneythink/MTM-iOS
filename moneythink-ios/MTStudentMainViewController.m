@@ -25,6 +25,9 @@
 
 @property (strong, nonatomic) IBOutlet UILabel *myPoints;
 
+@property (strong, nonatomic) IBOutlet UIImageView *managerProgress;
+@property (strong, nonatomic) IBOutlet UIImageView *makerProgress;
+
 @end
 
 @implementation MTStudentMainViewController
@@ -41,6 +44,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+//    [self.view setBackgroundColor:[UIColor blueColor]];
     
     self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
     self.buttonUserProfile.imageView.layer.masksToBounds = YES;
@@ -59,6 +64,40 @@
             [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
         }
     }];
+
+    NSInteger managerProgressValue = [user[@"money_manager"] intValue];
+    NSInteger makerProgressValue = [user[@"money_maker"] intValue];
+    
+    if (makerProgressValue == 100) {
+        self.makerProgress.hidden = NO;
+        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_2"];
+    } else if (makerProgressValue >= 50) {
+        self.makerProgress.hidden = NO;
+        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_1"];
+    }
+    
+    if (managerProgressValue == 100) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_7"];
+    } else if (managerProgressValue >= 86) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_6"];
+    } else if (managerProgressValue >= 72) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_5"];
+    } else if (managerProgressValue >= 58) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_4"];
+    } else if (managerProgressValue >= 44) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_3"];
+    } else if (managerProgressValue >= 30) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_2"];
+    } else if (managerProgressValue >= 16) {
+        self.managerProgress.hidden = NO;
+        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -75,9 +114,6 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    if (self.profileImageView.image) {
-
-    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,12 +152,8 @@
 
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-// Get the new view controller using [segue destinationViewController].
-// Pass the selected object to the new view controller.
-
     NSString *segueID = [segue identifier];
     
     MTUserInformationViewController *userInfoModal = (MTUserInformationViewController *)segue.destinationViewController;

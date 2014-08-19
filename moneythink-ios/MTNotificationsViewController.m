@@ -85,8 +85,11 @@
 // Override to customize what kind of query to perform on the class. The default is to query for
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
+    PFUser *user = [PFUser currentUser];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [query whereKey:@"read_by" notEqualTo:[user objectId]];
+    [query whereKey:@"recipient" equalTo:[user objectId]];
 
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.

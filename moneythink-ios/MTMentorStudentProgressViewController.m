@@ -44,7 +44,8 @@
     
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSString *nameSchool = [PFUser currentUser][@"school"];
-    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", nameClass, nameSchool];
+    NSString *type = @"student";
+    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
     [studentsForClass orderByAscending:@"last_name"];
     
@@ -53,7 +54,6 @@
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
-            
             [self.tableView reloadData];
         } else {
             NSLog(@"error - %@", error);

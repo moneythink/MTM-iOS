@@ -8,8 +8,9 @@
 
 #import "MICheckBox.h"
 
-@interface MTSignUpViewController : UIViewController <UITextFieldDelegate, UIActionSheetDelegate>
+@interface MTSignUpViewController : UIViewController <UIActionSheetDelegate, UITextFieldDelegate>
 
+@property (assign, nonatomic) id delegate;
 @property (strong, nonatomic) NSString *signUpTitle;
 @property (strong, nonatomic) NSString *signUpType;
 

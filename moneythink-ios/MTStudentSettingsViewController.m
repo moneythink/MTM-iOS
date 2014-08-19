@@ -1,4 +1,4 @@
-//
+
 //  MTStudentSettingsViewController.m
 //  moneythink-ios
 //
@@ -43,7 +43,8 @@
     
     self.notificationsOn = NO;
     PFUser *user = [PFUser currentUser];
-    self.signupOn = [user[@"type"] isEqualToString:@"mentor"];
+    NSString *userType = user[@"type"];
+    self.signupOn = [userType isEqualToString:@"mentor"];
     
     self.sections = @[@"PROFILE", @""];
     if (self.notificationsOn) {
@@ -127,7 +128,8 @@
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
-                cell.textLabel.text = [objects firstObject][@"code"];
+                NSString *code = [objects firstObject][@"code"];
+                cell.textLabel.text = [NSString stringWithFormat:@"Share sign up code - %@", code];
             } else {
                 NSLog(@"error - %@", error);
             }
@@ -187,6 +189,24 @@
         [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
     } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
         NSLog(@"share code");
+
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", [PFUser currentUser][@"class"], @"student"];
+        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                NSString *signupCode = [objects firstObject][@"code"];
+                signupCode = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", [PFUser currentUser][@"class"], signupCode];
+                NSArray *dataToShare = @[signupCode];
+                
+                UIActivityViewController *activityViewController =
+                [[UIActivityViewController alloc] initWithActivityItems:dataToShare
+                                                  applicationActivities:nil];
+                [self presentViewController:activityViewController animated:YES completion:^{}];
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+
     } else {
         UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
         
@@ -204,7 +224,7 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     switch (buttonIndex) {
-        case 0: 
+        case 0:
             break;
             
         case 1: {

@@ -73,9 +73,10 @@
     self.challengeNumber = postTabBarViewController.challengeNumber;
     
     self.className = [PFUser currentUser][@"class"];
+    self.schoolName = [PFUser currentUser][@"school"];
     
-    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
-                                    [self.challengeNumber intValue], self.className];
+    NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@ AND school = %@",
+                                    [self.challengeNumber intValue], self.className, self.schoolName];
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table

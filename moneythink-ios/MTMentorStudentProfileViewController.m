@@ -92,17 +92,17 @@
 
     if (managerProgressValue == 100) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_7"];
-    } else if (managerProgressValue >= 85) {
+    } else if (managerProgressValue >= 86) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_6"];
-    } else if (managerProgressValue >= 70) {
+    } else if (managerProgressValue >= 72) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_5"];
-    } else if (managerProgressValue >= 55) {
+    } else if (managerProgressValue >= 58) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_4"];
-    } else if (managerProgressValue >= 40) {
+    } else if (managerProgressValue >= 44) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_3"];
-    } else if (managerProgressValue >= 25) {
+    } else if (managerProgressValue >= 30) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_2"];
-    } else if (managerProgressValue >= 10) {
+    } else if (managerProgressValue >= 16) {
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
     } else {
         self.managerProgress.image = nil;

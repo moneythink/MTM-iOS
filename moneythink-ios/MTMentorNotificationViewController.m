@@ -25,9 +25,9 @@
     if (self) {
         PFUser *user = [PFUser currentUser];
         
-        
         PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-        [queryMe whereKey:@"read_by" equalTo:[user objectId]];
+        [queryMe whereKey:@"read_by" notEqualTo:[user objectId]];
+        [queryMe whereKey:@"recipient" equalTo:[user objectId]];
         [queryMe whereKeyDoesNotExist:@"challenge_activated"];
         
         PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
@@ -95,7 +95,8 @@
     [PFCloud callFunction:@"markAllNotificationsRead" withParameters:@{@"user_id": [user objectId]}];
     
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryMe whereKey:@"read_by" equalTo:[user objectId]];
+    [queryMe whereKey:@"read_by" notEqualTo:[user objectId]];
+    [queryMe whereKey:@"recipient" equalTo:[user objectId]];
     [queryMe whereKeyDoesNotExist:@"challenge_activated"];
 
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
@@ -126,9 +127,9 @@
     
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"read_by" notEqualTo:[user objectId]];
+    [queryMe whereKey:@"recipient" equalTo:[user objectId]];
     
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryMe whereKey:@"recipient" equalTo:user];
     [queryNoOne whereKeyDoesNotExist:@"recipient"];
     
     query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
