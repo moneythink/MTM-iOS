@@ -42,23 +42,6 @@
 
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-//    if (self.reachable) {
-//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Reachable"
-//                                                                 message:@"Connected."
-//                                                                delegate:nil
-//                                                       cancelButtonTitle:@"OK"
-//                                                       otherButtonTitles:nil, nil];
-//        [reachableAlert show];
-//    } else {
-//        NSString *msg = @"Many features of this app require a network connection.";
-//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
-//                                                                 message:msg
-//                                                                delegate:nil
-//                                                       cancelButtonTitle:@"OK"
-//                                                       otherButtonTitles:nil, nil];
-//        [reachableAlert show];
-//    }
-    
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
                                                  name:kReachabilityChangedNotification

@@ -16,6 +16,8 @@
 @property (assign, nonatomic) BOOL hasButtons;
 @property (strong, nonatomic) NSArray *postsLiked;
 
+@property (assign, nonatomic) BOOL reachable;
+
 @end
 
 @implementation MTMyClassTableViewController
@@ -430,6 +432,20 @@
     }
 }
 
+
+
+#pragma mark Notification
+
+-(void)reachabilityChanged:(NSNotification*)note
+{
+    Reachability * reach = [note object];
+    
+    if([reach isReachable]) {
+        self.reachable = YES;
+    } else {
+        self.reachable = NO;
+    }
+}
 
 
 @end

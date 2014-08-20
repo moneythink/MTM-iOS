@@ -257,7 +257,7 @@
         <!--Sign Up View Controller-->
         <scene sceneID="HHX-ba-Wva">
             <objects>
-                <viewController storyboardIdentifier="studentSignupView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8Ue-1k-B9o" customClass="MTSignUpViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="studentSignupView" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="8Ue-1k-B9o" customClass="MTSignUpViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="1lY-kM-8mF"/>
                         <viewControllerLayoutGuide type="bottom" id="T6D-1a-dKb"/>
@@ -286,19 +286,19 @@
                                         <rect key="frame" x="20" y="96" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Password" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="6Cx-TC-ge0">
                                         <rect key="frame" x="20" y="134" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Registration Code" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="iFn-Zo-Rkq">
                                         <rect key="frame" x="20" y="172" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
                                         <connections>
                                             <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorSignedUp" id="MZw-0r-VG2"/>
                                         </connections>
@@ -3106,7 +3106,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="zf7-a5-GnU"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Last Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ORF-qD-pOj">
                                         <rect key="frame" x="20" y="58" width="280" height="30"/>
@@ -3115,7 +3115,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="vOM-we-FgL"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="School Email" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="871-3R-XVp">
                                         <rect key="frame" x="20" y="96" width="280" height="30"/>
@@ -3124,7 +3124,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="7qf-JT-R87"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" keyboardType="emailAddress" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Create Password" clearsOnBeginEditing="YES" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="wH5-cm-geD">
                                         <rect key="frame" x="20" y="134" width="280" height="30"/>
@@ -3133,7 +3133,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="5nJ-Tw-khN"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Registration Code" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pPs-AL-Tjs">
                                         <rect key="frame" x="20" y="172" width="280" height="30"/>
@@ -3142,7 +3142,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="ekH-iM-2Pp"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jiJ-0t-mOo">
                                         <rect key="frame" x="21" y="286" width="20" height="30"/>
@@ -3198,7 +3198,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="jbr-vO-2k3"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Class Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yFB-wj-hwM">
                                         <rect key="frame" x="21" y="248" width="279" height="30"/>
@@ -3207,7 +3207,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="height" constant="30" id="6iY-4f-tRZ"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6">
                                         <rect key="frame" x="20" y="211" width="280" height="30"/>
@@ -3655,11 +3655,11 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="0Hm-VR-maT"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="ySr-9F-9a4"/>
-        <segue reference="Neh-9A-DML"/>
+        <segue reference="qYv-0w-I0f"/>
         <segue reference="fM9-bL-F9m"/>
+        <segue reference="Neh-9A-DML"/>
+        <segue reference="ySr-9F-9a4"/>
+        <segue reference="kgD-Kv-M6F"/>
         <segue reference="0tX-EG-lkN"/>
         <segue reference="3vf-te-PYL"/>
         <segue reference="VFk-5D-gdp"/>
