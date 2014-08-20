@@ -14,6 +14,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *mentorSignUpButton;
 @property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
+@property (strong, nonatomic) MTSignUpViewController *signUpViewController;
+
 @end
 
 @implementation MTUserViewController
@@ -95,9 +97,9 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
+//- (void)viewDidAppear:(BOOL)animated {
+//    [super viewDidAppear:animated];
+//}
 
 
 - (void)didReceiveMemoryWarning
@@ -106,30 +108,33 @@
         // Dispose of any resources that can be recreated.
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-}
+//- (void)viewWillLayoutSubviews {
+//    [super viewWillLayoutSubviews];
+//}
+//
+//- (void)viewDidLayoutSubviews {
+//    [super viewDidLayoutSubviews];
+//}
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
-}
+//- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+//    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+//}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueID = [segue identifier];
-    
+    id segueDVC = [segue destinationViewController];
+    NSLog(@"segueDVC - %@", segueDVC);
+
     if ([segueID isEqualToString:@"studentSignUp"]) {
         MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
         signUpViewController.signUpTitle = @"Student Signup";
         signUpViewController.signUpType = @"student";
+        NSLog(@"signUpViewController - %@", signUpViewController);
     } else if ([segueID isEqualToString:@"mentorSignUp"]) {
-        self.signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
-        self.signUpViewController.signUpTitle = @"Mentor Signup";
+        self.signUpViewController = (MTSignUpViewController *)segueDVC;
         self.signUpViewController.signUpType = @"mentor";
+        NSLog(@"self.userSignUpViewController - %@", self.signUpViewController);
     }
 }
 

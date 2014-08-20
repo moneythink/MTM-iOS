@@ -14,6 +14,4 @@
 
 @interface MTUserViewController : UIViewController <UINavigationControllerDelegate>
 
-@property (strong, nonatomic) MTSignUpViewController *signUpViewController;
-
 @end

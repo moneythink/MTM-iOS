@@ -15,9 +15,9 @@
 #import "MTAddSchoolViewController.h"
 
 #ifdef DEBUG
-static BOOL useStage = YES;
+    static BOOL useStage = YES;
 #else
-static BOOL useStage = NO;
+    static BOOL useStage = NO;
 #endif
 
 @interface MTSignUpViewController ()
@@ -50,7 +50,7 @@ static BOOL useStage = NO;
 
 @property (strong, nonatomic) IBOutlet UIButton *addClassButton;
 @property (strong, nonatomic) IBOutlet UITextField *className;
-@property (strong, nonatomic) PFClasses *class;
+@property (strong, nonatomic) PFClasses *userClass;
 @property (strong, nonatomic) UIActionSheet *classSheet;
 
 @property (strong, nonatomic) IBOutlet UIButton *signUpButton;
@@ -63,6 +63,16 @@ static BOOL useStage = NO;
 @end
 
 @implementation MTSignUpViewController
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+
+    }
+    return self;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -194,8 +204,9 @@ static BOOL useStage = NO;
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-
+    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
+    NSLog(@"delegate - %@", schoolSheet.delegate);
+    
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -207,6 +218,9 @@ static BOOL useStage = NO;
     for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
         [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
+
+    [schoolSheet addButtonWithTitle:@"Cancel"];
+    schoolSheet.cancelButtonIndex = schoolNames.count;
 
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -233,7 +247,7 @@ static BOOL useStage = NO;
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
@@ -247,6 +261,9 @@ static BOOL useStage = NO;
     for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
         [classSheet addButtonWithTitle:classNames[buttonItem]];
     }
+    
+    [classSheet addButtonWithTitle:@"Cancel"];
+    classSheet.cancelButtonIndex = classNames.count;
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -340,11 +357,15 @@ static BOOL useStage = NO;
     if ([title isEqualToString:@"Choose School"]) {
         if ([buttonTitle isEqualToString:@"New school"]) {
             [self performSegueWithIdentifier:@"addSchool" sender:nil];
-        } else {
+        } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.schoolName.text = buttonTitle;
         }
     } else if ([title isEqualToString:@"Choose Class"]) {
-        self.className.text = buttonTitle;
+        if ([buttonTitle isEqualToString:@"New class"]) {
+            [self performSegueWithIdentifier:@"addClass" sender:nil];
+        } else if (![buttonTitle isEqualToString:@"Cancel"]) {
+            self.className.text = buttonTitle;
+        }
     }
 }
 
@@ -380,8 +401,7 @@ static BOOL useStage = NO;
     
 }
 
-- (void)keyboardWasDismissed:(NSNotification *)notification
-{
+- (void)keyboardWasDismissed:(NSNotification *)notification {
     self.viewFields.frame = self.oldViewFieldsRect;
     self.viewFields.contentSize = self.oldViewFieldsContentSize;
 }
@@ -389,8 +409,7 @@ static BOOL useStage = NO;
 
 #pragma mark - UITextFieldDelegate methods
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSInteger nextTag = textField.tag + 1;
     // Try to find next responder
     UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
@@ -404,6 +423,7 @@ static BOOL useStage = NO;
     return NO; // We do not want UITextField to insert line-breaks.
 }
 
+/*
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -411,15 +431,14 @@ static BOOL useStage = NO;
     id destinationVC = [segue destinationViewController];
     if ([segueName isEqualToString:@"addSchool"]) {
         MTAddSchoolViewController *addSchoolVC = (MTAddSchoolViewController *)destinationVC;
-        addSchoolVC.schoolName = @"test";
     }
 }
+ */
 
 
 #pragma mark Notification
 
--(void)reachabilityChanged:(NSNotification*)note
-{
+-(void)reachabilityChanged:(NSNotification*)note {
     Reachability * reach = [note object];
     
     if([reach isReachable]) {
@@ -428,6 +447,7 @@ static BOOL useStage = NO;
         self.reachable = NO;
     }
 }
+
 
 #pragma mark - Unwind
 
