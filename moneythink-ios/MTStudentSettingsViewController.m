@@ -49,13 +49,13 @@
     self.sections = @[@"PROFILE", @""];
     if (self.notificationsOn) {
         if (self.signupOn) {
-            self.sections = @[@"NOTIFICATION", @"PROFILE", @"SIGN UP CODE", @""];
+            self.sections = @[@"NOTIFICATION", @"PROFILE", @"SHARE SIGN UP CODE", @""];
         } else {
             self.sections = @[@"NOTIFICATION", @"PROFILE", @""];
         }
     } else {
         if (self.signupOn) {
-            self.sections = @[@"PROFILE", @"SIGN UP CODE", @""];
+            self.sections = @[@"PROFILE", @"SHARE SIGN UP CODE", @""];
         }
     }
 }
@@ -81,8 +81,8 @@
         rows = 1;
     } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         rows = 1;
-    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
-        rows = 1;
+    } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
+        rows = 2;
     } else {
         rows = 1;
     }
@@ -122,14 +122,39 @@
     } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         cell.textLabel.text = @"Edit Profile";
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
-    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
-        PFUser *mentor = [PFUser currentUser];
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@", mentor[@"class"]];
+    } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
+        NSString *type = @"";
+        NSString *msg = @"";
+        
+        switch (indexPath.row) {
+            case 0: {
+                type = @"student";
+                msg = @"Student sign up code";
+            }
+                break;
+                
+            default: {
+                type = @"mentor";
+                msg = @"Mentor sign up code";
+            }
+                break;
+        }
+
+        PFUser *user = [PFUser currentUser];
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", user[@"class"], type];
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+
+            
                 NSString *code = [objects firstObject][@"code"];
-                cell.textLabel.text = [NSString stringWithFormat:@"Share sign up code - %@", code];
+                if (objects.count > 0) {
+                    cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
+                } else {
+                    cell.textLabel.text = @"";
+                }
+
+            
             } else {
                 NSLog(@"error - %@", error);
             }
@@ -187,15 +212,31 @@
         }
     } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
-    } else if ([self.sections[section] isEqualToString:@"SIGN UP CODE"]) {
-        NSLog(@"share code");
-
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", [PFUser currentUser][@"class"], @"student"];
+    } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
+        
+        NSString *type = @"";
+        NSString *msg = @"";
+        
+        switch (indexPath.row) {
+            case 0: {
+                type = @"student";
+                msg = @"Student";
+            }
+                break;
+                
+            default: {
+                type = @"mentor";
+                msg = @"Mentor";
+            }
+                break;
+        }
+        
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"school = %@ AND class = %@ AND type = %@", [PFUser currentUser][@"school"], [PFUser currentUser][@"class"], type];
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 NSString *signupCode = [objects firstObject][@"code"];
-                signupCode = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", [PFUser currentUser][@"class"], signupCode];
+                signupCode = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [PFUser currentUser][@"class"], signupCode];
                 NSArray *dataToShare = @[signupCode];
                 
                 UIActivityViewController *activityViewController =

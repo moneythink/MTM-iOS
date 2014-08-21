@@ -10,17 +10,18 @@
 
 @interface MTAddClassViewController ()
 
+@property (strong, nonatomic) IBOutlet UITextField *classNameText;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
 
 @end
 
 @implementation MTAddClassViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+
     }
     return self;
 }
@@ -28,10 +29,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
+
     [[self.doneButton layer] setCornerRadius:5.0f];
     [[self.doneButton layer] setBorderWidth:1.0f];
+    [[self.doneButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,5 +51,15 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+
+#pragma mark - IBAction
+
+- (IBAction)doneButtonTapped:(id)sender {
+    self.className = self.classNameText.text;
+
+    [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
+}
+
 
 @end

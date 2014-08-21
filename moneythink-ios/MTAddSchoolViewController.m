@@ -35,6 +35,10 @@
     [[self.doneButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 }
 
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:YES];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -52,13 +56,11 @@
 }
 */
 
-#pragma mark
+
+#pragma mark - IBAction
 
 - (IBAction)doneButtonTapped:(id)sender {
     self.schoolName = self.schoolNameText.text;
-    PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-    createSchool[@"name"] = self.schoolName;
-    [createSchool save];
     
     [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
 }

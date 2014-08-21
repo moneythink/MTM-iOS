@@ -10,4 +10,7 @@
 
 @interface MTAddClassViewController : UIViewController
 
+@property (strong, nonatomic) NSString *schoolName;
+@property (strong, nonatomic) NSString *className;
+
 @end

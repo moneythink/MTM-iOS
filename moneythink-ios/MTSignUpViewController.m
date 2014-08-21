@@ -45,11 +45,15 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
+@property (assign, nonatomic) BOOL schoolIsNew;
+@property (strong, nonatomic) NSArray *schools;
 @property (strong, nonatomic) PFSchools *school;
 @property (strong, nonatomic) UIActionSheet *schoolSheet;
 
 @property (strong, nonatomic) IBOutlet UIButton *addClassButton;
 @property (strong, nonatomic) IBOutlet UITextField *className;
+@property (assign, nonatomic) BOOL classIsNew;
+@property (strong, nonatomic) NSArray *classes;
 @property (strong, nonatomic) PFClasses *userClass;
 @property (strong, nonatomic) UIActionSheet *classSheet;
 
@@ -167,10 +171,13 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.oldViewFieldsRect = self.viewFields.frame;
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
 }
@@ -199,28 +206,23 @@
     }
 }
 
-- (void)schoolsSheet:(NSArray *)objects {
-    [self schoolsSheet:objects error:nil];
-}
-
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
     UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-    NSLog(@"delegate - %@", schoolSheet.delegate);
     
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
     }
     
-    NSArray *schoolNames = [names sortedArrayUsingSelector:
+    self.schools = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
-    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+    for (NSInteger buttonItem = 0; buttonItem < self.schools.count; buttonItem++) {
         [schoolSheet addButtonWithTitle:names[buttonItem]];
     }
 
     [schoolSheet addButtonWithTitle:@"Cancel"];
-    schoolSheet.cancelButtonIndex = schoolNames.count;
+    schoolSheet.cancelButtonIndex = self.schools.count;
 
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -233,7 +235,7 @@
 - (IBAction)classNameButton:(id)sender {
     if (self.reachable) {
         if ([self.schoolName.text isEqualToString:@""]) {
-            UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selectiing a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+            UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
             [chooseSchoolAlert show];
         } else {
             NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
@@ -254,16 +256,16 @@
         [names addObject:object[@"name"]];
     }
     
-    NSArray *classNames = [names sortedArrayUsingSelector:
+    self.classes = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
     
-    for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-        [classSheet addButtonWithTitle:classNames[buttonItem]];
+    for (NSInteger buttonItem = 0; buttonItem < self.classes.count; buttonItem++) {
+        [classSheet addButtonWithTitle:self.classes[buttonItem]];
     }
     
     [classSheet addButtonWithTitle:@"Cancel"];
-    classSheet.cancelButtonIndex = classNames.count;
+    classSheet.cancelButtonIndex = self.classes.count;
     
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
@@ -282,9 +284,10 @@
             [Parse setApplicationId:applicationID
                           clientKey:clientKey];
         }
-        
+
+        BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
         BOOL agreed = [self.agreeCheckbox isChecked];
-        if ([self.signUpType isEqualToString:@"mentor"]) {
+        if (isMentor) {
             agreed &= [self.mentorAgreeCheckbox isChecked];
         }
         
@@ -297,7 +300,7 @@
                 if (!error) {
                     NSArray *codes = objects;
                     
-                    if ([codes count] == 1) {
+                    if ([codes count] > 0) {
                         PFSignupCodes *code = [codes firstObject];
                         
                         PFUser *user = [PFUser user];
@@ -312,11 +315,31 @@
                         
                         user[@"type"] = self.signUpType;
                         
-                        NSString *aString = (NSString *)[code valueForUndefinedKey:@"class"];
-                        user[@"class"] = aString;
+                        user[@"class"] = self.className.text;
                         
-                        aString = (NSString *)[code valueForUndefinedKey:@"school"];
-                        user[@"school"] = aString;
+                        if (self.schoolIsNew) {
+                            PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
+                            createSchool[@"name"] = self.schoolName.text;
+                            [createSchool saveInBackground];
+                        }
+
+                        if (self.classIsNew) {
+                            PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
+                            createClass[@"name"] = self.className.text;
+                            createClass[@"school"] = self.schoolName.text;
+                            [createClass saveInBackground];
+                            
+                            PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
+                            signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
+                            signupCodeForStudent[@"class"] = self.className.text;
+                            signupCodeForStudent[@"school"] = self.schoolName.text;
+                            signupCodeForStudent[@"type"] = @"student";
+                            
+                            [signupCodeForStudent saveInBackground];
+                            
+                        }
+
+                        user[@"school"] = code[@"school"];
                         
                         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
@@ -356,15 +379,29 @@
     NSString *title = [actionSheet title];
     if ([title isEqualToString:@"Choose School"]) {
         if ([buttonTitle isEqualToString:@"New school"]) {
-            [self performSegueWithIdentifier:@"addSchool" sender:nil];
+            self.schoolIsNew = YES;
+            [self performSegueWithIdentifier:@"addSchool" sender:self];
+//            MTAddSchoolViewController *addSchoolModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addSchool"];
+//            [self presentViewController:addSchoolModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
+            self.school = self.schools[buttonIndex];
+            self.schoolIsNew = NO;
             self.schoolName.text = buttonTitle;
+        } else { // Cancel
+            self.schoolIsNew = NO;
         }
     } else if ([title isEqualToString:@"Choose Class"]) {
         if ([buttonTitle isEqualToString:@"New class"]) {
-            [self performSegueWithIdentifier:@"addClass" sender:nil];
+            self.classIsNew = YES;
+            [self performSegueWithIdentifier:@"addClass" sender:self];
+//            MTAddClassViewController *addClassModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addClass"];
+//            [self presentViewController:addClassModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
+            self.userClass = self.classes[buttonIndex];
+            self.classIsNew = NO;
             self.className.text = buttonTitle;
+        } else { // Cancel
+            self.classIsNew = NO;
         }
     }
 }
@@ -411,29 +448,28 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     NSInteger nextTag = textField.tag + 1;
-    // Try to find next responder
     UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
     if (nextResponder) {
-        // Found next responder, so set it.
         [nextResponder becomeFirstResponder];
     } else {
-        // Not found, so remove keyboard.
         [textField resignFirstResponder];
     }
-    return NO; // We do not want UITextField to insert line-breaks.
+    return NO;
 }
 
-/*
+
 #pragma mark - Navigation
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     NSString *segueName = [segue identifier];
     id destinationVC = [segue destinationViewController];
     if ([segueName isEqualToString:@"addSchool"]) {
-        MTAddSchoolViewController *addSchoolVC = (MTAddSchoolViewController *)destinationVC;
+//        MTAddSchoolViewController *addSchoolVC = (MTAddSchoolViewController *)destinationVC;
+    } else if ([segueName isEqualToString:@"addClass"]) {
+        MTAddClassViewController *addClassVC = (MTAddClassViewController *)destinationVC;
+        addClassVC.schoolName = self.schoolName.text;
     }
 }
- */
 
 
 #pragma mark Notification
@@ -454,6 +490,14 @@
 - (IBAction)unwindToSignupView:(UIStoryboardSegue *)sender {
     UIStoryboardSegue *returned = sender;
     id sourceVC = [returned sourceViewController];
+    if ([sourceVC class] == [MTAddSchoolViewController class]) {
+        MTAddSchoolViewController *schoolVC = sourceVC;
+        self.schoolName.text = schoolVC.schoolName;
+        self.className.text = @"";
+    } else if ([sourceVC class] == [MTAddClassViewController class]) {
+        MTAddClassViewController *classVC = sourceVC;
+        self.className.text = classVC.className;
+    }
 }
 
 @end

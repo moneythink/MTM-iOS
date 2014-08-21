@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTAddSchoolViewController : UIViewController
+@interface MTAddSchoolViewController : UIViewController <UITextFieldDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *schoolNameText;
 @property (strong, nonatomic) NSString *schoolName;
