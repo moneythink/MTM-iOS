@@ -54,6 +54,7 @@
             self.reachable = YES;
 
             PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+            [allChallenges orderByAscending:@"challange_number"];
             
             [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 [MBProgressHUD hideHUDForView:self.view animated:YES];
@@ -62,6 +63,9 @@
                     
                     // Create page view controller
                     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                    CGRect frame = self.pageViewController.view.frame;
+                    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+                    self.pageViewController.view.frame = frame;
                     self.pageViewController.dataSource = self;
                     
                     MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
@@ -70,8 +74,9 @@
                     
                     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
                     
-                    [self addChildViewController:_pageViewController];
-                    [self.view addSubview:_pageViewController.view];
+                    [self addChildViewController:self.pageViewController];
+                    [self.view addSubview:self.pageViewController.view];
+//                    [self.view insertSubview:self.pageViewController.view atIndex:self.view.subviews.count];
                     [self.pageViewController didMoveToParentViewController:self];
                 }
             }];
@@ -111,7 +116,10 @@
     // Create a new view controller and pass suitable data.
     
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
-    
+    CGRect frame = self.pageViewController.view.frame;
+    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+    challengeContentViewController.view.frame = frame;
+
 
     
     if (self.reachable) {

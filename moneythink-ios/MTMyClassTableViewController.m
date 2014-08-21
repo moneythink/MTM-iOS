@@ -148,12 +148,24 @@
     NSString *CellIdentifier = @"";
     
     UIImage *postImage = post[@"picture"];
-    if (!postImage) {
-        CellIdentifier = @"postCellNoImage";
-    } else {
+    
+    if (self.hasButtons && postImage) {
+        CellIdentifier = @"postCellWithButtons";
+    } else if (self.hasButtons) {
+        CellIdentifier = @"postCellNoImageWithButtons";
+    } else if (postImage) {
         CellIdentifier = @"postCell";
+    } else {
+        CellIdentifier = @"postCellNoImage";
     }
 
+
+    
+    
+    
+    
+    
+    
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[MTPostsTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
@@ -163,6 +175,43 @@
         cell.deletePost.hidden = NO;
     } else {
         cell.deletePost.hidden = YES;
+    }
+
+    cell.button1.tag = indexPath.row;
+    cell.button2.tag = indexPath.row;
+    
+    [[cell.button1 layer] setBorderWidth:2.0f];
+    [[cell.button1 layer] setCornerRadius:5.0f];
+    [[cell.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+    [cell.button1 setTintColor:[UIColor primaryGreen]];
+    [cell.button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [[cell.button2 layer] setCornerRadius:5.0f];
+    [[cell.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
+    [cell.button2 setTintColor:[UIColor white]];
+    [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+
+    NSArray *buttonTitles = self.challenge[@"buttons"];
+    NSArray *buttonsClicked = post [@"buttons_clicked"];
+    
+    if (buttonTitles.count > 0) {
+        NSString *button1Title;
+        NSString *button2Title;
+        
+        if (buttonsClicked.count > 0) {
+            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+        } else {
+            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
+        }
+        
+        if (buttonsClicked.count > 1) {
+            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        } else {
+            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
+        }
+        
+        [cell.button1 setTitle:button1Title forState:UIControlStateNormal];
+        [cell.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
 
     cell.userName.text = [user username];
@@ -445,6 +494,133 @@
     } else {
         self.reachable = NO;
     }
+}
+
+
+#pragma mark - IBAction methods
+
+- (IBAction)deletePostTapped:(id)sender {
+//    // call function deletePost
+//    PFUser *user = [PFUser currentUser];
+//    NSString *userID = [user objectId];
+//    
+//    NSString *postID = [self.challengePost objectId];
+//    
+//    [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+//        if (!error) {
+//            [self.navigationController popViewControllerAnimated:YES];
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
+}
+
+- (IBAction)verifiedTapped:(id)sender {
+//    NSString *postID = [self.challengePost objectId];
+//    NSString *verifiedBy = [[PFUser currentUser] objectId];
+//    
+//    if (self.verifiedCheckBox.isChecked) {
+//        verifiedBy = @"";
+//    }
+//    
+//    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
+//        if (error) {
+//            NSLog(@"error - %@", error);
+//        } else {
+//            [[PFUser currentUser] refresh];
+//            [self.challenge refresh];
+//            [self.challengePost refresh];
+//            
+//            [self.view setNeedsLayout];
+//        }
+//    }];
+//    
+//    self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
+}
+
+- (IBAction)likeButtonTapped:(id)sender {
+//    NSString *postID = [self.challengePost objectId];
+//    NSString *userID = [[PFUser currentUser] objectId];
+//    
+//    
+//    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
+//        if (!error) {
+//            PFChallengePost *post = self.challengePost;
+//            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
+//            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
+//            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//                if (!error) {
+//                    self.iLike = !self.iLike;
+//                    
+//                    if (self.iLike) {
+//                        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+//                        self.postLikesCount += 1;
+//                    } else {
+//                        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+//                        self.postLikesCount -= 1;
+//                    }
+//                    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+//                    
+//                    [[PFUser currentUser] refresh];
+//                    [self.challenge refresh];
+//                    [self.challengePost refresh];
+//                    
+//                    [self.view setNeedsLayout];
+//                }
+//            }];
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
+}
+
+- (void)button1Tapped:(id)sender {
+    UIButton *button = sender;
+    NSInteger buttonTag = button.tag;
+
+    NSLog(@"button tag - %ld", (long)buttonTag);
+    
+    PFUser *user = [PFUser currentUser];
+    PFChallengePost *post = self.objects[buttonTag];
+    
+    NSString *userID = [user objectId];
+    NSString *postID = [post objectId];
+
+    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
+    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+        if (!error) {
+            NSLog(@"button1Tapped");
+            [[PFUser currentUser] refresh];
+            [self.challenge refresh];
+            [post refresh];
+            
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
+
+- (void)button2Tapped:(id)sender {
+//    PFUser *user = [PFUser currentUser];
+//    PFChallengePost *post = self.challengePost;
+//    
+//    NSString *userID = [user objectId];
+//    NSString *postID = [post objectId];
+//    
+//    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
+//    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+//        if (!error) {
+//            NSLog(@"button2Tapped");
+//            [[PFUser currentUser] refresh];
+//            [self.challenge refresh];
+//            [self.challengePost refresh];
+//            
+//            [self.view setNeedsLayout];
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
 }
 
 

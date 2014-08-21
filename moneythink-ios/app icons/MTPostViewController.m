@@ -61,9 +61,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.postLikesCount = [self.challengePost[@"likes"] intValue];
-    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -71,6 +68,36 @@
     [self.view addGestureRecognizer:tap];
     
     self.postComment.delegate = self;
+    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.title = self.challenge[@"title"];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+}
+
+- (void)viewWillLayoutSubviews {
+    NSLog(@"refreshed");
+    
+    [self loadChallengePost];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self dismissKeyboard];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark -
+
+- (void)loadChallengePost
+{
+    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
@@ -167,10 +194,22 @@
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
     
     if (buttonTitles.count > 0) {
-        NSString *button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-        [self.button1 setTitle:button1Title forState:UIControlStateNormal];
+        NSString *button1Title;
+        NSString *button2Title;
         
-        NSString *button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        if (buttonsClicked.count > 0) {
+            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+        } else {
+            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
+        }
+        
+        if (buttonsClicked.count > 1) {
+            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        } else {
+            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
+        }
+        
+        [self.button1 setTitle:button1Title forState:UIControlStateNormal];
         [self.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
     
@@ -201,25 +240,6 @@
         self.deletePost.hidden = YES;
         self.deletePost.enabled = NO;
     }
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = self.challenge[@"title"];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
-}
-
-- (void)viewWillLayoutSubviews {
-    
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [self dismissKeyboard];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (IBAction)deletePostTapped:(id)sender {
@@ -231,7 +251,6 @@
     
     [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
         if (!error) {
-            
             [self.navigationController popViewControllerAnimated:YES];
         } else {
             NSLog(@"error - %@", error);
@@ -252,6 +271,10 @@
             NSLog(@"error - %@", error);
         } else {
             [[PFUser currentUser] refresh];
+            [self.challenge refresh];
+            [self.challengePost refresh];
+            
+            [self.view setNeedsLayout];
         }
     }];
     
@@ -265,7 +288,6 @@
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
         if (!error) {
-            
             PFChallengePost *post = self.challengePost;
             NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
             PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
@@ -282,11 +304,11 @@
                     }
                     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
                     
-                    [(PFChallengePost *)self.challengePost refresh];
                     [[PFUser currentUser] refresh];
+                    [self.challenge refresh];
+                    [self.challengePost refresh];
                     
-                    [self.parentViewController reloadInputViews];
-                    [self reloadInputViews];
+                    [self.view setNeedsLayout];
                 }
             }];
         } else {
@@ -296,10 +318,21 @@
 }
 
 - (IBAction)button1Tapped:(id)sender {
-    NSDictionary *buttonTappedDict = @{@"user": [[PFUser currentUser] objectId], @"post": [self.challengePost objectId], @"button": @0};
+    PFUser *user = [PFUser currentUser];
+    PFChallengePost *post = self.challengePost;
+    
+    NSString *userID = [user objectId];
+    NSString *postID = [post objectId];
+    
+    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
+            NSLog(@"button1Tapped");
+            [[PFUser currentUser] refresh];
+            [self.challenge refresh];
+            [self.challengePost refresh];
             
+            [self.view setNeedsLayout];
         } else {
             NSLog(@"error - %@", error);
         }
@@ -307,10 +340,21 @@
 }
 
 - (IBAction)button2Tapped:(id)sender {
-    NSDictionary *buttonTappedDict = @{@"user": [[PFUser currentUser] objectId], @"post": [self.challengePost objectId], @"button": @1};
+    PFUser *user = [PFUser currentUser];
+    PFChallengePost *post = self.challengePost;
+    
+    NSString *userID = [user objectId];
+    NSString *postID = [post objectId];
+    
+    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
+            NSLog(@"button2Tapped");
+            [[PFUser currentUser] refresh];
+            [self.challenge refresh];
+            [self.challengePost refresh];
             
+            [self.view setNeedsLayout];
         } else {
             NSLog(@"error - %@", error);
         }

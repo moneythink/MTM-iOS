@@ -14,11 +14,11 @@
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
 
-#ifdef DEBUG
-    static BOOL useStage = YES;
-#else
+//#ifdef DEBUG
+//    static BOOL useStage = YES;
+//#else
     static BOOL useStage = NO;
-#endif
+//#endif
 
 @interface MTSignUpViewController ()
 
@@ -40,8 +40,8 @@
 @property (strong, nonatomic) IBOutlet MICheckBox *mentorAgreeCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *useStageButton;
-@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 @property (strong, nonatomic) IBOutlet UILabel *useStageLabel;
+//@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
@@ -123,15 +123,16 @@
     
     self.mentorAgreeButton.hidden = YES;
     
-    if (useStage) {
-        self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-        [self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-        [self.viewFields addSubview:self.useStageCheckbox];
-        
-        self.useStageCheckbox.isChecked = useStage;
-    }
+//    if (useStage) {
+//        self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+//        [self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+//        [self.viewFields addSubview:self.useStageCheckbox];
+//        
+//        self.useStageCheckbox.isChecked = useStage;
+//    }
     self.useStageButton.hidden = YES;
+    self.useStageLabel.hidden = YES;
     
     [[self.addSchoolButton layer] setBorderWidth:1.0f];
     [[self.addSchoolButton layer] setCornerRadius:5.0f];
@@ -266,7 +267,7 @@
     
     [classSheet addButtonWithTitle:@"Cancel"];
     classSheet.cancelButtonIndex = self.classes.count;
-    
+
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
         [classSheet showInView:self.view];
@@ -277,13 +278,13 @@
 
 - (IBAction)tappedSignUpButton:(id)sender {
     if (self.reachable) {
-        if (useStage && [self.useStageCheckbox isChecked]) {
-            NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-            NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-            
-            [Parse setApplicationId:applicationID
-                          clientKey:clientKey];
-        }
+//        if (useStage && [self.useStageCheckbox isChecked]) {
+//            NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+//            NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+//            
+//            [Parse setApplicationId:applicationID
+//                          clientKey:clientKey];
+//        }
 
         BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
         BOOL agreed = [self.agreeCheckbox isChecked];
@@ -315,8 +316,6 @@
                         
                         user[@"type"] = self.signUpType;
                         
-                        user[@"class"] = self.className.text;
-                        
                         if (self.schoolIsNew) {
                             PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
                             createSchool[@"name"] = self.schoolName.text;
@@ -339,7 +338,13 @@
                             
                         }
 
-                        user[@"school"] = code[@"school"];
+                        if (isMentor) {
+                            user[@"school"] = self.schoolName.text;
+                            user[@"class"] = self.className.text;
+                        } else {
+                            user[@"school"] = code[@"school"];
+                            user[@"class"] = code[@"class"];
+                        }
                         
                         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
@@ -384,9 +389,10 @@
 //            MTAddSchoolViewController *addSchoolModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addSchool"];
 //            [self presentViewController:addSchoolModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.school = self.schools[buttonIndex];
+            self.school = self.schools[buttonIndex - 1];
             self.schoolIsNew = NO;
             self.schoolName.text = buttonTitle;
+            self.className.text = @"";
         } else { // Cancel
             self.schoolIsNew = NO;
         }
@@ -397,7 +403,7 @@
 //            MTAddClassViewController *addClassModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addClass"];
 //            [self presentViewController:addClassModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.userClass = self.classes[buttonIndex];
+            self.userClass = self.classes[buttonIndex - 1];
             self.classIsNew = NO;
             self.className.text = buttonTitle;
         } else { // Cancel

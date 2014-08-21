@@ -11,11 +11,11 @@
 #import "MTStudentTabBarViewController.h"
 #import "MTMentorTabBarViewControlle.h"
 
-#ifdef DEBUG
-static BOOL useStage = YES;
-#else
-static BOOL useStage = NO;
-#endif
+//#ifdef DEBUG
+//    static BOOL useStage = YES;
+//#else
+    static BOOL useStage = NO;
+//#endif
 
 @interface MTLogInViewController ()
 
@@ -28,7 +28,7 @@ static BOOL useStage = NO;
 @property (strong, nonatomic) IBOutlet UITextField *error;
 
 @property (strong, nonatomic) IBOutlet UIButton *useStageButton;
-@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
+//@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
@@ -50,14 +50,15 @@ static BOOL useStage = NO;
     [self.email setDelegate:self];
     [self.password setDelegate:self];
 
-    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-	[self.viewFields addSubview:self.useStageCheckbox];
+//    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
+//	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
+//	[self.viewFields addSubview:self.useStageCheckbox];
     
-    self.useStageCheckbox.isChecked = useStage;
+//    self.useStageCheckbox.isChecked = useStage;
     
     self.useStageButton.hidden = YES;
+    
     self.view.backgroundColor = [UIColor white];
     
     [[self.loginButton layer] setBorderWidth:1.0f];
@@ -82,13 +83,13 @@ static BOOL useStage = NO;
 }
 
 - (IBAction)loginTapped:(id)sender {
-    if ([self.useStageCheckbox isChecked]) {
-        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-        
-        [Parse setApplicationId:applicationID
-                      clientKey:clientKey];
-    }
+//    if ([self.useStageCheckbox isChecked]) {
+//        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+//        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+//        
+//        [Parse setApplicationId:applicationID
+//                      clientKey:clientKey];
+//    }
 
     PFUser *user = [PFUser user];
     

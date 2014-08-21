@@ -17,9 +17,9 @@
 @property (strong, nonatomic) IBOutlet UINavigationItem *studentMainNavItem;
 
 @property (strong, nonatomic) IBOutlet UIButton *buttonMoneyMaker;
-@property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
 @property (strong, nonatomic) IBOutlet UIButton *buttonMoneyManager;
 
+@property (strong, nonatomic) IBOutlet UIButton *buttonUserProfile;
 @property (nonatomic, strong) UIImage *profileImage;
 @property (strong, nonatomic) PFImageView *profileImageView;
 
@@ -45,8 +45,6 @@
 {
     [super viewDidLoad];
     
-//    [self.view setBackgroundColor:[UIColor blueColor]];
-    
     self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
     self.buttonUserProfile.imageView.layer.masksToBounds = YES;
     
@@ -61,7 +59,15 @@
     [self.profileImageView setFile:profileImageFile];
     [self.profileImageView loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
-            [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
+            if (image) {
+                [self.buttonUserProfile setImage:image forState:UIControlStateNormal];
+            } else {
+                UIImage *defaultProfile = [UIImage imageNamed:@"profile_image"];
+                [self.buttonUserProfile setImage:defaultProfile forState:UIControlStateNormal];
+            }
+        } else {
+            UIImage *defaultProfile = [UIImage imageNamed:@"profile_image"];
+            [self.buttonUserProfile setImage:defaultProfile forState:UIControlStateNormal];
         }
     }];
 
@@ -156,17 +162,7 @@
 {
     NSString *segueID = [segue identifier];
     
-    MTUserInformationViewController *userInfoModal = (MTUserInformationViewController *)segue.destinationViewController;
-    
-    if ([segueID isEqualToString:@"moneyMaker"]) {
-        userInfoModal.labelInfoTitleText = @"Money Maker";
-        userInfoModal.textInfoText = @"Making money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a talented money maker. As you complete these \"Money Maker\" challenges, you will see your progress here.";
-        
-    } else if ([segueID isEqualToString:@"moneyManager"]) {
-        userInfoModal.labelInfoTitleText = @"Money Manager";
-        userInfoModal.textInfoText = @"Managin money is one of the two pillars for financial success. Some of the challenges that you will complete relate to this pillar, and will put you on the path to becoming a expert money manager. As you complete these \"Money Manager\" challenges, you will see your progress here.";
-        
-    } else if ([segue.identifier isEqualToString:@"pushEditStudentProfile"]) {
+    if ([segueID isEqualToString:@"pushEditStudentProfile"]) {
 
     }
 }
