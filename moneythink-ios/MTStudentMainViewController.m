@@ -178,7 +178,7 @@
 
 - (void)editProfileViewControllerDidSave:(MTEditProfileViewController *)editProfileViewController
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 

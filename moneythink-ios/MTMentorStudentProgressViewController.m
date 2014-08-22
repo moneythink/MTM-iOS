@@ -52,7 +52,7 @@
 //    }
     [studentsForClass orderByAscending:@"last_name"];
     
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -70,7 +70,7 @@
 
         }
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
     }];
 }
 

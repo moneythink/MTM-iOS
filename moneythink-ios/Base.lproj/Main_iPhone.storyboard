@@ -563,9 +563,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="chooseImage:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="g3Q-nR-mgQ"/>
                                         </connections>
                                     </button>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
                                         <rect key="frame" x="20" y="48" width="280" height="123"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -578,7 +579,6 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </state>
                                         <connections>
                                             <action selector="commentCancelButton:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="Jwr-ht-Awi"/>
-                                            <action selector="commentDoneButton:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="L1L-CY-rjo"/>
                                         </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ao4-at-dOa" customClass="PFImageView">
@@ -606,6 +606,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                     </view>
                     <navigationItem key="navigationItem" id="h53-4N-wd0"/>
                     <connections>
+                        <outlet property="cancelButton" destination="0dG-Zl-OaJ" id="ONH-k8-qWR"/>
+                        <outlet property="chooseImageButton" destination="wnD-4j-xyi" id="uKr-Yp-J0d"/>
+                        <outlet property="postButton" destination="FHZ-b6-4ZT" id="WWp-po-DtJ"/>
                         <outlet property="postImage" destination="Ao4-at-dOa" id="hLW-og-chf"/>
                         <outlet property="postText" destination="Sfd-na-Zab" id="cvx-po-eHQ"/>
                         <outlet property="view" destination="k9s-2f-fqh" id="Bcq-H0-dxv"/>

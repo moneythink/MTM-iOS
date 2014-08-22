@@ -312,7 +312,7 @@
 {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     PFChallengePost *rowObject = self.objects[indexPath.row];
     UIImage *postImage = rowObject[@"picture"];
@@ -510,7 +510,7 @@
     
     [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
         if (!error) {
-            [self.navigationController popViewControllerAnimated:YES];
+            [self.navigationController popViewControllerAnimated:NO];
         } else {
             NSLog(@"error - %@", error);
         }

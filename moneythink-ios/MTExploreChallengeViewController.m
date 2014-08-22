@@ -39,7 +39,7 @@
 //        findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
 //    }
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -47,7 +47,7 @@
             
             [self.explorePostsTableView reloadData];
             
-            [MBProgressHUD hideHUDForView:self.view animated:YES];
+            [MBProgressHUD hideHUDForView:self.view animated:NO];
         } else {
 //            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
 //            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"

@@ -44,7 +44,7 @@
 //        studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
 //    }
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
     [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -62,7 +62,7 @@
 //            [reachableAlert show];
         }
         
-        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
     }];
 
     NSString *points = [self.student[@"points"] stringValue];

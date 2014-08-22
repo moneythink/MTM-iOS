@@ -40,7 +40,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
 
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challange_number"];
@@ -49,7 +49,7 @@
 //    }
 
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        [MBProgressHUD hideHUDForView:self.view animated:NO];
         if (!error) {
             self.challenges = objects;
             

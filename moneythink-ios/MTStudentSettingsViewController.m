@@ -195,7 +195,7 @@
     // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
@@ -248,7 +248,7 @@
                 UIActivityViewController *activityViewController =
                 [[UIActivityViewController alloc] initWithActivityItems:dataToShare
                                                   applicationActivities:nil];
-                [self presentViewController:activityViewController animated:YES completion:^{}];
+                [self presentViewController:activityViewController animated:NO completion:^{}];
 //            } else {
 //                NSLog(@"error - %@", error);
 //                NSString *msg = [NSString stringWithFormat:@"%@" ,error];

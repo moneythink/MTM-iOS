@@ -247,7 +247,7 @@
 
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    [collectionView deselectItemAtIndexPath:indexPath animated:YES];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     
     PFChallengePost *rowObject = self.posts[indexPath.row];
     UIImage *postImage = rowObject[@"picture"];

@@ -19,6 +19,9 @@
 
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
+@property (strong, nonatomic) IBOutlet UIButton *postButton;
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+@property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
 @end
 
 @implementation MTCommentViewController
@@ -53,6 +56,19 @@
     [self.view addGestureRecognizer:tap];
     
     self.postText.text = @"";
+    
+    [[self.postButton layer] setBorderWidth:1.0f];
+    [[self.postButton layer] setCornerRadius:5.0f];
+    [[self.postButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+    
+    [[self.cancelButton layer] setBorderWidth:1.0f];
+    [[self.cancelButton layer] setCornerRadius:5.0f];
+    [[self.cancelButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+    
+    [[self.chooseImageButton layer] setBorderWidth:1.0f];
+    [[self.chooseImageButton layer] setCornerRadius:5.0f];
+    [[self.chooseImageButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -122,7 +138,7 @@
     imagePickerController.allowsEditing = YES;
     
     self.imagePickerController = imagePickerController;
-    [self presentViewController:self.imagePickerController animated:YES completion:nil];
+    [self presentViewController:self.imagePickerController animated:NO completion:nil];
 }
 
 #pragma mark - UIImagePickerControllerDelegate methods
@@ -148,16 +164,16 @@
     
     self.postImage.image = image;
     
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
 - (IBAction)commentCancelButton:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 - (IBAction)commentDoneButton:(id)sender {
@@ -206,7 +222,7 @@
         }
     }
 
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 -(void)dismissKeyboard {

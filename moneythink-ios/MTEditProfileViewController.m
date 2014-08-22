@@ -279,7 +279,7 @@
         }
     }];
     
-    [self.navigationController popViewControllerAnimated:YES];
+    [self.navigationController popViewControllerAnimated:NO];
 }
 
 - (IBAction)saveChanges:(id)sender {
@@ -329,7 +329,7 @@
     
     self.imagePickerController = imagePickerController;
 
-    [self presentViewController:self.imagePickerController animated:YES completion:nil];
+    [self presentViewController:self.imagePickerController animated:NO completion:nil];
 }
 
 
@@ -375,12 +375,12 @@
     
     self.updatedProfileImage = image;
     
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self dismissViewControllerAnimated:YES completion:NULL];
+    [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
 
