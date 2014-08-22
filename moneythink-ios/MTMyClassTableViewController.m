@@ -28,7 +28,7 @@
         // Custom the table
         
         // The className to query on
-        self.parseClassName = @"ChallengePost";
+        self.parseClassName = [PFChallengePost parseClassName];
         
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"post_text";
@@ -288,7 +288,7 @@
     }
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    PFQuery *commentQuery = [PFQuery queryWithClassName:@"ChallengePostComment"];
+    PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [commentQuery whereKey:@"challenge_post" equalTo:post];
     [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {

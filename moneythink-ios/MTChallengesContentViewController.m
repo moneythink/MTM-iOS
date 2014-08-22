@@ -73,7 +73,7 @@
 
 -(void)exploreChallenge {
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
+    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
     
     __block NSInteger count;
     

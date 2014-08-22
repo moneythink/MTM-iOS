@@ -63,7 +63,7 @@
     self.challenge = postTabBarViewController.challenge;
     
     NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
-    PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:@"ChallengeBanners" predicate:predicateChallengeBanner];
+    PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
     
     [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

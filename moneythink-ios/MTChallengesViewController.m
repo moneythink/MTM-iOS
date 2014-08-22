@@ -42,7 +42,7 @@
 
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+    PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challange_number"];
 //    if ([self.challenges count] == 0) {
 //        allChallenges.cachePolicy = kPFCachePolicyCacheThenNetwork;
@@ -127,7 +127,7 @@
 
     PFChallenges *challenge = self.challenges[index];
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
+    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
     
     NSInteger count = [queryActivated countObjects];
     challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";

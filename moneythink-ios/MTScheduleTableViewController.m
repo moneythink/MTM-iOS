@@ -23,7 +23,7 @@
         // Custom the table
         
         // The className to query on
-        self.parseClassName = @"ScheduledActivations";
+        self.parseClassName = [PFScheduledActivations parseClassName];
         
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"challenge_number";
@@ -101,7 +101,7 @@
     id challengeNumber = activation[@"challenge_number"];
     
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
-    PFQuery *challengeQuery = [PFQuery queryWithClassName:@"Challenges" predicate:challengePredicate];
+    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:challengePredicate];
     
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

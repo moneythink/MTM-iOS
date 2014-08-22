@@ -23,7 +23,7 @@
         // Custom the table
         
         // The className to query on
-        self.parseClassName = @"ChallengePost";
+        self.parseClassName = [PFChallengePost parseClassName];
         
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"post_text";

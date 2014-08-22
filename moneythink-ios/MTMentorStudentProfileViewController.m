@@ -36,7 +36,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    PFQuery *studentPostsQuery = [PFQuery queryWithClassName:@"ChallengePost"];
+    PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
     [studentPostsQuery whereKey:@"user" equalTo:self.student];
     [studentPostsQuery includeKey:@"verified_by"];
     [studentPostsQuery orderByDescending:@"createdAt"];

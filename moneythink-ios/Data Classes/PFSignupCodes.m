@@ -59,7 +59,7 @@
     }
     
     NSPredicate *matchNewCode = [NSPredicate predicateWithFormat:@"code = %@", randomString];
-    PFQuery *findCode = [PFQuery queryWithClassName:@"SignupCodes" predicate:matchNewCode];
+    PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:matchNewCode];
     NSArray *foundCodes = [findCode findObjects];
     
     if ([foundCodes count] > 0) {
