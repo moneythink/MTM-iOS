@@ -17,7 +17,7 @@
 //#ifdef DEBUG
 //    static BOOL useStage = YES;
 //#else
-    static BOOL useStage = NO;
+//    static BOOL useStage = NO;
 //#endif
 
 @interface MTSignUpViewController ()
@@ -91,13 +91,26 @@
     
     self.view.backgroundColor = [UIColor white];
 
-    [self.firstName setDelegate:self];
-    [self.lastName setDelegate:self];
-    [self.email setDelegate:self];
-    [self.password setDelegate:self];
-    [self.registrationCode setDelegate:self];
-    [self.schoolName setDelegate:self];
-    [self.className setDelegate:self];
+    for(UIView *subview in self.view.subviews) {
+        if([subview isKindOfClass: [UIScrollView class]]) {
+            for(UIScrollView *scrollViewSubview in subview.subviews) {
+                if([scrollViewSubview isKindOfClass: [UITextView class]]) {
+                    ((UITextView*)scrollViewSubview).delegate = (id) self;
+                }
+                
+                if([scrollViewSubview isKindOfClass: [UITextField class]]) {
+                    ((UITextField*)scrollViewSubview).delegate = (id) self;
+                }
+            }
+        }
+    }
+//    [self.firstName setDelegate:self];
+//    [self.lastName setDelegate:self];
+//    [self.email setDelegate:self];
+//    [self.password setDelegate:self];
+//    [self.registrationCode setDelegate:self];
+//    [self.schoolName setDelegate:self];
+//    [self.className setDelegate:self];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
@@ -167,7 +180,6 @@
     };
     
     [reach startNotifier];
-    
 }
 
 - (void)viewDidLayoutSubviews {
@@ -201,9 +213,9 @@
     if (self.reachable) {
         PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
         [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-    } else {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [reachableAlert show];
+//    } else {
+//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [reachableAlert show];
     }
 }
 
@@ -243,9 +255,9 @@
             PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes" predicate:classesForSchool];
             [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
         }
-    } else {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [reachableAlert show];
+//    } else {
+//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+//        [reachableAlert show];
     }
 }
 
@@ -371,7 +383,7 @@
             [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
     } else {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:nil message:@"Internet unreachable." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [reachableAlert show];
     }
 }
@@ -386,8 +398,6 @@
         if ([buttonTitle isEqualToString:@"New school"]) {
             self.schoolIsNew = YES;
             [self performSegueWithIdentifier:@"addSchool" sender:self];
-//            MTAddSchoolViewController *addSchoolModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addSchool"];
-//            [self presentViewController:addSchoolModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.school = self.schools[buttonIndex - 1];
             self.schoolIsNew = NO;
@@ -400,8 +410,6 @@
         if ([buttonTitle isEqualToString:@"New class"]) {
             self.classIsNew = YES;
             [self performSegueWithIdentifier:@"addClass" sender:self];
-//            MTAddClassViewController *addClassModal = [self.storyboard instantiateViewControllerWithIdentifier:@"addClass"];
-//            [self presentViewController:addClassModal animated:YES completion:nil];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.userClass = self.classes[buttonIndex - 1];
             self.classIsNew = NO;

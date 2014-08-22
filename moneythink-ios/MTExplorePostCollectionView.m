@@ -36,9 +36,6 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    NSArray *buttons = self.challenge[@"buttons"];
-    self.hasButtons = buttons.count;
-    
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
     self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
@@ -54,8 +51,11 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.posts = objects;
-            [self.exploreCollectionView reloadData];
             
+            NSArray *buttons = self.challenge[@"buttons"];
+            self.hasButtons = buttons.count;
+            
+            [self.exploreCollectionView reloadData];
         } else {
             NSLog(@"error - %@", error);
         }
@@ -94,11 +94,6 @@
 - (void)objectsDidLoad:(NSError *)error {
     
 }
-
-- (PFObject *)objectAtIndexPath:(NSIndexPath *)indexPath {
-    return nil;
-}
-
 
 # pragma mark - Collection View data source
 

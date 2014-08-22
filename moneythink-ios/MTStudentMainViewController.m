@@ -44,11 +44,38 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.parentViewController.navigationItem.title = @"Challenges";
+    [[PFUser currentUser] refresh];
+}
+
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
     
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+    [self loadUserProfile:[PFUser currentUser]];
+}
+
+- (void)didReceiveMemoryWarning
+{
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+#pragma mark -
+
+- (void)loadUserProfile:(PFUser *)user
+{
     self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
     self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-    
-    PFUser *user = [PFUser currentUser];
     
     NSString *myPoints = user[@"points"] ? user[@"points"] : @"0";
     self.myPoints.text = [NSString stringWithFormat:@"%@ pts", myPoints];
@@ -70,7 +97,7 @@
             [self.buttonUserProfile setImage:defaultProfile forState:UIControlStateNormal];
         }
     }];
-
+    
     NSInteger managerProgressValue = [user[@"money_manager"] intValue];
     NSInteger makerProgressValue = [user[@"money_maker"] intValue];
     
@@ -105,29 +132,6 @@
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
     }
 }
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    
-    self.parentViewController.navigationItem.title = @"Challenges";
-
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 - (IBAction)buttonUserInfo:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {

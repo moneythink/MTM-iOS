@@ -27,6 +27,7 @@
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (strong, nonatomic) IBOutlet UILabel *postLikes;
 @property (assign, nonatomic) BOOL iLike;
+@property (assign, nonatomic) BOOL isMyClass;
 
 @property (strong, nonatomic) IBOutlet UIButton *comment;
 @property (strong, nonatomic) IBOutlet UILabel *commentCount;
@@ -225,6 +226,13 @@
     NSString *postID = [self.challengePost objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     self.iLike = !(index == NSNotFound);
+    
+    self.isMyClass = [PFUser currentUser][@"class"] == self.challengePost[@"class"];
+    self.postComment.hidden = !self.isMyClass;
+    self.commentPost.hidden = self.postComment.hidden;
+    self.likePost.enabled = self.isMyClass;
+    self.button1.enabled = self.isMyClass;
+    self.button2.enabled = self.isMyClass;
     
     if (self.iLike) {
         [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];

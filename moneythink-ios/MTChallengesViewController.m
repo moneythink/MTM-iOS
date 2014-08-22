@@ -42,6 +42,33 @@
 
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
+    PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
+    [allChallenges orderByAscending:@"challange_number"];
+    
+    [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [MBProgressHUD hideHUDForView:self.view animated:YES];
+        if (!error) {
+            self.challenges = objects;
+            
+            // Create page view controller
+            self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+            CGRect frame = self.pageViewController.view.frame;
+            frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+            self.pageViewController.view.frame = frame;
+            self.pageViewController.dataSource = self;
+            
+            MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
+            
+            NSArray *viewControllers = @[startingViewController];
+            
+            [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            
+            [self addChildViewController:self.pageViewController];
+            [self.view addSubview:self.pageViewController.view];
+            [self.pageViewController didMoveToParentViewController:self];
+        }
+    }];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
                                                  name:kReachabilityChangedNotification
@@ -53,33 +80,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = YES;
 
-            PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
-            [allChallenges orderByAscending:@"challange_number"];
-            
-            [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                [MBProgressHUD hideHUDForView:self.view animated:YES];
-                if (!error) {
-                    self.challenges = objects;
-                    
-                    // Create page view controller
-                    self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-                    CGRect frame = self.pageViewController.view.frame;
-                    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
-                    self.pageViewController.view.frame = frame;
-                    self.pageViewController.dataSource = self;
-                    
-                    MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-                    
-                    NSArray *viewControllers = @[startingViewController];
-                    
-                    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-                    
-                    [self addChildViewController:self.pageViewController];
-                    [self.view addSubview:self.pageViewController.view];
-//                    [self.view insertSubview:self.pageViewController.view atIndex:self.view.subviews.count];
-                    [self.pageViewController didMoveToParentViewController:self];
-                }
-            }];
         });
     };
 
@@ -87,13 +87,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = NO;
 
-        NSString *msg = @"Many features of this app require a network connection.";
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
-                                                                 message:msg
-                                                                delegate:nil
-                                                       cancelButtonTitle:@"OK"
-                                                       otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        NSString *msg = @"Many features of this app require a network connection.";
+//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
+//                                                                 message:msg
+//                                                                delegate:nil
+//                                                       cancelButtonTitle:@"OK"
+//                                                       otherButtonTitles:nil, nil];
+//            [reachableAlert show];
         });
     };
     
@@ -121,22 +121,22 @@
     challengeContentViewController.view.frame = frame;
 
 
+    PFChallenges *challenge = self.challenges[index];
+    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
+    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
     
+    NSInteger count = [queryActivated countObjects];
+    challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+    
+    challengeContentViewController.challengeTitleText = challenge[@"title"];
+    challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
+    challengeContentViewController.challengeDescriptionText = challenge[@"description"];
+    challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
+    
+    challengeContentViewController.pageIndex = index;
+    challengeContentViewController.challenge = challenge;
+
     if (self.reachable) {
-        PFChallenges *challenge = self.challenges[index];
-        NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
-        PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
-        
-        NSInteger count = [queryActivated countObjects];
-        challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
-        
-        challengeContentViewController.challengeTitleText = challenge[@"title"];
-        challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
-        challengeContentViewController.challengeDescriptionText = challenge[@"description"];
-        challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
-        
-        challengeContentViewController.pageIndex = index;
-        challengeContentViewController.challenge = challenge;
     } else {
         NSString *msg = @"Many features of this app require a network connection.";
         UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"

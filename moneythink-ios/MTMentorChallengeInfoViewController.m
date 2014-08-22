@@ -9,6 +9,9 @@
 #import "MTMentorChallengeInfoViewController.h"
 
 @interface MTMentorChallengeInfoViewController ()
+
+@property (strong, nonatomic) PFChallenges *challenge;
+
 @property (strong, nonatomic) IBOutlet PFImageView *challengeBanner;
 
 @property (strong, nonatomic) IBOutlet UIView *missionView;
@@ -55,9 +58,9 @@
     [self.rewardsView setBackgroundColor:[UIColor mutedOrange]];
     
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
-    PFChallenges *challenge = postTabBarViewController.challenge;
+    self.challenge = postTabBarViewController.challenge;
     
-    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
+    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:@"ChallengeBanners" predicate:predicateChallengeBanner];
     
     [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -74,10 +77,29 @@
         }
     }];
     
+    NSString *pillar = self.challenge[@"pillar"];
+    if ([pillar isEqualToString:@"Money Maker"]) {
+        UIImage *money = [UIImage imageNamed:@"icon_money"];
+        CGRect reFrame = CGRectMake(self.pillarImage.frame.origin.x,
+                                    self.pillarImage.frame.origin.y,
+                                    money.size.width,
+                                    money.size.height);
+        self.pillarImage.frame = reFrame;
+        self.pillarImage.image = money;
+    } else {
+        UIImage *pig = [UIImage imageNamed:@"icon_pig"];
+        CGRect reFrame = CGRectMake(self.pillarImage.frame.origin.x,
+                                    self.pillarImage.frame.origin.y,
+                                    pig.size.width,
+                                    pig.size.height);
+        self.pillarImage.frame = reFrame;
+        self.pillarImage.image = pig;
+    }
+    
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
-
-    self.tagline.text = challenge[@"student_instructions"];
+    
+    self.tagline.text = self.challenge[@"student_instructions"];
     
     [self.tagline sizeToFit];
     [self.missionView sizeToFit];
@@ -86,10 +108,10 @@
     
     [self.levelLabel setTextColor:[UIColor primaryOrange]];
     [self.rewardLabel setTextColor:[UIColor primaryOrange]];
-    self.pointsPerPost.text = [NSString stringWithFormat:@"%@ pts x post", challenge[@"points_per_post"]];
-    self.maxPoints.text = [NSString stringWithFormat:@"(up to %@ pts)", challenge[@"max_points"]];
+    self.pointsPerPost.text = [NSString stringWithFormat:@"%@ pts x post", self.challenge[@"points_per_post"]];
+    self.maxPoints.text = [NSString stringWithFormat:@"(up to %@ pts)", self.challenge[@"max_points"]];
     
-    NSInteger level = [challenge[@"level"] intValue];
+    NSInteger level = [self.challenge[@"level"] intValue];
     if (level < 3) {
         self.levelImage1.image = [UIImage imageNamed:@"bg_progress_orange1"];
         self.levelImage2.image = [UIImage imageNamed:@"bg_progress_white2"];
@@ -105,7 +127,7 @@
     }
     
     if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
-        self.mentorInstructions.text = challenge[@"mentor_instructions"];
+        self.mentorInstructions.text = self.challenge[@"mentor_instructions"];
         [self.mentorInstructions setTextColor:[UIColor primaryOrange]];
     } else {
         self.mentorInstructions.hidden = YES;
@@ -126,36 +148,28 @@
     CGFloat scaledHeight = targetHeight;
     CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
     
-    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
-        {
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO) {
         CGFloat widthFactor = targetWidth / width;
         CGFloat heightFactor = targetHeight / height;
         
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             scaleFactor = widthFactor; // scale to fit height
-            }
-        else
-            {
+        } else {
             scaleFactor = heightFactor; // scale to fit width
-            }
+        }
         
         scaledWidth  = width * scaleFactor;
         scaledHeight = height * scaleFactor;
         
         // center the image
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-            }
-        else
-            {
-            if (widthFactor < heightFactor)
-                {
+        } else {
+            if (widthFactor < heightFactor) {
                 thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-                }
             }
         }
+    }
     
     UIGraphicsBeginImageContext(targetSize); // this will crop
     
@@ -168,10 +182,9 @@
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     
-    if(newImage == nil)
-        {
+    if(newImage == nil) {
         NSLog(@"could not scale image");
-        }
+    }
     
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
@@ -186,14 +199,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+ {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 
 @end

@@ -20,7 +20,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *likes;
 @property (strong, nonatomic) IBOutlet UILabel *comments;
 
-
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *commentBUtton;
 @property (strong, nonatomic) IBOutlet UIButton *button1;

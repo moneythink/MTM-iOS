@@ -80,6 +80,33 @@
     self.lastName.text = self.userCurrent[@"last_name"];
     self.email.text = self.userCurrent[@"email"];
     
+    PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+    
+    self.profileImage = [[PFImageView alloc] init];
+    [self.profileImage setFile:profileImageFile];
+    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+            if (image) {
+                self.profileImageLabel.text = @"Edit Photo";
+                self.profileImage.image = image;
+            } else {
+                self.profileImageLabel.text = @"Add Photo";
+                self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+            }
+        } else {
+            self.profileImageLabel.text = @"Add Photo";
+            self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+        }
+        self.buttonUserProfile.imageView.image = self.profileImage.image;
+        self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
+        self.buttonUserProfile.imageView.layer.masksToBounds = YES;
+        
+        [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
+        
+        [[PFUser currentUser] refresh];
+        [self.view setNeedsLayout];
+    }];
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)
                                                  name:kReachabilityChangedNotification
@@ -93,31 +120,6 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = YES;
             
-            PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-            
-            self.profileImage = [[PFImageView alloc] init];
-            [self.profileImage setFile:profileImageFile];
-            [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-                if (!error) {
-                    if (image) {
-                        self.profileImageLabel.text = @"Edit Photo";
-                        self.profileImage.image = image;
-                    } else {
-                        self.profileImageLabel.text = @"Add Photo";
-                        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-                    }
-                } else {
-                    self.profileImageLabel.text = @"Add Photo";
-                    self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-                }
-                self.buttonUserProfile.imageView.image = self.profileImage.image;
-                self.buttonUserProfile.imageView.layer.cornerRadius = round(self.buttonUserProfile.imageView.frame.size.width / 2.0f);
-                self.buttonUserProfile.imageView.layer.masksToBounds = YES;
-                
-                [self.buttonUserProfile setImage:self.profileImage.image forState:UIControlStateNormal];
-                
-                [self.view setNeedsDisplay];
-            }];
         });
     };
     
@@ -169,8 +171,6 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    if (self.profileImage.image) {
-    }
 }
 
 #pragma mark - methods
@@ -265,7 +265,7 @@
     
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
-
+            [[PFUser currentUser] refresh];
         } else {
             NSLog(@"error - %@", error);
         }
