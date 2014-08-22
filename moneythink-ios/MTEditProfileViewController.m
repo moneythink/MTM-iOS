@@ -93,14 +93,14 @@
                 self.profileImageLabel.text = @"Add Photo";
                 self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
             }
-        } else {
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        } else {
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
             self.profileImageLabel.text = @"Add Photo";
             self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];

@@ -50,7 +50,7 @@
     NSInteger challengNumber = [self.challengeNumber intValue];
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-    
+
     [challengeQuery orderByDescending:@"createdAt"];
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -61,15 +61,15 @@
             self.hasButtons = buttons.count;
 
             [self.tableView reloadData];
-        } else {
-            NSLog(@"error - %@", error);
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        } else {
+//            NSLog(@"error - %@", error);
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
         }
     }];
@@ -118,26 +118,15 @@
                        [self.challengeNumber intValue], self.className];
     
     
-    /*
-     self.schoolName = [PFUser currentUser][@"school"];
-     
-     NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
-     [self.challengeNumber intValue], self.className];
-     
-     challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d",
-     [self.challengeNumber intValue]];
-     
-     challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@ AND school = %@",
-     [self.challengeNumber intValue], self.className, self.schoolName];
-     */
-    
-    
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
+//    if ([self.objects count] == 0) {
+//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
     [query orderByDescending:@"createdAt"];
     
-    if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
+//    if ([self.objects count] == 0) {
+//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];

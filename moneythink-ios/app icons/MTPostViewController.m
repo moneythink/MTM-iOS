@@ -141,15 +141,15 @@
                 
                 [self.postUserButton setImage:image forState:UIControlStateNormal];
             }];
-        } else {
-            NSLog(@"error - %@", error);
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        } else {
+//            NSLog(@"error - %@", error);
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
         }
     }];
@@ -234,14 +234,7 @@
     NSString *postID = [self.challengePost objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     self.iLike = !(index == NSNotFound);
-    
-//    self.isMyClass = [PFUser currentUser][@"class"] == self.challengePost[@"class"];
-//    self.postComment.hidden = !self.isMyClass;
-//    self.commentPost.hidden = self.postComment.hidden;
-//    self.likePost.enabled = self.isMyClass;
-//    self.button1.enabled = self.isMyClass;
-//    self.button2.enabled = self.isMyClass;
-    
+        
     if (self.iLike) {
         [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     } else {
@@ -325,27 +318,27 @@
                     [self.challengePost refresh];
                     
                     [self.view setNeedsLayout];
-                } else {
-                    NSLog(@"error - %@", error);
-                    NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-                    UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                             message:msg
-                                                                            delegate:nil
-                                                                   cancelButtonTitle:@"OK"
-                                                                   otherButtonTitles:nil, nil];
-                    [reachableAlert show];
+//                } else {
+//                    NSLog(@"error - %@", error);
+//                    NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//                    UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                             message:msg
+//                                                                            delegate:nil
+//                                                                   cancelButtonTitle:@"OK"
+//                                                                   otherButtonTitles:nil, nil];
+//                    [reachableAlert show];
                     
                 }
             }];
-        } else {
-            NSLog(@"error - %@", error);
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        } else {
+//            NSLog(@"error - %@", error);
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
         }
     }];

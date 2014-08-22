@@ -35,7 +35,10 @@
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
-    
+//    if ([self.challenges count] == 0) {
+//        findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
+
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -46,13 +49,13 @@
             
             [MBProgressHUD hideHUDForView:self.view animated:YES];
         } else {
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
         }
     }];

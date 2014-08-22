@@ -14,12 +14,6 @@
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
 
-//#ifdef DEBUG
-//    static BOOL useStage = YES;
-//#else
-//    static BOOL useStage = NO;
-//#endif
-
 @interface MTSignUpViewController ()
 
 @property (strong, nonatomic) IBOutlet UIView *view;
@@ -41,7 +35,6 @@
 
 @property (strong, nonatomic) IBOutlet UIButton *useStageButton;
 @property (strong, nonatomic) IBOutlet UILabel *useStageLabel;
-//@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
 @property (strong, nonatomic) IBOutlet UITextField *schoolName;
@@ -81,27 +74,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    
-    CGRect frame = self.viewFields.frame;
-    CGSize size = self.viewFields.contentSize;
-    
-//    self.scrollView.contentSize = self.scrollView.frame.size;
-//    self.scrollView.frame = self.view.frame;
-    
-    frame = self.view.frame;
-    size = self.view.frame.size;
-    NSLog(@"content size width - %f", self.viewFields.contentSize.width);
-    NSLog(@"content size height - %f", self.viewFields.contentSize.height);
-    
-    //    CGRect contentViewFrame = self.instructionsView.frame;
-    //    contentViewFrame.size.height = contentViewFrame.origin.y + contentViewFrame.size.height;
-    //    self.scrollView.contentSize = contentViewFrame.size;
-    
-    frame = self.viewFields.bounds;
-    frame = self.viewFields.frame;
-    size = self.viewFields.contentSize;
-    
-
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -112,26 +84,13 @@
     
     self.view.backgroundColor = [UIColor white];
 
-    for(UIView *subview in self.view.subviews) {
-        if([subview isKindOfClass: [UIScrollView class]]) {
-            for(UIScrollView *scrollViewSubview in subview.subviews) {
-                if([scrollViewSubview isKindOfClass: [UITextView class]]) {
-                    ((UITextView*)scrollViewSubview).delegate = (id) self;
-                }
-                
-                if([scrollViewSubview isKindOfClass: [UITextField class]]) {
-                    ((UITextField*)scrollViewSubview).delegate = (id) self;
-                }
-            }
-        }
-    }
-//    [self.firstName setDelegate:self];
-//    [self.lastName setDelegate:self];
-//    [self.email setDelegate:self];
-//    [self.password setDelegate:self];
-//    [self.registrationCode setDelegate:self];
-//    [self.schoolName setDelegate:self];
-//    [self.className setDelegate:self];
+    [self.firstName setDelegate:self];
+    [self.lastName setDelegate:self];
+    [self.email setDelegate:self];
+    [self.password setDelegate:self];
+    [self.registrationCode setDelegate:self];
+    [self.schoolName setDelegate:self];
+    [self.className setDelegate:self];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
@@ -157,14 +116,6 @@
     
     self.mentorAgreeButton.hidden = YES;
     
-//    if (useStage) {
-//        self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-//        [self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-//        [self.viewFields addSubview:self.useStageCheckbox];
-//        
-//        self.useStageCheckbox.isChecked = useStage;
-//    }
     self.useStageButton.hidden = YES;
     self.useStageLabel.hidden = YES;
     
@@ -205,17 +156,6 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-
-    CGRect frame = self.viewFields.frame;
-    CGSize size = self.viewFields.contentSize;
-    
-    //    self.scrollView.contentSize = self.scrollView.frame.size;
-    //    self.scrollView.frame = self.view.frame;
-    
-    frame = self.view.frame;
-    size = self.view.frame.size;
-    NSLog(@"content size width - %f", self.viewFields.contentSize.width);
-    NSLog(@"content size height - %f", self.viewFields.contentSize.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -246,38 +186,28 @@
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    if (!error) {
-        UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-        
-        NSMutableArray *names = [[NSMutableArray alloc] init];
-        for (id object in objects) {
-            [names addObject:object[@"name"]];
-        }
-        
-        self.schools = [names sortedArrayUsingSelector:
-                        @selector(localizedCaseInsensitiveCompare:)];
-        
-        for (NSInteger buttonItem = 0; buttonItem < self.schools.count; buttonItem++) {
-            [schoolSheet addButtonWithTitle:names[buttonItem]];
-        }
-        
-        [schoolSheet addButtonWithTitle:@"Cancel"];
-        schoolSheet.cancelButtonIndex = self.schools.count;
-        
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [schoolSheet showInView:self.view];
-        } else {
-            [schoolSheet showInView:window];
-        }
+    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        [names addObject:object[@"name"]];
+    }
+    
+    NSArray *schoolNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+        [schoolSheet addButtonWithTitle:names[buttonItem]];
+    }
+
+    [schoolSheet addButtonWithTitle:@"Cancel"];
+    schoolSheet.cancelButtonIndex = schoolNames.count;
+
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [schoolSheet showInView:self.view];
     } else {
-        NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                 message:msg
-                                                                delegate:nil
-                                                       cancelButtonTitle:@"OK"
-                                                       otherButtonTitles:nil, nil];
-        [reachableAlert show];
+        [schoolSheet showInView:window];
     }
 }
 
@@ -293,40 +223,29 @@
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    if (!error) {
-        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
-        
-        NSMutableArray *names = [[NSMutableArray alloc] init];
-        for (id object in objects) {
-            [names addObject:object[@"name"]];
-        }
-        
-        self.classes = [names sortedArrayUsingSelector:
-                        @selector(localizedCaseInsensitiveCompare:)];
-        
-        
-        for (NSInteger buttonItem = 0; buttonItem < self.classes.count; buttonItem++) {
-            [classSheet addButtonWithTitle:self.classes[buttonItem]];
-        }
-        
-        [classSheet addButtonWithTitle:@"Cancel"];
-        classSheet.cancelButtonIndex = self.classes.count;
-        
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [classSheet showInView:self.view];
-        } else {
-            [classSheet showInView:window];
-        }
+    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        [names addObject:object[@"name"]];
+    }
+    
+    NSArray *classNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    
+    for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+        [classSheet addButtonWithTitle:classNames[buttonItem]];
+    }
+    
+    [classSheet addButtonWithTitle:@"Cancel"];
+    classSheet.cancelButtonIndex = classNames.count;
+    
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [classSheet showInView:self.view];
     } else {
-        NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                 message:msg
-                                                                delegate:nil
-                                                       cancelButtonTitle:@"OK"
-                                                       otherButtonTitles:nil, nil];
-        [reachableAlert show];
-
+        [classSheet showInView:window];
     }
 }
 
@@ -507,7 +426,7 @@
     NSString *segueName = [segue identifier];
     id destinationVC = [segue destinationViewController];
     if ([segueName isEqualToString:@"addSchool"]) {
-//        MTAddSchoolViewController *addSchoolVC = (MTAddSchoolViewController *)destinationVC;
+
     } else if ([segueName isEqualToString:@"addClass"]) {
         MTAddClassViewController *addClassVC = (MTAddClassViewController *)destinationVC;
         addClassVC.schoolName = self.schoolName.text;

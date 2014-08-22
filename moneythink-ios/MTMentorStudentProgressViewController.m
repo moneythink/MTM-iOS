@@ -47,6 +47,9 @@
     NSString *type = @"student";
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
+//    if ([self.classStudents count] == 0) {
+//        studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
     [studentsForClass orderByAscending:@"last_name"];
     
     [MBProgressHUD showHUDAddedTo:self.view animated:YES];
@@ -55,15 +58,15 @@
         if (!error) {
             self.classStudents = objects;
             [self.tableView reloadData];
-        } else {
-            NSLog(@"error - %@", error);
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
+//        } else {
+//            NSLog(@"error - %@", error);
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
 
         }
         

@@ -201,14 +201,14 @@
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
                 cell.message.text = [NSString stringWithFormat:@"Activated: %@", challenge[@"title"]];
-            } else {
-                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                         message:msg
-                                                                        delegate:nil
-                                                               cancelButtonTitle:@"OK"
-                                                               otherButtonTitles:nil, nil];
-                [reachableAlert show];
+//            } else {
+//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                         message:msg
+//                                                                        delegate:nil
+//                                                               cancelButtonTitle:@"OK"
+//                                                               otherButtonTitles:nil, nil];
+//                [reachableAlert show];
 
             }
         }];
@@ -219,14 +219,14 @@
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
                 cell.message.text = [NSString stringWithFormat:@"Closed: %@", challenge[@"title"]];
-            } else {
-                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                         message:msg
-                                                                        delegate:nil
-                                                               cancelButtonTitle:@"OK"
-                                                               otherButtonTitles:nil, nil];
-                [reachableAlert show];
+//            } else {
+//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                         message:msg
+//                                                                        delegate:nil
+//                                                               cancelButtonTitle:@"OK"
+//                                                               otherButtonTitles:nil, nil];
+//                [reachableAlert show];
 
             }
         }];
@@ -237,14 +237,14 @@
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
                 cell.message.text = [NSString stringWithFormat:@"Completed: %@", challenge[@"title"]];
-            } else {
-                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                         message:msg
-                                                                        delegate:nil
-                                                               cancelButtonTitle:@"OK"
-                                                               otherButtonTitles:nil, nil];
-                [reachableAlert show];
+//            } else {
+//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                         message:msg
+//                                                                        delegate:nil
+//                                                               cancelButtonTitle:@"OK"
+//                                                               otherButtonTitles:nil, nil];
+//                [reachableAlert show];
 
             }
         }];
@@ -255,14 +255,14 @@
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
                 cell.message.text = [NSString stringWithFormat:@"Started: %@", challenge[@"title"]];
-            } else {
-                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                         message:msg
-                                                                        delegate:nil
-                                                               cancelButtonTitle:@"OK"
-                                                               otherButtonTitles:nil, nil];
-                [reachableAlert show];
+//            } else {
+//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                         message:msg
+//                                                                        delegate:nil
+//                                                               cancelButtonTitle:@"OK"
+//                                                               otherButtonTitles:nil, nil];
+//                [reachableAlert show];
 
             }
         }];

@@ -75,20 +75,28 @@
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
     
-    NSInteger count = [queryActivated countObjects];
-    NSString *type = [PFUser currentUser][@"type"];
-    switch (count) {
-        case 0: // not activated
-            if ([type isEqualToString:@"mentor"]) {
-                [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+    __block NSInteger count;
+    
+    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            count = number;
+
+            NSString *type = [PFUser currentUser][@"type"];
+            switch (count) {
+                case 0: // not activated
+                    if ([type isEqualToString:@"mentor"]) {
+                        [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+                    }
+                    break;
+                    
+                default: {
+                    [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+                }
+                    break;
             }
-            break;
-            
-        default: {
-            [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
         }
-            break;
-    }
+    }];
+    
 }
 
 #pragma mark - Navigation

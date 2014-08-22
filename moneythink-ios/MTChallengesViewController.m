@@ -44,7 +44,10 @@
 
     PFQuery *allChallenges = [PFQuery queryWithClassName:@"Challenges"];
     [allChallenges orderByAscending:@"challange_number"];
-    
+//    if ([self.challenges count] == 0) {
+//        allChallenges.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
+
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:YES];
         if (!error) {
@@ -68,14 +71,13 @@
             [self.pageViewController didMoveToParentViewController:self];
             
         } else {
-            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:msg
-                                                                    delegate:nil
-                                                           cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil, nil];
-            [reachableAlert show];
-
+//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+//                                                                     message:msg
+//                                                                    delegate:nil
+//                                                           cancelButtonTitle:@"OK"
+//                                                           otherButtonTitles:nil, nil];
+//            [reachableAlert show];
         }
     }];
 
