@@ -235,12 +235,12 @@
     NSInteger index = [self.postsLiked indexOfObject:postID];
     self.iLike = !(index == NSNotFound);
     
-    self.isMyClass = [PFUser currentUser][@"class"] == self.challengePost[@"class"];
-    self.postComment.hidden = !self.isMyClass;
-    self.commentPost.hidden = self.postComment.hidden;
-    self.likePost.enabled = self.isMyClass;
-    self.button1.enabled = self.isMyClass;
-    self.button2.enabled = self.isMyClass;
+//    self.isMyClass = [PFUser currentUser][@"class"] == self.challengePost[@"class"];
+//    self.postComment.hidden = !self.isMyClass;
+//    self.commentPost.hidden = self.postComment.hidden;
+//    self.likePost.enabled = self.isMyClass;
+//    self.button1.enabled = self.isMyClass;
+//    self.button2.enabled = self.isMyClass;
     
     if (self.iLike) {
         [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];

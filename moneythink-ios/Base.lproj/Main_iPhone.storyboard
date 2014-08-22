@@ -1020,7 +1020,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
         <!--Mentor Challenge Info View Controller - Info-->
         <scene sceneID="Lju-RJ-cwN">
             <objects>
-                <viewController storyboardIdentifier="challengeInfoModal" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IUs-Xj-5E6" customClass="MTMentorChallengeInfoViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="challengeInfoModal" useStoryboardIdentifierAsRestorationIdentifier="YES" id="IUs-Xj-5E6" customClass="MTMentorChallengeInfoViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="X9T-PT-EPg"/>
                         <viewControllerLayoutGuide type="bottom" id="Kjz-8f-5Nc"/>
@@ -1030,7 +1030,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView autoresizesSubviews="NO" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FCp-s1-xYe">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="760"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I0J-CD-4L4" customClass="PFImageView">
@@ -1152,6 +1152,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="rewardsView" destination="m01-10-ba6" id="QRc-pF-Wqx"/>
                         <outlet property="scrollView" destination="FCp-s1-xYe" id="F9A-65-eKM"/>
                         <outlet property="tagline" destination="9AI-3K-oZz" id="6pa-3a-Flg"/>
+                        <outlet property="view" destination="84R-C0-EnP" id="vWf-Wb-LiF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Kp-sg-W4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3718,14 +3719,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="Rwq-1l-OkU"/>
-        <segue reference="qYv-0w-I0f"/>
-        <segue reference="ySr-9F-9a4"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="fM9-bL-F9m"/>
+        <segue reference="t5m-aZ-wca"/>
         <segue reference="1CK-gQ-zH4"/>
         <segue reference="OaC-xo-Vq0"/>
         <segue reference="5KW-O2-h9I"/>
-        <segue reference="t5m-aZ-wca"/>
+        <segue reference="qYv-0w-I0f"/>
+        <segue reference="iSW-sc-15K"/>
+        <segue reference="MZw-0r-VG2"/>
+        <segue reference="fM9-bL-F9m"/>
+        <segue reference="Rwq-1l-OkU"/>
     </inferredMetricsTieBreakers>
 </document>

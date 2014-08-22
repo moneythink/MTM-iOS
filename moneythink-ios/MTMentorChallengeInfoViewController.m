@@ -58,7 +58,13 @@
     
     CGRect frame = self.scrollView.frame;
     CGSize size = self.scrollView.contentSize;
+    NSLog(@"content size width - %f", self.scrollView.contentSize.width);
+    NSLog(@"content size height - %f", self.scrollView.contentSize.height);
     
+    NSLog(@"frame size width - %f", self.scrollView.frame.size.width);
+    NSLog(@"frame size height - %f", self.scrollView.frame.size.height);
+    
+
     self.scrollView.contentSize = self.scrollView.frame.size;
     self.scrollView.frame = self.view.frame;
     
@@ -72,7 +78,7 @@
     frame = self.scrollView.bounds;
     frame = self.scrollView.frame;
     size = self.scrollView.contentSize;
-    
+ 
     [self.missionView setBackgroundColor:[UIColor primaryOrange]];
     [self.rewardsView setBackgroundColor:[UIColor mutedOrange]];
     
@@ -170,6 +176,20 @@
         self.mentorInstructions.hidden = YES;
         self.mentorLabel.hidden = YES;
     }
+}
+
+- (void)viewDidLayoutSubviews {
+    CGRect frame = self.scrollView.frame;
+    CGSize size = self.scrollView.contentSize;
+    
+    //    self.scrollView.contentSize = self.scrollView.frame.size;
+    //    self.scrollView.frame = self.view.frame;
+    
+    frame = self.view.frame;
+    size = self.view.frame.size;
+    NSLog(@"content size width - %f", self.scrollView.contentSize.width);
+    NSLog(@"content size height - %f", self.scrollView.contentSize.height);
+
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image

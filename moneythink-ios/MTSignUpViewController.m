@@ -81,6 +81,27 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    
+    CGRect frame = self.viewFields.frame;
+    CGSize size = self.viewFields.contentSize;
+    
+//    self.scrollView.contentSize = self.scrollView.frame.size;
+//    self.scrollView.frame = self.view.frame;
+    
+    frame = self.view.frame;
+    size = self.view.frame.size;
+    NSLog(@"content size width - %f", self.viewFields.contentSize.width);
+    NSLog(@"content size height - %f", self.viewFields.contentSize.height);
+    
+    //    CGRect contentViewFrame = self.instructionsView.frame;
+    //    contentViewFrame.size.height = contentViewFrame.origin.y + contentViewFrame.size.height;
+    //    self.scrollView.contentSize = contentViewFrame.size;
+    
+    frame = self.viewFields.bounds;
+    frame = self.viewFields.frame;
+    size = self.viewFields.contentSize;
+    
+
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -185,6 +206,16 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
+    CGRect frame = self.viewFields.frame;
+    CGSize size = self.viewFields.contentSize;
+    
+    //    self.scrollView.contentSize = self.scrollView.frame.size;
+    //    self.scrollView.frame = self.view.frame;
+    
+    frame = self.view.frame;
+    size = self.view.frame.size;
+    NSLog(@"content size width - %f", self.viewFields.contentSize.width);
+    NSLog(@"content size height - %f", self.viewFields.contentSize.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated
