@@ -72,7 +72,23 @@
 }
 
 -(void)exploreChallenge {
-    [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
+    PFQuery *queryActivated = [PFQuery queryWithClassName:@"ChallengesActivated" predicate:challengePredicate];
+    
+    NSInteger count = [queryActivated countObjects];
+    NSString *type = [PFUser currentUser][@"type"];
+    switch (count) {
+        case 0: // not activated
+            if ([type isEqualToString:@"mentor"]) {
+                [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+            }
+            break;
+            
+        default: {
+            [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+        }
+            break;
+    }
 }
 
 #pragma mark - Navigation

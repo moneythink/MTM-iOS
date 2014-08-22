@@ -66,6 +66,16 @@
             [self addChildViewController:self.pageViewController];
             [self.view addSubview:self.pageViewController.view];
             [self.pageViewController didMoveToParentViewController:self];
+            
+        } else {
+            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                     message:msg
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil, nil];
+            [reachableAlert show];
+
         }
     }];
 
@@ -86,14 +96,6 @@
     reach.unreachableBlock = ^(Reachability * reachability)     {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = NO;
-
-//        NSString *msg = @"Many features of this app require a network connection.";
-//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
-//                                                                 message:msg
-//                                                                delegate:nil
-//                                                       cancelButtonTitle:@"OK"
-//                                                       otherButtonTitles:nil, nil];
-//            [reachableAlert show];
         });
     };
     
@@ -136,20 +138,6 @@
     challengeContentViewController.pageIndex = index;
     challengeContentViewController.challenge = challenge;
 
-    if (self.reachable) {
-    } else {
-        NSString *msg = @"Many features of this app require a network connection.";
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable"
-                                                                 message:msg
-                                                                delegate:nil
-                                                       cancelButtonTitle:@"OK"
-                                                       otherButtonTitles:nil, nil];
-        [reachableAlert show];
-    }
-    
-    
-    
-    
     return challengeContentViewController;
 }
 

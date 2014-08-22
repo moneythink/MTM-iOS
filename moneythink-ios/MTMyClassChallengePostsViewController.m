@@ -51,6 +51,14 @@
             [self.tableView reloadData];
         } else {
             NSLog(@"error - %@", error);
+            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                     message:msg
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil, nil];
+            [reachableAlert show];
+
         }
     }];
     

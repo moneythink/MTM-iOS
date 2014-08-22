@@ -210,181 +210,179 @@
 #pragma mark - IBActions
 
 - (IBAction)schoolNameButton:(id)sender {
-    if (self.reachable) {
-        PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-//    } else {
-//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [reachableAlert show];
-    }
+    PFQuery *querySchools = [PFQuery queryWithClassName:@"Schools"];
+    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-    
-    NSMutableArray *names = [[NSMutableArray alloc] init];
-    for (id object in objects) {
-        [names addObject:object[@"name"]];
-    }
-    
-    self.schools = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    for (NSInteger buttonItem = 0; buttonItem < self.schools.count; buttonItem++) {
-        [schoolSheet addButtonWithTitle:names[buttonItem]];
-    }
-
-    [schoolSheet addButtonWithTitle:@"Cancel"];
-    schoolSheet.cancelButtonIndex = self.schools.count;
-
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [schoolSheet showInView:self.view];
+    if (!error) {
+        UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
+        
+        NSMutableArray *names = [[NSMutableArray alloc] init];
+        for (id object in objects) {
+            [names addObject:object[@"name"]];
+        }
+        
+        self.schools = [names sortedArrayUsingSelector:
+                        @selector(localizedCaseInsensitiveCompare:)];
+        
+        for (NSInteger buttonItem = 0; buttonItem < self.schools.count; buttonItem++) {
+            [schoolSheet addButtonWithTitle:names[buttonItem]];
+        }
+        
+        [schoolSheet addButtonWithTitle:@"Cancel"];
+        schoolSheet.cancelButtonIndex = self.schools.count;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [schoolSheet showInView:self.view];
+        } else {
+            [schoolSheet showInView:window];
+        }
     } else {
-        [schoolSheet showInView:window];
+        NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                 message:msg
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"OK"
+                                                       otherButtonTitles:nil, nil];
+        [reachableAlert show];
     }
 }
 
 - (IBAction)classNameButton:(id)sender {
-    if (self.reachable) {
-        if ([self.schoolName.text isEqualToString:@""]) {
-            UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-            [chooseSchoolAlert show];
-        } else {
-            NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
-            PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes" predicate:classesForSchool];
-            [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
-        }
-//    } else {
-//        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Internet Unreachable" message:@"Many features of this app require a network connection." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [reachableAlert show];
+    if ([self.schoolName.text isEqualToString:@""]) {
+        UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+        [chooseSchoolAlert show];
+    } else {
+        NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
+        PFQuery *querySchools = [PFQuery queryWithClassName:@"Classes" predicate:classesForSchool];
+        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
     }
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
-
-    NSMutableArray *names = [[NSMutableArray alloc] init];
-    for (id object in objects) {
-        [names addObject:object[@"name"]];
-    }
-    
-    self.classes = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    
-    for (NSInteger buttonItem = 0; buttonItem < self.classes.count; buttonItem++) {
-        [classSheet addButtonWithTitle:self.classes[buttonItem]];
-    }
-    
-    [classSheet addButtonWithTitle:@"Cancel"];
-    classSheet.cancelButtonIndex = self.classes.count;
-
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [classSheet showInView:self.view];
+    if (!error) {
+        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+        
+        NSMutableArray *names = [[NSMutableArray alloc] init];
+        for (id object in objects) {
+            [names addObject:object[@"name"]];
+        }
+        
+        self.classes = [names sortedArrayUsingSelector:
+                        @selector(localizedCaseInsensitiveCompare:)];
+        
+        
+        for (NSInteger buttonItem = 0; buttonItem < self.classes.count; buttonItem++) {
+            [classSheet addButtonWithTitle:self.classes[buttonItem]];
+        }
+        
+        [classSheet addButtonWithTitle:@"Cancel"];
+        classSheet.cancelButtonIndex = self.classes.count;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [classSheet showInView:self.view];
+        } else {
+            [classSheet showInView:window];
+        }
     } else {
-        [classSheet showInView:window];
+        NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                 message:msg
+                                                                delegate:nil
+                                                       cancelButtonTitle:@"OK"
+                                                       otherButtonTitles:nil, nil];
+        [reachableAlert show];
+
     }
 }
 
 - (IBAction)tappedSignUpButton:(id)sender {
-    if (self.reachable) {
-//        if (useStage && [self.useStageCheckbox isChecked]) {
-//            NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-//            NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-//            
-//            [Parse setApplicationId:applicationID
-//                          clientKey:clientKey];
-//        }
-
-        BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
-        BOOL agreed = [self.agreeCheckbox isChecked];
-        if (isMentor) {
-            agreed &= [self.mentorAgreeCheckbox isChecked];
-        }
+    BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
+    BOOL agreed = [self.agreeCheckbox isChecked];
+    if (isMentor) {
+        agreed &= [self.mentorAgreeCheckbox isChecked];
+    }
+    
+    if (agreed) {
+        NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
         
-        if (agreed) {
-            NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
-            
-            PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
-            
-            [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    NSArray *codes = objects;
+        PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
+        
+        [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                NSArray *codes = objects;
+                
+                if ([codes count] > 0) {
+                    PFSignupCodes *code = [codes firstObject];
                     
-                    if ([codes count] > 0) {
-                        PFSignupCodes *code = [codes firstObject];
-                        
-                        PFUser *user = [PFUser user];
-                        
-                        user.username = self.email.text;
-                        user.password = self.password.text;
-                        user.email = self.email.text;
-                        
-                        // other fields can be set just like with PFObject
-                        user[@"first_name"] = self.firstName.text;
-                        user[@"last_name"] = self.lastName.text;
-                        
-                        user[@"type"] = self.signUpType;
-                        
-                        if (self.schoolIsNew) {
-                            PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-                            createSchool[@"name"] = self.schoolName.text;
-                            [createSchool saveInBackground];
-                        }
-
-                        if (self.classIsNew) {
-                            PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
-                            createClass[@"name"] = self.className.text;
-                            createClass[@"school"] = self.schoolName.text;
-                            [createClass saveInBackground];
-                            
-                            PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
-                            signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
-                            signupCodeForStudent[@"class"] = self.className.text;
-                            signupCodeForStudent[@"school"] = self.schoolName.text;
-                            signupCodeForStudent[@"type"] = @"student";
-                            
-                            [signupCodeForStudent saveInBackground];
-                            
-                        }
-
-                        if (isMentor) {
-                            user[@"school"] = self.schoolName.text;
-                            user[@"class"] = self.className.text;
-                        } else {
-                            user[@"school"] = code[@"school"];
-                            user[@"class"] = code[@"class"];
-                        }
-                        
-                        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (!error) {
-                                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                    [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
-                                } else {
-                                    [self performSegueWithIdentifier:@"pushMentorSignedUp" sender:self];
-                                }
-                                
-                            } else {
-                                NSString *errorString = [error userInfo][@"error"];
-                                self.error.text = errorString;
-                                [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                            }
-                        }];
-                    } else {
-                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    PFUser *user = [PFUser user];
+                    
+                    user.username = self.email.text;
+                    user.password = self.password.text;
+                    user.email = self.email.text;
+                    
+                    // other fields can be set just like with PFObject
+                    user[@"first_name"] = self.firstName.text;
+                    user[@"last_name"] = self.lastName.text;
+                    
+                    user[@"type"] = self.signUpType;
+                    
+                    if (self.schoolIsNew) {
+                        PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
+                        createSchool[@"name"] = self.schoolName.text;
+                        [createSchool saveInBackground];
                     }
+                    
+                    if (self.classIsNew) {
+                        PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
+                        createClass[@"name"] = self.className.text;
+                        createClass[@"school"] = self.schoolName.text;
+                        [createClass saveInBackground];
+                        
+                        PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
+                        signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
+                        signupCodeForStudent[@"class"] = self.className.text;
+                        signupCodeForStudent[@"school"] = self.schoolName.text;
+                        signupCodeForStudent[@"type"] = @"student";
+                        
+                        [signupCodeForStudent saveInBackground];
+                        
+                    }
+                    
+                    if (isMentor) {
+                        user[@"school"] = self.schoolName.text;
+                        user[@"class"] = self.className.text;
+                    } else {
+                        user[@"school"] = code[@"school"];
+                        user[@"class"] = code[@"class"];
+                    }
+                    
+                    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        if (!error) {
+                            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                                [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
+                            } else {
+                                [self performSegueWithIdentifier:@"pushMentorSignedUp" sender:self];
+                            }
+                            
+                        } else {
+                            NSString *errorString = [error userInfo][@"error"];
+                            self.error.text = errorString;
+                            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                        }
+                    }];
                 } else {
-                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                 }
-            }];
-        } else {
-            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        }
+            } else {
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }];
     } else {
-        UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:nil message:@"Internet unreachable." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [reachableAlert show];
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
     }
 }
 

@@ -145,8 +145,6 @@
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
-
-            
                 NSString *code = [objects firstObject][@"code"];
                 if (objects.count > 0) {
                     cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
@@ -157,6 +155,14 @@
             
             } else {
                 NSLog(@"error - %@", error);
+                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                         message:msg
+                                                                        delegate:nil
+                                                               cancelButtonTitle:@"OK"
+                                                               otherButtonTitles:nil, nil];
+                [reachableAlert show];
+
             }
         }];
         
@@ -245,6 +251,14 @@
                 [self presentViewController:activityViewController animated:YES completion:^{}];
             } else {
                 NSLog(@"error - %@", error);
+                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                         message:msg
+                                                                        delegate:nil
+                                                               cancelButtonTitle:@"OK"
+                                                               otherButtonTitles:nil, nil];
+                [reachableAlert show];
+
             }
         }];
 

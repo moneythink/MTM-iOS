@@ -18,6 +18,8 @@
 @property (strong, nonatomic) IBOutlet UIView *rewardsView;
 @property (strong, nonatomic) IBOutlet UIView *instructionsView;
 
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+
 @property (strong, nonatomic) IBOutlet UITextView *tagline;
 
 @property (strong, nonatomic) IBOutlet UILabel *levelLabel;
@@ -54,6 +56,23 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    CGRect frame = self.scrollView.frame;
+    CGSize size = self.scrollView.contentSize;
+    
+    self.scrollView.contentSize = self.scrollView.frame.size;
+    self.scrollView.frame = self.view.frame;
+    
+    frame = self.view.frame;
+    size = self.view.frame.size;
+    
+//    CGRect contentViewFrame = self.instructionsView.frame;
+//    contentViewFrame.size.height = contentViewFrame.origin.y + contentViewFrame.size.height;
+//    self.scrollView.contentSize = contentViewFrame.size;
+    
+    frame = self.scrollView.bounds;
+    frame = self.scrollView.frame;
+    size = self.scrollView.contentSize;
+    
     [self.missionView setBackgroundColor:[UIColor primaryOrange]];
     [self.rewardsView setBackgroundColor:[UIColor mutedOrange]];
     
@@ -72,8 +91,26 @@
                 if (!error) {
                     NSLog(@"no error");
                     self.challengeBanner.image = [self imageByScalingAndCroppingForSize:self.challengeBanner.frame.size withImage:image];
+                } else {
+                    NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+                    UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                             message:msg
+                                                                            delegate:nil
+                                                                   cancelButtonTitle:@"OK"
+                                                                   otherButtonTitles:nil, nil];
+                    [reachableAlert show];
+
                 }
             }];
+        } else {
+            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
+            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                     message:msg
+                                                                    delegate:nil
+                                                           cancelButtonTitle:@"OK"
+                                                           otherButtonTitles:nil, nil];
+            [reachableAlert show];
+
         }
     }];
     
