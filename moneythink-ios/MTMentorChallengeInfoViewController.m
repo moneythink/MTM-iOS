@@ -62,7 +62,8 @@
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
     self.challenge = postTabBarViewController.challenge;
     
-    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
+    NSInteger challenge_number = [self.challenge[@"challenge_number"] intValue];
+    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInt:challenge_number]];
     PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
     
     [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -156,18 +157,22 @@
 }
 
 - (void)viewDidLayoutSubviews {
-    CGRect frame = self.scrollView.frame;
-    CGSize size = self.scrollView.contentSize;
-    
-    //    self.scrollView.contentSize = self.scrollView.frame.size;
-    //    self.scrollView.frame = self.view.frame;
-    
-    frame = self.view.frame;
-    size = self.view.frame.size;
-//    NSLog(@"frame size height - %f", self.scrollView.frame.size.height);
-//    NSLog(@"content size height - %f", self.scrollView.contentSize.height);
-//    NSLog(@"view size height - %f", self.view.frame.size.height);
+    CGRect scrollViewFrame = self.scrollView.frame;
 
+    CGSize contentSize = self.scrollView.contentSize;
+    CGRect mentorInstructionsFrame = self.mentorInstructions.frame;
+    CGRect instructionsViewFrame = self.instructionsView.frame;
+    
+    CGFloat contentHeight = instructionsViewFrame.origin.y + instructionsViewFrame.size.height + 44.0f;
+    contentSize = CGSizeMake(scrollViewFrame.size.width, contentHeight);
+    
+    CGFloat x = scrollViewFrame.origin.x;
+    CGFloat y = scrollViewFrame.origin.y + 44.0f;
+    CGFloat w = scrollViewFrame.size.width;
+    CGFloat h = self.view.frame.size.height - 44.0f;
+    
+    self.scrollView.frame = CGRectMake(x, y, w, h);
+    self.scrollView.contentSize = contentSize;
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image

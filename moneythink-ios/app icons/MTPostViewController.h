@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MICheckBox.h"
 
-@interface MTPostViewController : UIViewController <UITextFieldDelegate>
+@interface MTPostViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;

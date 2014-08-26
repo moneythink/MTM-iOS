@@ -12,7 +12,7 @@
 @implementation PFChallengeBanner
 
 + (NSString *)parseClassName {
-    return @"ChallengeBanner";
+    return @"ChallengeBanners";
 }
 
 @end

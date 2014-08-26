@@ -10,6 +10,8 @@
 #import "MTMentorStudentProfileViewController.h"
 
 @interface MTPostViewController ()
+@property (strong, nonatomic) PFUser *currentUser;
+@property (strong, nonatomic) PFUser *postUser;
 
 @property (strong, nonatomic) IBOutlet UILabel *postUsername;
 @property (strong, nonatomic) IBOutlet PFImageView *postUserImage;
@@ -39,7 +41,9 @@
 @property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
 @property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
 
-@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
+@property (strong, nonatomic) IBOutlet UIView *longView;
+@property (assign, nonatomic) NSInteger keyboardHeight;
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
@@ -57,10 +61,61 @@
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    self.scrollFields.scrollEnabled = YES;
+//    self.scrollFields.alwaysBounceHorizontal = YES;
+    self.scrollFields.alwaysBounceVertical = YES;
+    
+//    CGFloat w = 640;
+//    CGFloat h = 1200;
+//    CGSize size = CGSizeMake(w, h);
+    
+//    self.scrollFields.contentSize = size;
+//    self.scrollFields.contentOffset = CGPointMake(100.0f, 100.0f);
+    
+//    self.scrollFields.frame = CGRectMake(0, 0, 320, 320);
+    
+//    CGRect aRect = self.scrollFields.frame;
+//    aRect = self.longView.frame;
+//    aRect = self.longView.bounds;
+//    aRect = self.postComment.frame;
+//    size = self.scrollFields.contentSize;
+    
+//    CGFloat x = self.longView.frame.origin.x;
+//    CGFloat y = self.longView.frame.origin.y;
+//    w = self.longView.frame.size.width;
+//    w = 600.0f;
+//    h = 1000.0f;
+//    self.longView.frame = CGRectMake(x, y, w, h);
+    
+//    NSLog(@"self.view.frame.size.width - %f", self.view.frame.size.width);
+//    NSLog(@"self.view.frame.size.height - %f", self.view.frame.size.height);
+//    NSLog(@"self.view.frame.origin.x - %f", self.view.frame.origin.x);
+//    NSLog(@"self.view.frame.origin.y - %f\r\r", self.view.frame.origin.y);
+    
+//    NSLog(@"self.longView.frame.size.width - %f", self.longView.frame.size.width);
+//    NSLog(@"self.longView.frame.size.height - %f", self.longView.frame.size.height);
+//    NSLog(@"self.longView.frame.origin.x - %f", self.longView.frame.origin.x);
+//    NSLog(@"self.longView.frame.origin.y - %f\r\r", self.longView.frame.origin.y);
+    
+//    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
+//    NSLog(@"self.scrollFields.frame.size.height - %f", self.scrollFields.frame.size.height);
+//    NSLog(@"self.scrollFields.frame.origin.x - %f", self.scrollFields.frame.origin.x);
+//    NSLog(@"self.scrollFields.frame.origin.y - %f\r\r", self.scrollFields.frame.origin.y);
+    
+//    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
+//    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    self.scrollFields.delegate = self;
+    self.keyboardHeight = 0.0f;
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
@@ -69,34 +124,7 @@
     [self.view addGestureRecognizer:tap];
     
     self.postComment.delegate = self;
-    
-}
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = self.challenge[@"title"];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
-}
-
-- (void)viewWillLayoutSubviews {
-    NSLog(@"refreshed");
-    
-    [self loadChallengePost];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [self dismissKeyboard];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-
-#pragma mark -
-
-- (void)loadChallengePost
-{
     self.postLikesCount = [self.challengePost[@"likes"] intValue];
     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     
@@ -116,15 +144,16 @@
         }
     }];
     
-    __block PFUser *user = self.challengePost[@"user"];
+    self.postUser = self.challengePost[@"user"];
+    self.currentUser = [PFUser currentUser];
     
-    NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [user objectId]];
+    NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
     [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            user = [objects firstObject];
-            self.postUsername.text = [user username];
-            self.postUserImage.file = user[@"profile_picture"];
+            self.postUser = [objects firstObject];
+            self.postUsername.text = [self.postUser username];
+            self.postUserImage.file = self.postUser[@"profile_picture"];
             
             [self.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
                 CGRect frame = self.postUserButton.frame;
@@ -150,12 +179,61 @@
 //                                                           cancelButtonTitle:@"OK"
 //                                                           otherButtonTitles:nil, nil];
 //            [reachableAlert show];
-
+            
         }
     }];
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.title = self.challenge[@"title"];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
     
+//    CGFloat x = 0.0f;
+//    CGFloat y = 0.0f;
+    CGFloat w = self.scrollFields.frame.size.width;
+//    CGFloat w = self.longView.frame.size.width;
+    CGFloat h = self.postComment.frame.origin.y + self.postComment.frame.size.height + 88.0f;
+//    w = 320.0f;
+//    h = 536.0f;
+    CGSize size = CGSizeMake(w, h);
+
+//    self.longView.frame = CGRectMake(x, y, w, h);
+    self.scrollFields.contentSize = size;
+    
+    NSLog(@"self.postComment.frame.origin.y - %f", self.postComment.frame.origin.y);
+    NSLog(@"self.postComment.frame.size.height - %f\r\r", self.postComment.frame.size.height);
+    
+    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
+    NSLog(@"self.scrollFields.frame.size.height - %f\r\r", self.scrollFields.frame.size.height);
+    
+    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
+    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
+    
+}
+
+- (void)viewWillLayoutSubviews {
+    [self loadChallengePost];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [self dismissKeyboard];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark -
+
+- (void)loadChallengePost
+{
     // >>>>> Attributed hashtag
     self.postText.text = self.challengePost[@"post_text"];
     
@@ -222,7 +300,7 @@
         [self.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
     
-    BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+    BOOL isMentor = [self.currentUser[@"type"] isEqualToString:@"mentor"];
     BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
     BOOL hideVerifySwitch = !isMentor || autoVerify;
     self.verfiedLabel.hidden = hideVerifySwitch;
@@ -230,7 +308,7 @@
     
     self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
     
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
+    self.postsLiked = self.currentUser[@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     self.iLike = !(index == NSNotFound);
@@ -241,8 +319,7 @@
         [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     }
     
-    //    PFUser *user = self.challengePost[@"user"];
-    if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+    if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
         self.deletePost.hidden = NO;
         self.deletePost.enabled = YES;
     } else {
@@ -251,11 +328,12 @@
     }
 }
 
+
+#pragma mark - IBActions
+
 - (IBAction)deletePostTapped:(id)sender {
     // call function deletePost
-    PFUser *user = [PFUser currentUser];
-    NSString *userID = [user objectId];
-    
+    NSString *userID = [self.postUser objectId];
     NSString *postID = [self.challengePost objectId];
     
     [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
@@ -269,7 +347,7 @@
 
 - (IBAction)verifiedTapped:(id)sender {
     NSString *postID = [self.challengePost objectId];
-    NSString *verifiedBy = [[PFUser currentUser] objectId];
+    NSString *verifiedBy = [self.currentUser objectId];
     
     if (self.verifiedCheckBox.isChecked) {
         verifiedBy = @"";
@@ -279,7 +357,7 @@
         if (error) {
             NSLog(@"error - %@", error);
         } else {
-            [[PFUser currentUser] refresh];
+            [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];
             
@@ -292,7 +370,7 @@
 
 - (IBAction)likeButtonTapped:(id)sender {
     NSString *postID = [self.challengePost objectId];
-    NSString *userID = [[PFUser currentUser] objectId];
+    NSString *userID = [self.currentUser objectId];
     
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
@@ -313,7 +391,7 @@
                     }
                     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
                     
-                    [[PFUser currentUser] refresh];
+                    [self.currentUser refresh];
                     [self.challenge refresh];
                     [self.challengePost refresh];
                     
@@ -345,17 +423,16 @@
 }
 
 - (IBAction)button1Tapped:(id)sender {
-    PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.challengePost;
     
-    NSString *userID = [user objectId];
+    NSString *userID = [self.currentUser objectId];
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
             NSLog(@"button1Tapped");
-            [[PFUser currentUser] refresh];
+            [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];
             
@@ -367,17 +444,16 @@
 }
 
 - (IBAction)button2Tapped:(id)sender {
-    PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.challengePost;
     
-    NSString *userID = [user objectId];
+    NSString *userID = [self.currentUser objectId];
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
             NSLog(@"button2Tapped");
-            [[PFUser currentUser] refresh];
+            [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];
             
@@ -388,8 +464,8 @@
     }];
 }
 
-#pragma mark - date diff methods
 
+#pragma mark - date diff methods
 
 - (NSString *)dateDiffFromDate:(NSDate *)origDate {
     NSDate *todayDate = [NSDate date];
@@ -492,6 +568,9 @@
     return newImage;
 }
 
+
+#pragma mark - Keyboard methods
+
 -(void)dismissKeyboard {
     [self.view endEditing:YES];
 }
@@ -505,15 +584,16 @@
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
-    self.oldViewFieldsRect = self.viewFields.frame;
-    self.oldViewFieldsContentSize = self.viewFields.contentSize;
+    self.oldViewFieldsRect = self.scrollFields.frame;
+    self.oldViewFieldsContentSize = self.scrollFields.contentSize;
     
-    CGRect fieldsFrame = self.viewFields.frame;
+    CGRect fieldsFrame = self.scrollFields.frame;
     
     NSDictionary *userInfo = [nsNotification userInfo];
     CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
+    self.keyboardHeight = kbSize.height;
     
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
@@ -524,16 +604,24 @@
     
     fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
     
-    self.viewFields.contentSize = fieldsContentRect.size;
+    self.scrollFields.contentSize = fieldsContentRect.size;
     
-    self.viewFields.frame = fieldsFrame;
+    h = 800.0f;
+    self.scrollFields.contentSize = CGSizeMake(w, h);
     
+    self.scrollFields.frame = fieldsFrame;
+    
+    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
+    NSLog(@"self.scrollFields.frame.size.height - %f\r\r", self.scrollFields.frame.size.height);
+    
+    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
+    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
 {
-    self.viewFields.frame = self.oldViewFieldsRect;
-    self.viewFields.contentSize = self.oldViewFieldsContentSize;
+    self.scrollFields.frame = self.oldViewFieldsRect;
+    self.scrollFields.contentSize = self.oldViewFieldsContentSize;
 }
 
 

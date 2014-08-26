@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13F12" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13F18" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -2860,7 +2860,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bij-6A-cp5">
-                                <rect key="frame" x="0.0" y="0.0" width="331" height="484"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="484"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="akh-qz-Nav" customClass="PFImageView">
@@ -3010,10 +3010,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="postText" destination="Hei-pa-dWA" id="OJR-uj-xJE"/>
                         <outlet property="postUserButton" destination="4I2-Rm-sTl" id="j6t-tg-s8M"/>
                         <outlet property="postUsername" destination="WgP-dL-URA" id="7LG-T3-Vls"/>
+                        <outlet property="scrollFields" destination="Bij-6A-cp5" id="9Nk-7f-UBj"/>
                         <outlet property="verfiedLabel" destination="l3T-OP-Tet" id="Ax1-LM-Klw"/>
                         <outlet property="verifiedCheckBox" destination="ywS-El-jOg" id="4bo-cd-gu6"/>
                         <outlet property="view" destination="sCN-40-4OM" id="eHP-sp-85N"/>
-                        <outlet property="viewFields" destination="Bij-6A-cp5" id="75a-cW-Pwz"/>
                         <outlet property="whenPosted" destination="AVD-gU-phP" id="MRI-wY-af6"/>
                         <segue destination="xfn-2W-4dD" kind="unwind" unwindAction="unwindToExploreChallanges:" id="4tw-7W-8UG"/>
                     </connections>
