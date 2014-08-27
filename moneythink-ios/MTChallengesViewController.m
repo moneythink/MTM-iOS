@@ -43,10 +43,7 @@
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
 
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
-    [allChallenges orderByAscending:@"challange_number"];
-//    if ([self.challenges count] == 0) {
-//        allChallenges.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
+    [allChallenges orderByAscending:@"challenge_number"];
 
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:NO];
@@ -70,14 +67,6 @@
             [self.view addSubview:self.pageViewController.view];
             [self.pageViewController didMoveToParentViewController:self];
             
-        } else {
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
         }
     }];
 

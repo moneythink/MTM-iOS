@@ -104,6 +104,18 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent];
         }
     
+    
+    
+    
+    
+    [cell setBackgroundColor:[UIColor mutedOrange]];
+    [cell.textLabel setTextColor:[UIColor primaryOrange]];
+
+    
+    
+    
+    
+    
     if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
         switch (row) {
             case 0: {
@@ -151,18 +163,6 @@
                 } else {
                     cell.textLabel.text = @"";
                 }
-
-            
-//            } else {
-//                NSLog(@"error - %@", error);
-//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                         message:msg
-//                                                                        delegate:nil
-//                                                               cancelButtonTitle:@"OK"
-//                                                               otherButtonTitles:nil, nil];
-//                [reachableAlert show];
-
             }
         }];
         
@@ -192,6 +192,17 @@
 
 #pragma mark - UITableViewDelegate methods
 
+// Accessories (disclosures).
+
+- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath NS_DEPRECATED_IOS(2_0, 3_0)
+{
+    return UITableViewCellAccessoryDisclosureIndicator;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
     // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
@@ -249,16 +260,6 @@
                 [[UIActivityViewController alloc] initWithActivityItems:dataToShare
                                                   applicationActivities:nil];
                 [self presentViewController:activityViewController animated:NO completion:^{}];
-//            } else {
-//                NSLog(@"error - %@", error);
-//                NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//                UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                         message:msg
-//                                                                        delegate:nil
-//                                                               cancelButtonTitle:@"OK"
-//                                                               otherButtonTitles:nil, nil];
-//                [reachableAlert show];
-
             }
         }];
 

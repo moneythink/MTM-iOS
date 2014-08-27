@@ -127,10 +127,10 @@
     [[self.addClassButton layer] setCornerRadius:5.0f];
     [[self.addClassButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 
-    [[self.signUpButton layer] setBorderWidth:1.0f];
-    [[self.signUpButton layer] setCornerRadius:5.0f];
-    [[self.signUpButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
-
+    [self.signUpButton setTitle:@"SIGN UP" forState:UIControlStateNormal];
+    self.signUpButton.layer.cornerRadius = 4.0f;
+    [self.signUpButton setBackgroundColor:[UIColor mutedOrange]];
+    [self.signUpButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reachabilityChanged:)

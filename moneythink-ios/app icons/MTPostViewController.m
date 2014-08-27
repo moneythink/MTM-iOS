@@ -42,12 +42,15 @@
 @property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
-@property (strong, nonatomic) IBOutlet UIView *longView;
 @property (assign, nonatomic) NSInteger keyboardHeight;
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (strong, nonatomic) IBOutlet UIButton *deletePost;
+
+@property (strong, nonatomic) IBOutlet UITableView *commentsTableView;
+@property (strong, nonatomic) NSArray *comments;
+
 @end
 
 @implementation MTPostViewController
@@ -90,11 +93,14 @@
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
     [queryPostComments includeKey:@"user"];
-    [queryPostComments countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+    
+    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.commentsCount = number;
-            if (number > 0) {
-                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)number];
+            self.commentsCount = objects.count;
+            if (self.commentsCount > 0) {
+                self.comments = objects;
+                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)self.commentsCount];
+                [self.commentsTableView reloadData];
             } else {
                 self.commentCount.text = @"0";
             }
@@ -129,16 +135,6 @@
                 
                 [self.postUserButton setImage:image forState:UIControlStateNormal];
             }];
-//        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-            
         }
     }];
     
@@ -275,6 +271,26 @@
 
 #pragma mark - IBActions
 
+- (IBAction)commentTapped:(id)sender {
+    PFChallengePostComment *postComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
+    postComment[@"comment_text"] = self.postComment.text;
+    postComment[@"challenge_post"] = self.challengePost;
+    postComment[@"class"] = self.challengePost[@"class"];
+    postComment[@"school"] = self.challengePost[@"school"];
+    postComment[@"user"] = [PFUser currentUser];
+    
+    [self.navigationController popViewControllerAnimated:YES];
+
+//    [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//        if (!error) {
+//            [self.navigationController popViewControllerAnimated:YES];
+//            NSLog(@"no error");
+//        } else {
+//            NSLog(@"error");
+//        }
+//    }];
+}
+
 - (IBAction)deletePostTapped:(id)sender {
     // call function deletePost
     NSString *userID = [self.postUser objectId];
@@ -340,28 +356,8 @@
                     [self.challengePost refresh];
                     
                     [self.view setNeedsLayout];
-//                } else {
-//                    NSLog(@"error - %@", error);
-//                    NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//                    UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                             message:msg
-//                                                                            delegate:nil
-//                                                                   cancelButtonTitle:@"OK"
-//                                                                   otherButtonTitles:nil, nil];
-//                    [reachableAlert show];
-                    
                 }
             }];
-//        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
 }
@@ -593,6 +589,58 @@
         destinationVC.student = self.challengePost[@"user"];
     }
 }
+
+
+
+
+#pragma mark - UITableViewController delegate methods
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSInteger rows = self.comments.count;
+    
+    return rows;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	UITableViewCell *cell = [self.commentsTableView dequeueReusableCellWithIdentifier:@"cell"];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+    }
+    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    
+    PFChallengePostComment *comment = self.comments[indexPath.row];
+    cell.textLabel.text = comment[@"comment_text"];
+    
+    PFUser *commentPoster = comment[@"user"];
+    cell.detailTextLabel.text = [commentPoster username];
+    
+    return cell;
+}
+
+
+#pragma mark - UITableViewDelegate methods
+
+    // Accessories (disclosures).
+
+- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath NS_DEPRECATED_IOS(2_0, 3_0)
+{
+    return UITableViewCellAccessoryNone;
+}
+
+- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    
+}
+
 
 - (IBAction)unwindToPostView:(UIStoryboardSegue *)sender
 {

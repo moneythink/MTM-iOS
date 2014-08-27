@@ -61,10 +61,10 @@
     
     self.view.backgroundColor = [UIColor white];
     
-    [[self.loginButton layer] setBorderWidth:1.0f];
-    [[self.loginButton layer] setCornerRadius:5.0f];
-    [[self.loginButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
-
+    [self.loginButton setTitle:@"LOGIN" forState:UIControlStateNormal];
+    self.loginButton.layer.cornerRadius = 4.0f;
+    [self.loginButton setBackgroundColor:[UIColor mutedOrange]];
+    [self.loginButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 }
 
 - (void)viewDidLayoutSubviews {

@@ -40,9 +40,6 @@
     [studentPostsQuery whereKey:@"user" equalTo:self.student];
     [studentPostsQuery includeKey:@"verified_by"];
     [studentPostsQuery orderByDescending:@"createdAt"];
-//    if ([self.studentPosts count] == 0) {
-//        studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
 
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
@@ -51,15 +48,6 @@
             self.studentPosts = objects;
             
             [self.tableView reloadData];
-        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
         }
         
         [MBProgressHUD hideAllHUDsForView:self.view animated:NO];

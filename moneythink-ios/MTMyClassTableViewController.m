@@ -62,15 +62,6 @@
 
             [self.tableView reloadData];
 //        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
 }
@@ -119,14 +110,7 @@
     
     
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
-//    if ([self.objects count] == 0) {
-//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
     [query orderByDescending:@"createdAt"];
-    
-//    if ([self.objects count] == 0) {
-//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];

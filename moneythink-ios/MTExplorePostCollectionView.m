@@ -43,9 +43,6 @@
                                              challengNumber];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-//    if ([self.posts count] == 0) {
-//        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
 
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
@@ -60,15 +57,6 @@
             
             [self.exploreCollectionView reloadData];
         } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
     
@@ -137,16 +125,6 @@
             } else {
                 cell.postImage.image = nil;
             }
-        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
     
@@ -163,16 +141,6 @@
             } else {
                 cell.postImage.image = nil;
             }
-        } else {
-//            NSLog(@"error - %@", error);
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
     

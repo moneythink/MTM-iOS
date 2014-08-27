@@ -75,26 +75,8 @@
                 if (!error) {
                     NSLog(@"no error");
                     self.challengeBanner.image = [self imageByScalingAndCroppingForSize:self.challengeBanner.frame.size withImage:image];
-//                } else {
-//                    NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//                    UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                             message:msg
-//                                                                            delegate:nil
-//                                                                   cancelButtonTitle:@"OK"
-//                                                                   otherButtonTitles:nil, nil];
-//                    [reachableAlert show];
-
                 }
             }];
-//        } else {
-//            NSString *msg = [NSString stringWithFormat:@"%@" ,error];
-//            UIAlertView *reachableAlert = [[UIAlertView alloc] initWithTitle:@"Error"
-//                                                                     message:msg
-//                                                                    delegate:nil
-//                                                           cancelButtonTitle:@"OK"
-//                                                           otherButtonTitles:nil, nil];
-//            [reachableAlert show];
-
         }
     }];
     

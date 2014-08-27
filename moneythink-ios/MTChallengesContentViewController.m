@@ -107,9 +107,7 @@
     MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
     
     destination.challenge = self.challenge;
-    destination.challengeNumber = self.challengeNumberText;
-    destination.challenge = self.challenge;
-    
+    destination.challengeNumber = self.challengeNumberText;    
 }
 
 @end

@@ -266,8 +266,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
-                                <rect key="frame" x="0.0" y="20" width="320" height="528"/>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8cy-cQ-6Iw">
+                                <rect key="frame" x="0.0" y="15" width="320" height="528"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Preferred First Name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="tQ1-HJ-LR5">
@@ -1878,6 +1878,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <state key="normal" title="Comment">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="commentTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="1SL-5b-Vne"/>
+                                        </connections>
                                     </button>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H2X-td-GLp" customClass="PFImageView">
                                         <rect key="frame" x="5" y="48" width="321" height="320"/>
@@ -2001,7 +2004,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="verifiedCheckBox" destination="jTz-uS-R0X" id="89i-br-hrg"/>
                         <outlet property="view" destination="oNf-wq-emG" id="yux-Xp-I8D"/>
                         <outlet property="whenPosted" destination="0w0-Es-3vJ" id="RhJ-gs-Ygn"/>
-                        <segue destination="ltS-05-clY" kind="unwind" unwindAction="unwindToExploreChallanges:" id="5DG-I6-ZyH"/>
+                        <segue destination="ltS-05-clY" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="5DG-I6-ZyH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2721,6 +2724,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <state key="normal" title="Comment">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="commentTapped:" destination="ths-Es-m93" eventType="touchUpInside" id="Aom-F1-h7a"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TEU-Vx-ayj">
                                         <rect key="frame" x="14" y="50" width="30" height="30"/>
@@ -2812,6 +2818,15 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="deletePostTapped:" destination="ths-Es-m93" eventType="touchUpInside" id="tkv-UJ-cGu"/>
                                         </connections>
                                     </button>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="sog-1h-mwU">
+                                        <rect key="frame" x="14" y="188" width="286" height="260"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <connections>
+                                            <outlet property="dataSource" destination="ths-Es-m93" id="nn0-X9-qcd"/>
+                                            <outlet property="delegate" destination="ths-Es-m93" id="OWY-o6-rxr"/>
+                                        </connections>
+                                    </tableView>
                                 </subviews>
                             </scrollView>
                         </subviews>
@@ -2827,6 +2842,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="comment" destination="Y1i-Yy-cfE" id="JWy-jH-ekn"/>
                         <outlet property="commentCount" destination="rjY-Fx-3OH" id="Fz6-QW-kRJ"/>
                         <outlet property="commentPost" destination="S21-Jn-fbc" id="vvp-HP-BM5"/>
+                        <outlet property="commentsTableView" destination="sog-1h-mwU" id="KEe-8K-dnb"/>
                         <outlet property="deletePost" destination="y65-2M-hjF" id="Qk3-Gq-l4A"/>
                         <outlet property="likePost" destination="LXp-XX-JIB" id="5bP-IH-bsG"/>
                         <outlet property="postComment" destination="U5C-87-UDV" id="gOV-Ro-MCY"/>
@@ -2894,6 +2910,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <state key="normal" title="Comment">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="commentTapped:" destination="ROD-Uc-uF0" eventType="touchUpInside" id="rn9-HZ-HQ9"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Lgr-rB-e1x">
                                         <rect key="frame" x="15" y="426" width="19" height="16"/>
@@ -3042,6 +3061,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <state key="normal" title="Comment">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="commentTapped:" destination="67M-EA-c7G" eventType="touchUpInside" id="EQa-Jr-eUX"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bed-gL-dic">
                                 <rect key="frame" x="15" y="10" width="30" height="30"/>
@@ -3506,7 +3528,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <scene sceneID="oAQ-3o-3mK">
             <objects>
                 <tableViewController storyboardIdentifier="mentorNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rcd-Rs-SfS" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="58" sectionHeaderHeight="22" sectionFooterHeight="22" id="scz-Qt-cte">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="58" sectionHeaderHeight="22" sectionFooterHeight="22" id="scz-Qt-cte">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3564,6 +3586,9 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" id="wBf-ws-VxE"/>
+                    <connections>
+                        <segue destination="L15-4o-h8K" kind="push" identifier="notificationToChallenge" id="2Vg-aZ-xoJ"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PtW-0y-EHg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3764,14 +3789,15 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="2Vg-aZ-xoJ"/>
         <segue reference="kgD-Kv-M6F"/>
-        <segue reference="qYv-0w-I0f"/>
-        <segue reference="iSW-sc-15K"/>
+        <segue reference="A03-ja-bb3"/>
         <segue reference="fM9-bL-F9m"/>
-        <segue reference="Rwq-1l-OkU"/>
-        <segue reference="t5m-aZ-wca"/>
-        <segue reference="OaC-xo-Vq0"/>
-        <segue reference="5KW-O2-h9I"/>
-        <segue reference="1CK-gQ-zH4"/>
+        <segue reference="ySr-9F-9a4"/>
+        <segue reference="Pqy-YU-1Il"/>
+        <segue reference="0tX-EG-lkN"/>
+        <segue reference="3vf-te-PYL"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="VFk-5D-gdp"/>
     </inferredMetricsTieBreakers>
 </document>
