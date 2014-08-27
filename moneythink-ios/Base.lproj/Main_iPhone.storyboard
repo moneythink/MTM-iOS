@@ -1996,10 +1996,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="postText" destination="AHB-0V-qXV" id="sAb-gc-ixN"/>
                         <outlet property="postUserButton" destination="IgM-2K-kwg" id="ywo-27-x7B"/>
                         <outlet property="postUsername" destination="Xyq-JA-kie" id="8wA-cp-eVN"/>
+                        <outlet property="scrollFields" destination="r9A-zx-gH2" id="3vW-Go-bJO"/>
                         <outlet property="verfiedLabel" destination="xpI-E2-rF6" id="ggK-Mq-0rZ"/>
                         <outlet property="verifiedCheckBox" destination="jTz-uS-R0X" id="89i-br-hrg"/>
                         <outlet property="view" destination="oNf-wq-emG" id="yux-Xp-I8D"/>
-                        <outlet property="viewFields" destination="r9A-zx-gH2" id="AOV-Pc-Aog"/>
                         <outlet property="whenPosted" destination="0w0-Es-3vJ" id="RhJ-gs-Ygn"/>
                         <segue destination="ltS-05-clY" kind="unwind" unwindAction="unwindToExploreChallanges:" id="5DG-I6-ZyH"/>
                     </connections>
@@ -2834,10 +2834,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="postText" destination="piY-Mk-1G6" id="zGs-I5-rHI"/>
                         <outlet property="postUserButton" destination="TEU-Vx-ayj" id="zgo-WY-knG"/>
                         <outlet property="postUsername" destination="reh-os-Q6f" id="kdC-wr-3BB"/>
+                        <outlet property="scrollFields" destination="39J-XJ-tIL" id="LqW-bR-DFW"/>
                         <outlet property="verfiedLabel" destination="I76-Nu-jXR" id="qPw-kR-PwY"/>
                         <outlet property="verifiedCheckBox" destination="cXy-CC-ugL" id="VJj-Iu-flB"/>
                         <outlet property="view" destination="BK1-uk-t2d" id="cvw-qP-0Ef"/>
-                        <outlet property="viewFields" destination="39J-XJ-tIL" id="sHJ-au-oi4"/>
                         <outlet property="whenPosted" destination="5le-uJ-W01" id="yqF-WK-zOA"/>
                         <segue destination="4Qj-qr-n3q" kind="unwind" unwindAction="unwindToExploreChallanges:" id="NXS-7u-Ruf"/>
                     </connections>

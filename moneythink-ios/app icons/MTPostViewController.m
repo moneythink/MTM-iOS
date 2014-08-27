@@ -65,48 +65,7 @@
     [super viewDidAppear:animated];
     
     self.scrollFields.scrollEnabled = YES;
-//    self.scrollFields.alwaysBounceHorizontal = YES;
     self.scrollFields.alwaysBounceVertical = YES;
-    
-//    CGFloat w = 640;
-//    CGFloat h = 1200;
-//    CGSize size = CGSizeMake(w, h);
-    
-//    self.scrollFields.contentSize = size;
-//    self.scrollFields.contentOffset = CGPointMake(100.0f, 100.0f);
-    
-//    self.scrollFields.frame = CGRectMake(0, 0, 320, 320);
-    
-//    CGRect aRect = self.scrollFields.frame;
-//    aRect = self.longView.frame;
-//    aRect = self.longView.bounds;
-//    aRect = self.postComment.frame;
-//    size = self.scrollFields.contentSize;
-    
-//    CGFloat x = self.longView.frame.origin.x;
-//    CGFloat y = self.longView.frame.origin.y;
-//    w = self.longView.frame.size.width;
-//    w = 600.0f;
-//    h = 1000.0f;
-//    self.longView.frame = CGRectMake(x, y, w, h);
-    
-//    NSLog(@"self.view.frame.size.width - %f", self.view.frame.size.width);
-//    NSLog(@"self.view.frame.size.height - %f", self.view.frame.size.height);
-//    NSLog(@"self.view.frame.origin.x - %f", self.view.frame.origin.x);
-//    NSLog(@"self.view.frame.origin.y - %f\r\r", self.view.frame.origin.y);
-    
-//    NSLog(@"self.longView.frame.size.width - %f", self.longView.frame.size.width);
-//    NSLog(@"self.longView.frame.size.height - %f", self.longView.frame.size.height);
-//    NSLog(@"self.longView.frame.origin.x - %f", self.longView.frame.origin.x);
-//    NSLog(@"self.longView.frame.origin.y - %f\r\r", self.longView.frame.origin.y);
-    
-//    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
-//    NSLog(@"self.scrollFields.frame.size.height - %f", self.scrollFields.frame.size.height);
-//    NSLog(@"self.scrollFields.frame.origin.x - %f", self.scrollFields.frame.origin.x);
-//    NSLog(@"self.scrollFields.frame.origin.y - %f\r\r", self.scrollFields.frame.origin.y);
-    
-//    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
-//    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
 }
 
 - (void)viewDidLoad
@@ -196,27 +155,12 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-//    CGFloat x = 0.0f;
-//    CGFloat y = 0.0f;
     CGFloat w = self.scrollFields.frame.size.width;
-//    CGFloat w = self.longView.frame.size.width;
     CGFloat h = self.postComment.frame.origin.y + self.postComment.frame.size.height + 88.0f;
-//    w = 320.0f;
-//    h = 536.0f;
+
     CGSize size = CGSizeMake(w, h);
 
-//    self.longView.frame = CGRectMake(x, y, w, h);
     self.scrollFields.contentSize = size;
-    
-    NSLog(@"self.postComment.frame.origin.y - %f", self.postComment.frame.origin.y);
-    NSLog(@"self.postComment.frame.size.height - %f\r\r", self.postComment.frame.size.height);
-    
-    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
-    NSLog(@"self.scrollFields.frame.size.height - %f\r\r", self.scrollFields.frame.size.height);
-    
-    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
-    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
-    
 }
 
 - (void)viewWillLayoutSubviews {
@@ -606,16 +550,10 @@
     
     self.scrollFields.contentSize = fieldsContentRect.size;
     
-    h = 800.0f;
+    h = self.scrollFields.contentSize.height + self.keyboardHeight;
     self.scrollFields.contentSize = CGSizeMake(w, h);
     
     self.scrollFields.frame = fieldsFrame;
-    
-    NSLog(@"self.scrollFields.frame.size.width - %f", self.scrollFields.frame.size.width);
-    NSLog(@"self.scrollFields.frame.size.height - %f\r\r", self.scrollFields.frame.size.height);
-    
-    NSLog(@"self.scrollFields.contentSize.width - %f", self.scrollFields.contentSize.width);
-    NSLog(@"self.scrollFields.contentSize.height - %f\r\r", self.scrollFields.contentSize.height);
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification
