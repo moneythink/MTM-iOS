@@ -74,6 +74,106 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                    self.firstName.frame.size.height - 1.0f,
+                                                                    self.firstName.frame.size.width,
+                                                                    1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    UIView *rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.firstName.frame.size.width - 1.0f,
+                                                                   0.0f,
+                                                                   1.0f,
+                                                                   self.firstName.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.firstName addSubview:bottomBorder];
+    [self.firstName addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.lastName.frame.size.height - 1.0f,
+                                                            self.lastName.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.lastName.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.lastName.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.lastName addSubview:bottomBorder];
+    [self.lastName addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.email.frame.size.height - 1.0f,
+                                                            self.email.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.email.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.email.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.email addSubview:bottomBorder];
+    [self.email addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.password.frame.size.height - 1.0f,
+                                                            self.password.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.password.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.password.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.password addSubview:bottomBorder];
+    [self.password addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.registrationCode.frame.size.height - 1.0f,
+                                                            self.registrationCode.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.registrationCode.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.registrationCode.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.registrationCode addSubview:bottomBorder];
+    [self.registrationCode addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.schoolName.frame.size.height - 1.0f,
+                                                            self.schoolName.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.schoolName.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.schoolName.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.schoolName addSubview:bottomBorder];
+    [self.schoolName addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.className.frame.size.height - 1.0f,
+                                                            self.className.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.className.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.className.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.className addSubview:bottomBorder];
+    [self.className addSubview:rightBorder];
+    
+
+    
     [self.navigationController setNavigationBarHidden:NO animated:NO];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
@@ -119,13 +219,13 @@
     self.useStageButton.hidden = YES;
     self.useStageLabel.hidden = YES;
     
-    [[self.addSchoolButton layer] setBorderWidth:1.0f];
-    [[self.addSchoolButton layer] setCornerRadius:5.0f];
-    [[self.addSchoolButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+//    [[self.addSchoolButton layer] setBorderWidth:1.0f];
+//    [[self.addSchoolButton layer] setCornerRadius:5.0f];
+//    [[self.addSchoolButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
     
-    [[self.addClassButton layer] setBorderWidth:1.0f];
-    [[self.addClassButton layer] setCornerRadius:5.0f];
-    [[self.addClassButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+//    [[self.addClassButton layer] setBorderWidth:1.0f];
+//    [[self.addClassButton layer] setCornerRadius:5.0f];
+//    [[self.addClassButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 
     [self.signUpButton setTitle:@"SIGN UP" forState:UIControlStateNormal];
     self.signUpButton.layer.cornerRadius = 4.0f;

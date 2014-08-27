@@ -65,6 +65,34 @@
     self.loginButton.layer.cornerRadius = 4.0f;
     [self.loginButton setBackgroundColor:[UIColor mutedOrange]];
     [self.loginButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    
+    UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                    self.email.frame.size.height - 1.0f,
+                                                                    self.email.frame.size.width,
+                                                                    1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    UIView *rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.email.frame.size.width - 1.0f,
+                                                                   0.0f,
+                                                                   1.0f,
+                                                                   self.email.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.email addSubview:bottomBorder];
+    [self.email addSubview:rightBorder];
+    
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.password.frame.size.height - 1.0f,
+                                                            self.password.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.password.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.password.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.password addSubview:bottomBorder];
+    [self.password addSubview:rightBorder];
 }
 
 - (void)viewDidLayoutSubviews {

@@ -3335,13 +3335,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6">
                                         <rect key="frame" x="20" y="211" width="280" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="schoolNameButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="ksF-tT-5On"/>
@@ -3791,7 +3791,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     <inferredMetricsTieBreakers>
         <segue reference="2Vg-aZ-xoJ"/>
         <segue reference="kgD-Kv-M6F"/>
-        <segue reference="A03-ja-bb3"/>
+        <segue reference="qYv-0w-I0f"/>
         <segue reference="fM9-bL-F9m"/>
         <segue reference="ySr-9F-9a4"/>
         <segue reference="Pqy-YU-1Il"/>
