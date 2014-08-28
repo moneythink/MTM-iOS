@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import "MTHomeViewController.h"
 #import <Crashlytics/Crashlytics.h>
+#import "UIColor+Palette.h"
 
 #ifdef DEBUG
 // stage
@@ -59,7 +60,12 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor white]];
+    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    
+    [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
+    [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];
     
     [Crashlytics startWithAPIKey:@"f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e"];
     

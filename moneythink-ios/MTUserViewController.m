@@ -109,11 +109,12 @@
     id segueDVC = [segue destinationViewController];
 
     if ([segueID isEqualToString:@"studentSignup"]) {
-        MTSignUpViewController *signUpViewController = (MTSignUpViewController *)segue.destinationViewController;
-        signUpViewController.signUpTitle = @"Student Signup";
-        signUpViewController.signUpType = @"student";
+        self.signUpViewController = (MTSignUpViewController *)segueDVC;
+        self.signUpViewController.signUpTitle = @"Student Signup";
+        self.signUpViewController.signUpType = @"student";
     } else if ([segueID isEqualToString:@"mentorSignup"]) {
         self.signUpViewController = (MTSignUpViewController *)segueDVC;
+        self.signUpViewController.signUpTitle = @"Mentor Signup";
         self.signUpViewController.signUpType = @"mentor";
     }
 }

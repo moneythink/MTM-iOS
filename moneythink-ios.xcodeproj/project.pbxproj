@@ -39,6 +39,8 @@
 		5829B01219A283920054BEC6 /* bg_money_mananger_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00919A283920054BEC6 /* bg_money_mananger_5.png */; };
 		5829B01319A283920054BEC6 /* bg_money_mananger_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */; };
 		5829B01419A283920054BEC6 /* bg_money_mananger_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */; };
+		5849666F19AFC00E00672818 /* photo_post@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5849666D19AFC00E00672818 /* photo_post@2x.png */; };
+		5849667019AFC00E00672818 /* photo_post.png in Resources */ = {isa = PBXBuildFile; fileRef = 5849666E19AFC00E00672818 /* photo_post.png */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
 		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
 		5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942B197C060700EDC969 /* MTStudentMainViewController.m */; };
@@ -259,6 +261,8 @@
 		5829B00919A283920054BEC6 /* bg_money_mananger_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_5.png; sourceTree = "<group>"; };
 		5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_6.png; sourceTree = "<group>"; };
 		5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_7.png; sourceTree = "<group>"; };
+		5849666D19AFC00E00672818 /* photo_post@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_post@2x.png"; sourceTree = "<group>"; };
+		5849666E19AFC00E00672818 /* photo_post.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_post.png; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
 		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
@@ -932,6 +936,8 @@
 				58B7C24C1992DE630039E238 /* notifications_active@2x.png */,
 				58B7C24D1992DE630039E238 /* notifications_normal.png */,
 				58B7C24E1992DE630039E238 /* notifications_normal@2x.png */,
+				5849666D19AFC00E00672818 /* photo_post@2x.png */,
+				5849666E19AFC00E00672818 /* photo_post.png */,
 				58B7C24F1992DE630039E238 /* post.png */,
 				58B7C2501992DE630039E238 /* post@2x.png */,
 				58B7C2511992DE630039E238 /* profile_image.png */,
@@ -1090,6 +1096,7 @@
 				58B7C2731992DE630039E238 /* moneythink_icon_logo.png in Resources */,
 				58B7C2851992DE630039E238 /* verify_active.png in Resources */,
 				589F448019A44AF900238DCC /* checkbox_not_ticked@2x.png in Resources */,
+				5849666F19AFC00E00672818 /* photo_post@2x.png in Resources */,
 				5890F8E1197711AE0042AC2F /* Icon-60@2x.png in Resources */,
 				5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */,
 				5890F8E8197711AE0042AC2F /* iTunesArtwork1024 in Resources */,
@@ -1158,6 +1165,7 @@
 				5802EA781993752B00CF5F32 /* bg_progress_green2.png in Resources */,
 				580B5AE719820F8A0092AA9C /* app_icon_72.png in Resources */,
 				5890F8C0197710590042AC2F /* launchImage1536x2048.png in Resources */,
+				5849667019AFC00E00672818 /* photo_post.png in Resources */,
 				5890F8E5197711AE0042AC2F /* Icon-76@2x.png in Resources */,
 				5829B01219A283920054BEC6 /* bg_money_mananger_5.png in Resources */,
 				589F448119A44AF900238DCC /* checkbox_ticked@2x.png in Resources */,

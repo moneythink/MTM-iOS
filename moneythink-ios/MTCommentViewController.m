@@ -19,8 +19,6 @@
 
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
-@property (strong, nonatomic) IBOutlet UIButton *postButton;
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
 @end
 
@@ -55,19 +53,12 @@
     
     [self.view addGestureRecognizer:tap];
     
+    self.title = @"Create Post";
+    
     self.postText.text = @"";
     
-    [[self.postButton layer] setBorderWidth:1.0f];
-    [[self.postButton layer] setCornerRadius:5.0f];
-    [[self.postButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
-    
-    [[self.cancelButton layer] setBorderWidth:1.0f];
-    [[self.cancelButton layer] setCornerRadius:5.0f];
-    [[self.cancelButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
-    
-    [[self.chooseImageButton layer] setBorderWidth:1.0f];
-    [[self.chooseImageButton layer] setCornerRadius:5.0f];
-    [[self.chooseImageButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
+    UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(commentDoneButton)];
+    self.navigationItem.rightBarButtonItem = shareBarButton;
     
 }
 
@@ -163,6 +154,7 @@
     }
     
     self.postImage.image = image;
+    [self.chooseImageButton setImage:image forState:UIControlStateNormal];
     
     [self dismissViewControllerAnimated:NO completion:NULL];
 }
@@ -172,55 +164,51 @@
     [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
-- (IBAction)commentCancelButton:(id)sender {
-    [self dismissViewControllerAnimated:NO completion:nil];
-}
-
-- (IBAction)commentDoneButton:(id)sender {
-    if (![self.postText.text isEqualToString:@""]) {
-        self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
-        
-        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
-        self.challengePost[@"class"] = [PFUser currentUser][@"class"];
-        self.challengePost[@"school"] = [PFUser currentUser][@"school"];
-        self.challengePost[@"user"] = [PFUser currentUser];
-        self.challengePost[@"post_text"] = self.postText.text;
-        
-        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                NSLog(@"text saved");
-            } else {
-                NSLog(@"text error - %@", error);
-            }
-        }];
-
-        if (self.postImage) {
-            NSString *fileName = @"post_image.png";
-            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
-
-            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-            
-            if (self.postImage.file) {
-                [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (!error) {
-                        self.challengePost[@"picture"] = self.postImage.file;
-
-                        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (!error) {
-                                NSLog(@"text saved");
-                            } else {
-                                NSLog(@"text error - %@", error);
-                            }
-                        }];
-                        
-                        NSLog(@"picture saved");
-                    } else {
-                        NSLog(@"picture error - %@", error);
-                    }
-                }];
-            }
-        }
-    }
+- (void)commentDoneButton {
+//    if (![self.postText.text isEqualToString:@""]) {
+//        self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
+//        
+//        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+//        self.challengePost[@"class"] = [PFUser currentUser][@"class"];
+//        self.challengePost[@"school"] = [PFUser currentUser][@"school"];
+//        self.challengePost[@"user"] = [PFUser currentUser];
+//        self.challengePost[@"post_text"] = self.postText.text;
+//        
+//        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (!error) {
+//                NSLog(@"text saved");
+//            } else {
+//                NSLog(@"text error - %@", error);
+//            }
+//        }];
+//
+//        if (self.postImage) {
+//            NSString *fileName = @"post_image.png";
+//            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
+//
+//            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
+//            
+//            if (self.postImage.file) {
+//                [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//                    if (!error) {
+//                        self.challengePost[@"picture"] = self.postImage.file;
+//
+//                        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//                            if (!error) {
+//                                NSLog(@"text saved");
+//                            } else {
+//                                NSLog(@"text error - %@", error);
+//                            }
+//                        }];
+//                        
+//                        NSLog(@"picture saved");
+//                    } else {
+//                        NSLog(@"picture error - %@", error);
+//                    }
+//                }];
+//            }
+//        }
+//    }
 
     [self dismissViewControllerAnimated:NO completion:nil];
 }

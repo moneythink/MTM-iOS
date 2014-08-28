@@ -44,6 +44,12 @@
     self.navigationItem.rightBarButtonItem = postComment;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    
+    self.title = self.challenge[@"title"];
+    
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -51,6 +57,7 @@
 }
 
 - (void)postComment {
+    self.navigationItem.title = @"Cancel";
     [self performSegueWithIdentifier:@"modalComment" sender:self];
 }
 
@@ -74,7 +81,7 @@
     
 }
 
-#pragma mark = UITabBarControllerDelegate delegate methods
+#pragma mark - UITabBarControllerDelegate delegate methods
 
 - (BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController NS_AVAILABLE_IOS(3_0);
 {

@@ -61,7 +61,6 @@
             self.hasButtons = buttons.count;
 
             [self.tableView reloadData];
-//        } else {
         }
     }];
 }

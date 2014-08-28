@@ -79,6 +79,8 @@
     self.scrollFields.delegate = self;
     self.keyboardHeight = 0.0f;
     
+    [self.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -117,7 +119,10 @@
     [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.postUser = [objects firstObject];
-            self.postUsername.text = [self.postUser username];
+            NSString *firstName = self.postUser[@"first_name"];
+            NSString *lastName = self.postUser[@"last_name"];
+            self.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+//            self.postUsername.text = [self.postUser username];
             self.postUserImage.file = self.postUser[@"profile_picture"];
             
             [self.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -152,7 +157,7 @@
     [super viewDidLayoutSubviews];
     
     CGFloat w = self.scrollFields.frame.size.width;
-    CGFloat h = self.postComment.frame.origin.y + self.postComment.frame.size.height + 88.0f;
+    CGFloat h = self.commentsTableView.frame.origin.y + self.commentsTableView.frame.size.height + 88.0f;
 
     CGSize size = CGSizeMake(w, h);
 
@@ -540,9 +545,7 @@
     CGFloat w = fieldsFrame.size.width;
     CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
-    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
-    
-    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
+    CGRect fieldsContentRect = CGRectMake(x, y, w, kbTop + 320.0f);
     
     self.scrollFields.contentSize = fieldsContentRect.size;
     

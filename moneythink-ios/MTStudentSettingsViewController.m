@@ -104,18 +104,9 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdent];
         }
     
-    
-    
-    
-    
-    [cell setBackgroundColor:[UIColor mutedOrange]];
+    [cell setBackgroundColor:[UIColor white]];
     [cell.textLabel setTextColor:[UIColor primaryOrange]];
 
-    
-    
-    
-    
-    
     if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
         switch (row) {
             case 0: {
@@ -191,6 +182,13 @@
 
 
 #pragma mark - UITableViewDelegate methods
+
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    
+    [header.textLabel setTextColor:[UIColor blackColor]];
+    [header.contentView setBackgroundColor:[UIColor mutedOrange]];
+}
 
 // Accessories (disclosures).
 

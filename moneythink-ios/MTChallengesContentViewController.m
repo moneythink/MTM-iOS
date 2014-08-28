@@ -46,8 +46,7 @@
     self.leftPanel.backgroundColor = [UIColor mutedOrange];
     self.rightPanel.backgroundColor = [UIColor primaryOrange];
     
-    self.challengeDescription.textColor = [UIColor redColor];
-    
+    self.challengeDescription.textColor = [UIColor white];
     
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self

@@ -11,12 +11,6 @@
 #import "MTStudentTabBarViewController.h"
 #import "MTMentorTabBarViewControlle.h"
 
-//#ifdef DEBUG
-//    static BOOL useStage = YES;
-//#else
-    static BOOL useStage = NO;
-//#endif
-
 @interface MTLogInViewController ()
 
 @property (strong, nonatomic) IBOutlet UIView *view;
@@ -24,11 +18,6 @@
 
 @property (strong, nonatomic) IBOutlet UITextField *email;
 @property (strong, nonatomic) IBOutlet UITextField *password;
-
-@property (strong, nonatomic) IBOutlet UITextField *error;
-
-@property (strong, nonatomic) IBOutlet UIButton *useStageButton;
-//@property (strong, nonatomic) IBOutlet MICheckBox *useStageCheckbox;
 
 @property (strong, nonatomic) IBOutlet UIButton *loginButton;
 
@@ -50,22 +39,30 @@
     [self.email setDelegate:self];
     [self.password setDelegate:self];
 
-//    self.useStageCheckbox =[[MICheckBox alloc]initWithFrame:self.useStageButton.frame];
-//	[self.useStageCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//	[self.useStageCheckbox setTitle:@"" forState:UIControlStateNormal];
-//	[self.viewFields addSubview:self.useStageCheckbox];
-    
-//    self.useStageCheckbox.isChecked = useStage;
-    
-    self.useStageButton.hidden = YES;
-    
-    self.view.backgroundColor = [UIColor white];
+    self.view.backgroundColor = [UIColor lightGrey];
     
     [self.loginButton setTitle:@"LOGIN" forState:UIControlStateNormal];
     self.loginButton.layer.cornerRadius = 4.0f;
     [self.loginButton setBackgroundColor:[UIColor mutedOrange]];
     [self.loginButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f];
+    label.text = @"Login";
+    [label sizeToFit];
+    self.navigationItem.titleView = label;
+    
+    [self textFieldsConfigure];
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    
+}
+
+- (void)textFieldsConfigure {
     UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
                                                                     self.email.frame.size.height - 1.0f,
                                                                     self.email.frame.size.width,
@@ -79,6 +76,7 @@
     
     [self.email addSubview:bottomBorder];
     [self.email addSubview:rightBorder];
+    [self.email setBackgroundColor:[UIColor white]];
     
     bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
                                                             self.password.frame.size.height - 1.0f,
@@ -93,15 +91,7 @@
     
     [self.password addSubview:bottomBorder];
     [self.password addSubview:rightBorder];
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-    
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+    [self.password setBackgroundColor:[UIColor white]];
 }
 
 - (IBAction)resetTapped:(id)sender {
@@ -111,14 +101,6 @@
 }
 
 - (IBAction)loginTapped:(id)sender {
-//    if ([self.useStageCheckbox isChecked]) {
-//        NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-//        NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
-//        
-//        [Parse setApplicationId:applicationID
-//                      clientKey:clientKey];
-//    }
-
     PFUser *user = [PFUser user];
     
     user.username = self.email.text;
@@ -134,8 +116,7 @@
                 [self performSegueWithIdentifier:@"pushMentorLoggedIn" sender:self];
             }
         } else {
-            self.error.text = errorString;
-            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:self.error.text delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
     }];
 }
@@ -148,13 +129,7 @@
             break;
             
         default: // OK
-            [PFUser requestPasswordResetForEmailInBackground:self.email.text block:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-
-                } else {
-
-                }
-            }];
+            [PFUser requestPasswordResetForEmailInBackground:self.email.text];
             break;
     }
 }
