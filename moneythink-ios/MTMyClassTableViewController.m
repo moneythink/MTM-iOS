@@ -15,6 +15,7 @@
 
 @property (assign, nonatomic) BOOL hasButtons;
 @property (strong, nonatomic) NSArray *postsLiked;
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (assign, nonatomic) BOOL reachable;
 
@@ -72,7 +73,6 @@
     [self queryForTable];
     [self.tableView reloadData];
 }
-
 
 - (void)didReceiveMemoryWarning
 {

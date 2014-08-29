@@ -165,52 +165,52 @@
 }
 
 - (void)commentDoneButton {
-//    if (![self.postText.text isEqualToString:@""]) {
-//        self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
-//        
-//        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
-//        self.challengePost[@"class"] = [PFUser currentUser][@"class"];
-//        self.challengePost[@"school"] = [PFUser currentUser][@"school"];
-//        self.challengePost[@"user"] = [PFUser currentUser];
-//        self.challengePost[@"post_text"] = self.postText.text;
-//        
-//        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//            if (!error) {
-//                NSLog(@"text saved");
-//            } else {
-//                NSLog(@"text error - %@", error);
-//            }
-//        }];
-//
-//        if (self.postImage) {
-//            NSString *fileName = @"post_image.png";
-//            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
-//
-//            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-//            
-//            if (self.postImage.file) {
-//                [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//                    if (!error) {
-//                        self.challengePost[@"picture"] = self.postImage.file;
-//
-//                        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//                            if (!error) {
-//                                NSLog(@"text saved");
-//                            } else {
-//                                NSLog(@"text error - %@", error);
-//                            }
-//                        }];
-//                        
-//                        NSLog(@"picture saved");
-//                    } else {
-//                        NSLog(@"picture error - %@", error);
-//                    }
-//                }];
-//            }
-//        }
-//    }
+    if (![self.postText.text isEqualToString:@""]) {
+        self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
+        
+        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+        self.challengePost[@"class"] = [PFUser currentUser][@"class"];
+        self.challengePost[@"school"] = [PFUser currentUser][@"school"];
+        self.challengePost[@"user"] = [PFUser currentUser];
+        self.challengePost[@"post_text"] = self.postText.text;
+        
+        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                NSLog(@"text saved");
+            } else {
+                NSLog(@"text error - %@", error);
+            }
+        }];
 
-    [self dismissViewControllerAnimated:NO completion:nil];
+        if (self.postImage) {
+            NSString *fileName = @"post_image.png";
+            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
+
+            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
+            
+            if (self.postImage.file) {
+                [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    if (!error) {
+                        self.challengePost[@"picture"] = self.postImage.file;
+
+                        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            if (!error) {
+                                NSLog(@"text saved");
+                            } else {
+                                NSLog(@"text error - %@", error);
+                            }
+                        }];
+                        
+                        NSLog(@"picture saved");
+                    } else {
+                        NSLog(@"picture error - %@", error);
+                    }
+                }];
+            }
+        }
+    }
+
+    [self performSegueWithIdentifier:@"unwindToPostsTabBar" sender:nil];
 }
 
 -(void)dismissKeyboard {

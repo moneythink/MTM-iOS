@@ -20,8 +20,6 @@
 
 @property (nonatomic, strong) IBOutlet UIImageView *challengeIcon;
 
-@property (strong, nonatomic) IBOutlet UIView *viewChallengeInfo;
-
 @property (strong, nonatomic) IBOutlet UIView *leftPanel;
 @property (strong, nonatomic) IBOutlet UIView *rightPanel;
 
@@ -42,8 +40,8 @@
 {
     [super viewDidLoad];
     
-    self.viewChallengeInfo.layer.cornerRadius = 4.0f;
     self.leftPanel.backgroundColor = [UIColor mutedOrange];
+    self.rightPanel.layer.cornerRadius = 4.0f;
     self.rightPanel.backgroundColor = [UIColor primaryOrange];
     
     self.challengeDescription.textColor = [UIColor white];
@@ -70,32 +68,38 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)objectsReturned:(int)number {
+    NSInteger count = number;
+    NSString *type = [PFUser currentUser][@"type"];
+    
+    switch (count) {
+        case 0: { // not activated
+            if ([type isEqualToString:@"mentor"]) {
+                [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+            }
+        }
+            break;
+            
+        default: {
+            [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+        }
+            break;
+    }
+}
+
 -(void)exploreChallenge {
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
     
-    __block NSInteger count;
     
-    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            count = number;
-
-            NSString *type = [PFUser currentUser][@"type"];
-            switch (count) {
-                case 0: // not activated
-                    if ([type isEqualToString:@"mentor"]) {
-                        [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
-                    }
-                    break;
-                    
-                default: {
-                    [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
-                }
-                    break;
-            }
-        }
-    }];
+    [queryActivated countObjectsInBackgroundWithTarget:self selector:@selector(objectsReturned:)];
     
+    
+//    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+//        if (!error) {
+//            [self objectsReturned:number];
+//        }
+//    }];
 }
 
 #pragma mark - Navigation
@@ -106,7 +110,7 @@
     MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
     
     destination.challenge = self.challenge;
-    destination.challengeNumber = self.challengeNumberText;    
+    destination.challengeNumber = self.challengeNumberText;
 }
 
 @end

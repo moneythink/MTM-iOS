@@ -12,29 +12,30 @@
 
 @property (strong, nonatomic) PFChallenges *challenge;
 
-@property (strong, nonatomic) IBOutlet PFImageView *challengeBanner;
-
-@property (strong, nonatomic) IBOutlet UIView *missionView;
-@property (strong, nonatomic) IBOutlet UIView *rewardsView;
-@property (strong, nonatomic) IBOutlet UIView *instructionsView;
-
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
-@property (strong, nonatomic) IBOutlet UITextView *tagline;
 
+@property (strong, nonatomic) IBOutlet PFImageView *challengeBanner;
+
+
+@property (strong, nonatomic) IBOutlet UIView *rewardsView;
 @property (strong, nonatomic) IBOutlet UILabel *levelLabel;
 @property (strong, nonatomic) IBOutlet UILabel *rewardLabel;
-@property (strong, nonatomic) IBOutlet UILabel *ptsPerPost;
-@property (strong, nonatomic) IBOutlet UILabel *maxPts;
+@property (strong, nonatomic) IBOutlet UILabel *pointsPerPost;
+@property (strong, nonatomic) IBOutlet UILabel *maxPoints;
 @property (strong, nonatomic) IBOutlet UIImageView *levelImage1;
 @property (strong, nonatomic) IBOutlet UIImageView *levelImage2;
 @property (strong, nonatomic) IBOutlet UIImageView *levelImage3;
-
 @property (strong, nonatomic) IBOutlet UIImageView *pillarImage;
 
-@property (strong, nonatomic) IBOutlet UILabel *pointsPerPost;
-@property (strong, nonatomic) IBOutlet UILabel *maxPoints;
 
+
+@property (strong, nonatomic) IBOutlet UIView *missionView;
+@property (strong, nonatomic) IBOutlet UITextView *tagline;
+
+
+
+@property (strong, nonatomic) IBOutlet UIView *instructionsView;
 @property (strong, nonatomic) IBOutlet UILabel *mentorLabel;
 @property (strong, nonatomic) IBOutlet UITextView *mentorInstructions;
 
