@@ -124,6 +124,136 @@
             </objects>
             <point key="canvasLocation" x="-3989" y="-2984"/>
         </scene>
+        <!--User Information View Controller-->
+        <scene sceneID="sK3-ZY-ZbX">
+            <objects>
+                <viewController storyboardIdentifier="infoModal" useStoryboardIdentifierAsRestorationIdentifier="YES" id="lsj-V0-sfj" customClass="MTUserInformationViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="E3v-sg-bLy"/>
+                        <viewControllerLayoutGuide type="bottom" id="ACs-mb-9IF"/>
+                    </layoutGuides>
+                    <view key="view" alpha="0.5" contentMode="scaleToFill" id="ABu-48-4p8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="j2d-8F-SXb">
+                                <rect key="frame" x="20" y="136" width="280" height="284"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Modal info view" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mDN-Gv-a67">
+                                        <rect key="frame" x="11" y="20" width="258" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="O4e-Lt-mny">
+                                        <rect key="frame" x="11" y="50" width="258" height="4"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="4" id="eg1-1t-Kng"/>
+                                        </constraints>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="48b-eN-MfN">
+                                        <rect key="frame" x="239" y="234" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="OK">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="closePopup:" destination="lsj-V0-sfj" eventType="touchUpInside" id="CkB-dH-6Sz"/>
+                                        </connections>
+                                    </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="b8B-ge-1Rq">
+                                        <rect key="frame" x="11" y="62" width="258" height="164"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstItem="O4e-Lt-mny" firstAttribute="top" secondItem="mDN-Gv-a67" secondAttribute="bottom" constant="9" id="02H-CT-zM0"/>
+                                    <constraint firstItem="mDN-Gv-a67" firstAttribute="top" secondItem="j2d-8F-SXb" secondAttribute="top" constant="20" symbolic="YES" id="4kx-k8-eBx"/>
+                                    <constraint firstAttribute="bottom" secondItem="48b-eN-MfN" secondAttribute="bottom" constant="20" id="EmJ-6R-Hzk"/>
+                                    <constraint firstItem="48b-eN-MfN" firstAttribute="trailing" secondItem="b8B-ge-1Rq" secondAttribute="trailing" id="Ipx-pQ-OqJ"/>
+                                    <constraint firstItem="O4e-Lt-mny" firstAttribute="leading" secondItem="b8B-ge-1Rq" secondAttribute="leading" id="Kgz-xu-RZl"/>
+                                    <constraint firstItem="mDN-Gv-a67" firstAttribute="trailing" secondItem="O4e-Lt-mny" secondAttribute="trailing" id="Ue8-PC-XEQ"/>
+                                    <constraint firstItem="O4e-Lt-mny" firstAttribute="leading" secondItem="mDN-Gv-a67" secondAttribute="leading" id="Zru-Vl-QDC"/>
+                                    <constraint firstItem="b8B-ge-1Rq" firstAttribute="top" secondItem="O4e-Lt-mny" secondAttribute="bottom" constant="8" symbolic="YES" id="emg-3A-Jfa"/>
+                                    <constraint firstItem="48b-eN-MfN" firstAttribute="top" secondItem="b8B-ge-1Rq" secondAttribute="bottom" constant="8" symbolic="YES" id="kAL-gz-nZb"/>
+                                    <constraint firstItem="mDN-Gv-a67" firstAttribute="leading" secondItem="j2d-8F-SXb" secondAttribute="leading" constant="11" id="uwP-fG-mAo"/>
+                                    <constraint firstItem="b8B-ge-1Rq" firstAttribute="trailing" secondItem="O4e-Lt-mny" secondAttribute="trailing" id="wWE-w7-PTm"/>
+                                    <constraint firstItem="mDN-Gv-a67" firstAttribute="centerX" secondItem="j2d-8F-SXb" secondAttribute="centerX" id="z1D-EE-Jb8"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="j2d-8F-SXb" firstAttribute="leading" secondItem="ABu-48-4p8" secondAttribute="leading" constant="20" symbolic="YES" id="BsB-JD-QhO"/>
+                            <constraint firstItem="j2d-8F-SXb" firstAttribute="top" secondItem="E3v-sg-bLy" secondAttribute="bottom" constant="116" id="LH1-LY-ge4"/>
+                            <constraint firstAttribute="centerY" secondItem="j2d-8F-SXb" secondAttribute="centerY" constant="6" id="j3p-qa-weW"/>
+                            <constraint firstAttribute="centerX" secondItem="j2d-8F-SXb" secondAttribute="centerX" id="xdL-29-az2"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="EdQ-UO-LAZ"/>
+                    <connections>
+                        <outlet property="fieldsView" destination="j2d-8F-SXb" id="gUq-LR-q29"/>
+                        <outlet property="labelInfoTitle" destination="mDN-Gv-a67" id="xko-oO-8q8"/>
+                        <outlet property="textInfo" destination="b8B-ge-1Rq" id="z0B-vA-bIW"/>
+                        <segue destination="dSU-09-0j2" kind="unwind" unwindAction="unwindToMainMenu:" id="eef-r1-cMS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KaB-Vs-W1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="dSU-09-0j2" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-3822" y="-1896"/>
+        </scene>
+        <!--Home View Controller-->
+        <scene sceneID="MBQ-y5-AQ4">
+            <objects>
+                <viewController storyboardIdentifier="entryPath" useStoryboardIdentifierAsRestorationIdentifier="YES" id="tXl-do-oCH" customClass="MTHomeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="mpA-ue-1t1"/>
+                        <viewControllerLayoutGuide type="bottom" id="cbQ-NI-3NM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Xlb-au-mVL">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rwn-HW-UyY">
+                                <rect key="frame" x="131" y="128" width="85" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="signup/login">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hoC-LX-NpS">
+                                <rect key="frame" x="137" y="338" width="82" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="mentorMain">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XEA-VJ-7Jp">
+                                <rect key="frame" x="137" y="376" width="86" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="studentMain">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" id="5Pn-zc-haf"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Vkh-1o-7nc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3975" y="-2591"/>
+        </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="HHX-ba-Wva">
             <objects>
@@ -1521,7 +1651,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
@@ -3650,9 +3780,9 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     <inferredMetricsTieBreakers>
         <segue reference="qYv-0w-I0f"/>
         <segue reference="iSW-sc-15K"/>
+        <segue reference="fM9-bL-F9m"/>
+        <segue reference="Neh-9A-DML"/>
         <segue reference="0TQ-j3-ME3"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="Pqy-YU-1Il"/>
         <segue reference="3vf-te-PYL"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="VFk-5D-gdp"/>
