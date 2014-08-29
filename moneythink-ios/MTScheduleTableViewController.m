@@ -12,6 +12,9 @@
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
+@property (strong, nonatomic) NSArray *availableChallenges;
+@property (strong, nonatomic) NSArray *futureChallenges;
+
 @end
 
 @implementation MTScheduleTableViewController
@@ -20,20 +23,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom the table
-        
-        // The className to query on
-        self.parseClassName = [PFScheduledActivations parseClassName];
-        
-        // The key of the PFObject to display in the label of the default cell style
-        self.textKey = @"challenge_number";
-        
-        // The title for this table in the Navigation Controller.
         self.title = @"Challenge Schedule";
-        
-        // Whether the built-in pull-to-refresh is enabled
-        self.pullToRefreshEnabled = YES;
-        
     }
     return self;
 }
@@ -42,6 +32,34 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
+    [queryActivations whereKey:@"activated" equalTo:@YES];
+    [queryActivations orderByAscending:@"challenge_number"];
+
+    [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
+        if (!error) {
+            self.availableChallenges = availableObjects;
+            [self.tableView reloadData];
+        } else {
+            NSLog(@"error");
+        }
+    }];
+
+    
+    PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
+    [queryFuture whereKey:@"activated" equalTo:@NO];
+    [queryFuture orderByAscending:@"challenge_number"];
+
+    [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
+        if (!error) {
+            self.futureChallenges = scheduledObjects;
+            [self.tableView reloadData];
+        } else {
+            
+        }
+    }];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -50,46 +68,51 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Parse
-
-- (void)objectsDidLoad:(NSError *)error {
-    [super objectsDidLoad:error];
-    
-    // This method is called every time objects are loaded from Parse via the PFQuery
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSInteger sections = 2;
+    return sections;
 }
 
-- (void)objectsWillLoad {
-    [super objectsWillLoad];
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSInteger rows;
     
-    // This method is called before a PFQuery is fired to get more objects
-}
-
-
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
-- (PFQuery *)queryForTable {
-    
-    PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
-    
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
-        queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    switch (section) {
+        case 0:
+            rows = self.availableChallenges.count;
+            break;
+            
+        default:
+            rows = self.futureChallenges.count;
+            break;
     }
     
-    [queryActivations orderByAscending:@"challenge_number"];
+    return rows;
+}
+
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSString *title;
     
-    return queryActivations;
+    switch (section) {
+        case 0:
+            title = @"AVAILABLE CHALLENGES";
+            break;
+            
+        default:
+            title = @"FUTURE CHALLENGES";
+            break;
+    }
+    
+    return title;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    
+    [header.textLabel setTextColor:[UIColor blackColor]];
+    [header.contentView setBackgroundColor:[UIColor mutedOrange]];
 }
 
-
-// Override to customize the look of a cell representing an object. The default is to display
-// a UITableViewCellStyleDefault style cell with the label being the first key in the object.
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *CellIdentifier = @"activationCell";
     
     MTActivationTableViewCell *cell = (MTActivationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -97,7 +120,23 @@
         cell = [[MTActivationTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
     
-    PFScheduledActivations *activation = (PFScheduledActivations *)object;
+    NSInteger section = indexPath.section;
+    NSInteger row = indexPath.row;
+    
+    PFChallengesActivated *activation = [[PFChallengesActivated alloc] initWithClassName:[PFChallengesActivated parseClassName]];
+    
+    switch (section) {
+        case 0: {
+            activation = self.availableChallenges[row];
+        }
+            break;
+            
+        default: {
+            activation = self.futureChallenges[row];
+        }
+            break;
+    }
+    
     id challengeNumber = activation[@"challenge_number"];
     
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
@@ -116,14 +155,7 @@
         }
     }];
     
-    BOOL activated = [activation[@"activated"] boolValue];
-    
-    if (activated) {
-        [cell setBackgroundColor:[UIColor primaryGreen]];
-    } else {
-        [cell setBackgroundColor:[UIColor white]];
-    }
-
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
 }
 
@@ -132,22 +164,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
- 
-
-}
- */
 
 @end

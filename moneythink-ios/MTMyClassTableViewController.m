@@ -99,7 +99,7 @@
 // Override to customize what kind of query to perform on the class. The default is to query for
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
-    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
+    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
     self.challengeNumber = postTabBarViewController.challengeNumber;
     
     self.className = [PFUser currentUser][@"class"];

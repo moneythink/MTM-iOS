@@ -67,6 +67,8 @@
     [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
     [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];
     
+    [[UISwitch appearance] setOnTintColor:[UIColor primaryGreen]];
+    
     [Crashlytics startWithAPIKey:@"f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e"];
     
     return YES;
