@@ -42,7 +42,7 @@
             self.availableChallenges = availableObjects;
             [self.tableView reloadData];
         } else {
-            NSLog(@"error");
+            NSLog(@"error - %@", error);
         }
     }];
 

@@ -7,6 +7,7 @@
 //
 
 #import "MTPostsTabBarViewController.h"
+#import "MTCommentViewController.h"
 
 @interface MTPostsTabBarViewController ()
 
@@ -39,8 +40,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     
-    self.title = self.challenge[@"title"];
-    
+//    self.title = self.challenge[@"title"];
+    self.navigationItem.title = self.challenge[@"title"];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,8 +56,19 @@
     [self performSegueWithIdentifier:@"commentSegue" sender:self];
 }
 
+ #pragma mark - Navigation
+ 
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+     MTCommentViewController *destination = (MTCommentViewController *)[segue destinationViewController];
+     
+     destination.challenge = self.challenge;
+ }
+
+
 - (IBAction)unwindToPostsTabBar:(UIStoryboardSegue *)sender
 {
 }
+
+
 
 @end

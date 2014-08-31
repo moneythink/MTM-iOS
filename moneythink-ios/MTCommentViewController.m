@@ -12,7 +12,7 @@
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 
-@property (strong, nonatomic) IBOutlet PFImageView *postImage;
+@property (strong, nonatomic) PFImageView *postImage;
 @property (strong, nonatomic) IBOutlet UITextView *postText;
 
 @property (strong, nonatomic) PFChallengePost *challengePost;
@@ -60,6 +60,10 @@
     UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(commentDoneButton)];
     self.navigationItem.rightBarButtonItem = shareBarButton;
     
+}
+
+- (void)viewWillUnload {
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -153,7 +157,7 @@
         UIGraphicsEndImageContext();
     }
     
-    self.postImage.image = image;
+    self.postImage = [[PFImageView alloc] initWithImage:image];
     [self.chooseImageButton setImage:image forState:UIControlStateNormal];
     
     [self dismissViewControllerAnimated:NO completion:NULL];
@@ -176,13 +180,13 @@
         
         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (!error) {
-                NSLog(@"text saved");
+
             } else {
                 NSLog(@"text error - %@", error);
             }
         }];
 
-        if (self.postImage) {
+        if (self.postImage.image) {
             NSString *fileName = @"post_image.png";
             NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
 
@@ -195,13 +199,10 @@
 
                         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
-                                NSLog(@"text saved");
                             } else {
                                 NSLog(@"text error - %@", error);
                             }
                         }];
-                        
-                        NSLog(@"picture saved");
                     } else {
                         NSLog(@"picture error - %@", error);
                     }

@@ -10,6 +10,7 @@
 #import "MTMentorStudentProfileViewController.h"
 
 @interface MTPostViewController ()
+
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) PFUser *postUser;
 
@@ -122,7 +123,6 @@
             NSString *firstName = self.postUser[@"first_name"];
             NSString *lastName = self.postUser[@"last_name"];
             self.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-//            self.postUsername.text = [self.postUser username];
             self.postUserImage.file = self.postUser[@"profile_picture"];
             
             [self.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -156,8 +156,12 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
+    CGRect frame = self.view.frame;
+    frame = self.scrollFields.frame;
+    frame = self.commentsTableView.frame;
+    
     CGFloat w = self.scrollFields.frame.size.width;
-    CGFloat h = self.commentsTableView.frame.origin.y + self.commentsTableView.frame.size.height + 88.0f;
+    CGFloat h = self.commentsTableView.frame.origin.y + self.commentsTableView.frame.size.height + 108.0f;
 
     CGSize size = CGSizeMake(w, h);
 
@@ -286,14 +290,13 @@
     
     [self.navigationController popViewControllerAnimated:YES];
 
-//    [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//        if (!error) {
-//            [self.navigationController popViewControllerAnimated:YES];
-//            NSLog(@"no error");
-//        } else {
-//            NSLog(@"error");
-//        }
-//    }];
+    [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (!error) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
 }
 
 - (IBAction)deletePostTapped:(id)sender {
@@ -376,7 +379,6 @@
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"button1Tapped");
             [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];
@@ -397,7 +399,6 @@
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"button2Tapped");
             [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];

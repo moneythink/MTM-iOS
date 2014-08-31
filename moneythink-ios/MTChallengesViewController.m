@@ -121,6 +121,7 @@
     NSInteger count = [queryActivated countObjects];
     challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
     
+    challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
     challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
     challengeContentViewController.challengeDescriptionText = challenge[@"description"];

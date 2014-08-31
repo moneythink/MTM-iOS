@@ -40,9 +40,6 @@
 {
     [super viewDidLoad];
     
-    self.leftPanel.backgroundColor = [UIColor mutedOrange];
-    self.rightPanel.layer.cornerRadius = 4.0f;
-    self.rightPanel.backgroundColor = [UIColor primaryOrange];
     
     self.challengeDescription.textColor = [UIColor white];
     
@@ -60,6 +57,18 @@
     self.challengeNumber.text = self.challengeNumberText;
     self.challengeDescription.text = self.challengeDescriptionText;
     self.challengePoints.text = [self.challengePointsText stringByAppendingString:@" pts"];
+    
+    NSString *pillar = self.challengePillarText;
+    
+    if ([pillar isEqualToString:@"Money Manager"]) {
+        self.leftPanel.backgroundColor = [UIColor mutedOrange];
+        self.rightPanel.backgroundColor = [UIColor primaryOrange];
+    } else {
+        self.leftPanel.backgroundColor = [UIColor mutedGreen];
+        self.rightPanel.backgroundColor = [UIColor primaryGreen];
+    }
+
+    self.rightPanel.layer.cornerRadius = 4.0f;
 }
 
 - (void)didReceiveMemoryWarning

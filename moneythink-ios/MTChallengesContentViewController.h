@@ -14,6 +14,7 @@
 
 @property (nonatomic) NSUInteger pageIndex;
 
+@property (nonatomic, strong) NSString *challengePillarText;
 @property (nonatomic, strong) NSString *challengeStateText;
 @property (nonatomic, strong) NSString *challengeNumberText;
 @property (nonatomic, strong) NSString *challengeTitleText;

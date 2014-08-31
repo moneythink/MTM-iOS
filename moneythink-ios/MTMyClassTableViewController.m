@@ -47,20 +47,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     NSInteger challengNumber = [self.challengeNumber intValue];
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-
+    
     [challengeQuery orderByDescending:@"createdAt"];
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
             self.challenge = challenge;
-
+            
             NSArray *buttons = challenge[@"buttons"];
             self.hasButtons = buttons.count;
-
+            
             [self.tableView reloadData];
         }
     }];
@@ -69,7 +69,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"My Class";
-
+    
     [self queryForTable];
     [self.tableView reloadData];
 }
@@ -99,13 +99,17 @@
 // Override to customize what kind of query to perform on the class. The default is to query for
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
-    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
+    MTPostsTabBarViewController *postTabBarViewController;
+    postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
+    if (!postTabBarViewController) {
+        postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
+    }
     self.challengeNumber = postTabBarViewController.challengeNumber;
     
     self.className = [PFUser currentUser][@"class"];
     
     NSPredicate *challengeNumber = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@",
-                       [self.challengeNumber intValue], self.className];
+                                    [self.challengeNumber intValue], self.className];
     
     
     PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengeNumber];
@@ -137,13 +141,13 @@
     } else {
         CellIdentifier = @"postCellNoImage";
     }
-
+    
     
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[MTPostsTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
     }
-
+    
     if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
         cell.deletePost.hidden = NO;
         cell.deletePost.tag = indexPath.row;
@@ -151,7 +155,7 @@
     } else {
         cell.deletePost.hidden = YES;
     }
-
+    
     cell.button1.tag = indexPath.row;
     cell.button2.tag = indexPath.row;
     
@@ -165,7 +169,7 @@
     [[cell.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
     [cell.button2 setTintColor:[UIColor white]];
     [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = post [@"buttons_clicked"];
     
@@ -188,13 +192,14 @@
         [cell.button1 setTitle:button1Title forState:UIControlStateNormal];
         [cell.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
-
-    cell.userName.text = [user username];
+    
+//    cell.userName.text = [user username];
+    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
     cell.comments.text = @"";
     
     cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];
-
+    
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
@@ -223,7 +228,7 @@
         cell.postText.attributedText = hashtag;
     }];
     // Attributed hashtag
-
+    
     
     
     if (postImage) {
@@ -243,7 +248,7 @@
             }
         }];
     }
-
+    
     NSDate *dateObject = [post createdAt];
     
     if (dateObject) {
@@ -284,7 +289,7 @@
             NSLog(@"error - %@", error);
         }
     }];
-
+    
     return cell;
 }
 
@@ -299,7 +304,7 @@
     
     PFChallengePost *rowObject = self.objects[indexPath.row];
     UIImage *postImage = rowObject[@"picture"];
-
+    
     if (self.hasButtons && postImage) {
         [self performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
     } else if (self.hasButtons) {
@@ -331,10 +336,14 @@
             height = 120.0f;
         }
     } else {
-        NSLog(@"out of bounds");
+
     }
     
     return height;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 64.0f;
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -450,11 +459,11 @@
 {
     NSString *segueIdentifier = [segue identifier];
     
-
+    
     MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
     destinationViewController.challengePost = (PFChallengePost *)sender;
     destinationViewController.challenge = self.challenge;
-
+    
     if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
     } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {
     } else if ([segueIdentifier isEqualToString:@"pushViewPostNoImage"]) {
@@ -481,7 +490,7 @@
 #pragma mark - IBAction methods
 
 - (void)deletePostTapped:(id)sender {
-
+    
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
     
@@ -501,11 +510,8 @@
 }
 
 - (void)likeButtonTapped:(id)sender {
-
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
-    
-    NSLog(@"button tag - %ld", (long)buttonTag);
     
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
@@ -515,14 +521,23 @@
     
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSInteger index = [self.postsLiked indexOfObject:postID];
-    BOOL like = !(index == NSNotFound);
-
+    BOOL like = index == NSNotFound;
     
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!like]} block:^(id object, NSError *error) {
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:like]} block:^(id object, NSError *error) {
         if (!error) {
-            [[PFUser currentUser] refresh];
-            [self.challenge refresh];
-            [post refresh];
+            [[PFUser currentUser] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                self.postsLiked = [PFUser currentUser][@"posts_liked"];
+                NSInteger index = [self.postsLiked indexOfObject:postID];
+                BOOL like = index != NSNotFound;
+                
+                [self.tableView reloadData];
+            }];
+            [self.challenge refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [self.tableView reloadData];
+            }];
+            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [self.tableView reloadData];
+            }];
             
             [self.tableView reloadData];
         } else {
@@ -534,19 +549,16 @@
 - (void)button1Tapped:(id)sender {
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
-
-    NSLog(@"button tag - %ld", (long)buttonTag);
     
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
     
     NSString *userID = [user objectId];
     NSString *postID = [post objectId];
-
+    
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"button1Tapped");
             [[PFUser currentUser] refresh];
             [self.challenge refresh];
             [post refresh];
@@ -562,8 +574,6 @@
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
     
-    NSLog(@"button tag - %ld", (long)buttonTag);
-    
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
     
@@ -573,7 +583,6 @@
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            NSLog(@"button2Tapped");
             [[PFUser currentUser] refresh];
             [self.challenge refresh];
             [post refresh];

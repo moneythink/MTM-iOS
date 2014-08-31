@@ -39,6 +39,7 @@
 
 @property (assign, nonatomic) BOOL reachable;
 
+@property (strong, nonatomic) IBOutlet UIView *fieldBackground;
 @end
 
 @implementation MTEditProfileViewController
@@ -93,8 +94,6 @@
                 self.profileImageLabel.text = @"Add Photo";
                 self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
             }
-            self.profileImageLabel.text = @"Add Photo";
-            self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
         }
         self.userProfileButton.imageView.image = self.profileImage.image;
         self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
@@ -311,16 +310,12 @@
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
     CGFloat w = fieldsFrame.size.width;
-    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
+    CGFloat h = kbTop + 380.0f;
     
     CGRect fieldsContentRect = CGRectMake( x, y, w, h);
     
-    fieldsContentRect   = CGRectMake(x, y, w, kbTop + 320.0f);
-    
     self.viewFields.contentSize = fieldsContentRect.size;
-    
-    self.viewFields.frame = fieldsFrame;
-    
+    self.viewFields.contentOffset = CGPointMake(0.0f, 94.0f);
 }
 
 - (void)keyboardWasDismissed:(NSNotification *)notification

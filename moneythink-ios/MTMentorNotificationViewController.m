@@ -49,7 +49,7 @@
                     }
                 }];
             } else {
-                NSLog(@"error");
+                NSLog(@"error - %@", error);
             }
         }];
         

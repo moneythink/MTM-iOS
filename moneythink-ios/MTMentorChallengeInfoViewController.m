@@ -74,7 +74,6 @@
             self.challengeBanner.file = bannerFile;
             [self.challengeBanner loadInBackground:^(UIImage *image, NSError *error) {
                 if (!error) {
-                    NSLog(@"no error");
                     self.challengeBanner.image = [self imageByScalingAndCroppingForSize:self.challengeBanner.frame.size withImage:image];
                 }
             }];

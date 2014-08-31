@@ -60,9 +60,12 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor white]];
-    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor white]];
+//    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTintColor:[UIColor white]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
     [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
     [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];

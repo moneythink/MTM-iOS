@@ -28,6 +28,8 @@
 @property (strong, nonatomic) IBOutlet UIImageView *managerProgress;
 @property (strong, nonatomic) IBOutlet UIImageView *makerProgress;
 
+@property (strong, nonatomic) IBOutlet UIScrollView *challengesContainer;
+@property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
 @end
 
 @implementation MTStudentMainViewController
@@ -48,6 +50,10 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTintColor:[UIColor white]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+
     self.parentViewController.navigationItem.title = @"Challenges";
     [[PFUser currentUser] refresh];
 }
@@ -59,7 +65,7 @@
 
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
+
     [self loadUserProfile:[PFUser currentUser]];
 }
 
@@ -131,6 +137,12 @@
         self.managerProgress.hidden = NO;
         self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
     }
+
+    CGRect frame= self.scrollFields.frame;
+    CGSize size = self.scrollFields.contentSize;
+    size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + 60.0f);
+    self.scrollFields.contentSize = size;
+    
 }
 
 - (IBAction)buttonUserInfo:(id)sender {
