@@ -45,13 +45,11 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    NSString *segueIdentifier = [segue identifier];
+    
+    PFChallengePost *challengePost = (PFChallengePost *)sender;
     
     MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
-    destinationViewController.challengePost = (PFChallengePost *)sender;
-
-    if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
-    }
+    destinationViewController.challengePost = challengePost;
 }
 
 @end

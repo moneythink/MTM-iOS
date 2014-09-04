@@ -99,12 +99,6 @@
 // Override to customize what kind of query to perform on the class. The default is to query for
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
-    MTPostsTabBarViewController *postTabBarViewController;
-    postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
-    if (!postTabBarViewController) {
-        postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
-    }
-    self.challengeNumber = postTabBarViewController.challengeNumber;
     
     self.className = [PFUser currentUser][@"class"];
     
@@ -342,10 +336,6 @@
     return height;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 64.0f;
-}
-
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
     UIImage *newImage = nil;
@@ -525,21 +515,45 @@
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:like]} block:^(id object, NSError *error) {
         if (!error) {
-            [[PFUser currentUser] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                self.postsLiked = [PFUser currentUser][@"posts_liked"];
-                NSInteger index = [self.postsLiked indexOfObject:postID];
-                BOOL like = index != NSNotFound;
-                
-                [self.tableView reloadData];
+            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
+            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
+            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+//                    self.iLike = !self.iLike;
+                    
+//                    if (self.iLike) {
+//                        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+//                        self.postLikesCount += 1;
+//                    } else {
+//                        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+//                        self.postLikesCount -= 1;
+//                    }
+//                    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+//                    
+//                    [self.currentUser refresh];
+//                    [self.challenge refresh];
+//                    [self.challengePost refresh];
+//                    
+//                    [self.view setNeedsLayout];
+                }
             }];
-            [self.challenge refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self.tableView reloadData];
-            }];
-            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self.tableView reloadData];
-            }];
-            
-            [self.tableView reloadData];
+//        }
+//            {
+//            [[PFUser currentUser] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                self.postsLiked = [PFUser currentUser][@"posts_liked"];
+//                NSInteger index = [self.postsLiked indexOfObject:postID];
+//                BOOL like = index != NSNotFound;
+//                
+//                [self.tableView reloadData];
+//            }];
+//            [self.challenge refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                [self.tableView reloadData];
+//            }];
+//            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                [self.tableView reloadData];
+//            }];
+//            
+//            [self.tableView reloadData];
         } else {
             NSLog(@"error - %@", error);
         }

@@ -34,14 +34,14 @@
     }
 }
 
-+ (PFSignupCodes *)newStudentSignUpCodeForClass:(PFClasses *)class;
++ (PFSignupCodes *)newStudentSignUpCodeForClass:(PFClasses *)studentClass;
 {
-    return [self newSignUpCodeForClass:class forUserType:@"student"];
+    return [self newSignUpCodeForClass:studentClass forUserType:@"student"];
 }
 
-+ (PFSignupCodes *)newMentorSignUpCodeForClass:(PFClasses *)class;
++ (PFSignupCodes *)newMentorSignUpCodeForClass:(PFClasses *)mentorClass;
 {
-    return [self newSignUpCodeForClass:class forUserType:@"mentor"];
+    return [self newSignUpCodeForClass:mentorClass forUserType:@"mentor"];
 }
 
 + (PFSignupCodes *)newSignUpCodeForClass:(PFClasses *)class forUserType:(NSString *)userType

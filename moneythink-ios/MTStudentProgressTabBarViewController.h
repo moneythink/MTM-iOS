@@ -10,7 +10,7 @@
 
 @interface MTStudentProgressTabBarViewController : UITabBarController
 
-@property (nonatomic, strong) PFClasses *class;
+@property (nonatomic, strong) PFClasses *userClass;
 @property (nonatomic, strong) PFUser *mentor;
 @property (nonatomic, strong) NSArray *studentsForMentor;
 

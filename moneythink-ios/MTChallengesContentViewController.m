@@ -10,6 +10,8 @@
 #import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewController.h"
 
+#import "MTStudentChallengeRoomViewController.h"
+
 @interface MTChallengesContentViewController ()
 
 @property (weak, nonatomic) IBOutlet UILabel *challengeState;
@@ -84,16 +86,27 @@
     switch (count) {
         case 0: { // not activated
             if ([type isEqualToString:@"mentor"]) {
-                [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+                [self performSegueWithIdentifier:@"studentChallengeRoom" sender:self];
             }
         }
             break;
             
         default: {
-            [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
+            [self performSegueWithIdentifier:@"studentChallengeRoom" sender:self];
         }
             break;
     }
+}
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
+{
+//    if (self.tableView == self.searchDisplayController.searchResultsTableView) {
+//        
+//        [self performSegueWithIdentifier:@"showDetail"sender:self];
+//        return YES;
+//    }
+    
+    return NO;
 }
 
 -(void)exploreChallenge {
@@ -111,12 +124,14 @@
 //    }];
 }
 
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
+//    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
+    MTStudentChallengeRoomViewController *destination = (MTStudentChallengeRoomViewController *)[segue destinationViewController];
     
     destination.challenge = self.challenge;
     destination.challengeNumber = self.challengeNumberText;

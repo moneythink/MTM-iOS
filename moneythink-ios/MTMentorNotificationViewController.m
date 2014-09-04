@@ -28,15 +28,21 @@
     if (self) {
         PFUser *user = [PFUser currentUser];
         NSString *userID = [user objectId];
+        NSString *className = user[@"class"];
+        NSString *schoolName = user[@"school"];
         
         [PFCloud callFunctionInBackground:@"markAllNotificationsRead" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
             if (!error) {
                 PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
                 [queryMe whereKey:@"recipient" equalTo:user];
+                [queryMe whereKey:@"class" equalTo:className];
+                [queryMe whereKey:@"school" equalTo:schoolName];
                 [queryMe whereKey:@"read_by" notEqualTo:userID];
                 
                 PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
                 [queryNoOne whereKeyDoesNotExist:@"recipient"];
+                [queryNoOne whereKey:@"class" equalTo:className];
+                [queryNoOne whereKey:@"school" equalTo:schoolName];
                 [queryNoOne whereKey:@"read_by" notEqualTo:userID];
                 
                 PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
@@ -111,20 +117,32 @@
 
 - (PFQuery *)queryForTable {
     PFUser *user = [PFUser currentUser];
-    PFQuery *query = [[PFQuery alloc] init];
-    
+    NSString *userID = [user objectId];
+    NSString *className = user[@"class"];
+    NSString *schoolName = user[@"school"];
+
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
-    [queryMe whereKey:@"read_by" notEqualTo:[user objectId]];
+    [queryMe whereKey:@"class" equalTo:className];
+    [queryMe whereKey:@"school" equalTo:schoolName];
+    
+    [queryMe whereKey:@"read_by" notEqualTo:userID];
+    
     
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryNoOne whereKeyDoesNotExist:@"recipient"];
-    [queryNoOne whereKey:@"read_by" notEqualTo:[user objectId]];
+    [queryNoOne whereKey:@"class" equalTo:className];
+    [queryNoOne whereKey:@"school" equalTo:schoolName];
+    
+    [queryNoOne whereKey:@"read_by" notEqualTo:userID];
+    
     
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryActivated whereKeyExists:@"challenge_activated"];
+    [queryActivated whereKey:@"class" equalTo:className];
+    [queryActivated whereKey:@"school" equalTo:schoolName];
     
-    query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated]];
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated]];
     
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
@@ -176,7 +194,6 @@
         cell.message.text = [NSString stringWithFormat:@"Comment: %@", post[@"comment_text"]];
         
     } else if (notification[@"post_liked"]) { // ******************
-        self.notificationType = @"post";
         self.notificationType = @"post";
         PFChallengePost *post = notification[@"post_liked"];
         cell.message.text = [NSString stringWithFormat:@"Liked: %@", post[@"post_text"]];

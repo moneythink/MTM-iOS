@@ -11,7 +11,6 @@
 @interface MTPostsTabBarViewController : UITabBarController
 
 @property (nonatomic, strong) PFChallenges *challenge;
-
 @property (nonatomic, strong) NSString *challengeNumber;
 
 @end

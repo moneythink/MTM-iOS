@@ -7,18 +7,20 @@
 //
 
 #import "MTStudentChallengeRoomViewController.h"
+#import "MTCommentViewController.h"
 
 @interface MTStudentChallengeRoomViewController ()
+
+@property (strong, nonatomic) IBOutlet UISegmentedControl *challengeRoomControls;
 
 @end
 
 @implementation MTStudentChallengeRoomViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
     if (self) {
-        // Custom initialization
+
     }
     return self;
 }
@@ -26,24 +28,68 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [[UISegmentedControl appearance] setTintColor:[UIColor primaryOrange]];
+    
+    UIImage *postImage = [UIImage imageNamed:@"post"];
+    UIBarButtonItem *postComment = [[UIBarButtonItem alloc]
+                                    initWithImage:postImage
+                                    style:UIBarButtonItemStyleBordered
+                                    target:self
+                                    action:@selector(postCommentTapped)];
+    
+    self.navigationItem.rightBarButtonItem = postComment;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateControlButton:) name:@"challengeRoomSwipe" object:nil];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:NO];
+    self.navigationItem.title = nil;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-/*
+#pragma mark - Methods
+
+- (void)updateControlButton:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    NSInteger index = [[userInfo valueForKey:@"index"] intValue];
+    self.challengeRoomControls.selectedSegmentIndex = index;
+}
+
+- (IBAction)controlTapped:(id)sender {
+    NSInteger index = [self.challengeRoomControls selectedSegmentIndex];
+    [self.destinationVC.pageViewController setViewControllers:@[self.destinationVC.viewControllers[index]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+}
+
+- (void)postCommentTapped {
+    self.navigationItem.title = @"Cancel";
+    [self performSegueWithIdentifier:@"commentSegue" sender:self];
+}
+
+
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+
+    NSString *segueID = [segue identifier];
+    
+    if ([segueID isEqualToString:@"commentSegue"]) {
+        MTCommentViewController *destinationVC = (MTCommentViewController *)[segue destinationViewController];
+        destinationVC.challenge = self.challenge;
+    } else {
+        self.destinationVC = (MTStudentChallengeRoomContentViewController *)[segue destinationViewController];
+        self.destinationVC.challenge = self.challenge;
+        self.destinationVC.challengeNumber = self.challengeNumber;
+    }
 }
-*/
 
 @end

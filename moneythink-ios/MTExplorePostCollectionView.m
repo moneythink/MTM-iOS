@@ -34,13 +34,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
     
-    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
-    self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d",
-                                             challengNumber];
+    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
 
@@ -63,6 +59,10 @@
     
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:NO];
+}
+
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -71,8 +71,6 @@
 
 - (PFQuery *)queryForCollection
 {
-    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.navigationController.parentViewController;
-    self.challenge = postTabBarViewController.challenge;
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
     NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d",
                                              challengNumber];
@@ -105,47 +103,46 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     MTExploreCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exploreChallenge" forIndexPath:indexPath];
-    
-    PFChallengePost *post = self.posts[indexPath.row];
-    PFUser *user = post[@"user"];
-    
-    cell.postText.text = post[@"post_text"];
-    cell.postUser.text = [user username];
-    
-    
-    
-    cell.postImage.file = post[@"picture"];
-    [cell.postImage loadInBackground];
-    [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                CGRect frame = cell.postImage.frame;
-                cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                [cell setNeedsDisplay];
-            } else {
-                cell.postImage.image = nil;
+
+    if (indexPath.row <= self.posts.count) {
+        PFChallengePost *post = self.posts[indexPath.row];
+        PFUser *user = post[@"user"];
+        
+        cell.postText.text = post[@"post_text"];
+        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        
+        cell.postImage.file = post[@"picture"];
+        [cell.postImage loadInBackground];
+        [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+            if (!error) {
+                if (image) {
+                    CGRect frame = cell.postImage.frame;
+                    cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
+                    [cell setNeedsDisplay];
+                } else {
+                    cell.postImage.image = [UIImage imageNamed:@"photo_post"];
+                }
             }
-        }
-    }];
-    
-    
-    
-    cell.postUserImage.file = user[@"profile_picture"];
-    
-    [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                CGRect frame = cell.postUserImage.frame;
-                cell.postUserImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                [self.view setNeedsDisplay];
-            } else {
-                cell.postImage.image = nil;
+        }];
+        
+        cell.postUserImage.file = user[@"profile_picture"];
+        
+        [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
+            if (!error) {
+                if (image) {
+                    CGRect frame = cell.postUserImage.frame;
+                    cell.postUserImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
+                    [self.view setNeedsDisplay];
+                } else {
+                    cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
+                }
             }
-        }
-    }];
-    
-    
-    return cell;
+        }];
+        
+        return cell;
+    } else {
+        return nil;
+    }
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -221,24 +218,15 @@
     UIImage *postImage = rowObject[@"picture"];
     
     if (self.hasButtons && postImage) {
-        [self.navigationController performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
+        [self performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
     } else if (self.hasButtons) {
-        [self.navigationController performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
+        [self performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
     } else if (postImage) {
-        [self.navigationController performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
+        [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
     } else {
-        [self.navigationController performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
+        [self performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
     }
 }
-
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect
- {
- // Drawing code
- }
- */
 
 #pragma mark - Navigation
 
@@ -247,7 +235,7 @@
 {
     NSString *segueIdentifier = [segue identifier];
     
-    if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
+    if ([segueIdentifier hasPrefix:@"pushViewPost"]) {
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
         destinationViewController.challenge = self.challenge;

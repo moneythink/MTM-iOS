@@ -17,15 +17,6 @@
 
 @implementation MTChallengesViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
@@ -44,6 +35,8 @@
 
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challenge_number"];
+    [allChallenges whereKeyDoesNotExist:@"school"];
+    [allChallenges whereKeyDoesNotExist:@"class"];
 
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         [MBProgressHUD hideHUDForView:self.view animated:NO];

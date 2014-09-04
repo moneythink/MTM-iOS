@@ -8,12 +8,6 @@
 
 #import "MTStudentTabBarViewController.h"
 
-//#ifdef DEBUG
-//static BOOL button1 = YES;
-//#else
-//static BOOL button1 = NO;
-//#endif
-
 @interface MTStudentTabBarViewController ()
 
 @end
@@ -42,15 +36,6 @@
 
     self.delegate = self;
 
-//    if (button1) {
-//        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-//                                    initWithTitle:@"x"
-//                                    style:UIBarButtonItemStyleBordered
-//                                    target:self
-//                                    action:@selector(tappedButtonItem1:)];
-//        
-//        self.navigationItem.rightBarButtonItem = button1;
-//    }
 }
 
 - (void)viewWillAppear:(BOOL)animated

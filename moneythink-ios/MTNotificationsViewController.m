@@ -86,11 +86,32 @@
 // all objects ordered by createdAt descending.
 - (PFQuery *)queryForTable {
     PFUser *user = [PFUser currentUser];
+    NSString *userID = [user objectId];
+    NSString *className = user[@"class"];
+    NSString *schoolName = user[@"school"];
     
-    PFQuery *query = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [query whereKey:@"read_by" notEqualTo:[user objectId]];
-    [query whereKey:@"recipient" equalTo:[user objectId]];
-
+    
+    PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryMe whereKey:@"recipient" equalTo:user];
+    [queryMe whereKey:@"read_by" notEqualTo:userID];
+    [queryMe whereKey:@"class" equalTo:className];
+    [queryMe whereKey:@"school" equalTo:schoolName];
+    
+    
+    PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryNoOne whereKeyDoesNotExist:@"recipient"];
+    [queryNoOne whereKey:@"read_by" notEqualTo:userID];
+    [queryNoOne whereKey:@"class" equalTo:className];
+    [queryNoOne whereKey:@"school" equalTo:schoolName];
+    
+    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryActivated whereKeyExists:@"challenge_activated"];
+    
+    [queryActivated whereKey:@"school" equalTo:schoolName];
+    [queryActivated whereKey:@"read_by" notEqualTo:userID];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated]];
+    
     // If no objects are loaded in memory, we look to the cache first to fill the table
     // and then subsequently do a query against the network.
     if ([self.objects count] == 0) {

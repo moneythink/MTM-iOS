@@ -39,6 +39,7 @@
 		5829B01219A283920054BEC6 /* bg_money_mananger_5.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00919A283920054BEC6 /* bg_money_mananger_5.png */; };
 		5829B01319A283920054BEC6 /* bg_money_mananger_6.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */; };
 		5829B01419A283920054BEC6 /* bg_money_mananger_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */; };
+		583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */; };
 		5849666F19AFC00E00672818 /* photo_post@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5849666D19AFC00E00672818 /* photo_post@2x.png */; };
 		5849667019AFC00E00672818 /* photo_post.png in Resources */ = {isa = PBXBuildFile; fileRef = 5849666E19AFC00E00672818 /* photo_post.png */; };
 		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
@@ -207,6 +208,7 @@
 		58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
 		58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */; };
+		58DDC0F819B7ACDF006A910C /* MTModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 58DDC0F619B7ACDF006A910C /* MTModel.xcdatamodeld */; };
 		58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */; };
 		58DE6D98199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */; };
 		58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */; };
@@ -261,6 +263,8 @@
 		5829B00919A283920054BEC6 /* bg_money_mananger_5.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_5.png; sourceTree = "<group>"; };
 		5829B00A19A283920054BEC6 /* bg_money_mananger_6.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_6.png; sourceTree = "<group>"; };
 		5829B00B19A283920054BEC6 /* bg_money_mananger_7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_mananger_7.png; sourceTree = "<group>"; };
+		583787DC19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentChallengeRoomContentViewController.h; sourceTree = "<group>"; };
+		583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentChallengeRoomContentViewController.m; sourceTree = "<group>"; };
 		5849666D19AFC00E00672818 /* photo_post@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo_post@2x.png"; sourceTree = "<group>"; };
 		5849666E19AFC00E00672818 /* photo_post.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = photo_post.png; sourceTree = "<group>"; };
 		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
@@ -494,6 +498,7 @@
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
 		58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorTabBarViewControlle.h; sourceTree = "<group>"; };
 		58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorTabBarViewControlle.m; sourceTree = "<group>"; };
+		58DDC0F719B7ACDF006A910C /* MTModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MTModel.xcdatamodel; sourceTree = "<group>"; };
 		58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTActivationTableViewCell.h; sourceTree = "<group>"; };
 		58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTActivationTableViewCell.m; sourceTree = "<group>"; };
 		58DE6D91199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentPostsTableViewCell.h; sourceTree = "<group>"; };
@@ -563,6 +568,7 @@
 		58676B131974268E0070F604 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				58DDC0F619B7ACDF006A910C /* MTModel.xcdatamodeld */,
 				58669F4419772D00009BC13C /* PFChallengeBanner.h */,
 				58669F4519772D00009BC13C /* PFChallengeBanner.m */,
 				58669F4619772D00009BC13C /* PFChallengePost.h */,
@@ -648,6 +654,8 @@
 				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
 				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
 				58509440197C386100EDC969 /* MTChallengesContentViewController.m */,
+				583787DC19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.h */,
+				583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */,
 				5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */,
 				5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */,
 				58D60AE21984636100DF247E /* MTChallengePostsViewController.h */,
@@ -1225,11 +1233,13 @@
 			files = (
 				5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */,
 				5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */,
+				583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */,
 				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
+				58DDC0F819B7ACDF006A910C /* MTModel.xcdatamodeld in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
@@ -1542,6 +1552,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		58DDC0F619B7ACDF006A910C /* MTModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				58DDC0F719B7ACDF006A910C /* MTModel.xcdatamodel */,
+			);
+			currentVersion = 58DDC0F719B7ACDF006A910C /* MTModel.xcdatamodel */;
+			path = MTModel.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 5876E29D196F2C1F00C176EC /* Project object */;
 }

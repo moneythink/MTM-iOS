@@ -10,4 +10,6 @@
 
 @interface MTCollectionNavigationViewController : UINavigationController
 
+@property (strong, nonatomic) PFChallenges *challenge;
+
 @end

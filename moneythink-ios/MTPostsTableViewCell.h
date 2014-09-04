@@ -20,6 +20,12 @@
 @property (strong, nonatomic) IBOutlet UILabel *likes;
 @property (strong, nonatomic) IBOutlet UILabel *comments;
 
+@property (strong, nonatomic) IBOutlet UIButton *likePost;
+@property (strong, nonatomic) NSArray *postsLiked;
+@property (assign, nonatomic) NSInteger postLikesCount;
+@property (strong, nonatomic) IBOutlet UILabel *postLikes;
+@property (assign, nonatomic) BOOL iLike;
+
 @property (strong, nonatomic) IBOutlet UIButton *likeButton;
 @property (strong, nonatomic) IBOutlet UIButton *commentBUtton;
 

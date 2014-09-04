@@ -11,4 +11,6 @@
 
 @interface MTMentorChallengeInfoViewController : UIViewController
 
+@property (strong, nonatomic) PFChallenges *challenge;
+
 @end

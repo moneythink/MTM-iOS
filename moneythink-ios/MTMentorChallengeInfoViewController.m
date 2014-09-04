@@ -10,8 +10,6 @@
 
 @interface MTMentorChallengeInfoViewController ()
 
-@property (strong, nonatomic) PFChallenges *challenge;
-
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 
 
@@ -59,9 +57,6 @@
     
     [self.missionView setBackgroundColor:[UIColor primaryOrange]];
     [self.rewardsView setBackgroundColor:[UIColor mutedOrange]];
-    
-    MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
-    self.challenge = postTabBarViewController.challenge;
     
     NSInteger challenge_number = [self.challenge[@"challenge_number"] intValue];
     NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInt:challenge_number]];
@@ -142,16 +137,15 @@
     CGRect scrollViewFrame = self.scrollView.frame;
 
     CGSize contentSize = self.scrollView.contentSize;
-    CGRect mentorInstructionsFrame = self.mentorInstructions.frame;
     CGRect instructionsViewFrame = self.instructionsView.frame;
     
     CGFloat contentHeight = instructionsViewFrame.origin.y + instructionsViewFrame.size.height + 44.0f;
     contentSize = CGSizeMake(scrollViewFrame.size.width, contentHeight);
     
     CGFloat x = scrollViewFrame.origin.x;
-    CGFloat y = scrollViewFrame.origin.y + 44.0f;
+    CGFloat y = scrollViewFrame.origin.y;
     CGFloat w = scrollViewFrame.size.width;
-    CGFloat h = self.view.frame.size.height - 44.0f;
+    CGFloat h = self.view.frame.size.height;
     
     self.scrollView.frame = CGRectMake(x, y, w, h);
     self.scrollView.contentSize = contentSize;
