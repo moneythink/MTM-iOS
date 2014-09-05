@@ -11,8 +11,6 @@
 
 @interface MTStudentChallengeRoomContentViewController ()
 
-@property (nonatomic, assign) NSInteger pendingIndex;
-
 @end
 
 @implementation MTStudentChallengeRoomContentViewController
@@ -29,25 +27,10 @@
 {
     [super viewDidLoad];
 
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:NO];
-    
-    // Create page view controller
     self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"studentChallengeRoomView"];
-    CGRect frame = self.pageViewController.view.frame;
-    CGFloat x = frame.origin.x;
-    CGFloat y = frame.origin.y;
-    CGFloat width = frame.size.width;
-    CGFloat height = frame.size.height - 28.0f;
-    frame = CGRectMake(x, y, width, height);
-    self.pageViewController.view.frame = frame;
     
     self.pageViewController.dataSource = self;
     self.pageViewController.delegate = self;
-    
-    NSArray *viewControllers = [NSArray array];
     
     self.exploreCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"exploreCollectionView"];
     self.exploreCollectionView.challenge = self.challenge;
@@ -60,13 +43,17 @@
     self.challengeInfoView.challenge = self.challenge;
     
     self.viewControllers = @[self.myClassTableView, self.exploreCollectionView, self.challengeInfoView];
-    viewControllers = @[self.myClassTableView];
+    self.pageViewControllers = @[self.myClassTableView];
     
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self.pageViewController setViewControllers:self.pageViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     [self addChildViewController:self.pageViewController];
     [self.view addSubview:self.pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -100,14 +87,12 @@
     }
     
     index--;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"challengeRoomSwipe" object:self userInfo:@{@"index": [NSNumber numberWithInteger:index]}];
     return self.viewControllers[index];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
     NSUInteger index = [self.viewControllers indexOfObject:viewController];
-    //    NSUInteger index = ((MTChallengesContentViewController *)viewController).pageIndex;
     
     if (index == NSNotFound) {
         return nil;
@@ -118,7 +103,6 @@
         return nil;
     }
     
-//    [[NSNotificationCenter defaultCenter] postNotificationName:@"challengeRoomSwipe" object:self userInfo:@{@"index": [NSNumber numberWithInteger:index]}];
     return self.viewControllers[index];
 }
 
@@ -129,7 +113,13 @@
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
 {
-    return 0;
+    NSInteger page = 0;
+    
+    if (self.pendingIndex) {
+        page = self.pendingIndex;
+    }
+    
+    return page;
 }
 
 

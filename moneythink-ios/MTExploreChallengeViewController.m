@@ -35,9 +35,6 @@
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
-//    if ([self.challenges count] == 0) {
-//        findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
 
     [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     

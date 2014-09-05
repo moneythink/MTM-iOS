@@ -64,6 +64,7 @@
 
 - (IBAction)controlTapped:(id)sender {
     NSInteger index = [self.challengeRoomControls selectedSegmentIndex];
+    self.destinationVC.pendingIndex = index;
     [self.destinationVC.pageViewController setViewControllers:@[self.destinationVC.viewControllers[index]] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
 

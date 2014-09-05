@@ -112,16 +112,11 @@
 -(void)exploreChallenge {
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
-    
+    [queryActivated whereKeyDoesNotExist:@"school"];
+    [queryActivated whereKeyDoesNotExist:@"class"];
+
     
     [queryActivated countObjectsInBackgroundWithTarget:self selector:@selector(objectsReturned:)];
-    
-    
-//    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-//        if (!error) {
-//            [self objectsReturned:number];
-//        }
-//    }];
 }
 
 

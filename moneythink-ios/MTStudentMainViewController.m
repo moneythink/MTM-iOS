@@ -140,7 +140,8 @@
 
     CGRect frame= self.scrollFields.frame;
     CGSize size = self.scrollFields.contentSize;
-    size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + 60.0f);
+    CGFloat heightAdjustment = IS_IPHONE_5 ? 0.0f : 60.0f;
+    size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + heightAdjustment);
     self.scrollFields.contentSize = size;
     
 }

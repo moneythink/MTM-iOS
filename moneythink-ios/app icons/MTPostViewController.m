@@ -156,16 +156,21 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    CGRect frame = self.view.frame;
-    frame = self.scrollFields.frame;
-    frame = self.commentsTableView.frame;
+    CGFloat height = IS_IPHONE_5 ? HEIGHT_IPHONE_5 : HEIGHT_IPHONE_4;
     
-    CGFloat w = self.scrollFields.frame.size.width;
-    CGFloat h = self.commentsTableView.frame.origin.y + self.commentsTableView.frame.size.height + 108.0f;
+    CGRect frame = self.scrollFields.frame;
+    
+    CGFloat w = frame.size.width;
+    CGFloat h = frame.size.height;
 
     CGSize size = CGSizeMake(w, h);
 
     self.scrollFields.contentSize = size;
+    
+    frame = self.view.frame;
+    frame.size.height = frame.origin.y + frame.size.height - self.commentsTableView.frame.size.height;
+    frame.origin.y  = 0.0f;
+    self.scrollFields.frame = frame;
 }
 
 - (void)viewWillLayoutSubviews {
@@ -359,9 +364,9 @@
                     }
                     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
                     
-                    [self.currentUser refresh];
-                    [self.challenge refresh];
-                    [self.challengePost refresh];
+                    [self.currentUser refreshInBackgroundWithTarget:self selector:nil];
+                    [self.challenge refreshInBackgroundWithTarget:self selector:nil];
+                    [self.challengePost refreshInBackgroundWithTarget:self selector:nil];
                     
                     [self.view setNeedsLayout];
                 }
@@ -622,27 +627,8 @@
     PFUser *commentPoster = comment[@"user"];
     cell.detailTextLabel.text = [commentPoster username];
     
+    [cell setAccessoryType:UITableViewCellAccessoryNone];
     return cell;
-}
-
-
-#pragma mark - UITableViewDelegate methods
-
-    // Accessories (disclosures).
-
-- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath NS_DEPRECATED_IOS(2_0, 3_0)
-{
-    return UITableViewCellAccessoryNone;
-}
-
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
-{
-    
 }
 
 

@@ -40,8 +40,6 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-//    self.navigationItem.title = @"Challenges";
-//    self.parentViewController.navigationItem.title = @"Challenges";
 }
 
 - (void)didReceiveMemoryWarning

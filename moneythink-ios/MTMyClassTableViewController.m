@@ -17,6 +17,8 @@
 @property (strong, nonatomic) NSArray *postsLiked;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
+@property (assign, nonatomic) BOOL iLike;
+
 @property (assign, nonatomic) BOOL reachable;
 
 @end
@@ -51,7 +53,9 @@
     NSInteger challengNumber = [self.challengeNumber intValue];
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-    
+    [challengeQuery whereKeyDoesNotExist:@"school"];
+    [challengeQuery whereKeyDoesNotExist:@"class"];
+
     [challengeQuery orderByDescending:@"createdAt"];
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -187,7 +191,6 @@
         [cell.button2 setTitle:button2Title forState:UIControlStateNormal];
     }
     
-//    cell.userName.text = [user username];
     cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
     cell.comments.text = @"";
     
@@ -260,7 +263,6 @@
     
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [post objectId];
-    
     NSInteger index = [self.postsLiked indexOfObject:postID];
     
     if (index == NSNotFound || self.postsLiked.count < 1) {
@@ -268,6 +270,7 @@
     } else {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     }
+    cell.likeButton.tag = indexPath.row;
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
     PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
@@ -515,47 +518,14 @@
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:like]} block:^(id object, NSError *error) {
         if (!error) {
-            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
-            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
-            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-//                    self.iLike = !self.iLike;
-                    
-//                    if (self.iLike) {
-//                        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-//                        self.postLikesCount += 1;
-//                    } else {
-//                        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-//                        self.postLikesCount -= 1;
-//                    }
-//                    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-//                    
-//                    [self.currentUser refresh];
-//                    [self.challenge refresh];
-//                    [self.challengePost refresh];
-//                    
-//                    [self.view setNeedsLayout];
-                }
+            [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [self.tableView reloadData];
             }];
-//        }
-//            {
-//            [[PFUser currentUser] refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                self.postsLiked = [PFUser currentUser][@"posts_liked"];
-//                NSInteger index = [self.postsLiked indexOfObject:postID];
-//                BOOL like = index != NSNotFound;
-//                
-//                [self.tableView reloadData];
-//            }];
-//            [self.challenge refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                [self.tableView reloadData];
-//            }];
-//            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                [self.tableView reloadData];
-//            }];
-//            
-//            [self.tableView reloadData];
-        } else {
-            NSLog(@"error - %@", error);
+            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [self.tableView reloadData];
+            }];
+            
+            [self.tableView reloadData];
         }
     }];
 }

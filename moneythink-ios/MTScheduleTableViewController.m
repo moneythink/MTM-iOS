@@ -141,7 +141,9 @@
     
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:challengePredicate];
-    
+    [challengeQuery whereKeyDoesNotExist:@"school"];
+    [challengeQuery whereKeyDoesNotExist:@"class"];
+
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];

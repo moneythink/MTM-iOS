@@ -105,7 +105,7 @@
     PFChallengePost *post = (PFChallengePost *)object;
     
     PFUser *user = post[@"user"];
-    cell.userName.text = [user username];
+    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
     
     cell.profileImage.file = user[@"profile_picture"];
     [cell.profileImage loadInBackground];

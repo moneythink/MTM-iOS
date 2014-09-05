@@ -207,6 +207,8 @@
         self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery whereKeyDoesNotExist:@"school"];
+        [challengeQuery whereKeyDoesNotExist:@"class"];
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -217,6 +219,8 @@
         self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery whereKeyDoesNotExist:@"school"];
+        [challengeQuery whereKeyDoesNotExist:@"class"];
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -227,6 +231,8 @@
         self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery whereKeyDoesNotExist:@"school"];
+        [challengeQuery whereKeyDoesNotExist:@"class"];
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -237,6 +243,8 @@
         self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
+        [challengeQuery whereKeyDoesNotExist:@"school"];
+        [challengeQuery whereKeyDoesNotExist:@"class"];
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];

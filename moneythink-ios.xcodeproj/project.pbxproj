@@ -83,7 +83,6 @@
 		58669F6019772D00009BC13C /* PFChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4D19772D00009BC13C /* PFChallenges.m */; };
 		58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4F19772D00009BC13C /* PFChallengesActivated.m */; };
 		58669F6219772D00009BC13C /* PFClasses.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5119772D00009BC13C /* PFClasses.m */; };
-		58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5319772D00009BC13C /* PFGCMIDs.m */; };
 		58669F6419772D00009BC13C /* PFNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5519772D00009BC13C /* PFNotifications.m */; };
 		58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5719772D00009BC13C /* PFScheduledActivations.m */; };
 		58669F6619772D00009BC13C /* PFSchools.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5919772D00009BC13C /* PFSchools.m */; };
@@ -338,8 +337,6 @@
 		58669F4F19772D00009BC13C /* PFChallengesActivated.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengesActivated.m; path = "Data Classes/PFChallengesActivated.m"; sourceTree = "<group>"; };
 		58669F5019772D00009BC13C /* PFClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFClasses.h; path = "Data Classes/PFClasses.h"; sourceTree = "<group>"; };
 		58669F5119772D00009BC13C /* PFClasses.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFClasses.m; path = "Data Classes/PFClasses.m"; sourceTree = "<group>"; };
-		58669F5219772D00009BC13C /* PFGCMIDs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFGCMIDs.h; path = "Data Classes/PFGCMIDs.h"; sourceTree = "<group>"; };
-		58669F5319772D00009BC13C /* PFGCMIDs.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFGCMIDs.m; path = "Data Classes/PFGCMIDs.m"; sourceTree = "<group>"; };
 		58669F5419772D00009BC13C /* PFNotifications.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFNotifications.h; path = "Data Classes/PFNotifications.h"; sourceTree = "<group>"; };
 		58669F5519772D00009BC13C /* PFNotifications.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFNotifications.m; path = "Data Classes/PFNotifications.m"; sourceTree = "<group>"; };
 		58669F5619772D00009BC13C /* PFScheduledActivations.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFScheduledActivations.h; path = "Data Classes/PFScheduledActivations.h"; sourceTree = "<group>"; };
@@ -583,8 +580,6 @@
 				58669F4F19772D00009BC13C /* PFChallengesActivated.m */,
 				58669F5019772D00009BC13C /* PFClasses.h */,
 				58669F5119772D00009BC13C /* PFClasses.m */,
-				58669F5219772D00009BC13C /* PFGCMIDs.h */,
-				58669F5319772D00009BC13C /* PFGCMIDs.m */,
 				58669F5419772D00009BC13C /* PFNotifications.h */,
 				58669F5519772D00009BC13C /* PFNotifications.m */,
 				58669F5619772D00009BC13C /* PFScheduledActivations.h */,
@@ -1269,7 +1264,6 @@
 				5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */,
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
-				58669F6319772D00009BC13C /* PFGCMIDs.m in Sources */,
 				5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */,
 				58509435197C065E00EDC969 /* MTPostViewController.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,

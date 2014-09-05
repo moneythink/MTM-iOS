@@ -18,7 +18,10 @@
 @property (nonatomic, strong) NSString *challengeNumber;
 
 @property (strong, nonatomic) NSArray *viewControllers;
+@property (strong, nonatomic) NSArray *pageViewControllers;
 @property (strong, nonatomic) UIPageViewController *pageViewController;
+
+@property (nonatomic, assign) NSInteger pendingIndex;
 
 @property (nonatomic, strong) MTExplorePostCollectionView *exploreCollectionView;
 @property (nonatomic, strong) MTMyClassTableViewController  *myClassTableView;

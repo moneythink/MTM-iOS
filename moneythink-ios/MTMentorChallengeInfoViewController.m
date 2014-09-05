@@ -138,6 +138,10 @@
 
     CGSize contentSize = self.scrollView.contentSize;
     CGRect instructionsViewFrame = self.instructionsView.frame;
+
+    if ([self.mentorInstructions isHidden]) {
+        instructionsViewFrame = CGRectZero;
+    }
     
     CGFloat contentHeight = instructionsViewFrame.origin.y + instructionsViewFrame.size.height + 44.0f;
     contentSize = CGSizeMake(scrollViewFrame.size.width, contentHeight);

@@ -6,6 +6,12 @@
 
 #import <Availability.h>
 
+#define HEIGHT_IPHONE_5 568
+#define HEIGHT_IPHONE_4 480
+
+#define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_5 )
+#define IS_IPHONE_4 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_4 )
+
 #ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 5.0 and later."
 #endif
@@ -27,7 +33,6 @@
 #import "PFChallengePostComment.h"
 #import "PFChallenges.h"
 #import "PFChallengesActivated.h"
-#import "PFGCMIDs.h"
 #import "PFNotifications.h"
 #import "PFScheduledActivations.h"
 #import "PFSchools.h"

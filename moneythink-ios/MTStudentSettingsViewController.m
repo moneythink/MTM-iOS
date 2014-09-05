@@ -164,6 +164,7 @@
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
 
+    [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     return cell;
 }
 
@@ -190,17 +191,6 @@
     [header.contentView setBackgroundColor:[UIColor mutedOrange]];
 }
 
-// Accessories (disclosures).
-
-- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath NS_DEPRECATED_IOS(2_0, 3_0)
-{
-    return UITableViewCellAccessoryDisclosureIndicator;
-}
-
-- (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
     // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
