@@ -8,9 +8,7 @@
 
 #import "MTStudentMainViewController.h"
 #import "MTUserInformationViewController.h"
-#import "UIViewController+MJPopupViewController.h"
 #import "MTEditProfileViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTStudentMainViewController ()
 
@@ -139,9 +137,9 @@
     }
 
     CGRect frame= self.scrollFields.frame;
-    CGSize size = self.scrollFields.contentSize;
+//    CGSize size = self.scrollFields.contentSize;
     CGFloat heightAdjustment = IS_IPHONE_5 ? 0.0f : 60.0f;
-    size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + heightAdjustment);
+    CGSize size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + heightAdjustment);
     self.scrollFields.contentSize = size;
     
 }

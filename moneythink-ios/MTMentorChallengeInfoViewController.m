@@ -136,7 +136,7 @@
 - (void)viewDidLayoutSubviews {
     CGRect scrollViewFrame = self.scrollView.frame;
 
-    CGSize contentSize = self.scrollView.contentSize;
+//    CGSize contentSize = self.scrollView.contentSize;
     CGRect instructionsViewFrame = self.instructionsView.frame;
 
     if ([self.mentorInstructions isHidden]) {
@@ -144,7 +144,7 @@
     }
     
     CGFloat contentHeight = instructionsViewFrame.origin.y + instructionsViewFrame.size.height + 44.0f;
-    contentSize = CGSizeMake(scrollViewFrame.size.width, contentHeight);
+    CGSize contentSize = CGSizeMake(scrollViewFrame.size.width, contentHeight);
     
     CGFloat x = scrollViewFrame.origin.x;
     CGFloat y = scrollViewFrame.origin.y;

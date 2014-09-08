@@ -169,10 +169,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     PFObject *rowObject = self.objects[indexPath.row];
     
-    [self performSegueWithIdentifier:@"pushNotificationToPosts" sender:self.objects[indexPath.row]];
+    [self performSegueWithIdentifier:@"pushNotificationToPosts" sender:rowObject];
 }
 
 

@@ -45,9 +45,6 @@
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@", self.challengeNumber, [PFUser currentUser][@"class"]];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
-//    if ([self.objects count] == 0) {
-//        findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
 
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -117,11 +114,5 @@
 {
     [self performSegueWithIdentifier:@"viewPost" sender:self];
 }
-
-- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath NS_AVAILABLE_IOS(3_0)
-{
-    
-}
-
 
 @end

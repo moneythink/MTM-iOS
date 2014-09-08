@@ -8,7 +8,6 @@
 
 #import "MTExploreChallengeViewController.h"
 #import "MTPostsTabBarViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTExploreChallengeViewController ()
 
@@ -36,15 +35,11 @@
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-    
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.challenges = objects;
             
             [self.explorePostsTableView reloadData];
-            
-            [MBProgressHUD hideHUDForView:self.view animated:NO];
         }
     }];
 }
@@ -110,7 +105,7 @@
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
     poster = [[findPoster findObjects] firstObject];
     
-    cell.detailTextLabel.text = [poster username];
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", poster[@"first_name"], poster[@"last_name"]];
     
     return cell;
 }

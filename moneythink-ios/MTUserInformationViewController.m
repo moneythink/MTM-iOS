@@ -7,7 +7,6 @@
 //
 
 #import "MTUserInformationViewController.h"
-#import "UIViewController+MJPopupViewController.h"
 
 @interface MTUserInformationViewController ()
 

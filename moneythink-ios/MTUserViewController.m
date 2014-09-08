@@ -33,14 +33,11 @@
 
 - (void)viewDidLoad
 {
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-
     [super viewDidLoad];
 
     if ([PFUser currentUser]) {
         PFUser *user = [PFUser currentUser];
         [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
-            [MBProgressHUD hideHUDForView:self.view animated:NO];
             if (!error) {
                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                     [self performSegueWithIdentifier:@"studentMain" sender:self];
@@ -52,8 +49,6 @@
             }
         }];
     } else {
-        [MBProgressHUD hideHUDForView:self.view animated:NO];
-
         self.studentSignUpButton.hidden = NO;
         self.mentorSignUpButton.hidden = NO;
         self.loginButton.hidden = NO;

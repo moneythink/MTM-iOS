@@ -154,18 +154,6 @@
 //}
 
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    
-    PFObject *rowObject = self.objects[indexPath.row];
-    
-    [self performSegueWithIdentifier:@"someNamedSegue" sender:self.objects[indexPath.row]];
-}
-
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation

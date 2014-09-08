@@ -13,9 +13,4 @@
 
 + (NSString *)parseClassName;
 
-+ (PFSignupCodes *)validSignUpCode:(NSString *)code type:(NSString *)type;
-+ (PFSignupCodes *)newSignUpCodeForClass:(PFClasses *)class forUserType:(NSString *)userType;
-+ (PFSignupCodes *)newStudentSignUpCodeForClass:(PFClasses *)studentClass;
-+ (PFSignupCodes *)newMentorSignUpCodeForClass:(PFClasses *)mentorClass;
-
 @end

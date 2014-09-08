@@ -9,7 +9,6 @@
 #import "MTMentorStudentProgressViewController.h"
 #import "MTStudentProgressTableViewCell.h"
 #import "MICheckBox.h"
-#import "MBProgressHUD.h"
 #import "MTMentorStudentProfileViewController.h"
 #import "MTScheduleTableViewController.h"
 
@@ -47,20 +46,14 @@
     NSString *type = @"student";
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
-//    if ([self.classStudents count] == 0) {
-//        studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
+
     [studentsForClass orderByAscending:@"last_name"];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
             [self.tableView reloadData];
         }
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
     }];
 }
 
@@ -327,19 +320,20 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger section = indexPath.section;
-    NSInteger row = indexPath.row;
+
+    CGFloat height;
     
     switch (section) {
         case  0:
-            row = 44.0f;
+            height = 44.0f;
             break;
             
         default:
-            row = 60.0f;
+            height = 60.0f;
             break;
     }
     
-    return row;
+    return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

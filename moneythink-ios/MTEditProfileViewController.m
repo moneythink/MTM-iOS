@@ -358,8 +358,6 @@
     [self.userCurrent setEmail:self.email.text];
     [self.userCurrent setUsername:self.email.text];
     
-    //    self.userCurrent[@"password"] = self.userPassword.text;
-    
     if (self.updatedProfileImage) {
         
         self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
@@ -460,12 +458,10 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image = [[UIImage alloc] init];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     
     if ([info objectForKey:UIImagePickerControllerEditedImage]) {
         image = [info objectForKey:UIImagePickerControllerEditedImage];
-    } else {
-        image = [info objectForKey:UIImagePickerControllerOriginalImage];
     }
     
     if (image.size.width > 480.0f) {

@@ -7,7 +7,6 @@
 //
 
 #import "MTMentorNotificationViewController.h"
-#import "MBProgressHUD.h"
 #import "MTMentorStudentProfileViewController.h"
 #import "MTMentorStudentProgressViewController.h"
 #import "MTStudentProgressTabBarViewController.h"
@@ -258,15 +257,6 @@
 
 
 #pragma mark - Table view delegate
-
-//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-//
-//    if ([self.notificationType isEqualToString:@"challenge"]) {
-//        [self performSegueWithIdentifier:@"notificationToChallenge" sender:self.objects[indexPath.row]];
-//    }
-//}
 
 #pragma mark - date diff methods
 

@@ -140,12 +140,10 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    UIImage *image = [[UIImage alloc] init];
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
     
     if ([info objectForKey:UIImagePickerControllerEditedImage]) {
         image = [info objectForKey:UIImagePickerControllerEditedImage];
-    } else {
-        image = [info objectForKey:UIImagePickerControllerOriginalImage];
     }
     
     if (image.size.width > 480.0f) {
@@ -220,19 +218,13 @@
 
 - (void) keyboardWasShown:(NSNotification *)nsNotification {
     CGRect viewFrame = self.view.frame;
-    CGRect fieldsFrame = self.viewFields.frame;
     
     NSDictionary *userInfo = [nsNotification userInfo];
     CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     CGSize kbSize = kbRect.size;
     NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
     
-    CGRect fieldFrameSize = CGRectMake(fieldsFrame.origin.x ,
-                                       fieldsFrame.origin.y,
-                                       fieldsFrame.size.width,
-                                       fieldsFrame.size.height - kbSize.height + 40.0f);
-    
-    fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
+    CGRect fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
     
     self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 160.0f);
     

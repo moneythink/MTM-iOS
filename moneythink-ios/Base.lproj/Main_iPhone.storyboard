@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13F24" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13F31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -202,7 +202,7 @@
                         <outlet property="fieldsView" destination="j2d-8F-SXb" id="gUq-LR-q29"/>
                         <outlet property="labelInfoTitle" destination="mDN-Gv-a67" id="xko-oO-8q8"/>
                         <outlet property="textInfo" destination="b8B-ge-1Rq" id="z0B-vA-bIW"/>
-                        <segue destination="dSU-09-0j2" kind="unwind" unwindAction="unwindToMainMenu:" id="eef-r1-cMS"/>
+                        <segue destination="dSU-09-0j2" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="eef-r1-cMS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="KaB-Vs-W1y" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -307,7 +307,7 @@
                         <outlet property="termsButton" destination="nfr-Kf-99I" id="e3q-0h-vzs"/>
                         <outlet property="view" destination="Vpg-1D-iqc" id="euh-FL-CVZ"/>
                         <outlet property="viewFields" destination="8cy-cQ-6Iw" id="0wV-ET-uvh"/>
-                        <segue destination="tGy-vH-4cW" kind="unwind" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
+                        <segue destination="tGy-vH-4cW" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
                         <segue destination="4W6-dw-LgJ" kind="push" identifier="studentSignedUp" id="qYv-0w-I0f"/>
                     </connections>
                 </viewController>
@@ -483,7 +483,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <connections>
-                                    <segue destination="w3E-bd-aXs" kind="embed" id="NXI-ah-lwE"/>
+                                    <segue destination="w3E-bd-aXs" kind="embed" identifier="studentChallengeRoom" id="NXI-ah-lwE"/>
                                 </connections>
                             </containerView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="wc2-yC-gss">
@@ -803,7 +803,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="userProfileButton" destination="lQY-Ee-oPc" id="1nM-PM-4Uj"/>
                         <outlet property="userSchool" destination="23A-ni-AkG" id="6eQ-oe-ji9"/>
                         <outlet property="viewFields" destination="g17-9a-Vpj" id="94O-X5-LRB"/>
-                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindasdfasdf" unwindAction="unwindToStudentMain:" id="ZrI-gL-liA"/>
+                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToStudentMain" unwindAction="unwindToStudentMain:" id="ZrI-gL-liA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1563,7 +1563,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gww-XX-vMY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1886" y="-5794"/>
+            <point key="canvasLocation" x="-1881" y="-5877"/>
         </scene>
         <!--Schedule Table View Controller-->
         <scene sceneID="xeN-rM-7nR">
@@ -1995,6 +1995,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <rect key="frame" x="10" y="488" width="300" height="100"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="KPN-jL-6Tt">
+                                                <rect key="frame" x="0.0" y="1" width="300" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KPN-jL-6Tt" id="LeA-xK-mFN">
+                                                    <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <sections/>
                                         <connections>
                                             <outlet property="dataSource" destination="83z-FJ-qxJ" id="TAb-KU-p4C"/>
                                             <outlet property="delegate" destination="83z-FJ-qxJ" id="jZy-Bd-bIz"/>
@@ -2036,7 +2047,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ltS-05-clY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2057" y="-3402"/>
+            <point key="canvasLocation" x="2061" y="-3542"/>
         </scene>
         <!--Student Tab Bar View Controller-->
         <scene sceneID="PIP-Ah-Zib">
@@ -2615,7 +2626,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <constraint firstAttribute="width" constant="320" id="naO-Zd-8uf"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="3Vc-WG-Spa">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="3Vc-WG-Spa">
                                         <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Vc-WG-Spa" id="ilF-XN-Q1m">
@@ -2809,6 +2820,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <rect key="frame" x="14" y="163" width="286" height="322"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="GFb-yc-veD">
+                                                <rect key="frame" x="0.0" y="1" width="286" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="GFb-yc-veD" id="HVs-pg-nHd">
+                                                    <rect key="frame" x="0.0" y="0.0" width="286" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <sections/>
                                         <connections>
                                             <outlet property="dataSource" destination="ths-Es-m93" id="nn0-X9-qcd"/>
                                             <outlet property="delegate" destination="ths-Es-m93" id="OWY-o6-rxr"/>
@@ -2842,7 +2864,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="verifiedCheckBox" destination="cXy-CC-ugL" id="VJj-Iu-flB"/>
                         <outlet property="view" destination="BK1-uk-t2d" id="cvw-qP-0Ef"/>
                         <outlet property="whenPosted" destination="5le-uJ-W01" id="yqF-WK-zOA"/>
-                        <segue destination="4Qj-qr-n3q" kind="unwind" unwindAction="unwindToExploreChallanges:" id="NXS-7u-Ruf"/>
+                        <segue destination="4Qj-qr-n3q" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="NXS-7u-Ruf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lzC-2a-6Fe" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2994,6 +3016,17 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <rect key="frame" x="15" y="485" width="293" height="110"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <prototypes>
+                                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="wb6-bg-4Ir">
+                                                <rect key="frame" x="0.0" y="1" width="293" height="44"/>
+                                                <autoresizingMask key="autoresizingMask"/>
+                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wb6-bg-4Ir" id="sHk-wP-v7f">
+                                                    <rect key="frame" x="0.0" y="0.0" width="293" height="43"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </tableViewCellContentView>
+                                            </tableViewCell>
+                                        </prototypes>
+                                        <sections/>
                                         <connections>
                                             <outlet property="dataSource" destination="ROD-Uc-uF0" id="3JM-0e-dEp"/>
                                             <outlet property="delegate" destination="ROD-Uc-uF0" id="cx5-RI-xoq"/>
@@ -3028,13 +3061,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="verifiedCheckBox" destination="ywS-El-jOg" id="4bo-cd-gu6"/>
                         <outlet property="view" destination="sCN-40-4OM" id="eHP-sp-85N"/>
                         <outlet property="whenPosted" destination="AVD-gU-phP" id="MRI-wY-af6"/>
-                        <segue destination="xfn-2W-4dD" kind="unwind" unwindAction="unwindToExploreChallanges:" id="4tw-7W-8UG"/>
+                        <segue destination="xfn-2W-4dD" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="4tw-7W-8UG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q7v-li-ceb" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="xfn-2W-4dD" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2057" y="-2610"/>
+            <point key="canvasLocation" x="2081" y="-2512"/>
         </scene>
         <!--Post View Controller - Post-->
         <scene sceneID="YE4-Pr-c4c">
@@ -3169,9 +3202,20 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </connections>
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="PPx-mJ-NXi">
-                                <rect key="frame" x="14" y="160" width="288" height="0.0"/>
+                                <rect key="frame" x="14" y="160" width="288" height="324"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="4P3-HW-qZS">
+                                        <rect key="frame" x="0.0" y="1" width="288" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4P3-HW-qZS" id="1do-Ie-6Y0">
+                                            <rect key="frame" x="0.0" y="0.0" width="288" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
                                 <connections>
                                     <outlet property="dataSource" destination="67M-EA-c7G" id="URw-zI-U0J"/>
                                     <outlet property="delegate" destination="67M-EA-c7G" id="pKi-4g-ekx"/>
@@ -3204,7 +3248,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="verifiedCheckBox" destination="4dv-pI-rzj" id="8hZ-hG-In0"/>
                         <outlet property="view" destination="Tz2-3d-FX6" id="GYh-Vc-y7V"/>
                         <outlet property="whenPosted" destination="YvM-mz-CuJ" id="fzT-7i-xWb"/>
-                        <segue destination="85E-kC-AA3" kind="unwind" unwindAction="unwindToExploreChallanges:" id="7Ka-FM-bQ8"/>
+                        <segue destination="85E-kC-AA3" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="7Ka-FM-bQ8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Hh-ZC-D7R" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3294,11 +3338,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="ySr-9F-9a4"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77F-IV-6l0">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77F-IV-6l0">
                                         <rect key="frame" x="55" y="374" width="211" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="29" id="Ggf-iD-4xw"/>
+                                            <constraint firstAttribute="height" constant="30" id="Ggf-iD-4xw"/>
                                         </constraints>
                                         <state key="normal" title="Sign Up">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3389,6 +3433,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                     <constraint firstItem="jiJ-0t-mOo" firstAttribute="leading" secondItem="pPs-AL-Tjs" secondAttribute="leading" constant="1" id="G4y-Ny-SsB"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="21" id="Gt7-KQ-lc9"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="trailing" secondItem="vuS-Ey-fNB" secondAttribute="trailing" id="Hnc-8N-SQJ"/>
+                                    <constraint firstAttribute="height" constant="528" id="I49-ja-KO4"/>
                                     <constraint firstAttribute="trailing" secondItem="B4t-0I-SD6" secondAttribute="trailing" constant="20" id="Jrh-pb-KIt"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="leading" secondItem="ORF-qD-pOj" secondAttribute="leading" id="K7P-kl-45B"/>
                                     <constraint firstAttribute="trailing" secondItem="5Gn-Gs-M5t" secondAttribute="trailing" constant="20" id="Od5-Vk-Kvr"/>
@@ -3450,8 +3495,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="viewFields" destination="cfJ-PC-2Jb" id="ZsY-TY-UI0"/>
                         <segue destination="bhs-34-IGx" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="Cd2-OO-fi7"/>
                         <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorSignedUp" id="kgD-Kv-M6F"/>
-                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" id="kDD-cl-uw8"/>
-                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" id="0QY-Pc-qd8"/>
+                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" animates="NO" id="kDD-cl-uw8"/>
+                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" animates="NO" id="0QY-Pc-qd8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AiL-eG-MFh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3526,11 +3571,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="User Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBv-GO-boZ">
                                             <rect key="frame" x="10" y="10" width="60" height="15"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="15" id="pzO-AQ-WnM"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug1-6U-C1S">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug1-6U-C1S">
                                             <rect key="frame" x="10" y="33" width="300" height="15"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -3546,14 +3594,11 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="qBv-GO-boZ" firstAttribute="top" secondItem="5Du-O6-Oc3" secondAttribute="top" constant="10" id="KMz-u6-Ja0"/>
-                                        <constraint firstAttribute="trailing" secondItem="ug1-6U-C1S" secondAttribute="trailing" constant="10" id="NhX-d0-DEi"/>
-                                        <constraint firstItem="ug1-6U-C1S" firstAttribute="top" secondItem="qBv-GO-boZ" secondAttribute="bottom" constant="8" id="Uax-bv-FMp"/>
-                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="trailing" secondItem="ug1-6U-C1S" secondAttribute="trailing" id="W8O-EZ-T6k"/>
-                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="leading" secondItem="qBv-GO-boZ" secondAttribute="trailing" constant="8" id="gP5-H0-Rzk"/>
-                                        <constraint firstItem="ug1-6U-C1S" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="jD5-6X-BX6"/>
-                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="baseline" secondItem="qBv-GO-boZ" secondAttribute="baseline" id="qEV-FY-qCF"/>
-                                        <constraint firstItem="qBv-GO-boZ" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="uEM-r3-9zU"/>
+                                        <constraint firstAttribute="trailing" secondItem="ODO-o7-2nO" secondAttribute="trailing" constant="10" id="1a2-9d-C1W"/>
+                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="top" secondItem="5Du-O6-Oc3" secondAttribute="top" constant="10" id="2dq-3C-Zuf"/>
+                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="leading" secondItem="qBv-GO-boZ" secondAttribute="trailing" constant="8" id="9FI-1I-kDn"/>
+                                        <constraint firstItem="qBv-GO-boZ" firstAttribute="top" secondItem="5Du-O6-Oc3" secondAttribute="top" constant="10" id="HQt-eH-kFK"/>
+                                        <constraint firstItem="qBv-GO-boZ" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="xUd-bu-kWY"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -3593,11 +3638,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="User Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ScE-Ga-ohY">
                                             <rect key="frame" x="10" y="10" width="60" height="15"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="15" id="gCJ-xx-89d"/>
+                                            </constraints>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YNT-4M-Q1z">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YNT-4M-Q1z">
                                             <rect key="frame" x="10" y="33" width="300" height="15"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -3613,14 +3661,11 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                         </label>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="YNT-4M-Q1z" firstAttribute="top" secondItem="ScE-Ga-ohY" secondAttribute="bottom" constant="8" id="0W0-1F-1gi"/>
-                                        <constraint firstItem="ScE-Ga-ohY" firstAttribute="top" secondItem="3MC-3y-3ub" secondAttribute="top" constant="10" id="4bD-mk-PSi"/>
-                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="baseline" secondItem="ScE-Ga-ohY" secondAttribute="baseline" id="Hg5-iz-51d"/>
-                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="trailing" secondItem="YNT-4M-Q1z" secondAttribute="trailing" id="jQu-NR-LCD"/>
-                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="leading" secondItem="ScE-Ga-ohY" secondAttribute="trailing" constant="8" id="pUP-ym-tQd"/>
-                                        <constraint firstItem="ScE-Ga-ohY" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="rus-Sb-Jk7"/>
-                                        <constraint firstItem="YNT-4M-Q1z" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="tiC-Ar-hVZ"/>
-                                        <constraint firstAttribute="trailing" secondItem="YNT-4M-Q1z" secondAttribute="trailing" constant="10" id="ujX-BH-Se8"/>
+                                        <constraint firstAttribute="trailing" secondItem="ko6-Qy-mmr" secondAttribute="trailing" constant="10" id="5Jf-ak-1vP"/>
+                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="leading" secondItem="ScE-Ga-ohY" secondAttribute="trailing" constant="8" id="HKb-69-qxu"/>
+                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="top" secondItem="3MC-3y-3ub" secondAttribute="top" constant="10" id="KSR-QS-87O"/>
+                                        <constraint firstItem="ScE-Ga-ohY" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="hS4-tZ-xHp"/>
+                                        <constraint firstItem="ScE-Ga-ohY" firstAttribute="top" secondItem="3MC-3y-3ub" secondAttribute="top" constant="10" id="zbl-EH-eZ6"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -3639,7 +3684,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4S-HT-bsr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-715" y="-1076"/>
+            <point key="canvasLocation" x="-551" y="-1050"/>
         </scene>
         <!--Add Class View Controller-->
         <scene sceneID="a8I-4r-BfR">
@@ -3696,7 +3741,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="sDv-fB-G6G">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="sDv-fB-G6G">
                                 <rect key="frame" x="0.0" y="42" width="320" height="488"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -3704,7 +3749,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <constraint firstAttribute="width" constant="320" id="QYU-W1-1nA"/>
                                 </constraints>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ubk-Bb-tip">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="ubk-Bb-tip">
                                         <rect key="frame" x="0.0" y="119" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ubk-Bb-tip" id="MIt-OZ-chn">
@@ -3722,7 +3767,6 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="sDv-fB-G6G" firstAttribute="top" secondItem="gHR-yw-B3P" secondAttribute="bottom" constant="22" id="MyS-3D-aNj"/>
                             <constraint firstAttribute="bottom" secondItem="sDv-fB-G6G" secondAttribute="bottom" constant="38" id="Oh1-Hs-cXI"/>
                             <constraint firstItem="sDv-fB-G6G" firstAttribute="leading" secondItem="FgJ-57-a0n" secondAttribute="leading" id="cko-4B-E9w"/>
                         </constraints>
@@ -3769,14 +3813,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="qYv-0w-I0f"/>
-        <segue reference="Neh-9A-DML"/>
-        <segue reference="fM9-bL-F9m"/>
+        <segue reference="0Hm-VR-maT"/>
+        <segue reference="3av-NC-tBU"/>
         <segue reference="ySr-9F-9a4"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="3vf-te-PYL"/>
-        <segue reference="0tX-EG-lkN"/>
+        <segue reference="Rwq-1l-OkU"/>
+        <segue reference="fM9-bL-F9m"/>
         <segue reference="LS9-Mg-yad"/>
+        <segue reference="0tX-EG-lkN"/>
+        <segue reference="3vf-te-PYL"/>
         <segue reference="VFk-5D-gdp"/>
     </inferredMetricsTieBreakers>
 </document>

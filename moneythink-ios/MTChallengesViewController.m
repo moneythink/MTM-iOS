@@ -7,7 +7,6 @@
 //
 
 #import "MTChallengesViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTChallengesViewController ()
 
@@ -31,15 +30,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
-
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challenge_number"];
     [allChallenges whereKeyDoesNotExist:@"school"];
     [allChallenges whereKeyDoesNotExist:@"class"];
 
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [MBProgressHUD hideHUDForView:self.view animated:NO];
         if (!error) {
             self.challenges = objects;
             

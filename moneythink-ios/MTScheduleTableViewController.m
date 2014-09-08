@@ -123,7 +123,7 @@
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    PFChallengesActivated *activation = [[PFChallengesActivated alloc] initWithClassName:[PFChallengesActivated parseClassName]];
+    PFChallengesActivated *activation = self.futureChallenges[row];
     
     switch (section) {
         case 0: {
@@ -131,9 +131,7 @@
         }
             break;
             
-        default: {
-            activation = self.futureChallenges[row];
-        }
+        default: 
             break;
     }
     

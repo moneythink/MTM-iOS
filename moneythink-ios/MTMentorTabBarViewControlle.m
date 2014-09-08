@@ -12,12 +12,6 @@
 #import "MTMentorChallengeRoomViewController.h"
 #import "MTStudentSettingsViewController.h"
 
-//#ifdef DEBUG
-//static BOOL button1 = YES;
-//#else
-//static BOOL button1 = NO;
-//#endif
-
 @interface MTMentorTabBarViewController ()
 
 @end
@@ -43,16 +37,6 @@
     
     self.delegate = self;
     self.tabBarController.delegate = self;
-
-//    if (button1) {
-//        UIBarButtonItem *button1 = [[UIBarButtonItem alloc]
-//                                    initWithTitle:@"x"
-//                                    style:UIBarButtonItemStyleBordered
-//                                    target:self
-//                                    action:@selector(tappedButtonItem1:)];
-//        
-//        self.navigationItem.rightBarButtonItem = button1;
-//    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,9 +67,6 @@
     return YES;
 }
 
-- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
-{
-}
 
 /*
 #pragma mark - Navigation
@@ -111,40 +92,6 @@
         default:
             break;
     }
-}
-
-
-
-#pragma mark - UITabBarDelegate delegate methods
-
-- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item // called when a new view is selected by the user (but not programatically)
-{
-    // check
-}
-
-/* called when user shows or dismisses customize sheet. you can use the 'willEnd' to set up what appears underneath.
- changed is YES if there was some change to which items are visible or which order they appear. If selectedItem is no longer visible,
- it will be set to nil.
- */
-
-- (void)tabBar:(UITabBar *)tabBar willBeginCustomizingItems:(NSArray *)items // called before customize sheet is shown. items is current item list
-{
-    
-}
-
-- (void)tabBar:(UITabBar *)tabBar didBeginCustomizingItems:(NSArray *)items // called after customize sheet is shown. items is current item list
-{
-    
-}
-
-- (void)tabBar:(UITabBar *)tabBar willEndCustomizingItems:(NSArray *)items changed:(BOOL)changed // called before customize sheet is hidden. items is new item list
-{
-    
-}
-
-- (void)tabBar:(UITabBar *)tabBar didEndCustomizingItems:(NSArray *)items changed:(BOOL)changed // called after customize sheet is hidden. items is new item list
-{
-    
 }
 
 

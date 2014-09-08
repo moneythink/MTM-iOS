@@ -179,13 +179,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     PFObject *rowObject = self.objects[indexPath.row];
     
-    [self performSegueWithIdentifier:@"pushViewPost" sender:self.objects[indexPath.row]];
+    [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
 }
 
 

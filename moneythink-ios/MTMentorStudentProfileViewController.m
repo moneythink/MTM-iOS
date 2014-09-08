@@ -10,7 +10,6 @@
 #import "MTStudentProfileTableViewCell.h"
 #import "MTStudentProfileTableViewCell.h"
 #import "MTPostViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTMentorStudentProfileViewController ()
 
@@ -40,8 +39,6 @@
     [studentPostsQuery whereKey:@"user" equalTo:self.student];
     [studentPostsQuery includeKey:@"verified_by"];
     [studentPostsQuery orderByDescending:@"createdAt"];
-
-    [MBProgressHUD showHUDAddedTo:self.view animated:NO];
     
     [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
@@ -49,8 +46,6 @@
             
             [self.tableView reloadData];
         }
-        
-        [MBProgressHUD hideAllHUDsForView:self.view animated:NO];
     }];
 
     NSString *points = [self.student[@"points"] stringValue];
@@ -288,12 +283,6 @@
 
 
 #pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-//    PFChallengePost *rowObject = self.studentPosts[indexPath.row];
-//    [self performSegueWithIdentifier:@"pushProfileToPost" sender:rowObject];
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
     return 0.0f;

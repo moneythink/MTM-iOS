@@ -156,8 +156,6 @@
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
     
-    CGFloat height = IS_IPHONE_5 ? HEIGHT_IPHONE_5 : HEIGHT_IPHONE_4;
-    
     CGRect frame = self.scrollFields.frame;
     
     CGFloat w = frame.size.width;
@@ -549,13 +547,13 @@
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
     CGFloat w = fieldsFrame.size.width;
-    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
+//    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
     CGRect fieldsContentRect = CGRectMake(x, y, w, kbTop + 320.0f);
     
     self.scrollFields.contentSize = fieldsContentRect.size;
     
-    h = self.scrollFields.contentSize.height + self.keyboardHeight;
+    CGFloat h = self.scrollFields.contentSize.height + self.keyboardHeight;
     self.scrollFields.contentSize = CGSizeMake(w, h);
     
     self.scrollFields.frame = fieldsFrame;
@@ -625,7 +623,8 @@
     cell.textLabel.text = comment[@"comment_text"];
     
     PFUser *commentPoster = comment[@"user"];
-    cell.detailTextLabel.text = [commentPoster username];
+    
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
     
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     return cell;

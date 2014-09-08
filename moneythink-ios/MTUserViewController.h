@@ -10,7 +10,6 @@
 #import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
 #import "MTStudentTabBarViewController.h"
-#import "MBProgressHUD.h"
 
 @interface MTUserViewController : UIViewController <UINavigationControllerDelegate>
 
