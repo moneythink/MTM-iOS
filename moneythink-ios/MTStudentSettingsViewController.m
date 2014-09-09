@@ -144,10 +144,14 @@
         }
 
         PFUser *user = [PFUser currentUser];
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND type = %@", user[@"class"], type];
+        NSString *userClass = user[@"class"];
+        NSString *userSchool = user[@"school"];
+        
+        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", userClass, userSchool, type];
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                [cell.textLabel setFont:[UIFont systemFontOfSize:16.0f]];
                 NSString *code = [objects firstObject][@"code"];
                 if (objects.count > 0) {
                     cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
@@ -164,6 +168,8 @@
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
 
+    [cell.textLabel sizeToFit];
+    
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     return cell;
 }

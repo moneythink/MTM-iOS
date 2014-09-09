@@ -412,6 +412,8 @@
                     
                     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         if (!error) {
+                            [[PFUser currentUser] refreshInBackgroundWithTarget:self selector:nil];
+                            
                             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                                 [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
                             } else {
