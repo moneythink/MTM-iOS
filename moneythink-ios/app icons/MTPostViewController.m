@@ -90,9 +90,6 @@
     
     self.postComment.delegate = self;
 
-    self.postLikesCount = [self.challengePost[@"likes"] intValue];
-    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
     [queryPostComments includeKey:@"user"];
@@ -260,15 +257,26 @@
     
     self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
     
-    self.postsLiked = self.currentUser[@"posts_liked"];
+    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    NSString *likesString;
+    if (self.postLikesCount > 0) {
+        likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+    } else {
+        likesString = @"0";
+    }
+    self.postLikes.text = likesString;
+    
+    self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
-    self.iLike = !(index == NSNotFound);
-        
-    if (self.iLike) {
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-    } else {
+    
+    BOOL like_active = (index > 0) && (index < self.postsLiked.count);
+    like_active |= self.postLikesCount > 0;
+    
+    if (!like_active) {
         [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+    } else {
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     }
     
     if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
@@ -340,9 +348,18 @@
 }
 
 - (IBAction)likeButtonTapped:(id)sender {
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     NSString *postID = [self.challengePost objectId];
     NSString *userID = [self.currentUser objectId];
-    
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
         if (!error) {
@@ -547,7 +564,6 @@
     CGFloat x = fieldsFrame.origin.x;
     CGFloat y = fieldsFrame.origin.y;
     CGFloat w = fieldsFrame.size.width;
-//    CGFloat h = fieldsFrame.size.height - kbTop + 60.0f;
     
     CGRect fieldsContentRect = CGRectMake(x, y, w, kbTop + 320.0f);
     
@@ -614,17 +630,22 @@
 	UITableViewCell *cell = [self.commentsTableView dequeueReusableCellWithIdentifier:@"cell"];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:@"cell"];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
     }
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     
     PFChallengePostComment *comment = self.comments[indexPath.row];
     cell.textLabel.text = comment[@"comment_text"];
+    [cell.textLabel setFont:[UIFont systemFontOfSize:13.0f]];
+    cell.textLabel.textColor = [UIColor darkGrey];
     
     PFUser *commentPoster = comment[@"user"];
     
-    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+    NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+    cell.detailTextLabel.text = detailString;
+    [cell.detailTextLabel setFont:[UIFont systemFontOfSize:11.0f]];
+    cell.detailTextLabel.textColor = [UIColor darkGrey];
     
     [cell setAccessoryType:UITableViewCellAccessoryNone];
     return cell;

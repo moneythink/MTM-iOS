@@ -254,22 +254,27 @@
     }
     
     NSInteger likes = [post[@"likes"] intValue];
+    NSString *likesString;
     if (likes > 0) {
-        NSString *likesString = [NSString stringWithFormat:@"%ld", (long)likes];
-        cell.likes.text = likesString;
+        likesString = [NSString stringWithFormat:@"%ld", (long)likes];
     } else {
-        cell.likes.text = @"0";
+        likesString = @"0";
     }
-    
+    cell.likes.text = likesString;
+
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [post objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     
-    if (index == NSNotFound || self.postsLiked.count < 1) {
+    BOOL like_active = (index > 0) && (index < self.postsLiked.count);
+    like_active |= likes > 0;
+    
+    if (!like_active) {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     } else {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     }
+    
     cell.likeButton.tag = indexPath.row;
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
     
@@ -512,9 +517,10 @@
     
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSInteger index = [self.postsLiked indexOfObject:postID];
-    BOOL like = index == NSNotFound;
+    BOOL like = (index == NSNotFound);
+    NSString *likeString = [NSString stringWithFormat:@"%d", like];
     
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:like]} block:^(id object, NSError *error) {
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
             [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 [self.tableView reloadData];
@@ -522,8 +528,8 @@
             [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 [self.tableView reloadData];
             }];
-            
-            [self.tableView reloadData];
+        } else {
+            NSLog(@"error - %@", error);
         }
     }];
 }

@@ -69,20 +69,38 @@
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger sections = 2;
+    NSInteger sections = 0;
+    
+    if (self.futureChallenges.count > 0) {
+        sections += 1;
+    }
+    
+    if (self.availableChallenges.count > 0) {
+        sections += 1;
+    }
+    
     return sections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger rows;
+    NSInteger rows = 0;
+    
+    NSInteger available = self.availableChallenges.count;
+    NSInteger future = self.futureChallenges.count;
     
     switch (section) {
-        case 0:
-            rows = self.availableChallenges.count;
+        case 0: {
+            if (available > 0) {
+                rows = available;
+            }
+        }
             break;
             
-        default:
-            rows = self.futureChallenges.count;
+        default: {
+            if (future > 0) {
+                rows = future;
+            }
+        }
             break;
     }
     
@@ -90,15 +108,24 @@
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSString *title;
+    NSString *title = @"";
+
+    NSInteger available = self.availableChallenges.count;
+    NSInteger future = self.futureChallenges.count;
     
     switch (section) {
-        case 0:
-            title = @"AVAILABLE CHALLENGES";
+        case 0: {
+            if (available > 0) {
+                title = @"AVAILABLE CHALLENGES";
+            }
+        }
             break;
             
-        default:
-            title = @"FUTURE CHALLENGES";
+        default: {
+            if (future > 0) {
+                title = @"FUTURE CHALLENGES";
+            }
+        }
             break;
     }
     
@@ -123,15 +150,28 @@
     NSInteger section = indexPath.section;
     NSInteger row = indexPath.row;
     
-    PFChallengesActivated *activation = self.futureChallenges[row];
+    NSInteger available = self.availableChallenges.count;
+    NSInteger future = self.futureChallenges.count;
+    
+    PFChallengesActivated *activation;
     
     switch (section) {
         case 0: {
-            activation = self.availableChallenges[row];
+            if (available > 0) {
+                activation = self.availableChallenges[row];
+            } else {
+                return nil;
+            }
         }
             break;
             
-        default: 
+        default: {
+            if (future > 0) {
+                activation = self.futureChallenges[row];
+            } else {
+                return nil;
+            }
+        }
             break;
     }
     
