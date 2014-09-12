@@ -209,7 +209,7 @@
         }
     }
 
-    [self performSegueWithIdentifier:@"unwindToPostsTabBar" sender:nil];
+    [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
 }
 
 -(void)dismissKeyboard {

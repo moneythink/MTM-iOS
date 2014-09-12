@@ -32,9 +32,14 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    NSString *userSchool = [PFUser currentUser][@"school"];
+    NSString *userClass = [PFUser currentUser][@"class"];
     
     PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
     [queryActivations whereKey:@"activated" equalTo:@YES];
+    [queryActivations whereKey:@"school" equalTo:userSchool];
+    [queryActivations whereKey:@"class" equalTo:userClass];
+    
     [queryActivations orderByAscending:@"challenge_number"];
 
     [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
@@ -49,6 +54,9 @@
     
     PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
     [queryFuture whereKey:@"activated" equalTo:@NO];
+    [queryFuture whereKey:@"school" equalTo:userSchool];
+    [queryFuture whereKey:@"class" equalTo:userClass];
+
     [queryFuture orderByAscending:@"challenge_number"];
 
     [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {

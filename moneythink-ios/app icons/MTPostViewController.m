@@ -101,6 +101,7 @@
                 self.comments = objects;
                 self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)self.commentsCount];
                 [self.commentsTableView reloadData];
+                [self.view setNeedsLayout];
             } else {
                 self.commentCount.text = @"0";
             }
@@ -111,7 +112,8 @@
     
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
-    
+    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
     [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -161,6 +163,13 @@
     CGSize size = CGSizeMake(w, h);
 
     self.scrollFields.contentSize = size;
+    
+    CGRect commentsFrame = self.commentsTableView.frame;
+    NSInteger commentCount = self.comments.count;
+    if (commentCount > 2) {
+        commentsFrame.size.height = self.comments.count * [self.commentsTableView rowHeight];
+    }
+    self.commentsTableView.frame = commentsFrame;
     
     frame = self.view.frame;
     frame.size.height = frame.origin.y + frame.size.height - self.commentsTableView.frame.size.height;
@@ -257,7 +266,6 @@
     
     self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
     
-    self.postLikesCount = [self.challengePost[@"likes"] intValue];
     NSString *likesString;
     if (self.postLikesCount > 0) {
         likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
@@ -290,6 +298,49 @@
 
 
 #pragma mark - IBActions
+
+- (IBAction)likeButtonTapped:(id)sender {
+    
+    NSString *postID = [self.challengePost objectId];
+    NSString *userID = [self.currentUser objectId];
+    
+    self.iLike = !self.iLike;
+    
+    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    if (self.iLike) {
+        [likePosts addObject:postID];
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        self.postLikesCount += 1;
+    } else {
+        NSInteger index = [likePosts indexOfObject:postID];
+        if (!(index == NSNotFound)) {
+            [likePosts removeObjectAtIndex:index];
+        }
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+        self.postLikesCount -= 1;
+    }
+    self.postsLiked = likePosts;
+    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+    
+    [self.view setNeedsLayout];
+    
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
+        if (!error) {
+            PFChallengePost *post = self.challengePost;
+            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
+            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
+            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    [self.currentUser refreshInBackgroundWithTarget:self selector:nil];
+                    [self.challenge refreshInBackgroundWithTarget:self selector:nil];
+                    [self.challengePost refreshInBackgroundWithTarget:self selector:nil];
+                    
+                    [self.view setNeedsLayout];
+                }
+            }];
+        }
+    }];
+}
 
 - (IBAction)commentTapped:(id)sender {
     PFChallengePostComment *postComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
@@ -345,49 +396,6 @@
     }];
     
     self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
-}
-
-- (IBAction)likeButtonTapped:(id)sender {
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    NSString *postID = [self.challengePost objectId];
-    NSString *userID = [self.currentUser objectId];
-    
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
-        if (!error) {
-            PFChallengePost *post = self.challengePost;
-            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
-            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
-            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    self.iLike = !self.iLike;
-                    
-                    if (self.iLike) {
-                        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-                        self.postLikesCount += 1;
-                    } else {
-                        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-                        self.postLikesCount -= 1;
-                    }
-                    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-                    
-                    [self.currentUser refreshInBackgroundWithTarget:self selector:nil];
-                    [self.challenge refreshInBackgroundWithTarget:self selector:nil];
-                    [self.challengePost refreshInBackgroundWithTarget:self selector:nil];
-                    
-                    [self.view setNeedsLayout];
-                }
-            }];
-        }
-    }];
 }
 
 - (IBAction)button1Tapped:(id)sender {

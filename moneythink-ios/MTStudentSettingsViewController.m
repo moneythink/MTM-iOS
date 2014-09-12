@@ -11,14 +11,13 @@
 
 @interface MTStudentSettingsViewController ()
 
-//@property (strong, nonatomic) IBOutlet UITableView *tableView;
-
-@property (strong, nonatomic) IBOutlet UITableViewCell *logout;
-@property (strong, nonatomic) IBOutlet UITableViewCell *editProfile;
+@property (strong, nonatomic) IBOutlet UITableView *tableview;
 
 @property (assign, nonatomic) BOOL signupOn;
 @property (assign, nonatomic) BOOL notificationsOn;
 @property (strong, nonatomic) NSArray *sections;
+
+@property (strong, nonatomic) NSArray *signUpCodes;
 
 @end
 
@@ -45,6 +44,21 @@
     PFUser *user = [PFUser currentUser];
     NSString *userType = user[@"type"];
     self.signupOn = [userType isEqualToString:@"mentor"];
+    
+
+    NSString *userClass = user[@"class"];
+    NSString *userSchool = user[@"school"];
+    
+    NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
+    PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+    [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.signUpCodes = objects;
+            
+            [self.tableview reloadData];
+        }
+    }];
+
     
     self.sections = @[@"PROFILE", @""];
     if (self.notificationsOn) {
@@ -74,6 +88,13 @@
 
 #pragma mark - UITableViewController delegate methods
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
+{
+    NSInteger sections = self.sections.count;
+    
+    return sections;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger rows = 1;
@@ -82,7 +103,7 @@
     } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         rows = 1;
     } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
-        rows = 2;
+        rows = self.signUpCodes.count;
     } else {
         rows = 1;
     }
@@ -128,41 +149,21 @@
     } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
         NSString *type = @"";
         NSString *msg = @"";
+        NSString *code = @"";
         
-        switch (indexPath.row) {
-            case 0: {
-                type = @"student";
-                msg = @"Student sign up code";
-            }
-                break;
-                
-            default: {
-                type = @"mentor";
-                msg = @"Mentor sign up code";
-            }
-                break;
+        PFSignupCodes *signupCode = self.signUpCodes[row];
+        type = signupCode[@"type"];
+        code = signupCode[@"code"];
+        
+        if ([type isEqualToString:@"student"]) {
+            msg = @"Student sign up code";
+        } else if ([type isEqualToString:@"mentor"]) {
+            msg = @"Mentor sign up code";
         }
-
-        PFUser *user = [PFUser currentUser];
-        NSString *userClass = user[@"class"];
-        NSString *userSchool = user[@"school"];
         
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", userClass, userSchool, type];
-        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                [cell.textLabel setFont:[UIFont systemFontOfSize:16.0f]];
-                NSString *code = [objects firstObject][@"code"];
-                if (objects.count > 0) {
-                    cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
-                } else {
-                    cell.textLabel.text = @"";
-                }
-            }
-        }];
-        
-        cell.textLabel.text = @"Signup Code";
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+        [cell.textLabel setFont:[UIFont systemFontOfSize:16.0f]];
+        cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
     } else {
         cell.textLabel.text = @"Log Out";
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
@@ -172,13 +173,6 @@
     
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
     return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
-{
-    NSInteger sections = self.sections.count;
-    
-    return sections;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {

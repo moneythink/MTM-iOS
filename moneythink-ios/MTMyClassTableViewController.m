@@ -15,6 +15,7 @@
 
 @property (assign, nonatomic) BOOL hasButtons;
 @property (strong, nonatomic) NSArray *postsLiked;
+@property (strong, nonatomic) NSArray *myObjects;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @property (assign, nonatomic) BOOL iLike;
@@ -90,7 +91,7 @@
 
 - (void)objectsDidLoad:(NSError *)error {
     [super objectsDidLoad:error];
-    
+    self.myObjects = self.objects;
 }
 
 - (void)objectsWillLoad {
@@ -123,6 +124,10 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
     
     PFChallengePost *post = (PFChallengePost *)object;
+    NSInteger objectIndex = [self.objects indexOfObject:object];
+    if (objectIndex < self.myObjects.count) {
+        post = (PFChallengePost *)self.myObjects[objectIndex];
+    }
     
     PFUser *user = post[@"user"];
     
@@ -269,10 +274,10 @@
     BOOL like_active = (index > 0) && (index < self.postsLiked.count);
     like_active |= likes > 0;
     
-    if (!like_active) {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-    } else {
+    if (like_active) {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+    } else {
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     }
     
     cell.likeButton.tag = indexPath.row;
@@ -327,13 +332,13 @@
         UIImage *postImage = rowObject[@"picture"];
         
         if (self.hasButtons && postImage) {
-            height = 426.0f;
+            height = 436.0f;
         } else if (self.hasButtons) {
-            height = 150.0f;
+            height = 160.0f;
         } else if (postImage) {
-            height = 406.0f;
+            height = 416.0f;
         } else {
-            height = 120.0f;
+            height = 130.0f;
         }
     } else {
 
@@ -515,9 +520,33 @@
     NSString *userID = [user objectId];
     NSString *postID = [post objectId];
     
+    BOOL like = YES;
+    NSInteger index = 0;
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
-    NSInteger index = [self.postsLiked indexOfObject:postID];
-    BOOL like = (index == NSNotFound);
+    if (self.postsLiked.count > 0) {
+        index = [self.postsLiked indexOfObject:postID];
+        like = (index == NSNotFound);
+    } else {
+        like = YES;
+    }
+    
+    NSMutableArray *likes = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSMutableArray *objects = [NSMutableArray arrayWithArray:self.objects];
+    NSInteger likesCount = [post[@"likes"] intValue];
+    if (like) {
+        likesCount += 1;
+        [likes addObject:postID];
+    } else {
+        likesCount -= 1;
+        [likes removeObjectAtIndex:index];
+    }
+    post[@"likes"] = [NSNumber numberWithInteger:likesCount];
+    self.postsLiked = likes;
+    [PFUser currentUser][@"posts_liked"] = self.postsLiked;
+    objects[buttonTag] = post;
+    self.myObjects = objects;
+    [self.tableView reloadData];
+
     NSString *likeString = [NSString stringWithFormat:@"%d", like];
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
