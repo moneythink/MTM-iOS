@@ -62,6 +62,8 @@
     NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInt:challenge_number]];
     PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
     
+    queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallengeBanner *banner = [objects firstObject];

@@ -35,6 +35,8 @@
     [allChallenges whereKeyDoesNotExist:@"school"];
     [allChallenges whereKeyDoesNotExist:@"class"];
 
+//    allChallenges.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.challenges = objects;

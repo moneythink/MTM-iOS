@@ -40,11 +40,14 @@
     [studentPostsQuery includeKey:@"verified_by"];
     [studentPostsQuery orderByDescending:@"createdAt"];
     
+    studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.studentPosts = objects;
-            
             [self.tableView reloadData];
+        } else {
+            // error
         }
     }];
 

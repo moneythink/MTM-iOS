@@ -51,6 +51,8 @@
     
     NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
     PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+    querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.signUpCodes = objects;
@@ -238,6 +240,9 @@
         
         NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"school = %@ AND class = %@ AND type = %@", [PFUser currentUser][@"school"], [PFUser currentUser][@"class"], type];
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+        querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork
+        ;
+        
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 NSString *signupCode = [objects firstObject][@"code"];

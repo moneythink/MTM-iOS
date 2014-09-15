@@ -58,6 +58,8 @@
     [challengeQuery whereKeyDoesNotExist:@"class"];
 
     [challengeQuery orderByDescending:@"createdAt"];
+    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
@@ -74,9 +76,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.title = @"My Class";
-    
-    [self queryForTable];
-    [self.tableView reloadData];
+    [self loadObjects];
 }
 
 - (void)didReceiveMemoryWarning
@@ -116,7 +116,9 @@
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
-    
+
+    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     return query;
 }
 
@@ -285,6 +287,8 @@
     
     PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [commentQuery whereKey:@"challenge_post" equalTo:post];
+    commentQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {
             if (number > 0) {

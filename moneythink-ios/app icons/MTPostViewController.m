@@ -94,6 +94,8 @@
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
     [queryPostComments includeKey:@"user"];
     
+    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.commentsCount = objects.count;
@@ -116,6 +118,9 @@
 
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
+    
+    findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.postUser = [objects firstObject];
@@ -172,7 +177,7 @@
     self.commentsTableView.frame = commentsFrame;
     
     frame = self.view.frame;
-    frame.size.height = frame.origin.y + frame.size.height - self.commentsTableView.frame.size.height;
+//    frame.size.height = frame.origin.y + frame.size.height - self.commentsTableView.frame.size.height;
     frame.origin.y  = 0.0f;
     self.scrollFields.frame = frame;
 }
@@ -329,6 +334,8 @@
             PFChallengePost *post = self.challengePost;
             NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
             PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
+            queryChallengePost.cachePolicy = kPFCachePolicyCacheThenNetwork;
+            
             [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
                 if (!error) {
                     [self.currentUser refreshInBackgroundWithTarget:self selector:nil];
@@ -343,22 +350,25 @@
 }
 
 - (IBAction)commentTapped:(id)sender {
-    PFChallengePostComment *postComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
-    postComment[@"comment_text"] = self.postComment.text;
-    postComment[@"challenge_post"] = self.challengePost;
-    postComment[@"class"] = self.challengePost[@"class"];
-    postComment[@"school"] = self.challengePost[@"school"];
-    postComment[@"user"] = [PFUser currentUser];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-
-    [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+    if (![self.postComment.text isEqualToString:@""]) {
+        PFChallengePostComment *postComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
+        postComment[@"comment_text"] = self.postComment.text;
+        postComment[@"challenge_post"] = self.challengePost;
+        postComment[@"class"] = self.challengePost[@"class"];
+        postComment[@"school"] = self.challengePost[@"school"];
+        postComment[@"user"] = [PFUser currentUser];
+        
+        [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [self.navigationController popViewControllerAnimated:YES];
+            } else {
+                [self dismissKeyboard];
+                NSLog(@"error - %@", error);
+            }
+        }];
+    } else {
+        [self dismissKeyboard];
+    }
 }
 
 - (IBAction)deletePostTapped:(id)sender {

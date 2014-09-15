@@ -42,6 +42,8 @@
     
     [queryActivations orderByAscending:@"challenge_number"];
 
+//    queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
         if (!error) {
             self.availableChallenges = availableObjects;
@@ -59,6 +61,8 @@
 
     [queryFuture orderByAscending:@"challenge_number"];
 
+//    queryFuture.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
         if (!error) {
             self.futureChallenges = scheduledObjects;
@@ -190,6 +194,8 @@
     [challengeQuery whereKeyDoesNotExist:@"school"];
     [challengeQuery whereKeyDoesNotExist:@"class"];
 
+//    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];

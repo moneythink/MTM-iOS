@@ -176,14 +176,6 @@
         self.challengePost[@"user"] = [PFUser currentUser];
         self.challengePost[@"post_text"] = self.postText.text;
         
-        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-
-            } else {
-                NSLog(@"text error - %@", error);
-            }
-        }];
-
         if (self.postImage.image) {
             NSString *fileName = @"post_image.png";
             NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
@@ -197,6 +189,7 @@
 
                         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
+                                [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
                             } else {
                                 NSLog(@"text error - %@", error);
                             }
@@ -206,10 +199,15 @@
                     }
                 }];
             }
+        } else {
+            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (!error) {
+                } else {
+                    NSLog(@"text error - %@", error);
+                }
+            }];
         }
     }
-
-    [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
 }
 
 -(void)dismissKeyboard {

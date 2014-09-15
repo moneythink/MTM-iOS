@@ -46,6 +46,8 @@
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@", self.challengeNumber, [PFUser currentUser][@"class"]];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
 
+    findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             [self.tableView reloadData];

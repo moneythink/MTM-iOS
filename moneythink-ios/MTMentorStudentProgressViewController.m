@@ -49,6 +49,8 @@
 
     [studentsForClass orderByAscending:@"last_name"];
     
+//    studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
@@ -170,6 +172,8 @@
             NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date > %@", [NSDate date]];
             PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
 
+            scheduledActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
+            
             [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                 if (!error) {
                     self.autoReleaseSwitch.on = number > 0;

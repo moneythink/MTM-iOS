@@ -54,6 +54,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:NO];
+    [self reloadInputViews];
 }
 
 - (void)didReceiveMemoryWarning

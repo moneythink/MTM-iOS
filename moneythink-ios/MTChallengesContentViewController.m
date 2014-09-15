@@ -115,7 +115,8 @@
     [queryActivated whereKeyDoesNotExist:@"school"];
     [queryActivated whereKeyDoesNotExist:@"class"];
 
-    
+//    queryActivated.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//
     [queryActivated countObjectsInBackgroundWithTarget:self selector:@selector(objectsReturned:)];
 }
 

@@ -45,6 +45,8 @@
                 [queryNoOne whereKey:@"read_by" notEqualTo:userID];
                 
                 PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
+                query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+                
                 [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                     if (number > 0) {
                         NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
@@ -208,6 +210,8 @@
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
+        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -220,6 +224,8 @@
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
+        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -232,6 +238,8 @@
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
+        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -244,6 +252,8 @@
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
+        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 PFChallenges *challenge = [objects firstObject];
@@ -302,6 +312,8 @@
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
     
     __block NSInteger count;
+    
+    queryActivated.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
     [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
         if (!error) {

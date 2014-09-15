@@ -44,6 +44,8 @@
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
     
+    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.posts = objects;
@@ -79,6 +81,8 @@
     
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
+    
+    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
     return query;
 }
