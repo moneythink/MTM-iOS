@@ -46,11 +46,6 @@
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    
-}
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

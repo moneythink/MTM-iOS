@@ -53,7 +53,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     self.parentViewController.navigationItem.title = @"Challenges";
-    [[PFUser currentUser] refresh];
+    [[PFUser currentUser] refreshInBackgroundWithTarget:nil selector:nil];
 }
 
 - (void)viewWillLayoutSubviews {

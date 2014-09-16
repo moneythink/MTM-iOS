@@ -68,7 +68,8 @@
             NSArray *buttons = challenge[@"buttons"];
             self.hasButtons = buttons.count;
             
-            [self.tableView reloadData];
+//            [self.tableView reloadData];
+            [self loadObjects];
         }
     }];
 }
@@ -273,7 +274,9 @@
     NSString *postID = [post objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     
-    BOOL like_active = (index > 0) && (index < self.postsLiked.count);
+    BOOL like_active = (index > 0);
+    like_active &= (index != NSNotFound);
+    like_active &= (index < self.postsLiked.count);
     like_active |= likes > 0;
     
     if (like_active) {
@@ -549,17 +552,20 @@
     [PFUser currentUser][@"posts_liked"] = self.postsLiked;
     objects[buttonTag] = post;
     self.myObjects = objects;
-    [self.tableView reloadData];
+//    [self.tableView reloadData];
+    [self loadObjects];
 
     NSString *likeString = [NSString stringWithFormat:@"%d", like];
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
             [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self.tableView reloadData];
+//                [self.tableView reloadData];
+                [self loadObjects];
             }];
             [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self.tableView reloadData];
+//                [self.tableView reloadData];
+                [self loadObjects];
             }];
         } else {
             NSLog(@"error - %@", error);
@@ -584,7 +590,8 @@
             [self.challenge refresh];
             [post refresh];
             
-            [self.tableView reloadData];
+//            [self.tableView reloadData];
+            [self loadObjects];
         } else {
             NSLog(@"error - %@", error);
         }
@@ -608,7 +615,8 @@
             [self.challenge refresh];
             [post refresh];
             
-            [self.tableView reloadData];
+//            [self.tableView reloadData];
+            [self loadObjects];
         } else {
             NSLog(@"error - %@", error);
         }

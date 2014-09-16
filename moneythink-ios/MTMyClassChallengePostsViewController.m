@@ -22,18 +22,7 @@
     if (self) {
         // Custom the table
         
-        // The className to query on
-        self.parseClassName = [PFChallengePost parseClassName];
-        
-        // The key of the PFObject to display in the label of the default cell style
-        self.textKey = @"post_text";
-        
-        // The title for this table in the Navigation Controller.
         self.title = @"My Class";
-        
-        // Whether the built-in pull-to-refresh is enabled
-        self.pullToRefreshEnabled = YES;
-        
     }
     return self;
 }

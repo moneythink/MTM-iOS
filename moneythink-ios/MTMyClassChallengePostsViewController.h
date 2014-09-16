@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTMyClassChallengePostsViewController : PFQueryTableViewController
+@interface MTMyClassChallengePostsViewController : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *myClassPostsTableView;
 

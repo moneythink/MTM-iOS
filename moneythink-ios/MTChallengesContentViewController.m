@@ -98,17 +98,6 @@
     }
 }
 
-- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-//    if (self.tableView == self.searchDisplayController.searchResultsTableView) {
-//        
-//        [self performSegueWithIdentifier:@"showDetail"sender:self];
-//        return YES;
-//    }
-    
-    return NO;
-}
-
 -(void)exploreChallenge {
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];

@@ -111,6 +111,10 @@
     
     NSInteger count = [queryActivated countObjects];
     challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+//    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+//        challengeContentViewController.challengeStateText = (number > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+//        [self.view setNeedsLayout];
+//    }];
     
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
