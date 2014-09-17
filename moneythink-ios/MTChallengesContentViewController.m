@@ -25,6 +25,8 @@
 @property (strong, nonatomic) IBOutlet UIView *leftPanel;
 @property (strong, nonatomic) IBOutlet UIView *rightPanel;
 
+@property (assign, nonatomic) BOOL activated;
+
 @end
 
 @implementation MTChallengesContentViewController
@@ -49,11 +51,33 @@
                                    initWithTarget:self
                                    action:@selector(exploreChallenge)];
     
+    self.activated = NO;
+    
     [self.view addGestureRecognizer:tap];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    NSString *userClass = [PFUser currentUser][@"class"];
+    NSString *userSchool = [PFUser currentUser][@"school"];
+    
+    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
+    PFQuery *checkSchedule = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:challengePredicate];
+    
+    checkSchedule.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    [checkSchedule whereKey:@"activated" equalTo:@YES];
+    [checkSchedule whereKey:@"class" equalTo:userClass];
+    [checkSchedule whereKey:@"school" equalTo:userSchool];
+    
+    [checkSchedule countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
+            self.activated = YES;
+        } else {
+            self.activated = number > 0;
+        }
+    }];
+    
     self.challengeState.text = self.challengeStateText;
     self.challengeTitle.text = self.challengeTitleText;
     self.challengeNumber.text = self.challengeNumberText;
@@ -99,14 +123,16 @@
 }
 
 -(void)exploreChallenge {
-    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
-    [queryActivated whereKeyDoesNotExist:@"school"];
-    [queryActivated whereKeyDoesNotExist:@"class"];
-
-//    queryActivated.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//
-    [queryActivated countObjectsInBackgroundWithTarget:self selector:@selector(objectsReturned:)];
+    if (self.activated) {
+        NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
+        PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
+        [queryActivated whereKeyDoesNotExist:@"school"];
+        [queryActivated whereKeyDoesNotExist:@"class"];
+        
+//        queryActivated.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//        
+        [queryActivated countObjectsInBackgroundWithTarget:self selector:@selector(objectsReturned:)];
+    }
 }
 
 

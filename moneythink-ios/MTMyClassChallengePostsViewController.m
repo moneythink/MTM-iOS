@@ -32,9 +32,19 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
+    
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@", self.challengeNumber, [PFUser currentUser][@"class"]];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
-
+    
     findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -42,12 +52,6 @@
             [self.tableView reloadData];
         }
     }];
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    
 }
 
 - (void)didReceiveMemoryWarning

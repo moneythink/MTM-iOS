@@ -23,7 +23,9 @@
 @property (strong, nonatomic) IBOutlet UILabel *postText;
 
 @property (strong, nonatomic) IBOutlet UIButton *commentPost;
-@property (strong, nonatomic) IBOutlet UITextField *postComment;
+@property (strong, nonatomic) IBOutlet UIButton *comment;
+@property (strong, nonatomic) IBOutlet UILabel *commentCount;
+@property (assign, nonatomic) NSInteger commentsCount;
 
 @property (strong, nonatomic) IBOutlet UIButton *likePost;
 @property (strong, nonatomic) NSArray *postsLiked;
@@ -32,10 +34,6 @@
 @property (assign, nonatomic) BOOL iLike;
 @property (assign, nonatomic) BOOL isMyClass;
 
-@property (strong, nonatomic) IBOutlet UIButton *comment;
-@property (strong, nonatomic) IBOutlet UILabel *commentCount;
-@property (assign, nonatomic) NSInteger commentsCount;
-
 @property (strong, nonatomic) IBOutlet UIButton *button1;
 @property (strong, nonatomic) IBOutlet UIButton *button2;
 
@@ -43,9 +41,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
-@property (assign, nonatomic) NSInteger keyboardHeight;
-@property (assign, nonatomic) CGRect oldViewFieldsRect;
-@property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (strong, nonatomic) IBOutlet UIButton *deletePost;
 
@@ -65,57 +60,23 @@
     return self;
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    self.scrollFields.scrollEnabled = YES;
-    self.scrollFields.alwaysBounceVertical = YES;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.scrollFields.delegate = self;
-    self.keyboardHeight = 0.0f;
-    
     [self.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
-    
-    self.postComment.delegate = self;
+}
 
-    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
-    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
-    [queryPostComments includeKey:@"user"];
-    
-    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.commentsCount = objects.count;
-            if (self.commentsCount > 0) {
-                self.comments = objects;
-                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)self.commentsCount];
-                [self.commentsTableView reloadData];
-                [self.view setNeedsLayout];
-            } else {
-                self.commentCount.text = @"0";
-            }
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
-    
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.title = self.challenge[@"title"];
+
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
     self.postLikesCount = [self.challengePost[@"likes"] intValue];
-
+    
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
     
@@ -147,14 +108,28 @@
         }
     }];
     
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = self.challenge[@"title"];
+    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
+    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
+    [queryPostComments includeKey:@"user"];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.commentsCount = objects.count;
+            if (self.commentsCount > 0) {
+                self.comments = objects;
+                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)self.commentsCount];
+                [self.commentsTableView reloadData];
+                [self.view setNeedsLayout];
+            } else {
+                self.commentCount.text = @"0";
+            }
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+
 }
 
 - (void)viewDidLayoutSubviews {
@@ -168,16 +143,15 @@
     CGSize size = CGSizeMake(w, h);
 
     self.scrollFields.contentSize = size;
-    
+
     CGRect commentsFrame = self.commentsTableView.frame;
     NSInteger commentCount = self.comments.count;
     if (commentCount > 2) {
         commentsFrame.size.height = self.comments.count * [self.commentsTableView rowHeight];
     }
     self.commentsTableView.frame = commentsFrame;
-    
+
     frame = self.view.frame;
-//    frame.size.height = frame.origin.y + frame.size.height - self.commentsTableView.frame.size.height;
     frame.origin.y  = 0.0f;
     self.scrollFields.frame = frame;
 }
@@ -188,7 +162,6 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -350,25 +323,11 @@
 }
 
 - (IBAction)commentTapped:(id)sender {
-    if (![self.postComment.text isEqualToString:@""]) {
-        PFChallengePostComment *postComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
-        postComment[@"comment_text"] = self.postComment.text;
-        postComment[@"challenge_post"] = self.challengePost;
-        postComment[@"class"] = self.challengePost[@"class"];
-        postComment[@"school"] = self.challengePost[@"school"];
-        postComment[@"user"] = [PFUser currentUser];
-        
-        [postComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [self.navigationController popViewControllerAnimated:YES];
-            } else {
-                [self dismissKeyboard];
-                NSLog(@"error - %@", error);
-            }
-        }];
-    } else {
-        [self dismissKeyboard];
-    }
+    [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
+}
+
+- (void)dismissCommentView {
+    [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
 - (IBAction)deletePostTapped:(id)sender {
@@ -553,85 +512,22 @@
 }
 
 
-#pragma mark - Keyboard methods
-
--(void)dismissKeyboard {
-    [self.view endEditing:YES];
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (void) keyboardWasShown:(NSNotification *)nsNotification {
-    CGRect viewFrame = self.view.frame;
-    self.oldViewFieldsRect = self.scrollFields.frame;
-    self.oldViewFieldsContentSize = self.scrollFields.contentSize;
-    
-    CGRect fieldsFrame = self.scrollFields.frame;
-    
-    NSDictionary *userInfo = [nsNotification userInfo];
-    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGSize kbSize = kbRect.size;
-    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
-    self.keyboardHeight = kbSize.height;
-    
-    CGFloat x = fieldsFrame.origin.x;
-    CGFloat y = fieldsFrame.origin.y;
-    CGFloat w = fieldsFrame.size.width;
-    
-    CGRect fieldsContentRect = CGRectMake(x, y, w, kbTop + 320.0f);
-    
-    self.scrollFields.contentSize = fieldsContentRect.size;
-    
-    CGFloat h = self.scrollFields.contentSize.height + self.keyboardHeight;
-    self.scrollFields.contentSize = CGSizeMake(w, h);
-    
-    self.scrollFields.frame = fieldsFrame;
-}
-
-- (void)keyboardWasDismissed:(NSNotification *)notification
-{
-    self.scrollFields.frame = self.oldViewFieldsRect;
-    self.scrollFields.contentSize = self.oldViewFieldsContentSize;
-}
-
-
-
-#pragma mark - UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    NSInteger nextTag = textField.tag + 1;
-    // Try to find next responder
-    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
-    if (nextResponder) {
-        // Found next responder, so set it.
-        [nextResponder becomeFirstResponder];
-    } else {
-        // Not found, so remove keyboard.
-        [textField resignFirstResponder];
-    }
-    return NO; // We do not want UITextField to insert line-breaks.
-}
-
-
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    NSString *segueID = [segue identifier];
-    if ([segueID isEqualToString:@"pushStudentProfileFromPost"]) {
+    NSString *segueIdentifier = [segue identifier];
+    if ([segueIdentifier isEqualToString:@"commentOnPost"]) {
+        MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
+        destinationViewController.post = self.challengePost;
+        destinationViewController.challenge = self.challenge;
+        [destinationViewController setDelegate:self];
+    } else if ([segueIdentifier isEqualToString:@"pushStudentProfileFromPost"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         destinationVC.student = self.challengePost[@"user"];
     }
 }
-
-
 
 
 #pragma mark - UITableViewController delegate methods

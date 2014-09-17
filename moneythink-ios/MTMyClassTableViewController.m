@@ -10,6 +10,7 @@
 #import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewCell.h"
 #import "MTPostViewController.h"
+#import "MTCommentViewController.h"
 
 @interface MTMyClassTableViewController ()
 
@@ -51,12 +52,23 @@
 {
     [super viewDidLoad];
 
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.title = @"My Class";
+    [self loadObjects];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
+    
     NSInteger challengNumber = [self.challengeNumber intValue];
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
     [challengeQuery whereKeyDoesNotExist:@"school"];
     [challengeQuery whereKeyDoesNotExist:@"class"];
-
+    
     [challengeQuery orderByDescending:@"createdAt"];
     challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
@@ -68,16 +80,10 @@
             NSArray *buttons = challenge[@"buttons"];
             self.hasButtons = buttons.count;
             
-//            [self.tableView reloadData];
+            //            [self.tableView reloadData];
             [self loadObjects];
         }
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.title = @"My Class";
-    [self loadObjects];
 }
 
 - (void)didReceiveMemoryWarning
@@ -287,7 +293,9 @@
     
     cell.likeButton.tag = indexPath.row;
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    
+
+    cell.commentBUtton.tag = indexPath.row;
+
     PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [commentQuery whereKey:@"challenge_post" equalTo:post];
     commentQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
@@ -466,22 +474,31 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueIdentifier = [segue identifier];
-    
-    
-    MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
-    destinationViewController.challengePost = (PFChallengePost *)sender;
-    destinationViewController.challenge = self.challenge;
-    
-    if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
-    } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {
-    } else if ([segueIdentifier isEqualToString:@"pushViewPostNoImage"]) {
-    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
+    if ([segueIdentifier isEqualToString:@"commentOnPost"]) {
+        UIButton *button = sender;
+        NSInteger buttonTag = button.tag;
+        
+        PFChallengePost *post = self.objects[buttonTag];
+
+        MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
+        destinationViewController.post = post;
+        destinationViewController.challenge = self.challenge;
+        [destinationViewController setDelegate:self];
+        
+//    } else if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
+//    } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {
+//    } else if ([segueIdentifier isEqualToString:@"pushViewPostNoImage"]) {
+//    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
+    } else {
+        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
+        destinationViewController.challengePost = (PFChallengePost *)sender;
+        destinationViewController.challenge = self.challenge;
     }
 }
 
 
 
-#pragma mark Notification
+#pragma mark - Notification
 
 -(void)reachabilityChanged:(NSNotification*)note
 {
@@ -496,6 +513,18 @@
 
 
 #pragma mark - IBAction methods
+
+- (IBAction)unwindToMyClassTableView:(UIStoryboardSegue *)sender
+{
+}
+
+- (IBAction)commentTapped:(id)sender {
+    [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
+}
+
+- (void)dismissCommentView {
+    [self dismissViewControllerAnimated:YES completion:^{}];
+}
 
 - (void)deletePostTapped:(id)sender {
     
@@ -552,7 +581,6 @@
     [PFUser currentUser][@"posts_liked"] = self.postsLiked;
     objects[buttonTag] = post;
     self.myObjects = objects;
-//    [self.tableView reloadData];
     [self loadObjects];
 
     NSString *likeString = [NSString stringWithFormat:@"%d", like];
@@ -560,11 +588,9 @@
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
             [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                [self.tableView reloadData];
                 [self loadObjects];
             }];
             [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                [self.tableView reloadData];
                 [self loadObjects];
             }];
         } else {
@@ -590,7 +616,6 @@
             [self.challenge refresh];
             [post refresh];
             
-//            [self.tableView reloadData];
             [self loadObjects];
         } else {
             NSLog(@"error - %@", error);
@@ -615,7 +640,6 @@
             [self.challenge refresh];
             [post refresh];
             
-//            [self.tableView reloadData];
             [self loadObjects];
         } else {
             NSLog(@"error - %@", error);

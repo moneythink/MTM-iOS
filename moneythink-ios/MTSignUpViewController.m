@@ -282,8 +282,8 @@
 
 - (IBAction)schoolNameButton:(id)sender {
     PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-//    querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
+    querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
 }
 
@@ -320,8 +320,8 @@
     } else {
         NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
         PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
-//        querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//        
+        querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
     }
 }
@@ -365,8 +365,8 @@
         
         PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
         
-//        findCode.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//        
+        findCode.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
         [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 NSArray *codes = objects;

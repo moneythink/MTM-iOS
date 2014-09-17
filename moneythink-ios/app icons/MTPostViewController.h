@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MICheckBox.h"
+#import "MTCommentViewController.h"
 
-@interface MTPostViewController : UIViewController <UITextFieldDelegate, UIScrollViewDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface MTPostViewController : UIViewController <mtCommentViewProtocol, UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;

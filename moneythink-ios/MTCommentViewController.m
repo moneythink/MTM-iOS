@@ -7,6 +7,7 @@
 //
 
 #import "MTCommentViewController.h"
+#import "MTMyClassTableViewController.h"
 
 @interface MTCommentViewController ()
 
@@ -20,6 +21,10 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
 
 @property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
+
+@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
+@property (strong, nonatomic) IBOutlet UIButton *doneButton;
+
 @end
 
 @implementation MTCommentViewController
@@ -47,6 +52,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
+    [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
                                    initWithTarget:self
                                    action:@selector(dismissKeyboard)];
@@ -56,6 +64,7 @@
     self.title = @"Create Post";
     
     self.postText.text = @"";
+    [self.postText becomeFirstResponder];
     
     UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(commentDoneButton)];
     self.navigationItem.rightBarButtonItem = shareBarButton;
@@ -208,6 +217,29 @@
             }];
         }
     }
+}
+- (IBAction)postCommentDone:(id)sender {
+    if (![self.postText.text isEqualToString:@""]) {
+        self.challengePostComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
+        
+        self.challengePostComment[@"challenge_post"] = self.post;
+        self.challengePostComment[@"comment_text"] = self.postText.text;
+        self.challengePostComment[@"school"] = [PFUser currentUser][@"school"];
+        self.challengePostComment[@"class"] = [PFUser currentUser][@"class"];
+        self.challengePostComment[@"user"] = [PFUser currentUser];
+        
+        [self.challengePostComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+            } else {
+                NSLog(@"text error - %@", error);
+            }
+        }];
+    }
+    [self.delegate dismissCommentView];
+}
+- (IBAction)postCommentCancel:(id)sender {
+    self.postText.text = @"";
+    [self postCommentDone:nil];
 }
 
 -(void)dismissKeyboard {

@@ -32,6 +32,9 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+}
+
+- (void)viewDidAppear:(BOOL)animated {
     NSString *userSchool = [PFUser currentUser][@"school"];
     NSString *userClass = [PFUser currentUser][@"class"];
     
@@ -41,9 +44,9 @@
     [queryActivations whereKey:@"class" equalTo:userClass];
     
     [queryActivations orderByAscending:@"challenge_number"];
+    
+    queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
 
-//    queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
     [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
         if (!error) {
             self.availableChallenges = availableObjects;
@@ -52,17 +55,17 @@
             NSLog(@"error - %@", error);
         }
     }];
-
+    
     
     PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
     [queryFuture whereKey:@"activated" equalTo:@NO];
     [queryFuture whereKey:@"school" equalTo:userSchool];
     [queryFuture whereKey:@"class" equalTo:userClass];
-
+    
     [queryFuture orderByAscending:@"challenge_number"];
+    
+    queryFuture.cachePolicy = kPFCachePolicyCacheThenNetwork;
 
-//    queryFuture.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
     [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
         if (!error) {
             self.futureChallenges = scheduledObjects;
@@ -71,7 +74,6 @@
             
         }
     }];
-
 }
 
 - (void)didReceiveMemoryWarning
@@ -194,8 +196,8 @@
     [challengeQuery whereKeyDoesNotExist:@"school"];
     [challengeQuery whereKeyDoesNotExist:@"class"];
 
-//    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
+    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];

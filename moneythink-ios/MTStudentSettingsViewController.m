@@ -45,23 +45,6 @@
     NSString *userType = user[@"type"];
     self.signupOn = [userType isEqualToString:@"mentor"];
     
-
-    NSString *userClass = user[@"class"];
-    NSString *userSchool = user[@"school"];
-    
-    NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
-    PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-    querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.signUpCodes = objects;
-            
-            [self.tableview reloadData];
-        }
-    }];
-
-    
     self.sections = @[@"PROFILE", @""];
     if (self.notificationsOn) {
         if (self.signupOn) {
@@ -79,6 +62,24 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     self.parentViewController.navigationItem.title = @"Settings";
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    PFUser *user = [PFUser currentUser];
+    NSString *userClass = user[@"class"];
+    NSString *userSchool = user[@"school"];
+    
+    NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
+    PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
+    querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.signUpCodes = objects;
+            
+            [self.tableview reloadData];
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning

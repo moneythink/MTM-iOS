@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTCommentViewController.h"
 
-@interface MTMyClassTableViewController : PFQueryTableViewController
+@interface MTMyClassTableViewController : PFQueryTableViewController <mtCommentViewProtocol>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
 @property (nonatomic, strong) NSString *className;
 @property (nonatomic, strong) NSString *schoolName;
+
+@property (nonatomic, strong) NSString *comment;
 
 @end
 

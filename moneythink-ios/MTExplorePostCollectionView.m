@@ -34,12 +34,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:NO];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
+
     NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
     NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
     
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-
+    
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
@@ -57,12 +65,6 @@
         } else {
         }
     }];
-    
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:NO];
 }
 
 - (void)didReceiveMemoryWarning
@@ -82,8 +84,8 @@
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
     
-    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
+//    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    
     return query;
 }
 

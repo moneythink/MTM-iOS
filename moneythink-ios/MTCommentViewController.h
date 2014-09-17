@@ -8,8 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol mtCommentViewProtocol <NSObject>
+
+- (void)dismissCommentView;
+
+@end
+
 @interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
+@property (weak, nonatomic) id <mtCommentViewProtocol> delegate;
 @property (strong, nonatomic) PFChallenges *challenge;
+@property (strong, nonatomic) PFChallengePost *post;
+@property (strong, nonatomic) PFChallengePostComment *challengePostComment;
 
 @end

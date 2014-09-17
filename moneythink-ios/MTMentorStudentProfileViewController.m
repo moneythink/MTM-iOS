@@ -35,22 +35,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
-    [studentPostsQuery whereKey:@"user" equalTo:self.student];
-    [studentPostsQuery includeKey:@"verified_by"];
-    [studentPostsQuery orderByDescending:@"createdAt"];
-    
-    studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.studentPosts = objects;
-            [self.tableView reloadData];
-        } else {
-            // error
-        }
-    }];
-
     NSString *points = [self.student[@"points"] stringValue];
     if (!points) {
         points = @"0";
@@ -103,6 +87,26 @@
     } else {
         self.managerProgress.image = nil;
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
+    
+    PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
+    [studentPostsQuery whereKey:@"user" equalTo:self.student];
+    [studentPostsQuery includeKey:@"verified_by"];
+    [studentPostsQuery orderByDescending:@"createdAt"];
+    
+    studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            self.studentPosts = objects;
+            [self.tableView reloadData];
+        } else {
+            // error
+        }
+    }];
 }
 
 - (void)didReceiveMemoryWarning

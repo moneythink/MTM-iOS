@@ -31,10 +31,14 @@
     
     MTPostsTabBarViewController *postTabBarViewController = (MTPostsTabBarViewController *)self.parentViewController;
     self.challengeNumber = [postTabBarViewController.challengeNumber intValue];
+}
+
+- (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d", self.challengeNumber];
     PFQuery *findChallengePosts = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:findAllChallengePosts];
-
+    
     findChallengePosts.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
     [findChallengePosts findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

@@ -41,27 +41,32 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    self.parentViewController.navigationItem.title = @"Students";
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:NO];
+    
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSString *nameSchool = [PFUser currentUser][@"school"];
     NSString *type = @"student";
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
-
+    
     [studentsForClass orderByAscending:@"last_name"];
     
-//    studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
+    studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
+
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             self.classStudents = objects;
             [self.tableView reloadData];
         }
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.parentViewController.navigationItem.title = @"Students";
 }
 
 - (void)didReceiveMemoryWarning
