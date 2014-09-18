@@ -55,12 +55,6 @@
     [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
-    
     self.title = @"Create Post";
     
     self.postText.text = @"";
@@ -198,8 +192,13 @@
 
                         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
-                                [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kReloadMyClassChallengePostsdNotification object:self];
+                                });
                             } else {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kReloadMyClassChallengePostsdNotification object:self];
+                                });
                                 NSLog(@"text error - %@", error);
                             }
                         }];
@@ -216,6 +215,10 @@
                 }
             }];
         }
+        if ([self.delegate respondsToSelector:@selector(dismissPostView)]) {
+            [self.delegate dismissPostView];
+        }
+        [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
     }
 }
 - (IBAction)postCommentDone:(id)sender {
@@ -240,48 +243,6 @@
 - (IBAction)postCommentCancel:(id)sender {
     self.postText.text = @"";
     [self postCommentDone:nil];
-}
-
--(void)dismissKeyboard {
-    [self.view endEditing:YES];
-}
-
-- (void) keyboardWasShown:(NSNotification *)nsNotification {
-    CGRect viewFrame = self.view.frame;
-    
-    NSDictionary *userInfo = [nsNotification userInfo];
-    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGSize kbSize = kbRect.size;
-    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
-    
-    CGRect fieldFrameSize = CGRectMake(0.0f, 0.0f, viewFrame.size.width, kbTop);
-    
-    self.viewFields.contentSize = CGSizeMake(viewFrame.size.width, kbTop + 160.0f);
-    
-    self.viewFields.frame = fieldFrameSize;
-}
-
-- (void)keyboardWasDismissed:(NSNotification *)notification
-{
-    self.viewFields.frame = self.view.frame;
-}
-
-
-#pragma mark - UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
-    NSInteger nextTag = textField.tag + 1;
-    // Try to find next responder
-    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
-    if (nextResponder) {
-        // Found next responder, so set it.
-        [nextResponder becomeFirstResponder];
-    } else {
-        // Not found, so remove keyboard.
-        [textField resignFirstResponder];
-    }
-    return NO; // We do not want UITextField to insert line-breaks.
 }
 
 

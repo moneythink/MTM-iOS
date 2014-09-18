@@ -2210,13 +2210,9 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <rect key="frame" x="20" y="58" width="280" height="280"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="KpO-O7-xUz" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KpO-O7-xUz" customClass="PFImageView">
                                             <rect key="frame" x="20" y="20" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="30" id="4tL-TL-2Jk"/>
-                                                <constraint firstAttribute="width" constant="30" id="fSO-rv-vW1"/>
-                                            </constraints>
                                         </imageView>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" highlighted="YES" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gpP-NG-Lrv" userLabel="Like Button">
                                             <rect key="frame" x="15" y="380" width="29" height="26"/>
@@ -2241,23 +2237,21 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                                 <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="nDT-Bq-oVK"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QeF-c5-9yr">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QeF-c5-9yr">
                                             <rect key="frame" x="58" y="20" width="160" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="30" id="cBX-jz-Xke"/>
-                                            </constraints>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wpu-F8-PK5">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wpu-F8-PK5">
                                             <rect key="frame" x="226" y="23" width="74" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="24" id="NJg-uO-80Y"/>
+                                                <constraint firstAttribute="height" constant="24" id="x2F-zU-1E6"/>
+                                                <constraint firstAttribute="width" constant="74" id="yiW-Fd-Icc"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -2292,13 +2286,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="wpu-F8-PK5" secondAttribute="trailing" constant="20" id="EBe-cF-DRH"/>
-                                        <constraint firstItem="wpu-F8-PK5" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="23" id="PHa-ad-NIm"/>
-                                        <constraint firstItem="KpO-O7-xUz" firstAttribute="leading" secondItem="onZ-tg-5rn" secondAttribute="leading" constant="20" id="PdU-bf-eY7"/>
-                                        <constraint firstItem="KpO-O7-xUz" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="20" id="adR-cg-KYP"/>
-                                        <constraint firstItem="QeF-c5-9yr" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="20" id="lYs-SW-2dJ"/>
-                                        <constraint firstItem="wpu-F8-PK5" firstAttribute="leading" secondItem="QeF-c5-9yr" secondAttribute="trailing" constant="8" id="ox6-VP-xJe"/>
-                                        <constraint firstItem="QeF-c5-9yr" firstAttribute="leading" secondItem="KpO-O7-xUz" secondAttribute="trailing" constant="8" id="uk1-c1-EAi"/>
+                                        <constraint firstItem="wpu-F8-PK5" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="23" id="YR4-QH-nxY"/>
+                                        <constraint firstAttribute="trailing" secondItem="wpu-F8-PK5" secondAttribute="trailing" constant="20" id="pTW-So-DGz"/>
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
@@ -2379,14 +2368,22 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="73d-iI-rUz">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="73d-iI-rUz">
                                             <rect key="frame" x="226" y="13" width="74" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="74" id="Go4-Yd-B9p"/>
+                                                <constraint firstAttribute="height" constant="24" id="JNZ-TT-yAY"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="73d-iI-rUz" firstAttribute="top" secondItem="8Wv-vT-FfS" secondAttribute="top" constant="13" id="GE8-fF-KBy"/>
+                                        <constraint firstAttribute="trailing" secondItem="73d-iI-rUz" secondAttribute="trailing" constant="20" id="nbX-9v-KRd"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="commentBUtton" destination="sJx-A5-cNc" id="Bid-DY-Ecs"/>
@@ -2472,17 +2469,21 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <rect key="frame" x="20" y="10" width="30" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UWu-sx-UKH">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" fixedFrame="YES" placeholderIntrinsicWidth="160" placeholderIntrinsicHeight="30" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UWu-sx-UKH">
                                             <rect key="frame" x="58" y="10" width="160" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0XS-Ol-FOc">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="100" placeholderIntrinsicWidth="74" placeholderIntrinsicHeight="24" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0XS-Ol-FOc">
                                             <rect key="frame" x="226" y="13" width="74" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="74" id="Elr-2S-PDT"/>
+                                                <constraint firstAttribute="height" constant="24" id="uv3-6d-xL0"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -2491,6 +2492,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="0XS-Ol-FOc" secondAttribute="trailing" constant="20" id="1cK-sq-h4a"/>
+                                        <constraint firstItem="0XS-Ol-FOc" firstAttribute="top" secondItem="WhG-8e-g82" secondAttribute="top" constant="13" id="Slu-ee-Nfo"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="button1" destination="BUW-Vd-xnh" id="bp4-66-H5A"/>
@@ -2543,10 +2548,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ori-QR-4iV">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ori-QR-4iV">
                                             <rect key="frame" x="226" y="13" width="74" height="24"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="18"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="XTp-3S-QCn"/>
+                                                <constraint firstAttribute="width" constant="74" id="lMz-EN-wXM"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="14"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
@@ -2594,6 +2603,10 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             </state>
                                         </button>
                                     </subviews>
+                                    <constraints>
+                                        <constraint firstItem="Ori-QR-4iV" firstAttribute="top" secondItem="VAr-eh-M5c" secondAttribute="top" constant="13" id="B6w-sf-mbJ"/>
+                                        <constraint firstAttribute="trailing" secondItem="Ori-QR-4iV" secondAttribute="trailing" constant="20" id="oR0-we-ZjP"/>
+                                    </constraints>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="button1" destination="b62-xy-Ish" id="si7-6K-1Ky"/>
@@ -3963,15 +3976,15 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="A03-ja-bb3"/>
-        <segue reference="ySr-9F-9a4"/>
-        <segue reference="0TQ-j3-ME3"/>
         <segue reference="Pqy-YU-1Il"/>
+        <segue reference="0TQ-j3-ME3"/>
+        <segue reference="ySr-9F-9a4"/>
+        <segue reference="A03-ja-bb3"/>
         <segue reference="fM9-bL-F9m"/>
-        <segue reference="nYB-OV-yVU"/>
         <segue reference="0tX-EG-lkN"/>
-        <segue reference="3vf-te-PYL"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="VFk-5D-gdp"/>
+        <segue reference="3vf-te-PYL"/>
+        <segue reference="nYB-OV-yVU"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -7,7 +7,6 @@
 //
 
 #import "MTStudentChallengeRoomViewController.h"
-#import "MTCommentViewController.h"
 
 @interface MTStudentChallengeRoomViewController ()
 
@@ -48,7 +47,7 @@
     self.navigationItem.title = nil;
 }
 
-- (void)didReceiveMemoryWarning
+- (void)didReceiveMemoryWarnng
 {
     [super didReceiveMemoryWarning];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -73,6 +72,20 @@
     [self performSegueWithIdentifier:@"commentSegue" sender:self];
 }
 
+- (void)dismissPostView {
+    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post is processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [updateMessage showInView:self.view];
+    } else {
+        [updateMessage showInView:window];
+    }
+}
+
+- (void)dismissCommentView {
+    
+}
+
 - (IBAction)unwindToChallengeRoom:(UIStoryboardSegue *)sender
 {
 }
@@ -90,6 +103,7 @@
     if ([segueID isEqualToString:@"commentSegue"]) {
         MTCommentViewController *destinationVC = (MTCommentViewController *)[segue destinationViewController];
         destinationVC.challenge = self.challenge;
+        destinationVC.delegate = self;
     } else {
         self.destinationVC = (MTStudentChallengeRoomContentViewController *)[segue destinationViewController];
         self.destinationVC.challenge = self.challenge;

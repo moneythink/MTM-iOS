@@ -330,6 +330,10 @@
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
+- (void)dismissPostView {
+    
+}
+
 - (IBAction)deletePostTapped:(id)sender {
     // call function deletePost
     NSString *userID = [self.postUser objectId];

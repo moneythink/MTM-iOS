@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 
 #import "MTStudentChallengeRoomContentViewController.h"
+#import "MTCommentViewController.h"
 
-@interface MTStudentChallengeRoomViewController : UIViewController
+@interface MTStudentChallengeRoomViewController : UIViewController <MTCommentViewProtocol>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;

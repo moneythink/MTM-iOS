@@ -12,6 +12,9 @@
 #import "MTPostViewController.h"
 #import "MTCommentViewController.h"
 
+NSString *const kReloadMyClassChallengePostsdNotification = @"kReloadMyClassChallengePostsdNotification";
+NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
+
 @interface MTMyClassTableViewController ()
 
 @property (assign, nonatomic) BOOL hasButtons;
@@ -52,6 +55,14 @@
 {
     [super viewDidLoad];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reloadPosts)
+                                                 name:kReloadMyClassChallengePostsdNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(postFailed)
+                                                 name:kReloadMyClassChallengePostsdNotification
+                                               object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -80,7 +91,6 @@
             NSArray *buttons = challenge[@"buttons"];
             self.hasButtons = buttons.count;
             
-            //            [self.tableView reloadData];
             [self loadObjects];
         }
     }];
@@ -91,6 +101,7 @@
     // Releases the view if it doesn't have a superview.
     [super didReceiveMemoryWarning];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     // Release any cached data, images, etc that aren't in use.
 }
 
@@ -316,6 +327,23 @@
 }
 
 
+#pragma mark - Class Methods
+
+- (void)reloadPosts {
+    [self loadObjects];
+}
+
+- (void)postFailed {
+    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post failed processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+    if ([window.subviews containsObject:self.view]) {
+        [updateMessage showInView:self.view];
+    } else {
+        [updateMessage showInView:window];
+    }
+}
+
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -524,6 +552,10 @@
 
 - (void)dismissCommentView {
     [self dismissViewControllerAnimated:YES completion:^{}];
+}
+
+- (void)dismissPostView {
+    
 }
 
 - (void)deletePostTapped:(id)sender {

@@ -9,7 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "MTCommentViewController.h"
 
-@interface MTMyClassTableViewController : PFQueryTableViewController <mtCommentViewProtocol>
+extern NSString *const kReloadMyClassChallengePostsdNotification;
+extern NSString *const kFailedMyClassChallengePostsdNotification;
+
+@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
