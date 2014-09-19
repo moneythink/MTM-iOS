@@ -223,6 +223,11 @@
 
 #pragma mark - UITableViewController delegate methods
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
+{
+    return 2;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger rows = [self.studentPosts count];
@@ -262,12 +267,11 @@
     }];
     
     // Attributed hashtag
-    
-    
-    id likesCount = cell.rowPost[@"likes"];
+
+    NSInteger likesCount = [cell.rowPost[@"likes"] intValue];
     if (likesCount > 0) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
-        cell.likeCount.text = [NSString stringWithFormat:@"%@", likesCount];
+        cell.likeCount.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
     } else {
         cell.likes.image = [UIImage imageNamed:@"like_normal"];
         cell.likeCount.text = @"0";
@@ -281,11 +285,6 @@
     }
     
     return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
-{
-    return 2;
 }
 
 

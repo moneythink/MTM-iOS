@@ -67,6 +67,11 @@
     
     [self.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     
+    self.postsLiked = [PFUser currentUser][@"posts_liked"];
+    NSString *postID = [self.challengePost objectId];
+    NSInteger index = [self.postsLiked indexOfObject:postID];
+    
+    self.iLike = !(index == NSNotFound);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -246,24 +251,13 @@
     
     NSString *likesString;
     if (self.postLikesCount > 0) {
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
         likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     } else {
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
         likesString = @"0";
     }
     self.postLikes.text = likesString;
-    
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
-    NSString *postID = [self.challengePost objectId];
-    NSInteger index = [self.postsLiked indexOfObject:postID];
-    
-    BOOL like_active = (index > 0) && (index < self.postsLiked.count);
-    like_active |= self.postLikesCount > 0;
-    
-    if (!like_active) {
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-    } else {
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-    }
     
     if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
         self.deletePost.hidden = NO;
@@ -302,22 +296,16 @@
     
     [self.view setNeedsLayout];
     
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : [NSNumber numberWithBool:!self.iLike]} block:^(id object, NSError *error) {
+    NSString *likeString = [NSString stringWithFormat:@"%d", self.iLike];
+    
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
-            PFChallengePost *post = self.challengePost;
-            NSPredicate *predPost = [NSPredicate predicateWithFormat:@"objectId = %@", [post objectId]];
-            PFQuery *queryChallengePost = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:predPost];
-            queryChallengePost.cachePolicy = kPFCachePolicyCacheThenNetwork;
-            
-            [queryChallengePost findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-                if (!error) {
-                    [self.currentUser refreshInBackgroundWithTarget:self selector:nil];
-                    [self.challenge refreshInBackgroundWithTarget:self selector:nil];
-                    [self.challengePost refreshInBackgroundWithTarget:self selector:nil];
-                    
-                    [self.view setNeedsLayout];
-                }
+            [self.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
+            [self.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                [self.view setNeedsLayout];
             }];
+        } else {
+            NSLog(@"error");
         }
     }];
 }

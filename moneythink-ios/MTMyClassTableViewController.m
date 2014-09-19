@@ -61,7 +61,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
                                                object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(postFailed)
-                                                 name:kReloadMyClassChallengePostsdNotification
+                                                 name:kFailedMyClassChallengePostsdNotification
                                                object:nil];
 }
 
@@ -282,25 +282,19 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     NSString *likesString;
     if (likes > 0) {
         likesString = [NSString stringWithFormat:@"%ld", (long)likes];
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
     } else {
         likesString = @"0";
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     }
     cell.likes.text = likesString;
 
+    
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [post objectId];
     NSInteger index = [self.postsLiked indexOfObject:postID];
     
-    BOOL like_active = (index > 0);
-    like_active &= (index != NSNotFound);
-    like_active &= (index < self.postsLiked.count);
-    like_active |= likes > 0;
-    
-    if (like_active) {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-    } else {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-    }
+    BOOL like_active = !(index == NSNotFound);
     
     cell.likeButton.tag = indexPath.row;
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -309,6 +303,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 
     PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [commentQuery whereKey:@"challenge_post" equalTo:post];
+    
     commentQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
     [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
@@ -334,7 +329,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 }
 
 - (void)postFailed {
-    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post failed processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post failed to upload." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
     if ([window.subviews containsObject:self.view]) {
         [updateMessage showInView:self.view];
@@ -619,9 +614,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
-            [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self loadObjects];
-            }];
+            [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 [self loadObjects];
             }];
