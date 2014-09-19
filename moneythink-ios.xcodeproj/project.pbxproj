@@ -1409,7 +1409,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "0e5d652a-e475-4e96-ab95-267b93823f7f";
+				PROVISIONING_PROFILE = "a4a64643-6060-4b53-a379-ca0f195af6dc";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1422,7 +1422,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1433,7 +1433,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "c0c30c01-dcd0-4419-8f5a-ab4ffc4f00c4";
+				PROVISIONING_PROFILE = "ea77f8a6-0096-4bae-97fd-b8f4b2621c9f";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

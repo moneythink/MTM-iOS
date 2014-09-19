@@ -56,16 +56,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "moneythink-ios/MTMyClassTableViewController.m"
-            timestampString = "432846096.051412"
+            timestampString = "432857732.797396"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "146"
-            endingLineNumber = "146"
-            landmarkName = "-tableView:cellForRowAtIndexPath:object:"
+            startingLineNumber = "363"
+            endingLineNumber = "363"
+            landmarkName = "-userButtonsTapped:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -76,12 +76,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "moneythink-ios/MTMyClassTableViewController.m"
-            timestampString = "432846112.834986"
+            timestampString = "432857732.797396"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "297"
-            endingLineNumber = "297"
-            landmarkName = "-tableView:cellForRowAtIndexPath:object:"
+            startingLineNumber = "355"
+            endingLineNumber = "355"
+            landmarkName = "-userButtonsTapped:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

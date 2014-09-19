@@ -19,6 +19,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 
 @property (assign, nonatomic) BOOL hasButtons;
 @property (strong, nonatomic) NSArray *postsLiked;
+@property (strong, nonatomic) NSDictionary *buttonsTapped;
 @property (strong, nonatomic) NSArray *myObjects;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
@@ -54,6 +55,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    [self userButtonsTapped:NO];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(reloadPosts)
@@ -179,20 +182,45 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         cell.deletePost.hidden = YES;
     }
     
+    
+    NSInteger button = [[self.buttonsTapped valueForKey:[post objectId]] intValue];
+    if (button == 0) {
+        [[cell.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
+        [cell.button1 setTintColor:[UIColor white]];
+        
+        [[cell.button2 layer] setBorderWidth:2.0f];
+        [[cell.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [cell.button2 setTintColor:[UIColor redOrange]];
+        [[cell.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+    } else if (button == 1) {
+        [[cell.button1 layer] setBorderWidth:2.0f];
+        [[cell.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [cell.button1 setTintColor:[UIColor primaryGreen]];
+        [[cell.button1 layer] setBackgroundColor:[UIColor white].CGColor];
+
+        [[cell.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
+        [cell.button2 setTintColor:[UIColor white]];
+    } else {
+        [[cell.button1 layer] setBorderWidth:2.0f];
+        [[cell.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [cell.button1 setTintColor:[UIColor primaryGreen]];
+        [[cell.button1 layer] setBackgroundColor:[UIColor white].CGColor];
+        
+        [[cell.button2 layer] setBorderWidth:2.0f];
+        [[cell.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [cell.button2 setTintColor:[UIColor redOrange]];
+        [[cell.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+    }
+    
     cell.button1.tag = indexPath.row;
     cell.button2.tag = indexPath.row;
     
-    [[cell.button1 layer] setBorderWidth:2.0f];
     [[cell.button1 layer] setCornerRadius:5.0f];
-    [[cell.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-    [cell.button1 setTintColor:[UIColor primaryGreen]];
-    [cell.button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-    
     [[cell.button2 layer] setCornerRadius:5.0f];
-    [[cell.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
-    [cell.button2 setTintColor:[UIColor white]];
-    [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     
+    [cell.button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+
     NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = post [@"buttons_clicked"];
     
@@ -289,13 +317,6 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     }
     cell.likes.text = likesString;
 
-    
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
-    NSString *postID = [post objectId];
-    NSInteger index = [self.postsLiked indexOfObject:postID];
-    
-    BOOL like_active = !(index == NSNotFound);
-    
     cell.likeButton.tag = indexPath.row;
     [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -323,6 +344,31 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 
 
 #pragma mark - Class Methods
+
+- (void)userButtonsTapped:(BOOL)loadObjects
+{
+    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
+    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
+//    buttonsTapped.cachePolicy = kPFCachePolicyCacheElseNetwork;
+//    __block BOOL cacheCheck = YES;
+    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        cacheCheck = !cacheCheck;
+        if (!error) {
+            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
+            for (PFChallengePostButtonsClicked *clicks in objects) {
+                id button = clicks[@"button_clicked"];
+                id post = [(PFChallengePost *)clicks[@"post"] objectId];
+                [tappedButtonObjects setValue:button forKey:post];
+            }
+            self.buttonsTapped = tappedButtonObjects;
+//            if (loadObjects) {
+                [self loadObjects];
+//            }
+        } else {
+            NSLog(@"Error - %@", error);
+        }
+    }];
+}
 
 - (void)reloadPosts {
     [self loadObjects];
@@ -576,7 +622,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 - (void)likeButtonTapped:(id)sender {
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
-    
+    button.enabled = NO;
+
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
     
@@ -614,6 +661,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
+            button.enabled = YES;
             [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 [self loadObjects];
@@ -627,6 +675,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 - (void)button1Tapped:(id)sender {
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
+    button.enabled = NO;
     
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
@@ -641,7 +690,11 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
             [self.challenge refresh];
             [post refresh];
             
-            [self loadObjects];
+            button.enabled = YES;
+
+            [self userButtonsTapped:YES];
+            
+//            [self loadObjects];
         } else {
             NSLog(@"error - %@", error);
         }
@@ -651,7 +704,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 - (void)button2Tapped:(id)sender {
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
-    
+    button.enabled = NO;
+
     PFUser *user = [PFUser currentUser];
     PFChallengePost *post = self.objects[buttonTag];
     
@@ -664,6 +718,10 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
             [[PFUser currentUser] refresh];
             [self.challenge refresh];
             [post refresh];
+            
+            button.enabled = YES;
+            
+            [self userButtonsTapped:YES];
             
             [self loadObjects];
         } else {

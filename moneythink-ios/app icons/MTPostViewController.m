@@ -47,6 +47,8 @@
 @property (strong, nonatomic) IBOutlet UITableView *commentsTableView;
 @property (strong, nonatomic) NSArray *comments;
 
+@property (strong, nonatomic) NSDictionary *buttonsTapped;
+
 @end
 
 @implementation MTPostViewController
@@ -171,7 +173,32 @@
 }
 
 
-#pragma mark -
+#pragma mark - Class Methods
+
+- (void)userButtonsTapped:(BOOL)loadObjects
+{
+    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
+    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
+    //    buttonsTapped.cachePolicy = kPFCachePolicyCacheElseNetwork;
+    //    __block BOOL cacheCheck = YES;
+    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        //        cacheCheck = !cacheCheck;
+        if (!error) {
+            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
+            for (PFChallengePostButtonsClicked *clicks in objects) {
+                id button = clicks[@"button_clicked"];
+                id post = [(PFChallengePost *)clicks[@"post"] objectId];
+                [tappedButtonObjects setValue:button forKey:post];
+            }
+            self.buttonsTapped = tappedButtonObjects;
+            //            if (loadObjects) {
+            [self.view setNeedsLayout];
+            //            }
+        } else {
+            NSLog(@"Error - %@", error);
+        }
+    }];
+}
 
 - (void)loadChallengePost
 {
@@ -208,17 +235,53 @@
     }];
     
     self.whenPosted.text = [self dateDiffFromDate:[self.challengePost createdAt]];
+
+    NSInteger button = [[self.buttonsTapped valueForKey:[self.challengePost objectId]] intValue];
+    if (button == 0) {
+        [[self.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
+        [self.button1 setTintColor:[UIColor white]];
+        
+        [[self.button2 layer] setBorderWidth:2.0f];
+        [[self.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [self.button2 setTintColor:[UIColor redOrange]];
+        [[self.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+    } else if (button == 1) {
+        [[self.button1 layer] setBorderWidth:2.0f];
+        [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [self.button1 setTintColor:[UIColor primaryGreen]];
+        [[self.button1 layer] setBackgroundColor:[UIColor white].CGColor];
+        
+        [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
+        [self.button2 setTintColor:[UIColor white]];
+    } else {
+        [[self.button1 layer] setBorderWidth:2.0f];
+        [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [self.button1 setTintColor:[UIColor primaryGreen]];
+        [[self.button1 layer] setBackgroundColor:[UIColor white].CGColor];
+        
+        [[self.button2 layer] setBorderWidth:2.0f];
+        [[self.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [self.button2 setTintColor:[UIColor redOrange]];
+        [[self.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+    }
     
-    [[self.button1 layer] setBorderWidth:2.0f];
     [[self.button1 layer] setCornerRadius:5.0f];
-    [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-    [self.button1 setTintColor:[UIColor primaryGreen]];
-    
     [[self.button2 layer] setCornerRadius:5.0f];
-    [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
-    [self.button2 setTintColor:[UIColor white]];
     
-    NSArray *buttonTitles = self.challenge[@"buttons"];
+
+//    [[self.button1 layer] setBorderWidth:2.0f];
+//    [[self.button1 layer] setCornerRadius:5.0f];
+//    [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+//    [self.button1 setTintColor:[UIColor primaryGreen]];
+//    
+//    [[self.button2 layer] setCornerRadius:5.0f];
+//    [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
+//    [self.button2 setTintColor:[UIColor white]];
+    
+    NSArray
+    
+    
+    *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
     
     if (buttonTitles.count > 0) {
@@ -272,7 +335,8 @@
 #pragma mark - IBActions
 
 - (IBAction)likeButtonTapped:(id)sender {
-    
+    self.likePost.enabled = NO;
+
     NSString *postID = [self.challengePost objectId];
     NSString *userID = [self.currentUser objectId];
     
@@ -300,6 +364,7 @@
     
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         if (!error) {
+            self.likePost.enabled = YES;
             [self.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [self.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 [self.view setNeedsLayout];
@@ -360,6 +425,9 @@
 }
 
 - (IBAction)button1Tapped:(id)sender {
+
+    self.button1.enabled = NO;
+    
     PFChallengePost *post = self.challengePost;
     
     NSString *userID = [self.currentUser objectId];
@@ -372,6 +440,8 @@
             [self.challenge refresh];
             [self.challengePost refresh];
             
+            self.button1.enabled = YES;
+            
             [self.view setNeedsLayout];
         } else {
             NSLog(@"error - %@", error);
@@ -380,6 +450,9 @@
 }
 
 - (IBAction)button2Tapped:(id)sender {
+    
+    self.button2.enabled = NO;
+
     PFChallengePost *post = self.challengePost;
     
     NSString *userID = [self.currentUser objectId];
@@ -391,6 +464,8 @@
             [self.currentUser refresh];
             [self.challenge refresh];
             [self.challengePost refresh];
+            
+            self.button2.enabled = YES;
             
             [self.view setNeedsLayout];
         } else {
