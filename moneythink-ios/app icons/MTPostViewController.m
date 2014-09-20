@@ -237,7 +237,7 @@
     self.whenPosted.text = [self dateDiffFromDate:[self.challengePost createdAt]];
 
     NSInteger button = [[self.buttonsTapped valueForKey:[self.challengePost objectId]] intValue];
-    if (button == 0) {
+    if ((button == 0) && (self.buttonsTapped.count > 0)) {
         [[self.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
         [self.button1 setTintColor:[UIColor white]];
         
@@ -268,20 +268,7 @@
     [[self.button1 layer] setCornerRadius:5.0f];
     [[self.button2 layer] setCornerRadius:5.0f];
     
-
-//    [[self.button1 layer] setBorderWidth:2.0f];
-//    [[self.button1 layer] setCornerRadius:5.0f];
-//    [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-//    [self.button1 setTintColor:[UIColor primaryGreen]];
-//    
-//    [[self.button2 layer] setCornerRadius:5.0f];
-//    [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
-//    [self.button2 setTintColor:[UIColor white]];
-    
-    NSArray
-    
-    
-    *buttonTitles = self.challenge[@"buttons"];
+    NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
     
     if (buttonTitles.count > 0) {

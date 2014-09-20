@@ -183,8 +183,12 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     }
     
     
-    NSInteger button = [[self.buttonsTapped valueForKey:[post objectId]] intValue];
-    if (button == 0) {
+    id buttonID = [self.buttonsTapped valueForKey:[post objectId]];
+    NSInteger button;
+    if (buttonID) {
+        button = [buttonID intValue];
+    }
+    if ((button == 0) && [self.buttonsTapped valueForKey:[post objectId]]) {
         [[cell.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
         [cell.button1 setTintColor:[UIColor white]];
         
@@ -349,10 +353,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 {
     PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
     [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-//    buttonsTapped.cachePolicy = kPFCachePolicyCacheElseNetwork;
-//    __block BOOL cacheCheck = YES;
     [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        cacheCheck = !cacheCheck;
         if (!error) {
             NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
             for (PFChallengePostButtonsClicked *clicks in objects) {
@@ -361,9 +362,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
                 [tappedButtonObjects setValue:button forKey:post];
             }
             self.buttonsTapped = tappedButtonObjects;
-//            if (loadObjects) {
-                [self loadObjects];
-//            }
+            [self loadObjects];
         } else {
             NSLog(@"Error - %@", error);
         }
@@ -620,6 +619,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 }
 
 - (void)likeButtonTapped:(id)sender {
+    NSLog(@"asdf");
     UIButton *button = sender;
     NSInteger buttonTag = button.tag;
     button.enabled = NO;
