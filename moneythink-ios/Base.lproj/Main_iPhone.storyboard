@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -540,7 +540,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SaZ-o1-K9i">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
                                         <rect key="frame" x="99" y="48" width="201" height="100"/>
                                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                         <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
@@ -3702,15 +3702,15 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="0tX-EG-lkN"/>
-        <segue reference="VFk-5D-gdp"/>
-        <segue reference="nYB-OV-yVU"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="3vf-te-PYL"/>
-        <segue reference="A03-ja-bb3"/>
-        <segue reference="Rwq-1l-OkU"/>
-        <segue reference="kgD-Kv-M6F"/>
+        <segue reference="0Hm-VR-maT"/>
+        <segue reference="3av-NC-tBU"/>
         <segue reference="ySr-9F-9a4"/>
+        <segue reference="Pqy-YU-1Il"/>
         <segue reference="7JS-73-w9v"/>
+        <segue reference="0tX-EG-lkN"/>
+        <segue reference="3vf-te-PYL"/>
+        <segue reference="VFk-5D-gdp"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="aDB-Hr-0CS"/>
     </inferredMetricsTieBreakers>
 </document>

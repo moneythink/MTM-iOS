@@ -208,6 +208,7 @@
 		58DE6D98199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */; };
 		58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */; };
 		58DE6D9A199D0ABD00F1534C /* MTSignUpOrSignInViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D96199D0ABD00F1534C /* MTSignUpOrSignInViewController.m */; };
+		58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */; };
 		58F08AC5199EA0DA009329B6 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC4199EA0DA009329B6 /* Reachability.m */; };
 		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
 		58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */; };
@@ -493,6 +494,7 @@
 		58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTScheduleTableViewController.m; sourceTree = "<group>"; };
 		58DE6D95199D0ABD00F1534C /* MTSignUpOrSignInViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpOrSignInViewController.h; sourceTree = "<group>"; };
 		58DE6D96199D0ABD00F1534C /* MTSignUpOrSignInViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpOrSignInViewController.m; sourceTree = "<group>"; };
+		58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		58F08AC3199EA0DA009329B6 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		58F08AC4199EA0DA009329B6 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddSchoolViewController.h; sourceTree = "<group>"; };
@@ -507,6 +509,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */,
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
 				1083254C1994918A008C0488 /* Crashlytics.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
@@ -713,6 +716,7 @@
 		5876E2A7196F2C1F00C176EC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */,
 				1083254B1994918A008C0488 /* Crashlytics.framework */,
 				58B59E80198AF60C001E003D /* Parse.framework */,
 				5806A4F219746655000B3656 /* Accounts.framework */,
@@ -1398,7 +1402,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1422,7 +1426,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: HiDef Web Solutions LLC. (8V7X4CYMJ6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1433,7 +1437,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "ea77f8a6-0096-4bae-97fd-b8f4b2621c9f";
+				PROVISIONING_PROFILE = "f6a812e3-67ed-4896-8691-3c4d9d1bbb35";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

@@ -389,13 +389,37 @@
 }
 
 - (IBAction)editProfileImageButton:(id)sender {
-    UIActionSheet *editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+    [self.view endEditing:YES];
     
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [editProfileImage showInView:self.view];
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+        UIAlertController *chooseImage = [UIAlertController alertControllerWithTitle:@"" message:@"Change Profile Image" preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+            //
+        }];
+        UIAlertAction *takePhoto = [UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            NSLog(@"takePicture");
+            [self takePicture];
+        }];
+        UIAlertAction *choosePhoto = [UIAlertAction actionWithTitle:@"Choose from Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [self choosePicture];
+        }];
+        
+        [chooseImage addAction:cancel];
+        [chooseImage addAction:takePhoto];
+        [chooseImage addAction:choosePhoto];
+        
+        [self presentViewController:chooseImage animated:YES completion:nil];
+        
     } else {
-        [editProfileImage showInView:window];
+        UIActionSheet *editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [editProfileImage showInView:self.view];
+        } else {
+            [editProfileImage showInView:window];
+        }
     }
 }
 
@@ -411,12 +435,25 @@
  */
 
 - (void)takePicture {
+    NSString *mediaType = AVMediaTypeVideo;
     
-    [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+    [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
+        if (granted) {
+            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+        } else {
+            //Not granted access to mediaType
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[[UIAlertView alloc] initWithTitle:@"Camera Access Alert!"
+                                            message:@"Monrythink doesn't have permission to use Camera, please change privacy settings"
+                                           delegate:self
+                                  cancelButtonTitle:@"OK"
+                                  otherButtonTitles:nil] show];
+            });
+        }
+    }];
 }
 
 - (void)choosePicture {
-    
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 }
 

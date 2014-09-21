@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AVFoundation/AVFoundation.h>
 
 @protocol MTCommentViewProtocol <NSObject>
 
@@ -15,7 +16,7 @@
 
 @end
 
-@interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate>
+@interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) id <MTCommentViewProtocol> delegate;
 @property (strong, nonatomic) PFChallenges *challenge;
@@ -23,8 +24,3 @@
 @property (strong, nonatomic) PFChallengePostComment *challengePostComment;
 
 @end
-
-
-
-
-
