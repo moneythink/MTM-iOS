@@ -82,7 +82,13 @@
 
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
-    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+//    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    
+    self.postLikesCount = 0;
+    if (self.challengePost[@"likes"]) {
+        self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    }
+
     
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
@@ -340,7 +346,10 @@
             [likePosts removeObjectAtIndex:index];
         }
         [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        self.postLikesCount -= 1;
+
+        if (self.postLikesCount > 0) {
+            self.postLikesCount -= 1;
+        }
     }
     self.postsLiked = likePosts;
     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];

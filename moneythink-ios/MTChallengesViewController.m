@@ -10,7 +10,11 @@
 
 @interface MTChallengesViewController ()
 
-@property (assign, nonatomic) BOOL reachable;
+@property (assign, nonatomic) NSInteger pendingPageIndex;
+@property (assign, nonatomic) NSInteger pageIndex;
+
+@property (strong, nonatomic) MTChallengesContentViewController *viewControllerBefore;
+@property (strong, nonatomic) MTChallengesContentViewController *viewControllerAfter;
 
 @end
 
@@ -47,6 +51,7 @@
             frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
             self.pageViewController.view.frame = frame;
             self.pageViewController.dataSource = self;
+            self.pageViewController.delegate = self;
             
             MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
             
@@ -60,29 +65,6 @@
             
         }
     }];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(reachabilityChanged:)
-                                                 name:kReachabilityChangedNotification
-                                               object:nil];
-    
-    Reachability * reach = [Reachability reachabilityWithHostname:@"www.parse.com"];
-    
-    reach.reachableBlock = ^(Reachability * reachability) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.reachable = YES;
-
-        });
-    };
-
-    reach.unreachableBlock = ^(Reachability * reachability)     {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.reachable = NO;
-        });
-    };
-    
-    [reach startNotifier];
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,28 +75,17 @@
 
 - (MTChallengesContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
-    if (([self.challenges count] == 0) || (index >= [self.challenges count])) {
+    if (([self.challenges count] <= 0) || (index >= [self.challenges count])) {
         return nil;
     }
     
     // Create a new view controller and pass suitable data.
-    
     MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
     CGRect frame = self.pageViewController.view.frame;
     frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
     challengeContentViewController.view.frame = frame;
 
-
     PFChallenges *challenge = self.challenges[index];
-    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
-    
-    NSInteger count = [queryActivated countObjects];
-    challengeContentViewController.challengeStateText = (count > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
-//    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-//        challengeContentViewController.challengeStateText = (number > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
-//        [self.view setNeedsLayout];
-//    }];
     
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
@@ -133,29 +104,12 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
-    NSUInteger index = ((MTChallengesContentViewController*) viewController).pageIndex;
-    
-    if ((index == 0) || (index == NSNotFound)) {
-        return nil;
-    }
-    
-    index--;
-    return [self viewControllerAtIndex:index];
+    return self.viewControllerBefore;
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
-    NSUInteger index = ((MTChallengesContentViewController *)viewController).pageIndex;
-    
-    if (index == NSNotFound) {
-        return nil;
-    }
-    
-    index++;
-    if (index == [self.challenges count]) {
-        return nil;
-    }
-    return [self viewControllerAtIndex:index];
+    return self.viewControllerAfter;
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
@@ -165,7 +119,34 @@
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
 {
-    return 0;
+    self.pageIndex = 0;
+    self.viewControllerBefore = nil;
+    self.viewControllerAfter = [self viewControllerAtIndex:1];
+    return self.pageIndex;
+}
+
+
+#pragma mark - Page View Controller Delegate
+
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    self.pendingPageIndex = ((MTChallengesContentViewController *)[pendingViewControllers firstObject]).pageIndex;
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+    if (completed) {
+        self.pageIndex = self.pendingPageIndex;
+        if ((self.pageIndex == 0) || (self.pageIndex >= self.challenges.count)) {
+            self.viewControllerBefore = nil;
+        } else {
+            self.viewControllerBefore = [self viewControllerAtIndex:(self.pageIndex - 1)];
+        }
+        
+        if (self.pageIndex >= (self.challenges.count - 1)) {
+            self.viewControllerAfter = nil;
+        } else {
+            self.viewControllerAfter = [self viewControllerAtIndex:(self.pageIndex + 1)];
+        }
+    }
 }
 
 
@@ -183,20 +164,5 @@
 {
     
 }
-
-#pragma mark Notification
-
--(void)reachabilityChanged:(NSNotification*)note
-{
-    Reachability * reach = [note object];
-    
-    if([reach isReachable]) {
-        self.reachable = YES;
-    } else {
-        self.reachable = NO;
-    }
-}
-
-
 
 @end

@@ -64,13 +64,15 @@
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", self.challenge[@"challenge_number"]];
     PFQuery *checkSchedule = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:challengePredicate];
     
-    checkSchedule.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    checkSchedule.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [checkSchedule whereKey:@"activated" equalTo:@YES];
     [checkSchedule whereKey:@"class" equalTo:userClass];
     [checkSchedule whereKey:@"school" equalTo:userSchool];
     
     [checkSchedule countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        self.challengeState.text = (number > 0) ? @"OPEN CHALLENGE" : @"FUTURE CHALLENGE";
+
         if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
             self.activated = YES;
         } else {

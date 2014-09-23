@@ -268,7 +268,10 @@
     
     // Attributed hashtag
 
-    NSInteger likesCount = [cell.rowPost[@"likes"] intValue];
+    NSInteger likesCount = 0;
+    if (cell.rowPost[@"likes"]) {
+        likesCount = [cell.rowPost[@"likes"] intValue];
+    }
     if (likesCount > 0) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
         cell.likeCount.text = [NSString stringWithFormat:@"%ld", (long)likesCount];

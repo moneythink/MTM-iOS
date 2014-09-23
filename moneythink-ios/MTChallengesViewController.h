@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MTChallengesContentViewController.h"
 
-@interface MTChallengesViewController : UIViewController <UIPageViewControllerDataSource>
+@interface MTChallengesViewController : UIViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
 @property (strong, nonatomic) UIPageViewController *pageViewController;
 

@@ -310,7 +310,12 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         [cell.postedWhen sizeToFit];
     }
     
-    NSInteger likes = [post[@"likes"] intValue];
+//    NSInteger likes = [post[@"likes"] intValue];
+    NSInteger likes = 0;
+    if (post[@"likes"]) {
+        likes = [post[@"likes"] intValue];
+    }
+
     NSString *likesString;
     if (likes > 0) {
         likesString = [NSString stringWithFormat:@"%ld", (long)likes];
