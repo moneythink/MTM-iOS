@@ -73,17 +73,33 @@
 }
 
 - (void)dismissPostView {
-    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post is processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [updateMessage showInView:self.view];
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+        UIAlertController *updateMessage = [UIAlertController
+                                            alertControllerWithTitle:@""
+                                            message:@"Choose Image"
+                                            preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {}];
+        
+        [updateMessage addAction:cancel];
+        
+        [self presentViewController:updateMessage animated:YES completion:nil];
+        
     } else {
-        [updateMessage showInView:window];
+        UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post is processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [updateMessage showInView:self.view];
+        } else {
+            [updateMessage showInView:window];
+        }
     }
 }
 
 - (void)dismissCommentView {
-    
 }
 
 - (IBAction)unwindToChallengeRoom:(UIStoryboardSegue *)sender

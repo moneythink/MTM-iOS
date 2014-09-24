@@ -392,24 +392,35 @@
     [self.view endEditing:YES];
     
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-        UIAlertController *chooseImage = [UIAlertController alertControllerWithTitle:@"" message:@"Change Profile Image" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertController *editProfileImage = [UIAlertController
+                                               alertControllerWithTitle:@""
+                                               message:@"Change Profile Image"
+                                               preferredStyle:UIAlertControllerStyleActionSheet];
         
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            //
-        }];
-        UIAlertAction *takePhoto = [UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"takePicture");
-            [self takePicture];
-        }];
-        UIAlertAction *choosePhoto = [UIAlertAction actionWithTitle:@"Choose from Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [self choosePicture];
-        }];
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) { }];
         
-        [chooseImage addAction:cancel];
-        [chooseImage addAction:takePhoto];
-        [chooseImage addAction:choosePhoto];
+        UIAlertAction *takePhoto = [UIAlertAction
+                                    actionWithTitle:@"Take Photo"
+                                    style:UIAlertActionStyleDefault
+                                    handler:^(UIAlertAction *action) {
+                                        [self takePicture];
+                                    }];
         
-        [self presentViewController:chooseImage animated:YES completion:nil];
+        UIAlertAction *choosePhoto = [UIAlertAction
+                                      actionWithTitle:@"Choose from Library"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction *action) {
+                                          [self choosePicture];
+                                      }];
+        
+        [editProfileImage addAction:cancel];
+        [editProfileImage addAction:takePhoto];
+        [editProfileImage addAction:choosePhoto];
+        
+        [self presentViewController:editProfileImage animated:YES completion:nil];
         
     } else {
         UIActionSheet *editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];

@@ -45,22 +45,6 @@
 }
 
 
-#pragma mark - Button selectors
-
-- (void)tappedButtonItem1:(id)sender
-{
-    UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
-    
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [logoutSheet showInView:self.view];
-    } else {
-        [logoutSheet showInView:window];
-    }
-
-}
-
-
 #pragma mark - Navigation
 
 /*

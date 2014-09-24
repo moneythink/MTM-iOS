@@ -95,25 +95,35 @@
     [self.view endEditing:YES];
     
     if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-        UIAlertController *chooseImage = [UIAlertController alertControllerWithTitle:@"" message:@"Choose Image" preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertController *chooseImage = [UIAlertController
+                                          alertControllerWithTitle:@""
+                                          message:@"Choose Image"
+                                          preferredStyle:UIAlertControllerStyleActionSheet];
         
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
-            //
-        }];
-        UIAlertAction *takePhoto = [UIAlertAction actionWithTitle:@"Take Photo" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            NSLog(@"takePicture");
-            [self takePicture];
-        }];
-        UIAlertAction *choosePhoto = [UIAlertAction actionWithTitle:@"Choose from Library" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            [self choosePicture];
-        }];
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {}];
+        
+        UIAlertAction *takePhoto = [UIAlertAction
+                                    actionWithTitle:@"Take Photo"
+                                    style:UIAlertActionStyleDefault
+                                    handler:^(UIAlertAction *action) {
+                                        [self takePicture];
+                                    }];
+        
+        UIAlertAction *choosePhoto = [UIAlertAction
+                                      actionWithTitle:@"Choose from Library"
+                                      style:UIAlertActionStyleDefault
+                                      handler:^(UIAlertAction *action) {
+                                          [self choosePicture];
+                                      }];
         
         [chooseImage addAction:cancel];
         [chooseImage addAction:takePhoto];
         [chooseImage addAction:choosePhoto];
         
         [self presentViewController:chooseImage animated:YES completion:nil];
-
     } else {
         UIActionSheet *addPostImage = [[UIActionSheet alloc] initWithTitle:@"Choose Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         
@@ -223,14 +233,14 @@
         if (self.postImage.image) {
             NSString *fileName = @"post_image.png";
             NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
-
+            
             self.postImage.file = [PFFile fileWithName:fileName data:imageData];
             
             if (self.postImage.file) {
                 [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                     if (!error) {
                         self.challengePost[@"picture"] = self.postImage.file;
-
+                        
                         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
                                 dispatch_async(dispatch_get_main_queue(), ^{

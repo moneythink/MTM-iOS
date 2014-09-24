@@ -282,14 +282,12 @@
 
 - (IBAction)schoolNameButton:(id)sender {
     PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-    querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *schoolSheet = [[UIActionSheet alloc] initWithTitle:@"Choose School" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New school" otherButtonTitles:nil, nil];
-    
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -298,18 +296,68 @@
     NSArray *schoolNames = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
-    for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-        [schoolSheet addButtonWithTitle:names[buttonItem]];
-    }
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+    UIAlertController *schoolSheet = [UIAlertController
+                                          alertControllerWithTitle:@""
+                                          message:@"Choose School"
+                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                   actionWithTitle:@"Cancel"
+                                   style:UIAlertActionStyleCancel
+                                   handler:^(UIAlertAction *action) {
+                                       self.schoolIsNew = NO;
+                                   }];
+        
+        UIAlertAction *destruct = [UIAlertAction
+                                   actionWithTitle:@"New school"
+                                   style:UIAlertActionStyleDestructive
+                                   handler:^(UIAlertAction *action) {
+                                       self.schoolIsNew = YES;
+                                       [self performSegueWithIdentifier:@"addSchool" sender:self];
+                                   }];
+        
+        UIAlertAction *schoolName;
+        
+        [schoolSheet addAction:destruct];
 
-    [schoolSheet addButtonWithTitle:@"Cancel"];
-    schoolSheet.cancelButtonIndex = schoolNames.count;
+        for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+            schoolName = [UIAlertAction
+                          actionWithTitle:schoolNames[buttonItem]
+                          style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction *action) {
+                              self.schoolIsNew = NO;
+                              self.schoolName.text = schoolNames[buttonItem];
+                              self.className.text = @"";
 
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [schoolSheet showInView:self.view];
+                          }];
+            [schoolSheet addAction:schoolName];
+        }
+        
+        [schoolSheet addAction:cancel];
+        
+        [self presentViewController:schoolSheet animated:YES completion:nil];
     } else {
-        [schoolSheet showInView:window];
+        UIActionSheet *schoolSheet = [[UIActionSheet alloc]
+                                      initWithTitle:@"Choose School"
+                                      delegate:self
+                                      cancelButtonTitle:nil
+                                      destructiveButtonTitle:@"New school"
+                                      otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+            [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
+        }
+        
+        [schoolSheet addButtonWithTitle:@"Cancel"];
+        schoolSheet.cancelButtonIndex = schoolNames.count + 1;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [schoolSheet showInView:self.view];
+        } else {
+            [schoolSheet showInView:window];
+        }
     }
 }
 
@@ -320,36 +368,75 @@
     } else {
         NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
         PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
-        querySchools.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
         
         [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
     }
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error {
-    UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
-    
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
     }
     
     NSArray *classNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
+                           @selector(localizedCaseInsensitiveCompare:)];
     
+    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+        UIAlertController *classSheet = [UIAlertController
+                                          alertControllerWithTitle:@""
+                                          message:@"Choose School"
+                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                     self.classIsNew = NO;
+                                 }];
     
-    for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-        [classSheet addButtonWithTitle:classNames[buttonItem]];
-    }
-    
-    [classSheet addButtonWithTitle:@"Cancel"];
-    classSheet.cancelButtonIndex = classNames.count;
-    
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
-        [classSheet showInView:self.view];
+        UIAlertAction *destruct = [UIAlertAction
+                                   actionWithTitle:@"New class"
+                                   style:UIAlertActionStyleDestructive
+                                   handler:^(UIAlertAction *action) {
+                                       self.classIsNew = YES;
+                                       [self performSegueWithIdentifier:@"addClass" sender:self];
+                                   }];
+        
+        UIAlertAction *className;
+        
+        for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+            className = [UIAlertAction
+                          actionWithTitle:classNames[buttonItem]
+                          style:UIAlertActionStyleDefault
+                          handler:^(UIAlertAction *action) {
+                              self.classIsNew = NO;
+                              self.className.text = classNames[buttonItem];
+                          }];
+            [classSheet addAction:className];
+        }
+        
+        [classSheet addAction:cancel];
+        [classSheet addAction:destruct];
+        
+        [self presentViewController:classSheet animated:YES completion:nil];
     } else {
-        [classSheet showInView:window];
+        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+            [classSheet addButtonWithTitle:classNames[buttonItem]];
+        }
+        
+        [classSheet addButtonWithTitle:@"Cancel"];
+        classSheet.cancelButtonIndex = classNames.count + 1;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:self.view]) {
+            [classSheet showInView:self.view];
+        } else {
+            [classSheet showInView:window];
+        }
     }
 }
 
@@ -455,7 +542,6 @@
             self.schoolIsNew = YES;
             [self performSegueWithIdentifier:@"addSchool" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.school = self.schools[buttonIndex - 1];
             self.schoolIsNew = NO;
             self.schoolName.text = buttonTitle;
             self.className.text = @"";
@@ -467,7 +553,6 @@
             self.classIsNew = YES;
             [self performSegueWithIdentifier:@"addClass" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.userClass = self.classes[buttonIndex - 1];
             self.classIsNew = NO;
             self.className.text = buttonTitle;
         } else { // Cancel

@@ -26,11 +26,11 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
-
+    
     if (self) {
         // Custom initialization
     } else {
-
+        
     }
     return self;
 }
@@ -80,7 +80,7 @@
             [self.tableview reloadData];
         }
     }];
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -131,7 +131,7 @@
     
     [cell setBackgroundColor:[UIColor white]];
     [cell.textLabel setTextColor:[UIColor primaryOrange]];
-
+    
     if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
         switch (row) {
             case 0: {
@@ -172,7 +172,7 @@
         cell.textLabel.text = @"Log Out";
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
-
+    
     [cell.textLabel sizeToFit];
     
     [cell setAccessoryType:UITableViewCellAccessoryDisclosureIndicator];
@@ -181,7 +181,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSString *titleHeader = self.sections[section];
-
+    
     return titleHeader;
 }
 
@@ -195,7 +195,7 @@
     [header.contentView setBackgroundColor:[UIColor mutedOrange]];
 }
 
-    // Called after the user changes the selection.
+// Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -206,17 +206,17 @@
     if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
         switch (row) {
             case 0: {
-//                    cell.textLabel.text = @"Push Notifications";
+                //                    cell.textLabel.text = @"Push Notifications";
             }
                 break;
                 
             case 1: {
-//                    cell.textLabel.text = @"Vibrate";
+                //                    cell.textLabel.text = @"Vibrate";
             }
                 break;
                 
             default:
-//                    cell.textLabel.text = @"Sound";
+                //                    cell.textLabel.text = @"Sound";
                 break;
         }
     } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
@@ -257,15 +257,40 @@
                 [self presentViewController:activityViewController animated:NO completion:^{}];
             }
         }];
-
-    } else {
-        UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
         
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [logoutSheet showInView:self.view];
+    } else {
+        if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+            UIAlertController *logoutSheet = [UIAlertController
+                                              alertControllerWithTitle:@""
+                                              message:@"Choose Image"
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {}];
+            
+            UIAlertAction *logout = [UIAlertAction
+                                        actionWithTitle:@"Logout"
+                                        style:UIAlertActionStyleDefault
+                                        handler:^(UIAlertAction *action) {
+                                            [PFUser logOut];
+                                            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
+                                        }];
+            
+            [logoutSheet addAction:cancel];
+            [logoutSheet addAction:logout];
+            
+            [self presentViewController:logoutSheet animated:YES completion:nil];
         } else {
-            [logoutSheet showInView:window];
+            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:self.view]) {
+                [logoutSheet showInView:self.view];
+            } else {
+                [logoutSheet showInView:window];
+            }
         }
     }
 }
