@@ -59,7 +59,7 @@
     [self.rewardsView setBackgroundColor:[UIColor mutedOrange]];
     
     NSInteger challenge_number = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInt:challenge_number]];
+    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInteger:challenge_number]];
     PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
     
     queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
