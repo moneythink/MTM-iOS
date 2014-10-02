@@ -53,8 +53,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - Methods
 
+#pragma mark - Methods
 - (void)updateControlButton:(NSNotification *)notification {
     NSDictionary *userInfo = [notification userInfo];
     NSInteger index = [[userInfo valueForKey:@"index"] intValue];
@@ -72,30 +72,29 @@
     [self performSegueWithIdentifier:@"commentSegue" sender:self];
 }
 
-- (void)dismissPostView {
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-        UIAlertController *updateMessage = [UIAlertController
-                                            alertControllerWithTitle:@""
-                                            message:@"Choose Image"
-                                            preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"OK"
-                                 style:UIAlertActionStyleCancel
-                                 handler:^(UIAlertAction *action) {}];
-        
+- (void)dismissPostViewWithCompletion:(void (^)(void))completion {
+    if ([UIAlertController class]) {
+        UIAlertController *updateMessage = [UIAlertController alertControllerWithTitle:@"Your post is processing"
+                                                                               message:nil
+                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"OK"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:nil];
         [updateMessage addAction:cancel];
-        
-        [self presentViewController:updateMessage animated:YES completion:nil];
+        [self presentViewController:updateMessage animated:YES completion:^{
+            if (completion) {
+                completion();
+            }
+        }];
         
     } else {
-        UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post is processing." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [updateMessage showInView:self.view];
-        } else {
-            [updateMessage showInView:window];
+        if (completion) {
+            completion();
         }
+
+        UIActionSheet *updateMessage = [[UIActionSheet alloc] bk_initWithTitle:@"Your post is processing"];
+        [updateMessage bk_addButtonWithTitle:@"OK" handler:nil];
+        [updateMessage showInView:[UIApplication sharedApplication].keyWindow];
     }
 }
 
@@ -108,7 +107,6 @@
 
 
 #pragma mark - Navigation
-
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
@@ -126,5 +124,6 @@
         self.destinationVC.challengeNumber = self.challengeNumber;
     }
 }
+
 
 @end

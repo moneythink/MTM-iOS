@@ -296,8 +296,8 @@
     NSArray *schoolNames = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
     
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
-    UIAlertController *schoolSheet = [UIAlertController
+    if ([UIAlertController class]) {
+        UIAlertController *schoolSheet = [UIAlertController
                                           alertControllerWithTitle:@""
                                           message:@"Choose School"
                                           preferredStyle:UIAlertControllerStyleActionSheet];
@@ -383,7 +383,7 @@
     NSArray *classNames = [names sortedArrayUsingSelector:
                            @selector(localizedCaseInsensitiveCompare:)];
     
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+    if ([UIAlertController class]) {
         UIAlertController *classSheet = [UIAlertController
                                           alertControllerWithTitle:@""
                                           message:@"Choose School"

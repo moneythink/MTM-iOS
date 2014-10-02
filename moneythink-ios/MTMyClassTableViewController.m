@@ -599,7 +599,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
-- (void)dismissPostView {
+- (void)dismissPostViewWithCompletion:(void (^)(void))completion {
     
 }
 

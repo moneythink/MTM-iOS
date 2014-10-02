@@ -11,6 +11,8 @@
 
 #define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_5 )
 #define IS_IPHONE_4 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_4 )
+#define MTMakeWeakSelf() __weak __typeof__(self) weakSelf = self
+#define MTMakeStrongSelf() __typeof__(self) strongSelf = weakSelf
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
@@ -21,6 +23,9 @@
 
 #import "UIColor+Palette.h"
 #import "Reachability.h"
+#import "BlocksKit.h"
+#import "BlocksKit+UIKit.h"
+#import "UIActionSheet+BlocksKit.h"
 
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"

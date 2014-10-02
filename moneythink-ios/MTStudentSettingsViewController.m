@@ -259,10 +259,10 @@
         }];
         
     } else {
-        if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+        if ([UIAlertController class]) {
             UIAlertController *logoutSheet = [UIAlertController
-                                              alertControllerWithTitle:@""
-                                              message:@"Choose Image"
+                                              alertControllerWithTitle:nil
+                                              message:nil
                                               preferredStyle:UIAlertControllerStyleActionSheet];
             
             UIAlertAction *cancel = [UIAlertAction
@@ -272,7 +272,7 @@
             
             UIAlertAction *logout = [UIAlertAction
                                         actionWithTitle:@"Logout"
-                                        style:UIAlertActionStyleDefault
+                                        style:UIAlertActionStyleDestructive
                                         handler:^(UIAlertAction *action) {
                                             [PFUser logOut];
                                             [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
@@ -283,14 +283,8 @@
             
             [self presentViewController:logoutSheet animated:YES completion:nil];
         } else {
-            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"Cancel" otherButtonTitles:@"Logout", nil];
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:self.view]) {
-                [logoutSheet showInView:self.view];
-            } else {
-                [logoutSheet showInView:window];
-            }
+            UIActionSheet *logoutSheet = [[UIActionSheet alloc] initWithTitle:nil delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Logout" otherButtonTitles:nil, nil];
+            [logoutSheet showInView:[UIApplication sharedApplication].keyWindow];
         }
     }
 }
@@ -299,18 +293,9 @@
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
-    switch (buttonIndex) {
-        case 0:
-            break;
-            
-        case 1: {
-            [PFUser logOut];
-            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
-        }
-            break;
-            
-        default:
-            break;
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        [PFUser logOut];
+        [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
     }
 }
 

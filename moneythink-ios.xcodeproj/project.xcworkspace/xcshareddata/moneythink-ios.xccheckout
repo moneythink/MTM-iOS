@@ -11,17 +11,17 @@
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>7160B8432B546BBB28347B15BBCBD95C28576DD7</key>
-		<string>ssh://bitbucket.org/hidef/moneythink-ios.git</string>
+		<string>bitbucket.org:hidef/moneythink-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>moneythink-ios.xcodeproj/project.xcworkspace</string>
+	<string>moneythink-ios.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>7160B8432B546BBB28347B15BBCBD95C28576DD7</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://bitbucket.org/hidef/moneythink-ios.git</string>
+	<string>bitbucket.org:hidef/moneythink-ios.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>

@@ -94,7 +94,7 @@
 - (IBAction)chooseImage:(id)sender {
     [self.view endEditing:YES];
     
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+    if ([UIAlertController class]) {
         UIAlertController *chooseImage = [UIAlertController
                                           alertControllerWithTitle:@""
                                           message:@"Choose Image"
@@ -266,10 +266,16 @@
                 }
             }];
         }
-        if ([self.delegate respondsToSelector:@selector(dismissPostView)]) {
-            [self.delegate dismissPostView];
+        if ([self.delegate respondsToSelector:@selector(dismissPostViewWithCompletion:)]) {
+            
+            MTMakeWeakSelf();
+            [self.delegate dismissPostViewWithCompletion:^{
+                [weakSelf performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
+            }];
         }
-        [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
+        else {
+            [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
+        }
     }
 }
 - (IBAction)postCommentDone:(id)sender {
@@ -291,6 +297,7 @@
     }
     [self.delegate dismissCommentView];
 }
+
 - (IBAction)postCommentCancel:(id)sender {
     self.postText.text = @"";
     [self postCommentDone:nil];

@@ -391,7 +391,7 @@
 - (IBAction)editProfileImageButton:(id)sender {
     [self.view endEditing:YES];
     
-    if (NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+    if ([UIAlertController class]) {
         UIAlertController *editProfileImage = [UIAlertController
                                                alertControllerWithTitle:@""
                                                message:@"Change Profile Image"
