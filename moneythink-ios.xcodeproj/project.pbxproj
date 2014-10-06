@@ -164,8 +164,11 @@
 		8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065119DA1F52000CFBF6 /* mentorSignupButton@2x.png */; };
 		8921065819DA1F52000CFBF6 /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065219DA1F52000CFBF6 /* studentSignupButton.png */; };
 		8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */; };
+		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		89A50CEB19DDFDF7003BE1D8 /* libBlocksKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEA19DDFDF7003BE1D8 /* libBlocksKit.a */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
+		89C6792C19E315660054E890 /* UIAlertView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */; };
+		89C6792F19E317340054E890 /* MTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792E19E317340054E890 /* MTUtil.m */; };
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
 		89FFFC7A19D9C1B200DD3716 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7819D9C1B200DD3716 /* Bolts.framework */; };
 		89FFFC7B19D9C1B200DD3716 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7919D9C1B200DD3716 /* Parse.framework */; };
@@ -411,6 +414,8 @@
 		8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
 		8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
 		8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
+		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
+		8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MTAdditions.m"; sourceTree = "<group>"; };
 		89A50CC519DDFDF7003BE1D8 /* A2BlockInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2BlockInvocation.h; sourceTree = "<group>"; };
 		89A50CC619DDFDF7003BE1D8 /* A2DynamicDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2DynamicDelegate.h; sourceTree = "<group>"; };
 		89A50CC719DDFDF7003BE1D8 /* BKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKMacros.h; sourceTree = "<group>"; };
@@ -450,6 +455,10 @@
 		89A50CE919DDFDF7003BE1D8 /* UIWebView+BlocksKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+BlocksKit.h"; sourceTree = "<group>"; };
 		89A50CEA19DDFDF7003BE1D8 /* libBlocksKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBlocksKit.a; sourceTree = "<group>"; };
 		89A50CEC19DE0141003BE1D8 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+MTAdditions.h"; sourceTree = "<group>"; };
+		89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+MTAdditions.m"; sourceTree = "<group>"; };
+		89C6792D19E317340054E890 /* MTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUtil.h; sourceTree = "<group>"; };
+		89C6792E19E317340054E890 /* MTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUtil.m; sourceTree = "<group>"; };
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		89FFFC7819D9C1B200DD3716 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		89FFFC7919D9C1B200DD3716 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
@@ -704,6 +713,8 @@
 				5876E2B4196F2C1F00C176EC /* main.m */,
 				5876E2B0196F2C1F00C176EC /* moneythink-ios-Info.plist */,
 				5876E2B6196F2C1F00C176EC /* moneythink-ios-Prefix.pch */,
+				89C6792D19E317340054E890 /* MTUtil.h */,
+				89C6792E19E317340054E890 /* MTUtil.m */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -731,6 +742,10 @@
 			children = (
 				5890F7451976DDAF0042AC2F /* UIColor+Palette.h */,
 				5890F7461976DDAF0042AC2F /* UIColor+Palette.m */,
+				8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */,
+				8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */,
+				89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */,
+				89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -1094,6 +1109,7 @@
 				58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
+				89C6792F19E317340054E890 /* MTUtil.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
 				892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */,
@@ -1115,6 +1131,7 @@
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
 				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */,
+				89C6792C19E315660054E890 /* UIAlertView+MTAdditions.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				89FFFC8C19D9EDCF00DD3716 /* MICheckBox.m in Sources */,
@@ -1132,6 +1149,7 @@
 				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
 				58676B201974273E0070F604 /* MTLogInViewController.m in Sources */,
 				58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */,
+				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
 				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
 				585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */,

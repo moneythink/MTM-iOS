@@ -48,6 +48,7 @@
 @property (strong, nonatomic) NSArray *comments;
 
 @property (strong, nonatomic) NSDictionary *buttonsTapped;
+@property (nonatomic) NSInteger likeActionCount;
 
 @end
 
@@ -71,9 +72,7 @@
     
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
-    NSInteger index = [self.postsLiked indexOfObject:postID];
-    
-    self.iLike = !(index == NSNotFound);
+    self.iLike = [self.postsLiked containsObject:postID];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,13 +81,11 @@
 
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
-//    self.postLikesCount = [self.challengePost[@"likes"] intValue];
     
     self.postLikesCount = 0;
     if (self.challengePost[@"likes"]) {
         self.postLikesCount = [self.challengePost[@"likes"] intValue];
     }
-
     
     NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
     PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
@@ -223,8 +220,6 @@
     }];
     // Attributed hashtag
     
-    
-    
     self.postImage.file = self.challengePost[@"picture"];
     
     [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -306,14 +301,23 @@
     self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
     
     NSString *likesString;
+    
     if (self.postLikesCount > 0) {
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
         likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     } else {
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
         likesString = @"0";
     }
+    
     self.postLikes.text = likesString;
+    
+    if (self.iLike) {
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+    }
+    else {
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
+    }
     
     if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
         self.deletePost.hidden = NO;
@@ -326,47 +330,81 @@
 
 
 #pragma mark - IBActions
-
 - (IBAction)likeButtonTapped:(id)sender {
-    self.likePost.enabled = NO;
-
-    NSString *postID = [self.challengePost objectId];
+    self.likeActionCount++;
+    
+    __block NSString *postID = [self.challengePost objectId];
     NSString *userID = [self.currentUser objectId];
     
     self.iLike = !self.iLike;
     
+    NSInteger oldPostLikesCount = self.postLikesCount;
+    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
     NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    
     if (self.iLike) {
         [likePosts addObject:postID];
+        
         [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
         self.postLikesCount += 1;
-    } else {
-        NSInteger index = [likePosts indexOfObject:postID];
-        if (!(index == NSNotFound)) {
-            [likePosts removeObjectAtIndex:index];
-        }
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            self.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.2f animations:^{
+                self.likePost.transform = CGAffineTransformMakeScale(1, 1);
+            } completion:NULL];
+        }];
+    }
+    else {
+        [likePosts removeObject:postID];
         [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-
+        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
         if (self.postLikesCount > 0) {
             self.postLikesCount -= 1;
         }
     }
+    
     self.postsLiked = likePosts;
+    [PFUser currentUser][@"posts_liked"] = self.postsLiked;
+    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
     self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     
     [self.view setNeedsLayout];
     
     NSString *likeString = [NSString stringWithFormat:@"%d", self.iLike];
     
+    MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
+        
+        weakSelf.likeActionCount--;
+        if (weakSelf.likeActionCount > 0) {
+            return;
+        }
+
         if (!error) {
-            self.likePost.enabled = YES;
-            [self.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
-            [self.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                [self.view setNeedsLayout];
+            [weakSelf.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
+            [weakSelf.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.view setNeedsLayout];
+                });
             }];
         } else {
-            NSLog(@"error");
+            NSLog(@"Error updating: %@", [error localizedDescription]);
+            
+            // Rollback
+            weakSelf.iLike = !weakSelf.iLike;
+            weakSelf.postsLiked = oldLikePosts;
+            weakSelf.postLikesCount = oldPostLikesCount;
+            [PFUser currentUser][@"posts_liked"] = oldLikePosts;
+            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
+                [weakSelf.view setNeedsLayout];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
         }
     }];
 }

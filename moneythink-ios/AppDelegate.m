@@ -69,6 +69,15 @@
     
     [Crashlytics startWithAPIKey:@"f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e"];
     
+    // Set up Reachability
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(reachabilityDidChange:)
+                                                 name:kReachabilityChangedNotification object:nil];
+    
+    self.reachability = [Reachability reachabilityForInternetConnection];
+    self.reachable = [MTUtil internetReachable];
+    [self.reachability startNotifier];
+    
     return YES;
 }
 
@@ -111,5 +120,24 @@
 didReceiveRemoteNotification:(NSDictionary *)userInfo {
     [PFPush handlePush:userInfo];
 }
+
+
+#pragma mark - Reachability Methods -
+- (void)reachabilityDidChange:(NSNotification *)note {
+    BOOL reachable = (self.reachability.currentReachabilityStatus != NotReachable);
+    if (reachable != self.reachable){
+        // State Changed. Inform the user if necessary.
+        if (reachable){
+            // Connected.
+            [[NSNotificationCenter defaultCenter] postNotificationName:kInternetDidBecomeReachableNotification object:nil];
+        } else {
+            // Lost connection.
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Lost Internet" message:@"Please check the network connection under Settings." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alert show];
+        }
+    }
+    self.reachable = reachable;
+}
+
 
 @end
