@@ -36,11 +36,18 @@
     [[self.doneButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.classNameText becomeFirstResponder];
+}
+
 
 #pragma mark - IBAction
 - (IBAction)doneButtonTapped:(id)sender {
     self.className = self.classNameText.text;
-
+    [self.classNameText resignFirstResponder];
+    
     UINavigationController *navController = (UINavigationController *)self.presentingViewController;
     if ([navController.topViewController isKindOfClass:[MTEditProfileViewController class]]) {
         [self performSegueWithIdentifier:@"unwindToEditProfileView" sender:self];
@@ -48,7 +55,6 @@
     else {
         [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
     }
-
 }
 
 

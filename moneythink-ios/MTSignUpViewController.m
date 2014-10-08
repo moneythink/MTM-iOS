@@ -55,6 +55,7 @@
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 
 @property (assign, nonatomic) BOOL reachable;
+@property (nonatomic, strong) NSString *confirmationString;
 
 @end
 
@@ -69,10 +70,12 @@
     return self;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     
     [self textFieldsConfigure];
+    self.confirmationString = @"✓ ";
     
     [self.view setBackgroundColor:[UIColor lightGrey]];
     [self.viewFields setBackgroundColor:[UIColor lightGrey]];
@@ -147,7 +150,8 @@
     [reach startNotifier];
 }
 
-- (void)viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
 }
 
@@ -169,7 +173,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (void)textFieldsConfigure {
+- (void)textFieldsConfigure
+{
     UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
                                                                     self.firstName.frame.size.height - 1.0f,
                                                                     self.firstName.frame.size.width,
@@ -278,22 +283,32 @@
 
 
 #pragma mark - IBActions
-
-- (IBAction)schoolNameButton:(id)sender {
+- (IBAction)schoolNameButton:(id)sender
+{
     PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
     querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
 }
 
-- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error {
+- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
+{
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
     }
     
-    NSArray *schoolNames = [names sortedArrayUsingSelector:
+    NSArray *sortedNames = [names sortedArrayUsingSelector:
                             @selector(localizedCaseInsensitiveCompare:)];
+    
+    NSMutableArray *schoolNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
+    for (NSString *thisSchoolName in sortedNames) {
+        NSString *name = thisSchoolName;
+        if ([self.schoolName.text isEqualToString:thisSchoolName]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisSchoolName];
+        }
+        [schoolNames addObject:name];
+    }
     
     if ([UIAlertController class]) {
         UIAlertController *schoolSheet = [UIAlertController
@@ -326,7 +341,7 @@
                           style:UIAlertActionStyleDefault
                           handler:^(UIAlertAction *action) {
                               self.schoolIsNew = NO;
-                              self.schoolName.text = schoolNames[buttonItem];
+                              self.schoolName.text = [self stringWithoutConfirmation:schoolNames[buttonItem]];
                               self.className.text = @"";
 
                           }];
@@ -360,7 +375,8 @@
     }
 }
 
-- (IBAction)classNameButton:(id)sender {
+- (IBAction)classNameButton:(id)sender
+{
     if ([self.schoolName.text isEqualToString:@""]) {
         UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [chooseSchoolAlert show];
@@ -373,14 +389,24 @@
     }
 }
 
-- (void)classesSheet:(NSArray *)objects error:(NSError *)error {
+- (void)classesSheet:(NSArray *)objects error:(NSError *)error
+{
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
     }
     
-    NSArray *classNames = [names sortedArrayUsingSelector:
-                           @selector(localizedCaseInsensitiveCompare:)];
+    NSArray *sortedNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
+    for (NSString *thisClassName in sortedNames) {
+        NSString *name = thisClassName;
+        if ([self.className.text isEqualToString:thisClassName]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisClassName];
+        }
+        [classNames addObject:name];
+    }
     
     if ([UIAlertController class]) {
         UIAlertController *classSheet = [UIAlertController
@@ -412,7 +438,7 @@
                           style:UIAlertActionStyleDefault
                           handler:^(UIAlertAction *action) {
                               self.classIsNew = NO;
-                              self.className.text = classNames[buttonItem];
+                              self.className.text = [self stringWithoutConfirmation:classNames[buttonItem]];
                           }];
             [classSheet addAction:className];
         }
@@ -439,7 +465,8 @@
     }
 }
 
-- (IBAction)tappedSignUpButton:(id)sender {
+- (IBAction)tappedSignUpButton:(id)sender
+{
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
     BOOL agreed = [self.agreeCheckbox isChecked];
     if (isMentor) {
@@ -530,8 +557,21 @@
     }
 }
 
-#pragma mark - UIActionSheetDelegate methods
 
+#pragma mark - Private
+- (NSString *)stringWithoutConfirmation:(NSString *)oldString
+{
+    if ([oldString hasPrefix:self.confirmationString]) {
+        NSString *newString = [oldString substringFromIndex:[oldString rangeOfString:self.confirmationString].length];
+        return newString;
+    }
+    else {
+        return oldString;
+    }
+}
+
+
+#pragma mark - UIActionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
@@ -542,7 +582,7 @@
             [self performSegueWithIdentifier:@"addSchool" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.schoolIsNew = NO;
-            self.schoolName.text = buttonTitle;
+            self.schoolName.text = [self stringWithoutConfirmation:buttonTitle];
             self.className.text = @"";
         } else { // Cancel
             self.schoolIsNew = NO;
@@ -553,7 +593,7 @@
             [self performSegueWithIdentifier:@"addClass" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.classIsNew = NO;
-            self.className.text = buttonTitle;
+            self.className.text = [self stringWithoutConfirmation:buttonTitle];
         } else { // Cancel
             self.classIsNew = NO;
         }
@@ -562,12 +602,13 @@
 
 
 #pragma mark - Keyboard methods
-
--(void)dismissKeyboard {
+-(void)dismissKeyboard
+{
     [self.view endEditing:YES];
 }
 
-- (void) keyboardWasShown:(NSNotification *)nsNotification {
+- (void) keyboardWasShown:(NSNotification *)nsNotification
+{
     CGRect viewFrame = self.view.frame;
     self.oldViewFieldsRect = self.viewFields.frame;
     self.oldViewFieldsContentSize = self.viewFields.contentSize;
@@ -589,18 +630,18 @@
     self.viewFields.contentSize = fieldsContentRect.size;
     
     self.viewFields.frame = fieldsFrame;
-    
 }
 
-- (void)keyboardWasDismissed:(NSNotification *)notification {
+- (void)keyboardWasDismissed:(NSNotification *)notification
+{
     self.viewFields.frame = self.oldViewFieldsRect;
     self.viewFields.contentSize = self.oldViewFieldsContentSize;
 }
 
 
 #pragma mark - UITextFieldDelegate methods
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     NSInteger nextTag = textField.tag + 1;
     UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
     if (nextResponder) {
@@ -613,8 +654,8 @@
 
 
 #pragma mark - Navigation
-
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
     NSString *segueName = [segue identifier];
     id destinationVC = [segue destinationViewController];
     if ([segueName isEqualToString:@"addSchool"]) {
@@ -627,8 +668,8 @@
 
 
 #pragma mark Notification
-
--(void)reachabilityChanged:(NSNotification*)note {
+-(void)reachabilityChanged:(NSNotification*)note
+{
     Reachability * reach = [note object];
     
     if([reach isReachable]) {
@@ -640,8 +681,8 @@
 
 
 #pragma mark - Unwind
-
-- (IBAction)unwindToSignupView:(UIStoryboardSegue *)sender {
+- (IBAction)unwindToSignupView:(UIStoryboardSegue *)sender
+{
     UIStoryboardSegue *returned = sender;
     id sourceVC = [returned sourceViewController];
     if ([sourceVC class] == [MTAddSchoolViewController class]) {
@@ -663,5 +704,6 @@
         self.className.text = classVC.className;
     }
 }
+
 
 @end

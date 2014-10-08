@@ -157,6 +157,11 @@
     } else {
         // Not found, so remove keyboard.
         [textField resignFirstResponder];
+        
+        if (textField == self.password) {
+            // submit login
+            [self loginTapped:self.loginButton];
+        }
     }
     return NO; // We do not want UITextField to insert line-breaks.
 }

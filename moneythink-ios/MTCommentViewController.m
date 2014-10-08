@@ -140,7 +140,9 @@
     
     [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
         if (granted) {
-            [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeCamera];
+            });
         } else {
             //Not granted access to mediaType
             dispatch_async(dispatch_get_main_queue(), ^{

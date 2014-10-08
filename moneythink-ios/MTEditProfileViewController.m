@@ -40,6 +40,8 @@
 @property (strong, nonatomic) NSArray *classes;
 @property (strong, nonatomic) PFClasses *userClass;
 @property (nonatomic, strong) NSString *confirmationString;
+@property (nonatomic) BOOL unwinding;
+@property (nonatomic) BOOL showingKeyboard;
 
 @end
 
@@ -57,6 +59,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.viewFields.delegate = self;
     
     self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
     
@@ -160,10 +164,15 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     self.parentViewController.navigationItem.title = @"Settings";
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -187,6 +196,10 @@
 #pragma mark - Actions -
 - (IBAction)schoolNameButton:(id)sender
 {
+    if (!self.isMentor) {
+        return;
+    }
+    
     PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
     querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
     
@@ -279,6 +292,10 @@
 
 - (IBAction)classNameButton:(id)sender
 {
+    if (!self.isMentor) {
+        return;
+    }
+
     if ([self.userSchool.text isEqualToString:@""]) {
         UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [chooseSchoolAlert show];
@@ -495,7 +512,12 @@
     [self.view endEditing:YES];
 }
 
-- (void)keyboardWasShown:(NSNotification *)nsNotification
+- (void)keyboardDidShow:(NSNotification *)nsNotification
+{
+    self.showingKeyboard = YES;
+}
+
+- (void)keyboardWillShow:(NSNotification *)nsNotification
 {
     CGRect viewFrame = self.view.frame;
     self.oldViewFieldsRect = self.viewFields.frame;
@@ -515,14 +537,24 @@
     
     CGRect fieldsContentRect = CGRectMake( x, y, w, h);
     
-    self.viewFields.contentSize = fieldsContentRect.size;
-    self.viewFields.contentOffset = CGPointMake(0.0f, 94.0f);
+    [UIView animateWithDuration:0.35f animations:^{
+        self.viewFields.contentSize = fieldsContentRect.size;
+        self.viewFields.contentOffset = CGPointMake(0.0f, 94.0f);
+    }];
 }
 
-- (void)keyboardWasDismissed:(NSNotification *)notification
+- (void)keyboardWillHide:(NSNotification *)notification
 {
-    self.viewFields.frame = self.oldViewFieldsRect;
-    self.viewFields.contentSize = self.oldViewFieldsContentSize;
+    self.showingKeyboard = NO;
+    if (self.unwinding) {
+        self.unwinding = NO;
+    }
+    else {
+        [UIView animateWithDuration:0.35f animations:^{
+            self.viewFields.frame = self.oldViewFieldsRect;
+            self.viewFields.contentSize = self.oldViewFieldsContentSize;
+        }];
+    }
 }
 
 
@@ -823,6 +855,8 @@
 
 #pragma mark - Unwind
 - (IBAction)unwindToEditProfileView:(UIStoryboardSegue *)sender {
+    self.unwinding = YES;
+    
     UIStoryboardSegue *returned = sender;
     id sourceVC = [returned sourceViewController];
     if ([sourceVC class] == [MTAddSchoolViewController class]) {
@@ -842,6 +876,15 @@
         }
         
         self.userClassName.text = classVC.className;
+    }
+}
+
+
+#pragma mark - UIScrollViewDelegate -
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.showingKeyboard) {
+        [self dismissKeyboard];
     }
 }
 

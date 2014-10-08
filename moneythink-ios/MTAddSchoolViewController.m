@@ -36,6 +36,12 @@
     [[self.doneButton layer] setBorderColor:[UIColor mutedOrange].CGColor];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.schoolNameText becomeFirstResponder];
+}
+
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:YES];
 }
@@ -44,6 +50,8 @@
 #pragma mark - IBAction
 - (IBAction)doneButtonTapped:(id)sender {
     self.schoolName = self.schoolNameText.text;
+    [self.schoolNameText resignFirstResponder];
+
     UINavigationController *navController = (UINavigationController *)self.presentingViewController;
     if ([navController.topViewController isKindOfClass:[MTEditProfileViewController class]]) {
         [self performSegueWithIdentifier:@"unwindToEditProfileView" sender:self];

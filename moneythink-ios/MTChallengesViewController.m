@@ -90,7 +90,7 @@
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
     challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
-    challengeContentViewController.challengeDescriptionText = challenge[@"description"];
+    challengeContentViewController.challengeDescriptionText = challenge[@"student_instructions"];
     challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     
     challengeContentViewController.pageIndex = index;
