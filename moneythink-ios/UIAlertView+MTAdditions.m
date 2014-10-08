@@ -30,7 +30,7 @@
 {
     NSString *title = @"Network Error";
     if (error != nil) {
-        title = [title stringByAppendingFormat:@" (%lu)", error.code];
+        title = [title stringByAppendingFormat:@" (%lu)", (long)error.code];
     }
     
     NSString *message = nil;

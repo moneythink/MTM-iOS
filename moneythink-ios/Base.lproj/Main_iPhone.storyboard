@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6249" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
-        <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6243"/>
+        <deployment defaultVersion="1808" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -83,7 +83,6 @@
                         </subviews>
                         <color key="backgroundColor" red="0.10196079313755035" green="0.74901962280273438" blue="0.59215688705444336" alpha="1" colorSpace="deviceRGB"/>
                         <constraints>
-                            <constraint firstItem="hXp-YV-vWk" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="266" id="0pi-rC-g50"/>
                             <constraint firstItem="jU4-WJ-EZZ" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="34" id="1Rz-5r-I5K"/>
                             <constraint firstAttribute="trailing" secondItem="W2Y-S8-thM" secondAttribute="trailing" id="5g4-lM-ibE"/>
                             <constraint firstItem="7fn-Uc-eMe" firstAttribute="top" secondItem="hXp-YV-vWk" secondAttribute="bottom" constant="18" id="I9v-7H-IWz"/>
@@ -93,7 +92,6 @@
                             <constraint firstItem="hXp-YV-vWk" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Ql1-SN-Buc"/>
                             <constraint firstItem="hXp-YV-vWk" firstAttribute="top" secondItem="QK8-w5-dZG" secondAttribute="bottom" constant="8" id="Vb5-KS-bWZ"/>
                             <constraint firstItem="QK8-w5-dZG" firstAttribute="top" secondItem="W2Y-S8-thM" secondAttribute="bottom" constant="46" id="XoW-jg-WSI"/>
-                            <constraint firstItem="7fn-Uc-eMe" firstAttribute="top" secondItem="hXp-YV-vWk" secondAttribute="bottom" constant="18" id="cgT-L5-es6"/>
                             <constraint firstItem="W2Y-S8-thM" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="i2S-oK-lpJ"/>
                             <constraint firstAttribute="trailing" secondItem="Lx9-xh-3h8" secondAttribute="trailing" constant="20" id="nKt-v9-uTv"/>
                             <constraint firstItem="jU4-WJ-EZZ" firstAttribute="top" secondItem="W2Y-S8-thM" secondAttribute="bottom" constant="23" id="oYX-gI-o19"/>
@@ -594,7 +592,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g17-9a-Vpj">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="g17-9a-Vpj">
                                 <rect key="frame" x="0.0" y="-68" width="320" height="528"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IQH-3D-KXJ" userLabel="Field Background">
@@ -633,9 +631,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <rect key="frame" x="0.0" y="225" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lQY-Ee-oPc" userLabel="Button Profile Picture">
+                                    <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lQY-Ee-oPc" userLabel="Button Profile Picture">
                                         <rect key="frame" x="115" y="105" width="90" height="90"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="90" id="CXV-MX-ZeO"/>
+                                            <constraint firstAttribute="width" constant="90" id="qeQ-L9-6Ze"/>
+                                        </constraints>
                                         <state key="normal" image="profile_image.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -643,95 +645,171 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="editProfileImageButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="SQx-AL-Ix5"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SCHOOL EMAIL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="06N-tf-KYj">
-                                        <rect key="frame" x="14" y="341" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SCHOOL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5EJ-of-cWe" userLabel="School Label">
+                                        <rect key="frame" x="10" y="232" width="137" height="15"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CHANGE PASSWORD" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pY7-D4-bfq">
-                                        <rect key="frame" x="14" y="368" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CLASS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AZg-RL-o69" userLabel="Class Label">
+                                        <rect key="frame" x="10" y="260" width="137" height="14"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PREFERRED FIRST NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5h9-DZ-bGf">
-                                        <rect key="frame" x="14" y="287" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="PREFERRED FIRST NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5h9-DZ-bGf" userLabel="First Name Label">
+                                        <rect key="frame" x="10" y="287" width="137" height="14"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LAST NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIn-tp-MRT">
-                                        <rect key="frame" x="14" y="314" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="LAST NAME" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CIn-tp-MRT" userLabel="Last Name Label">
+                                        <rect key="frame" x="10" y="314" width="137" height="14"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SCHOOL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5EJ-of-cWe">
-                                        <rect key="frame" x="14" y="232" width="137" height="15"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SCHOOL EMAIL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="06N-tf-KYj" userLabel="Email Label">
+                                        <rect key="frame" x="10" y="341" width="137" height="14"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CLASS" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="AZg-RL-o69">
-                                        <rect key="frame" x="14" y="260" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CHANGE PASSWORD" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pY7-D4-bfq" userLabel="Change Password Label">
+                                        <rect key="frame" x="10" y="368" width="137" height="14"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oaA-FE-jNE">
-                                        <rect key="frame" x="159" y="338" width="148" height="19"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CONFIRM PASSWORD" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ypa-zN-PJm" userLabel="Confirm Password Label">
+                                        <rect key="frame" x="10" y="395" width="137" height="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="23A-ni-AkG" userLabel="School Text Field">
+                                        <rect key="frame" x="162" y="230" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="52q-WZ-qO3"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Ssp-rY-Cf7" userLabel="Class Text Field">
+                                        <rect key="frame" x="162" y="257" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="kW1-aX-don"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="a5y-A9-Gg8" userLabel="First Name Text Field">
+                                        <rect key="frame" x="162" y="284" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="daV-ef-O1J"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="mjU-ji-yUY" userLabel="Last Name Text Field">
+                                        <rect key="frame" x="162" y="311" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="1tG-M1-v4z"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
+                                    </textField>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="oaA-FE-jNE" userLabel="Email Text Field">
+                                        <rect key="frame" x="162" y="338" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="zj4-4R-ddH"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qet-24-6N4">
-                                        <rect key="frame" x="159" y="365" width="148" height="19"/>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qet-24-6N4" userLabel="Change Password Text Field">
+                                        <rect key="frame" x="162" y="365" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="MOH-4a-mal"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next" secureTextEntry="YES"/>
                                     </textField>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="CONFIRM PASSWORD" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="6" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ypa-zN-PJm">
-                                        <rect key="frame" x="14" y="395" width="137" height="14"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pFv-uz-ebB">
-                                        <rect key="frame" x="159" y="392" width="148" height="19"/>
+                                    <textField opaque="NO" clipsSubviews="YES" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pFv-uz-ebB" userLabel="Confirm Password Text Field">
+                                        <rect key="frame" x="162" y="392" width="148" height="19"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="148" id="OYy-17-lem"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="done" secureTextEntry="YES"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="a5y-A9-Gg8">
-                                        <rect key="frame" x="159" y="284" width="148" height="19"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="mjU-ji-yUY">
-                                        <rect key="frame" x="159" y="311" width="148" height="19"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="23A-ni-AkG">
-                                        <rect key="frame" x="159" y="230" width="148" height="19"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
-                                    </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="9" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="Ssp-rY-Cf7">
-                                        <rect key="frame" x="159" y="257" width="148" height="19"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
-                                    </textField>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="EDIT PHOTO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="whb-yp-d4u">
-                                        <rect key="frame" x="92" y="203" width="137" height="14"/>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EDIT PHOTO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="whb-yp-d4u" userLabel="Edit Photo Label">
+                                        <rect key="frame" x="0.0" y="203" width="320" height="13.5"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="2W6-IN-NRr"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vl4-hF-4w0" userLabel="School Name Button">
+                                        <rect key="frame" x="0.0" y="225" width="320" height="27"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="schoolNameButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="J6d-4f-r6q"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fom-lv-RLx" userLabel="Class Name Button">
+                                        <rect key="frame" x="0.0" y="252" width="320" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="classNameButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="9ke-EY-nz5"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="a5y-A9-Gg8" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="284" id="19D-Pb-UF5"/>
+                                    <constraint firstItem="23A-ni-AkG" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="230" id="3iU-D0-uRZ"/>
+                                    <constraint firstAttribute="trailing" secondItem="pFv-uz-ebB" secondAttribute="trailing" constant="10" id="44A-Zf-Y1c"/>
+                                    <constraint firstAttribute="centerX" secondItem="lQY-Ee-oPc" secondAttribute="centerX" id="74d-Yc-WUa"/>
+                                    <constraint firstAttribute="trailing" secondItem="Ssp-rY-Cf7" secondAttribute="trailing" constant="10" id="7DL-R2-Wm8"/>
+                                    <constraint firstItem="mjU-ji-yUY" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="311" id="7pU-dB-Isd"/>
+                                    <constraint firstAttribute="trailing" secondItem="Fom-lv-RLx" secondAttribute="trailing" id="9F1-PE-VqG"/>
+                                    <constraint firstItem="Fom-lv-RLx" firstAttribute="leading" secondItem="g17-9a-Vpj" secondAttribute="leading" id="LTe-NS-wof"/>
+                                    <constraint firstItem="oaA-FE-jNE" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="338" id="M1c-V4-ZKK"/>
+                                    <constraint firstItem="whb-yp-d4u" firstAttribute="leading" secondItem="g17-9a-Vpj" secondAttribute="leading" id="MuJ-X2-rFa"/>
+                                    <constraint firstAttribute="trailing" secondItem="23A-ni-AkG" secondAttribute="trailing" constant="10" id="PzQ-SE-ekl"/>
+                                    <constraint firstItem="Ssp-rY-Cf7" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="257" id="Q5T-ec-9Wd"/>
+                                    <constraint firstAttribute="trailing" secondItem="qet-24-6N4" secondAttribute="trailing" constant="10" id="Yho-SP-5wX"/>
+                                    <constraint firstItem="Fom-lv-RLx" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="252" id="cAg-6F-ygK"/>
+                                    <constraint firstAttribute="trailing" secondItem="a5y-A9-Gg8" secondAttribute="trailing" constant="10" id="cvg-Xa-RSA"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="Ssp-rY-Cf7" secondAttribute="trailing" constant="10" id="dAm-3c-Zvi"/>
+                                    <constraint firstItem="lQY-Ee-oPc" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="105" id="kW4-EA-73X"/>
+                                    <constraint firstItem="whb-yp-d4u" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="203" id="kbI-C8-Pzp"/>
+                                    <constraint firstAttribute="centerX" secondItem="whb-yp-d4u" secondAttribute="centerX" id="p4f-nv-kpp"/>
+                                    <constraint firstAttribute="trailing" secondItem="whb-yp-d4u" secondAttribute="trailing" id="uR5-rU-xze"/>
+                                    <constraint firstAttribute="trailing" secondItem="mjU-ji-yUY" secondAttribute="trailing" constant="10" id="xPV-co-n55"/>
+                                    <constraint firstAttribute="trailing" secondItem="oaA-FE-jNE" secondAttribute="trailing" constant="10" id="yBR-Qf-ONi"/>
+                                    <constraint firstItem="qet-24-6N4" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="365" id="zLG-8x-IOF"/>
+                                    <constraint firstItem="pFv-uz-ebB" firstAttribute="top" secondItem="g17-9a-Vpj" secondAttribute="top" constant="392" id="zZt-YT-NbM"/>
+                                </constraints>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="g17-9a-Vpj" firstAttribute="top" secondItem="YAx-1Q-yv6" secondAttribute="top" constant="-68" id="A76-hJ-kXO"/>
+                            <constraint firstItem="g17-9a-Vpj" firstAttribute="leading" secondItem="YAx-1Q-yv6" secondAttribute="leading" id="ZRr-uk-ewP"/>
+                            <constraint firstAttribute="bottom" secondItem="g17-9a-Vpj" secondAttribute="bottom" constant="20" id="rNB-SB-kxU"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="lLJ-ea-ow7"/>
                     <connections>
@@ -746,12 +824,14 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <outlet property="userSchool" destination="23A-ni-AkG" id="6eQ-oe-ji9"/>
                         <outlet property="viewFields" destination="g17-9a-Vpj" id="94O-X5-LRB"/>
                         <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToStudentMain" unwindAction="unwindToStudentMain:" id="ZrI-gL-liA"/>
+                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" id="NwG-bn-vTI"/>
+                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" id="Gdm-gL-5Rd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="cd1-HY-ACM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-1208" y="-3078"/>
+            <point key="canvasLocation" x="-1320" y="-2998"/>
         </scene>
         <!--Add School View Controller-->
         <scene sceneID="0Zq-Hb-rfV">
@@ -772,6 +852,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                 </state>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="zeU-Mr-fxZ" eventType="touchUpInside" id="EX2-1a-qqk"/>
+                                    <segue destination="hz2-0S-NYE" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="Meb-xp-jfZ"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New school" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="X2M-4u-vKh">
@@ -793,7 +874,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7AG-gt-3qy" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="hz2-0S-NYE" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2411" y="-2167"/>
+            <point key="canvasLocation" x="-2521" y="-2359"/>
         </scene>
         <!--studentMainView-->
         <scene sceneID="4Me-qA-dkw">
@@ -1526,8 +1607,11 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="DtS-a6-r1F">
                                 <rect key="frame" x="0.0" y="20" width="320" height="440"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-21-0QJ">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rgq-21-0QJ">
                                         <rect key="frame" x="20" y="96" width="280" height="39"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="39" id="E6r-di-b9q"/>
+                                        </constraints>
                                         <state key="normal" title="Login">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1626,7 +1710,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <viewControllerLayoutGuide type="bottom" id="gia-Cx-wTG"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="82v-vk-FoO">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="235"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="206"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </view>
                 </viewController>
@@ -2483,7 +2567,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="singleLineEtched" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="w4W-Dv-kLM">
-                                <rect key="frame" x="0.0" y="42" width="320" height="400"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="naO-Zd-8uf"/>
@@ -2507,8 +2591,8 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="w4W-Dv-kLM" secondAttribute="bottom" constant="38" id="JON-4o-WtI"/>
-                            <constraint firstItem="w4W-Dv-kLM" firstAttribute="top" secondItem="Zq9-8r-dYi" secondAttribute="bottom" constant="22" id="eYh-dJ-l04"/>
+                            <constraint firstAttribute="bottom" secondItem="w4W-Dv-kLM" secondAttribute="bottom" id="IF7-yN-2py"/>
+                            <constraint firstItem="w4W-Dv-kLM" firstAttribute="top" secondItem="RyN-7q-12f" secondAttribute="top" constant="64" id="c73-We-j13"/>
                             <constraint firstItem="w4W-Dv-kLM" firstAttribute="leading" secondItem="RyN-7q-12f" secondAttribute="leading" id="hY7-GD-T2k"/>
                         </constraints>
                     </view>
@@ -3123,7 +3207,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cfJ-PC-2Jb">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cfJ-PC-2Jb">
                                 <rect key="frame" x="0.0" y="20" width="320" height="460"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Preferred First Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="KIH-xy-YyE">
@@ -3166,37 +3250,6 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jiJ-0t-mOo">
-                                        <rect key="frame" x="21" y="276" width="20" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="20" id="WGk-QS-cQ8"/>
-                                        </constraints>
-                                        <state key="normal" title="Button">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J55-1d-FvR">
-                                        <rect key="frame" x="49" y="277" width="251" height="27"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <state key="normal" title="I agree to the Terms &amp; Conditions">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="ySr-9F-9a4"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77F-IV-6l0">
-                                        <rect key="frame" x="20" y="364" width="280" height="39"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="39" id="Ggf-iD-4xw"/>
-                                        </constraints>
-                                        <state key="normal" title="Sign Up">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="tappedSignUpButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="cyK-Ua-uE7"/>
-                                        </connections>
-                                    </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="School Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="vuS-Ey-fNB">
                                         <rect key="frame" x="21" y="200" width="279" height="30"/>
                                         <constraints>
@@ -3205,17 +3258,13 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Class Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yFB-wj-hwM">
-                                        <rect key="frame" x="21" y="238" width="279" height="30"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="6iY-4f-tRZ"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6">
-                                        <rect key="frame" x="20" y="201" width="280" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B4t-0I-SD6" userLabel="School Name Button">
+                                        <rect key="frame" x="20" y="200" width="280" height="30"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="280" id="1v2-LE-zvt"/>
+                                            <constraint firstAttribute="height" constant="30" id="sk2-bM-9Sv"/>
+                                        </constraints>
                                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <state key="normal">
                                             <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3224,9 +3273,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="schoolNameButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="ksF-tT-5On"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CyJ-49-Z5K">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Class Name" minimumFontSize="8" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="yFB-wj-hwM">
+                                        <rect key="frame" x="21" y="238" width="279" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="6iY-4f-tRZ"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="done"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CyJ-49-Z5K" userLabel="Class Name Button">
                                         <rect key="frame" x="20" y="238" width="280" height="30"/>
                                         <constraints>
+                                            <constraint firstAttribute="height" constant="30" id="0uV-cA-38Z"/>
                                             <constraint firstAttribute="width" constant="280" id="XoZ-sE-Nf8"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -3237,17 +3295,27 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <action selector="classNameButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="NQg-xi-WFA"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0H-vY-jeG">
-                                        <rect key="frame" x="21" y="319" width="20" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jiJ-0t-mOo" userLabel="Agree Button">
+                                        <rect key="frame" x="21" y="276" width="20" height="30"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="20" id="EbQ-vE-x9d"/>
+                                            <constraint firstAttribute="width" constant="20" id="WGk-QS-cQ8"/>
                                         </constraints>
                                         <state key="normal" title="Button">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J55-1d-FvR">
+                                        <rect key="frame" x="49" y="276" width="251" height="27"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <state key="normal" title="I agree to the Terms &amp; Conditions">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="ySr-9F-9a4"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="5Gn-Gs-M5t">
-                                        <rect key="frame" x="49" y="312" width="251" height="44"/>
+                                        <rect key="frame" x="49" y="311" width="251" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="cHw-W2-NjR"/>
                                             <constraint firstAttribute="width" constant="251" id="q4i-57-WIM"/>
@@ -3260,45 +3328,66 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <segue destination="uK7-CR-Ad7" kind="push" identifier="agreeVolunteerTerms" id="3fE-kn-Ubn"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0H-vY-jeG" userLabel="Mentor Agree Button">
+                                        <rect key="frame" x="21" y="318" width="20" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="20" id="EbQ-vE-x9d"/>
+                                            <constraint firstAttribute="height" constant="30" id="vkA-TI-eXJ"/>
+                                        </constraints>
+                                        <state key="normal" title="Button">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77F-IV-6l0">
+                                        <rect key="frame" x="20" y="363" width="280" height="39"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="39" id="Ggf-iD-4xw"/>
+                                        </constraints>
+                                        <state key="normal" title="Sign Up">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tappedSignUpButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="cyK-Ua-uE7"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="77F-IV-6l0" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="58" id="0cg-U1-d5T"/>
                                     <constraint firstItem="pPs-AL-Tjs" firstAttribute="top" secondItem="wH5-cm-geD" secondAttribute="bottom" constant="8" symbolic="YES" id="12K-Xk-wQY"/>
                                     <constraint firstItem="5Gn-Gs-M5t" firstAttribute="centerY" secondItem="d0H-vY-jeG" secondAttribute="centerY" id="5n2-zT-fb6"/>
                                     <constraint firstItem="vuS-Ey-fNB" firstAttribute="leading" secondItem="yFB-wj-hwM" secondAttribute="leading" id="6Wk-32-p4P"/>
                                     <constraint firstItem="77F-IV-6l0" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="20" id="7s3-87-uQD"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="leading" secondItem="ORF-qD-pOj" secondAttribute="leading" id="8cr-48-XrP"/>
                                     <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="J55-1d-FvR" secondAttribute="leading" id="8tO-XQ-QBh"/>
+                                    <constraint firstItem="J55-1d-FvR" firstAttribute="top" secondItem="yFB-wj-hwM" secondAttribute="bottom" constant="8" id="BNc-ED-xqm"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="top" secondItem="yFB-wj-hwM" secondAttribute="top" id="D7P-Eg-dd5"/>
                                     <constraint firstItem="jiJ-0t-mOo" firstAttribute="leading" secondItem="pPs-AL-Tjs" secondAttribute="leading" constant="1" id="G4y-Ny-SsB"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="21" id="Gt7-KQ-lc9"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="trailing" secondItem="vuS-Ey-fNB" secondAttribute="trailing" id="Hnc-8N-SQJ"/>
-                                    <constraint firstAttribute="trailing" secondItem="B4t-0I-SD6" secondAttribute="trailing" constant="20" id="Jrh-pb-KIt"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="leading" secondItem="ORF-qD-pOj" secondAttribute="leading" id="K7P-kl-45B"/>
                                     <constraint firstAttribute="trailing" secondItem="5Gn-Gs-M5t" secondAttribute="trailing" constant="20" id="Od5-Vk-Kvr"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="leading" secondItem="pPs-AL-Tjs" secondAttribute="leading" id="Oyd-fb-jyC"/>
                                     <constraint firstAttribute="trailing" secondItem="CyJ-49-Z5K" secondAttribute="trailing" constant="20" id="QYH-8f-iBt"/>
-                                    <constraint firstItem="B4t-0I-SD6" firstAttribute="leading" secondItem="vuS-Ey-fNB" secondAttribute="trailing" constant="-280" id="RBa-cb-nVm"/>
-                                    <constraint firstItem="CyJ-49-Z5K" firstAttribute="top" secondItem="B4t-0I-SD6" secondAttribute="bottom" constant="7" id="RMT-mP-vTA"/>
+                                    <constraint firstAttribute="bottom" secondItem="77F-IV-6l0" secondAttribute="bottom" constant="58" id="RW8-se-qdX"/>
+                                    <constraint firstItem="5Gn-Gs-M5t" firstAttribute="top" secondItem="J55-1d-FvR" secondAttribute="bottom" constant="8" symbolic="YES" id="Rwp-Kb-9fW"/>
                                     <constraint firstItem="vuS-Ey-fNB" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="21" id="TBJ-ic-38X"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="20" id="UAJ-HO-QE2"/>
+                                    <constraint firstItem="B4t-0I-SD6" firstAttribute="leading" secondItem="cfJ-PC-2Jb" secondAttribute="leading" constant="20" id="UN2-jM-Png"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="trailing" secondItem="KIH-xy-YyE" secondAttribute="trailing" id="WTf-Q5-0BK"/>
                                     <constraint firstItem="jiJ-0t-mOo" firstAttribute="centerX" secondItem="J55-1d-FvR" secondAttribute="centerX" constant="-143.5" id="Wkr-FJ-l8Y"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="top" secondItem="871-3R-XVp" secondAttribute="bottom" constant="8" symbolic="YES" id="Y63-BN-fIw"/>
-                                    <constraint firstItem="jiJ-0t-mOo" firstAttribute="top" secondItem="pPs-AL-Tjs" secondAttribute="bottom" constant="84" id="Z0U-7e-L6I"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="top" secondItem="ORF-qD-pOj" secondAttribute="bottom" constant="8" symbolic="YES" id="cml-jT-SBK"/>
+                                    <constraint firstItem="B4t-0I-SD6" firstAttribute="top" secondItem="vuS-Ey-fNB" secondAttribute="top" id="fO6-6w-ZON"/>
                                     <constraint firstAttribute="trailing" secondItem="77F-IV-6l0" secondAttribute="trailing" constant="20" id="fwK-1W-seT"/>
                                     <constraint firstItem="KIH-xy-YyE" firstAttribute="top" secondItem="cfJ-PC-2Jb" secondAttribute="top" constant="10" id="hrU-2l-R4w"/>
                                     <constraint firstItem="pPs-AL-Tjs" firstAttribute="trailing" secondItem="wH5-cm-geD" secondAttribute="trailing" id="kOu-XC-tfq"/>
-                                    <constraint firstItem="CyJ-49-Z5K" firstAttribute="bottom" secondItem="yFB-wj-hwM" secondAttribute="bottom" id="lc7-3O-u9s"/>
-                                    <constraint firstItem="d0H-vY-jeG" firstAttribute="top" secondItem="jiJ-0t-mOo" secondAttribute="bottom" constant="13" id="mdZ-C7-y0c"/>
                                     <constraint firstAttribute="trailing" secondItem="KIH-xy-YyE" secondAttribute="trailing" constant="20" id="mm0-hQ-0II"/>
                                     <constraint firstItem="CyJ-49-Z5K" firstAttribute="leading" secondItem="yFB-wj-hwM" secondAttribute="trailing" constant="-280" id="ns4-8o-UNX"/>
+                                    <constraint firstItem="77F-IV-6l0" firstAttribute="top" secondItem="5Gn-Gs-M5t" secondAttribute="bottom" constant="8" symbolic="YES" id="ovm-rK-pFH"/>
                                     <constraint firstItem="5Gn-Gs-M5t" firstAttribute="leading" secondItem="d0H-vY-jeG" secondAttribute="trailing" constant="8" id="p6C-bX-73Z"/>
-                                    <constraint firstItem="J55-1d-FvR" firstAttribute="top" secondItem="CyJ-49-Z5K" secondAttribute="bottom" constant="9" id="syz-kQ-T7l"/>
                                     <constraint firstItem="wH5-cm-geD" firstAttribute="leading" secondItem="871-3R-XVp" secondAttribute="leading" id="t5H-6W-R94"/>
                                     <constraint firstItem="871-3R-XVp" firstAttribute="trailing" secondItem="wH5-cm-geD" secondAttribute="trailing" id="tkt-1Z-mo3"/>
                                     <constraint firstItem="yFB-wj-hwM" firstAttribute="top" secondItem="vuS-Ey-fNB" secondAttribute="bottom" constant="8" symbolic="YES" id="uW8-Lk-hDX"/>
+                                    <constraint firstItem="vuS-Ey-fNB" firstAttribute="top" secondItem="pPs-AL-Tjs" secondAttribute="bottom" constant="8" symbolic="YES" id="vc7-b3-hq2"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="trailing" secondItem="871-3R-XVp" secondAttribute="trailing" id="w0S-AX-zKx"/>
                                     <constraint firstItem="pPs-AL-Tjs" firstAttribute="trailing" secondItem="J55-1d-FvR" secondAttribute="trailing" id="yEy-7u-oR8"/>
                                     <constraint firstItem="ORF-qD-pOj" firstAttribute="top" secondItem="KIH-xy-YyE" secondAttribute="bottom" constant="8" symbolic="YES" id="yqu-Cz-2qs"/>
@@ -3389,7 +3478,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J6W-jL-mjd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2411" y="-2878"/>
+            <point key="canvasLocation" x="-2433" y="-2969"/>
         </scene>
         <!--Mentor Notification View Controller-->
         <scene sceneID="oAQ-3o-3mK">
@@ -3541,6 +3630,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                 </state>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="hO1-oe-Ce4" eventType="touchUpInside" id="J3Z-2v-MXv"/>
+                                    <segue destination="T4o-US-tP7" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="CIe-F9-UJb"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Class" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="uPQ-0o-epA">
@@ -3561,7 +3651,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FQD-dR-Na2" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="T4o-US-tP7" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-2631" y="-1880"/>
+            <point key="canvasLocation" x="-2799" y="-1824"/>
         </scene>
         <!--Settings-->
         <scene sceneID="RfM-FD-Zt3">
@@ -3705,13 +3795,15 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     <inferredMetricsTieBreakers>
         <segue reference="3av-NC-tBU"/>
         <segue reference="0Hm-VR-maT"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="Rwq-1l-OkU"/>
-        <segue reference="ySr-9F-9a4"/>
-        <segue reference="0tX-EG-lkN"/>
-        <segue reference="VFk-5D-gdp"/>
+        <segue reference="0QY-Pc-qd8"/>
+        <segue reference="kDD-cl-uw8"/>
+        <segue reference="iSW-sc-15K"/>
+        <segue reference="fM9-bL-F9m"/>
+        <segue reference="Pqy-YU-1Il"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="3vf-te-PYL"/>
+        <segue reference="0tX-EG-lkN"/>
+        <segue reference="VFk-5D-gdp"/>
         <segue reference="a3W-fR-2k0"/>
     </inferredMetricsTieBreakers>
 </document>

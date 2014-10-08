@@ -952,7 +952,7 @@
 				ORGANIZATIONNAME = Moneythink;
 				TargetAttributes = {
 					5876E2A4196F2C1F00C176EC = {
-						DevelopmentTeam = 8V7X4CYMJ6;
+						DevelopmentTeam = YN5DHE47NH;
 						SystemCapabilities = {
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1220,7 +1220,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1245,7 +1245,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1267,7 +1267,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "f6a812e3-67ed-4896-8691-3c4d9d1bbb35";
+				PROVISIONING_PROFILE = "4b9e8da7-dbe3-4320-a060-ef6b74feafb5";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1322,7 +1322,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Sica (U7545FJG96)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1344,7 +1344,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "da60ac34-fe8c-4b25-be54-c57bc16e2dd2";
+				PROVISIONING_PROFILE = "79305cba-bfc1-432f-918f-fc013ebfb87d";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1398,7 +1398,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Jon Burgermeister (7BJZUA3Y8X)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Sica (U7545FJG96)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1420,11 +1420,87 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "da60ac34-fe8c-4b25-be54-c57bc16e2dd2";
+				PROVISIONING_PROFILE = "79305cba-bfc1-432f-918f-fc013ebfb87d";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
 			name = "Debug (Production)";
+		};
+		89E8577C19E44F1500E1C708 /* Adhoc (Production) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Adhoc (Production)";
+		};
+		89E8577D19E44F1500E1C708 /* Adhoc (Production) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CFBundleShortVersionString = 1.0.2;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/moneythink-ios",
+					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
+					"$(PROJECT_DIR)/moneythink-ios/libs",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/**",
+				);
+				INFOPLIST_FILE = "moneythink-ios/moneythink-ios-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/moneythink-ios/libs",
+				);
+				PRODUCT_NAME = Moneythink;
+				PROVISIONING_PROFILE = "1cb188f4-c2da-488a-b83c-4ab0b4ec24d3";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Adhoc (Production)";
 		};
 /* End XCBuildConfiguration section */
 
@@ -1433,6 +1509,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8982071919D9F78D0008ED5D /* Debug (Production) */,
+				89E8577C19E44F1500E1C708 /* Adhoc (Production) */,
 				8982071719D9F77D0008ED5D /* Debug (Stage) */,
 				5876E2D9196F2C1F00C176EC /* Release */,
 			);
@@ -1443,6 +1520,7 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8982071A19D9F78D0008ED5D /* Debug (Production) */,
+				89E8577D19E44F1500E1C708 /* Adhoc (Production) */,
 				8982071819D9F77D0008ED5D /* Debug (Stage) */,
 				5876E2DC196F2C1F00C176EC /* Release */,
 			);

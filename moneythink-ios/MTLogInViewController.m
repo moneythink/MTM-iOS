@@ -57,9 +57,14 @@
     [self textFieldsConfigure];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self.email becomeFirstResponder];
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
-    
 }
 
 - (void)textFieldsConfigure {

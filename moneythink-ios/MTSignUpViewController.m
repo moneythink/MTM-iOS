@@ -153,6 +153,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     self.oldViewFieldsRect = self.viewFields.frame;
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
@@ -161,13 +163,10 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
+    
     [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    
 }
 
 - (void)textFieldsConfigure {
@@ -386,7 +385,7 @@
     if ([UIAlertController class]) {
         UIAlertController *classSheet = [UIAlertController
                                           alertControllerWithTitle:@""
-                                          message:@"Choose School"
+                                          message:@"Choose Class"
                                           preferredStyle:UIAlertControllerStyleActionSheet];
         
         UIAlertAction *cancel = [UIAlertAction
@@ -405,7 +404,8 @@
                                    }];
         
         UIAlertAction *className;
-        
+        [classSheet addAction:destruct];
+
         for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
             className = [UIAlertAction
                           actionWithTitle:classNames[buttonItem]
@@ -418,7 +418,6 @@
         }
         
         [classSheet addAction:cancel];
-        [classSheet addAction:destruct];
         
         [self presentViewController:classSheet animated:YES completion:nil];
     } else {
@@ -647,10 +646,20 @@
     id sourceVC = [returned sourceViewController];
     if ([sourceVC class] == [MTAddSchoolViewController class]) {
         MTAddSchoolViewController *schoolVC = sourceVC;
+        
+        if (IsEmpty(schoolVC.schoolName)) {
+            return;
+        }
+
         self.schoolName.text = schoolVC.schoolName;
         self.className.text = @"";
     } else if ([sourceVC class] == [MTAddClassViewController class]) {
         MTAddClassViewController *classVC = sourceVC;
+        
+        if (IsEmpty(classVC.className)) {
+            return;
+        }
+
         self.className.text = classVC.className;
     }
 }

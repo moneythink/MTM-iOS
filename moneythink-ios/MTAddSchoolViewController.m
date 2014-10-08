@@ -7,6 +7,7 @@
 //
 
 #import "MTAddSchoolViewController.h"
+#import "MTEditProfileViewController.h"
 
 @interface MTAddSchoolViewController ()
 
@@ -39,30 +40,17 @@
     [super viewDidDisappear:YES];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
-
 
 #pragma mark - IBAction
-
 - (IBAction)doneButtonTapped:(id)sender {
     self.schoolName = self.schoolNameText.text;
-    
-    [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
+    UINavigationController *navController = (UINavigationController *)self.presentingViewController;
+    if ([navController.topViewController isKindOfClass:[MTEditProfileViewController class]]) {
+        [self performSegueWithIdentifier:@"unwindToEditProfileView" sender:self];
+    }
+    else {
+        [self performSegueWithIdentifier:@"unwindToSignupView" sender:self];
+    }
 }
 
 

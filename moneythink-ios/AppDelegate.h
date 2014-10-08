@@ -15,6 +15,4 @@
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic) BOOL reachable;
 
-+ (BOOL)internetReachable;
-
 @end
