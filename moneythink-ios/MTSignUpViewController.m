@@ -480,6 +480,9 @@
         
         findCode.cachePolicy = kPFCachePolicyCacheThenNetwork;
         
+        __block BOOL showedSignupError = NO;
+        
+        MTMakeWeakSelf();
         [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 NSArray *codes = objects;
@@ -489,32 +492,32 @@
                     
                     PFUser *user = [PFUser user];
                     
-                    user.username = self.email.text;
-                    user.password = self.password.text;
-                    user.email = self.email.text;
+                    user.username = weakSelf.email.text;
+                    user.password = weakSelf.password.text;
+                    user.email = weakSelf.email.text;
                     
                     // other fields can be set just like with PFObject
-                    user[@"first_name"] = self.firstName.text;
-                    user[@"last_name"] = self.lastName.text;
+                    user[@"first_name"] = weakSelf.firstName.text;
+                    user[@"last_name"] = weakSelf.lastName.text;
                     
-                    user[@"type"] = self.signUpType;
+                    user[@"type"] = weakSelf.signUpType;
                     
-                    if (self.schoolIsNew) {
+                    if (weakSelf.schoolIsNew) {
                         PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-                        createSchool[@"name"] = self.schoolName.text;
+                        createSchool[@"name"] = weakSelf.schoolName.text;
                         [createSchool saveInBackground];
                     }
                     
-                    if (self.classIsNew) {
+                    if (weakSelf.classIsNew) {
                         PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
-                        createClass[@"name"] = self.className.text;
-                        createClass[@"school"] = self.schoolName.text;
+                        createClass[@"name"] = weakSelf.className.text;
+                        createClass[@"school"] = weakSelf.schoolName.text;
                         [createClass saveInBackground];
                         
                         PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
                         signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
-                        signupCodeForStudent[@"class"] = self.className.text;
-                        signupCodeForStudent[@"school"] = self.schoolName.text;
+                        signupCodeForStudent[@"class"] = weakSelf.className.text;
+                        signupCodeForStudent[@"school"] = weakSelf.schoolName.text;
                         signupCodeForStudent[@"type"] = @"student";
                         
                         [signupCodeForStudent saveInBackground];
@@ -522,8 +525,8 @@
                     }
                     
                     if (isMentor) {
-                        user[@"school"] = self.schoolName.text;
-                        user[@"class"] = self.className.text;
+                        user[@"school"] = weakSelf.schoolName.text;
+                        user[@"class"] = weakSelf.className.text;
                     } else {
                         user[@"school"] = code[@"school"];
                         user[@"class"] = code[@"class"];
@@ -531,25 +534,37 @@
                     
                     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                         if (!error) {
-                            [[PFUser currentUser] refreshInBackgroundWithTarget:self selector:nil];
+                            [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
                             
                             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                [self performSegueWithIdentifier:@"studentSignedUp" sender:self];
+                                [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
                             } else {
-                                [self performSegueWithIdentifier:@"pushMentorSignedUp" sender:self];
+                                [weakSelf performSegueWithIdentifier:@"pushMentorSignedUp" sender:weakSelf];
                             }
                             
                         } else {
-                            NSString *errorString = [error userInfo][@"error"];
-                            self.error.text = errorString;
-                            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            // Ignore parse cache errors for now
+                            if (error.code != 120) {
+                                NSString *errorString = [error userInfo][@"error"];
+                                weakSelf.error.text = errorString;
+                                [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            }
                         }
                     }];
                 } else {
-                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    if (!showedSignupError) {
+                        showedSignupError = YES;
+                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    }
+                    else {
+                        showedSignupError = NO;
+                    }
                 }
             } else {
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                // Ignore parse cache errors for now
+                if (error.code != 120) {
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
             }
         }];
     } else {

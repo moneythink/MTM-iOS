@@ -57,6 +57,18 @@
             self.sections = @[@"PROFILE", @"SHARE SIGN UP CODE", @""];
         }
     }
+    
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 30.0f)];
+    UILabel *versionLabel = [[UILabel alloc] initWithFrame:footerView.frame];
+    versionLabel.text = [NSString stringWithFormat:@"Version %@ (%@)",
+                         [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                         [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    versionLabel.backgroundColor = [UIColor clearColor];
+    versionLabel.font = [UIFont systemFontOfSize:10.0f];
+    versionLabel.textColor = [UIColor darkGrey];
+    versionLabel.textAlignment = NSTextAlignmentCenter;
+    [footerView addSubview:versionLabel];
+    self.tableview.tableFooterView = footerView;
 }
 
 - (void)viewWillAppear:(BOOL)animated
