@@ -10,7 +10,15 @@
 #import "MICheckBox.h"
 #import "MTCommentViewController.h"
 
+@protocol MTPostViewControllerDelegate <NSObject>
+
+- (void)didDeletePost:(PFChallengePost *)challengePost;
+
+@end
+
 @interface MTPostViewController : UIViewController <MTCommentViewProtocol, UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, weak) id<MTPostViewControllerDelegate> delegate;
 
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;

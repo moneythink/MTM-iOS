@@ -36,19 +36,14 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     self.parentViewController.navigationItem.title = @"Students";
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:NO];
     
     NSString *nameClass = [PFUser currentUser][@"class"];
@@ -69,12 +64,6 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)cloudCodeSchedule:(id)sender
 {
     if (self.autoReleaseSwitch.on) {
@@ -83,7 +72,6 @@
         
         [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
             if (!error) {
-                
                 [self.tableView reloadData];
             } else {
                 NSLog(@"error - %@", error);
@@ -91,14 +79,12 @@
         }];
     } else {
         UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil message:@"Do you want to put the Challenge schedule on hold? This will not affect open Challenges, and you can resume the schedule at any time from this screen." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
-        
         [confirm show];
     }
 }
 
 
 #pragma mark - UIAlertViewDelegate methods
-
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     switch (buttonIndex) {
         case 0: // Cancel
@@ -111,9 +97,9 @@
             
             [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
                 if (!error) {
-                    
                     [self.tableView reloadData];
                 } else {
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Cancel" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                     NSLog(@"error - %@", error);
                 }
             }];
@@ -124,7 +110,6 @@
 
 
 #pragma mark - UITableViewController delegate methods
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger rows = 0;
@@ -147,7 +132,6 @@
 
 // Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
 // Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;

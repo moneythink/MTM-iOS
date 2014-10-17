@@ -38,37 +38,35 @@
     self.navigationItem.rightBarButtonItem = postComment;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
-//    self.title = self.challenge[@"title"];
-    self.navigationItem.title = self.challenge[@"title"];
-
-}
-
-- (void)didReceiveMemoryWarning
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super viewWillAppear:animated];
+    self.navigationItem.title = self.challenge[@"title"];
 }
 
-- (void)postCommentTapped {
+- (void)postCommentTapped
+{
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+
     self.navigationItem.title = @"Cancel";
     [self performSegueWithIdentifier:@"commentSegue" sender:self];
 }
 
- #pragma mark - Navigation
- 
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-     MTCommentViewController *destination = (MTCommentViewController *)[segue destinationViewController];
-     
-     destination.challenge = self.challenge;
- }
+
+#pragma mark - Navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    MTCommentViewController *destination = (MTCommentViewController *)[segue destinationViewController];
+    destination.challenge = self.challenge;
+}
 
 
 - (IBAction)unwindToPostsTabBar:(UIStoryboardSegue *)sender
 {
 }
-
 
 
 @end

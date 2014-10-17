@@ -12,7 +12,6 @@
 @protocol MTCommentViewProtocol <NSObject>
 
 - (void)dismissCommentView;
-- (void)dismissPostViewWithCompletion:(void (^)(void))completion;
 
 @end
 

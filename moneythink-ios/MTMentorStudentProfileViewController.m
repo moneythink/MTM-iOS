@@ -13,9 +13,9 @@
 
 @interface MTMentorStudentProfileViewController ()
 
-@property (strong, nonatomic) IBOutlet UILabel *userPoints;
 @property (strong, nonatomic) NSArray *studentPosts;
 
+@property (strong, nonatomic) IBOutlet UILabel *userPoints;
 @property (strong, nonatomic) IBOutlet UIImageView *managerProgress;
 @property (strong, nonatomic) IBOutlet UIImageView *makerProgress;
 
@@ -89,7 +89,8 @@
     }
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:NO];
     
     PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
@@ -109,12 +110,6 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
     UIImage *newImage = nil;
@@ -128,36 +123,30 @@
     CGFloat scaledHeight = targetHeight;
     CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
     
-    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
-        {
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO) {
         CGFloat widthFactor = targetWidth / width;
         CGFloat heightFactor = targetHeight / height;
         
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             scaleFactor = widthFactor; // scale to fit height
-            }
-        else
-            {
+        }
+        else {
             scaleFactor = heightFactor; // scale to fit width
-            }
+        }
         
         scaledWidth  = width * scaleFactor;
         scaledHeight = height * scaleFactor;
         
         // center the image
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-            }
-        else
-            {
-            if (widthFactor < heightFactor)
-                {
+        }
+        else {
+            if (widthFactor < heightFactor) {
                 thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-                }
             }
         }
+    }
     
     UIGraphicsBeginImageContext(targetSize); // this will crop
     
@@ -170,10 +159,9 @@
     
     newImage = UIGraphicsGetImageFromCurrentImageContext();
     
-    if(newImage == nil)
-        {
+    if(newImage == nil) {
         NSLog(@"could not scale image");
-        }
+    }
     
     //pop the context to get back to the default
     UIGraphicsEndImageContext();
@@ -182,47 +170,7 @@
 }
 
 
-#pragma mark - date diff methods
-
-
-- (NSString *)dateDiffFromDate:(NSDate *)origDate {
-    NSDate *todayDate = [NSDate date];
-
-    double interval     = [origDate timeIntervalSinceDate:todayDate];
-    
-    interval = interval * -1;
-    if(interval < 1) {
-    	return @"";
-    } else 	if (interval < 60) {
-    	return @"less than a minute ago";
-    } else if (interval < 3600) {
-    	int diff = round(interval / 60);
-    	return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (interval < 86400) {
-    	int diff = round(interval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (interval < 604800) {
-    	int diff = round(interval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
-    	int diff = round(interval / 60 / 60 / 24 / 7);
-    	return[NSString stringWithFormat:@"%d wks ago", diff];
-    }
-}
-
-- (NSString *)dateDiffFromString:(NSString *)origDate {
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
-    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
-    
-    NSDate *convertedDate = [df dateFromString:origDate];
-    
-    return [self dateDiffFromDate:convertedDate];
-}
-
-
 #pragma mark - UITableViewController delegate methods
-
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
 {
     return 2;
@@ -248,7 +196,7 @@
     NSDate *dateObject = [cell.rowPost createdAt];
     
     if (dateObject) {
-        cell.timeSince.text = [self dateDiffFromDate:dateObject];
+        cell.timeSince.text = [dateObject niceRelativeTimeFromNow];
     }
     
     PFUser *verifier = cell.rowPost[@"verified_by"];
@@ -291,15 +239,14 @@
 }
 
 
-#pragma mark - Table view delegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+#pragma mark - UITableViewDelegate Methods -
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
     return 0.0f;
 }
 
 
 #pragma mark - Navigation
-
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -312,5 +259,6 @@
         destinationVC.challengePost = rowObject;
     }
 }
+
 
 @end

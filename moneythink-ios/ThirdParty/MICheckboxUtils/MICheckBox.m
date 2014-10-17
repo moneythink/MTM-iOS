@@ -35,15 +35,28 @@
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
-        // Initialization code
-		
-		//self.frame =frame;
-		self.contentHorizontalAlignment  = UIControlContentHorizontalAlignmentLeft;
-
-		[self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
-		[self addTarget:self action:@selector(checkBoxClicked) forControlEvents:UIControlEventTouchUpInside];
+        [self initCheckBox];
 	}
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self initCheckBox];
+    }
+    return self;
+
+}
+
+- (void)initCheckBox
+{
+    // Initialization code
+    self.contentHorizontalAlignment  = UIControlContentHorizontalAlignmentCenter;
+    
+    [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+    [self addTarget:self action:@selector(checkBoxClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
 -(IBAction) checkBoxClicked{

@@ -8,11 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MTCommentViewController.h"
+#import "MTPostViewController.h"
 
-extern NSString *const kReloadMyClassChallengePostsdNotification;
+extern NSString *const kWillSaveNewChallengePostNotification;
+extern NSString *const kSavingWithPhotoNewChallengePostNotification;
+extern NSString *const kSavedMyClassChallengePostsdNotification;
 extern NSString *const kFailedMyClassChallengePostsdNotification;
 
-@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol>
+@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTPostViewControllerDelegate>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;

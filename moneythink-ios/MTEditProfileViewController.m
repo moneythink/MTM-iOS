@@ -627,6 +627,7 @@
         if (!error) {
             [[PFUser currentUser] refresh];
         } else {
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Save Changes" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             NSLog(@"error - %@", error);
         }
     }];

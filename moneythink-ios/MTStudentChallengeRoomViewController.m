@@ -68,34 +68,13 @@
 }
 
 - (void)postCommentTapped {
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+
     self.navigationItem.title = @"Cancel";
     [self performSegueWithIdentifier:@"commentSegue" sender:self];
-}
-
-- (void)dismissPostViewWithCompletion:(void (^)(void))completion {
-    if ([UIAlertController class]) {
-        UIAlertController *updateMessage = [UIAlertController alertControllerWithTitle:@"Your post is processing"
-                                                                               message:nil
-                                                                        preferredStyle:UIAlertControllerStyleActionSheet];
-        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"OK"
-                                                         style:UIAlertActionStyleDefault
-                                                       handler:nil];
-        [updateMessage addAction:cancel];
-        [self presentViewController:updateMessage animated:YES completion:^{
-            if (completion) {
-                completion();
-            }
-        }];
-        
-    } else {
-        if (completion) {
-            completion();
-        }
-
-        UIActionSheet *updateMessage = [[UIActionSheet alloc] bk_initWithTitle:@"Your post is processing"];
-        [updateMessage bk_addButtonWithTitle:@"OK" handler:nil];
-        [updateMessage showInView:[UIApplication sharedApplication].keyWindow];
-    }
 }
 
 - (void)dismissCommentView {

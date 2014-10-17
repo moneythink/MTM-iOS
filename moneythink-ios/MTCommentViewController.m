@@ -12,16 +12,12 @@
 @interface MTCommentViewController ()
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
-
 @property (strong, nonatomic) PFImageView *postImage;
-@property (strong, nonatomic) IBOutlet UITextView *postText;
-
 @property (strong, nonatomic) PFChallengePost *challengePost;
 
+@property (strong, nonatomic) IBOutlet UITextView *postText;
 @property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
-
 @property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
-
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
 
@@ -56,12 +52,10 @@
     [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 
     self.title = @"Create Post";
-    
     self.postText.text = @"";
     
     UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(commentDoneButton)];
     self.navigationItem.rightBarButtonItem = shareBarButton;
-    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,7 +99,8 @@
         [chooseImage addAction:choosePhoto];
         
         [self presentViewController:chooseImage animated:YES completion:nil];
-    } else {
+    }
+    else {
         UIActionSheet *addPostImage = [[UIActionSheet alloc] initWithTitle:@"Choose Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         
         UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
@@ -117,8 +112,8 @@
     }
 }
 
-#pragma mark - UIACtionSheetDelegate methods
 
+#pragma mark - UIACtionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     switch (buttonIndex) {
@@ -135,7 +130,8 @@
     }
 }
 
-- (void)takePicture {
+- (void)takePicture
+{
     NSString *mediaType = AVMediaTypeVideo;
     
     [AVCaptureDevice requestAccessForMediaType:mediaType completionHandler:^(BOOL granted) {
@@ -156,7 +152,8 @@
     }];
 }
 
-- (void)choosePicture {
+- (void)choosePicture
+{
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypeSavedPhotosAlbum];
 }
 
@@ -173,8 +170,8 @@
     [self presentViewController:self.imagePickerController animated:NO completion:nil];
 }
 
-#pragma mark - UIImagePickerControllerDelegate methods
 
+#pragma mark - UIImagePickerControllerDelegate methods
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
@@ -203,8 +200,14 @@
     [self dismissViewControllerAnimated:NO completion:NULL];
 }
 
-- (void)commentDoneButton {
+- (void)commentDoneButton
+{
     if (![self.postText.text isEqualToString:@""]) {
+        if (![MTUtil internetReachable]) {
+            [UIAlertView showNoInternetAlert];
+            return;
+        }
+
         self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
         
         self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
@@ -212,10 +215,12 @@
         self.challengePost[@"school"] = [PFUser currentUser][@"school"];
         self.challengePost[@"user"] = [PFUser currentUser];
         self.challengePost[@"post_text"] = self.postText.text;
-        
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+
         if (self.postImage.image) {
             NSString *fileName = @"post_image.png";
-            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.8f);
+            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
             
             self.postImage.file = [PFFile fileWithName:fileName data:imageData];
             
@@ -224,10 +229,14 @@
                     if (!error) {
                         self.challengePost[@"picture"] = self.postImage.file;
                         
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
+                        });
+                        
                         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                             if (!error) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                    [[NSNotificationCenter defaultCenter] postNotificationName:kReloadMyClassChallengePostsdNotification object:self];
+                                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
                                 });
                             } else {
                                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -238,31 +247,40 @@
                         }];
                     } else {
                         NSLog(@"picture error - %@", error);
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                        });
                     }
                 }];
             }
-        } else {
+        }
+        else {
             [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (!error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
+                    });
                 } else {
                     NSLog(@"text error - %@", error);
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                    });
                 }
             }];
         }
-        if ([self.delegate respondsToSelector:@selector(dismissPostViewWithCompletion:)]) {
-            
-            MTMakeWeakSelf();
-            [self.delegate dismissPostViewWithCompletion:^{
-                [weakSelf performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
-            }];
-        }
-        else {
-            [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
-        }
+        
+        [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
     }
 }
-- (IBAction)postCommentDone:(id)sender {
+
+- (IBAction)postCommentDone:(id)sender
+{
     if (![self.postText.text isEqualToString:@""]) {
+        if (![MTUtil internetReachable]) {
+            [UIAlertView showNoInternetAlert];
+            return;
+        }
+
         self.challengePostComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
         
         self.challengePostComment[@"challenge_post"] = self.post;
@@ -283,7 +301,8 @@
     [self.delegate dismissCommentView];
 }
 
-- (IBAction)postCommentCancel:(id)sender {
+- (IBAction)postCommentCancel:(id)sender
+{
     self.postText.text = @"";
     [self postCommentDone:nil];
 }

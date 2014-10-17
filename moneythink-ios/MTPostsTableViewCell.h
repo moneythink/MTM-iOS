@@ -10,26 +10,24 @@
 
 @interface MTPostsTableViewCell : PFTableViewCell
 
+@property (nonatomic, strong) PFChallengePost *post;
 @property (strong, nonatomic) IBOutlet PFImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UILabel *userName;
 @property (strong, nonatomic) IBOutlet UILabel *postedWhen;
-
 @property (strong, nonatomic) IBOutlet PFImageView *postImage;
 @property (strong, nonatomic) IBOutlet UILabel *postText;
-
 @property (strong, nonatomic) IBOutlet UILabel *likes;
 @property (strong, nonatomic) IBOutlet UILabel *comments;
+@property (strong, nonatomic) IBOutlet UIButton *likeButton;
+@property (strong, nonatomic) IBOutlet UIButton *commentBUtton;
+@property (strong, nonatomic) IBOutlet UIButton *button1;
+@property (strong, nonatomic) IBOutlet UIButton *button2;
+@property (strong, nonatomic) IBOutlet UIButton *deletePost;
+@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
+@property (nonatomic, strong) IBOutlet UIView *loadingView;
 
 @property (strong, nonatomic) NSArray *postsLiked;
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (assign, nonatomic) BOOL iLike;
-
-@property (strong, nonatomic) IBOutlet UIButton *likeButton;
-@property (strong, nonatomic) IBOutlet UIButton *commentBUtton;
-
-@property (strong, nonatomic) IBOutlet UIButton *button1;
-@property (strong, nonatomic) IBOutlet UIButton *button2;
-
-@property (strong, nonatomic) IBOutlet UIButton *deletePost;
 
 @end

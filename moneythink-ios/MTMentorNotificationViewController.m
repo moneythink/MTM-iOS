@@ -88,35 +88,29 @@
     self.navigationItem.title = self.title;
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     self.navigationController.parentViewController.navigationItem.title = @"Notifications";
-    
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 #pragma mark - Parse
-
-- (void)objectsDidLoad:(NSError *)error {
+- (void)objectsDidLoad:(NSError *)error
+{
     [super objectsDidLoad:error];
-    
     // This method is called every time objects are loaded from Parse via the PFQuery
-    
 }
 
-- (void)objectsWillLoad {
+- (void)objectsWillLoad
+{
     [super objectsWillLoad];
-    
     // This method is called before a PFQuery is fired to get more objects
 }
 
 
-- (PFQuery *)queryForTable {
+- (PFQuery *)queryForTable
+{
     PFUser *user = [PFUser currentUser];
     NSString *userID = [user objectId];
     NSString *className = user[@"class"];
@@ -162,7 +156,6 @@
     return query;
 }
 
-
 // Override to customize the look of a cell representing an object. The default is to display
 // a UITableViewCellStyleDefault style cell with the label being the first key in the object.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object {
@@ -183,7 +176,7 @@
         [cell.userName sizeToFit];
     }
     
-    cell.agePosted.text = [self dateDiffFromDate:[notification createdAt]];
+    cell.agePosted.text = [[notification createdAt] niceRelativeTimeFromNow];
     [cell.agePosted sizeToFit];
     
     //<><><><><><><><><><> - Challenge
@@ -265,49 +258,8 @@
     return cell;
 }
 
-
-#pragma mark - Table view delegate
-
-#pragma mark - date diff methods
-
-
-- (NSString *)dateDiffFromDate:(NSDate *)origDate {
-    NSDate *todayDate = [NSDate date];
-    
-    double interval     = [origDate timeIntervalSinceDate:todayDate];
-    
-    interval = interval * -1;
-    if(interval < 1) {
-    	return @"";
-    } else 	if (interval < 60) {
-    	return @"less than a minute ago";
-    } else if (interval < 3600) {
-    	int diff = round(interval / 60);
-    	return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (interval < 86400) {
-    	int diff = round(interval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (interval < 604800) {
-    	int diff = round(interval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
-    	int diff = round(interval / 60 / 60 / 24 / 7);
-    	return[NSString stringWithFormat:@"%d wks ago", diff];
-    }
-}
-
-- (NSString *)dateDiffFromString:(NSString *)origDate {
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
-    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
-    
-    NSDate *convertedDate = [df dateFromString:origDate];
-    
-    return [self dateDiffFromDate:convertedDate];
-}
-
-
--(void)exploreChallenge:(PFChallenges *)challenge {
+-(void)exploreChallenge:(PFChallenges *)challenge
+{
     NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
     
@@ -334,11 +286,10 @@
             }
         }
     }];
-    
 }
 
-#pragma mark - Navigation
 
+#pragma mark - Navigation
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

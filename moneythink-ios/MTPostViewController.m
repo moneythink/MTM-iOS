@@ -18,35 +18,27 @@
 @property (strong, nonatomic) IBOutlet PFImageView *postUserImage;
 @property (strong, nonatomic) IBOutlet UIButton *postUserButton;
 @property (strong, nonatomic) IBOutlet UILabel *whenPosted;
-
 @property (strong, nonatomic) IBOutlet PFImageView *postImage;
 @property (strong, nonatomic) IBOutlet UILabel *postText;
-
 @property (strong, nonatomic) IBOutlet UIButton *commentPost;
 @property (strong, nonatomic) IBOutlet UIButton *comment;
 @property (strong, nonatomic) IBOutlet UILabel *commentCount;
-@property (assign, nonatomic) NSInteger commentsCount;
-
-@property (strong, nonatomic) IBOutlet UIButton *likePost;
-@property (strong, nonatomic) NSArray *postsLiked;
-@property (assign, nonatomic) NSInteger postLikesCount;
-@property (strong, nonatomic) IBOutlet UILabel *postLikes;
-@property (assign, nonatomic) BOOL iLike;
-@property (assign, nonatomic) BOOL isMyClass;
-
 @property (strong, nonatomic) IBOutlet UIButton *button1;
 @property (strong, nonatomic) IBOutlet UIButton *button2;
-
 @property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
 @property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
-
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
-
 @property (strong, nonatomic) IBOutlet UIButton *deletePost;
-
 @property (strong, nonatomic) IBOutlet UITableView *commentsTableView;
-@property (strong, nonatomic) NSArray *comments;
+@property (strong, nonatomic) IBOutlet UIButton *likePost;
+@property (strong, nonatomic) IBOutlet UILabel *postLikes;
 
+@property (strong, nonatomic) NSArray *postsLiked;
+@property (assign, nonatomic) NSInteger postLikesCount;
+@property (assign, nonatomic) BOOL iLike;
+@property (assign, nonatomic) BOOL isMyClass;
+@property (assign, nonatomic) NSInteger commentsCount;
+@property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSDictionary *buttonsTapped;
 @property (nonatomic) NSInteger likeActionCount;
 
@@ -66,10 +58,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     [self.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
-    
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     self.iLike = [self.postsLiked containsObject:postID];
@@ -77,11 +67,11 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     self.title = self.challenge[@"title"];
-
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
-    
     self.postLikesCount = 0;
     if (self.challengePost[@"likes"]) {
         self.postLikesCount = [self.challengePost[@"likes"] intValue];
@@ -139,10 +129,10 @@
             NSLog(@"error - %@", error);
         }
     }];
-
 }
 
-- (void)viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
     
     CGRect frame = self.scrollFields.frame;
@@ -166,26 +156,27 @@
     self.scrollFields.frame = frame;
 }
 
-- (void)viewWillLayoutSubviews {
+- (void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
     [self loadChallengePost];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
 #pragma mark - Class Methods
-
 - (void)userButtonsTapped:(BOOL)loadObjects
 {
     PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
     [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-    //    buttonsTapped.cachePolicy = kPFCachePolicyCacheElseNetwork;
-    //    __block BOOL cacheCheck = YES;
+    
+    MTMakeWeakSelf();
     [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        //        cacheCheck = !cacheCheck;
         if (!error) {
             NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
             for (PFChallengePostButtonsClicked *clicks in objects) {
@@ -193,19 +184,18 @@
                 id post = [(PFChallengePost *)clicks[@"post"] objectId];
                 [tappedButtonObjects setValue:button forKey:post];
             }
-            self.buttonsTapped = tappedButtonObjects;
-            //            if (loadObjects) {
-            [self.view setNeedsLayout];
-            //            }
-        } else {
+            weakSelf.buttonsTapped = tappedButtonObjects;
+            [weakSelf.view setNeedsLayout];
+        }
+        else {
             NSLog(@"Error - %@", error);
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
         }
     }];
 }
 
 - (void)loadChallengePost
 {
-    // >>>>> Attributed hashtag
     self.postText.text = self.challengePost[@"post_text"];
     
     NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -218,24 +208,26 @@
         
         self.postText.attributedText = hashtag;
     }];
-    // Attributed hashtag
     
     self.postImage.file = self.challengePost[@"picture"];
     
+    MTMakeWeakSelf();
     [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
-                CGRect frame = self.postImage.frame;
-                self.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-            } else {
-                self.postImage.image = nil;
+                CGRect frame = weakSelf.postImage.frame;
+                weakSelf.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
             }
-        } else {
+            else {
+                weakSelf.postImage.image = nil;
+            }
+        }
+        else {
             NSLog(@"error - %@", error);
         }
     }];
     
-    self.whenPosted.text = [self dateDiffFromDate:[self.challengePost createdAt]];
+    self.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
 
     NSInteger button = [[self.buttonsTapped valueForKey:[self.challengePost objectId]] intValue];
     if ((button == 0) && (self.buttonsTapped.count > 0)) {
@@ -246,7 +238,8 @@
         [[self.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
         [self.button2 setTintColor:[UIColor redOrange]];
         [[self.button2 layer] setBackgroundColor:[UIColor white].CGColor];
-    } else if (button == 1) {
+    }
+    else if (button == 1) {
         [[self.button1 layer] setBorderWidth:2.0f];
         [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
         [self.button1 setTintColor:[UIColor primaryGreen]];
@@ -254,7 +247,8 @@
         
         [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
         [self.button2 setTintColor:[UIColor white]];
-    } else {
+    }
+    else {
         [[self.button1 layer] setBorderWidth:2.0f];
         [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
         [self.button1 setTintColor:[UIColor primaryGreen]];
@@ -304,7 +298,8 @@
     
     if (self.postLikesCount > 0) {
         likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    } else {
+    }
+    else {
         likesString = @"0";
     }
     
@@ -322,7 +317,8 @@
     if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
         self.deletePost.hidden = NO;
         self.deletePost.enabled = YES;
-    } else {
+    }
+    else {
         self.deletePost.hidden = YES;
         self.deletePost.enabled = NO;
     }
@@ -330,7 +326,8 @@
 
 
 #pragma mark - IBActions
-- (IBAction)likeButtonTapped:(id)sender {
+- (IBAction)likeButtonTapped:(id)sender
+{
     self.likeActionCount++;
     
     __block NSString *postID = [self.challengePost objectId];
@@ -409,33 +406,78 @@
     }];
 }
 
-- (IBAction)commentTapped:(id)sender {
+- (IBAction)commentTapped:(id)sender
+{
     [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
 }
 
-- (void)dismissCommentView {
+- (void)dismissCommentView
+{
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
-- (void)dismissPostViewWithCompletion:(void (^)(void))completion {
-    
+- (IBAction)deletePostTapped:(id)sender
+{
+    if ([UIAlertController class]) {
+        UIAlertController *deletePostSheet = [UIAlertController
+                                              alertControllerWithTitle:@"Delete this post?"
+                                              message:nil
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        MTMakeWeakSelf();
+        UIAlertAction *delete = [UIAlertAction
+                                 actionWithTitle:@"Delete"
+                                 style:UIAlertActionStyleDestructive
+                                 handler:^(UIAlertAction *action) {
+                                     [weakSelf performDeletePost];
+                                 }];
+        
+        [deletePostSheet addAction:cancel];
+        [deletePostSheet addAction:delete];
+        
+        [self presentViewController:deletePostSheet animated:YES completion:nil];
+    } else {
+        
+        MTMakeWeakSelf();
+        UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
+        [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
+            [weakSelf performDeletePost];
+        }];
+        [deleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [deleteAction showInView:[UIApplication sharedApplication].keyWindow];
+    }
 }
 
-- (IBAction)deletePostTapped:(id)sender {
-    // call function deletePost
-    NSString *userID = [self.postUser objectId];
-    NSString *postID = [self.challengePost objectId];
-    
-    [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-        if (!error) {
-            [self.navigationController popViewControllerAnimated:NO];
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+- (void)performDeletePost
+{
+    if ([self.delegate respondsToSelector:@selector(didDeletePost:)]) {
+        [self.delegate didDeletePost:self.challengePost];
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+    else {
+        // call function deletePost
+        NSString *userID = [self.postUser objectId];
+        NSString *postID = [self.challengePost objectId];
+        
+        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+            if (!error) {
+                [self.navigationController popViewControllerAnimated:NO];
+            } else {
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            }
+        }];
+    }
 }
 
-- (IBAction)verifiedTapped:(id)sender {
+- (IBAction)verifiedTapped:(id)sender
+{
     NSString *postID = [self.challengePost objectId];
     NSString *verifiedBy = [self.currentUser objectId];
     
@@ -443,23 +485,26 @@
         verifiedBy = @"";
     }
     
+    MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
         if (error) {
             NSLog(@"error - %@", error);
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+
         } else {
-            [self.currentUser refresh];
-            [self.challenge refresh];
-            [self.challengePost refresh];
+            [weakSelf.currentUser refresh];
+            [weakSelf.challenge refresh];
+            [weakSelf.challengePost refresh];
             
-            [self.view setNeedsLayout];
+            [weakSelf.view setNeedsLayout];
         }
     }];
     
     self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
 }
 
-- (IBAction)button1Tapped:(id)sender {
-
+- (IBAction)button1Tapped:(id)sender
+{
     self.button1.enabled = NO;
     
     PFChallengePost *post = self.challengePost;
@@ -468,23 +513,25 @@
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
+    
+    MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            [self.currentUser refresh];
-            [self.challenge refresh];
-            [self.challengePost refresh];
-            
-            self.button1.enabled = YES;
-            
-            [self.view setNeedsLayout];
-        } else {
+            [weakSelf.currentUser refresh];
+            [weakSelf.challenge refresh];
+            [weakSelf.challengePost refresh];
+            weakSelf.button1.enabled = YES;
+            [weakSelf.view setNeedsLayout];
+        }
+        else {
             NSLog(@"error - %@", error);
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
         }
     }];
 }
 
-- (IBAction)button2Tapped:(id)sender {
-    
+- (IBAction)button2Tapped:(id)sender
+{
     self.button2.enabled = NO;
 
     PFChallengePost *post = self.challengePost;
@@ -493,59 +540,22 @@
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
+    
+    MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
         if (!error) {
-            [self.currentUser refresh];
-            [self.challenge refresh];
-            [self.challengePost refresh];
-            
-            self.button2.enabled = YES;
-            
-            [self.view setNeedsLayout];
-        } else {
+            [weakSelf.currentUser refresh];
+            [weakSelf.challenge refresh];
+            [weakSelf.challengePost refresh];
+            weakSelf.button2.enabled = YES;
+            [weakSelf.view setNeedsLayout];
+        }
+        else {
             NSLog(@"error - %@", error);
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
         }
     }];
 }
-
-
-#pragma mark - date diff methods
-
-- (NSString *)dateDiffFromDate:(NSDate *)origDate {
-    NSDate *todayDate = [NSDate date];
-    
-    double interval     = [origDate timeIntervalSinceDate:todayDate];
-    
-    interval = interval * -1;
-    if(interval < 1) {
-    	return @"";
-    } else 	if (interval < 60) {
-    	return @"less than a minute ago";
-    } else if (interval < 3600) {
-    	int diff = round(interval / 60);
-    	return [NSString stringWithFormat:@"%d minutes ago", diff];
-    } else if (interval < 86400) {
-    	int diff = round(interval / 60 / 60);
-    	return[NSString stringWithFormat:@"%d hours ago", diff];
-    } else if (interval < 604800) {
-    	int diff = round(interval / 60 / 60 / 24);
-    	return[NSString stringWithFormat:@"%d days ago", diff];
-    } else {
-    	int diff = round(interval / 60 / 60 / 24 / 7);
-    	return[NSString stringWithFormat:@"%d wks ago", diff];
-    }
-}
-
-- (NSString *)dateDiffFromString:(NSString *)origDate {
-    NSDateFormatter *df = [[NSDateFormatter alloc] init];
-    [df setFormatterBehavior:NSDateFormatterBehavior10_4];
-    [df setDateFormat:@"EEE, dd MMM yy HH:mm:ss VVVV"];
-    
-    NSDate *convertedDate = [df dateFromString:origDate];
-    
-    return [self dateDiffFromDate:convertedDate];
-}
-
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
@@ -560,36 +570,30 @@
     CGFloat scaledHeight = targetHeight;
     CGPoint thumbnailPoint = CGPointMake(0.0,0.0);
     
-    if (CGSizeEqualToSize(imageSize, targetSize) == NO)
-        {
+    if (CGSizeEqualToSize(imageSize, targetSize) == NO) {
         CGFloat widthFactor = targetWidth / width;
         CGFloat heightFactor = targetHeight / height;
         
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             scaleFactor = widthFactor; // scale to fit height
-            }
-        else
-            {
+        }
+        else {
             scaleFactor = heightFactor; // scale to fit width
-            }
+        }
         
         scaledWidth  = width * scaleFactor;
         scaledHeight = height * scaleFactor;
         
         // center the image
-        if (widthFactor > heightFactor)
-            {
+        if (widthFactor > heightFactor) {
             thumbnailPoint.y = (targetHeight - scaledHeight) * 0.5;
-            }
-        else
-            {
-            if (widthFactor < heightFactor)
-                {
+        }
+        else {
+            if (widthFactor < heightFactor) {
                 thumbnailPoint.x = (targetWidth - scaledWidth) * 0.5;
-                }
             }
         }
+    }
     
     UIGraphicsBeginImageContext(targetSize); // this will crop
     
@@ -614,7 +618,6 @@
 
 
 #pragma mark - Navigation
-
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -624,7 +627,8 @@
         destinationViewController.post = self.challengePost;
         destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
-    } else if ([segueIdentifier isEqualToString:@"pushStudentProfileFromPost"]) {
+    }
+    else if ([segueIdentifier isEqualToString:@"pushStudentProfileFromPost"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         destinationVC.student = self.challengePost[@"user"];
     }
@@ -632,11 +636,9 @@
 
 
 #pragma mark - UITableViewController delegate methods
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     NSInteger rows = self.comments.count;
-    
     return rows;
 }
 
@@ -666,9 +668,9 @@
     return cell;
 }
 
-
 - (IBAction)unwindToPostView:(UIStoryboardSegue *)sender
 {
 }
+
 
 @end

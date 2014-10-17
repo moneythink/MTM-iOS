@@ -64,6 +64,7 @@
             self.verifiedCheckbox.isChecked = !self.verifiedCheckbox.isChecked;
             [self setNeedsLayout];
             NSLog(@"error - %@", error);
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
         }
     }];
 }

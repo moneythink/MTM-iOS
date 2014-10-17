@@ -22,6 +22,8 @@
 {
     [super prepareForReuse];
 
+    self.activityIndicator.hidden = YES;
+    self.loadingView.alpha = 0.0f;
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
 }

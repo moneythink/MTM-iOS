@@ -164,6 +164,8 @@
 		8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065119DA1F52000CFBF6 /* mentorSignupButton@2x.png */; };
 		8921065819DA1F52000CFBF6 /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065219DA1F52000CFBF6 /* studentSignupButton.png */; };
 		8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */; };
+		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
+		8946407819EC7DD800B7C3FD /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407719EC7DD800B7C3FD /* MBProgressHUD.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		89A50CEB19DDFDF7003BE1D8 /* libBlocksKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEA19DDFDF7003BE1D8 /* libBlocksKit.a */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
@@ -414,6 +416,10 @@
 		8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
 		8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
 		8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
+		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
+		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
+		8946407619EC7DD800B7C3FD /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		8946407719EC7DD800B7C3FD /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
 		8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MTAdditions.m"; sourceTree = "<group>"; };
 		89A50CC519DDFDF7003BE1D8 /* A2BlockInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2BlockInvocation.h; sourceTree = "<group>"; };
@@ -746,6 +752,8 @@
 				8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */,
 				89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */,
 				89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */,
+				8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */,
+				8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -899,6 +907,8 @@
 			isa = PBXGroup;
 			children = (
 				89FFFC7D19D9EDCF00DD3716 /* MICheckboxUtils */,
+				8946407619EC7DD800B7C3FD /* MBProgressHUD.h */,
+				8946407719EC7DD800B7C3FD /* MBProgressHUD.m */,
 				89FFFC8619D9EDCF00DD3716 /* Reachability.h */,
 				89FFFC8719D9EDCF00DD3716 /* Reachability.m */,
 			);
@@ -1109,6 +1119,7 @@
 				58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
+				8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */,
 				89C6792F19E317340054E890 /* MTUtil.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
@@ -1161,6 +1172,7 @@
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
+				8946407819EC7DD800B7C3FD /* MBProgressHUD.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);
