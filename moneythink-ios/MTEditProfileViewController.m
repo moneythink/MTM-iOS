@@ -134,7 +134,7 @@
         });
     };
 
-    [self.viewFields setBackgroundColor:[UIColor lightGrey]];
+    [self.viewFields setBackgroundColor:[UIColor clearColor]];
     
     [self textFieldsConfigure];
     

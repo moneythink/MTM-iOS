@@ -15,6 +15,11 @@
     return [UIColor colorWithHexString:@"#f7a341"];
 }
 
++ (UIColor *)primaryOrangeDark
+{
+    return [UIColor colorWithHexString:@"#BB6705"];
+}
+
 + (UIColor *)mutedOrange
 {
     return [UIColor colorWithHexString:@"#fdefd2"];
@@ -23,6 +28,11 @@
 + (UIColor *)primaryGreen;
 {
     return [UIColor colorWithHexString:@"#1abf97"];
+}
+
++ (UIColor *)primaryGreenDark;
+{
+    return [UIColor colorWithHexString:@"#00976F"];
 }
 
 + (UIColor *)mutedGreen;

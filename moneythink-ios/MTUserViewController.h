@@ -7,10 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
 #import "MTStudentTabBarViewController.h"
 
-@interface MTUserViewController : UIViewController <UINavigationControllerDelegate>
+@interface MTUserViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate>
 
 @end

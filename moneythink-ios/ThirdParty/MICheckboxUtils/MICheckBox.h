@@ -33,7 +33,10 @@ OF SUCH DAMAGE.
 @interface MICheckBox : UIButton {
 	BOOL isChecked;
 }
-@property (nonatomic,assign) BOOL isChecked;
+
+@property (nonatomic, strong) UIImage *checkedImage;
+@property (nonatomic, strong) UIImage *uncheckedImage;
+@property (nonatomic) BOOL isChecked;
 
 -(IBAction) checkBoxClicked;
 

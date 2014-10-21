@@ -15,4 +15,7 @@
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic) BOOL reachable;
 
+- (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
+- (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
+
 @end

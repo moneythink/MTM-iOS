@@ -16,46 +16,41 @@
 
 @interface MTSignUpViewController ()
 
-@property (strong, nonatomic) IBOutlet UIView *view;
-@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
-
-@property (strong, nonatomic) IBOutlet UITextField *firstName;
-@property (strong, nonatomic) IBOutlet UITextField *lastName;
-@property (strong, nonatomic) IBOutlet UITextField *email;
-@property (strong, nonatomic) IBOutlet UITextField *password;
-@property (strong, nonatomic) IBOutlet UITextField *registrationCode;
-
-@property (strong, nonatomic) IBOutlet UITextField *error;
-
-@property (strong, nonatomic) IBOutlet UIButton *agreeButton;
-@property (strong, nonatomic) IBOutlet UIButton *mentorAgreeButton;
+@property (weak, nonatomic) IBOutlet UIView *view;
+@property (weak, nonatomic) IBOutlet UITextField *firstName;
+@property (weak, nonatomic) IBOutlet UITextField *lastName;
+@property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UITextField *password;
+@property (weak, nonatomic) IBOutlet UITextField *registrationCode;
+@property (weak, nonatomic) IBOutlet UITextField *error;
+@property (weak, nonatomic) IBOutlet UIButton *agreeButton;
+@property (weak, nonatomic) IBOutlet UIButton *mentorAgreeButton;
+@property (weak, nonatomic) IBOutlet UIButton *addSchoolButton;
+@property (weak, nonatomic) IBOutlet UITextField *schoolName;
+@property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UIButton *addClassButton;
+@property (weak, nonatomic) IBOutlet UITextField *className;
+@property (weak, nonatomic) IBOutlet UIButton *signUpButton;
+@property (weak, nonatomic) IBOutlet UIButton *termsButton;
+@property (weak, nonatomic) IBOutlet UIButton *mentorTermsButton;
 
 @property (strong, nonatomic) IBOutlet MICheckBox *agreeCheckbox;
 @property (strong, nonatomic) IBOutlet MICheckBox *mentorAgreeCheckbox;
+@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *separatorViews;
 
-@property (strong, nonatomic) IBOutlet UIButton *addSchoolButton;
-@property (strong, nonatomic) IBOutlet UITextField *schoolName;
-@property (assign, nonatomic) BOOL schoolIsNew;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalSpaceConstraint;
+
+@property (nonatomic) BOOL schoolIsNew;
+@property (nonatomic) BOOL classIsNew;
+@property (nonatomic) BOOL reachable;
 @property (strong, nonatomic) NSArray *schools;
 @property (strong, nonatomic) PFSchools *school;
 @property (strong, nonatomic) UIActionSheet *schoolSheet;
-
-@property (strong, nonatomic) IBOutlet UIButton *addClassButton;
-@property (strong, nonatomic) IBOutlet UITextField *className;
-@property (assign, nonatomic) BOOL classIsNew;
 @property (strong, nonatomic) NSArray *classes;
 @property (strong, nonatomic) PFClasses *userClass;
 @property (strong, nonatomic) UIActionSheet *classSheet;
-
-@property (strong, nonatomic) IBOutlet UIButton *signUpButton;
-@property (strong, nonatomic) IBOutlet UIButton *termsButton;
-@property (strong, nonatomic) IBOutlet UIButton *mentorTermsButton;
-
-@property (assign, nonatomic) CGRect oldViewFieldsRect;
-@property (assign, nonatomic) CGSize oldViewFieldsContentSize;
-
-@property (assign, nonatomic) BOOL reachable;
-@property (nonatomic, strong) NSString *confirmationString;
+@property (strong, nonatomic) NSString *confirmationString;
+@property (nonatomic) BOOL keyboardShowing;
 
 @end
 
@@ -74,56 +69,37 @@
 {
     [super viewDidLoad];
     
-    [self textFieldsConfigure];
     self.confirmationString = @"✓ ";
     
-    [self.view setBackgroundColor:[UIColor lightGrey]];
-    [self.viewFields setBackgroundColor:[UIColor lightGrey]];
-    
     [self.navigationController setNavigationBarHidden:NO animated:NO];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
-    
-    [self.firstName setDelegate:self];
-    [self.lastName setDelegate:self];
-    [self.email setDelegate:self];
-    [self.password setDelegate:self];
-    [self.registrationCode setDelegate:self];
-    [self.schoolName setDelegate:self];
-    [self.className setDelegate:self];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
     label.backgroundColor = [UIColor clearColor];
     label.textAlignment = NSTextAlignmentCenter;
     label.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f];
+    label.textColor = [UIColor blackColor];
     label.text = self.signUpTitle;
     [label sizeToFit];
     self.navigationItem.titleView = label;
     
-	self.agreeCheckbox =[[MICheckBox alloc]initWithFrame:self.agreeButton.frame];
-	[self.agreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[self.agreeCheckbox setTitle:@"" forState:UIControlStateNormal];
+    self.agreeCheckbox.uncheckedImage = [UIImage imageNamed:@"check-unactive"];
+    self.agreeCheckbox.checkedImage = [UIImage imageNamed:@"check-active"];
     self.agreeCheckbox.isChecked = NO;
-	[self.viewFields addSubview:self.agreeCheckbox];
     
     self.agreeButton.hidden = YES;
     
-	self.mentorAgreeCheckbox =[[MICheckBox alloc]initWithFrame:self.mentorAgreeButton.frame];
-	[self.mentorAgreeCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-	[self.mentorAgreeCheckbox setTitle:@"" forState:UIControlStateNormal];
+    self.mentorAgreeCheckbox.uncheckedImage = [UIImage imageNamed:@"check-unactive"];
+    self.mentorAgreeCheckbox.checkedImage = [UIImage imageNamed:@"check-active"];
     self.mentorAgreeCheckbox.isChecked = NO;
-	[self.viewFields addSubview:self.mentorAgreeCheckbox];
     
     self.mentorAgreeButton.hidden = YES;
     
-    [self.signUpButton setTitle:@"SIGN UP" forState:UIControlStateNormal];
-    self.signUpButton.layer.cornerRadius = 4.0f;
-    [self.signUpButton setBackgroundColor:[UIColor mutedOrange]];
-    [self.signUpButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    self.signUpButton.layer.cornerRadius = 5.0f;
+    self.signUpButton.layer.masksToBounds = YES;
+    [self.signUpButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryOrange] size:self.signUpButton.frame.size] forState:UIControlStateNormal];
+    [self.signUpButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryOrangeDark] size:self.signUpButton.frame.size] forState:UIControlStateHighlighted];
+    [self.signUpButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
+    [self.signUpButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
 
     [self.termsButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.mentorTermsButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
@@ -148,137 +124,51 @@
     };
     
     [reach startNotifier];
-}
-
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
+    
+    MTMakeWeakSelf();
+    UISwipeGestureRecognizer *swipeUp = [UISwipeGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        [weakSelf.view endEditing:YES];
+        if (!weakSelf.keyboardShowing) {
+            [weakSelf resetLayout];
+        }
+    }];
+    swipeUp.direction = UISwipeGestureRecognizerDirectionUp;
+    [self.view addGestureRecognizer:swipeUp];
+    
+    UISwipeGestureRecognizer *swipeDown = [UISwipeGestureRecognizer bk_recognizerWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        [weakSelf.view endEditing:YES];
+        if (!weakSelf.keyboardShowing) {
+            [weakSelf resetLayout];
+        }
+    }];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeDown];
+    
+    if (IS_RETINA) {
+        for (UIView *thisSeparatorView in self.separatorViews) {
+            thisSeparatorView.frame = ({
+                CGRect newFrame = thisSeparatorView.frame;
+                newFrame.size.height = 0.5f;
+                newFrame;
+            });
+        }
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.oldViewFieldsRect = self.viewFields.frame;
 
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasShown:) name:UIKeyboardDidShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWasDismissed:) name:UIKeyboardDidHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDismiss:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
-    [self dismissKeyboard];
+    [self.view endEditing:YES];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)textFieldsConfigure
-{
-    UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                    self.firstName.frame.size.height - 1.0f,
-                                                                    self.firstName.frame.size.width,
-                                                                    1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    UIView *rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.firstName.frame.size.width - 1.0f,
-                                                                   0.0f,
-                                                                   1.0f,
-                                                                   self.firstName.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.firstName addSubview:bottomBorder];
-    [self.firstName addSubview:rightBorder];
-    [self.firstName setBackgroundColor:[UIColor white]];
-    
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.lastName.frame.size.height - 1.0f,
-                                                            self.lastName.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.lastName.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.lastName.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.lastName addSubview:bottomBorder];
-    [self.lastName addSubview:rightBorder];
-    [self.lastName setBackgroundColor:[UIColor white]];
-
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.email.frame.size.height - 1.0f,
-                                                            self.email.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.email.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.email.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.email addSubview:bottomBorder];
-    [self.email addSubview:rightBorder];
-    [self.email setBackgroundColor:[UIColor white]];
-
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.password.frame.size.height - 1.0f,
-                                                            self.password.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.password.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.password.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.password addSubview:bottomBorder];
-    [self.password addSubview:rightBorder];
-    [self.password setBackgroundColor:[UIColor white]];
-
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.registrationCode.frame.size.height - 1.0f,
-                                                            self.registrationCode.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.registrationCode.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.registrationCode.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.registrationCode addSubview:bottomBorder];
-    [self.registrationCode addSubview:rightBorder];
-    [self.registrationCode setBackgroundColor:[UIColor white]];
-
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.schoolName.frame.size.height - 1.0f,
-                                                            self.schoolName.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.schoolName.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.schoolName.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.schoolName addSubview:bottomBorder];
-    [self.schoolName addSubview:rightBorder];
-    [self.schoolName setBackgroundColor:[UIColor white]];
-
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.className.frame.size.height - 1.0f,
-                                                            self.className.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.className.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.className.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.className addSubview:bottomBorder];
-    [self.className addSubview:rightBorder];
-    [self.className setBackgroundColor:[UIColor white]];
 }
 
 
@@ -335,14 +225,21 @@
         
         [schoolSheet addAction:destruct];
 
+        MTMakeWeakSelf();
         for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
             schoolName = [UIAlertAction
                           actionWithTitle:schoolNames[buttonItem]
                           style:UIAlertActionStyleDefault
                           handler:^(UIAlertAction *action) {
-                              self.schoolIsNew = NO;
-                              self.schoolName.text = [self stringWithoutConfirmation:schoolNames[buttonItem]];
-                              self.className.text = @"";
+                              weakSelf.schoolIsNew = NO;
+                              weakSelf.schoolName.text = [weakSelf stringWithoutConfirmation:schoolNames[buttonItem]];
+                              weakSelf.className.text = @"";
+                              
+                              [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+                              [weakSelf bk_performBlock:^(id obj) {
+                                  [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                                  [weakSelf classNameButton:nil];
+                              } afterDelay:0.3f];
 
                           }];
             [schoolSheet addAction:schoolName];
@@ -468,12 +365,8 @@
 - (IBAction)tappedSignUpButton:(id)sender
 {
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
-    BOOL agreed = [self.agreeCheckbox isChecked];
-    if (isMentor) {
-        agreed &= [self.mentorAgreeCheckbox isChecked];
-    }
-    
-    if (agreed) {
+
+    if ([self validate]) {
         NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
         
         PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
@@ -482,6 +375,9 @@
         
         __block BOOL showedSignupError = NO;
         
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Registering...";
+
         MTMakeWeakSelf();
         [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
@@ -533,6 +429,8 @@
                     }
                     
                     [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        
                         if (!error) {
                             [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
                             
@@ -552,6 +450,8 @@
                         }
                     }];
                 } else {
+                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
                     if (!showedSignupError) {
                         showedSignupError = YES;
                         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
@@ -561,19 +461,66 @@
                     }
                 }
             } else {
+                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+
                 // Ignore parse cache errors for now
                 if (error.code != 120) {
                     [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                 }
             }
         }];
-    } else {
-        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
     }
 }
 
+- (BOOL)validate
+{
+    BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
+    BOOL agreed = [self.agreeCheckbox isChecked];
+    if (isMentor) {
+        agreed &= [self.mentorAgreeCheckbox isChecked];
+    }
+    
+    if (!agreed) {
+        if (isMentor) {
+            if ([self.agreeCheckbox isChecked]) {
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Mentor Release before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+            else {
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }
+        else {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+        
+        return NO;
+    }
+    
+    if (IsEmpty(self.password.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Password is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
+    
+    if (IsEmpty(self.registrationCode.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Registration Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
 
-#pragma mark - Private
+    if (isMentor && IsEmpty(self.schoolName.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"School Name is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
+
+    if (isMentor && IsEmpty(self.className.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Class Name is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
+
+    return YES;
+}
+
+
+#pragma mark - Private -
 - (NSString *)stringWithoutConfirmation:(NSString *)oldString
 {
     if ([oldString hasPrefix:self.confirmationString]) {
@@ -585,8 +532,39 @@
     }
 }
 
+- (void)adjustLayout
+{
+    [self.view layoutIfNeeded];
+    CGFloat yOffset = 0.0f;
+    UIView *firstResponder = [self.view findViewThatIsFirstResponder];
+    
+    CGFloat adjustment = self.firstName.frame.size.height;
+    
+    if (firstResponder) {
+        if (firstResponder.tag == 0) {
+            yOffset = 54.0f;
+        }
+        else {
+            yOffset = 54.0f + adjustment - (adjustment * firstResponder.tag);
+        }
+    }
+    self.verticalSpaceConstraint.constant = yOffset;
+    [UIView animateWithDuration:0.35f animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
 
-#pragma mark - UIActionSheetDelegate methods
+- (void)resetLayout
+{
+    [self.view layoutIfNeeded];
+    self.verticalSpaceConstraint.constant = 54.0f;
+    [UIView animateWithDuration:0.35f animations:^{
+        [self.view layoutIfNeeded];
+    }];
+}
+
+
+#pragma mark - UIActionSheetDelegate methods -
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
@@ -599,6 +577,14 @@
             self.schoolIsNew = NO;
             self.schoolName.text = [self stringWithoutConfirmation:buttonTitle];
             self.className.text = @"";
+            
+            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
+            MTMakeWeakSelf();
+            [self bk_performBlock:^(id obj) {
+                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
+                [weakSelf classNameButton:nil];
+            } afterDelay:0.3f];
+            
         } else { // Cancel
             self.schoolIsNew = NO;
         }
@@ -616,49 +602,29 @@
 }
 
 
-#pragma mark - Keyboard methods
--(void)dismissKeyboard
+#pragma mark - Keyboard methods -
+- (void)keyboardWillShow:(NSNotification *)nsNotification
 {
-    [self.view endEditing:YES];
+    self.keyboardShowing = YES;
+    [self adjustLayout];
 }
 
-- (void) keyboardWasShown:(NSNotification *)nsNotification
+- (void)keyboardWillDismiss:(NSNotification *)notification
 {
-    CGRect viewFrame = self.view.frame;
-    self.oldViewFieldsRect = self.viewFields.frame;
-    self.oldViewFieldsContentSize = self.viewFields.contentSize;
-    
-    CGRect fieldsFrame = self.viewFields.frame;
-    
-    NSDictionary *userInfo = [nsNotification userInfo];
-    CGRect kbRect = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    CGSize kbSize = kbRect.size;
-    NSInteger kbTop = viewFrame.origin.y + viewFrame.size.height - kbSize.height;
-    
-    CGFloat x = fieldsFrame.origin.x;
-    CGFloat y = fieldsFrame.origin.y;
-    CGFloat w = fieldsFrame.size.width;
-    CGFloat h = kbTop + 320.0f;
-    
-    CGRect fieldsContentRect   = CGRectMake(x, y, w, h);
-    
-    self.viewFields.contentSize = fieldsContentRect.size;
-    
-    self.viewFields.frame = fieldsFrame;
-}
-
-- (void)keyboardWasDismissed:(NSNotification *)notification
-{
-    self.viewFields.frame = self.oldViewFieldsRect;
-    self.viewFields.contentSize = self.oldViewFieldsContentSize;
+    [self.view layoutIfNeeded];
+    self.verticalSpaceConstraint.constant = 54.0f;
+    [UIView animateWithDuration:0.35f animations:^{
+        [self.view layoutIfNeeded];
+        self.keyboardShowing = NO;
+    }];
 }
 
 
-#pragma mark - UITextFieldDelegate methods
+#pragma mark - UITextFieldDelegate methods -
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     NSInteger nextTag = textField.tag + 1;
-    UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
+    UIResponder *nextResponder = [textField.superview viewWithTag:nextTag];
     if (nextResponder) {
         [nextResponder becomeFirstResponder];
     } else {
@@ -667,8 +633,13 @@
     return NO;
 }
 
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    [self adjustLayout];
+}
 
-#pragma mark - Navigation
+
+#pragma mark - Navigation -
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueName = [segue identifier];
@@ -682,11 +653,10 @@
 }
 
 
-#pragma mark Notification
+#pragma mark Notification -
 -(void)reachabilityChanged:(NSNotification*)note
 {
     Reachability * reach = [note object];
-    
     if([reach isReachable]) {
         self.reachable = YES;
     } else {
@@ -695,7 +665,7 @@
 }
 
 
-#pragma mark - Unwind
+#pragma mark - Unwind -
 - (IBAction)unwindToSignupView:(UIStoryboardSegue *)sender
 {
     UIStoryboardSegue *returned = sender;

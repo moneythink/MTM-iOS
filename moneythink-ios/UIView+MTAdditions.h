@@ -12,5 +12,6 @@
 
 + (UIView *)viewFromNib:(NSString *)nibName bundle:(NSBundle *)bundle;
 - (UIView *)findSuperViewWithClass:(Class)superViewClass;
+- (UIView *)findViewThatIsFirstResponder;
 
 @end

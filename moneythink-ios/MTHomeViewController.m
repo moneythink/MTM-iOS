@@ -8,7 +8,6 @@
 
 #import "MTHomeViewController.h"
 #import "MTUserViewController.h"
-#import "MTLogInViewController.h"
 #import "MTSignUpViewController.h"
 
 @interface MTHomeViewController ()
@@ -24,7 +23,7 @@
     
     if ([PFUser currentUser]) {
         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-            [self performSegueWithIdentifier:@"studentMain" sender:self];
+            [self performSegueWithIdentifier:@"studentLoginSegue" sender:self];
         } else {
             [self performSegueWithIdentifier:@"challengesView" sender:self];
         }

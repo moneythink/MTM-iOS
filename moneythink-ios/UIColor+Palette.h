@@ -22,8 +22,10 @@
 //@property (nonatomic, strong) UIColor *redOrange;
 
 + (UIColor *)primaryOrange;
++ (UIColor *)primaryOrangeDark;
 + (UIColor *)mutedOrange;
 + (UIColor *)primaryGreen;
++ (UIColor *)primaryGreenDark;
 + (UIColor *)mutedGreen;
 + (UIColor *)darkGrey;
 + (UIColor *)grey;

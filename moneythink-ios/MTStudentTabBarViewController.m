@@ -7,6 +7,7 @@
 //
 
 #import "MTStudentTabBarViewController.h"
+#import "MTStudentSettingsViewController.h"
 
 @interface MTStudentTabBarViewController ()
 
@@ -26,39 +27,24 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     self.navigationItem.title = @"Challenges";
-
     [self.navigationController setNavigationBarHidden:NO animated:NO];
-
     self.navigationItem.hidesBackButton = YES;
-
     self.delegate = self;
-
 }
 
-- (void)didReceiveMemoryWarning
+- (void)viewWillAppear:(BOOL)animated
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [super viewWillAppear:animated];
+    
+    if (![self.selectedViewController isKindOfClass:[MTStudentSettingsViewController class]]) {
+        [[MTUtil getAppDelegate] setDefaultNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+    }
 }
 
-
-#pragma mark - Navigation
-
-/*
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
- 
-}
-*/
 
 #pragma mark - UIActionSheetDelegate methods
-
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     switch (buttonIndex) {
@@ -75,5 +61,6 @@
         }
     }
 }
+
 
 @end

@@ -58,9 +58,7 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
-    [[UINavigationBar appearance] setTintColor:[UIColor white]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    [self setDefaultNavBarAppearanceForNavigationBar:nil];
     
     [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
     [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];
@@ -137,6 +135,34 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
         }
     }
     self.reachable = reachable;
+}
+
+
+#pragma mark - Public Methods -
+- (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
+{
+    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTintColor:[UIColor white]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    
+    [navigationBar setBarTintColor:[UIColor primaryOrange]];
+    [navigationBar setTintColor:[UIColor white]];
+    [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
+}
+
+- (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
+{
+    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    
+    [navigationBar setBarTintColor:[UIColor whiteColor]];
+    [navigationBar setTintColor:[UIColor primaryOrange]];
+    [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
 

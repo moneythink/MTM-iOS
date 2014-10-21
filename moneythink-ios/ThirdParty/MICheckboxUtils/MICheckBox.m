@@ -55,28 +55,62 @@
     // Initialization code
     self.contentHorizontalAlignment  = UIControlContentHorizontalAlignmentCenter;
     
-    [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+    if (self.uncheckedImage) {
+        [self setImage:self.uncheckedImage forState:UIControlStateNormal];
+    }
+    else {
+        [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+    }
+    
     [self addTarget:self action:@selector(checkBoxClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(IBAction) checkBoxClicked{
-	if(self.isChecked ==NO){
+-(IBAction) checkBoxClicked
+{
+	if(self.isChecked ==NO) {
 		self.isChecked =YES;
-		[self setImage:[UIImage imageNamed:@"checkbox_ticked.png"] forState:UIControlStateNormal];
+        
+        if (self.checkedImage) {
+            [self setImage:self.checkedImage forState:UIControlStateNormal];
+        }
+        else {
+            [self setImage:[UIImage imageNamed:@"checkbox_ticked.png"] forState:UIControlStateNormal];
+        }
 		
-	}else{
+	}
+    else {
 		self.isChecked =NO;
-		[self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+        
+        if (self.uncheckedImage) {
+            [self setImage:self.uncheckedImage forState:UIControlStateNormal];
+        }
+        else {
+            [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+        }
 
 	}
 }
 
-- (void)setIsChecked:(BOOL)checked {
+- (void)setIsChecked:(BOOL)checked
+{
     isChecked = checked;
 	if(!isChecked) {
-		[self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
-	} else {
-		[self setImage:[UIImage imageNamed:@"checkbox_ticked.png"] forState:UIControlStateNormal];
+        
+        if (self.uncheckedImage) {
+            [self setImage:self.uncheckedImage forState:UIControlStateNormal];
+        }
+        else {
+            [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
+        }
+
+	}
+    else {
+        if (self.checkedImage) {
+            [self setImage:self.checkedImage forState:UIControlStateNormal];
+        }
+        else {
+            [self setImage:[UIImage imageNamed:@"checkbox_ticked.png"] forState:UIControlStateNormal];
+        }
 	}
 }
 

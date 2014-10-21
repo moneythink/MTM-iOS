@@ -9,6 +9,7 @@
 #define HEIGHT_IPHONE_5 568
 #define HEIGHT_IPHONE_4 480
 
+#define IS_RETINA ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))
 #define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_5 )
 #define IS_IPHONE_4 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_4 )
 #define MTMakeWeakSelf() __weak __typeof__(self) weakSelf = self
@@ -28,6 +29,8 @@
 #import "UIView+MTAdditions.h"
 #import "UIAlertView+MTAdditions.h"
 #import "NSDate+MTAdditions.h"
+#import "UIImage+MTAdditions.h"
+#import "UIFont+MTAdditions.h"
 
 #import "Reachability.h"
 #import "BlocksKit.h"

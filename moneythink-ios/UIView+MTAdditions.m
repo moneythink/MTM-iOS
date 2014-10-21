@@ -45,5 +45,21 @@
     return foundSuperView;
 }
 
+- (UIView *)findViewThatIsFirstResponder
+{
+    if (self.isFirstResponder) {
+        return self;
+    }
+    
+    for (UIView *subView in self.subviews) {
+        UIView *firstResponder = [subView findViewThatIsFirstResponder];
+        if (firstResponder != nil) {
+            return firstResponder;
+        }
+    }
+    
+    return nil;
+}
+
 
 @end
