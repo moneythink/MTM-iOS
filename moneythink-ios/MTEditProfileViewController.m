@@ -626,6 +626,9 @@
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
             [[PFUser currentUser] refresh];
+            
+            // Update for Push Notifications
+            [[MTUtil getAppDelegate] updateParseInstallationState];
         } else {
             [UIAlertView bk_showAlertViewWithTitle:@"Unable to Save Changes" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             NSLog(@"error - %@", error);

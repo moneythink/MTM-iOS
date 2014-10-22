@@ -34,10 +34,16 @@
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     // Register for push notifications
-    [application registerForRemoteNotificationTypes:
-     UIRemoteNotificationTypeBadge |
-     UIRemoteNotificationTypeAlert |
-     UIRemoteNotificationTypeSound];
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
+        [application registerForRemoteNotifications];
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
+                                                                                             |UIRemoteNotificationTypeSound
+                                                                                             |UIRemoteNotificationTypeAlert) categories:nil];
+        [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
+    }
+    else {
+        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+    }
     
     [PFChallengeBanner registerSubclass];
     [PFChallengePost registerSubclass];
@@ -79,34 +85,8 @@
     return YES;
 }
 
-- (void)applicationWillResignActive:(UIApplication *)application
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
-    // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-    // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application
-{
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
-    // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application
-{
-    // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application
-{
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-}
-
-- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken {
     // Store the deviceToken in the current installation and save it to Parse.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
@@ -114,14 +94,20 @@
     [currentInstallation saveInBackground];
 }
 
-- (void)application:(UIApplication *)application
-didReceiveRemoteNotification:(NSDictionary *)userInfo {
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", [error localizedDescription]);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
     [PFPush handlePush:userInfo];
 }
 
 
 #pragma mark - Reachability Methods -
-- (void)reachabilityDidChange:(NSNotification *)note {
+- (void)reachabilityDidChange:(NSNotification *)note
+{
     BOOL reachable = (self.reachability.currentReachabilityStatus != NotReachable);
     if (reachable != self.reachable){
         // State Changed. Inform the user if necessary.
@@ -163,6 +149,32 @@ didReceiveRemoteNotification:(NSDictionary *)userInfo {
     [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
+- (void)updateParseInstallationState
+{
+    if (![PFUser currentUser]) {
+        NSLog(@"Have no user object to update installation with");
+        return;
+    }
+    
+    PFUser *user = [PFUser currentUser];
+
+    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    [currentInstallation setObject:user forKey:@"user"];
+
+    NSString *className = user[@"class"];
+    NSString *schoolName = user[@"school"];
+    
+    if (!IsEmpty(className)) {
+        [currentInstallation setObject:className forKey:@"class_name"];
+    }
+    if (!IsEmpty(schoolName)) {
+        [currentInstallation setObject:schoolName forKey:@"school_name"];
+    }
+    
+    currentInstallation.channels = @[@"global"];
+    [currentInstallation saveInBackground];
 }
 
 

@@ -250,6 +250,9 @@
         NSString *errorString = [error userInfo][@"error"];
         
         if (!error) {
+            // Update for Push Notifications
+            [[MTUtil getAppDelegate] updateParseInstallationState];
+
             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                 [self performSegueWithIdentifier:@"studentLoginSegue" sender:self];
             } else {

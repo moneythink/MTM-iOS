@@ -15,6 +15,7 @@
 @interface MTMentorStudentProgressViewController ()
 
 @property (nonatomic, strong) UISwitch *autoReleaseSwitch;
+@property (nonatomic) BOOL scheduledActivationsOn;
 
 @end
 
@@ -40,6 +41,33 @@
 {
     [super viewWillAppear:animated];
     self.parentViewController.navigationItem.title = @"Students";
+    
+    [self.tableView reloadData];
+    
+    self.autoReleaseSwitch.enabled = NO;
+    
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date != nil && activated = NO"];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    MTMakeWeakSelf();
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            weakSelf.scheduledActivationsOn = (number > 0);
+        } else {
+            NSLog(@"error - %@", error);
+            if (![MTUtil internetReachable]) {
+                [UIAlertView showNoInternetAlert];
+            }
+            else {
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }
+        
+        weakSelf.autoReleaseSwitch.enabled = YES;
+        [weakSelf.tableView reloadData];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -53,28 +81,84 @@
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
     
     [studentsForClass orderByAscending:@"last_name"];
-    
     studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
-
+    
+    MTMakeWeakSelf();
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.classStudents = objects;
-            [self.tableView reloadData];
+            weakSelf.classStudents = objects;
+            [weakSelf.tableView reloadData];
         }
     }];
 }
 
 - (void)cloudCodeSchedule:(id)sender
 {
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+
+    self.autoReleaseSwitch.enabled = NO;
+    
     if (self.autoReleaseSwitch.on) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Activating...";
+        hud.dimBackground = YES;
+
         PFUser *user = [PFUser currentUser];
         NSString *userID = [user objectId];
         
+        MTMakeWeakSelf();
         [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
             if (!error) {
-                [self.tableView reloadData];
+                
+                // Make sure we have future challenges, otherwise display message
+                NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date != nil && activated = NO"];
+                PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+                scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+                
+                MTMakeWeakSelf();
+                [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        
+                        if (!error) {
+                            weakSelf.scheduledActivationsOn = (number > 0);
+                            
+                            if (number == 0) {
+                                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"All of the Challenges in this schedule have been activated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            }
+                            
+                        } else {
+                            weakSelf.scheduledActivationsOn = NO;
+                            
+                            NSLog(@"error - %@", error);
+                            if (![MTUtil internetReachable]) {
+                                [UIAlertView showNoInternetAlert];
+                            }
+                            else {
+                                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            }
+                        }
+                        
+                        weakSelf.autoReleaseSwitch.enabled = YES;
+                        [weakSelf.tableView reloadData];
+                    });
+
+                }];
+
             } else {
-                NSLog(@"error - %@", error);
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    
+                    NSLog(@"error - %@", error);
+                    NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                    [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    weakSelf.scheduledActivationsOn = NO;
+                    [weakSelf.tableView reloadData];
+                });
             }
         }];
     } else {
@@ -85,26 +169,51 @@
 
 
 #pragma mark - UIAlertViewDelegate methods
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
     switch (buttonIndex) {
-        case 0: // Cancel
-            self.autoReleaseSwitch.on = YES;
+        case 0:
+        {// Cancel
+            self.scheduledActivationsOn = YES;
+            self.autoReleaseSwitch.enabled = YES;
+            [self.tableView reloadData];
+            
             break;
-            
-        default: {  // OK
-            PFUser *user = [PFUser currentUser];
-            NSString *userID = [user objectId];
-            
-            [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
-                if (!error) {
-                    [self.tableView reloadData];
-                } else {
-                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Cancel" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                    NSLog(@"error - %@", error);
-                }
-            }];
         }
+            
+        default:
+        {  // OK
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+                hud.labelText = @"Deactivating...";
+                hud.dimBackground = YES;
+                
+                PFUser *user = [PFUser currentUser];
+                NSString *userID = [user objectId];
+                
+                MTMakeWeakSelf();
+                [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^(void) {
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                        
+                        weakSelf.autoReleaseSwitch.enabled = YES;
+                        
+                        if (!error) {
+                            weakSelf.scheduledActivationsOn = NO;
+                        } else {
+                            weakSelf.scheduledActivationsOn = YES;
+                            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Cancel" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                            NSLog(@"error - %@", error);
+                        }
+                        
+                        [weakSelf.tableView reloadData];
+                    });
+                }];
+
+            });
+            
             break;
+        }
     }
 }
 
@@ -142,105 +251,95 @@
     switch (section) {
         case 0:
         {
-        switch (row) {
-            case 0:
-            {
-            identString = @"autorelease";
-            UITableViewCell *cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:identString];
-            
-            if (cell == nil)
+            switch (row) {
+                case 0:
                 {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
+                    identString = @"autorelease";
+                    UITableViewCell *cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:identString];
+                    
+                    if (cell == nil) {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
+                    }
+                    
+                    if (!self.autoReleaseSwitch) {
+                        self.autoReleaseSwitch = [[UISwitch alloc] init];
+                    }
+                    
+                    self.autoReleaseSwitch.on = self.scheduledActivationsOn;
+                    
+                    cell.textLabel.text = @"Auto-Release";
+                    
+                    [self.autoReleaseSwitch removeTarget:self action:@selector(cloudCodeSchedule:) forControlEvents:UIControlEventValueChanged];
+                    [self.autoReleaseSwitch addTarget:self action:@selector(cloudCodeSchedule:) forControlEvents:UIControlEventValueChanged];
+                    cell.accessoryView = self.autoReleaseSwitch;
+                
+                    return cell;
                 }
+                    break;
+                    
+                default:
+                {
+                    identString = @"schedule";
+                    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
+                    
+                    if (cell == nil)
+                        {
+                        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
+                        }
+                    cell.textLabel.text = @"Schedule";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    
+                    return cell;
+                }
+                    break;
+            }
+        }
+        break;
             
-            self.autoReleaseSwitch = [[UISwitch alloc] init];
+        default:
+        {
+            MTStudentProgressTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
+            if (cell == nil) {
+                cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
+            }
+            PFUser *rowStudent = self.classStudents[row];
+            cell.user = rowStudent;
             
-            // - future activation dates are nil
+            NSString *fullName = rowStudent[@"first_name"];
+            fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent[@"last_name"]];
+            cell.userFullName.text = fullName;
             
+            NSString *bankAccount = rowStudent[@"bank_account"];
             
-            NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date > %@", [NSDate date]];
-            PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
-
-            scheduledActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
+            if ([bankAccount intValue] == 1) {
+                cell.bankCheckbox.isChecked = YES;
+            }
+            else {
+                cell.bankCheckbox.isChecked = NO;
+            }
             
-            [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+            NSString *resume = rowStudent[@"resume"];
+            
+            if ([resume intValue] == 1) {
+                cell.resumeCheckbox.isChecked = YES;
+            }
+            else {
+                cell.resumeCheckbox.isChecked = NO;
+            }
+            
+            cell.userProfileImage.image = nil;
+            cell.userProfileImage.image = [UIImage imageNamed:@"profile_image.png"];
+            
+            cell.userProfileImage.file = rowStudent[@"profile_picture"];
+            [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {
                 if (!error) {
-                    self.autoReleaseSwitch.on = number > 0;
-                } else {
+                }
+                else {
                     NSLog(@"error - %@", error);
                 }
             }];
             
-            cell.textLabel.text = @"Auto-Release";
-            [self.autoReleaseSwitch addTarget:self action:@selector(cloudCodeSchedule:) forControlEvents:UIControlEventTouchUpInside];
-            cell.accessoryView = self.autoReleaseSwitch;
-            
             return cell;
-            }
-                break;
-                
-            default:
-            {
-            identString = @"schedule";
-            UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
-            
-            if (cell == nil)
-                {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identString];
-                }
-            cell.textLabel.text = @"Schedule";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            
-            return cell;
-            }
-                break;
-        }
-        }
-            break;
-            
-        default:
-        {
-        MTStudentProgressTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identString];
-        if (cell == nil)
-            {
-            cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
-            }
-        PFUser *rowStudent = self.classStudents[row];
-        cell.user = rowStudent;
-        
-        NSString *fullName = rowStudent[@"first_name"];
-        fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent[@"last_name"]];
-        cell.userFullName.text = fullName;
-        
-        NSString *bankAccount = rowStudent[@"bank_account"];
-        
-        if ([bankAccount intValue] == 1) {
-            cell.bankCheckbox.isChecked = YES;
-        } else {
-            cell.bankCheckbox.isChecked = NO;
-        }
-        
-        NSString *resume = rowStudent[@"resume"];
-        
-        if ([resume intValue] == 1) {
-            cell.resumeCheckbox.isChecked = YES;
-        } else {
-            cell.resumeCheckbox.isChecked = NO;
-        }
-        
-        cell.userProfileImage.image = nil;
-        cell.userProfileImage.image = [UIImage imageNamed:@"profile_image.png"];
-        
-        cell.userProfileImage.file = rowStudent[@"profile_picture"];
-        [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-        
-        return cell;
         }
             break;
     }
@@ -308,8 +407,6 @@
 }
 
 
-// Variable height support
-
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger section = indexPath.section;
@@ -340,10 +437,7 @@
 }
 
 
-
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     // Get the new view controller using [segue destinationViewController].
@@ -361,5 +455,6 @@
 //        MTScheduleTableViewController *destinationVC = (MTScheduleTableViewController *)[segue destinationViewController];
     }
 }
+
 
 @end

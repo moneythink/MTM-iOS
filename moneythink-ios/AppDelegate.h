@@ -17,5 +17,6 @@
 
 - (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
+- (void)updateParseInstallationState;
 
 @end

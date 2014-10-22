@@ -434,6 +434,9 @@
                         if (!error) {
                             [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
                             
+                            // Update for Push Notifications
+                            [[MTUtil getAppDelegate] updateParseInstallationState];
+
                             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                                 [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
                             } else {
