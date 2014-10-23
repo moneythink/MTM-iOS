@@ -161,6 +161,12 @@
     PFUser *user = [PFUser currentUser];
 
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
+    
+    // Don't update if Installation doesn't have a deviceToken (i.e simulator)
+    if (IsEmpty(currentInstallation.deviceToken)) {
+        return;
+    }
+    
     [currentInstallation setObject:user forKey:@"user"];
 
     NSString *className = user[@"class"];
