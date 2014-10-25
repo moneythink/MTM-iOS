@@ -11,6 +11,9 @@
 #import "MTHomeViewController.h"
 #import <Crashlytics/Crashlytics.h>
 #import "UIColor+Palette.h"
+#import "MTMentorTabBarViewControlle.h"
+#import "MTStudentTabBarViewController.h"
+#import "MTMentorNotificationViewController.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -102,6 +105,69 @@
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [PFPush handlePush:userInfo];
+    
+    // Open Notifications tab, if appropriate
+    NSDictionary *apsDict = [userInfo objectForKey:@"aps"];
+    if ([apsDict valueForKey:@"category"]) {
+        NSString *category = [apsDict valueForKey:@"category"];
+        if (![[category uppercaseString] isEqualToString:@"NOTIFICATIONS"]) {
+            return;
+        }
+    }
+    else {
+        return;
+    }
+    
+    id rootVC = self.window.rootViewController;
+    if ([rootVC isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nav = (UINavigationController *)rootVC;
+        
+        id tabBar = nav.topViewController;
+        if (![tabBar isKindOfClass:[UITabBarController class]]) {
+            return;
+        }
+        
+        NSInteger indexOfNotificationVC = -1;
+
+        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
+            // Mentor
+            NSInteger index = 0;
+            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
+            for (UIViewController *vc in viewControllers) {
+                if ([vc isKindOfClass:[UINavigationController class]]) {
+                    id topVC = ((UINavigationController *)vc).topViewController;
+                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
+                        indexOfNotificationVC = index;
+                        break;
+                    }
+                }
+                index++;
+            }
+        }
+        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
+            // Student
+            NSInteger index = 0;
+            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
+            for (UIViewController *vc in viewControllers) {
+                if ([vc isKindOfClass:[UINavigationController class]]) {
+                    id topVC = ((UINavigationController *)vc).topViewController;
+                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
+                        indexOfNotificationVC = index;
+                        break;
+                    }
+                }
+                index++;
+            }
+        }
+        else {
+            return;
+        }
+        
+        NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
+        if (indexOfNotificationVC != -1 && [viewControllers count] > indexOfNotificationVC) {
+            [((UITabBarController *)tabBar) setSelectedIndex:indexOfNotificationVC];
+        }
+    }
 }
 
 

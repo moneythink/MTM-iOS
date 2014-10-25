@@ -60,7 +60,7 @@
                 [UIAlertView showNoInternetAlert];
             }
             else {
-                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
                 [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
         }
@@ -138,7 +138,7 @@
                                 [UIAlertView showNoInternetAlert];
                             }
                             else {
-                                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
                                 [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                             }
                         }
@@ -154,7 +154,7 @@
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                     
                     NSLog(@"error - %@", error);
-                    NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %lu: %@", error.code, [error localizedDescription]];
+                    NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
                     [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                     weakSelf.scheduledActivationsOn = NO;
                     [weakSelf.tableView reloadData];
