@@ -11,5 +11,6 @@
 @interface UIFont (MTAdditions)
 
 + (UIFont *)mtFontOfSize:(CGFloat)fontSize;
++ (UIFont *)mtLightFontOfSize:(CGFloat)fontSize;
 
 @end

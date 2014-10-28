@@ -94,6 +94,7 @@
 		8901D8A419FAB39F006E9168 /* MTPostCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */; };
 		8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */; };
 		8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */; };
+		8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8B119FFDF00006E9168 /* MTLabel.m */; };
 		892105BC19DA0C5D000CFBF6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
 		8921060919DA1F37000CFBF6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */; };
@@ -358,6 +359,8 @@
 		8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostLikeCommentTableViewCell.m; sourceTree = "<group>"; };
 		8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostCommentItemsTableViewCell.h; sourceTree = "<group>"; };
 		8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostCommentItemsTableViewCell.m; sourceTree = "<group>"; };
+		8901D8B019FFDF00006E9168 /* MTLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLabel.h; sourceTree = "<group>"; };
+		8901D8B119FFDF00006E9168 /* MTLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLabel.m; sourceTree = "<group>"; };
 		892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
@@ -736,6 +739,7 @@
 				587464B2197EFEA30030D706 /* View Controllers */,
 				5876E2C3196F2C1F00C176EC /* Images.xcassets */,
 				892105C419DA1F37000CFBF6 /* Assets */,
+				8901D8AF19FFDEE0006E9168 /* Subclasses */,
 				5890F7441976DD7E0042AC2F /* Categories */,
 			);
 			path = "moneythink-ios";
@@ -793,6 +797,15 @@
 				8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */,
 			);
 			name = Categories;
+			sourceTree = "<group>";
+		};
+		8901D8AF19FFDEE0006E9168 /* Subclasses */ = {
+			isa = PBXGroup;
+			children = (
+				8901D8B019FFDF00006E9168 /* MTLabel.h */,
+				8901D8B119FFDF00006E9168 /* MTLabel.m */,
+			);
+			name = Subclasses;
 			sourceTree = "<group>";
 		};
 		892105C419DA1F37000CFBF6 /* Assets */ = {
@@ -1199,6 +1212,7 @@
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
+				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
 				89FFFC8C19D9EDCF00DD3716 /* MICheckBox.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,

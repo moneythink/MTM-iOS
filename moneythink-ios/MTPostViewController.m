@@ -281,6 +281,8 @@ typedef enum {
 }
 
 - (CGFloat)calculateHeightForCommentsConfiguredSizingCell:(UITableViewCell *)sizingCell {
+    sizingCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(self.tableView.bounds), 0.0f);
+
     [sizingCell setNeedsLayout];
     [sizingCell layoutIfNeeded];
     
@@ -291,12 +293,12 @@ typedef enum {
 - (void)configurePostCommentsCell:(MTPostCommentItemsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     PFChallengePostComment *comment = self.comments[indexPath.row];
     cell.commentLabel.text = comment[@"comment_text"];
-    [cell.commentLabel setFont:[UIFont systemFontOfSize:13.0f]];
+    [cell.commentLabel setFont:[UIFont mtLightFontOfSize:13.0f]];
     
     PFUser *commentPoster = comment[@"user"];
     NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
     cell.userLabel.text = detailString;
-    [cell.userLabel setFont:[UIFont systemFontOfSize:11.0f]];
+    [cell.userLabel setFont:[UIFont mtLightFontOfSize:11.0f]];
 }
 
 
@@ -658,7 +660,7 @@ typedef enum {
         {
             switch (section) {
                 case MTPostTableCellTypeUserInfo:
-                    height = 68.0f;
+                    height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
                     height = 320.0f;
@@ -686,7 +688,7 @@ typedef enum {
         {
             switch (section) {
                 case MTPostTableCellTypeUserInfo:
-                    height = 68.0f;
+                    height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
                     height = 0.0f;
@@ -713,7 +715,7 @@ typedef enum {
         {
             switch (section) {
                 case MTPostTableCellTypeUserInfo:
-                    height = 68.0f;
+                    height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
                     height = 320.0f;
@@ -740,7 +742,7 @@ typedef enum {
         {
             switch (section) {
                 case MTPostTableCellTypeUserInfo:
-                    height = 68.0f;
+                    height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
                     height = 0.0f;
@@ -1034,6 +1036,9 @@ typedef enum {
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
             likeCommentCell.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
 
+            [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+            [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
+
             cell = likeCommentCell;
             
             break;
@@ -1045,14 +1050,14 @@ typedef enum {
             
             PFChallengePostComment *comment = self.comments[indexPath.row];
             defaultCell.commentLabel.text = comment[@"comment_text"];
-            [defaultCell.commentLabel setFont:[UIFont systemFontOfSize:13.0f]];
+            [defaultCell.commentLabel setFont:[UIFont mtLightFontOfSize:13.0f]];
             defaultCell.commentLabel.textColor = [UIColor darkGrey];
             
             PFUser *commentPoster = comment[@"user"];
             
             NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
             defaultCell.userLabel.text = detailString;
-            [defaultCell.userLabel setFont:[UIFont systemFontOfSize:11.0f]];
+            [defaultCell.userLabel setFont:[UIFont mtLightFontOfSize:11.0f]];
             defaultCell.userLabel.textColor = [UIColor darkGrey];
             
             [defaultCell setAccessoryType:UITableViewCellAccessoryNone];

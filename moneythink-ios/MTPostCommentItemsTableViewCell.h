@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTLabel.h"
 
 @interface MTPostCommentItemsTableViewCell : UITableViewCell
 
-@property (nonatomic, weak) IBOutlet UILabel *commentLabel;
-@property (nonatomic, weak) IBOutlet UILabel *userLabel;
+@property (nonatomic, weak) IBOutlet MTLabel *commentLabel;
+@property (nonatomic, weak) IBOutlet MTLabel *userLabel;
 @end

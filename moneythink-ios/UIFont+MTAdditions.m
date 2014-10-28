@@ -17,4 +17,9 @@
 	return [self fontWithName:fontName size:fontSize];
 }
 
++ (UIFont *)mtLightFontOfSize:(CGFloat)fontSize {
+    NSString *fontName = @"HelveticaNeue-Light";
+    return [self fontWithName:fontName size:fontSize];
+}
+
 @end
