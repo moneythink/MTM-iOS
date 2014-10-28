@@ -10,6 +10,14 @@
 #import "MICheckBox.h"
 #import "MTCommentViewController.h"
 
+typedef enum {
+    MTPostTypeWithButtonsWithImage,
+    MTPostTypeWithButtonsNoImage,
+    MTPostTypeNoButtonsWithImage,
+    MTPostTypeNoButtonsNoImage,
+} MTPostType;
+
+
 @protocol MTPostViewControllerDelegate <NSObject>
 
 - (void)didDeletePost:(PFChallengePost *)challengePost;
@@ -22,5 +30,6 @@
 
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;
+@property (nonatomic) MTPostType postType;
 
 @end

@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) IBOutlet UICollectionView *exploreCollectionView;
 @property (assign, nonatomic) BOOL hasButtons;
+@property (nonatomic, strong) UIImage *postImage;
 
 @end
 
@@ -221,17 +222,9 @@
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     
     PFChallengePost *rowObject = self.posts[indexPath.row];
-    UIImage *postImage = rowObject[@"picture"];
+    self.postImage = rowObject[@"picture"];
     
-    if (self.hasButtons && postImage) {
-        [self performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
-    } else if (self.hasButtons) {
-        [self performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
-    } else if (postImage) {
-        [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
-    } else {
-        [self performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
-    }
+    [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
 }
 
 #pragma mark - Navigation
@@ -245,6 +238,20 @@
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
+        
+        if (self.hasButtons && self.postImage) {
+            destinationViewController.postType = MTPostTypeWithButtonsWithImage;
+        }
+        else if (self.hasButtons) {
+            destinationViewController.postType = MTPostTypeWithButtonsNoImage;
+        }
+        else if (self.postImage) {
+            destinationViewController.postType = MTPostTypeNoButtonsWithImage;
+        }
+        else {
+            destinationViewController.postType = MTPostTypeNoButtonsNoImage;
+        }
+
     } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
         
     }

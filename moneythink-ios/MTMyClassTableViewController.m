@@ -28,6 +28,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 @property (nonatomic, strong) NSMutableArray *myObjects;
 @property (nonatomic) BOOL postingNewComment;
 @property (nonatomic) BOOL deletingPost;
+@property (nonatomic, strong) UIImage *postImage;
 
 @end
 
@@ -85,6 +86,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     
     if (!self.postingNewComment && !self.deletingPost) {
         [self loadObjects];
+        [self userButtonsTapped];
         
         NSInteger challengNumber = [self.challengeNumber intValue];
         NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
@@ -158,11 +160,17 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 
 
 #pragma mark - Class Methods
-- (void)userButtonsTapped:(BOOL)loadObjects
+- (void)userButtonsTapped
 {
     PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
     [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
+    
+    MTMakeWeakSelf();
     [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+
         if (!error) {
             NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
             for (PFChallengePostButtonsClicked *clicks in objects) {
@@ -170,8 +178,12 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
                 id post = [(PFChallengePost *)clicks[@"post"] objectId];
                 [tappedButtonObjects setValue:button forKey:post];
             }
-            self.buttonsTapped = tappedButtonObjects;
-            [self loadObjects];
+            weakSelf.buttonsTapped = tappedButtonObjects;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadObjects];
+            });
+
         } else {
             NSLog(@"Error - %@", error);
         }
@@ -458,20 +470,9 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     }
     
     PFChallengePost *rowObject = self.myObjects[indexPath.row];
-    UIImage *postImage = rowObject[@"picture"];
+    self.postImage = rowObject[@"picture"];
     
-    if (self.hasButtons && postImage) {
-        [self performSegueWithIdentifier:@"pushViewPostWithButtons" sender:rowObject];
-    }
-    else if (self.hasButtons) {
-        [self performSegueWithIdentifier:@"pushViewPostWithButtonsNoImage" sender:rowObject];
-    }
-    else if (postImage) {
-        [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
-    }
-    else {
-        [self performSegueWithIdentifier:@"pushViewPostNoImage" sender:rowObject];
-    }
+    [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -574,16 +575,25 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
         
-//    } else if ([segueIdentifier isEqualToString:@"pushViewPost"]) {
-//    } else if ([segueIdentifier isEqualToString:@"pushViewPostWithButtons"]) {
-//    } else if ([segueIdentifier isEqualToString:@"pushViewPostNoImage"]) {
-//    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
     }
     else {
         MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
         destinationViewController.delegate = self;
+        
+        if (self.hasButtons && self.postImage) {
+            destinationViewController.postType = MTPostTypeWithButtonsWithImage;
+        }
+        else if (self.hasButtons) {
+            destinationViewController.postType = MTPostTypeWithButtonsNoImage;
+        }
+        else if (self.postImage) {
+            destinationViewController.postType = MTPostTypeNoButtonsWithImage;
+        }
+        else {
+            destinationViewController.postType = MTPostTypeNoButtonsNoImage;
+        }
     }
 }
 
@@ -777,13 +787,19 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
         
-        [UIView animateWithDuration:0.2f animations:^{
-            cell.likeButton.transform = CGAffineTransformMakeScale(1.5, 1.5);
-        } completion:^(BOOL finished) {
+        // Animations are borked on < iOS 8.0 because of autolayout?
+        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
+        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
+            // no animation
+        } else {
             [UIView animateWithDuration:0.2f animations:^{
-                cell.likeButton.transform = CGAffineTransformMakeScale(1, 1);
-            } completion:NULL];
-        }];
+                cell.likeButton.transform = CGAffineTransformMakeScale(1.5, 1.5);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.2f animations:^{
+                    cell.likeButton.transform = CGAffineTransformMakeScale(1, 1);
+                } completion:NULL];
+            }];
+        }
 
     }
     else {
@@ -830,20 +846,34 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
-    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-        if (!error) {
-            [[PFUser currentUser] refresh];
-            [self.challenge refresh];
-            [post refresh];
-            [self userButtonsTapped:YES];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-        
-        button.enabled = YES;
-    }];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Submitting...";
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] refresh];
+                [weakSelf.challenge refresh];
+                [post refresh];
+                [weakSelf userButtonsTapped];
+                [weakSelf loadObjects];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+                
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            }
+            
+            button.enabled = YES;
+        }];
+    } afterDelay:0.35f];
+    
 }
 
 - (void)button2Tapped:(id)sender
@@ -860,21 +890,33 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     NSString *postID = [post objectId];
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
-    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-        if (!error) {
-            [[PFUser currentUser] refresh];
-            [self.challenge refresh];
-            [post refresh];
-            [self userButtonsTapped:YES];
-            [self loadObjects];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-        
-        button.enabled = YES;
-    }];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Submitting...";
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] refresh];
+                [weakSelf.challenge refresh];
+                [post refresh];
+                [weakSelf userButtonsTapped];
+                [weakSelf loadObjects];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            }
+            
+            button.enabled = YES;
+        }];
+    } afterDelay:0.35f];
 }
 
 

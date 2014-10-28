@@ -8,39 +8,41 @@
 
 #import "MTPostViewController.h"
 #import "MTMentorStudentProfileViewController.h"
+#import "MTPostUserInfoTableViewCell.h"
+#import "MTPostImageTableViewCell.h"
+#import "MTPostCommentTableViewCell.h"
+#import "MTPostLikeCommentTableViewCell.h"
+#import "MTPostCommentItemsTableViewCell.h"
+
+typedef enum {
+    MTPostTableCellTypeUserInfo = 0,
+    MTPostTableCellTypeImage,
+    MTPostTableCellTypeCommentText,
+    MTPostTableCellTypeButtons,
+    MTPostTableCellTypeLikeComment,
+    MTPostTableCellTypePostComments
+} MTPostTableCellType;
 
 @interface MTPostViewController ()
 
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
+
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) PFUser *postUser;
-
-@property (strong, nonatomic) IBOutlet UILabel *postUsername;
-@property (strong, nonatomic) IBOutlet PFImageView *postUserImage;
-@property (strong, nonatomic) IBOutlet UIButton *postUserButton;
-@property (strong, nonatomic) IBOutlet UILabel *whenPosted;
-@property (strong, nonatomic) IBOutlet PFImageView *postImage;
-@property (strong, nonatomic) IBOutlet UILabel *postText;
-@property (strong, nonatomic) IBOutlet UIButton *commentPost;
-@property (strong, nonatomic) IBOutlet UIButton *comment;
-@property (strong, nonatomic) IBOutlet UILabel *commentCount;
-@property (strong, nonatomic) IBOutlet UIButton *button1;
-@property (strong, nonatomic) IBOutlet UIButton *button2;
-@property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
-@property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollFields;
-@property (strong, nonatomic) IBOutlet UIButton *deletePost;
-@property (strong, nonatomic) IBOutlet UITableView *commentsTableView;
-@property (strong, nonatomic) IBOutlet UIButton *likePost;
-@property (strong, nonatomic) IBOutlet UILabel *postLikes;
-
 @property (strong, nonatomic) NSArray *postsLiked;
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (assign, nonatomic) BOOL iLike;
 @property (assign, nonatomic) BOOL isMyClass;
-@property (assign, nonatomic) NSInteger commentsCount;
 @property (strong, nonatomic) NSArray *comments;
 @property (strong, nonatomic) NSDictionary *buttonsTapped;
 @property (nonatomic) NSInteger likeActionCount;
+@property (nonatomic, strong) UIImage *userAvatarImage;
+@property (nonatomic, strong) UIImage *postImage;
+@property (nonatomic, strong) NSMutableAttributedString *postText;
+@property (nonatomic) CGFloat postTextHeight;
+@property (nonatomic) BOOL isMentor;
+@property (nonatomic) BOOL autoVerify;
+@property (nonatomic) BOOL hideVerifySwitch;
 
 @end
 
@@ -59,10 +61,12 @@
 {
     [super viewDidLoad];
     
-    [self.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     self.iLike = [self.postsLiked containsObject:postID];
+ 
+    [self loadPostText];
+    [self loadChallengePost];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -82,84 +86,18 @@
     
     findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
+    MTMakeWeakSelf();
     [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.postUser = [objects firstObject];
-            NSString *firstName = self.postUser[@"first_name"];
-            NSString *lastName = self.postUser[@"last_name"];
-            self.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-            self.postUserImage.file = self.postUser[@"profile_picture"];
-            
-            [self.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
-                CGRect frame = self.postUserButton.frame;
-                
-                if (image.size.width > frame.size.width) {
-                    CGFloat scale = frame.size.width / image.size.width;
-                    CGFloat heightNew = scale * image.size.height;
-                    CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-                    UIGraphicsBeginImageContext(sizeNew);
-                    [image drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-                    image = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-                }
-                
-                [self.postUserButton setImage:image forState:UIControlStateNormal];
-            }];
+            weakSelf.postUser = [objects firstObject];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+            });
         }
     }];
     
-    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
-    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
-    [queryPostComments includeKey:@"user"];
-    
-    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.commentsCount = objects.count;
-            if (self.commentsCount > 0) {
-                self.comments = objects;
-                self.commentCount.text = [NSString stringWithFormat:@"%ld", (long)self.commentsCount];
-                [self.commentsTableView reloadData];
-                [self.view setNeedsLayout];
-            } else {
-                self.commentCount.text = @"0";
-            }
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
-}
-
-- (void)viewDidLayoutSubviews
-{
-    [super viewDidLayoutSubviews];
-    
-    CGRect frame = self.scrollFields.frame;
-    
-    CGFloat w = frame.size.width;
-    CGFloat h = frame.size.height;
-
-    CGSize size = CGSizeMake(w, h);
-
-    self.scrollFields.contentSize = size;
-
-    CGRect commentsFrame = self.commentsTableView.frame;
-    NSInteger commentCount = self.comments.count;
-    if (commentCount > 2) {
-        commentsFrame.size.height = self.comments.count * [self.commentsTableView rowHeight];
-    }
-    self.commentsTableView.frame = commentsFrame;
-
-    frame = self.view.frame;
-    frame.origin.y  = 0.0f;
-    self.scrollFields.frame = frame;
-}
-
-- (void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
-    [self loadChallengePost];
+    [self loadComments];
+    [self updateButtonsTapped];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -169,14 +107,56 @@
 }
 
 
-#pragma mark - Class Methods
-- (void)userButtonsTapped:(BOOL)loadObjects
+#pragma mark - Private Methods -
+- (void)loadComments
+{
+    MTMakeWeakSelf();
+    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
+    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
+    [queryPostComments includeKey:@"user"];
+    
+    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.comments = objects;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+            });
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
+
+- (void)loadPostText
+{
+    NSString *textString = self.challengePost[@"post_text"];
+    self.postText = [[NSMutableAttributedString alloc] initWithString:textString];
+    
+    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+    NSRange rangeAll = NSMakeRange(0, textString.length);
+    
+    [hashtags enumerateMatchesInString:textString options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        
+        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc] initWithString:textString];
+        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+        
+        self.postText = hashtag;
+    }];
+}
+
+- (void)updateButtonsTapped
 {
     PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
     [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
     
     MTMakeWeakSelf();
     [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+
         if (!error) {
             NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
             for (PFChallengePostButtonsClicked *clicks in objects) {
@@ -185,7 +165,7 @@
                 [tappedButtonObjects setValue:button forKey:post];
             }
             weakSelf.buttonsTapped = tappedButtonObjects;
-            [weakSelf.view setNeedsLayout];
+            [weakSelf.tableView reloadData];
         }
         else {
             NSLog(@"Error - %@", error);
@@ -196,138 +176,135 @@
 
 - (void)loadChallengePost
 {
-    self.postText.text = self.challengePost[@"post_text"];
-    
-    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
-    NSRange rangeAll = NSMakeRange(0, self.postText.text.length);
-    
-    [hashtags enumerateMatchesInString:self.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        
-        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:self.postText.text];
-        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
-        
-        self.postText.attributedText = hashtag;
-    }];
-    
-    self.postImage.file = self.challengePost[@"picture"];
-    
-    MTMakeWeakSelf();
-    [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                CGRect frame = weakSelf.postImage.frame;
-                weakSelf.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
-            }
-            else {
-                weakSelf.postImage.image = nil;
-            }
-        }
-        else {
-            NSLog(@"error - %@", error);
-        }
-    }];
-    
-    self.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+    self.isMentor = [self.currentUser[@"type"] isEqualToString:@"mentor"];
+    self.autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    self.hideVerifySwitch = !self.isMentor || self.autoVerify;
+}
 
+- (void)setupButtonsForCell:(UITableViewCell *)cell
+{
+    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    
     NSInteger button = [[self.buttonsTapped valueForKey:[self.challengePost objectId]] intValue];
     if ((button == 0) && (self.buttonsTapped.count > 0)) {
-        [[self.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
-        [self.button1 setTintColor:[UIColor white]];
-        
-        [[self.button2 layer] setBorderWidth:2.0f];
-        [[self.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-        [self.button2 setTintColor:[UIColor redOrange]];
-        [[self.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+        [[button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
+        [button1 setTintColor:[UIColor white]];
+
+        [[button2 layer] setBorderWidth:2.0f];
+        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [button2 setTintColor:[UIColor redOrange]];
+        [[button2 layer] setBackgroundColor:[UIColor white].CGColor];
     }
     else if (button == 1) {
-        [[self.button1 layer] setBorderWidth:2.0f];
-        [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-        [self.button1 setTintColor:[UIColor primaryGreen]];
-        [[self.button1 layer] setBackgroundColor:[UIColor white].CGColor];
-        
-        [[self.button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
-        [self.button2 setTintColor:[UIColor white]];
+        [[button1 layer] setBorderWidth:2.0f];
+        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [button1 setTintColor:[UIColor primaryGreen]];
+        [[button1 layer] setBackgroundColor:[UIColor white].CGColor];
+
+        [[button2 layer] setBackgroundColor:[UIColor redOrange].CGColor];
+        [button2 setTintColor:[UIColor white]];
     }
     else {
-        [[self.button1 layer] setBorderWidth:2.0f];
-        [[self.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-        [self.button1 setTintColor:[UIColor primaryGreen]];
-        [[self.button1 layer] setBackgroundColor:[UIColor white].CGColor];
-        
-        [[self.button2 layer] setBorderWidth:2.0f];
-        [[self.button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-        [self.button2 setTintColor:[UIColor redOrange]];
-        [[self.button2 layer] setBackgroundColor:[UIColor white].CGColor];
+        [[button1 layer] setBorderWidth:2.0f];
+        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [button1 setTintColor:[UIColor primaryGreen]];
+        [[button1 layer] setBackgroundColor:[UIColor white].CGColor];
+
+        [[button2 layer] setBorderWidth:2.0f];
+        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [button2 setTintColor:[UIColor redOrange]];
+        [[button2 layer] setBackgroundColor:[UIColor white].CGColor];
     }
-    
-    [[self.button1 layer] setCornerRadius:5.0f];
-    [[self.button2 layer] setCornerRadius:5.0f];
-    
+
+    [[button1 layer] setCornerRadius:5.0f];
+    [[button2 layer] setCornerRadius:5.0f];
+
     NSArray *buttonTitles = self.challenge[@"buttons"];
     NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
-    
+
     if (buttonTitles.count > 0) {
         NSString *button1Title;
         NSString *button2Title;
-        
+
         if (buttonsClicked.count > 0) {
             button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
         } else {
             button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
         }
-        
+
         if (buttonsClicked.count > 1) {
             button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
         } else {
             button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
         }
         
-        [self.button1 setTitle:button1Title forState:UIControlStateNormal];
-        [self.button2 setTitle:button2Title forState:UIControlStateNormal];
-    }
-    
-    BOOL isMentor = [self.currentUser[@"type"] isEqualToString:@"mentor"];
-    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
-    BOOL hideVerifySwitch = !isMentor || autoVerify;
-    self.verfiedLabel.hidden = hideVerifySwitch;
-    self.verifiedCheckBox.hidden = hideVerifySwitch;
-    
-    self.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
-    
-    NSString *likesString;
-    
-    if (self.postLikesCount > 0) {
-        likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    }
-    else {
-        likesString = @"0";
-    }
-    
-    self.postLikes.text = likesString;
-    
-    if (self.iLike) {
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-    }
-    else {
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-    }
-    
-    if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
-        self.deletePost.hidden = NO;
-        self.deletePost.enabled = YES;
-    }
-    else {
-        self.deletePost.hidden = YES;
-        self.deletePost.enabled = NO;
+        [button1 setTitle:button1Title forState:UIControlStateNormal];
+        [button2 setTitle:button2Title forState:UIControlStateNormal];
     }
 }
 
 
-#pragma mark - IBActions
+#pragma mark - Variable Cell Height calculations -
+- (CGFloat)heightForPostTextCellAtIndexPath:(NSIndexPath *)indexPath {
+    static MTPostCommentTableViewCell *sizingCell = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"CommentTextCell"];
+    });
+    
+    [self configurePostTextCell:sizingCell atIndexPath:indexPath];
+    return [self calculateHeightForConfiguredSizingCell:sizingCell];
+}
+
+- (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell {
+    [sizingCell setNeedsLayout];
+    [sizingCell layoutIfNeeded];
+    
+    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
+}
+
+- (void)configurePostTextCell:(MTPostCommentTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    cell.postText.attributedText = self.postText;
+}
+
+- (CGFloat)heightForPostCommentsCellAtIndexPath:(NSIndexPath *)indexPath {
+    static MTPostCommentItemsTableViewCell *sizingCell = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"PostCommentItemsCell"];
+    });
+    
+    [self configurePostCommentsCell:sizingCell atIndexPath:indexPath];
+    return [self calculateHeightForCommentsConfiguredSizingCell:sizingCell];
+}
+
+- (CGFloat)calculateHeightForCommentsConfiguredSizingCell:(UITableViewCell *)sizingCell {
+    [sizingCell setNeedsLayout];
+    [sizingCell layoutIfNeeded];
+    
+    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return size.height;
+}
+
+- (void)configurePostCommentsCell:(MTPostCommentItemsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    PFChallengePostComment *comment = self.comments[indexPath.row];
+    cell.commentLabel.text = comment[@"comment_text"];
+    [cell.commentLabel setFont:[UIFont systemFontOfSize:13.0f]];
+    
+    PFUser *commentPoster = comment[@"user"];
+    NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+    cell.userLabel.text = detailString;
+    [cell.userLabel setFont:[UIFont systemFontOfSize:11.0f]];
+}
+
+
+#pragma mark - Actions -
 - (IBAction)likeButtonTapped:(id)sender
 {
+    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+    
     self.likeActionCount++;
     
     __block NSString *postID = [self.challengePost objectId];
@@ -342,22 +319,29 @@
     if (self.iLike) {
         [likePosts addObject:postID];
         
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [self.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
         self.postLikesCount += 1;
         
-        [UIView animateWithDuration:0.2f animations:^{
-            self.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
-        } completion:^(BOOL finished) {
+        // Animations are borked on < iOS 8.0 because of autolayout?
+        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
+        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
+            // no animation
+        } else {
             [UIView animateWithDuration:0.2f animations:^{
-                self.likePost.transform = CGAffineTransformMakeScale(1, 1);
-            } completion:NULL];
-        }];
+                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.2f animations:^{
+                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
+                } completion:NULL];
+            }];
+        }
+
     }
     else {
         [likePosts removeObject:postID];
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        [self.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
         if (self.postLikesCount > 0) {
             self.postLikesCount -= 1;
         }
@@ -366,9 +350,7 @@
     self.postsLiked = likePosts;
     [PFUser currentUser][@"posts_liked"] = self.postsLiked;
     self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
-    self.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    
-    [self.view setNeedsLayout];
+    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     
     NSString *likeString = [NSString stringWithFormat:@"%d", self.iLike];
     
@@ -384,7 +366,7 @@
             [weakSelf.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [weakSelf.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.view setNeedsLayout];
+                    [weakSelf.tableView reloadData];
                 });
             }];
         } else {
@@ -398,8 +380,8 @@
             weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
-                [weakSelf.view setNeedsLayout];
+                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
+                [weakSelf.tableView reloadData];
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             });
         }
@@ -413,6 +395,7 @@
 
 - (void)dismissCommentView
 {
+    [self loadComments];
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
@@ -461,7 +444,6 @@
         [self.navigationController popViewControllerAnimated:YES];
     }
     else {
-        // call function deletePost
         NSString *userID = [self.postUser objectId];
         NSString *postID = [self.challengePost objectId];
         
@@ -478,10 +460,12 @@
 
 - (IBAction)verifiedTapped:(id)sender
 {
+    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+
     NSString *postID = [self.challengePost objectId];
     NSString *verifiedBy = [self.currentUser objectId];
     
-    if (self.verifiedCheckBox.isChecked) {
+    if (likeCommentCell.verifiedCheckBox.isChecked) {
         verifiedBy = @"";
     }
     
@@ -496,16 +480,17 @@
             [weakSelf.challenge refresh];
             [weakSelf.challengePost refresh];
             
-            [weakSelf.view setNeedsLayout];
+            [weakSelf.tableView reloadData];
         }
     }];
     
-    self.verifiedCheckBox.isChecked = !self.verifiedCheckBox.isChecked;
+    likeCommentCell.verifiedCheckBox.isChecked = !likeCommentCell.verifiedCheckBox.isChecked;
 }
 
 - (IBAction)button1Tapped:(id)sender
 {
-    self.button1.enabled = NO;
+    __block id weakSender = sender;
+    ((UIButton *)sender).enabled = NO;
     
     PFChallengePost *post = self.challengePost;
     
@@ -514,25 +499,40 @@
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Submitting...";
+    hud.dimBackground = YES;
+    
     MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-        if (!error) {
-            [weakSelf.currentUser refresh];
-            [weakSelf.challenge refresh];
-            [weakSelf.challengePost refresh];
-            weakSelf.button1.enabled = YES;
-            [weakSelf.view setNeedsLayout];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-    }];
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+            if (!error) {
+                [weakSelf.currentUser refresh];
+                [weakSelf.challenge refresh];
+                [weakSelf.challengePost refresh];
+                ((UIButton *)weakSender).enabled = YES;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf updateButtonsTapped];
+                });
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+                
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            }
+        }];
+    } afterDelay:0.35f];
+    
 }
 
 - (IBAction)button2Tapped:(id)sender
 {
-    self.button2.enabled = NO;
+    __block id weakSender = sender;
+    ((UIButton *)sender).enabled = NO;
 
     PFChallengePost *post = self.challengePost;
     
@@ -541,20 +541,33 @@
     
     NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Submitting...";
+    hud.dimBackground = YES;
+    
     MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-        if (!error) {
-            [weakSelf.currentUser refresh];
-            [weakSelf.challenge refresh];
-            [weakSelf.challengePost refresh];
-            weakSelf.button2.enabled = YES;
-            [weakSelf.view setNeedsLayout];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-    }];
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+            if (!error) {
+                [weakSelf.currentUser refresh];
+                [weakSelf.challenge refresh];
+                [weakSelf.challengePost refresh];
+                ((UIButton *)weakSender).enabled = YES;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf updateButtonsTapped];
+                });
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            }
+        }];
+    } afterDelay:0.35f];
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -617,8 +630,7 @@
 }
 
 
-#pragma mark - Navigation
-// In a storyboard-based application, you will often want to do a little preparation before navigation
+#pragma mark - Navigation -
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueIdentifier = [segue identifier];
@@ -635,36 +647,426 @@
 }
 
 
-#pragma mark - UITableViewController delegate methods
+#pragma mark - UITableViewDataSource & Delegate Methods -
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat height = 0.0f;
+    NSInteger section = indexPath.section;
+    
+    switch (self.postType) {
+        case MTPostTypeWithButtonsWithImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    height = 68.0f;
+                    break;
+                case MTPostTableCellTypeImage:
+                    height = 320.0f;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    height = [self heightForPostTextCellAtIndexPath:indexPath];
+                    break;
+                case MTPostTableCellTypeButtons:
+                    height = 44.0f;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    height = 46.0f;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    height = [self heightForPostCommentsCellAtIndexPath:indexPath];
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+            
+        case MTPostTypeWithButtonsNoImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    height = 68.0f;
+                    break;
+                case MTPostTableCellTypeImage:
+                    height = 0.0f;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    height = [self heightForPostTextCellAtIndexPath:indexPath];
+                    break;
+                case MTPostTableCellTypeButtons:
+                    height = 44.0f;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    height = 46.0f;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    height = [self heightForPostCommentsCellAtIndexPath:indexPath];
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+        case MTPostTypeNoButtonsWithImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    height = 68.0f;
+                    break;
+                case MTPostTableCellTypeImage:
+                    height = 320.0f;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    height = [self heightForPostTextCellAtIndexPath:indexPath];
+                    break;
+                case MTPostTableCellTypeButtons:
+                    height = 0.0f;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    height = 46.0f;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    height = [self heightForPostCommentsCellAtIndexPath:indexPath];
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+        case MTPostTypeNoButtonsNoImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    height = 68.0f;
+                    break;
+                case MTPostTableCellTypeImage:
+                    height = 0.0f;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    height = [self heightForPostTextCellAtIndexPath:indexPath];
+                    break;
+                case MTPostTableCellTypeButtons:
+                    height = 0.0f;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    height = 46.0f;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    height = [self heightForPostCommentsCellAtIndexPath:indexPath];
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+            
+        default:
+            break;
+    }
+    
+    return height;
+}
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 6;
+}
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSInteger rows = self.comments.count;
+    NSInteger rows = 0;
+
+    switch (self.postType) {
+        case MTPostTypeWithButtonsWithImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeImage:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeButtons:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    rows = self.comments.count;
+                    break;
+   
+                default:
+                    break;
+            }
+            break;
+        }
+         
+        case MTPostTypeWithButtonsNoImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeImage:
+                    rows = 0;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeButtons:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    rows = self.comments.count;
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+        case MTPostTypeNoButtonsWithImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeImage:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeButtons:
+                    rows = 0;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    rows = self.comments.count;
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+        case MTPostTypeNoButtonsNoImage:
+        {
+            switch (section) {
+                case MTPostTableCellTypeUserInfo:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeImage:
+                    rows = 0;
+                    break;
+                case MTPostTableCellTypeCommentText:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypeButtons:
+                    rows = 0;
+                    break;
+                case MTPostTableCellTypeLikeComment:
+                    rows = 1;
+                    break;
+                case MTPostTableCellTypePostComments:
+                    rows = self.comments.count;
+                    break;
+                    
+                default:
+                    break;
+            }
+            break;
+        }
+
+        default:
+            break;
+    }
+    
     return rows;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell = [self.commentsTableView dequeueReusableCellWithIdentifier:@"cell"];
+    id cell = nil;
     
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"cell"];
+    switch (indexPath.section) {
+        case MTPostTableCellTypeUserInfo:
+        {
+            __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
+            
+            NSString *firstName = self.postUser[@"first_name"];
+            NSString *lastName = self.postUser[@"last_name"];
+            userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            
+            userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+
+            if (self.userAvatarImage) {
+                [userInfoCell.postUserButton setImage:self.userAvatarImage forState:UIControlStateNormal];
+            }
+            else {
+                userInfoCell.postImage.file = self.postUser[@"profile_picture"];
+                
+                MTMakeWeakSelf();
+                [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+                    weakSelf.userAvatarImage = image;
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        CGRect frame = userInfoCell.postUserButton.frame;
+                        
+                        if (weakSelf.userAvatarImage.size.width > frame.size.width) {
+                            CGFloat scale = frame.size.width / weakSelf.userAvatarImage.size.width;
+                            CGFloat heightNew = scale * weakSelf.userAvatarImage.size.height;
+                            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
+                            UIGraphicsBeginImageContext(sizeNew);
+                            [weakSelf.userAvatarImage drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
+                            weakSelf.userAvatarImage = UIGraphicsGetImageFromCurrentImageContext();
+                            UIGraphicsEndImageContext();
+                        }
+                        
+                        if (weakSelf.userAvatarImage) {
+                            [userInfoCell.postUserButton setImage:weakSelf.userAvatarImage forState:UIControlStateNormal];
+                        }
+                    });
+                    
+                }];
+            }
+            
+            if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
+                userInfoCell.deletePost.hidden = NO;
+                userInfoCell.deletePost.enabled = YES;
+            }
+            else {
+                userInfoCell.deletePost.hidden = YES;
+                userInfoCell.deletePost.enabled = NO;
+            }
+            
+            cell = userInfoCell;
+            
+            break;
+        }
+        case MTPostTableCellTypeImage:
+        {
+            __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
+            
+            imageCell.postImage.file = self.challengePost[@"picture"];
+            
+            MTMakeWeakSelf();
+            [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+                if (!error) {
+                    if (image) {
+                        CGRect frame = imageCell.postImage.frame;
+                        imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
+                    }
+                    else {
+                        imageCell.postImage.image = nil;
+                    }
+                }
+                else {
+                    NSLog(@"error - %@", error);
+                }
+            }];
+
+            cell = imageCell;
+
+            break;
+        }
+        case MTPostTableCellTypeCommentText:
+        {
+            MTPostCommentTableViewCell *commentTextCell = [tableView dequeueReusableCellWithIdentifier:@"CommentTextCell" forIndexPath:indexPath];
+            commentTextCell.postText.attributedText = self.postText;
+            cell = commentTextCell;
+            
+            break;
+        }
+        case MTPostTableCellTypeButtons:
+        {
+            UITableViewCell *buttonsCell = [tableView dequeueReusableCellWithIdentifier:@"ButtonsCell" forIndexPath:indexPath];
+            [self setupButtonsForCell:buttonsCell];
+            cell = buttonsCell;
+
+            break;
+        }
+        case MTPostTableCellTypeLikeComment:
+        {
+            MTPostLikeCommentTableViewCell *likeCommentCell = [tableView dequeueReusableCellWithIdentifier:@"LikeCommentCell" forIndexPath:indexPath];
+            
+            NSString *likesString;
+        
+            if (self.postLikesCount > 0) {
+                likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+            }
+            else {
+                likesString = @"0";
+            }
+        
+            likeCommentCell.postLikes.text = likesString;
+        
+            if (self.iLike) {
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+            }
+            else {
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
+            }
+            
+            if (self.comments) {
+                likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", [self.comments count]];
+            }
+            else {
+                likeCommentCell.commentCount.text = @"0";
+            }
+            
+            likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
+            likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
+            likeCommentCell.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
+
+            cell = likeCommentCell;
+            
+            break;
+        }
+        case MTPostTableCellTypePostComments:
+        {
+            MTPostCommentItemsTableViewCell *defaultCell = [tableView dequeueReusableCellWithIdentifier:@"PostCommentItemsCell" forIndexPath:indexPath];
+            defaultCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            PFChallengePostComment *comment = self.comments[indexPath.row];
+            defaultCell.commentLabel.text = comment[@"comment_text"];
+            [defaultCell.commentLabel setFont:[UIFont systemFontOfSize:13.0f]];
+            defaultCell.commentLabel.textColor = [UIColor darkGrey];
+            
+            PFUser *commentPoster = comment[@"user"];
+            
+            NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+            defaultCell.userLabel.text = detailString;
+            [defaultCell.userLabel setFont:[UIFont systemFontOfSize:11.0f]];
+            defaultCell.userLabel.textColor = [UIColor darkGrey];
+            
+            [defaultCell setAccessoryType:UITableViewCellAccessoryNone];
+            
+            cell = defaultCell;
+
+            break;
+        }
+            
+        default:
+            break;
     }
-    
-    cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    
-    PFChallengePostComment *comment = self.comments[indexPath.row];
-    cell.textLabel.text = comment[@"comment_text"];
-    [cell.textLabel setFont:[UIFont systemFontOfSize:13.0f]];
-    cell.textLabel.textColor = [UIColor darkGrey];
-    
-    PFUser *commentPoster = comment[@"user"];
-    
-    NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
-    cell.detailTextLabel.text = detailString;
-    [cell.detailTextLabel setFont:[UIFont systemFontOfSize:11.0f]];
-    cell.detailTextLabel.textColor = [UIColor darkGrey];
-    
-    [cell setAccessoryType:UITableViewCellAccessoryNone];
+
+    ((UITableViewCell *)cell).selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

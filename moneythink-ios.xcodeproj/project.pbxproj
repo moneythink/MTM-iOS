@@ -89,6 +89,11 @@
 		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
 		58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */; };
 		89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */; };
+		8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */; };
+		8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */; };
+		8901D8A419FAB39F006E9168 /* MTPostCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */; };
+		8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */; };
+		8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */; };
 		892105BC19DA0C5D000CFBF6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
 		8921060919DA1F37000CFBF6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */; };
@@ -343,6 +348,16 @@
 		58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddClassViewController.m; sourceTree = "<group>"; };
 		89007BD119F6E271008B4F8C /* UIFont+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+MTAdditions.h"; sourceTree = "<group>"; };
 		89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+MTAdditions.m"; sourceTree = "<group>"; };
+		8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostUserInfoTableViewCell.h; sourceTree = "<group>"; };
+		8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostUserInfoTableViewCell.m; sourceTree = "<group>"; };
+		8901D89F19FAB2FA006E9168 /* MTPostImageTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostImageTableViewCell.h; sourceTree = "<group>"; };
+		8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostImageTableViewCell.m; sourceTree = "<group>"; };
+		8901D8A219FAB39F006E9168 /* MTPostCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostCommentTableViewCell.h; sourceTree = "<group>"; };
+		8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostCommentTableViewCell.m; sourceTree = "<group>"; };
+		8901D8A519FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostLikeCommentTableViewCell.h; sourceTree = "<group>"; };
+		8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostLikeCommentTableViewCell.m; sourceTree = "<group>"; };
+		8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostCommentItemsTableViewCell.h; sourceTree = "<group>"; };
+		8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostCommentItemsTableViewCell.m; sourceTree = "<group>"; };
 		892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
@@ -619,6 +634,16 @@
 				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
 				892105C119DA1EEA000CFBF6 /* MTPostViewController.h */,
 				892105C219DA1EEA000CFBF6 /* MTPostViewController.m */,
+				8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */,
+				8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */,
+				8901D89F19FAB2FA006E9168 /* MTPostImageTableViewCell.h */,
+				8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */,
+				8901D8A219FAB39F006E9168 /* MTPostCommentTableViewCell.h */,
+				8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */,
+				8901D8A519FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.h */,
+				8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */,
+				8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */,
+				8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */,
 				5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */,
 				5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
@@ -1131,6 +1156,7 @@
 				583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */,
 				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
+				8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
@@ -1148,6 +1174,7 @@
 				89C6792F19E317340054E890 /* MTUtil.m in Sources */,
 				5850943E197C06E400EDC969 /* MTNotificationsViewController.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
+				8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */,
 				892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */,
 				585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */,
 				5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */,
@@ -1161,6 +1188,7 @@
 				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
 				580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */,
+				8901D8A419FAB39F006E9168 /* MTPostCommentTableViewCell.m in Sources */,
 				58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */,
 				5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */,
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
@@ -1170,6 +1198,7 @@
 				89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */,
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
+				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
 				89FFFC8C19D9EDCF00DD3716 /* MICheckBox.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,
@@ -1198,6 +1227,7 @@
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
 				8946407819EC7DD800B7C3FD /* MBProgressHUD.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
+				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
