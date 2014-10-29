@@ -48,6 +48,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
+    
     [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
     [[UINavigationBar appearance] setTintColor:[UIColor white]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
@@ -56,26 +58,14 @@
     [[PFUser currentUser] refreshInBackgroundWithTarget:nil selector:nil];
 }
 
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-}
-
-- (void)viewDidLayoutSubviews {
+- (void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
-
     [self loadUserProfile:[PFUser currentUser]];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
-
-#pragma mark -
-
+#pragma mark - Private -
 - (void)loadUserProfile:(PFUser *)user
 {
     self.buttonUserProfile.imageView.layer.cornerRadius = self.buttonUserProfile.frame.size.width / 2;
@@ -141,9 +131,10 @@
     CGFloat heightAdjustment = IS_IPHONE_5 ? 0.0f : 60.0f;
     CGSize size = CGSizeMake(frame.size.width, frame.origin.y + frame.size.height + heightAdjustment);
     self.scrollFields.contentSize = size;
-    
 }
 
+
+#pragma mark - Actions -
 - (IBAction)buttonUserInfo:(id)sender {
     if ([sender isKindOfClass:[UIButton class]]) {
         UIButton* userInfo = sender;

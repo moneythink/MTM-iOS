@@ -637,16 +637,7 @@
 				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
 				892105C119DA1EEA000CFBF6 /* MTPostViewController.h */,
 				892105C219DA1EEA000CFBF6 /* MTPostViewController.m */,
-				8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */,
-				8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */,
-				8901D89F19FAB2FA006E9168 /* MTPostImageTableViewCell.h */,
-				8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */,
-				8901D8A219FAB39F006E9168 /* MTPostCommentTableViewCell.h */,
-				8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */,
-				8901D8A519FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.h */,
-				8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */,
-				8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */,
-				8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */,
+				8901D8B319FFEDB5006E9168 /* MTPost TableViewCells */,
 				5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */,
 				5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
@@ -806,6 +797,23 @@
 				8901D8B119FFDF00006E9168 /* MTLabel.m */,
 			);
 			name = Subclasses;
+			sourceTree = "<group>";
+		};
+		8901D8B319FFEDB5006E9168 /* MTPost TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */,
+				8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */,
+				8901D89F19FAB2FA006E9168 /* MTPostImageTableViewCell.h */,
+				8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */,
+				8901D8A219FAB39F006E9168 /* MTPostCommentTableViewCell.h */,
+				8901D8A319FAB39F006E9168 /* MTPostCommentTableViewCell.m */,
+				8901D8A519FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.h */,
+				8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */,
+				8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */,
+				8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */,
+			);
+			name = "MTPost TableViewCells";
 			sourceTree = "<group>";
 		};
 		892105C419DA1F37000CFBF6 /* Assets */ = {

@@ -175,14 +175,25 @@
 #pragma mark - IBActions
 - (IBAction)schoolNameButton:(id)sender
 {
-    PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-    querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading Schools...";
+    hud.dimBackground = YES;
     
-    [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
+        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+        
+        [querySchools findObjectsInBackgroundWithTarget:weakSelf selector:@selector(schoolsSheet:error:)];
+    } afterDelay:0.35f];
 }
 
 - (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    });
+
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -200,76 +211,72 @@
         [schoolNames addObject:name];
     }
     
-    if ([UIAlertController class]) {
-        UIAlertController *schoolSheet = [UIAlertController
-                                          alertControllerWithTitle:@""
-                                          message:@"Choose School"
-                                          preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                   actionWithTitle:@"Cancel"
-                                   style:UIAlertActionStyleCancel
-                                   handler:^(UIAlertAction *action) {
-                                       self.schoolIsNew = NO;
-                                   }];
-        
-        UIAlertAction *destruct = [UIAlertAction
-                                   actionWithTitle:@"New school"
-                                   style:UIAlertActionStyleDestructive
-                                   handler:^(UIAlertAction *action) {
-                                       self.schoolIsNew = YES;
-                                       [self performSegueWithIdentifier:@"addSchool" sender:self];
-                                   }];
-        
-        UIAlertAction *schoolName;
-        
-        [schoolSheet addAction:destruct];
-
-        MTMakeWeakSelf();
-        for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-            schoolName = [UIAlertAction
-                          actionWithTitle:schoolNames[buttonItem]
-                          style:UIAlertActionStyleDefault
-                          handler:^(UIAlertAction *action) {
-                              weakSelf.schoolIsNew = NO;
-                              weakSelf.schoolName.text = [weakSelf stringWithoutConfirmation:schoolNames[buttonItem]];
-                              weakSelf.className.text = @"";
-                              
-                              [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-                              [weakSelf bk_performBlock:^(id obj) {
-                                  [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                                  [weakSelf classNameButton:nil];
-                              } afterDelay:0.3f];
-
-                          }];
-            [schoolSheet addAction:schoolName];
-        }
-        
-        [schoolSheet addAction:cancel];
-        
-        [self presentViewController:schoolSheet animated:YES completion:nil];
-    } else {
-        UIActionSheet *schoolSheet = [[UIActionSheet alloc]
-                                      initWithTitle:@"Choose School"
-                                      delegate:self
-                                      cancelButtonTitle:nil
-                                      destructiveButtonTitle:@"New school"
-                                      otherButtonTitles:nil, nil];
-        
-        for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-            [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
-        }
-        
-        [schoolSheet addButtonWithTitle:@"Cancel"];
-        schoolSheet.cancelButtonIndex = schoolNames.count + 1;
-        
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [schoolSheet showInView:self.view];
+    [self bk_performBlock:^(id obj) {
+        if ([UIAlertController class]) {
+            UIAlertController *schoolSheet = [UIAlertController
+                                              alertControllerWithTitle:@""
+                                              message:@"Choose School"
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                         self.schoolIsNew = NO;
+                                     }];
+            
+            UIAlertAction *destruct = [UIAlertAction
+                                       actionWithTitle:@"New school"
+                                       style:UIAlertActionStyleDestructive
+                                       handler:^(UIAlertAction *action) {
+                                           self.schoolIsNew = YES;
+                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
+                                       }];
+            
+            UIAlertAction *schoolName;
+            
+            [schoolSheet addAction:destruct];
+            
+            MTMakeWeakSelf();
+            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+                schoolName = [UIAlertAction
+                              actionWithTitle:schoolNames[buttonItem]
+                              style:UIAlertActionStyleDefault
+                              handler:^(UIAlertAction *action) {
+                                  weakSelf.schoolIsNew = NO;
+                                  weakSelf.schoolName.text = [weakSelf stringWithoutConfirmation:schoolNames[buttonItem]];
+                                  weakSelf.className.text = @"";
+                              }];
+                [schoolSheet addAction:schoolName];
+            }
+            
+            [schoolSheet addAction:cancel];
+            
+            [self presentViewController:schoolSheet animated:YES completion:nil];
         } else {
-            [schoolSheet showInView:window];
+            UIActionSheet *schoolSheet = [[UIActionSheet alloc]
+                                          initWithTitle:@"Choose School"
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          destructiveButtonTitle:@"New school"
+                                          otherButtonTitles:nil, nil];
+            
+            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+                [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
+            }
+            
+            [schoolSheet addButtonWithTitle:@"Cancel"];
+            schoolSheet.cancelButtonIndex = schoolNames.count + 1;
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:self.view]) {
+                [schoolSheet showInView:self.view];
+            } else {
+                [schoolSheet showInView:window];
+            }
         }
-    }
+ 
+    } afterDelay:0.35f];
 }
 
 - (IBAction)classNameButton:(id)sender
@@ -278,16 +285,27 @@
         UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [chooseSchoolAlert show];
     } else {
-        NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.schoolName.text];
-        PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
-        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Classes...";
+        hud.dimBackground = YES;
         
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
+        MTMakeWeakSelf();
+        [self bk_performBlock:^(id obj) {
+            NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", weakSelf.schoolName.text];
+            PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
+            querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+            
+            [querySchools findObjectsInBackgroundWithTarget:weakSelf selector:@selector(classesSheet:error:)];
+        } afterDelay:0.35f];
     }
 }
 
 - (void)classesSheet:(NSArray *)objects error:(NSError *)error
 {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    });
+
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
         [names addObject:object[@"name"]];
@@ -305,61 +323,64 @@
         [classNames addObject:name];
     }
     
-    if ([UIAlertController class]) {
-        UIAlertController *classSheet = [UIAlertController
-                                          alertControllerWithTitle:@""
-                                          message:@"Choose Class"
-                                          preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleCancel
-                                 handler:^(UIAlertAction *action) {
-                                     self.classIsNew = NO;
-                                 }];
-    
-        UIAlertAction *destruct = [UIAlertAction
-                                   actionWithTitle:@"New class"
-                                   style:UIAlertActionStyleDestructive
-                                   handler:^(UIAlertAction *action) {
-                                       self.classIsNew = YES;
-                                       [self performSegueWithIdentifier:@"addClass" sender:self];
-                                   }];
-        
-        UIAlertAction *className;
-        [classSheet addAction:destruct];
-
-        for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-            className = [UIAlertAction
-                          actionWithTitle:classNames[buttonItem]
-                          style:UIAlertActionStyleDefault
-                          handler:^(UIAlertAction *action) {
-                              self.classIsNew = NO;
-                              self.className.text = [self stringWithoutConfirmation:classNames[buttonItem]];
-                          }];
-            [classSheet addAction:className];
-        }
-        
-        [classSheet addAction:cancel];
-        
-        [self presentViewController:classSheet animated:YES completion:nil];
-    } else {
-        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:self cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
-        
-        for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-            [classSheet addButtonWithTitle:classNames[buttonItem]];
-        }
-        
-        [classSheet addButtonWithTitle:@"Cancel"];
-        classSheet.cancelButtonIndex = classNames.count + 1;
-        
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:self.view]) {
-            [classSheet showInView:self.view];
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        if ([UIAlertController class]) {
+            UIAlertController *classSheet = [UIAlertController
+                                             alertControllerWithTitle:@""
+                                             message:@"Choose Class"
+                                             preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                         weakSelf.classIsNew = NO;
+                                     }];
+            
+            UIAlertAction *destruct = [UIAlertAction
+                                       actionWithTitle:@"New class"
+                                       style:UIAlertActionStyleDestructive
+                                       handler:^(UIAlertAction *action) {
+                                           weakSelf.classIsNew = YES;
+                                           [weakSelf performSegueWithIdentifier:@"addClass" sender:weakSelf];
+                                       }];
+            
+            UIAlertAction *className;
+            [classSheet addAction:destruct];
+            
+            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+                className = [UIAlertAction
+                             actionWithTitle:classNames[buttonItem]
+                             style:UIAlertActionStyleDefault
+                             handler:^(UIAlertAction *action) {
+                                 weakSelf.classIsNew = NO;
+                                 weakSelf.className.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
+                             }];
+                [classSheet addAction:className];
+            }
+            
+            [classSheet addAction:cancel];
+            
+            [weakSelf presentViewController:classSheet animated:YES completion:nil];
         } else {
-            [classSheet showInView:window];
+            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+            
+            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
+                [classSheet addButtonWithTitle:classNames[buttonItem]];
+            }
+            
+            [classSheet addButtonWithTitle:@"Cancel"];
+            classSheet.cancelButtonIndex = classNames.count + 1;
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:weakSelf.view]) {
+                [classSheet showInView:weakSelf.view];
+            } else {
+                [classSheet showInView:window];
+            }
         }
-    }
+    } afterDelay:0.35f];
 }
 
 - (IBAction)tappedSignUpButton:(id)sender
@@ -371,107 +392,127 @@
         
         PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
         
-        findCode.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        findCode.cachePolicy = kPFCachePolicyNetworkOnly;
         
         __block BOOL showedSignupError = NO;
         
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Registering...";
-
+        hud.dimBackground = YES;
+        
         MTMakeWeakSelf();
-        [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                NSArray *codes = objects;
-                
-                if ([codes count] > 0) {
-                    PFSignupCodes *code = [codes firstObject];
+        [self bk_performBlock:^(id obj) {
+            [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                if (!error) {
+                    NSArray *codes = objects;
                     
-                    PFUser *user = [PFUser user];
-                    
-                    user.username = weakSelf.email.text;
-                    user.password = weakSelf.password.text;
-                    user.email = weakSelf.email.text;
-                    
-                    // other fields can be set just like with PFObject
-                    user[@"first_name"] = weakSelf.firstName.text;
-                    user[@"last_name"] = weakSelf.lastName.text;
-                    
-                    user[@"type"] = weakSelf.signUpType;
-                    
-                    if (weakSelf.schoolIsNew) {
-                        PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-                        createSchool[@"name"] = weakSelf.schoolName.text;
-                        [createSchool saveInBackground];
-                    }
-                    
-                    if (weakSelf.classIsNew) {
-                        PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
-                        createClass[@"name"] = weakSelf.className.text;
-                        createClass[@"school"] = weakSelf.schoolName.text;
-                        [createClass saveInBackground];
+                    if ([codes count] > 0) {
+                        PFSignupCodes *code = [codes firstObject];
                         
-                        PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
-                        signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
-                        signupCodeForStudent[@"class"] = weakSelf.className.text;
-                        signupCodeForStudent[@"school"] = weakSelf.schoolName.text;
-                        signupCodeForStudent[@"type"] = @"student";
+                        PFUser *user = [PFUser user];
                         
-                        [signupCodeForStudent saveInBackground];
+                        user.username = weakSelf.email.text;
+                        user.password = weakSelf.password.text;
+                        user.email = weakSelf.email.text;
                         
-                    }
-                    
-                    if (isMentor) {
-                        user[@"school"] = weakSelf.schoolName.text;
-                        user[@"class"] = weakSelf.className.text;
-                    } else {
-                        user[@"school"] = code[@"school"];
-                        user[@"class"] = code[@"class"];
-                    }
-                    
-                    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+                        // other fields can be set just like with PFObject
+                        user[@"first_name"] = weakSelf.firstName.text;
+                        user[@"last_name"] = weakSelf.lastName.text;
                         
-                        if (!error) {
-                            [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
-                            
-                            // Update for Push Notifications
-                            [[MTUtil getAppDelegate] updateParseInstallationState];
-
-                            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
-                            } else {
-                                [weakSelf performSegueWithIdentifier:@"pushMentorSignedUp" sender:weakSelf];
-                            }
-                            
-                        } else {
-                            // Ignore parse cache errors for now
-                            if (error.code != 120) {
-                                NSString *errorString = [error userInfo][@"error"];
-                                weakSelf.error.text = errorString;
-                                [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                            }
+                        user[@"type"] = weakSelf.signUpType;
+                        
+                        if (weakSelf.schoolIsNew) {
+                            PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
+                            createSchool[@"name"] = weakSelf.schoolName.text;
+                            [createSchool saveInBackground];
                         }
-                    }];
+                        
+                        if (weakSelf.classIsNew) {
+                            PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
+                            createClass[@"name"] = weakSelf.className.text;
+                            createClass[@"school"] = weakSelf.schoolName.text;
+                            [createClass saveInBackground];
+                            
+                            PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
+                            signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
+                            signupCodeForStudent[@"class"] = weakSelf.className.text;
+                            signupCodeForStudent[@"school"] = weakSelf.schoolName.text;
+                            signupCodeForStudent[@"type"] = @"student";
+                            
+                            [signupCodeForStudent saveInBackground];
+                            
+                        }
+                        
+                        if (isMentor) {
+                            user[@"school"] = weakSelf.schoolName.text;
+                            user[@"class"] = weakSelf.className.text;
+                        } else {
+                            user[@"school"] = code[@"school"];
+                            user[@"class"] = code[@"class"];
+                        }
+                        
+                        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                            });
+                            
+                            [weakSelf bk_performBlock:^(id obj) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    if (!error) {
+                                        [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
+                                        
+                                        // Update for Push Notifications
+                                        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                        
+                                        if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+                                            [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
+                                        } else {
+                                            [weakSelf performSegueWithIdentifier:@"pushMentorSignedUp" sender:weakSelf];
+                                        }
+                                        
+                                    } else {
+                                        // Ignore parse cache errors for now
+                                        if (error.code != 120) {
+                                            NSString *errorString = [error userInfo][@"error"];
+                                            weakSelf.error.text = errorString;
+                                            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                        }
+                                    }
+                                });
+
+                            } afterDelay:0.35f];
+                            
+                        }];
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        });
+                        
+                        [weakSelf bk_performBlock:^(id obj) {
+                            if (!showedSignupError) {
+                                showedSignupError = YES;
+                                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            }
+                            else {
+                                showedSignupError = NO;
+                            }
+                        } afterDelay:0.35f];
+                    }
                 } else {
-                    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-
-                    if (!showedSignupError) {
-                        showedSignupError = YES;
-                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                    }
-                    else {
-                        showedSignupError = NO;
-                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    });
+                    
+                    [weakSelf bk_performBlock:^(id obj) {
+                        // Ignore parse cache errors for now
+                        if (error.code != 120) {
+                            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                        }
+                    } afterDelay:0.35f];
                 }
-            } else {
-                [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            }];
+        } afterDelay:0.35f];
 
-                // Ignore parse cache errors for now
-                if (error.code != 120) {
-                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                }
-            }
-        }];
     }
 }
 
@@ -580,13 +621,6 @@
             self.schoolIsNew = NO;
             self.schoolName.text = [self stringWithoutConfirmation:buttonTitle];
             self.className.text = @"";
-            
-            [[UIApplication sharedApplication] beginIgnoringInteractionEvents];
-            MTMakeWeakSelf();
-            [self bk_performBlock:^(id obj) {
-                [[UIApplication sharedApplication] endIgnoringInteractionEvents];
-                [weakSelf classNameButton:nil];
-            } afterDelay:0.3f];
             
         } else { // Cancel
             self.schoolIsNew = NO;

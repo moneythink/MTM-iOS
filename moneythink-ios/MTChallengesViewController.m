@@ -67,12 +67,6 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (MTChallengesContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
     if (([self.challenges count] <= 0) || (index >= [self.challenges count])) {
@@ -101,7 +95,6 @@
 
 
 #pragma mark - Page View Controller Data Source
-
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
     return self.viewControllerBefore;
