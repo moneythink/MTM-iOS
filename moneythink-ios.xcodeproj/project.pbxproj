@@ -95,6 +95,9 @@
 		8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A619FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m */; };
 		8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */; };
 		8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8B119FFDF00006E9168 /* MTLabel.m */; };
+		890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */ = {isa = PBXBuildFile; fileRef = 890587461A01816000DB8CD4 /* EndUserAgreement.html */; };
+		890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = 890587481A01816900DB8CD4 /* PrivacyPolicy.html */; };
+		8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8905874B1A0181F500DB8CD4 /* MTWebViewController.m */; };
 		892105BC19DA0C5D000CFBF6 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
 		8921060919DA1F37000CFBF6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */; };
@@ -361,6 +364,10 @@
 		8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostCommentItemsTableViewCell.m; sourceTree = "<group>"; };
 		8901D8B019FFDF00006E9168 /* MTLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLabel.h; sourceTree = "<group>"; };
 		8901D8B119FFDF00006E9168 /* MTLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLabel.m; sourceTree = "<group>"; };
+		890587461A01816000DB8CD4 /* EndUserAgreement.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = EndUserAgreement.html; sourceTree = "<group>"; };
+		890587481A01816900DB8CD4 /* PrivacyPolicy.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PrivacyPolicy.html; sourceTree = "<group>"; };
+		8905874A1A0181F500DB8CD4 /* MTWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTWebViewController.h; sourceTree = "<group>"; };
+		8905874B1A0181F500DB8CD4 /* MTWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTWebViewController.m; sourceTree = "<group>"; };
 		892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
@@ -674,6 +681,8 @@
 				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
 				58676B191974273E0070F604 /* MTUserViewController.h */,
 				58676B1E1974273E0070F604 /* MTUserViewController.m */,
+				8905874A1A0181F500DB8CD4 /* MTWebViewController.h */,
+				8905874B1A0181F500DB8CD4 /* MTWebViewController.m */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -819,6 +828,8 @@
 		892105C419DA1F37000CFBF6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				890587461A01816000DB8CD4 /* EndUserAgreement.html */,
+				890587481A01816900DB8CD4 /* PrivacyPolicy.html */,
 				8921064D19DA1F52000CFBF6 /* button images */,
 				892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */,
 				892105C619DA1F37000CFBF6 /* bg_money_maker_2.png */,
@@ -1111,6 +1122,7 @@
 				89FFFC8E19D9EDCF00DD3716 /* z checkbox_ticked.png in Resources */,
 				8921063F19DA1F37000CFBF6 /* profile_image.png in Resources */,
 				8921061419DA1F37000CFBF6 /* bg_progress_green3.png in Resources */,
+				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
 				8921063419DA1F37000CFBF6 /* menu_button@2x.png in Resources */,
 				8921062219DA1F37000CFBF6 /* icon_challenge_future@2x.png in Resources */,
 				8921062019DA1F37000CFBF6 /* comment@2x.png in Resources */,
@@ -1124,6 +1136,7 @@
 				8921064C19DA1F37000CFBF6 /* verify_normal@2x.png in Resources */,
 				8921061619DA1F37000CFBF6 /* bg_progress_orange2.png in Resources */,
 				89FFFC8819D9EDCF00DD3716 /* checkbox_not_ticked.png in Resources */,
+				890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */,
 				8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */,
 				8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */,
 				8921061E19DA1F37000CFBF6 /* challenges_normal@2x.png in Resources */,
@@ -1250,6 +1263,7 @@
 				8946407819EC7DD800B7C3FD /* MBProgressHUD.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
 				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
+				8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

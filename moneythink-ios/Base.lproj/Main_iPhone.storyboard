@@ -388,18 +388,18 @@
                                             <constraint firstAttribute="height" constant="220" id="qWj-TV-bRF"/>
                                         </constraints>
                                     </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nfr-Kf-99I" userLabel="Agree Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="nfr-Kf-99I" userLabel="Agree Button">
                                         <rect key="frame" x="58" y="245" width="252" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="252" id="DTP-Oc-8wC"/>
                                             <constraint firstAttribute="height" constant="44" id="kj1-3o-Tlw"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <state key="normal" title="I agree to the Terms &amp; Conditions">
+                                        <state key="normal" title="I agree to the end user license agreement and privacy policy.">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="z8Z-Rq-rRI" kind="push" identifier="agreeTerms" id="iSW-sc-15K"/>
+                                            <action selector="termsAndPrivacyTapped:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="CkE-Gc-qRe"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IfJ-eh-inN" userLabel="Sign Up Button">
@@ -477,17 +477,18 @@
                         <outletCollection property="separatorViews" destination="nNX-DU-9aa" id="0SH-4b-KwA"/>
                         <segue destination="tGy-vH-4cW" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
                         <segue destination="4W6-dw-LgJ" kind="push" identifier="studentSignedUp" id="qYv-0w-I0f"/>
+                        <segue destination="z8Z-Rq-rRI" kind="push" identifier="showWebView" id="yad-P5-d3y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-3412" y="-3276"/>
+            <point key="canvasLocation" x="-3393" y="-3269"/>
         </scene>
-        <!--Terms and Conditions-->
+        <!--MTWebView-->
         <scene sceneID="Wi0-Zj-jXc">
             <objects>
-                <viewController id="z8Z-Rq-rRI" userLabel="Terms and Conditions" sceneMemberID="viewController">
+                <viewController id="z8Z-Rq-rRI" userLabel="MTWebView" customClass="MTWebViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y8R-8s-41Y"/>
                         <viewControllerLayoutGuide type="bottom" id="GLU-G9-lNn"/>
@@ -496,44 +497,53 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I74-ab-BBo">
-                                <rect key="frame" x="20" y="20" width="280" height="440"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <string key="text">Statement of Terms and Conditions
-Effective 1.8.2013
-
-By accessing or using the Moneythink mobile application (hereafter, “Moneythink Mobile,” “we,” or “us”), you agree to the following Statement of Terms and Conditions:
- 
-1.  Sharing Your Content and Information
-Moneythink Mobile is designed to challenge you to complete fun and educational tasks that improve your personal finance skills.  As you complete these challenges, Moneythink Mobile will prompt you to post updates on your progress, usually -- but not exclusively -- in the form of photos and text.
- 
-You own all of the content and information you post to Moneythink Mobile.  However, by posting content and information to Moneythink Mobile, you grant Moneythink and its program sponsors a perpetual, non-exclusive, non-transferable, royalty-free worldwide license to use any content that you post on or in connection with Moneythink Mobile. 
- 
-You agree that you are solely responsible for the content and information that you supply, and that Moneythink Mobile is not responsible or liable for said content and information. While we are not obligated to do so, we reserve the right, and have absolute discretion, to review, screen and delete content and information at any time and for any reason.
- 
-2.  Safety
-Moneythink Mobile is designed as a constructive educational tool.  We pledge to do our best to keep Moneythink Mobile a safe and positive experience, but need your help.  By accessing or using Moneythink Mobile, you make the following commitments:
- 
-1.  You will not upload viruses or other malicious code.
-2.  You will not solicit login information or access an account belonging to someone else.
-3.  You will not bully, intimidate, or harass any user.
-4.  You will not post content that contains hate speech, nudity, or graphic or gratuitous violence; is threatening or pornographic; or incites violence.
-5.  You will not use Moneythink Mobile to do anything unlawful, misleading, malicious, or discriminatory.
-6.  You will not facilitate or encourage any violations of this Statement.
- 
-3.  Audience
-Moneythink Mobile is intended for use by individuals who are 13 years of age or older.  Persons under the age of 13 are prohibited from creating Moneythink Mobile accounts.
- 
-By accessing and using Moneythink Mobile, you affirm that you are either more than 18 years of age, or an emancipated minor, or possess parental or legal guardian consent, and are fully able and competent to enter into, abide by, and comply with the terms, conditions, obligations, affirmations, representations, and warranties set forth in this Statement. 
- 
-We may, in our sole discretion, refuse to offer Moneythink Mobile to any person or entity. We may, without notice and in our sole discretion, terminate your right to use Moneythink Mobile, or any portion of thereof, and block or prevent your future access to and use of the Services or any portion thereof.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZc-nn-Jmd">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="delegate" destination="z8Z-Rq-rRI" id="1vH-Pd-AYt"/>
+                                </connections>
+                            </webView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7mE-7T-FkV">
+                                <rect key="frame" x="0.0" y="436" width="320" height="44"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJI-Zc-Xnl">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                                        <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7WU-y9-KK7">
+                                        <rect key="frame" x="8" y="7" width="304" height="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                                        <state key="normal" title="Reset">
+                                            <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="goBack:" destination="z8Z-Rq-rRI" eventType="touchUpInside" id="9OE-7R-4Vi"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="9v9-Jf-fos"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="mZc-nn-Jmd" firstAttribute="top" secondItem="9xt-gk-ufl" secondAttribute="top" id="VFC-GE-1wq"/>
+                            <constraint firstItem="7mE-7T-FkV" firstAttribute="top" secondItem="mZc-nn-Jmd" secondAttribute="bottom" id="Vnp-Bp-1bU"/>
+                            <constraint firstAttribute="trailing" secondItem="7mE-7T-FkV" secondAttribute="trailing" id="nV0-dc-uVN"/>
+                            <constraint firstAttribute="trailing" secondItem="mZc-nn-Jmd" secondAttribute="trailing" id="q7F-r2-xfU"/>
+                            <constraint firstItem="7mE-7T-FkV" firstAttribute="leading" secondItem="9xt-gk-ufl" secondAttribute="leading" id="sEG-r0-tQs"/>
+                            <constraint firstItem="mZc-nn-Jmd" firstAttribute="leading" secondItem="9xt-gk-ufl" secondAttribute="leading" id="vCg-WI-fU6"/>
+                            <constraint firstAttribute="bottom" secondItem="7mE-7T-FkV" secondAttribute="bottom" id="vGb-ZY-72R"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="QUa-FK-ezz"/>
+                    <connections>
+                        <outlet property="backButton" destination="7WU-y9-KK7" id="E96-kj-RRC"/>
+                        <outlet property="webView" destination="mZc-nn-Jmd" id="r46-h9-tw3"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OzH-ei-JDI" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -3156,18 +3166,18 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xnR-Jl-u89" userLabel="Agree Button">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="xnR-Jl-u89" userLabel="Agree Button">
                                         <rect key="frame" x="53" y="263" width="252" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="44" id="QWX-fW-EJi"/>
                                             <constraint firstAttribute="width" constant="252" id="ec8-FG-Yr9"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <state key="normal" title="I agree to the Terms &amp; Conditions">
+                                        <state key="normal" title="I agree to the end user license agreement and privacy policy.">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <segue destination="z8Z-Rq-rRI" kind="push" id="Hqd-U6-b27"/>
+                                            <action selector="termsAndPrivacyTapped:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="QZt-zR-6nR"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="d0H-vY-jeG" userLabel="Mentor Agree Check Button" customClass="MICheckBox">
@@ -3187,7 +3197,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                                             <constraint firstAttribute="width" constant="251" id="q4i-57-WIM"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
-                                        <state key="normal" title="I agree to the Moneythink Mentor Release and Liability Waiver">
+                                        <state key="normal" title="I agree to the Moneythink Mentor Release and Liability Waiver.">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -3264,6 +3274,7 @@ We may, in our sole discretion, refuse to offer Moneythink Mobile to any person 
                         <segue destination="fiu-BG-JtN" kind="push" identifier="pushMentorSignedUp" id="kgD-Kv-M6F"/>
                         <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" animates="NO" id="kDD-cl-uw8"/>
                         <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" animates="NO" id="0QY-Pc-qd8"/>
+                        <segue destination="z8Z-Rq-rRI" kind="push" identifier="showWebView" id="fGY-fc-BPd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="AiL-eG-MFh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3631,12 +3642,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="kgD-Kv-M6F"/>
-        <segue reference="0Hm-VR-maT"/>
-        <segue reference="Hqd-U6-b27"/>
+        <segue reference="qYv-0w-I0f"/>
+        <segue reference="kDD-cl-uw8"/>
+        <segue reference="0QY-Pc-qd8"/>
+        <segue reference="fGY-fc-BPd"/>
         <segue reference="7JS-73-w9v"/>
         <segue reference="Pqy-YU-1Il"/>
-        <segue reference="Gdm-gL-5Rd"/>
-        <segue reference="NwG-bn-vTI"/>
         <segue reference="Dm1-SI-6eC"/>
         <segue reference="a3W-fR-2k0"/>
     </inferredMetricsTieBreakers>

@@ -13,6 +13,7 @@
 #import "MTMentorTabBarViewControlle.h"
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
+#import "MTWebViewController.h"
 
 @interface MTSignUpViewController ()
 
@@ -51,6 +52,7 @@
 @property (strong, nonatomic) UIActionSheet *classSheet;
 @property (strong, nonatomic) NSString *confirmationString;
 @property (nonatomic) BOOL keyboardShowing;
+@property (nonatomic) BOOL showPrivacy;
 
 @end
 
@@ -527,14 +529,14 @@
     if (!agreed) {
         if (isMentor) {
             if ([self.agreeCheckbox isChecked]) {
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Mentor Release before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to the Mentor Release before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
             else {
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to the End User License Agreement & Privacy Policy before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
         }
         else {
-            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to Terms & Conditions before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Please agree to the End User License Agreement & Privacy Policy before signing up." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
         
         return NO;
@@ -561,6 +563,61 @@
     }
 
     return YES;
+}
+
+- (IBAction)termsAndPrivacyTapped:(id)sender
+{
+    if ([UIAlertController class]) {
+        UIAlertController *viewSheet = [UIAlertController
+                                          alertControllerWithTitle:@"View Content"
+                                          message:nil
+                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *option1 = [UIAlertAction
+                                   actionWithTitle:@"End User License Agreement"
+                                   style:UIAlertActionStyleDefault
+                                   handler:^(UIAlertAction *action) {
+                                       [self performSegueWithIdentifier:@"showWebView" sender:self];
+                                   }];
+
+        UIAlertAction *option2 = [UIAlertAction
+                                  actionWithTitle:@"Privacy Policy"
+                                  style:UIAlertActionStyleDefault
+                                  handler:^(UIAlertAction *action) {
+                                      self.showPrivacy = YES;
+                                      [self performSegueWithIdentifier:@"showWebView" sender:self];
+                                  }];
+
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        
+        [viewSheet addAction:option1];
+        [viewSheet addAction:option2];
+        [viewSheet addAction:cancel];
+        
+        [self presentViewController:viewSheet animated:YES completion:nil];
+    }
+    else {
+        MTMakeWeakSelf();
+        UIActionSheet *sheet = [[UIActionSheet alloc] bk_initWithTitle:@"View Content"];
+        [sheet bk_addButtonWithTitle:@"End User License Agreement" handler:^{
+            [weakSelf performSegueWithIdentifier:@"showWebView" sender:weakSelf];
+        }];
+        
+        [sheet bk_addButtonWithTitle:@"Privacy Policy" handler:^{
+            weakSelf.showPrivacy = YES;
+            [weakSelf performSegueWithIdentifier:@"showWebView" sender:weakSelf];
+        }];
+        
+        [sheet bk_setCancelButtonWithTitle:@"Cancel" handler:^{
+        }];
+        
+        [sheet showInView:[UIApplication sharedApplication].keyWindow];
+    }
 }
 
 
@@ -686,6 +743,17 @@
     } else if ([segueName isEqualToString:@"addClass"]) {
         MTAddClassViewController *addClassVC = (MTAddClassViewController *)destinationVC;
         addClassVC.schoolName = self.schoolName.text;
+    }
+    else if ([segueName isEqualToString:@"showWebView"]) {
+        MTWebViewController *webViewVC = (MTWebViewController *)destinationVC;
+        
+        if (self.showPrivacy) {
+            webViewVC.fileName = @"PrivacyPolicy";
+            self.showPrivacy = NO;
+        }
+        else {
+            webViewVC.fileName = @"EndUserAgreement";
+        }
     }
 }
 
