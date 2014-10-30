@@ -174,6 +174,7 @@
     }
     else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         cell.textLabel.text = @"Edit Profile";
+        cell.accessoryType = UITableViewCellAccessoryNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
     }
     else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
@@ -251,7 +252,7 @@
         }
     }
     else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
-        [self performSegueWithIdentifier:@"pushEditProfile" sender:self];
+        [self performSegueWithIdentifier:@"presentEditProfile" sender:self];
     }
     else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
         

@@ -1026,7 +1026,7 @@ typedef enum {
             }
             
             if (self.comments) {
-                likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", [self.comments count]];
+                likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", (unsigned long)[self.comments count]];
             }
             else {
                 likeCommentCell.commentCount.text = @"0";

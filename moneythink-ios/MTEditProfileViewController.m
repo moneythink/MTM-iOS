@@ -25,6 +25,11 @@
 @property (strong, nonatomic) IBOutlet UITextField *userSchool;
 @property (strong, nonatomic) IBOutlet UITextField *userClassName;
 
+@property (nonatomic, strong) IBOutlet UIButton *cancelButton;
+@property (nonatomic, strong) IBOutlet UIButton *saveButton;
+
+@property (nonatomic, strong) IBOutletCollection(UIView) NSArray *separatorViews;
+
 @property (assign, nonatomic) BOOL isMentor;
 @property (strong, nonatomic) PFImageView *profileImage;
 @property (strong, nonatomic) UIImage *updatedProfileImage;
@@ -133,8 +138,6 @@
             self.reachable = NO;
         });
     };
-
-    [self.viewFields setBackgroundColor:[UIColor clearColor]];
     
     [self textFieldsConfigure];
     
@@ -159,6 +162,11 @@
     }
     
     self.confirmationString = @"✓ ";
+    
+    [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    [self.cancelButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
+    [self.saveButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
+    [self.saveButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -170,6 +178,9 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -181,15 +192,6 @@
     
     [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
-    
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
 }
 
 
@@ -409,6 +411,91 @@
     } afterDelay:0.35f];
 }
 
+- (IBAction)saveChanges:(id)sender
+{
+    [self saveProfileChanges];
+}
+
+
+- (IBAction)cancelChanges:(id)sender
+{
+    BOOL dirty = NO;
+    
+    if (self.updatedProfileImage) {
+        dirty = YES;
+    }
+    
+    if (![self.userSchool.text isEqualToString:self.userCurrent[@"school"]]) {
+        dirty = YES;
+    }
+    if (![self.userClassName.text isEqualToString:self.userCurrent[@"class"]]) {
+        dirty = YES;
+    }
+    if (![self.firstName.text isEqualToString:self.userCurrent[@"first_name"]]) {
+        dirty = YES;
+    }
+    if (![self.lastName.text isEqualToString:self.userCurrent[@"last_name"]]) {
+        dirty = YES;
+    }
+    if (![self.email.text isEqualToString:self.userCurrent[@"email"]]) {
+        dirty = YES;
+    }
+
+    if (dirty) {
+        if ([UIAlertController class]) {
+            UIAlertController *saveSheet = [UIAlertController
+                                                  alertControllerWithTitle:@"Save Changes?"
+                                                  message:@"You have changed some profile information. Choose an option:"
+                                                  preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                     }];
+            
+            MTMakeWeakSelf();
+            UIAlertAction *saveAction = [UIAlertAction
+                                     actionWithTitle:@"Save Changes"
+                                     style:UIAlertActionStyleDestructive
+                                     handler:^(UIAlertAction *action) {
+                                         [weakSelf saveProfileChanges];
+                                     }];
+            
+            UIAlertAction *discardAction = [UIAlertAction
+                                         actionWithTitle:@"Discard Changes"
+                                         style:UIAlertActionStyleDefault
+                                         handler:^(UIAlertAction *action) {
+                                             [weakSelf dismissViewControllerAnimated:YES completion:NULL];
+                                         }];
+
+            [saveSheet addAction:saveAction];
+            [saveSheet addAction:discardAction];
+
+            [saveSheet addAction:cancel];
+
+            [self presentViewController:saveSheet animated:YES completion:nil];
+        } else {
+            
+            MTMakeWeakSelf();
+            UIActionSheet *saveSheet = [UIActionSheet bk_actionSheetWithTitle:@"Save Changes?"];
+            
+            [saveSheet bk_setDestructiveButtonWithTitle:@"Save Changes" handler:^{
+                [weakSelf saveProfileChanges];
+            }];
+            [saveSheet bk_addButtonWithTitle:@"Discard Changes" handler:^{
+                [weakSelf dismissViewControllerAnimated:YES completion:NULL];
+            }];
+            [saveSheet bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+            [saveSheet showInView:[UIApplication sharedApplication].keyWindow];
+        }
+
+    }
+    else {
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
 
 #pragma mark - Private
 - (NSString *)stringWithoutConfirmation:(NSString *)oldString
@@ -529,6 +616,10 @@
     [self.confirmPassword addSubview:bottomBorder];
     [self.confirmPassword addSubview:rightBorder];
     [self.confirmPassword setBackgroundColor:[UIColor white]];
+    
+    for (UIView *thisView in self.separatorViews) {
+        [self.viewFields bringSubviewToFront:thisView];
+    }
 }
 
 -(void)dismissKeyboard
@@ -563,7 +654,7 @@
     
     [UIView animateWithDuration:0.35f animations:^{
         self.viewFields.contentSize = fieldsContentRect.size;
-        self.viewFields.contentOffset = CGPointMake(0.0f, 94.0f);
+        self.viewFields.contentOffset = CGPointMake(0.0f, 184.0f);
     }];
 }
 
@@ -659,11 +750,7 @@
         }
     }];
     
-    [self.navigationController popViewControllerAnimated:NO];
-}
-
-- (IBAction)saveChanges:(id)sender {
-    [self saveProfileChanges];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (IBAction)editProfileImageButton:(id)sender {
@@ -818,7 +905,21 @@
     
     self.updatedProfileImage = image;
     
-    [self dismissViewControllerAnimated:NO completion:NULL];
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [UIView animateWithDuration:0.2f animations:^{
+            weakSelf.userProfileButton.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            weakSelf.userProfileButton.imageView.image = self.updatedProfileImage;
+            
+            [UIView animateWithDuration:0.2f animations:^{
+                weakSelf.userProfileButton.alpha = 1.0f;
+            } completion:^(BOOL finished) {
+            }];
+        }];
+    } afterDelay:0.35f];
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
