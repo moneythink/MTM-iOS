@@ -174,8 +174,6 @@
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8946407819EC7DD800B7C3FD /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407719EC7DD800B7C3FD /* MBProgressHUD.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
-		899F309119F1692D004F6B10 /* moneythink-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F308F19F1692D004F6B10 /* moneythink-logo.png */; };
-		899F309219F1692D004F6B10 /* moneythink-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309019F1692D004F6B10 /* moneythink-logo@2x.png */; };
 		899F309719F16948004F6B10 /* check-active.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309319F16948004F6B10 /* check-active.png */; };
 		899F309819F16948004F6B10 /* check-active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309419F16948004F6B10 /* check-active@2x.png */; };
 		899F309919F16948004F6B10 /* check-unactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309519F16948004F6B10 /* check-unactive.png */; };
@@ -186,8 +184,8 @@
 		89C6792C19E315660054E890 /* UIAlertView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */; };
 		89C6792F19E317340054E890 /* MTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792E19E317340054E890 /* MTUtil.m */; };
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
-		89E56D261A02EF7F00C187C9 /* logo_banner.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D241A02EF7F00C187C9 /* logo_banner.png */; };
-		89E56D271A02EF7F00C187C9 /* logo_banner@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D251A02EF7F00C187C9 /* logo_banner@2x.png */; };
+		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
+		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
 		89FFFC7A19D9C1B200DD3716 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7819D9C1B200DD3716 /* Bolts.framework */; };
 		89FFFC7B19D9C1B200DD3716 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7919D9C1B200DD3716 /* Parse.framework */; };
 		89FFFC8819D9EDCF00DD3716 /* checkbox_not_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89FFFC7E19D9EDCF00DD3716 /* checkbox_not_ticked.png */; };
@@ -451,8 +449,6 @@
 		8946407719EC7DD800B7C3FD /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
 		8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MTAdditions.m"; sourceTree = "<group>"; };
-		899F308F19F1692D004F6B10 /* moneythink-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moneythink-logo.png"; sourceTree = "<group>"; };
-		899F309019F1692D004F6B10 /* moneythink-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "moneythink-logo@2x.png"; sourceTree = "<group>"; };
 		899F309319F16948004F6B10 /* check-active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-active.png"; sourceTree = "<group>"; };
 		899F309419F16948004F6B10 /* check-active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-active@2x.png"; sourceTree = "<group>"; };
 		899F309519F16948004F6B10 /* check-unactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-unactive.png"; sourceTree = "<group>"; };
@@ -503,8 +499,8 @@
 		89C6792D19E317340054E890 /* MTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUtil.h; sourceTree = "<group>"; };
 		89C6792E19E317340054E890 /* MTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUtil.m; sourceTree = "<group>"; };
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
-		89E56D241A02EF7F00C187C9 /* logo_banner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_banner.png; sourceTree = "<group>"; };
-		89E56D251A02EF7F00C187C9 /* logo_banner@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_banner@2x.png"; sourceTree = "<group>"; };
+		89E56D281A0448A300C187C9 /* login-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header.png"; sourceTree = "<group>"; };
+		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
 		89FFFC7819D9C1B200DD3716 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		89FFFC7919D9C1B200DD3716 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		89FFFC7E19D9EDCF00DD3716 /* checkbox_not_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_not_ticked.png; sourceTree = "<group>"; };
@@ -877,15 +873,13 @@
 				892105EA19DA1F37000CFBF6 /* like_active@2x.png */,
 				892105EB19DA1F37000CFBF6 /* like_normal.png */,
 				892105EC19DA1F37000CFBF6 /* like_normal@2x.png */,
+				89E56D281A0448A300C187C9 /* login-header.png */,
+				89E56D291A0448A300C187C9 /* login-header@2x.png */,
 				892105EE19DA1F37000CFBF6 /* logo_actionbar.png */,
-				89E56D241A02EF7F00C187C9 /* logo_banner.png */,
-				89E56D251A02EF7F00C187C9 /* logo_banner@2x.png */,
 				892105EF19DA1F37000CFBF6 /* menu_button.png */,
 				892105F019DA1F37000CFBF6 /* menu_button@2x.png */,
 				892105F119DA1F37000CFBF6 /* moneythink_icon_logo.png */,
 				892105F219DA1F37000CFBF6 /* moneythink_icon_logo@2x.png */,
-				899F308F19F1692D004F6B10 /* moneythink-logo.png */,
-				899F309019F1692D004F6B10 /* moneythink-logo@2x.png */,
 				892105F319DA1F37000CFBF6 /* notifications_active.png */,
 				892105F419DA1F37000CFBF6 /* notifications_active@2x.png */,
 				892105F519DA1F37000CFBF6 /* notifications_normal.png */,
@@ -1079,7 +1073,6 @@
 				89FFFC8A19D9EDCF00DD3716 /* checkbox_ticked.png in Resources */,
 				8921065519DA1F52000CFBF6 /* loginButton@2x.png in Resources */,
 				8921064019DA1F37000CFBF6 /* profile_image@2x.png in Resources */,
-				89E56D261A02EF7F00C187C9 /* logo_banner.png in Resources */,
 				8921061A19DA1F37000CFBF6 /* bg_progress_white3.png in Resources */,
 				8921064319DA1F37000CFBF6 /* settings_normal.png in Resources */,
 				8921064519DA1F37000CFBF6 /* students_active.png in Resources */,
@@ -1089,7 +1082,6 @@
 				8921062F19DA1F37000CFBF6 /* like_normal.png in Resources */,
 				8921062719DA1F37000CFBF6 /* icon_pig.png in Resources */,
 				8921063319DA1F37000CFBF6 /* menu_button.png in Resources */,
-				899F309119F1692D004F6B10 /* moneythink-logo.png in Resources */,
 				8921060D19DA1F37000CFBF6 /* bg_money_mananger_3.png in Resources */,
 				8921061C19DA1F37000CFBF6 /* challenges_active@2x.png in Resources */,
 				8921061119DA1F37000CFBF6 /* bg_money_mananger_7.png in Resources */,
@@ -1102,6 +1094,8 @@
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
 				899F309819F16948004F6B10 /* check-active@2x.png in Resources */,
 				8921064619DA1F37000CFBF6 /* students_active@2x.png in Resources */,
+				89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */,
+				89E56D2A1A0448A300C187C9 /* login-header.png in Resources */,
 				89FFFC8B19D9EDCF00DD3716 /* checkbox_ticked@2x.png in Resources */,
 				8921064419DA1F37000CFBF6 /* settings_normal@2x.png in Resources */,
 				8921062619DA1F37000CFBF6 /* icon_money@2x.png in Resources */,
@@ -1140,7 +1134,6 @@
 				8921061619DA1F37000CFBF6 /* bg_progress_orange2.png in Resources */,
 				89FFFC8819D9EDCF00DD3716 /* checkbox_not_ticked.png in Resources */,
 				890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */,
-				89E56D271A02EF7F00C187C9 /* logo_banner@2x.png in Resources */,
 				8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */,
 				8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */,
 				8921061E19DA1F37000CFBF6 /* challenges_normal@2x.png in Resources */,
@@ -1162,7 +1155,6 @@
 				8921061519DA1F37000CFBF6 /* bg_progress_orange1.png in Resources */,
 				899F309919F16948004F6B10 /* check-unactive.png in Resources */,
 				899F309719F16948004F6B10 /* check-active.png in Resources */,
-				899F309219F1692D004F6B10 /* moneythink-logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

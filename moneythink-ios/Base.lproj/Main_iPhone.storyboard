@@ -21,11 +21,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IIF-0u-Hrc" userLabel="Top Background View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="logo_banner.png" translatesAutoresizingMaskIntoConstraints="NO" id="AsJ-va-y8O">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="login-header.png" translatesAutoresizingMaskIntoConstraints="NO" id="AsJ-va-y8O">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="166"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="moneythink-logo.png" translatesAutoresizingMaskIntoConstraints="NO" id="hmw-CG-o7X" userLabel="MT Logo View">
-                                        <rect key="frame" x="38" y="38" width="244" height="91"/>
                                     </imageView>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -3758,8 +3755,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <image name="icon_pig.png" width="38" height="28"/>
         <image name="info_icon.png" width="10" height="22"/>
         <image name="like_normal.png" width="19" height="16"/>
-        <image name="logo_banner.png" width="320" height="166"/>
-        <image name="moneythink-logo.png" width="244" height="91"/>
+        <image name="login-header.png" width="320" height="166"/>
         <image name="notifications_active.png" width="25" height="25"/>
         <image name="photo_post.png" width="71" height="71"/>
         <image name="profile_image.png" width="90" height="90"/>
