@@ -46,7 +46,10 @@
     
     self.autoReleaseSwitch.enabled = NO;
     
-    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date != nil && activated = NO"];
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
     PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
     scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
     
@@ -114,7 +117,10 @@
             if (!error) {
                 
                 // Make sure we have future challenges, otherwise display message
-                NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"activation_date != nil && activated = NO"];
+                NSString *nameClass = [PFUser currentUser][@"class"];
+                NSString *nameSchool = [PFUser currentUser][@"school"];
+                
+                NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
                 PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
                 scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
                 
