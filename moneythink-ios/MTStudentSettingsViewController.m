@@ -138,7 +138,6 @@
     return rows;
 }
 
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
@@ -209,21 +208,32 @@
     return cell;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
-{
-    NSString *titleHeader = self.sections[section];
-    return titleHeader;
-}
-
 
 #pragma mark - UITableViewDelegate methods -
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    if (section == [self.sections count]-1) {
+        return 20.0f;
+    }
+    else {
+        return 44.0f;
+    }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 44.0f)];
+    headerView.backgroundColor = [UIColor clearColor];
     
-    [header.textLabel setTextColor:[UIColor darkGrayColor]];
-    header.textLabel.font = [UIFont mtFontOfSize:13.0f];
-    [header.contentView setBackgroundColor:[UIColor clearColor]];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 14.0f, tableView.frame.size.width-30.0f, 30.0f)];
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.text = self.sections[section];
+    titleLabel.textColor = [UIColor darkGrayColor];
+    titleLabel.font = [UIFont mtFontOfSize:13.0f];
+    
+    [headerView addSubview:titleLabel];
+    
+    return headerView;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
