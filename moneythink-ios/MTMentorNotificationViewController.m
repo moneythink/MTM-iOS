@@ -15,8 +15,6 @@
 
 @interface MTMentorNotificationViewController ()
 
-@property (strong, nonatomic) NSString *notificationType;
-
 @end
 
 @implementation MTMentorNotificationViewController
@@ -60,7 +58,6 @@
             }
         }];
         
-        
         // Custom the table
         
         // The className to query on
@@ -74,6 +71,7 @@
         
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
+        self.loadingViewEnabled = NO;
         
         self.paginationEnabled = NO;
     }
@@ -92,6 +90,13 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.parentViewController.navigationItem.title = @"Notifications";
+    [self loadObjects];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 
@@ -99,51 +104,66 @@
 - (void)objectsDidLoad:(NSError *)error
 {
     [super objectsDidLoad:error];
+    
     // This method is called every time objects are loaded from Parse via the PFQuery
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 - (void)objectsWillLoad
 {
     [super objectsWillLoad];
+    
     // This method is called before a PFQuery is fired to get more objects
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
+    if ([self.objects count] == 0) {
+        hud.labelText = @"Loading...";
+    }
+    else {
+        hud.labelText = @"Refreshing...";
+    }
+    hud.dimBackground = YES;
 }
-
 
 - (PFQuery *)queryForTable
 {
     PFUser *user = [PFUser currentUser];
-    NSString *userID = [user objectId];
     NSString *className = user[@"class"];
     NSString *schoolName = user[@"school"];
 
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
-    [queryMe whereKey:@"class" equalTo:className];
-    [queryMe whereKey:@"school" equalTo:schoolName];
-    
-    [queryMe whereKey:@"read_by" notEqualTo:userID];
-    
     
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryNoOne whereKeyDoesNotExist:@"recipient"];
     [queryNoOne whereKey:@"class" equalTo:className];
     [queryNoOne whereKey:@"school" equalTo:schoolName];
     
-    [queryNoOne whereKey:@"read_by" notEqualTo:userID];
-    
-    
     PFQuery *queryActivated = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryActivated whereKeyExists:@"challenge_activated"];
     [queryActivated whereKey:@"class" equalTo:className];
     [queryActivated whereKey:@"school" equalTo:schoolName];
     
-    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated]];
+    PFQuery *queryClosed = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryClosed whereKeyExists:@"challenge_closed"];
+    [queryClosed whereKey:@"class" equalTo:className];
+    [queryClosed whereKey:@"school" equalTo:schoolName];
+
+    PFQuery *queryCompleted = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryCompleted whereKeyExists:@"challenge_completed"];
+    [queryCompleted whereKey:@"class" equalTo:className];
+    [queryCompleted whereKey:@"school" equalTo:schoolName];
+
+    PFQuery *queryStarted = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryStarted whereKeyExists:@"challenge_started"];
+    [queryStarted whereKey:@"class" equalTo:className];
+    [queryStarted whereKey:@"school" equalTo:schoolName];
+
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated,
+                                                      queryClosed, queryCompleted, queryStarted]];
     
-    // If no objects are loaded in memory, we look to the cache first to fill the table
-    // and then subsequently do a query against the network.
-    if ([self.objects count] == 0) {
-        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
+    // Always pull latest from Network if available
+    query.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [query orderByDescending:@"createdAt"];
     
@@ -183,22 +203,18 @@
     // ****************** - Post
     
     if (notification[@"comment"]) { // ******************
-        self.notificationType = @"post";
         PFChallengePostComment *post = notification[@"comment"];
         cell.message.text = [NSString stringWithFormat:@"Comment: %@", post[@"comment_text"]];
         
     } else if (notification[@"post_liked"]) { // ******************
-        self.notificationType = @"post";
         PFChallengePost *post = notification[@"post_liked"];
         cell.message.text = [NSString stringWithFormat:@"Liked: %@", post[@"post_text"]];
         
     } else if (notification[@"post_verified"]) { // ******************
-        self.notificationType = @"post";
         PFChallengePost *post = notification[@"post_verified"];
         cell.message.text = [NSString stringWithFormat:@"Verified: %@", post[@"post_text"]];
         
     } else if (notification[@"challenge_activated"]) { //<><><><><><><><><><>
-        self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
@@ -212,7 +228,6 @@
             }
         }];
     } else if (notification[@"challenge_closed"]) { //<><><><><><><><><><>
-        self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
@@ -226,7 +241,6 @@
             }
         }];
     } else if (notification[@"challenge_completed"]) { //<><><><><><><><><><>
-        self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
@@ -240,7 +254,6 @@
             }
         }];
     } else if (notification[@"challenge_started"]) { //<><><><><><><><><><>
-        self.notificationType = @"challenge";
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];

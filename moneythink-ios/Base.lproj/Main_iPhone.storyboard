@@ -1884,19 +1884,19 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8S6-cv-1Ch">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8S6-cv-1Ch">
                                             <rect key="frame" x="20" y="15" width="7" height="14"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Challenge Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cE-7p-1sE">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2cE-7p-1sE">
                                             <rect key="frame" x="35" y="15" width="77" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GdN-su-5wf">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GdN-su-5wf">
                                             <rect key="frame" x="276" y="15" width="24" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -3019,10 +3019,10 @@
             </objects>
             <point key="canvasLocation" x="-3412" y="-3928"/>
         </scene>
-        <!--Settings (mentor)-->
+        <!--Settings (Mentor)-->
         <scene sceneID="TZW-hV-z9p">
             <objects>
-                <viewController storyboardIdentifier="mentorSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nX0-MG-KCI" userLabel="Settings (mentor)" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mentorSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nX0-MG-KCI" userLabel="Settings (Mentor)" customClass="MTStudentSettingsViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zq9-8r-dYi"/>
                         <viewControllerLayoutGuide type="bottom" id="eRv-R0-dKq"/>
@@ -3076,10 +3076,10 @@
             </objects>
             <point key="canvasLocation" x="-1851" y="-3432"/>
         </scene>
-        <!--Notifications-->
+        <!--Notifications (Mentor)-->
         <scene sceneID="k3h-4D-LN7">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sjw-tE-ynH" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="sjw-tE-ynH" userLabel="Notifications (Mentor)" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Notifications" image="notifications_active.png" id="LBf-Ek-H3T"/>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="rB0-np-nf1"/>
@@ -3096,10 +3096,10 @@
             </objects>
             <point key="canvasLocation" x="-1851" y="-4918"/>
         </scene>
-        <!--Notifications-->
+        <!--Notifications (Student)-->
         <scene sceneID="qtV-MD-tae">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yfd-S3-zCW" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Yfd-S3-zCW" userLabel="Notifications (Student)" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Notifications" image="notifications_active.png" id="buv-5F-5a7"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="YYS-Tk-BTR">
@@ -3769,10 +3769,10 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="qYv-0w-I0f"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="fGY-fc-BPd"/>
         <segue reference="fM9-bL-F9m"/>
-        <segue reference="Neh-9A-DML"/>
+        <segue reference="fGY-fc-BPd"/>
+        <segue reference="kgD-Kv-M6F"/>
+        <segue reference="Pqy-YU-1Il"/>
         <segue reference="Gdm-gL-5Rd"/>
         <segue reference="NwG-bn-vTI"/>
         <segue reference="Dm1-SI-6eC"/>

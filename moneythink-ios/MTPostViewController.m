@@ -64,9 +64,6 @@ typedef enum {
     self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     self.iLike = [self.postsLiked containsObject:postID];
- 
-    [self loadPostText];
-    [self loadChallengePost];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -98,6 +95,9 @@ typedef enum {
     
     [self loadComments];
     [self updateButtonsTapped];
+    
+    [self loadPostText];
+    [self loadChallengePost];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -467,26 +467,44 @@ typedef enum {
     NSString *postID = [self.challengePost objectId];
     NSString *verifiedBy = [self.currentUser objectId];
     
-    if (likeCommentCell.verifiedCheckBox.isChecked) {
+    BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
+
+    if (isChecked) {
         verifiedBy = @"";
     }
     
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (isChecked) {
+        hud.labelText = @"Removing Verification...";
+    }
+    else {
+        hud.labelText = @"Verifying...";
+    }
+    hud.dimBackground = YES;
+    
     MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-        if (error) {
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-
-        } else {
-            [weakSelf.currentUser refresh];
-            [weakSelf.challenge refresh];
-            [weakSelf.challengePost refresh];
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+            
+            if (error) {
+                NSLog(@"error - %@", error);
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                
+            } else {
+                [weakSelf.currentUser refresh];
+                [weakSelf.challenge refresh];
+                [weakSelf.challengePost refresh];
+                
+                [likeCommentCell.verifiedCheckBox setIsChecked:!isChecked];
+            }
             
             [weakSelf.tableView reloadData];
-        }
-    }];
-    
-    likeCommentCell.verifiedCheckBox.isChecked = !likeCommentCell.verifiedCheckBox.isChecked;
+        }];
+        
+    } afterDelay:0.35f];
 }
 
 - (IBAction)button1Tapped:(id)sender
@@ -1034,7 +1052,8 @@ typedef enum {
             
             likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
-            likeCommentCell.verifiedCheckBox.isChecked = self.challengePost[@"verified_by"] != nil;
+            BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
+            [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
 
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];

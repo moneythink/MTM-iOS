@@ -7,7 +7,6 @@
 //
 
 #import "MTMentorTabBarViewControlle.h"
-#import "MTNotificationsViewController.h"
 #import "MTMentorStudentProgressViewController.h"
 #import "MTMentorChallengeRoomViewController.h"
 #import "MTStudentSettingsViewController.h"

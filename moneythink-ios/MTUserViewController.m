@@ -22,6 +22,7 @@
 @property (strong, nonatomic) IBOutletCollection(UIView) NSArray *separatorViews;
 
 @property (strong, nonatomic) MTSignUpViewController *signUpViewController;
+@property (nonatomic) BOOL showedMessage;
 
 @end
 
@@ -69,8 +70,11 @@
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self updateView];
+    self.showedMessage = NO;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetBecameReachable:) name:kInternetDidBecomeReachableNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDismiss:) name:UIKeyboardWillHideNotification object:nil];
     
     [[MTUtil getAppDelegate] setDefaultNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
@@ -300,6 +304,29 @@
 - (void)internetBecameReachable:(NSNotification *)aNotification
 {
     [self updateView];
+}
+
+
+#pragma mark - Keyboard methods -
+- (void)keyboardWillShow:(NSNotification *)nsNotification
+{
+    if (!self.showedMessage) {
+        self.showedMessage = YES;
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.detailsLabelText = @"Swipe down or tap MoneyThink logo to dismiss keyboard.";
+        hud.mode = MBProgressHUDModeText;
+        hud.yOffset = 30.0f;
+        
+        [self bk_performBlock:^(id obj) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+        } afterDelay:2.0f];
+    }
+}
+
+- (void)keyboardWillDismiss:(NSNotification *)notification
+{
+    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
 }
 
 

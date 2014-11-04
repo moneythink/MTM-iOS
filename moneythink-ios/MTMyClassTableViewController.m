@@ -91,6 +91,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         NSInteger challengNumber = [self.challengeNumber intValue];
         NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
+        
+        [challengeQuery includeKey:@"verified_by"];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
         
@@ -198,6 +200,7 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 
     PFChallengePost *newPost = notif.object;
     [self.myObjects insertObject:newPost atIndex:0];
+    
     [self.tableView reloadData];
 }
 
@@ -231,6 +234,14 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.myObjects count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    // Override to use self.myObjects in below method.  Otherwise, crashes because
+    //  the PFQueryTableViewController gets called and can't find the object when
+    //  adding a new item.
+    return [self tableView:tableView cellForRowAtIndexPath:indexPath object:nil];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
