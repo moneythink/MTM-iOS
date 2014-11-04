@@ -1992,8 +1992,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenge Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT3-dc-YCB">
-                                <rect key="frame" x="123" y="4" width="117" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenge Status" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KT3-dc-YCB">
+                                <rect key="frame" x="123" y="4" width="160" height="21"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <bool key="isElement" value="NO"/>
                                 </accessibility>
@@ -2007,7 +2007,7 @@
                                     <bool key="isElement" value="YES"/>
                                 </accessibility>
                             </imageView>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bjq-xx-n8M">
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Bjq-xx-n8M" userLabel="Right Panel View">
                                 <rect key="frame" x="20" y="37" width="280" height="160"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenge points" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Gwf-vh-1uf">
@@ -2037,7 +2037,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <view alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0qE-Zm-YyP">
+                                    <view alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0qE-Zm-YyP" userLabel="Left Panel View">
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="160"/>
                                         <subviews>
                                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Qv-kj-lsk">
@@ -2050,6 +2050,10 @@
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XPH-fa-DMW" userLabel="Separator View">
+                                        <rect key="frame" x="50" y="0.0" width="1" height="160"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -2067,12 +2071,13 @@
                         <outlet property="challengeTitle" destination="xpg-Kc-3Xd" id="H2y-Iz-egV"/>
                         <outlet property="leftPanel" destination="0qE-Zm-YyP" id="zjN-j3-LmK"/>
                         <outlet property="rightPanel" destination="Bjq-xx-n8M" id="aak-sg-fng"/>
+                        <outlet property="separatorView" destination="XPH-fa-DMW" id="vav-VD-x5K"/>
                         <segue destination="Xun-AN-0nR" kind="push" identifier="studentChallengeRoom" id="bBt-L6-ONO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bVh-SA-DSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-842" y="-3208"/>
+            <point key="canvasLocation" x="-922" y="-3263"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="P9H-Sj-CNa">
@@ -3785,11 +3790,11 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     <inferredMetricsTieBreakers>
         <segue reference="qYv-0w-I0f"/>
         <segue reference="fM9-bL-F9m"/>
-        <segue reference="fGY-fc-BPd"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="Pqy-YU-1Il"/>
+        <segue reference="Neh-9A-DML"/>
         <segue reference="Gdm-gL-5Rd"/>
         <segue reference="NwG-bn-vTI"/>
+        <segue reference="fGY-fc-BPd"/>
+        <segue reference="kgD-Kv-M6F"/>
         <segue reference="Dm1-SI-6eC"/>
         <segue reference="a3W-fR-2k0"/>
     </inferredMetricsTieBreakers>
