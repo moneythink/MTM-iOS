@@ -34,7 +34,10 @@
     // Do any additional setup after loading the view.
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)viewWillAppear:(BOOL)animated {
+    
+    [super viewWillAppear:animated];
+    
     NSString *userSchool = [PFUser currentUser][@"school"];
     NSString *userClass = [PFUser currentUser][@"class"];
     
@@ -45,44 +48,53 @@
     
     [queryActivations orderByAscending:@"challenge_number"];
     
-    queryActivations.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    queryActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
 
-    [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
-        if (!error) {
-            self.availableChallenges = availableObjects;
-            [self.tableView reloadData];
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
     
-    
-    PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
-    [queryFuture whereKey:@"activated" equalTo:@NO];
-    [queryFuture whereKey:@"school" equalTo:userSchool];
-    [queryFuture whereKey:@"class" equalTo:userClass];
-    
-    [queryFuture orderByAscending:@"challenge_number"];
-    
-    queryFuture.cachePolicy = kPFCachePolicyCacheThenNetwork;
-
-    [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
-        if (!error) {
-            self.futureChallenges = scheduledObjects;
-            [self.tableView reloadData];
-        } else {
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
             
-        }
-    }];
+            if (!error) {
+                weakSelf.availableChallenges = availableObjects;
+                [weakSelf.tableView reloadData];
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
+        
+        PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
+        [queryFuture whereKey:@"activated" equalTo:@NO];
+        [queryFuture whereKey:@"school" equalTo:userSchool];
+        [queryFuture whereKey:@"class" equalTo:userClass];
+        
+        [queryFuture orderByAscending:@"challenge_number"];
+        
+        queryFuture.cachePolicy = kPFCachePolicyNetworkElseCache;
+        
+        [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+            
+            if (!error) {
+                weakSelf.futureChallenges = scheduledObjects;
+                [weakSelf.tableView reloadData];
+            } else {
+                
+            }
+        }];
+    } afterDelay:0.35f];
 }
 
-- (void)didReceiveMemoryWarning
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     NSInteger sections = 0;
     
     if (self.futureChallenges.count > 0) {
@@ -96,7 +108,8 @@
     return sections;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
     NSInteger rows = 0;
     
     NSInteger available = self.availableChallenges.count;
@@ -121,7 +134,8 @@
     return rows;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
     NSString *title = @"";
 
     NSInteger available = self.availableChallenges.count;
@@ -146,14 +160,16 @@
     return title;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section {
+- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+{
     UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
     
     [header.textLabel setTextColor:[UIColor blackColor]];
     [header.contentView setBackgroundColor:[UIColor mutedOrange]];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     NSString *CellIdentifier = @"activationCell";
     
     MTActivationTableViewCell *cell = (MTActivationTableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -217,10 +233,10 @@
 
 
 #pragma mark - Table view delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
+
 
 @end
