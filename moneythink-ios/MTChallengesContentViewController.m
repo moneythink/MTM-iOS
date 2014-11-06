@@ -75,6 +75,8 @@
 
     // Pull challenge info
     if (!self.queriedForOpenness) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Refreshing Challenge...";
         hud.dimBackground = YES;

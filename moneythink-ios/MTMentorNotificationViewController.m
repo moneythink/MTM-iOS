@@ -15,6 +15,8 @@
 
 @interface MTMentorNotificationViewController ()
 
+@property (nonatomic, strong) UIView *noNotificationsView;
+
 @end
 
 @implementation MTMentorNotificationViewController
@@ -84,6 +86,17 @@
     // Do any additional setup after loading the view.
     
     self.navigationItem.title = self.title;
+    
+    // Add a no notifications view
+    self.noNotificationsView = [[UIView alloc] initWithFrame:self.tableView.frame];
+    self.noNotificationsView.backgroundColor = [UIColor whiteColor];
+    UILabel *noNotificationsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 20.0f, self.view.frame.size.width, 44.0f)];
+    noNotificationsLabel.backgroundColor = [UIColor clearColor];
+    noNotificationsLabel.text = @"No Notifications";
+    noNotificationsLabel.font = [UIFont mtFontOfSize:18.0f];
+    noNotificationsLabel.textAlignment = NSTextAlignmentCenter;
+    [self.noNotificationsView addSubview:noNotificationsLabel];
+    [self.view addSubview:self.noNotificationsView];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -107,6 +120,15 @@
     
     // This method is called every time objects are loaded from Parse via the PFQuery
     [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    
+    if (!IsEmpty(self.objects)) {
+        self.noNotificationsView.alpha = 0.0f;
+        [self.view bringSubviewToFront:self.tableView];
+    }
+    else {
+        self.noNotificationsView.alpha = 1.0f;
+        [self.view bringSubviewToFront:self.noNotificationsView];
+    }
 }
 
 - (void)objectsWillLoad
@@ -161,7 +183,7 @@
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated,
                                                       queryClosed, queryCompleted, queryStarted]];
-    
+
     // Always pull latest from Network if available
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
     

@@ -60,6 +60,8 @@
     [userClassQuery whereKey:@"school" equalTo:userSchool];
     userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
     
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     if (self.userChangedClass) {
         self.userChangedClass = NO;

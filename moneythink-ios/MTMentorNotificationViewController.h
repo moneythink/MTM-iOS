@@ -11,7 +11,6 @@
 @interface MTMentorNotificationViewController : PFQueryTableViewController
 
 @property (nonatomic, strong) NSArray *classNotifications;
-@property (strong, nonatomic) IBOutlet UITableView *notificationsTableView;
 
 
 @end
