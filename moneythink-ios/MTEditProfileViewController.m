@@ -674,15 +674,25 @@
 
 
 #pragma mark - Get and save image
-
 - (void)saveProfileChanges
 {
+    BOOL newClass = NO;
+    if (self.classIsNew || ![self.userCurrent[@"class"] isEqualToString:self.userClassName.text]) {
+        newClass = YES;
+    }
+
     if (self.userClassName.text) {
         self.userCurrent[@"class"] = self.userClassName.text;
     }
     
-    if (self.firstName.text) {
+    if (self.userSchool.text) {
         self.userCurrent[@"school"] = self.userSchool.text;
+    }
+    
+    if (newClass) {
+        // Check for custom playlist for this class
+        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:YES];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kUserDidChangeClass object:nil];
     }
     
     if (self.firstName.text) {
@@ -707,6 +717,7 @@
         createSchool[@"name"] = self.userSchool.text;
         [createSchool saveInBackground];
     }
+    
     
     if (self.classIsNew) {
         PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];

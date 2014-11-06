@@ -14,4 +14,10 @@
 + (BOOL)internetReachable;
 + (id)getAppDelegate;
 
++ (BOOL)displayingCustomPlaylist;
++ (void)setDisplayingCustomPlaylist:(BOOL)diplayingCustomPlaylist;
+
++ (NSInteger)orderingForChallengeObjectId:(NSString *)objectId;
++ (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId;
+
 @end

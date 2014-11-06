@@ -37,71 +37,49 @@
     [super viewDidLoad];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:NO];
-}
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:NO];
-
-    NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
-    
+    NSInteger challengeNumber = [self.challenge[@"challenge_number"] intValue];
+    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d AND picture != nil", challengeNumber];
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-    
+
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
     
     query.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
+    MTMakeWeakSelf();
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.posts = objects;
+            weakSelf.posts = objects;
             
-            NSArray *buttons = self.challenge[@"buttons"];
-            self.hasButtons = buttons.count;
+            NSArray *buttons = weakSelf.challenge[@"buttons"];
+            weakSelf.hasButtons = buttons.count;
             
-            [self.exploreCollectionView reloadData];
+            [weakSelf.exploreCollectionView reloadData];
         } else {
+            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
         }
     }];
 }
 
-- (void)didReceiveMemoryWarning
+- (void)objectsWillLoad
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    
 }
 
-- (PFQuery *)queryForCollection
+- (void)objectsDidLoad:(NSError *)error
 {
-    NSInteger challengNumber = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d",
-                                             challengNumber];
-    
-    PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-    
-    [query includeKey:@"user"];
-    [query includeKey:@"reference_post"];
-    
-//    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
-    return query;
-}
-
-
-- (void)objectsWillLoad {
     
 }
 
-- (void)objectsDidLoad:(NSError *)error {
-    
-}
 
-# pragma mark - Collection View data source
-
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
+# pragma mark - Collection View data source -
+- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+{
     NSInteger itemCount = self.posts.count;
     
     return itemCount;
@@ -218,7 +196,8 @@
 }
 
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     
     PFChallengePost *rowObject = self.posts[indexPath.row];
@@ -227,8 +206,8 @@
     [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
 }
 
-#pragma mark - Navigation
 
+#pragma mark - Navigation -
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -256,5 +235,6 @@
         
     }
 }
+
 
 @end

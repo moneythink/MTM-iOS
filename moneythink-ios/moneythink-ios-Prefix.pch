@@ -16,6 +16,7 @@
 #define MTMakeStrongSelf() __typeof__(self) strongSelf = weakSelf
 
 #define kInternetDidBecomeReachableNotification @"kInternetDidBecomeReachableNotification"
+#define kUserDidChangeClass @"kUserDidChangeClass"
 
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
@@ -46,7 +47,10 @@
 #import "PFChallengePostComment.h"
 #import "PFChallenges.h"
 #import "PFChallengesActivated.h"
+#import "PFCustomChallenges.h"
 #import "PFNotifications.h"
+#import "PFPlaylist.h"
+#import "PFPlaylistChallenges.h"
 #import "PFScheduledActivations.h"
 #import "PFSchools.h"
 #import "PFSignupCodes.h"

@@ -249,5 +249,109 @@
     [currentInstallation saveInBackground];
 }
 
+- (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
+{
+    // Default to no custom playlist
+    [MTUtil setDisplayingCustomPlaylist:YES];
+
+    // Only need to do this if we have custom playlists
+    NSString *userClass = [PFUser currentUser][@"class"];
+    NSString *userSchool = [PFUser currentUser][@"school"];
+    
+    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFClasses parseClassName]];
+    [userClassQuery whereKey:@"name" equalTo:userClass];
+    [userClassQuery whereKey:@"school" equalTo:userSchool];
+    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    [MTUtil setDisplayingCustomPlaylist:NO];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (refresh) {
+        hud.labelText = @"Refreshing Content...";
+    }
+    else {
+        hud.labelText = @"Loading Content...";
+    }
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                if (!IsEmpty(objects)) {
+                    PFClasses *userClass = [objects firstObject];
+                    NSLog(@"%@", userClass);
+                    
+                    // Next, determine if this class has custom challenges
+                    __block PFQuery *customPlaylist = [PFQuery queryWithClassName:[PFPlaylist parseClassName]];
+                    [customPlaylist whereKey:@"class" equalTo:userClass];
+                    customPlaylist.cachePolicy = kPFCachePolicyNetworkElseCache;
+                    
+                    [customPlaylist findObjectsInBackgroundWithBlock:^(NSArray *playlistObjects, NSError *error) {
+                        if (!error) {
+                            if (!IsEmpty(playlistObjects)) {
+                                // Pre-load the content
+                                [MTUtil setDisplayingCustomPlaylist:YES];
+                                [weakSelf loadCustomChallengesForPlaylist:[playlistObjects firstObject]];
+                            }
+                            else {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                });
+                            }
+                        }
+                        else {
+                            NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                            });
+                        }
+                    }];
+                }
+                else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    });
+                }
+            }
+            else {
+                NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+            }
+        }];
+    } afterDelay:0.35f];
+}
+
+
+#pragma mark - Private Methods -
+- (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
+{
+    [MTUtil setDisplayingCustomPlaylist:YES];
+    
+    PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
+    [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
+    [allCustomChallenges orderByAscending:@"ordering"];
+    [allCustomChallenges includeKey:@"challenge"];
+    
+    [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+        
+        if (!error) {
+            for (PFPlaylistChallenges *thisPlaylistChallenge in objects) {
+                PFCustomChallenges *thisChallenge = thisPlaylistChallenge[@"challenge"];
+                NSInteger ordering = [thisPlaylistChallenge[@"ordering"] integerValue];
+                [MTUtil setOrdering:ordering forChallengeObjectId:thisChallenge.objectId];
+            }
+        }
+        else {
+            NSLog(@"Unable to load custom challenges");
+        }
+    }];
+}
+
 
 @end

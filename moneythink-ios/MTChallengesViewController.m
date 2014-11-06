@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) MTChallengesContentViewController *viewControllerBefore;
 @property (strong, nonatomic) MTChallengesContentViewController *viewControllerAfter;
+@property (nonatomic) BOOL userChangedClass;
 
 @end
 
@@ -32,37 +33,189 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidChangeClass:) name:kUserDidChangeClass object:nil];
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    if (IsEmpty(self.challenges)) {
+        [self loadChallenges];
+    }
+}
+
+
+#pragma mark - Private -
+- (void)loadChallenges
+{
+    self.pageViewController.view.alpha = 0.0f;
+
+    NSString *userClass = [PFUser currentUser][@"class"];
+    NSString *userSchool = [PFUser currentUser][@"school"];
+    
+    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFClasses parseClassName]];
+    [userClassQuery whereKey:@"name" equalTo:userClass];
+    [userClassQuery whereKey:@"school" equalTo:userSchool];
+    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (self.userChangedClass) {
+        self.userChangedClass = NO;
+        hud.labelText = @"Updating Challenges...";
+    }
+    else {
+        hud.labelText = @"Loading Challenges...";
+    }
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                if (!IsEmpty(objects)) {
+                    PFClasses *userClass = [objects firstObject];
+                    NSLog(@"%@", userClass);
+                    
+                    // Next, determine if this class has custom challenges
+                    PFQuery *customPlaylist = [PFQuery queryWithClassName:[PFPlaylist parseClassName]];
+                    [customPlaylist whereKey:@"class" equalTo:userClass];
+                    customPlaylist.cachePolicy = kPFCachePolicyNetworkElseCache;
+                    
+                    [customPlaylist findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+                        if (!error) {
+                            if (!IsEmpty(objects)) {
+                                // Assume we're on custom playlist for this class
+                                [weakSelf loadCustomChallengesForPlaylist:[objects firstObject]];
+                            }
+                            else {
+                                [weakSelf loadDefaultChallenges];
+                            }
+                        }
+                        else {
+                            NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
+                            [weakSelf loadDefaultChallenges];
+                        }
+                    }];
+                    
+                }
+                else {
+                    [weakSelf loadDefaultChallenges];
+                }
+            }
+            else {
+                NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
+                [weakSelf loadDefaultChallenges];
+            }
+        }];
+    } afterDelay:0.35f];
+}
+
+- (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
+{
+    [MTUtil setDisplayingCustomPlaylist:YES];
+    
+    PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
+    [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
+    [allCustomChallenges orderByAscending:@"ordering"];
+    [allCustomChallenges includeKey:@"challenge"];
+
+    MTMakeWeakSelf();
+    [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+        
+        if (!error) {
+            NSMutableArray *customChallenges = [NSMutableArray arrayWithCapacity:[objects count]];
+            for (PFPlaylistChallenges *thisPlaylistChallenge in objects) {
+                PFCustomChallenges *thisChallenge = thisPlaylistChallenge[@"challenge"];
+                
+                NSInteger ordering = [thisPlaylistChallenge[@"ordering"] integerValue];
+                [MTUtil setOrdering:ordering forChallengeObjectId:thisChallenge.objectId];
+                [customChallenges addObject:thisChallenge];
+            }
+            
+            weakSelf.challenges = [NSArray arrayWithArray:customChallenges];
+            
+            // Create page view controller
+            if (!weakSelf.pageViewController) {
+                weakSelf.pageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                CGRect frame = weakSelf.pageViewController.view.frame;
+                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+                weakSelf.pageViewController.view.frame = frame;
+                weakSelf.pageViewController.dataSource = weakSelf;
+                weakSelf.pageViewController.delegate = weakSelf;
+                
+                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                NSArray *viewControllers = @[startingViewController];
+                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                
+                [weakSelf addChildViewController:weakSelf.pageViewController];
+                [weakSelf.view addSubview:weakSelf.pageViewController.view];
+                [weakSelf.pageViewController didMoveToParentViewController:weakSelf];
+            }
+            else {
+                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                NSArray *viewControllers = @[startingViewController];
+                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            }
+            
+            [UIView animateWithDuration:0.2f animations:^{
+                weakSelf.pageViewController.view.alpha = 1.0f;
+            }];
+        }
+        else {
+            NSLog(@"Unable to load custom challenges");
+        }
+    }];
+}
+
+- (void)loadDefaultChallenges
+{
+    [MTUtil setDisplayingCustomPlaylist:NO];
+    
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challenge_number"];
     [allChallenges whereKeyDoesNotExist:@"school"];
     [allChallenges whereKeyDoesNotExist:@"class"];
-
-//    allChallenges.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
+    
+    MTMakeWeakSelf();
     [allChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+
         if (!error) {
-            self.challenges = objects;
+            weakSelf.challenges = objects;
             
             // Create page view controller
-            self.pageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-            CGRect frame = self.pageViewController.view.frame;
-            frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
-            self.pageViewController.view.frame = frame;
-            self.pageViewController.dataSource = self;
-            self.pageViewController.delegate = self;
+            if (!weakSelf.pageViewController) {
+                weakSelf.pageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                CGRect frame = weakSelf.pageViewController.view.frame;
+                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+                weakSelf.pageViewController.view.frame = frame;
+                weakSelf.pageViewController.dataSource = weakSelf;
+                weakSelf.pageViewController.delegate = weakSelf;
+                
+                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                NSArray *viewControllers = @[startingViewController];
+                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                
+                [weakSelf addChildViewController:weakSelf.pageViewController];
+                [weakSelf.view addSubview:weakSelf.pageViewController.view];
+                [weakSelf.pageViewController didMoveToParentViewController:weakSelf];
+            }
+            else {
+                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                NSArray *viewControllers = @[startingViewController];
+                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            }
             
-            MTChallengesContentViewController *startingViewController = [self viewControllerAtIndex:0];
-            
-            NSArray *viewControllers = @[startingViewController];
-            
-            [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-            
-            [self addChildViewController:self.pageViewController];
-            [self.view addSubview:self.pageViewController.view];
-            [self.pageViewController didMoveToParentViewController:self];
-            
+            [UIView animateWithDuration:0.2f animations:^{
+                weakSelf.pageViewController.view.alpha = 1.0f;
+            }];
         }
     }];
 }
@@ -83,7 +236,20 @@
     
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
-    challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
+    
+    if ([MTUtil displayingCustomPlaylist]) {
+        NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
+        if (ordering != -1) {
+            challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", ordering];
+        }
+        else {
+            challengeContentViewController.challengeNumberText = @"";
+        }
+    }
+    else {
+        challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
+    }
+    
     challengeContentViewController.challengeDescriptionText = challenge[@"student_instructions"];
     challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     
@@ -144,18 +310,17 @@
 
 
 #pragma mark - Navigation
-/*
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
- {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
- */
-
 - (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
 {
-    
 }
+
+
+#pragma mark - Notifications -
+- (void)userDidChangeClass:(NSNotification *)notif
+{
+    self.userChangedClass = YES;
+    self.challenges = nil;
+}
+
 
 @end

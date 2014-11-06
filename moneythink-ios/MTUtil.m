@@ -24,5 +24,33 @@
     return [UIApplication sharedApplication].delegate;
 }
 
++ (BOOL)displayingCustomPlaylist
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"DisplayingCustomPlaylist"];
+}
+
++ (void)setDisplayingCustomPlaylist:(BOOL)diplayingCustomPlaylist
+{
+    [[NSUserDefaults standardUserDefaults] setBool:diplayingCustomPlaylist forKey:@"DisplayingCustomPlaylist"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (NSInteger)orderingForChallengeObjectId:(NSString *)objectId
+{
+    NSNumber *ordering = [[NSUserDefaults standardUserDefaults] objectForKey:objectId];
+    if (ordering) {
+        return [ordering integerValue];
+    }
+    else {
+        return -1;
+    }
+}
+
++ (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:ordering] forKey:objectId];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 @end

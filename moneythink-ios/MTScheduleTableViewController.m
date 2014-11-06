@@ -46,7 +46,7 @@
     [queryActivations whereKey:@"school" equalTo:userSchool];
     [queryActivations whereKey:@"class" equalTo:userClass];
     
-    [queryActivations orderByAscending:@"challenge_number"];
+    [queryActivations orderByAscending:@"activation_date"];
     
     queryActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
 
@@ -74,7 +74,7 @@
         [queryFuture whereKey:@"school" equalTo:userSchool];
         [queryFuture whereKey:@"class" equalTo:userClass];
         
-        [queryFuture orderByAscending:@"challenge_number"];
+        [queryFuture orderByAscending:@"activation_date"];
         
         queryFuture.cachePolicy = kPFCachePolicyNetworkElseCache;
         
@@ -217,7 +217,20 @@
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            cell.challengeNumber.text = [challengeNumber stringValue];
+            
+            if ([MTUtil displayingCustomPlaylist]) {
+                NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
+                if (ordering != -1) {
+                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu", ordering];
+                }
+                else {
+                    cell.challengeNumber.text = @"";
+                }
+            }
+            else {
+                cell.challengeNumber.text = [challengeNumber stringValue];
+            }
+            
             cell.challengeTitle.text = challenge[@"title"];
             NSDate *activationDate = activation[@"activation_date"];
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];

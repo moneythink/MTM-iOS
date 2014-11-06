@@ -72,7 +72,6 @@
 		5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */; };
 		5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */; };
 		5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5890F7461976DDAF0042AC2F /* UIColor+Palette.m */; };
-		58A3568C1980CD520018FC61 /* MTExploreChallengeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */; };
 		58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */; };
 		58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */; };
 		58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */; };
@@ -185,6 +184,9 @@
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
 		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
+		89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */; };
+		89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */; };
+		89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E51A09638400F02CC7 /* PFCustomChallenges.m */; };
 		89FFFC7A19D9C1B200DD3716 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7819D9C1B200DD3716 /* Bolts.framework */; };
 		89FFFC7B19D9C1B200DD3716 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FFFC7919D9C1B200DD3716 /* Parse.framework */; };
 		89FFFC8819D9EDCF00DD3716 /* checkbox_not_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89FFFC7E19D9EDCF00DD3716 /* checkbox_not_ticked.png */; };
@@ -317,8 +319,6 @@
 		5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassTableViewController.m; sourceTree = "<group>"; };
 		5890F7451976DDAF0042AC2F /* UIColor+Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIColor+Palette.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5890F7461976DDAF0042AC2F /* UIColor+Palette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIColor+Palette.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		58A3568A1980CD520018FC61 /* MTExploreChallengeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreChallengeViewController.h; sourceTree = "<group>"; };
-		58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExploreChallengeViewController.m; sourceTree = "<group>"; };
 		58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMyClassChallengePostsViewController.h; sourceTree = "<group>"; };
 		58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassChallengePostsViewController.m; sourceTree = "<group>"; };
 		58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeInfoViewController.h; sourceTree = "<group>"; };
@@ -498,6 +498,12 @@
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		89E56D281A0448A300C187C9 /* login-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header.png"; sourceTree = "<group>"; };
 		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
+		89F250DE1A09629000F02CC7 /* PFPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylist.h; path = "Data Classes/PFPlaylist.h"; sourceTree = "<group>"; };
+		89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylist.m; path = "Data Classes/PFPlaylist.m"; sourceTree = "<group>"; };
+		89F250E11A0962E300F02CC7 /* PFPlaylistChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylistChallenges.h; path = "Data Classes/PFPlaylistChallenges.h"; sourceTree = "<group>"; };
+		89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylistChallenges.m; path = "Data Classes/PFPlaylistChallenges.m"; sourceTree = "<group>"; };
+		89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCustomChallenges.h; path = "Data Classes/PFCustomChallenges.h"; sourceTree = "<group>"; };
+		89F250E51A09638400F02CC7 /* PFCustomChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCustomChallenges.m; path = "Data Classes/PFCustomChallenges.m"; sourceTree = "<group>"; };
 		89FFFC7819D9C1B200DD3716 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		89FFFC7919D9C1B200DD3716 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		89FFFC7E19D9EDCF00DD3716 /* checkbox_not_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkbox_not_ticked.png; sourceTree = "<group>"; };
@@ -560,8 +566,14 @@
 				58669F4F19772D00009BC13C /* PFChallengesActivated.m */,
 				58669F5019772D00009BC13C /* PFClasses.h */,
 				58669F5119772D00009BC13C /* PFClasses.m */,
+				89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */,
+				89F250E51A09638400F02CC7 /* PFCustomChallenges.m */,
 				58669F5419772D00009BC13C /* PFNotifications.h */,
 				58669F5519772D00009BC13C /* PFNotifications.m */,
+				89F250DE1A09629000F02CC7 /* PFPlaylist.h */,
+				89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */,
+				89F250E11A0962E300F02CC7 /* PFPlaylistChallenges.h */,
+				89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */,
 				58669F5619772D00009BC13C /* PFScheduledActivations.h */,
 				58669F5719772D00009BC13C /* PFScheduledActivations.m */,
 				58669F5819772D00009BC13C /* PFSchools.h */,
@@ -595,8 +607,6 @@
 				58509437197C068000EDC969 /* MTCommentViewController.m */,
 				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
 				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
-				58A3568A1980CD520018FC61 /* MTExploreChallengeViewController.h */,
-				58A3568B1980CD520018FC61 /* MTExploreChallengeViewController.m */,
 				585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */,
 				585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */,
 				5869D458199446D20037B517 /* MTExplorePostCollectionView.h */,
@@ -1212,6 +1222,7 @@
 				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
 				580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */,
+				89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */,
 				8901D8A419FAB39F006E9168 /* MTPostCommentTableViewCell.m in Sources */,
 				58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */,
 				5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */,
@@ -1223,6 +1234,7 @@
 				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
+				89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */,
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
 				89FFFC8C19D9EDCF00DD3716 /* MICheckBox.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
@@ -1234,6 +1246,7 @@
 				58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */,
 				58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */,
 				5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */,
+				89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */,
 				89FFFC8F19D9EDCF00DD3716 /* Reachability.m in Sources */,
 				5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
@@ -1244,7 +1257,6 @@
 				585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */,
 				58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */,
 				58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */,
-				58A3568C1980CD520018FC61 /* MTExploreChallengeViewController.m in Sources */,
 				5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */,
 				58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,

@@ -466,6 +466,9 @@
                                         // Update for Push Notifications
                                         [[MTUtil getAppDelegate] updateParseInstallationState];
                                         
+                                        // Check for custom playlist for this class
+                                        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+                                        
                                         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                                             [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
                                         } else {
