@@ -31,4 +31,13 @@
     // Configure the view for the selected state
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.userName.text = nil;
+    self.message.text = nil;
+    self.agePosted.text = nil;
+}
+
 @end

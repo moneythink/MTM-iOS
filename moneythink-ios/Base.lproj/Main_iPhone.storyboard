@@ -3485,12 +3485,13 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <scene sceneID="oAQ-3o-3mK">
             <objects>
                 <tableViewController storyboardIdentifier="mentorNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="rcd-Rs-SfS" userLabel="Mentor Notification (mentor)" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="58" sectionHeaderHeight="22" sectionFooterHeight="22" id="scz-Qt-cte">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" id="scz-Qt-cte">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="notificationCellView" rowHeight="60" id="sew-EW-JOh" customClass="MTNotificationTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="notificationCellView" rowHeight="85" id="sew-EW-JOh" customClass="MTNotificationTableViewCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sew-EW-JOh" id="5Du-O6-Oc3">
@@ -3498,38 +3499,44 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qBv-GO-boZ">
-                                            <rect key="frame" x="10" y="10" width="63" height="15"/>
+                                            <rect key="frame" x="10" y="10" width="300" height="14.5"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="15" id="pzO-AQ-WnM"/>
+                                                <constraint firstAttribute="height" relation="lessThanOrEqual" constant="15" id="pzO-AQ-WnM"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug1-6U-C1S">
-                                            <rect key="frame" x="10" y="33" width="300" height="15"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ODO-o7-2nO">
+                                            <rect key="frame" x="10" y="29" width="300" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ODO-o7-2nO">
-                                            <rect key="frame" x="81" y="10" width="229" height="15"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug1-6U-C1S">
+                                            <rect key="frame" x="10" y="64" width="300" height="15"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="15" id="6yt-ZB-9gb"/>
+                                                <constraint firstAttribute="height" constant="15" id="cqJ-bm-Lat"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="ODO-o7-2nO" secondAttribute="trailing" constant="10" id="1a2-9d-C1W"/>
-                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="top" secondItem="5Du-O6-Oc3" secondAttribute="top" constant="10" id="2dq-3C-Zuf"/>
-                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="leading" secondItem="qBv-GO-boZ" secondAttribute="trailing" constant="8" id="9FI-1I-kDn"/>
+                                        <constraint firstItem="ug1-6U-C1S" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="4Oy-Bo-rEi"/>
+                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="670-JQ-QGV"/>
+                                        <constraint firstItem="ODO-o7-2nO" firstAttribute="top" secondItem="qBv-GO-boZ" secondAttribute="bottom" constant="5" id="HQj-c7-jcL"/>
                                         <constraint firstItem="qBv-GO-boZ" firstAttribute="top" secondItem="5Du-O6-Oc3" secondAttribute="top" constant="10" id="HQt-eH-kFK"/>
+                                        <constraint firstAttribute="bottom" secondItem="ug1-6U-C1S" secondAttribute="bottom" constant="6" id="JmS-69-Ncy"/>
+                                        <constraint firstAttribute="trailing" secondItem="qBv-GO-boZ" secondAttribute="trailing" constant="10" id="TOE-f1-dJt"/>
+                                        <constraint firstAttribute="trailing" secondItem="ug1-6U-C1S" secondAttribute="trailing" constant="10" id="Tex-Tu-kIj"/>
+                                        <constraint firstItem="ug1-6U-C1S" firstAttribute="top" secondItem="ODO-o7-2nO" secondAttribute="bottom" constant="5" id="XLY-Mo-9cb"/>
                                         <constraint firstItem="qBv-GO-boZ" firstAttribute="leading" secondItem="5Du-O6-Oc3" secondAttribute="leading" constant="10" id="xUd-bu-kWY"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="agePosted" destination="ug1-6U-C1S" id="0uU-0U-EUm"/>
                                     <outlet property="message" destination="ODO-o7-2nO" id="BKd-Bl-C87"/>
@@ -3552,12 +3559,13 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <scene sceneID="wc5-yf-oBB">
             <objects>
                 <tableViewController storyboardIdentifier="studentNotifications" useStoryboardIdentifierAsRestorationIdentifier="YES" id="JWJ-Ic-LWx" userLabel="Mentor Notification (student)" customClass="MTMentorNotificationViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="58" sectionHeaderHeight="22" sectionFooterHeight="22" id="ECf-tx-p3l">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="85" sectionHeaderHeight="22" sectionFooterHeight="22" id="ECf-tx-p3l">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="notificationCellView" rowHeight="60" id="3yh-J6-RwR" customClass="MTNotificationTableViewCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" shouldIndentWhileEditing="NO" reuseIdentifier="notificationCellView" rowHeight="85" id="3yh-J6-RwR" customClass="MTNotificationTableViewCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3yh-J6-RwR" id="3MC-3y-3ub">
@@ -3565,35 +3573,44 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="User Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ScE-Ga-ohY">
-                                            <rect key="frame" x="10" y="10" width="63" height="15"/>
+                                            <rect key="frame" x="10" y="10" width="300" height="15"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="15" id="gCJ-xx-89d"/>
                                             </constraints>
-                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="12"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YNT-4M-Q1z">
-                                            <rect key="frame" x="10" y="33" width="300" height="15"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ko6-Qy-mmr">
+                                            <rect key="frame" x="10" y="30" width="300" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="Message" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ko6-Qy-mmr">
-                                            <rect key="frame" x="81" y="10" width="229" height="15"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Age Posted" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YNT-4M-Q1z">
+                                            <rect key="frame" x="10" y="65" width="300" height="15"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="15" id="kd7-9C-IYX"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
                                     <constraints>
+                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="3dP-dA-cdz"/>
                                         <constraint firstAttribute="trailing" secondItem="ko6-Qy-mmr" secondAttribute="trailing" constant="10" id="5Jf-ak-1vP"/>
-                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="leading" secondItem="ScE-Ga-ohY" secondAttribute="trailing" constant="8" id="HKb-69-qxu"/>
-                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="top" secondItem="3MC-3y-3ub" secondAttribute="top" constant="10" id="KSR-QS-87O"/>
+                                        <constraint firstItem="YNT-4M-Q1z" firstAttribute="top" secondItem="ko6-Qy-mmr" secondAttribute="bottom" constant="5" id="Cvg-hm-lhg"/>
+                                        <constraint firstAttribute="trailing" secondItem="YNT-4M-Q1z" secondAttribute="trailing" constant="10" id="LS4-Ho-Ov8"/>
+                                        <constraint firstAttribute="bottom" secondItem="YNT-4M-Q1z" secondAttribute="bottom" constant="4.5" id="QjA-b6-b35"/>
+                                        <constraint firstAttribute="trailing" secondItem="ScE-Ga-ohY" secondAttribute="trailing" constant="10" id="X2r-5a-vNa"/>
+                                        <constraint firstItem="ko6-Qy-mmr" firstAttribute="top" secondItem="ScE-Ga-ohY" secondAttribute="bottom" constant="5" id="Xyz-qy-OU4"/>
                                         <constraint firstItem="ScE-Ga-ohY" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="hS4-tZ-xHp"/>
+                                        <constraint firstItem="YNT-4M-Q1z" firstAttribute="leading" secondItem="3MC-3y-3ub" secondAttribute="leading" constant="10" id="pgF-15-b8o"/>
                                         <constraint firstItem="ScE-Ga-ohY" firstAttribute="top" secondItem="3MC-3y-3ub" secondAttribute="top" constant="10" id="zbl-EH-eZ6"/>
                                     </constraints>
                                 </tableViewCellContentView>
+                                <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <connections>
                                     <outlet property="agePosted" destination="YNT-4M-Q1z" id="Qeq-jZ-HIc"/>
                                     <outlet property="message" destination="ko6-Qy-mmr" id="CQs-1j-0rT"/>
@@ -3610,7 +3627,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="j4S-HT-bsr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2535" y="-1002"/>
+            <point key="canvasLocation" x="-2462" y="-1044"/>
         </scene>
         <!--Add Class -->
         <scene sceneID="a8I-4r-BfR">

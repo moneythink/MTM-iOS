@@ -215,11 +215,12 @@
     if (notification[@"user"]) {
         PFUser *user = notification[@"user"];
         cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
-        [cell.userName sizeToFit];
+    }
+    else {
+        cell.userName.text = @"";
     }
     
     cell.agePosted.text = [[notification createdAt] niceRelativeTimeFromNow];
-    [cell.agePosted sizeToFit];
     
     //<><><><><><><><><><> - Challenge
     // ****************** - Post
