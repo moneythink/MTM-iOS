@@ -115,7 +115,7 @@ typedef enum {
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
     [queryPostComments includeKey:@"user"];
     
-    queryPostComments.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    queryPostComments.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {

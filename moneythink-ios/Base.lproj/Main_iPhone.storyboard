@@ -2056,6 +2056,9 @@
                                         <rect key="frame" x="50" y="0.0" width="1" height="160"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Jdg-RU-OUM" userLabel="Activate Button">
+                                        <rect key="frame" x="0.0" y="0.0" width="280" height="160"/>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.80000001190000003" blue="0.40000000600000002" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -2064,6 +2067,7 @@
                     </view>
                     <tabBarItem key="tabBarItem" title="Item" id="oFi-Dp-916"/>
                     <connections>
+                        <outlet property="activateButton" destination="Jdg-RU-OUM" id="0e2-IC-pGU"/>
                         <outlet property="challengeDescription" destination="eu9-lb-6AD" id="ZP9-yA-Bue"/>
                         <outlet property="challengeIcon" destination="Ev2-KZ-Bda" id="bLC-L2-O3T"/>
                         <outlet property="challengeNumber" destination="2Qv-kj-lsk" id="hJw-v1-xys"/>

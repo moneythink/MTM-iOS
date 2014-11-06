@@ -25,6 +25,7 @@
 @property (strong, nonatomic) IBOutlet UIView *leftPanel;
 @property (strong, nonatomic) IBOutlet UIView *rightPanel;
 @property (nonatomic, strong) IBOutlet UIView *separatorView;
+@property (nonatomic, strong) IBOutlet UIButton *activateButton;
 
 @property (assign, nonatomic) BOOL activated;
 @property (nonatomic) BOOL openChallenge;
@@ -47,15 +48,13 @@
 {
     [super viewDidLoad];
     
-    
     self.challengeDescription.textColor = [UIColor white];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(exploreChallenge)];
-    
-    self.activated = NO;
-    [self.view addGestureRecognizer:tap];
+    [self.activateButton addTarget:self action:@selector(exploreChallenge) forControlEvents:UIControlEventTouchUpInside];
+    [self.activateButton setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithWhite:0.0f alpha:0.4f] size:self.activateButton.frame.size] forState:UIControlStateHighlighted];
+    [self.activateButton setBackgroundImage:[UIImage imageWithColor:[UIColor clearColor] size:self.activateButton.frame.size] forState:UIControlStateNormal];
+    self.activateButton.layer.cornerRadius = 4.0f;
+    self.activateButton.layer.masksToBounds = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -214,6 +213,8 @@
     }
 }
 
+
+#pragma mark - Actions -
 -(void)exploreChallenge
 {
     if (self.activated) {
