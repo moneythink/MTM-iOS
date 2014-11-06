@@ -47,6 +47,7 @@
 @property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL unwinding;
 @property (nonatomic) BOOL showingKeyboard;
+@property (nonatomic) BOOL removedProfilePhoto;
 
 @end
 
@@ -91,30 +92,6 @@
     self.lastName.text = self.userCurrent[@"last_name"];
     self.email.text = self.userCurrent[@"email"];
     
-    PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-    
-    self.profileImage = [[PFImageView alloc] init];
-    [self.profileImage setFile:profileImageFile];
-    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                self.profileImageLabel.text = @"Edit Photo";
-                self.profileImage.image = image;
-            } else {
-                self.profileImageLabel.text = @"Add Photo";
-                self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-            }
-        }
-        self.userProfileButton.imageView.image = self.profileImage.image;
-        self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
-        self.userProfileButton.imageView.layer.masksToBounds = YES;
-        
-        [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
-        
-        [[PFUser currentUser] refresh];
-        [self.view setNeedsLayout];
-    }];
-    
     [self.profileImageLabel setBackgroundColor:[UIColor clearColor]];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -129,7 +106,6 @@
     reach.reachableBlock = ^(Reachability * reachability) {
         dispatch_async(dispatch_get_main_queue(), ^{
             self.reachable = YES;
-            
         });
     };
     
@@ -167,6 +143,60 @@
     [self.cancelButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
     [self.saveButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.saveButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
+    
+    __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
+    self.userProfileButton.imageView.image = self.profileImage.image;
+    self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
+    self.userProfileButton.imageView.layer.masksToBounds = YES;
+
+    if (profileImageFile) {
+        self.profileImageLabel.alpha = 0.0f;
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Profile...";
+        hud.dimBackground = YES;
+        
+        [self bk_performBlock:^(id obj) {
+            self.profileImage = [[PFImageView alloc] init];
+            [self.profileImage setFile:profileImageFile];
+            
+            [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    
+                    [UIView animateWithDuration:0.2f animations:^{
+                        self.userProfileButton.alpha = 0.0f;
+                    } completion:^(BOOL finished) {
+                        if (!error) {
+                            if (image) {
+                                self.profileImageLabel.text = @"Edit Photo";
+                                self.profileImage.image = image;
+                            } else {
+                                self.profileImageLabel.text = @"Add Photo";
+                                self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+                            }
+                        }
+                        
+                        [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
+                        
+                        [UIView animateWithDuration:0.2f animations:^{
+                            self.profileImageLabel.alpha = 1.0f;
+                            self.userProfileButton.alpha = 1.0f;
+                        }];
+                    }];
+                });
+                
+                [[PFUser currentUser] refresh];
+            }];
+        } afterDelay:0.35f];
+    }
+    else {
+        self.profileImageLabel.text = @"Add Photo";
+        self.profileImage = [[PFImageView alloc] init];
+        [self.profileImage setFile:nil];
+        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+        [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -423,6 +453,11 @@
     
     if (self.updatedProfileImage) {
         dirty = YES;
+    }
+    else {
+        if (self.removedProfilePhoto) {
+            dirty = YES;
+        }
     }
     
     if (![self.userSchool.text isEqualToString:self.userCurrent[@"school"]]) {
@@ -748,6 +783,12 @@
             [self.profileImage.file saveInBackground];
         }
     }
+    else {
+        if (self.removedProfilePhoto) {
+            self.profileImage = nil;
+            [self.userCurrent removeObjectForKey:@"profile_picture"];
+        }
+    }
     
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
@@ -791,15 +832,33 @@
                                       handler:^(UIAlertAction *action) {
                                           [self choosePicture];
                                       }];
-        
+
         [editProfileImage addAction:cancel];
+        
+        if ([self.profileImageLabel.text isEqualToString:@"Edit Photo"]) {
+            UIAlertAction *removePhoto = [UIAlertAction
+                                          actionWithTitle:@"Remove Existing Photo"
+                                          style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *action) {
+                                              [self removePicture];
+                                          }];
+            [editProfileImage addAction:removePhoto];
+        }
+
         [editProfileImage addAction:takePhoto];
         [editProfileImage addAction:choosePhoto];
         
         [self presentViewController:editProfileImage animated:YES completion:nil];
         
     } else {
-        UIActionSheet *editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        UIActionSheet *editProfileImage = nil;
+        
+        if ([self.profileImageLabel.text isEqualToString:@"Edit Photo"]) {
+            editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        }
+        else {
+            editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        }
         
         UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
         if ([window.subviews containsObject:self.view]) {
@@ -836,6 +895,28 @@
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 }
 
+- (void)removePicture {
+    self.updatedProfileImage = nil;
+    self.removedProfilePhoto = YES;
+    [self.profileImage setFile:nil];
+    
+    [UIView animateWithDuration:0.2f animations:^{
+        self.userProfileButton.alpha = 0.0f;
+        self.profileImageLabel.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self.userProfileButton setImage:[UIImage imageNamed:@"profile_image.png"] forState:UIControlStateNormal];
+        
+        self.profileImageLabel.text = @"Add Photo";
+        self.profileImage.image = nil;
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            self.userProfileButton.alpha = 1.0f;
+            self.profileImageLabel.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+        }];
+    }];
+}
+
 - (void)showImagePickerForSourceType:(UIImagePickerControllerSourceType)sourceType
 {
     UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
@@ -847,7 +928,7 @@
     
     self.imagePickerController = imagePickerController;
 
-    [self presentViewController:self.imagePickerController animated:NO completion:nil];
+    [self presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 
 
@@ -880,17 +961,26 @@
     }
     else {
         // Photo picker
-        switch (buttonIndex) {
-            case 0:
-                [self takePicture];
-                break;
-                
-            case 1:
-                [self choosePicture];
-                break;
-                
-            default:
-                break;
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self removePicture];
+        }
+        else {
+            NSInteger adjustedIndex = buttonIndex;
+            if (actionSheet.firstOtherButtonIndex != 0) {
+                adjustedIndex = buttonIndex-1;
+            }
+            switch (adjustedIndex) {
+                case 0:
+                    [self takePicture];
+                    break;
+                    
+                case 1:
+                    [self choosePicture];
+                    break;
+                    
+                default:
+                    break;
+            }
         }
     }
 }
@@ -920,11 +1010,16 @@
     [self bk_performBlock:^(id obj) {
         [UIView animateWithDuration:0.2f animations:^{
             weakSelf.userProfileButton.alpha = 0.0f;
+            weakSelf.profileImageLabel.alpha = 0.0f;
         } completion:^(BOOL finished) {
-            weakSelf.userProfileButton.imageView.image = self.updatedProfileImage;
-            
+            [weakSelf.userProfileButton setImage:self.updatedProfileImage forState:UIControlStateNormal];
+
+            weakSelf.profileImageLabel.text = @"Edit Photo";
+
             [UIView animateWithDuration:0.2f animations:^{
                 weakSelf.userProfileButton.alpha = 1.0f;
+                weakSelf.profileImageLabel.alpha = 1.0f;
+
             } completion:^(BOOL finished) {
             }];
         }];
@@ -935,7 +1030,7 @@
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self dismissViewControllerAnimated:NO completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 

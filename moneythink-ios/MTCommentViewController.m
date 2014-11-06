@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
+@property (nonatomic, strong) IBOutlet UILabel *chooseImageLabel;
 
 @end
 
@@ -95,14 +96,31 @@
                                       }];
         
         [chooseImage addAction:cancel];
+        
+        if (self.postImage) {
+            UIAlertAction *removePhoto = [UIAlertAction
+                                          actionWithTitle:@"Remove Existing Photo"
+                                          style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *action) {
+                                              [self removePicture];
+                                          }];
+            [chooseImage addAction:removePhoto];
+        }
+
         [chooseImage addAction:takePhoto];
         [chooseImage addAction:choosePhoto];
         
         [self presentViewController:chooseImage animated:YES completion:nil];
     }
     else {
-        UIActionSheet *addPostImage = [[UIActionSheet alloc] initWithTitle:@"Choose Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
-        
+        UIActionSheet *addPostImage = nil;
+        if (self.postImage) {
+            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Edit Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        }
+        else {
+            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Add Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+        }
+
         UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
         if ([window.subviews containsObject:self.view]) {
             [addPostImage showInView:self.view];
@@ -113,20 +131,49 @@
 }
 
 
+#pragma mark - Private Methods -
+- (void)removePicture {
+    self.postImage = nil;
+    
+    [UIView animateWithDuration:0.2f animations:^{
+        self.chooseImageButton.alpha = 0.0f;
+        self.chooseImageLabel.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self.chooseImageButton setImage:[UIImage imageNamed:@"photo_post"] forState:UIControlStateNormal];
+        self.chooseImageLabel.text = @"Add Image";
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            self.chooseImageButton.alpha = 1.0f;
+            self.chooseImageLabel.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+        }];
+    }];
+}
+
+
 #pragma mark - UIACtionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
-    switch (buttonIndex) {
-        case 0:
-            [self takePicture];
-            break;
-            
-        case 1:
-            [self choosePicture];
-            break;
-            
-        default:
-            break;
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        [self removePicture];
+    }
+    else {
+        NSInteger adjustedIndex = buttonIndex;
+        if (actionSheet.firstOtherButtonIndex != 0) {
+            adjustedIndex = buttonIndex-1;
+        }
+        switch (adjustedIndex) {
+            case 0:
+                [self takePicture];
+                break;
+                
+            case 1:
+                [self choosePicture];
+                break;
+                
+            default:
+                break;
+        }
     }
 }
 
@@ -167,7 +214,7 @@
     imagePickerController.allowsEditing = YES;
     
     self.imagePickerController = imagePickerController;
-    [self presentViewController:self.imagePickerController animated:NO completion:nil];
+    [self presentViewController:self.imagePickerController animated:YES completion:nil];
 }
 
 
@@ -189,15 +236,31 @@
         UIGraphicsEndImageContext();
     }
     
-    self.postImage = [[PFImageView alloc] initWithImage:image];
-    [self.chooseImageButton setImage:image forState:UIControlStateNormal];
-    
-    [self dismissViewControllerAnimated:NO completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:^{
+        [UIView animateWithDuration:0.2f animations:^{
+            self.chooseImageButton.alpha = 0.0f;
+            self.chooseImageLabel.alpha = 0.0f;
+        } completion:^(BOOL finished) {
+            self.postImage = [[PFImageView alloc] initWithImage:image];
+            [self.chooseImageButton setImage:image forState:UIControlStateNormal];
+            self.chooseImageLabel.text = @"Edit Image";
+            
+            [UIView animateWithDuration:0.2f animations:^{
+                self.chooseImageButton.alpha = 1.0f;
+                self.chooseImageLabel.alpha = 1.0f;
+            }];
+        }];
+    }];
+}
+
+- (void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated
+{
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {
-    [self dismissViewControllerAnimated:NO completion:NULL];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)commentDoneButton
