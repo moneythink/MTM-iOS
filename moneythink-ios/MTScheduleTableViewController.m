@@ -221,7 +221,7 @@
             if ([MTUtil displayingCustomPlaylist]) {
                 NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
                 if (ordering != -1) {
-                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu", ordering];
+                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu", (long)ordering];
                 }
                 else {
                     cell.challengeNumber.text = @"";
