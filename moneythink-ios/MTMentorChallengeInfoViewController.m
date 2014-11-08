@@ -95,6 +95,7 @@
         self.pillarImage.frame = reFrame;
         self.pillarImage.image = pig;
     }
+    self.pillarImage.contentMode = UIViewContentModeScaleAspectFit;
     
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];

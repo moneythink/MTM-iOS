@@ -173,7 +173,7 @@
 #pragma mark - UITableViewController delegate methods
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
 {
-    return 2;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
