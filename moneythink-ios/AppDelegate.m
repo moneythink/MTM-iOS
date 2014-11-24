@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
 #import "MTHomeViewController.h"
+#import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "UIColor+Palette.h"
 #import "MTMentorTabBarViewControlle.h"
@@ -74,7 +75,7 @@
     
     [[UISwitch appearance] setOnTintColor:[UIColor primaryGreen]];
     
-    [Crashlytics startWithAPIKey:@"f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e"];
+    [Fabric with:@[CrashlyticsKit]];
     
     // Set up Reachability
     [[NSNotificationCenter defaultCenter] addObserver:self

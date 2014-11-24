@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		101631131A23A4CF00259C22 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 101631121A23A4CF00259C22 /* Fabric.framework */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -200,6 +201,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		101631121A23A4CF00259C22 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Fabric.framework; path = libs/Fabric.framework; sourceTree = SOURCE_ROOT; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -537,6 +539,7 @@
 				89FFFC7B19D9C1B200DD3716 /* Parse.framework in Frameworks */,
 				892105BC19DA0C5D000CFBF6 /* Crashlytics.framework in Frameworks */,
 				5876E2E7196F2CA000C176EC /* CoreLocation.framework in Frameworks */,
+				101631131A23A4CF00259C22 /* Fabric.framework in Frameworks */,
 				5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */,
 				89FFFC7A19D9C1B200DD3716 /* Bolts.framework in Frameworks */,
 				5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */,
@@ -975,6 +978,7 @@
 				89A50CEA19DDFDF7003BE1D8 /* libBlocksKit.a */,
 				89FFFC7819D9C1B200DD3716 /* Bolts.framework */,
 				892105BB19DA0C5D000CFBF6 /* Crashlytics.framework */,
+				101631121A23A4CF00259C22 /* Fabric.framework */,
 				89FFFC7919D9C1B200DD3716 /* Parse.framework */,
 			);
 			path = libs;
@@ -1177,7 +1181,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./libs/Crashlytics.framework/run f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e 4dd59297f9c0e4cf81062b0586870df9e586efd39d4d7de33d380dadbc344f79";
+			shellScript = "./libs/Fabric.framework/run f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e 4dd59297f9c0e4cf81062b0586870df9e586efd39d4d7de33d380dadbc344f79";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1356,6 +1360,7 @@
 					"$(PROJECT_DIR)/moneythink-ios",
 					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
 					"$(PROJECT_DIR)/moneythink-ios/libs",
+					"$(PROJECT_DIR)/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
@@ -1426,6 +1431,7 @@
 					"$(PROJECT_DIR)/moneythink-ios",
 					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
 					"$(PROJECT_DIR)/moneythink-ios/libs",
+					"$(PROJECT_DIR)/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
@@ -1503,6 +1509,7 @@
 					"$(PROJECT_DIR)/moneythink-ios",
 					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
 					"$(PROJECT_DIR)/moneythink-ios/libs",
+					"$(PROJECT_DIR)/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
@@ -1579,6 +1586,7 @@
 					"$(PROJECT_DIR)/moneythink-ios",
 					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
 					"$(PROJECT_DIR)/moneythink-ios/libs",
+					"$(PROJECT_DIR)/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
@@ -1655,6 +1663,7 @@
 					"$(PROJECT_DIR)/moneythink-ios",
 					"$(PROJECT_DIR)/moneythink-ios/ThirdParty",
 					"$(PROJECT_DIR)/moneythink-ios/libs",
+					"$(PROJECT_DIR)/libs",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
