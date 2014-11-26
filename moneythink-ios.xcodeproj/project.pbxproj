@@ -1018,6 +1018,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5876E2DA196F2C1F00C176EC /* Build configuration list for PBXNativeTarget "moneythink-ios" */;
 			buildPhases = (
+				10F7E8341A2638F40045E944 /* ShellScript */,
 				5876E2A1196F2C1F00C176EC /* Sources */,
 				5876E2A2196F2C1F00C176EC /* Frameworks */,
 				5876E2A3196F2C1F00C176EC /* Resources */,
@@ -1182,6 +1183,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "./libs/Fabric.framework/run f79dbd9b335f6c6ed9fc1fa3e3a0534cf5016b0e 4dd59297f9c0e4cf81062b0586870df9e586efd39d4d7de33d380dadbc344f79";
+		};
+		10F7E8341A2638F40045E944 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [[ \"$CONFIGURATION\" == \"Debug\" ]]; then\nexit 0\nfi\n./xcode-build-bump.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1352,8 +1366,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1376,7 +1390,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "3f78b931-b6c3-4554-bec5-706cef9dd3de";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1423,8 +1437,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1447,7 +1461,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "3f78b931-b6c3-4554-bec5-706cef9dd3de";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1501,8 +1515,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Sica (U7545FJG96)";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1525,7 +1539,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "bd47ca07-e6ce-4a03-9751-f70c2418e803";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1578,8 +1592,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: David Sica (U7545FJG96)";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1602,7 +1616,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "bd47ca07-e6ce-4a03-9751-f70c2418e803";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1655,8 +1669,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1679,7 +1693,7 @@
 					"$(PROJECT_DIR)/moneythink-ios/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "c4aaee33-4b94-4d8b-9aad-baf798cd9c06";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
