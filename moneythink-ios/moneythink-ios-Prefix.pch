@@ -19,11 +19,12 @@
 #define kUserDidChangeClass @"kUserDidChangeClass"
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import <MobileCoreServices/UTCoreTypes.h>
-    #import <CoreGraphics/CoreGraphics.h>
-    #import <Parse/Parse.h>
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <MobileCoreServices/UTCoreTypes.h>
+#import <CoreGraphics/CoreGraphics.h>
+#import <Parse/Parse.h>
+#import <ParseUI/ParseUI.h>
 
 #import "MTUtil.h"
 #import "UIColor+Palette.h"
