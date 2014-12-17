@@ -461,7 +461,7 @@
                             [weakSelf bk_performBlock:^(id obj) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     if (!error) {
-                                        [[PFUser currentUser] refreshInBackgroundWithTarget:weakSelf selector:nil];
+                                        [[PFUser currentUser] fetchInBackgroundWithTarget:weakSelf selector:nil];
                                         
                                         // Update for Push Notifications
                                         [[MTUtil getAppDelegate] updateParseInstallationState];

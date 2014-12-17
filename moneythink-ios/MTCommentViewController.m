@@ -281,10 +281,62 @@
         self.challengePost[@"user"] = [PFUser currentUser];
         self.challengePost[@"post_text"] = self.postText.text;
         
-        [self.challengePost saveEventually]; // save the post data we have so far
+        if (self.postImage.image)
+        {
+            NSString *fileName = @"post_image.png";
+            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
+            
+            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
+            if (self.postImage.file)
+            {
+                // if there's a picture, then update the Parse post and save it locally, we shouldn't do that on a successful Parse save only!!
+                self.challengePost[@"picture"] = self.postImage.file;
+            }
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+            
+            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (!error)
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
+                    });
+                }
+                else
+                {
+                    NSLog(@"Post with picture error - %@", error);
+                    [self.challengePost saveEventually];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                    });
+                }
+            }];
+        }
+        else
+        {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+            
+            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                if (!error)
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
+                    });
+                }
+                else
+                {
+                    NSLog(@"Post error - %@", error);
+                    [self.challengePost saveEventually];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                    });
+                }
+            }];
+        }
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
 
+        /*
         if (self.postImage.image)
         {
             NSString *fileName = @"post_image.png";
@@ -350,6 +402,7 @@
                 }
             }];
         }
+        */
         
         [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
     }

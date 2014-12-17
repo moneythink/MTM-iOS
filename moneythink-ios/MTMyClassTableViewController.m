@@ -91,7 +91,6 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         NSInteger challengNumber = [self.challengeNumber intValue];
         NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-        
         [challengeQuery includeKey:@"verified_by"];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
@@ -373,21 +372,24 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         cell.postText.attributedText = hashtag;
     }];
     
-    if (postImage) {
+    if (postImage)
+    {
+        cell.postImage.image = nil;
         cell.postImage.file = post[@"picture"];
-        
         [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
+            if (!error)
+            {
+                if (image)
+                {
                     CGRect frame = cell.postImage.frame;
                     cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
                     [cell setNeedsDisplay];
-                } else {
-                    cell.postImage.image = nil;
                 }
-            } else {
-                NSLog(@"error - %@", error);
+                else
+                    cell.postImage.image = nil;
             }
+            else
+                NSLog(@"error - %@", error);
         }];
     }
     
@@ -827,8 +829,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         }
         
         if (!error) {
-            [user refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
-            [post refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            [user fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 // Load/update the objects but don't clear the table
                 [weakSelf loadObjects];
             }];
@@ -866,9 +868,9 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     [self bk_performBlock:^(id obj) {
         [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
             if (!error) {
-                [[PFUser currentUser] refresh];
-                [weakSelf.challenge refresh];
-                [post refresh];
+                [[PFUser currentUser] fetch];
+                [weakSelf.challenge fetch];
+                [post fetch];
                 [weakSelf userButtonsTapped];
                 [weakSelf loadObjects];
             }
@@ -910,9 +912,9 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     [self bk_performBlock:^(id obj) {
         [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
             if (!error) {
-                [[PFUser currentUser] refresh];
-                [weakSelf.challenge refresh];
-                [post refresh];
+                [[PFUser currentUser] fetch];
+                [weakSelf.challenge fetch];
+                [post fetch];
                 [weakSelf userButtonsTapped];
                 [weakSelf loadObjects];
             }

@@ -186,7 +186,7 @@
                     }];
                 });
                 
-                [[PFUser currentUser] refresh];
+                [[PFUser currentUser] fetch];
             }];
         } afterDelay:0.35f];
     }
@@ -792,7 +792,7 @@
     
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
-            [[PFUser currentUser] refresh];
+            [[PFUser currentUser] fetch];
             
             // Update for Push Notifications
             [[MTUtil getAppDelegate] updateParseInstallationState];

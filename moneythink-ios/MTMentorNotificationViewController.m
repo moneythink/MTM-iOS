@@ -183,7 +183,6 @@
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated,
                                                       queryClosed, queryCompleted, queryStarted]];
-
     // Always pull latest from Network if available
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
     

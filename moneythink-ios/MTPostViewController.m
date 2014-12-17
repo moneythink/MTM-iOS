@@ -365,8 +365,8 @@ typedef enum {
         }
 
         if (!error) {
-            [weakSelf.currentUser refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
-            [weakSelf.challengePost refreshInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            [weakSelf.currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
+            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.tableView reloadData];
                 });
@@ -494,9 +494,9 @@ typedef enum {
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                 
             } else {
-                [weakSelf.currentUser refresh];
-                [weakSelf.challenge refresh];
-                [weakSelf.challengePost refresh];
+                [weakSelf.currentUser fetch];
+                [weakSelf.challenge fetch];
+                [weakSelf.challengePost fetch];
                 
                 [likeCommentCell.verifiedCheckBox setIsChecked:!isChecked];
             }
@@ -527,9 +527,9 @@ typedef enum {
     [self bk_performBlock:^(id obj) {
         [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
             if (!error) {
-                [weakSelf.currentUser refresh];
-                [weakSelf.challenge refresh];
-                [weakSelf.challengePost refresh];
+                [weakSelf.currentUser fetch];
+                [weakSelf.challenge fetch];
+                [weakSelf.challengePost fetch];
                 ((UIButton *)weakSender).enabled = YES;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -569,9 +569,9 @@ typedef enum {
     [self bk_performBlock:^(id obj) {
         [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
             if (!error) {
-                [weakSelf.currentUser refresh];
-                [weakSelf.challenge refresh];
-                [weakSelf.challengePost refresh];
+                [weakSelf.currentUser fetch];
+                [weakSelf.challenge fetch];
+                [weakSelf.challengePost fetch];
                 ((UIButton *)weakSender).enabled = YES;
                 
                 dispatch_async(dispatch_get_main_queue(), ^{

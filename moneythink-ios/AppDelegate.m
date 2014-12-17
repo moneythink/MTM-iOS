@@ -31,7 +31,7 @@
     [Fabric with:@[CrashlyticsKit]];
     
     [Parse setApplicationId:applicationID clientKey:clientKey];
-    [Parse enableLocalDatastore];
+    //[Parse enableLocalDatastore];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
