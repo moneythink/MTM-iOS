@@ -14,6 +14,7 @@ extern NSString *const kWillSaveNewChallengePostNotification;
 extern NSString *const kSavingWithPhotoNewChallengePostNotification;
 extern NSString *const kSavedMyClassChallengePostsdNotification;
 extern NSString *const kFailedMyClassChallengePostsdNotification;
+extern NSString *const kWillSaveNewPostCommentNotification;
 
 @interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTPostViewControllerDelegate>
 

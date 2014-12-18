@@ -15,6 +15,7 @@ NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengeP
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
 NSString *const kSavedMyClassChallengePostsdNotification = @"kSavedMyClassChallengePostsdNotification";
 NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
+NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
 
 @interface MTMyClassTableViewController ()
 
@@ -56,26 +57,15 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     return self;
 }
 
-- (void)viewDidLoad
+- (void) viewDidLoad
 {
     [super viewDidLoad];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(willSaveNewChallengePost:)
-                                                 name:kWillSaveNewChallengePostNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(savingWithPhoto:)
-                                                 name:kSavingWithPhotoNewChallengePostNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(postSucceeded)
-                                                 name:kSavedMyClassChallengePostsdNotification
-                                               object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(postFailed)
-                                                 name:kFailedMyClassChallengePostsdNotification
-                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewChallengePost:) name:kWillSaveNewChallengePostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savingWithPhoto:) name:kSavingWithPhotoNewChallengePostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostsdNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -113,16 +103,6 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    // Release any cached data, images, etc that aren't in use.
-}
-
-
 #pragma mark - Parse
 - (void)objectsDidLoad:(NSError *)error
 {
@@ -130,12 +110,6 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     
     self.myObjects = [NSMutableArray arrayWithArray:self.objects];
     [self.tableView reloadData];
-}
-
-- (void)objectsWillLoad
-{
-    [super objectsWillLoad];
-    // This method is called before a PFQuery is fired to get more objects
 }
 
 // Override to customize what kind of query to perform on the class. The default is to query for
@@ -191,9 +165,8 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     }];
 }
 
-
 #pragma mark - NSNotification Methods -
-- (void)willSaveNewChallengePost:(NSNotification *)notif;
+- (void) willSaveNewChallengePost:(NSNotification*) notif
 {
     self.postingNewComment = YES;
 
@@ -203,31 +176,34 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     [self.tableView reloadData];
 }
 
-- (void)savingWithPhoto:(NSNotificationCenter *)notif;
+- (void) savingWithPhoto:(NSNotificationCenter*) notif
 {
     [self.tableView reloadData];
 }
 
-- (void)postSucceeded
+- (void) postSucceeded
 {
     self.postingNewComment = NO;
     [self loadObjects];
 }
 
-- (void)postFailed
+- (void) postFailed
 {
     self.postingNewComment = NO;
     [self loadObjects];
     
     UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post failed to upload." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
     UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view]) {
+    if ([window.subviews containsObject:self.view])
         [updateMessage showInView:self.view];
-    } else {
+    else
         [updateMessage showInView:window];
-    }
 }
 
+- (void) willSaveNewPostComment:(NSNotification*) notif
+{
+    [self.tableView reloadData];
+}
 
 #pragma mark - UITableViewDataSource methods -
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -571,13 +547,11 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     return newImage;
 }
 
-
-#pragma mark - Navigation
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (void) prepareForSegue:(UIStoryboardSegue*) segue sender:(id) sender
 {
     NSString *segueIdentifier = [segue identifier];
-    if ([segueIdentifier isEqualToString:@"commentOnPost"]) {
+    if ([segueIdentifier isEqualToString:@"commentOnPost"])
+    {
         UIButton *button = sender;
         
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
@@ -587,26 +561,22 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
         destinationViewController.post = post;
         destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
-        
     }
-    else {
-        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
-        destinationViewController.challengePost = (PFChallengePost *)sender;
+    else
+    {
+        MTPostViewController *destinationViewController = (MTPostViewController*)[segue destinationViewController];
+        destinationViewController.challengePost = (PFChallengePost*)sender;
         destinationViewController.challenge = self.challenge;
         destinationViewController.delegate = self;
         
-        if (self.hasButtons && self.postImage) {
+        if (self.hasButtons && self.postImage)
             destinationViewController.postType = MTPostTypeWithButtonsWithImage;
-        }
-        else if (self.hasButtons) {
+        else if (self.hasButtons)
             destinationViewController.postType = MTPostTypeWithButtonsNoImage;
-        }
-        else if (self.postImage) {
+        else if (self.postImage)
             destinationViewController.postType = MTPostTypeNoButtonsWithImage;
-        }
-        else {
+        else
             destinationViewController.postType = MTPostTypeNoButtonsNoImage;
-        }
     }
 }
 
@@ -666,12 +636,12 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
 }
 
-- (void)deletePostTapped:(id)sender
+- (void) deletePostTapped:(id) sender
 {
     [self performDeletePostWithSender:sender withConfirmation:YES];
 }
 
-- (void)performDeletePostWithSender:(id)sender withConfirmation:(BOOL)withConfirmation
+- (void) performDeletePostWithSender:(id) sender withConfirmation:(BOOL) withConfirmation
 {
     UIButton *button = sender;
     PFUser *user = [PFUser currentUser];
@@ -681,33 +651,27 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
     __block NSString *userID = [user objectId];
     __block NSString *postID = [post objectId];
     
-    if (withConfirmation) {
-        if ([UIAlertController class]) {
-            UIAlertController *deletePostSheet = [UIAlertController
-                                                  alertControllerWithTitle:@"Delete this post?"
-                                                  message:nil
-                                                  preferredStyle:UIAlertControllerStyleActionSheet];
-            
-            UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleCancel
-                                     handler:^(UIAlertAction *action) {
+    if (withConfirmation)
+    {
+        if ([UIAlertController class])
+        {
+            UIAlertController *deletePostSheet = [UIAlertController alertControllerWithTitle:@"Delete this post?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+            UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
                                      }];
-            
             MTMakeWeakSelf();
-            UIAlertAction *delete = [UIAlertAction
-                                     actionWithTitle:@"Delete"
-                                     style:UIAlertActionStyleDestructive
-                                     handler:^(UIAlertAction *action) {
-                                         
+            UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
                                          NSInteger index = [weakSelf.myObjects indexOfObject:post];
                                          [weakSelf.myObjects removeObject:post];
                                          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                         [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];\
+                                         [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                                         [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                                             [weakSelf loadObjects];
+                                         }];
                                          
                                          [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                                             [weakSelf loadObjects];
-                                             if (error) {
+                                             //[weakSelf loadObjects];
+                                             if (error)
+                                             {
                                                  [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                                                  NSLog(@"error - %@", error);
                                              }
@@ -718,20 +682,24 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
             [deletePostSheet addAction:delete];
             
             [self presentViewController:deletePostSheet animated:YES completion:nil];
-        } else {
-            
+        }
+        else
+        {
             MTMakeWeakSelf();
             UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
             [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
-                
                 NSInteger index = [weakSelf.myObjects indexOfObject:post];
                 [weakSelf.myObjects removeObject:post];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];\
+                [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+                    [weakSelf loadObjects];
+                }];
                 
                 [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                    [weakSelf loadObjects];
-                    if (error) {
+                    //[weakSelf loadObjects];
+                    if (error)
+                    {
                         [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                         NSLog(@"error - %@", error);
                     }
@@ -742,16 +710,21 @@ NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChal
             [deleteAction showInView:[UIApplication sharedApplication].keyWindow];
         }
     }
-    else {
+    else
+    {
+        MTMakeWeakSelf();
         NSInteger index = [self.myObjects indexOfObject:post];
         [self.myObjects removeObject:post];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-        MTMakeWeakSelf();
-        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+        [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             [weakSelf loadObjects];
-            if (error) {
+        }];
+        
+        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+            //[weakSelf loadObjects];
+            if (error)
+            {
                 NSLog(@"error - %@", error);
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             }

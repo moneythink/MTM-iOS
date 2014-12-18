@@ -48,7 +48,6 @@
 		5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */; };
 		5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */; };
 		5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */; };
-		5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */; };
 		5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */; };
 		5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */; };
 		5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */; };
@@ -306,8 +305,6 @@
 		5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProgressViewController.m; sourceTree = "<group>"; };
 		5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentFollowViewController.h; sourceTree = "<group>"; };
 		5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentFollowViewController.m; sourceTree = "<group>"; };
-		5860BF4319870CA8007D9BB3 /* MTMentorChallangeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallangeViewController.h; sourceTree = "<group>"; };
-		5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallangeViewController.m; sourceTree = "<group>"; };
 		5860BF461987118F007D9BB3 /* MTMentorInstructionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorInstructionsViewController.h; sourceTree = "<group>"; };
 		5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorInstructionsViewController.m; sourceTree = "<group>"; };
 		5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeRoomViewController.h; sourceTree = "<group>"; };
@@ -709,8 +706,6 @@
 				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
 				580B5AE91982CF690092AA9C /* MTImagePickerViewController.h */,
 				580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */,
-				5860BF4319870CA8007D9BB3 /* MTMentorChallangeViewController.h */,
-				5860BF4419870CA8007D9BB3 /* MTMentorChallangeViewController.m */,
 				58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */,
 				58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */,
 				5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */,
@@ -1203,7 +1198,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [[ \"$CONFIGURATION\" == \"Debug\" ]]; then\nexit 0\nfi\n./xcode-build-bump.sh\n";
+			shellScript = "if [[ \"$CONFIGURATION\" != \"Release\" ]]; then\nexit 0\nfi\n./xcode-build-bump.sh\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1213,7 +1208,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */,
-				5860BF4519870CA8007D9BB3 /* MTMentorChallangeViewController.m in Sources */,
 				583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */,
 				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
@@ -1397,7 +1391,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "cff7f48b-842c-4e79-92f5-55a2a13a7e35";
+				PROVISIONING_PROFILE = "0bf16c8c-1e1e-488f-adeb-7d9979015bae";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1467,7 +1461,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "cff7f48b-842c-4e79-92f5-55a2a13a7e35";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1544,7 +1538,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "cff7f48b-842c-4e79-92f5-55a2a13a7e35";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1620,7 +1614,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "cff7f48b-842c-4e79-92f5-55a2a13a7e35";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1696,7 +1690,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "cff7f48b-842c-4e79-92f5-55a2a13a7e35";
+				PROVISIONING_PROFILE = "f1eac011-c291-4aee-a600-f80175e7ebd8";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
