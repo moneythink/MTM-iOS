@@ -17,6 +17,7 @@
 
 - (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
+- (void)setGrayNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)updateParseInstallationState;
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
 

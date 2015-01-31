@@ -17,6 +17,8 @@
 
 #define kInternetDidBecomeReachableNotification @"kInternetDidBecomeReachableNotification"
 #define kUserDidChangeClass @"kUserDidChangeClass"
+#define kUserSavedProfileChanges @"kUserSavedProfileChanges"
+#define kUserActivatedChallenges @"kUserActivatedChallenges"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

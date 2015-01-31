@@ -747,6 +747,10 @@
         return;
     }
     
+    // Mark user saved profile changes
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     if (self.schoolIsNew) {
         PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
         createSchool[@"name"] = self.userSchool.text;

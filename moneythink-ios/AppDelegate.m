@@ -214,6 +214,19 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
+- (void)setGrayNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
+{
+    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"ECEBF3"]];
+    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    
+    [navigationBar setBarTintColor:[UIColor colorWithHexString:@"ECEBF3"]];
+    [navigationBar setTintColor:[UIColor primaryOrange]];
+    [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    
+    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
+}
+
 - (void)updateParseInstallationState
 {
     if (![PFUser currentUser]) {

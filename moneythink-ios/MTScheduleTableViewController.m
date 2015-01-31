@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) NSArray *availableChallenges;
 @property (strong, nonatomic) NSArray *futureChallenges;
+@property (nonatomic, strong) UISwitch *autoReleaseSwitch;
+@property (nonatomic) BOOL scheduledActivationsOn;
 
 @end
 
@@ -23,7 +25,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.title = @"Challenge Schedule";
+        self.title = @"Schedule";
     }
     return self;
 }
@@ -31,11 +33,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    
+- (void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     
     NSString *userSchool = [PFUser currentUser][@"school"];
@@ -91,11 +92,39 @@
             }
         }];
     } afterDelay:0.35f];
+    
+    // Query for activations on
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            weakSelf.scheduledActivationsOn = (number > 0);
+        } else {
+            NSLog(@"error - %@", error);
+            if (![MTUtil internetReachable]) {
+                [UIAlertView showNoInternetAlert];
+            }
+            else {
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
+                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }
+        
+        weakSelf.autoReleaseSwitch.enabled = YES;
+        [weakSelf.tableView reloadData];
+    }];
+    
+    [[MTUtil getAppDelegate] setGrayNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    NSInteger sections = 0;
+    // Start at 1 to include activation toggle
+    NSInteger sections = 1;
     
     if (self.futureChallenges.count > 0) {
         sections += 1;
@@ -116,56 +145,90 @@
     NSInteger future = self.futureChallenges.count;
     
     switch (section) {
-        case 0: {
+        case 0:
+        {
+            return 1;
+            break;
+        }
+        case 1:
+        {
             if (available > 0) {
                 rows = available;
             }
-        }
             break;
+        }
             
-        default: {
+        default:
+        {
             if (future > 0) {
                 rows = future;
             }
-        }
             break;
+        }
     }
     
     return rows;
 }
 
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    NSString *title = @"";
-
-    NSInteger available = self.availableChallenges.count;
-    NSInteger future = self.futureChallenges.count;
+    CGFloat height;
     
     switch (section) {
-        case 0: {
-            if (available > 0) {
-                title = @"AVAILABLE CHALLENGES";
-            }
-        }
+        case 0:
+        {
+            height = 0.0f;
             break;
-            
-        default: {
-            if (future > 0) {
-                title = @"FUTURE CHALLENGES";
-            }
         }
+            
+        default:
+            height = 40.0f;
             break;
     }
     
-    return title;
+    return height;
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayHeaderView:(UIView *)view forSection:(NSInteger)section
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UITableViewHeaderFooterView *header = (UITableViewHeaderFooterView *)view;
+    if (section == 0) {
+        return nil;
+    }
     
-    [header.textLabel setTextColor:[UIColor blackColor]];
-    [header.contentView setBackgroundColor:[UIColor mutedOrange]];
+    static NSString *CellIdentifier = @"ScheduleSectionHeader";
+    
+    UITableViewCell *headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if (headerView == nil) {
+        [NSException raise:@"headerView == nil.." format:@"No cells with matching CellIdentifier loaded from your storyboard"];
+        return nil;
+    }
+    
+    // Gets around long-press interaction on content.
+    //  http://stackoverflow.com/questions/9219234/how-to-implement-custom-table-view-section-headers-and-footers-with-storyboard/
+    while (headerView.contentView.gestureRecognizers.count) {
+        [headerView.contentView removeGestureRecognizer:[headerView.contentView.gestureRecognizers objectAtIndex:0]];
+    }
+    
+    UILabel *headerLabel = (UILabel *)[headerView viewWithTag:99];
+    if (headerLabel) {
+        headerLabel.text = [self titleForSection:section];
+    }
+    
+    [[headerView.contentView viewWithTag:1000] removeFromSuperview];
+    [[headerView.contentView viewWithTag:1001] removeFromSuperview];
+
+    UIView *topSeparator = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, headerView.contentView.frame.size.width, 0.5f)];
+    topSeparator.backgroundColor = [UIColor lightGrayColor];
+    topSeparator.tag = 1000;
+    [headerView.contentView addSubview:topSeparator];
+    
+    CGFloat sectionHeight = [self tableView:tableView heightForHeaderInSection:section];
+    UIView *bottomSeparator = [[UIView alloc] initWithFrame:CGRectMake(0.0f, sectionHeight-0.5f, headerView.frame.size.width, 0.5f)];
+    bottomSeparator.backgroundColor = [UIColor lightGrayColor];
+    bottomSeparator.tag = 1001;
+    [headerView.contentView addSubview:bottomSeparator];
+    
+    return headerView.contentView;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -186,7 +249,33 @@
     PFChallengesActivated *activation;
     
     switch (section) {
-        case 0: {
+        case 0:
+        {
+            UITableViewCell *cell = (UITableViewCell *)[self.tableView dequeueReusableCellWithIdentifier:@"autorelease"];
+
+            if (cell == nil) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"autorelease"];
+            }
+
+            if (!self.autoReleaseSwitch) {
+                self.autoReleaseSwitch = [[UISwitch alloc] init];
+            }
+
+            self.autoReleaseSwitch.on = self.scheduledActivationsOn;
+
+            cell.textLabel.text = @"Challenges On/Off";
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
+            [self.autoReleaseSwitch removeTarget:self action:@selector(challengesOnOffToggle:) forControlEvents:UIControlEventValueChanged];
+            [self.autoReleaseSwitch addTarget:self action:@selector(challengesOnOffToggle:) forControlEvents:UIControlEventValueChanged];
+            cell.accessoryView = self.autoReleaseSwitch;
+        
+            return cell;
+
+            break;
+        }
+        case 1:
+        {
             if (available > 0) {
                 activation = self.availableChallenges[row];
             } else {
@@ -195,7 +284,8 @@
         }
             break;
             
-        default: {
+        default:
+        {
             if (future > 0) {
                 activation = self.futureChallenges[row];
             } else {
@@ -221,21 +311,20 @@
             if ([MTUtil displayingCustomPlaylist]) {
                 NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
                 if (ordering != -1) {
-                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu", (long)ordering];
+                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", (long)ordering];
                 }
                 else {
                     cell.challengeNumber.text = @"";
                 }
             }
             else {
-                cell.challengeNumber.text = [challengeNumber stringValue];
+                cell.challengeNumber.text = [NSString stringWithFormat:@"%@)", [challengeNumber stringValue]];
             }
             
             cell.challengeTitle.text = challenge[@"title"];
             NSDate *activationDate = activation[@"activation_date"];
             NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-            [dateFormat setDateStyle:NSDateFormatterMediumStyle];
-            [dateFormat setTimeStyle:NSDateFormatterNoStyle];
+            [dateFormat setDateFormat:@"MM-dd-yyyy"];
             cell.activationDate.text = [dateFormat stringFromDate:activationDate];
         }
     }];
@@ -249,6 +338,195 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
+
+
+#pragma mark - UIAlertViewDelegate methods -
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if (self.autoReleaseSwitch.on) {
+        if (buttonIndex == alertView.cancelButtonIndex) {
+            self.scheduledActivationsOn = NO;
+            self.autoReleaseSwitch.enabled = YES;
+            [self.tableView reloadData];
+        }
+        else {
+            [self activateSchedules];
+        }
+    }
+    else {
+        if (buttonIndex == alertView.cancelButtonIndex) {
+            self.scheduledActivationsOn = YES;
+            self.autoReleaseSwitch.enabled = YES;
+            [self.tableView reloadData];
+        }
+        else {
+            [self deactivateSchedules];
+        }
+    }
+}
+
+
+#pragma mark - Private -
+- (void)challengesOnOffToggle:(id)sender
+{
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+    
+    self.autoReleaseSwitch.enabled = NO;
+    
+    if (self.autoReleaseSwitch.on) {
+        NSString *title = @"Turn Challenges ON";
+        NSString *message = @"Woohoo! You're about to unlock challenges for your students! Every week at this time, a new challenge will be unlocked. Check out the schedule for details.";
+        
+        [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil] show];
+        
+    } else {
+        NSString *title = @"Turn Challenges OFF";
+        NSString *message = @"Are you sure you want to turn challenges off?  No new challenges will be unlocked until you turn challenges back on. (The challenges that are already open will stay open.)";
+        
+        [[[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil] show];
+    }
+}
+
+- (void)activateSchedules
+{
+    // Mark user activated challenges
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserActivatedChallenges];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Turning ON...";
+    hud.dimBackground = YES;
+    
+    PFUser *user = [PFUser currentUser];
+    NSString *userID = [user objectId];
+    
+    MTMakeWeakSelf();
+    [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
+        if (!error) {
+            
+            // Make sure we have future challenges, otherwise display message
+            NSString *nameClass = [PFUser currentUser][@"class"];
+            NSString *nameSchool = [PFUser currentUser][@"school"];
+            
+            NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
+            PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+            scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+            
+            MTMakeWeakSelf();
+            [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    
+                    if (!error) {
+                        weakSelf.scheduledActivationsOn = (number > 0);
+                        
+                        if (number == 0) {
+                            [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"All of the Challenges in this schedule have been activated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                        }
+                        
+                    } else {
+                        weakSelf.scheduledActivationsOn = NO;
+                        
+                        NSLog(@"error - %@", error);
+                        if (![MTUtil internetReachable]) {
+                            [UIAlertView showNoInternetAlert];
+                        }
+                        else {
+                            NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn ON schedules. %ld: %@", (long)error.code, [error localizedDescription]];
+                            [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                        }
+                    }
+                    
+                    weakSelf.autoReleaseSwitch.enabled = YES;
+                    [weakSelf.tableView reloadData];
+                });
+                
+            }];
+            
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                
+                NSLog(@"error - %@", error);
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn ON schedules. %ld: %@", (long)error.code, [error localizedDescription]];
+                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                weakSelf.scheduledActivationsOn = NO;
+                [weakSelf.tableView reloadData];
+            });
+        }
+    }];
+}
+
+- (void)deactivateSchedules
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Turning OFF...";
+    hud.dimBackground = YES;
+    
+    PFUser *user = [PFUser currentUser];
+    NSString *userID = [user objectId];
+    
+    MTMakeWeakSelf();
+    [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            
+            weakSelf.autoReleaseSwitch.enabled = YES;
+            
+            if (!error) {
+                weakSelf.scheduledActivationsOn = NO;
+            } else {
+                weakSelf.scheduledActivationsOn = YES;
+                
+                NSLog(@"error - %@", error);
+                if (![MTUtil internetReachable]) {
+                    [UIAlertView showNoInternetAlert];
+                }
+                else {
+                    NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn OFF schedules. %ld: %@", (long)error.code, [error localizedDescription]];
+                    [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
+            }
+            
+            [weakSelf.tableView reloadData];
+        });
+    }];
+}
+
+- (NSString *)titleForSection:(NSInteger)section
+{
+    NSString *title = @"";
+
+    NSInteger available = self.availableChallenges.count;
+    NSInteger future = self.futureChallenges.count;
+
+    switch (section) {
+        case 0:
+        {
+            break;
+        }
+        case 1:
+        {
+            if (available > 0) {
+                title = @"AVAILABLE CHALLENGES";
+            }
+        }
+            break;
+
+        default:
+        {
+            if (future > 0) {
+                title = @"FUTURE CHALLENGES";
+            }
+        }
+            break;
+    }
+
+    return title;
 }
 
 
