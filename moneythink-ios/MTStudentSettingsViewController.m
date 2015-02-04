@@ -46,16 +46,17 @@
     NSString *userType = user[@"type"];
     self.signupOn = [userType isEqualToString:@"mentor"];
     
-    self.sections = @[@"PROFILE", @""];
+    self.sections = @[@"PROFILE", @"HELP", @""];
     if (self.notificationsOn) {
         if (self.signupOn) {
-            self.sections = @[@"NOTIFICATION", @"PROFILE", @"SHARE SIGN UP CODE", @""];
-        } else {
-            self.sections = @[@"NOTIFICATION", @"PROFILE", @""];
+            self.sections = @[@"NOTIFICATION", @"PROFILE", @"SHARE SIGN UP CODE", @"HELP", @""];
+        }
+        else {
+            self.sections = @[@"NOTIFICATION", @"PROFILE", @"HELP", @""];
         }
     } else {
         if (self.signupOn) {
-            self.sections = @[@"PROFILE", @"SHARE SIGN UP CODE", @""];
+            self.sections = @[@"PROFILE", @"SHARE SIGN UP CODE", @"HELP", @""];
         }
     }
     
@@ -128,11 +129,17 @@
     NSInteger rows = 1;
     if ([self.sections[section] isEqualToString:@"NOTIFICATIONS"]) {
         rows = 1;
-    } else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
+    }
+    else if ([self.sections[section] isEqualToString:@"PROFILE"]) {
         rows = 1;
-    } else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
+    }
+    else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
         rows = self.signUpCodes.count;
-    } else {
+    }
+    else if ([self.sections[section] isEqualToString:@"HELP"]) {
+        rows = 3;
+    }
+    else {
         rows = 1;
     }
     return rows;
@@ -195,6 +202,30 @@
         [cell.textLabel setFont:[UIFont systemFontOfSize:16.0f]];
         cell.textLabel.text = [NSString stringWithFormat:@"%@ - %@", msg, code];
         cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    else if ([self.sections[section] isEqualToString:@"HELP"]) {
+        switch (row) {
+            case 0:
+                cell.textLabel.text = @"Contact Us";
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+                break;
+                
+            case 1:
+                cell.textLabel.text = @"My Tickets";
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+                break;
+                
+            case 2:
+                cell.textLabel.text = @"Support";
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+                break;
+                
+            default:
+                break;
+        }
     }
     else {
         cell.textLabel.text = @"Log Out";
@@ -300,7 +331,42 @@
                 [self presentViewController:activityViewController animated:YES completion:^{}];
             }
         }];
-        
+    }
+    else if ([self.sections[section] isEqualToString:@"HELP"]) {
+        switch (row) {
+            case 0:
+            {
+                [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
+                    
+                    // specify any additional tags desired
+                    //requestCreationConfig.tags = [NSArray arrayWithObjects:@"tag_one", @"tag_two", nil];
+                    
+                    // add some custom content to the description
+                    //NSString *additionalText = @"Some sample extra content.";
+//                    
+//                    NSString *txt = [NSString stringWithFormat:@"%@%@",
+//                                     [requestCreationConfig contentSeperator],
+//                                     additionalText];
+//                    
+//                    requestCreationConfig.additionalRequestInfo = txt;
+                }];
+                
+                [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+                break;
+            }
+                
+            case 1:
+            {
+                [ZDKRequests showRequestListWithNavController:self.navigationController];
+                break;
+            }
+                
+            case 2:
+            {
+                [ZDKHelpCenter showHelpCenterWithNavController:self.navigationController];
+                break;
+            }
+        }
     }
     else {
         if ([UIAlertController class]) {
@@ -315,12 +381,12 @@
                                      handler:^(UIAlertAction *action) {}];
             
             UIAlertAction *logout = [UIAlertAction
-                                        actionWithTitle:@"Logout"
-                                        style:UIAlertActionStyleDestructive
-                                        handler:^(UIAlertAction *action) {
-                                            [PFUser logOut];
-                                            [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
-                                        }];
+                                     actionWithTitle:@"Logout"
+                                     style:UIAlertActionStyleDestructive
+                                     handler:^(UIAlertAction *action) {
+                                         [PFUser logOut];
+                                         [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
+                                     }];
             
             [logoutSheet addAction:cancel];
             [logoutSheet addAction:logout];

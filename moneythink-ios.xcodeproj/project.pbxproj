@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1063096D1A3A3BBF0093C209 /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 106309681A3A3BBF0093C209 /* Bolts.framework */; };
-		1063096F1A3A3BBF0093C209 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063096A1A3A3BBF0093C209 /* Fabric.framework */; };
 		106309701A3A3BBF0093C209 /* libBlocksKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063096B1A3A3BBF0093C209 /* libBlocksKit.a */; };
 		106309711A3A3BBF0093C209 /* Parse.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063096C1A3A3BBF0093C209 /* Parse.framework */; };
 		106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309741A3A3C4D0093C209 /* MBProgressHUD.m */; };
@@ -182,7 +180,6 @@
 		8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065119DA1F52000CFBF6 /* mentorSignupButton@2x.png */; };
 		8921065819DA1F52000CFBF6 /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065219DA1F52000CFBF6 /* studentSignupButton.png */; };
 		8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */; };
-		893C18F71A719E2900F0666B /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 893C18F61A719E2900F0666B /* Crashlytics.framework */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C78A1A77F79500BE125E /* challenges-icon.png */; };
@@ -203,6 +200,12 @@
 		89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */; };
 		89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */; };
 		89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E51A09638400F02CC7 /* PFCustomChallenges.m */; };
+		89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF35591A81792C0025735E /* Bolts.framework */; };
+		89FF355C1A8179350025735E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355B1A8179350025735E /* Crashlytics.framework */; };
+		89FF355E1A8179400025735E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355D1A8179400025735E /* Fabric.framework */; };
+		89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355F1A8179560025735E /* ZendeskSDK.framework */; };
+		89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35611A8179950025735E /* ZendeskSDK.bundle */; };
+		89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -243,8 +246,6 @@
 		106309651A3A3BBF0093C209 /* UITextField+BlocksKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITextField+BlocksKit.h"; sourceTree = "<group>"; };
 		106309661A3A3BBF0093C209 /* UIView+BlocksKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+BlocksKit.h"; sourceTree = "<group>"; };
 		106309671A3A3BBF0093C209 /* UIWebView+BlocksKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+BlocksKit.h"; sourceTree = "<group>"; };
-		106309681A3A3BBF0093C209 /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		1063096A1A3A3BBF0093C209 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		1063096B1A3A3BBF0093C209 /* libBlocksKit.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libBlocksKit.a; sourceTree = "<group>"; };
 		1063096C1A3A3BBF0093C209 /* Parse.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Parse.framework; sourceTree = "<group>"; };
 		106309731A3A3C4D0093C209 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
@@ -498,7 +499,6 @@
 		8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
 		8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
 		8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
-		893C18F61A719E2900F0666B /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = SOURCE_ROOT; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
@@ -527,6 +527,12 @@
 		89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylistChallenges.m; path = "Data Classes/PFPlaylistChallenges.m"; sourceTree = "<group>"; };
 		89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCustomChallenges.h; path = "Data Classes/PFCustomChallenges.h"; sourceTree = "<group>"; };
 		89F250E51A09638400F02CC7 /* PFCustomChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCustomChallenges.m; path = "Data Classes/PFCustomChallenges.m"; sourceTree = "<group>"; };
+		89FF35591A81792C0025735E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
+		89FF355B1A8179350025735E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		89FF355D1A8179400025735E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		89FF355F1A8179560025735E /* ZendeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZendeskSDK.framework; sourceTree = "<group>"; };
+		89FF35611A8179950025735E /* ZendeskSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDK.bundle; sourceTree = "<group>"; };
+		89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDKStrings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -534,17 +540,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89FF355E1A8179400025735E /* Fabric.framework in Frameworks */,
 				1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */,
 				1063098A1A3A3C8F0093C209 /* ParseUI.framework in Frameworks */,
 				89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */,
 				89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */,
-				893C18F71A719E2900F0666B /* Crashlytics.framework in Frameworks */,
 				106309701A3A3BBF0093C209 /* libBlocksKit.a in Frameworks */,
+				89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */,
 				58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */,
-				1063096F1A3A3BBF0093C209 /* Fabric.framework in Frameworks */,
+				89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */,
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
+				89FF355C1A8179350025735E /* Crashlytics.framework in Frameworks */,
 				5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */,
 				5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */,
 				106309711A3A3BBF0093C209 /* Parse.framework in Frameworks */,
@@ -552,7 +560,6 @@
 				5876E2E9196F2CAB00C176EC /* libz.dylib in Frameworks */,
 				5876E2E7196F2CA000C176EC /* CoreLocation.framework in Frameworks */,
 				5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */,
-				1063096D1A3A3BBF0093C209 /* Bolts.framework in Frameworks */,
 				5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */,
 				5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */,
 				5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */,
@@ -566,13 +573,14 @@
 		106309411A3A3BBF0093C209 /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				893C18F61A719E2900F0666B /* Crashlytics.framework */,
+				89FF35591A81792C0025735E /* Bolts.framework */,
 				106309421A3A3BBF0093C209 /* BlocksKit */,
-				106309681A3A3BBF0093C209 /* Bolts.framework */,
-				1063096A1A3A3BBF0093C209 /* Fabric.framework */,
 				1063096B1A3A3BBF0093C209 /* libBlocksKit.a */,
+				89FF355B1A8179350025735E /* Crashlytics.framework */,
+				89FF355D1A8179400025735E /* Fabric.framework */,
 				1063096C1A3A3BBF0093C209 /* Parse.framework */,
 				106309891A3A3C8F0093C209 /* ParseUI.framework */,
+				89FF355F1A8179560025735E /* ZendeskSDK.framework */,
 			);
 			path = libs;
 			sourceTree = SOURCE_ROOT;
@@ -833,6 +841,7 @@
 		5876E2AE196F2C1F00C176EC /* moneythink-ios */ = {
 			isa = PBXGroup;
 			children = (
+				89FF35581A8178540025735E /* Bundles */,
 				5876E2AF196F2C1F00C176EC /* Global */,
 				106309411A3A3BBF0093C209 /* libs */,
 				106309721A3A3C4D0093C209 /* ThirdParty */,
@@ -1026,6 +1035,15 @@
 			path = "button images";
 			sourceTree = "<group>";
 		};
+		89FF35581A8178540025735E /* Bundles */ = {
+			isa = PBXGroup;
+			children = (
+				89FF35611A8179950025735E /* ZendeskSDK.bundle */,
+				89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */,
+			);
+			path = Bundles;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1150,10 +1168,12 @@
 				8921063419DA1F37000CFBF6 /* menu_button@2x.png in Resources */,
 				1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */,
 				8921062219DA1F37000CFBF6 /* icon_challenge_future@2x.png in Resources */,
+				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8921062019DA1F37000CFBF6 /* comment@2x.png in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
 				8921064B19DA1F37000CFBF6 /* verify_normal.png in Resources */,
 				8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */,
+				89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */,
 				8921063519DA1F37000CFBF6 /* moneythink_icon_logo.png in Resources */,
 				8921064919DA1F37000CFBF6 /* verify_active.png in Resources */,
 				899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */,
@@ -1557,7 +1577,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "c5b47fe0-127e-4fd6-aa86-02a289cbabd9";
+				PROVISIONING_PROFILE = "f59bc4f9-fbd8-4d52-bbd6-33f3c38bf3fd";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1634,7 +1654,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "c5b47fe0-127e-4fd6-aa86-02a289cbabd9";
+				PROVISIONING_PROFILE = "f59bc4f9-fbd8-4d52-bbd6-33f3c38bf3fd";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1674,7 +1694,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1711,7 +1731,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "54ec535c-29ba-4684-92b9-573476b89cab";
+				PROVISIONING_PROFILE = "6de1cb88-7967-42fa-8a76-92ce2b1f1b55";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

@@ -30,6 +30,10 @@
 {
     [Fabric with:@[CrashlyticsKit]];
     
+    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
+                               zendeskUrl:@"https://moneythink.zendesk.com"
+                              andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
+    
     [Parse setApplicationId:applicationID clientKey:clientKey];
     //[Parse enableLocalDatastore];
     

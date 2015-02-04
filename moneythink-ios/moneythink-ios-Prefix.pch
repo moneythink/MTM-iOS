@@ -27,6 +27,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
+#import <ZendeskSDK/ZendeskSDK.h>
 
 #import "MTUtil.h"
 #import "UIColor+Palette.h"

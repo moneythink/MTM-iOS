@@ -131,6 +131,15 @@
         [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
+                
+                // Setup Zendesk User
+                ZDKAnonymousIdentity *identity = [ZDKAnonymousIdentity new];
+                PFUser *userCurrent = [PFUser currentUser];
+                identity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
+                identity.email = userCurrent[@"email"];
+                identity.externalId = [user objectId];
+                [ZDKConfig instance].userIdentity = identity;
+
                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                     [weakSelf performSegueWithIdentifier:@"studentLoginSegue" sender:weakSelf];
                 } else {
