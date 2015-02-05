@@ -71,6 +71,8 @@
     versionLabel.textAlignment = NSTextAlignmentCenter;
     [footerView addSubview:versionLabel];
     self.tableview.tableFooterView = footerView;
+    
+    [self.tableview reloadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -247,22 +249,29 @@
         return 20.0f;
     }
     else {
-        return 44.0f;
+        return 30.0f;
     }
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 44.0f)];
+    CGFloat height = 30.0f;
+    if (section == [self.sections count]-1) {
+        height = 20.0f;
+    }
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableView.frame.size.width, height)];
     headerView.backgroundColor = [UIColor clearColor];
     
-    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 14.0f, tableView.frame.size.width-30.0f, 30.0f)];
-    titleLabel.backgroundColor = [UIColor clearColor];
-    titleLabel.text = self.sections[section];
-    titleLabel.textColor = [UIColor darkGrayColor];
-    titleLabel.font = [UIFont mtFontOfSize:13.0f];
-    
-    [headerView addSubview:titleLabel];
+    if (section != [self.sections count] -1) {
+        UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 0.0f, tableView.frame.size.width-30.0f, 30.0f)];
+        titleLabel.backgroundColor = [UIColor clearColor];
+        titleLabel.text = self.sections[section];
+        titleLabel.textColor = [UIColor darkGrayColor];
+        titleLabel.font = [UIFont mtFontOfSize:13.0f];
+        
+        [headerView addSubview:titleLabel];
+    }
     
     return headerView;
 }

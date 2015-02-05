@@ -562,7 +562,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" allowsSelection="NO" rowHeight="60" sectionHeaderHeight="60" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="4xe-Pq-Mah">
-                                <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                                <rect key="frame" x="0.0" y="64" width="320" height="366"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NextStepHeaderView" rowHeight="50" id="rTt-Wj-TrA" userLabel="Section Header (Next Step)">
@@ -579,7 +579,7 @@
                                                             <color key="backgroundColor" red="0.1019607843" green="0.74901960779999999" blue="0.59215686270000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                             <inset key="contentEdgeInsets" minX="5" minY="0.0" maxX="5" maxY="0.0"/>
-                                                            <state key="normal" title="▶︎ NEXT STEP: Edit Your Profile">
+                                                            <state key="normal" title="▶︎ NEXT STEP: Add Your Profile Photo">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
@@ -815,8 +815,8 @@
                         <constraints>
                             <constraint firstItem="4xe-Pq-Mah" firstAttribute="top" secondItem="gvY-Cd-lj7" secondAttribute="top" constant="64" id="MpF-TQ-3py"/>
                             <constraint firstAttribute="trailing" secondItem="4xe-Pq-Mah" secondAttribute="trailing" id="NPh-pq-qNj"/>
-                            <constraint firstItem="z0w-D1-kzW" firstAttribute="top" secondItem="4xe-Pq-Mah" secondAttribute="bottom" id="X1V-RS-xQv"/>
                             <constraint firstItem="4xe-Pq-Mah" firstAttribute="leading" secondItem="gvY-Cd-lj7" secondAttribute="leading" id="XJj-uR-h1t"/>
+                            <constraint firstAttribute="bottom" secondItem="4xe-Pq-Mah" secondAttribute="bottom" constant="50" id="cLo-af-xcd"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Dashboard" image="students_normal.png" id="awp-qS-UwJ"/>
@@ -3260,8 +3260,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="w4W-Dv-kLM">
-                                <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" rowHeight="44" sectionHeaderHeight="30" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="w4W-Dv-kLM">
+                                <rect key="frame" x="0.0" y="64" width="320" height="366"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="naO-Zd-8uf"/>
@@ -3286,8 +3286,8 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="w4W-Dv-kLM" secondAttribute="bottom" id="IF7-yN-2py"/>
-                            <constraint firstItem="w4W-Dv-kLM" firstAttribute="top" secondItem="RyN-7q-12f" secondAttribute="top" constant="64" id="c73-We-j13"/>
+                            <constraint firstItem="w4W-Dv-kLM" firstAttribute="top" secondItem="RyN-7q-12f" secondAttribute="top" constant="64" id="Cai-IG-QFE"/>
+                            <constraint firstAttribute="bottom" secondItem="w4W-Dv-kLM" secondAttribute="bottom" constant="50" id="av8-5w-FOz"/>
                             <constraint firstItem="w4W-Dv-kLM" firstAttribute="leading" secondItem="RyN-7q-12f" secondAttribute="leading" id="hY7-GD-T2k"/>
                         </constraints>
                     </view>

@@ -44,6 +44,7 @@
 {
     [super viewWillAppear:animated];
     self.parentViewController.navigationItem.title = @"Dashboard";
+    self.scheduledActivationsOn = NO;
     self.queriedForActivationsOn = NO;
     
     [self setNextStepState];
@@ -166,7 +167,7 @@
     
     BOOL activatedChallenges = NO;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserActivatedChallenges] ||
-        (self.scheduledActivationsOn)) {
+        (self.scheduledActivationsOn && self.queriedForActivationsOn)) {
         // Make sure to set in case of upgrade
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserActivatedChallenges];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -327,7 +328,7 @@
             switch (self.nextStepState) {
                 case MTProgressNextStepStateEditProfile:
                 {
-                    nextStepText = @"▶︎ NEXT STEP: Edit Your Profile";
+                    nextStepText = @"▶︎ NEXT STEP: Add Your Profile Photo";
                     [nextStepButton addTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
                     break;
                 }
@@ -375,7 +376,7 @@
             [editButton setBackgroundImage:[UIImage imageWithColor:[UIColor darkGrayColor] size:editButton.frame.size] forState:UIControlStateHighlighted];
             [editButton setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithHexString:@"F2F2F2"] size:editButton.frame.size] forState:UIControlStateNormal];
             [editButton setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
-            [editButton setTitleColor:[UIColor colorWithHexString:@"58559b"] forState:UIControlStateNormal];
+            [editButton setTitleColor:[UIColor colorWithHexString:@"58595b"] forState:UIControlStateNormal];
             [editButton addTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
 
             break;

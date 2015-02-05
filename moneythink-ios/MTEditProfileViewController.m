@@ -145,7 +145,6 @@
     [self.saveButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
     
     __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-    self.userProfileButton.imageView.image = self.profileImage.image;
     self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
     self.userProfileButton.imageView.layer.masksToBounds = YES;
 
@@ -747,10 +746,6 @@
         return;
     }
     
-    // Mark user saved profile changes
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
     if (self.schoolIsNew) {
         PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
         createSchool[@"name"] = self.userSchool.text;
@@ -778,6 +773,10 @@
     
     if (self.updatedProfileImage) {
         
+        // Mark user saved profile changes
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
         self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
         NSString *fileName = @"profile_image.png";
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.8f);
