@@ -393,6 +393,10 @@
                                      actionWithTitle:@"Logout"
                                      style:UIAlertActionStyleDestructive
                                      handler:^(UIAlertAction *action) {
+                                         // Reset user profile check for next user
+                                         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
+                                         [[NSUserDefaults standardUserDefaults] synchronize];
+
                                          [PFUser logOut];
                                          [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
                                      }];
@@ -414,6 +418,10 @@
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        // Reset user profile check for next user
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
         [PFUser logOut];
         [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
     }

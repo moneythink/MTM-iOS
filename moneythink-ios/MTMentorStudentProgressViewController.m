@@ -72,16 +72,17 @@
             }
         }
         
-        weakSelf.queriedForActivationsOn = YES;
-        
-        [weakSelf setNextStepState];
-        [weakSelf.tableView reloadData];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.queriedForActivationsOn = YES;
+            [weakSelf setNextStepState];
+            [weakSelf.tableView reloadData];
+        });
     }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:NO];
+    [super viewDidAppear:animated];
     
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSString *nameSchool = [PFUser currentUser][@"school"];
@@ -96,7 +97,11 @@
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             weakSelf.classStudents = objects;
-            [weakSelf.tableView reloadData];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf setNextStepState];
+                [weakSelf.tableView reloadData];
+            });
         }
     }];
 }
@@ -157,7 +162,9 @@
 - (void)setNextStepState
 {
     BOOL savedProfile = NO;
-    if ([PFUser currentUser][@"profile_picture"] || [[NSUserDefaults standardUserDefaults] boolForKey:kUserSavedProfileChanges]) {
+    
+    BOOL hasEdited = [[NSUserDefaults standardUserDefaults] boolForKey:kUserSavedProfileChanges];
+    if ([PFUser currentUser][@"profile_picture"] || hasEdited) {
         // Make sure to set in case of upgrade
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
         [[NSUserDefaults standardUserDefaults] synchronize];

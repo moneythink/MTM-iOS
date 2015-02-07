@@ -1577,7 +1577,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "f59bc4f9-fbd8-4d52-bbd6-33f3c38bf3fd";
+				PROVISIONING_PROFILE = "939a8ac7-6a0f-438a-8dce-816f2ee37657";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1654,7 +1654,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "f59bc4f9-fbd8-4d52-bbd6-33f3c38bf3fd";
+				PROVISIONING_PROFILE = "939a8ac7-6a0f-438a-8dce-816f2ee37657";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1731,7 +1731,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "6de1cb88-7967-42fa-8a76-92ce2b1f1b55";
+				PROVISIONING_PROFILE = "caade4ce-dbd8-4d42-9125-e0a1a264117d";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

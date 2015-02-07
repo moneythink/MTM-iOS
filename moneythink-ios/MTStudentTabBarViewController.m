@@ -52,6 +52,10 @@
             break;
             
         case 1: {
+            // Reset user profile check for next user
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+
             [PFUser logOut];
             [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
             break;
