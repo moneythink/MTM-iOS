@@ -19,6 +19,7 @@
 #define kUserDidChangeClass @"kUserDidChangeClass"
 #define kUserSavedProfileChanges @"kUserSavedProfileChanges"
 #define kUserActivatedChallenges @"kUserActivatedChallenges"
+#define kUserInvitedStudents @"kUserInvitedStudents"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

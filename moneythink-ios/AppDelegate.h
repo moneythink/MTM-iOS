@@ -20,5 +20,6 @@
 - (void)setGrayNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)updateParseInstallationState;
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
+- (void)selectSettingsTabView;
 
 @end

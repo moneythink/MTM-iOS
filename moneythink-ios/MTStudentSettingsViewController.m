@@ -96,11 +96,21 @@
     PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
     querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
+    MTMakeWeakSelf();
     [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
-            self.signUpCodes = objects;
+            weakSelf.signUpCodes = objects;
             
-            [self.tableview reloadData];
+            if (self.signupOn) {
+                if ([weakSelf.signUpCodes count] == 0) {
+                    weakSelf.sections = @[@"PROFILE", @"HELP", @""];
+                }
+                else {
+                    weakSelf.sections = @[@"PROFILE", @"SHARE SIGN UP CODE", @"HELP", @""];
+                }
+            }
+
+            [weakSelf.tableview reloadData];
         }
     }];
 }
@@ -121,8 +131,7 @@
 #pragma mark - UITableViewController delegate methods -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
 {
-    NSInteger sections = self.sections.count;
-    
+    NSInteger sections = [self.sections count];
     return sections;
 }
 
@@ -215,13 +224,11 @@
                 
             case 1:
                 cell.textLabel.text = @"My Tickets";
-                cell.accessoryType = UITableViewCellAccessoryNone;
                 [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
                 break;
                 
             case 2:
                 cell.textLabel.text = @"Support";
-                cell.accessoryType = UITableViewCellAccessoryNone;
                 [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
                 break;
                 
@@ -313,6 +320,10 @@
             case 0: {
                 type = @"student";
                 msg = @"Student";
+                
+                // Mark user invited students
+                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserInvitedStudents];
+                [[NSUserDefaults standardUserDefaults] synchronize];
             }
                 break;
                 
@@ -323,43 +334,18 @@
                 break;
         }
         
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"school = %@ AND class = %@ AND type = %@", [PFUser currentUser][@"school"], [PFUser currentUser][@"class"], type];
-        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-        querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork
-        ;
+        PFSignupCodes *signupCode = self.signUpCodes[row];
+        NSString *signupCodeString = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [PFUser currentUser][@"class"], signupCode[@"code"]];
+        NSArray *dataToShare = @[signupCodeString];
         
-        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                NSString *signupCode = [objects firstObject][@"code"];
-                signupCode = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [PFUser currentUser][@"class"], signupCode];
-                NSArray *dataToShare = @[signupCode];
-                
-                UIActivityViewController *activityViewController =
-                [[UIActivityViewController alloc] initWithActivityItems:dataToShare
-                                                  applicationActivities:nil];
-                [self presentViewController:activityViewController animated:YES completion:^{}];
-            }
-        }];
+        UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:dataToShare
+                                                                                             applicationActivities:nil];
+        [self presentViewController:activityViewController animated:YES completion:nil];
     }
     else if ([self.sections[section] isEqualToString:@"HELP"]) {
         switch (row) {
             case 0:
             {
-                [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
-                    
-                    // specify any additional tags desired
-                    //requestCreationConfig.tags = [NSArray arrayWithObjects:@"tag_one", @"tag_two", nil];
-                    
-                    // add some custom content to the description
-                    //NSString *additionalText = @"Some sample extra content.";
-//                    
-//                    NSString *txt = [NSString stringWithFormat:@"%@%@",
-//                                     [requestCreationConfig contentSeperator],
-//                                     additionalText];
-//                    
-//                    requestCreationConfig.additionalRequestInfo = txt;
-                }];
-                
                 [ZDKRequests showRequestCreationWithNavController:self.navigationController];
                 break;
             }
@@ -420,9 +406,13 @@
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         // Reset user profile check for next user
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
         [[NSUserDefaults standardUserDefaults] synchronize];
 
         [PFUser logOut];
+        [[ZDKConfig instance] setUserIdentity:nil];
+
         [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
     }
 }

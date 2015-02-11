@@ -19,6 +19,7 @@
 @property (nonatomic, strong) PFUser *userCurrent;
 @property (nonatomic) MTProgressNextStepState nextStepState;
 @property (nonatomic) BOOL queriedForActivationsOn;
+@property (nonatomic) BOOL queriedForStudents;
 
 @end
 
@@ -46,6 +47,7 @@
     self.parentViewController.navigationItem.title = @"Dashboard";
     self.scheduledActivationsOn = NO;
     self.queriedForActivationsOn = NO;
+    self.queriedForStudents = NO;
     
     [self setNextStepState];
     [self.tableView reloadData];
@@ -99,6 +101,7 @@
             weakSelf.classStudents = objects;
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.queriedForStudents = YES;
                 [weakSelf setNextStepState];
                 [weakSelf.tableView reloadData];
             });
@@ -116,6 +119,11 @@
 - (void)presentChallengeSchedule
 {
     [self performSegueWithIdentifier:@"pushScheduleView" sender:self];
+}
+
+- (void)presentInviteStudents
+{
+    [[MTUtil getAppDelegate] selectSettingsTabView];
 }
 
 
@@ -186,11 +194,28 @@
         activatedChallenges = YES;
     }
     
+    BOOL invitedStudents = NO;
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserInvitedStudents] ||
+        ([self.classStudents count] > 0 && self.queriedForStudents)) {
+        // Make sure to set in case of upgrade
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserInvitedStudents];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        invitedStudents = YES;
+    }
+    else if (([self.classStudents count] == 0 && !self.queriedForStudents) || !self.queriedForActivationsOn) {
+        // Temporaritly set to YES until we have actually queried for both activations AND students
+        invitedStudents = YES;
+    }
+    
     if (!savedProfile) {
         self.nextStepState = MTProgressNextStepStateEditProfile;
     }
     else if (!activatedChallenges) {
         self.nextStepState = MTProgressNextStepStateScheduleChallenges;
+    }
+    else if (!invitedStudents) {
+        self.nextStepState = MTProgressNextStepStateInviteStudents;
     }
     else {
         self.nextStepState = MTProgressNextStepStateDone;
@@ -329,6 +354,7 @@
             
             [nextStepButton removeTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
             [nextStepButton removeTarget:self action:@selector(presentChallengeSchedule) forControlEvents:UIControlEventTouchUpInside];
+            [nextStepButton removeTarget:self action:@selector(presentInviteStudents) forControlEvents:UIControlEventTouchUpInside];
 
             NSString *nextStepText;
 
@@ -347,6 +373,13 @@
                     break;
                 }
                     
+                case MTProgressNextStepStateInviteStudents:
+                {
+                    nextStepText = @"▶︎ NEXT STEP: Invite Students";
+                    [nextStepButton addTarget:self action:@selector(presentInviteStudents) forControlEvents:UIControlEventTouchUpInside];
+                    break;
+                }
+  
                 case MTProgressNextStepStateDone:
                 {
                     return nil;

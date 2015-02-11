@@ -18,6 +18,7 @@ typedef enum {
 typedef enum {
     MTProgressNextStepStateEditProfile = 0,
     MTProgressNextStepStateScheduleChallenges,
+    MTProgressNextStepStateInviteStudents,
     MTProgressNextStepStateDone
 } MTProgressNextStepState;
 

@@ -132,13 +132,7 @@
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
                 
-                // Setup Zendesk User
-                ZDKAnonymousIdentity *identity = [ZDKAnonymousIdentity new];
-                PFUser *userCurrent = [PFUser currentUser];
-                identity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
-                identity.email = userCurrent[@"email"];
-                identity.externalId = [user objectId];
-                [ZDKConfig instance].userIdentity = identity;
+                [weakSelf setupZenDeskUser:user];
 
                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                     [weakSelf performSegueWithIdentifier:@"studentLoginSegue" sender:weakSelf];
@@ -227,6 +221,16 @@
     [self reloadInputViews];
 }
 
+- (void)setupZenDeskUser:(PFUser *)user
+{
+    ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
+    PFUser *userCurrent = [PFUser currentUser];
+    newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
+    newIdentity.email = userCurrent[@"email"];
+    newIdentity.externalId = [user objectId];
+    [[ZDKConfig instance] setUserIdentity:newIdentity];
+}
+
 
 #pragma mark - Login Methods -
 - (IBAction)resetTapped:(id)sender
@@ -255,10 +259,13 @@
     user.username = self.emailTextField.text;
     user.password = self.passwordTextField.text;
     
+    MTMakeWeakSelf();
     [PFUser logInWithUsernameInBackground:self.emailTextField.text password:self.passwordTextField.text block:^(PFUser *user, NSError *error) {
         NSString *errorString = [error userInfo][@"error"];
         
         if (!error) {
+            [weakSelf setupZenDeskUser:user];
+
             // Update for Push Notifications
             [[MTUtil getAppDelegate] updateParseInstallationState];
             
@@ -266,9 +273,9 @@
             [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
 
             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                [self performSegueWithIdentifier:@"studentLoginSegue" sender:self];
+                [weakSelf performSegueWithIdentifier:@"studentLoginSegue" sender:weakSelf];
             } else {
-                [self performSegueWithIdentifier:@"mentorLoginSegue" sender:self];
+                [weakSelf performSegueWithIdentifier:@"mentorLoginSegue" sender:weakSelf];
             }
         } else {
             [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
