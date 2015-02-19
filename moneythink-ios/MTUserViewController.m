@@ -132,7 +132,7 @@
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
                 
-                [weakSelf setupZenDeskUser:user];
+                [[MTUtil getAppDelegate] configureZendesk];
 
                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
                     [weakSelf performSegueWithIdentifier:@"studentLoginSegue" sender:weakSelf];
@@ -221,16 +221,6 @@
     [self reloadInputViews];
 }
 
-- (void)setupZenDeskUser:(PFUser *)user
-{
-    ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
-    PFUser *userCurrent = [PFUser currentUser];
-    newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
-    newIdentity.email = userCurrent[@"email"];
-    newIdentity.externalId = [user objectId];
-    [[ZDKConfig instance] setUserIdentity:newIdentity];
-}
-
 
 #pragma mark - Login Methods -
 - (IBAction)resetTapped:(id)sender
@@ -264,7 +254,7 @@
         NSString *errorString = [error userInfo][@"error"];
         
         if (!error) {
-            [weakSelf setupZenDeskUser:user];
+            [[MTUtil getAppDelegate] configureZendesk];
 
             // Update for Push Notifications
             [[MTUtil getAppDelegate] updateParseInstallationState];

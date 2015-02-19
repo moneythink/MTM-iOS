@@ -9,6 +9,12 @@
 #import "MTStudentSettingsViewController.h"
 #import "MTStudentTabBarViewController.h"
 
+#ifdef STAGE
+static NSString *stageString = @"STAGE";
+#else
+static NSString *stageString = @"";
+#endif
+
 @interface MTStudentSettingsViewController ()
 
 @property (strong, nonatomic) IBOutlet UITableView *tableview;
@@ -62,9 +68,18 @@
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 30.0f)];
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:footerView.frame];
-    versionLabel.text = [NSString stringWithFormat:@"Version %@ (%@)",
-                         [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
-                         [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    
+    if (!IsEmpty(stageString)) {
+        versionLabel.text = [NSString stringWithFormat:@"Version %@ (%@) - STAGE",
+                             [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    }
+    else {
+        versionLabel.text = [NSString stringWithFormat:@"Version %@ (%@)",
+                             [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                             [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+    }
+    
     versionLabel.backgroundColor = [UIColor clearColor];
     versionLabel.font = [UIFont mtFontOfSize:10.0f];
     versionLabel.textColor = [UIColor darkGrey];
@@ -87,6 +102,8 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    
+    [[MTUtil getAppDelegate] configureZendesk];
     
     PFUser *user = [PFUser currentUser];
     NSString *userClass = user[@"class"];
@@ -343,6 +360,8 @@
         [self presentViewController:activityViewController animated:YES completion:nil];
     }
     else if ([self.sections[section] isEqualToString:@"HELP"]) {
+        [[MTUtil getAppDelegate] configureZendesk];
+
         switch (row) {
             case 0:
             {

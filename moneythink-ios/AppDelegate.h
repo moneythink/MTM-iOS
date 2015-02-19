@@ -21,5 +21,6 @@
 - (void)updateParseInstallationState;
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
 - (void)selectSettingsTabView;
+- (void)configureZendesk;
 
 @end

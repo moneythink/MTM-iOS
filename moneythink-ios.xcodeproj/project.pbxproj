@@ -1434,7 +1434,7 @@
 			};
 			name = Release;
 		};
-		8901D8AA19FC58F6006E9168 /* Release (Stage) */ = {
+		897278211A96484000557B66 /* Adhoc (Stage) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1450,11 +1450,18 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Moneythink (YN5DHE47NH)";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_NS_ASSERTIONS = NO;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "STAGE=1";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"STAGE=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
@@ -1462,14 +1469,14 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = "-ObjC";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 			};
-			name = "Release (Stage)";
+			name = "Adhoc (Stage)";
 		};
-		8901D8AB19FC58F6006E9168 /* Release (Stage) */ = {
+		897278221A96484000557B66 /* Adhoc (Stage) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1499,11 +1506,11 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "4bfa5f38-a24f-4e3e-b939-fac3470f6fef";
+				PROVISIONING_PROFILE = "caade4ce-dbd8-4d42-9125-e0a1a264117d";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
-			name = "Release (Stage)";
+			name = "Adhoc (Stage)";
 		};
 		8982071719D9F77D0008ED5D /* Debug (Stage) */ = {
 			isa = XCBuildConfiguration;
@@ -1745,9 +1752,9 @@
 			buildConfigurations = (
 				8982071919D9F78D0008ED5D /* Debug (Production) */,
 				89E8577C19E44F1500E1C708 /* Adhoc (Production) */,
+				897278211A96484000557B66 /* Adhoc (Stage) */,
 				8982071719D9F77D0008ED5D /* Debug (Stage) */,
 				5876E2D9196F2C1F00C176EC /* Release */,
-				8901D8AA19FC58F6006E9168 /* Release (Stage) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1757,9 +1764,9 @@
 			buildConfigurations = (
 				8982071A19D9F78D0008ED5D /* Debug (Production) */,
 				89E8577D19E44F1500E1C708 /* Adhoc (Production) */,
+				897278221A96484000557B66 /* Adhoc (Stage) */,
 				8982071819D9F77D0008ED5D /* Debug (Stage) */,
 				5876E2DC196F2C1F00C176EC /* Release */,
-				8901D8AB19FC58F6006E9168 /* Release (Stage) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

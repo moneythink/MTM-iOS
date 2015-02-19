@@ -31,10 +31,11 @@
 {
     [Fabric with:@[CrashlyticsKit]];
     
-    [self setupZenDesk];
-    
     [Parse setApplicationId:applicationID clientKey:clientKey];
     //[Parse enableLocalDatastore];
+    
+    // AFTER Parse setup
+    [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
@@ -414,35 +415,13 @@
     }];
 }
 
-- (void)setupZenDesk
+- (void)setupZendesk
 {
     [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
                                    zendeskUrl:@"https://moneythink.zendesk.com"
                                   andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
-
-    [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
-        
-        // specify any additional tags desired
-        NSString *appVersion = [NSString stringWithFormat:@"AppVersion_%@ AppBuild_%@",
-                                [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
-                                [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
-        
-        requestCreationConfig.tags = [NSArray arrayWithObjects:[[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                                      [[UIDevice currentDevice].localizedModel stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                                      [[UIDevice currentDevice].systemName stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                                      [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@" " withString:@"_"],
-                                      appVersion,
-                                      nil];
-        
-        // add some custom content to the description
-        //NSString *additionalText = @"Some sample extra content.";
-        //
-        //                    NSString *txt = [NSString stringWithFormat:@"%@%@",
-        //                                     [requestCreationConfig contentSeperator],
-        //                                     additionalText];
-        //
-        //                    requestCreationConfig.additionalRequestInfo = txt;
-    }];
+    
+    [self configureZendesk];
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
     // OPTIONAL - Customize appearance
@@ -581,6 +560,43 @@
     UIActivityIndicatorView *rmaSpinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
     [[ZDKRMAFeedbackView appearance] setSpinner:(id<ZDKSpinnerDelegate>)rmaSpinner];
+}
+
+- (void)configureZendesk
+{
+    [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
+        
+        // specify any additional tags desired
+        NSString *appVersion = [NSString stringWithFormat:@"AppVersion_%@ AppBuild_%@",
+                                [NSBundle mainBundle].infoDictionary[@"CFBundleShortVersionString"],
+                                [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+        
+        requestCreationConfig.tags = [NSArray arrayWithObjects:[[UIDevice currentDevice].model stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                                      [[UIDevice currentDevice].localizedModel stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                                      [[UIDevice currentDevice].systemName stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                                      [[UIDevice currentDevice].systemVersion stringByReplacingOccurrencesOfString:@" " withString:@"_"],
+                                      appVersion,
+                                      nil];
+        
+        // add some custom content to the description
+        //NSString *additionalText = @"Some sample extra content.";
+        //
+        //                    NSString *txt = [NSString stringWithFormat:@"%@%@",
+        //                                     [requestCreationConfig contentSeperator],
+        //                                     additionalText];
+        //
+        //                    requestCreationConfig.additionalRequestInfo = txt;
+    }];
+
+    // Set Anonymous user info
+    PFUser *userCurrent = [PFUser currentUser];
+    if (userCurrent) {
+        ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
+        newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
+        newIdentity.email = userCurrent[@"email"];
+        newIdentity.externalId = [userCurrent objectId];
+        [[ZDKConfig instance] setUserIdentity:newIdentity];
+    }
 }
 
 
