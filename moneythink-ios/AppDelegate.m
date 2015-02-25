@@ -35,6 +35,7 @@
     //[Parse enableLocalDatastore];
     
     // AFTER Parse setup
+    [self clearZendesk];
     [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
@@ -69,14 +70,12 @@
     pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
     
     // Register for push notifications
-    if ([application respondsToSelector:@selector(registerForRemoteNotifications)])
-    {
+    if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         [application registerForRemoteNotifications];
         UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert) categories:nil];
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
-    else
-    {
+    else {
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
     }
     
@@ -102,6 +101,16 @@
 {
     NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", [error localizedDescription]);
 }
+
+// TODO Create Common Methods to handle both types of pushes and add this method for background pushes.
+//      Also be sure to enable background modes.
+
+//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+//{
+//    if (handler) {
+//        handler(UIBackgroundFetchResultNewData);
+//    }
+//}
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
@@ -417,10 +426,6 @@
 
 - (void)setupZendesk
 {
-    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
-                                   zendeskUrl:@"https://moneythink.zendesk.com"
-                                  andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
-    
     [self configureZendesk];
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -562,8 +567,20 @@
     [[ZDKRMAFeedbackView appearance] setSpinner:(id<ZDKSpinnerDelegate>)rmaSpinner];
 }
 
+- (void)clearZendesk
+{
+    // Call to clear on new launch as preventative for Zendesk connection errors
+    [[ZDKConfig instance] setUserIdentity:nil];
+    [[ZDKSdkStorage instance] clearUserData];
+    [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
+}
+
 - (void)configureZendesk
 {
+    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
+                                   zendeskUrl:@"https://moneythink.zendesk.com"
+                                  andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
+
     [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
         
         // specify any additional tags desired

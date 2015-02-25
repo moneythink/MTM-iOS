@@ -78,8 +78,9 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         [self loadObjects];
         [self userButtonsTapped];
         
-        NSInteger challengNumber = [self.challengeNumber intValue];
-        NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengNumber];
+        NSInteger challengeNumber = [self.challengeNumber intValue];
+
+        NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %d", challengeNumber];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
         [challengeQuery includeKey:@"verified_by"];
         [challengeQuery whereKeyDoesNotExist:@"school"];
@@ -636,12 +637,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
 }
 
-- (void) deletePostTapped:(id) sender
+- (void)deletePostTapped:(id)sender
 {
     [self performDeletePostWithSender:sender withConfirmation:YES];
 }
 
-- (void) performDeletePostWithSender:(id) sender withConfirmation:(BOOL) withConfirmation
+- (void)performDeletePostWithSender:(id)sender withConfirmation:(BOOL)withConfirmation
 {
     UIButton *button = sender;
     PFUser *user = [PFUser currentUser];
@@ -667,13 +668,15 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
                                          [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                                              [weakSelf loadObjects];
                                          }];
-                                         
+
                                          [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
                                              //[weakSelf loadObjects];
-                                             if (error)
-                                             {
+                                             if (error) {
                                                  [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                                                  NSLog(@"error - %@", error);
+                                             }
+                                             else {
+                                                 // TODO Update User
                                              }
                                          }];
                                      }];
@@ -683,8 +686,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             
             [self presentViewController:deletePostSheet animated:YES completion:nil];
         }
-        else
-        {
+        else {
             MTMakeWeakSelf();
             UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
             [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
@@ -698,10 +700,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
                 
                 [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
                     //[weakSelf loadObjects];
-                    if (error)
-                    {
+                    if (error) {
                         [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                         NSLog(@"error - %@", error);
+                    }
+                    else {
+                        // TODO Update User
                     }
                 }];
                 
@@ -710,8 +714,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             [deleteAction showInView:[UIApplication sharedApplication].keyWindow];
         }
     }
-    else
-    {
+    else {
         MTMakeWeakSelf();
         NSInteger index = [self.myObjects indexOfObject:post];
         [self.myObjects removeObject:post];
@@ -723,8 +726,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         
         [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
             //[weakSelf loadObjects];
-            if (error)
-            {
+            if (error) {
                 NSLog(@"error - %@", error);
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             }

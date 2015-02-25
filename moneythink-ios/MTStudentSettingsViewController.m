@@ -398,11 +398,7 @@ static NSString *stageString = @"";
                                      actionWithTitle:@"Logout"
                                      style:UIAlertActionStyleDestructive
                                      handler:^(UIAlertAction *action) {
-                                         // Reset user profile check for next user
-                                         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
-                                         [[NSUserDefaults standardUserDefaults] synchronize];
-
-                                         [PFUser logOut];
+                                         [MTUtil logout];
                                          [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:nil];
                                      }];
             
@@ -423,15 +419,7 @@ static NSString *stageString = @"";
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        // Reset user profile check for next user
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        [PFUser logOut];
-        [[ZDKConfig instance] setUserIdentity:nil];
-
+        [MTUtil logout];
         [self performSegueWithIdentifier:@"unwindToSignUpLogin" sender:self];
     }
 }

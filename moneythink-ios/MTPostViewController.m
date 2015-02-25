@@ -451,6 +451,7 @@ typedef enum {
         
         [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
             if (!error) {
+                // TODO Update User
                 [self.navigationController popViewControllerAnimated:NO];
             } else {
                 NSLog(@"error - %@", error);

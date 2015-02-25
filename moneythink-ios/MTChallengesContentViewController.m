@@ -265,7 +265,7 @@
     MTStudentChallengeRoomViewController *destination = (MTStudentChallengeRoomViewController *)[segue destinationViewController];
     
     destination.challenge = self.challenge;
-    destination.challengeNumber = self.challengeNumberText;
+    destination.challengeNumber = [self.challenge[@"challenge_number"] stringValue];
 }
 
 

@@ -263,7 +263,7 @@
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void) commentDoneButton
+- (void)commentDoneButton
 {
     if (![self.postText.text isEqualToString:@""])
     {
@@ -296,14 +296,13 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
             
             [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error)
-                {
+                if (!error) {
+                    // TODO Update User
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
                     });
                 }
-                else
-                {
+                else {
                     NSLog(@"Post with picture error - %@", error);
                     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post with picture error" message:[NSString stringWithFormat:@"%@", error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     //[alert show];
@@ -319,14 +318,13 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
             
             [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error)
-                {
+                if (!error) {
+                    // TODO Update User
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
                     });
                 }
-                else
-                {
+                else {
                     NSLog(@"Post error - %@", error);
                     //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post error" message:[NSString stringWithFormat:@"%@", error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
                     //[alert show];
@@ -412,7 +410,7 @@
     }
 }
 
-- (IBAction) postCommentDone:(id) sender
+- (IBAction)postCommentDone:(id)sender
 {
     if (![self.postText.text isEqualToString:@""])
     {
@@ -432,11 +430,10 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewPostCommentNotification object:nil];
         
         [self.challengePostComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error)
-            {
+            if (!error) {
+                // TODO Update User
             }
-            else
-            {
+            else {
                 NSLog(@"Post text comment error - %@", error);
                 [self.challengePostComment saveEventually];
             }
@@ -447,7 +444,7 @@
     [self.delegate dismissCommentView];
 }
 
-- (IBAction) postCommentCancel:(id) sender
+- (IBAction)postCommentCancel:(id)sender
 {
     self.postText.text = @"";
     [self postCommentDone:nil];

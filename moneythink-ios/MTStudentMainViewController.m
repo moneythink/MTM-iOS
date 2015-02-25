@@ -55,6 +55,9 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     self.parentViewController.navigationItem.title = @"Challenges";
+    
+    // TODO: Remove this fetch after enabling background pushes
+    // Only fetch User updates when push received and after profile edit
     [[PFUser currentUser] fetchInBackgroundWithTarget:nil selector:nil];
 }
 

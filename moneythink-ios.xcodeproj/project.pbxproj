@@ -1056,6 +1056,7 @@
 				5876E2A2196F2C1F00C176EC /* Frameworks */,
 				5876E2A3196F2C1F00C176EC /* Resources */,
 				1083254A19949131008C0488 /* ShellScript */,
+				897278231A97BBF800557B66 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1079,6 +1080,9 @@
 					5876E2A4196F2C1F00C176EC = {
 						DevelopmentTeam = YN5DHE47NH;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
 							};
@@ -1235,6 +1239,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$CONFIGURATION\" != \"Release\"  && \"$CONFIGURATION\" != \"Adhoc (Stage)\" && \"$CONFIGURATION\" != \"Adhoc (Production)\" ]]; then\nexit 0\nfi\n./xcode-build-bump.sh\n";
+		};
+		897278231A97BBF800557B66 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "echo \"Total lines of code:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -and \\( -path \"${SRCROOT}/Pods/*\" -prune -o -print0 \\) | xargs -0 cat | wc -l\n\nKEYWORDS=\"TODO|FIXME|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}/\" \\( -name \"*.h\" -or -name \"*.m\" \\) -and \\( -path \"${SRCROOT}/Pods/*\" -prune -o -print0 \\) | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

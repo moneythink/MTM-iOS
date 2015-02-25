@@ -242,7 +242,8 @@
     if ([MTUtil displayingCustomPlaylist]) {
         NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
         if (ordering != -1) {
-            challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", (long)ordering];
+            // Set ordering at +1 (starts at 0 in Parse) to match Android
+            challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", (long)ordering+1];
         }
         else {
             challengeContentViewController.challengeNumberText = @"";

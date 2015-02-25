@@ -37,6 +37,10 @@
 
 + (NSInteger)orderingForChallengeObjectId:(NSString *)objectId
 {
+    if (IsEmpty(objectId)) {
+        return -1;
+    }
+    
     NSNumber *ordering = [[NSUserDefaults standardUserDefaults] objectForKey:objectId];
     if (ordering) {
         return [ordering integerValue];
@@ -48,8 +52,30 @@
 
 + (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId
 {
+    if (IsEmpty(objectId)) {
+        return;
+    }
+    
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:ordering] forKey:objectId];
     [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (void)logout
+{
+    // Removes all keys
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
+    for (NSString *key in [defaultsDictionary allKeys]) {
+        NSLog(@"removing user pref for %@", key);
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+    }
+
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [PFUser logOut];
+    [[ZDKConfig instance] setUserIdentity:nil];
+    [[ZDKSdkStorage instance] clearUserData];
+    [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
 }
 
 
