@@ -17,6 +17,10 @@
 @property (nonatomic, strong) UISwitch *autoReleaseSwitch;
 @property (nonatomic) BOOL scheduledActivationsOn;
 
+@property (nonatomic) BOOL queriedAvailableChallenges;
+@property (nonatomic) BOOL queriedFutureChallenges;
+@property (nonatomic) BOOL queriedForActivationsOn;
+
 @end
 
 @implementation MTScheduleTableViewController
@@ -30,94 +34,26 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    NSString *userSchool = [PFUser currentUser][@"school"];
-    NSString *userClass = [PFUser currentUser][@"class"];
+    self.queriedAvailableChallenges = NO;
+    self.queriedFutureChallenges = NO;
+    self.queriedForActivationsOn = NO;
     
-    PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
-    [queryActivations whereKey:@"activated" equalTo:@YES];
-    [queryActivations whereKey:@"school" equalTo:userSchool];
-    [queryActivations whereKey:@"class" equalTo:userClass];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     
-    [queryActivations orderByAscending:@"activation_date"];
-    
-    queryActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
-
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Loading...";
     hud.dimBackground = YES;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-            
-            if (!error) {
-                weakSelf.availableChallenges = availableObjects;
-                [weakSelf.tableView reloadData];
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-        
-        PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
-        [queryFuture whereKey:@"activated" equalTo:@NO];
-        [queryFuture whereKey:@"school" equalTo:userSchool];
-        [queryFuture whereKey:@"class" equalTo:userClass];
-        
-        [queryFuture orderByAscending:@"activation_date"];
-        
-        queryFuture.cachePolicy = kPFCachePolicyNetworkElseCache;
-        
-        [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-            
-            if (!error) {
-                weakSelf.futureChallenges = scheduledObjects;
-                [weakSelf.tableView reloadData];
-            } else {
-                
-            }
-        }];
-    } afterDelay:0.35f];
-    
-    // Query for activations on
-    NSString *nameClass = [PFUser currentUser][@"class"];
-    NSString *nameSchool = [PFUser currentUser][@"school"];
-    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
-    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
-    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
-    
-    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            weakSelf.scheduledActivationsOn = (number > 0);
-        } else {
-            NSLog(@"error - %@", error);
-            if (![MTUtil internetReachable]) {
-                [UIAlertView showNoInternetAlert];
-            }
-            else {
-                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
-                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            }
-        }
-        
-        weakSelf.autoReleaseSwitch.enabled = YES;
-        [weakSelf.tableView reloadData];
-    }];
-    
+    [self loadData];
     [[MTUtil getAppDelegate] setGrayNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
@@ -303,30 +239,46 @@
     [challengeQuery whereKeyDoesNotExist:@"class"];
 
     challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
+
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
             
-            if ([MTUtil displayingCustomPlaylist]) {
-                NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
-                if (ordering != -1) {
-                    // Set ordering at +1 (starts at 0 in Parse) to match Android
-                    cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", (long)ordering+1];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (challenge) {
+                    if ([MTUtil displayingCustomPlaylist]) {
+                        NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
+                        if (ordering != -1) {
+                            // Set ordering at +1 (starts at 0 in Parse) to match Android
+                            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", (long)ordering+1];
+                        }
+                        else {
+                            cell.challengeNumber.text = @"";
+                        }
+                    }
+                    else {
+                        cell.challengeNumber.text = [NSString stringWithFormat:@"%@)", [challengeNumber stringValue]];
+                    }
+                    
+                    
+                    cell.challengeTitle.text = challenge[@"title"];
                 }
                 else {
                     cell.challengeNumber.text = @"";
+                    cell.challengeTitle.text = @"";
                 }
-            }
-            else {
-                cell.challengeNumber.text = [NSString stringWithFormat:@"%@)", [challengeNumber stringValue]];
-            }
-            
-            cell.challengeTitle.text = challenge[@"title"];
-            NSDate *activationDate = activation[@"activation_date"];
-            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-            [dateFormat setDateFormat:@"MM-dd-yyyy"];
-            cell.activationDate.text = [dateFormat stringFromDate:activationDate];
+                
+                NSDate *activationDate = activation[@"activation_date"];
+                
+                if (activationDate) {
+                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                    [dateFormat setDateFormat:@"MM-dd-yyyy"];
+                    cell.activationDate.text = [dateFormat stringFromDate:activationDate];
+                }
+                else {
+                    cell.activationDate.text = @"Paused";
+                }
+            });
         }
     }];
     
@@ -420,35 +372,32 @@
             MTMakeWeakSelf();
             [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    
+                    weakSelf.autoReleaseSwitch.enabled = YES;
+
                     if (!error) {
                         weakSelf.scheduledActivationsOn = (number > 0);
                         
                         if (number == 0) {
+                            [weakSelf.tableView reloadData];
+                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                             [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"All of the Challenges in this schedule have been activated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                            return;
                         }
                         
-                    } else {
+                    }
+                    else {
                         weakSelf.scheduledActivationsOn = NO;
                         
+                        // Log error but fail silently, we'll call loadData again anyway
                         NSLog(@"error - %@", error);
-                        if (![MTUtil internetReachable]) {
-                            [UIAlertView showNoInternetAlert];
-                        }
-                        else {
-                            NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn ON schedules. %ld: %@", (long)error.code, [error localizedDescription]];
-                            [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                        }
                     }
                     
-                    weakSelf.autoReleaseSwitch.enabled = YES;
-                    [weakSelf.tableView reloadData];
+                    [weakSelf loadData];
                 });
-                
             }];
             
-        } else {
+        }
+        else {
             dispatch_async(dispatch_get_main_queue(), ^(void) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 
@@ -474,13 +423,15 @@
     MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"cancelScheduledActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^(void) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
             
             weakSelf.autoReleaseSwitch.enabled = YES;
             
             if (!error) {
                 weakSelf.scheduledActivationsOn = NO;
+                [weakSelf loadData];
             } else {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+
                 weakSelf.scheduledActivationsOn = YES;
                 
                 NSLog(@"error - %@", error);
@@ -491,9 +442,9 @@
                     NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn OFF schedules. %ld: %@", (long)error.code, [error localizedDescription]];
                     [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                 }
+                
+                [weakSelf.tableView reloadData];
             }
-            
-            [weakSelf.tableView reloadData];
         });
     }];
 }
@@ -528,6 +479,100 @@
     }
 
     return title;
+}
+
+- (void)loadData
+{
+    NSString *userSchool = [PFUser currentUser][@"school"];
+    NSString *userClass = [PFUser currentUser][@"class"];
+    
+    PFQuery *queryActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
+    [queryActivations whereKey:@"activated" equalTo:@YES];
+    [queryActivations whereKey:@"school" equalTo:userSchool];
+    [queryActivations whereKey:@"class" equalTo:userClass];
+    
+    [queryActivations orderByAscending:@"activation_date"];
+    [queryActivations addAscendingOrder:@"challenge_number"];
+    queryActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [queryActivations findObjectsInBackgroundWithBlock:^(NSArray *availableObjects, NSError *error) {
+        if (!error) {
+            weakSelf.availableChallenges = availableObjects;
+        } else {
+            NSLog(@"error - %@", error);
+        }
+        
+        weakSelf.queriedAvailableChallenges = YES;
+        [weakSelf checkForRefresh];
+    }];
+    
+    PFQuery *queryFuture = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName]];
+    [queryFuture whereKey:@"activated" equalTo:@NO];
+    [queryFuture whereKey:@"school" equalTo:userSchool];
+    [queryFuture whereKey:@"class" equalTo:userClass];
+    
+    [queryFuture orderByAscending:@"activation_date"];
+    
+    // TODO: Should determine proper sorting for custom playlist when "Paused"
+    if (![MTUtil displayingCustomPlaylist]) {
+        [queryFuture addAscendingOrder:@"challenge_number"];
+    }
+    
+    queryFuture.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
+        if (!error) {
+            weakSelf.futureChallenges = scheduledObjects;
+        }
+        
+        weakSelf.queriedFutureChallenges = YES;
+        [weakSelf checkForRefresh];
+    }];
+    
+    // Query for activations on
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            weakSelf.scheduledActivationsOn = (number > 0);
+            weakSelf.autoReleaseSwitch.enabled = YES;
+
+        } else {
+            weakSelf.autoReleaseSwitch.enabled = NO;
+
+            NSLog(@"error - %@", error);
+            if (![MTUtil internetReachable]) {
+                [UIAlertView showNoInternetAlert];
+            }
+            else {
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
+                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }
+        
+        weakSelf.queriedForActivationsOn = YES;
+        [weakSelf checkForRefresh];
+    }];
+}
+
+- (void)checkForRefresh
+{
+    if (self.queriedAvailableChallenges && self.queriedFutureChallenges && self.queriedForActivationsOn) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            
+            self.queriedAvailableChallenges = NO;
+            self.queriedFutureChallenges = NO;
+            self.queriedForActivationsOn = NO;
+
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+    }
 }
 
 

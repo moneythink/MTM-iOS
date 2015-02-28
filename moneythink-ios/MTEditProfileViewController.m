@@ -155,7 +155,7 @@
         hud.labelText = @"Loading Profile...";
         hud.dimBackground = YES;
         
-        [self bk_performBlock:^(id obj) {
+        [self bk_performBlockInBackground:^(id obj) {
             self.profileImage = [[PFImageView alloc] init];
             [self.profileImage setFile:profileImageFile];
             
@@ -188,6 +188,7 @@
                 [[PFUser currentUser] fetch];
             }];
         } afterDelay:0.35f];
+        
     }
     else {
         self.profileImageLabel.text = @"Add Photo";
@@ -727,6 +728,11 @@
         // Check for custom playlist for this class
         [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:YES];
         [[NSNotificationCenter defaultCenter] postNotificationName:kUserDidChangeClass object:nil];
+        
+        // Reset prompts
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
     
     if (self.firstName.text) {
@@ -795,7 +801,7 @@
     
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
-            [[PFUser currentUser] fetch];
+            [[PFUser currentUser] fetchInBackground];
             
             // Update for Push Notifications
             [[MTUtil getAppDelegate] updateParseInstallationState];

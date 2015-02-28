@@ -25,22 +25,6 @@
 
 @implementation MTMentorStudentProgressViewController
 
-- (id)init
-{
-    self = [super init];
-    
-    return self;
-}
-
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -52,63 +36,24 @@
     [self setNextStepState];
     [self.tableView reloadData];
     
-    NSString *nameClass = [PFUser currentUser][@"class"];
-    NSString *nameSchool = [PFUser currentUser][@"school"];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     
-    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
-    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
-    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
-    
-    MTMakeWeakSelf();
-    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            weakSelf.scheduledActivationsOn = (number > 0);
-        } else {
-            NSLog(@"error - %@", error);
-            if (![MTUtil internetReachable]) {
-                [UIAlertView showNoInternetAlert];
-            }
-            else {
-                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
-                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.queriedForActivationsOn = YES;
-            [weakSelf setNextStepState];
-            [weakSelf.tableView reloadData];
-        });
-    }];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Refreshing...";
+    hud.dimBackground = YES;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
-    NSString *nameClass = [PFUser currentUser][@"class"];
-    NSString *nameSchool = [PFUser currentUser][@"school"];
-    NSString *type = @"student";
-    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
-    PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
-    
-    [studentsForClass orderByAscending:@"last_name"];
-    studentsForClass.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    MTMakeWeakSelf();
-    [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.classStudents = objects;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.queriedForStudents = YES;
-                [weakSelf setNextStepState];
-                [weakSelf.tableView reloadData];
-            });
-        }
-    }];
+    [self loadData];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+}
 
 #pragma mark - Actions -
 - (void)presentEditProfile
@@ -154,7 +99,7 @@
                     [imageView setImage:self.profileImage.image];
                 });
                 
-                [[PFUser currentUser] fetch];
+                [[PFUser currentUser] fetchInBackground];
             }];
         } afterDelay:0.35f];
     }
@@ -170,9 +115,7 @@
 - (void)setNextStepState
 {
     BOOL savedProfile = NO;
-    
-    BOOL hasEdited = [[NSUserDefaults standardUserDefaults] boolForKey:kUserSavedProfileChanges];
-    if ([PFUser currentUser][@"profile_picture"] || hasEdited) {
+    if ([PFUser currentUser][@"profile_picture"] || [[NSUserDefaults standardUserDefaults] boolForKey:kUserSavedProfileChanges]) {
         // Make sure to set in case of upgrade
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
         [[NSUserDefaults standardUserDefaults] synchronize];
@@ -189,10 +132,6 @@
 
         activatedChallenges = YES;
     }
-    else if (!self.scheduledActivationsOn && !self.queriedForActivationsOn) {
-        // Temporaritly set to YES until we have actually queried
-        activatedChallenges = YES;
-    }
     
     BOOL invitedStudents = NO;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserInvitedStudents] ||
@@ -203,23 +142,78 @@
         
         invitedStudents = YES;
     }
-    else if (([self.classStudents count] == 0 && !self.queriedForStudents) || !self.queriedForActivationsOn) {
-        // Temporaritly set to YES until we have actually queried for both activations AND students
-        invitedStudents = YES;
-    }
     
     if (!savedProfile) {
         self.nextStepState = MTProgressNextStepStateEditProfile;
     }
-    else if (!activatedChallenges) {
+    else if (self.queriedForActivationsOn && !activatedChallenges) {
         self.nextStepState = MTProgressNextStepStateScheduleChallenges;
     }
-    else if (!invitedStudents) {
+    else if (self.queriedForStudents && !invitedStudents) {
         self.nextStepState = MTProgressNextStepStateInviteStudents;
     }
     else {
         self.nextStepState = MTProgressNextStepStateDone;
     }
+}
+
+- (void)loadData
+{
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            weakSelf.scheduledActivationsOn = (number > 0);
+            
+        } else {
+            NSLog(@"error - %@", error);
+            if (![MTUtil internetReachable]) {
+                [UIAlertView showNoInternetAlert];
+            }
+            else {
+                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
+                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }
+        
+        weakSelf.queriedForActivationsOn = YES;
+        
+        if (weakSelf.queriedForStudents) {
+            [weakSelf setNextStepState];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }
+    }];
+    
+    NSString *type = @"student";
+    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
+    PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
+    
+    [studentsForClass orderByAscending:@"last_name"];
+    studentsForClass.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        weakSelf.classStudents = objects;
+        weakSelf.queriedForStudents = YES;
+        
+        if (weakSelf.queriedForActivationsOn) {
+            [weakSelf setNextStepState];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }
+    }];
 }
 
 

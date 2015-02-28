@@ -24,6 +24,14 @@
     // Initialization code
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.challengeTitle.text = @"";
+    self.challengeNumber.text = @"";
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];

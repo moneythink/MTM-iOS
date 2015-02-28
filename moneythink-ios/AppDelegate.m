@@ -99,7 +99,11 @@
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
+#if !(TARGET_IPHONE_SIMULATOR)
+    // Device
     NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", [error localizedDescription]);
+#endif
+
 }
 
 // TODO Create Common Methods to handle both types of pushes and add this method for background pushes.
@@ -175,6 +179,7 @@
         
         NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
         if (indexOfNotificationVC != -1 && [viewControllers count] > indexOfNotificationVC) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             [((UITabBarController *)tabBar) setSelectedIndex:indexOfNotificationVC];
         }
     }
