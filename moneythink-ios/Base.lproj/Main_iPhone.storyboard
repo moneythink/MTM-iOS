@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14D72i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14D87h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -1379,7 +1379,6 @@
                                 </state>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="zeU-Mr-fxZ" eventType="touchUpInside" id="EX2-1a-qqk"/>
-                                    <segue destination="hz2-0S-NYE" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="Meb-xp-jfZ"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New school" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="X2M-4u-vKh">
@@ -1396,6 +1395,7 @@
                         <outlet property="schoolName" destination="X2M-4u-vKh" id="eVA-YM-Tp8"/>
                         <outlet property="schoolNameText" destination="X2M-4u-vKh" id="YyF-qn-d8d"/>
                         <segue destination="hz2-0S-NYE" kind="unwind" identifier="unwindToSignupView" unwindAction="unwindToSignupView:" id="h5C-Dr-P7L"/>
+                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="VWs-WG-A0Q"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7AG-gt-3qy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3833,10 +3833,10 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
             </objects>
             <point key="canvasLocation" x="-4544" y="-84"/>
         </scene>
-        <!--Add Class -->
+        <!--Add Class-->
         <scene sceneID="a8I-4r-BfR">
             <objects>
-                <viewController storyboardIdentifier="addClass" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hO1-oe-Ce4" userLabel="Add Class " customClass="MTAddClassViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="addClass" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hO1-oe-Ce4" userLabel="Add Class" customClass="MTAddClassViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="j8o-rY-nRn"/>
                         <viewControllerLayoutGuide type="bottom" id="kE2-dm-kYq"/>
@@ -3852,7 +3852,6 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                 </state>
                                 <connections>
                                     <action selector="doneButtonTapped:" destination="hO1-oe-Ce4" eventType="touchUpInside" id="J3Z-2v-MXv"/>
-                                    <segue destination="T4o-US-tP7" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="CIe-F9-UJb"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Class" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="uPQ-0o-epA">
@@ -3868,6 +3867,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                         <outlet property="classNameText" destination="uPQ-0o-epA" id="gOu-K0-mLm"/>
                         <outlet property="doneButton" destination="J7c-hC-3iu" id="eZn-X3-o1D"/>
                         <segue destination="T4o-US-tP7" kind="unwind" identifier="unwindToSignupView" unwindAction="unwindToSignupView:" id="7kl-9M-Taa"/>
+                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="bpp-oM-KJi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FQD-dR-Na2" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -4016,13 +4016,13 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="3av-NC-tBU"/>
         <segue reference="0Hm-VR-maT"/>
+        <segue reference="3av-NC-tBU"/>
         <segue reference="fGY-fc-BPd"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="Pqy-YU-1Il"/>
+        <segue reference="eZ1-MC-FDS"/>
         <segue reference="NwG-bn-vTI"/>
         <segue reference="Gdm-gL-5Rd"/>
+        <segue reference="7JS-73-w9v"/>
         <segue reference="a3W-fR-2k0"/>
         <segue reference="Dm1-SI-6eC"/>
     </inferredMetricsTieBreakers>

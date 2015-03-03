@@ -443,20 +443,20 @@
     [[ZDKCreateRequestView appearance] setViewBackgroundColor:[UIColor whiteColor]];
     [[ZDKCreateRequestView appearance] setTextEntryFont:[UIFont systemFontOfSize:12.0f]];
     
-    [[ZDKCreateRequestView appearance] setAutomaticallyHideNavBarOnLandscape:1];
-    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+    [[ZDKCreateRequestView appearance] setAutomaticallyHideNavBarOnLandscape:@1];
     
-    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [[ZDKCreateRequestView appearance] setSpinner:(id<ZDKSpinnerDelegate>)spinner];
+//    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+//    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+//    [[ZDKCreateRequestView appearance] setSpinner:(id<ZDKSpinnerDelegate>)spinner];
     
     // request list
     [[ZDKRequestListTable appearance] setTableBackgroundColor:[UIColor clearColor]];
     [[ZDKRequestListTable appearance] setCellSeparatorColor:[UIColor colorWithWhite:0.90f alpha:1.0f]];
     
     // loading cell
-    spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [[ZDRequestListLoadingTableCell appearance] setSpinner:(id<ZDKSpinnerDelegate>)spinner];
+//    UIActivityIndicatorView *requestListSpinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(20, 20, 20, 20)];
+//    requestListSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+//    [[ZDRequestListLoadingTableCell appearance] setSpinner:(id<ZDKSpinnerDelegate>)requestListSpinner];
     
     // request list cells
     [[ZDKRequestListTableCell appearance] setDescriptionFont:[UIFont systemFontOfSize:15]];
@@ -464,9 +464,9 @@
     [[ZDKRequestListTableCell appearance] setUnreadColor:[UIColor colorWithRed:0.47059 green:0.6392 blue:0 alpha:1.0]];
     [[ZDKRequestListTableCell appearance] setDescriptionColor:[UIColor colorWithWhite:0.26f alpha:1.0f]];
     [[ZDKRequestListTableCell appearance] setCreatedAtColor:[UIColor colorWithWhite:0.54f alpha:1.0f]];
-    [[ZDKRequestListTableCell appearance] setVerticalMargin:20.0f];
-    [[ZDKRequestListTableCell appearance] setDescriptionTimestampMargin:5.0f];
-    [[ZDKRequestListTableCell appearance] setLeftInset:25.0f];
+    [[ZDKRequestListTableCell appearance] setVerticalMargin:@20.0f];
+    [[ZDKRequestListTableCell appearance] setDescriptionTimestampMargin:@5.0f];
+    [[ZDKRequestListTableCell appearance] setLeftInset:@25.0f];
     [[ZDKRequestListTableCell appearance] setCellBackgroundColor:[UIColor whiteColor]];
     
     // no requests cell
@@ -474,7 +474,7 @@
     [[ZDRequestListEmptyTableCell appearance] setMessageColor:[UIColor colorWithWhite:0.3f alpha:1.0f]];
     
     // comments list agent comment cells
-    [[ZDKAgentCommentTableCell appearance] setAvatarSize:40.0f];
+    [[ZDKAgentCommentTableCell appearance] setAvatarSize:@40.0f];
     [[ZDKAgentCommentTableCell appearance] setAgentNameFont:[UIFont systemFontOfSize:14.0f]];
     [[ZDKAgentCommentTableCell appearance] setAgentNameColor:[UIColor colorWithWhite:0.25f alpha:1.0f]];
     [[ZDKAgentCommentTableCell appearance] setTimestampFont:[UIFont systemFontOfSize:11.0f]];
@@ -491,11 +491,11 @@
     [[ZDKEndUserCommentTableCell appearance] setCellBackground:[UIColor colorWithWhite:0.976f alpha:1.0f]];
     
     // comments list loading cell
-    spinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [[ZDKCommentsListLoadingTableCell appearance] setSpinner:(id<ZDKSpinnerDelegate>)spinner];
+//    UIActivityIndicatorView * commentListSpinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+//    commentListSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+//    [[ZDKCommentsListLoadingTableCell appearance] setSpinner:(id<ZDKSpinnerDelegate>)commentListSpinner];
     [[ZDKCommentsListLoadingTableCell appearance] setCellBackground:[UIColor whiteColor]];
-    [[ZDKCommentsListLoadingTableCell appearance] setLeftInset:25.0f];
+    [[ZDKCommentsListLoadingTableCell appearance] setLeftInset:@25.0f];
     
     // comment entry area
     [[ZDKCommentEntryView appearance] setTopBorderColor:[UIColor colorWithWhite:0.831f alpha:1.0f]];
@@ -537,10 +537,10 @@
     [[ZDKSupportView appearance] setNoResultsFoundLabelBackground:[UIColor colorWithWhite:0.94f alpha:1.0f]];
     [[ZDKSupportView appearance] setNoResultsContactButtonBackground:[UIColor colorWithWhite:0.94f alpha:1.0f]];
     [[ZDKSupportView appearance] setNoResultsContactButtonBorderColor:[UIColor colorWithWhite:0.2627f alpha:1.0f]];
-    [[ZDKSupportView appearance] setNoResultsContactButtonBorderWidth:1.0f];
-    [[ZDKSupportView appearance] setNoResultsContactButtonCornerRadius:4.0f];
+    [[ZDKSupportView appearance] setNoResultsContactButtonBorderWidth:@1.0f];
+    [[ZDKSupportView appearance] setNoResultsContactButtonCornerRadius:@4.0f];
     [[ZDKSupportView appearance] setNoResultsFoundLabelFont:[UIFont systemFontOfSize:14.0f]];
-    [[ZDKSupportView appearance] setNoResultsContactButtonEdgeInsets:UIEdgeInsetsMake(12, 22, 12, 22)];
+    [[ZDKSupportView appearance] setNoResultsContactButtonEdgeInsets:[NSValue valueWithUIEdgeInsets:UIEdgeInsetsMake(12, 22, 12, 22)]];
     [[ZDKSupportView appearance] setNoResultsContactButtonTitleColorNormal:[UIColor colorWithWhite:0.2627f alpha:1.0f]];
     [[ZDKSupportView appearance] setNoResultsContactButtonTitleColorHighlighted:[UIColor colorWithWhite:0.2627f alpha:1.0f]];
     [[ZDKSupportView appearance] setNoResultsContactButtonTitleColorDisabled:[UIColor colorWithWhite:0.2627f alpha:1.0f]];
@@ -567,9 +567,9 @@
     [[ZDKSupportAttachmentCell appearance] setFileSizeLabelColor:[UIColor grayColor]];
     [[ZDKSupportAttachmentCell appearance] setFileSizeLabelFont:[UIFont systemFontOfSize:12.0f]];
     
-    UIActivityIndicatorView *rmaSpinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    spinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
-    [[ZDKRMAFeedbackView appearance] setSpinner:(id<ZDKSpinnerDelegate>)rmaSpinner];
+//    UIActivityIndicatorView *rmaSpinner = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+//    rmaSpinner.activityIndicatorViewStyle = UIActivityIndicatorViewStyleGray;
+//    [[ZDKRMAFeedbackView appearance] setSpinner:(id<ZDKSpinnerDelegate>)rmaSpinner];
 }
 
 - (void)clearZendesk
