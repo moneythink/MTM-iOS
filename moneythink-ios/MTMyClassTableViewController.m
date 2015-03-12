@@ -249,11 +249,11 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }
     
     id buttonID = [self.buttonsTapped valueForKey:[post objectId]];
-    NSInteger button;
+    NSInteger button = 0;
     if (buttonID) {
         button = [buttonID intValue];
     }
-    if ((button == 0) && [self.buttonsTapped valueForKey:[post objectId]]) {
+    if ((button == 0) && buttonID) {
         [[cell.button1 layer] setBackgroundColor:[UIColor primaryGreen].CGColor];
         [cell.button1 setTintColor:[UIColor white]];
         

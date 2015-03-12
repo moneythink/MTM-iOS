@@ -85,6 +85,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorInset = UIEdgeInsetsZero;
+    
     self.navigationItem.title = self.title;
     
     // Add a no notifications view
@@ -155,7 +158,7 @@
 
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
-    
+
     PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryNoOne whereKeyDoesNotExist:@"recipient"];
     [queryNoOne whereKey:@"class" equalTo:className];
@@ -207,6 +210,10 @@
         cell = [[MTNotificationTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuserIdentifier];
     }
     
+    __block NSIndexPath *weakIndexPath = indexPath;
+    cell.currentIndexPath = indexPath;
+    
+    __block MTNotificationTableViewCell *weakCell = cell;
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     
     PFNotifications *notification = (PFNotifications *)object;
@@ -220,6 +227,7 @@
     }
     
     cell.agePosted.text = [[notification createdAt] niceRelativeTimeFromNow];
+    cell.message.text = @"";
     
     //<><><><><><><><><><> - Challenge
     // ****************** - Post
@@ -228,25 +236,43 @@
         PFChallengePostComment *post = notification[@"comment"];
         cell.message.text = [NSString stringWithFormat:@"Comment: %@", post[@"comment_text"]];
         
-    } else if (notification[@"post_liked"]) { // ******************
+    }
+    else if (notification[@"post_liked"]) { // ******************
         PFChallengePost *post = notification[@"post_liked"];
         cell.message.text = [NSString stringWithFormat:@"Liked: %@", post[@"post_text"]];
         
-    } else if (notification[@"post_verified"]) { // ******************
+    }
+    else if (notification[@"post_verified"]) { // ******************
         PFChallengePost *post = notification[@"post_verified"];
         cell.message.text = [NSString stringWithFormat:@"Verified: %@", post[@"post_text"]];
         
-    } else if (notification[@"challenge_activated"]) { //<><><><><><><><><><>
+    }
+    else if (notification[@"challenge_activated"]) { //<><><><><><><><><><>
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
         PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
         challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
+        weakCell.message.text = @"Activated: loading...";
+
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
+                    return;
+                }
+                
                 PFChallenges *challenge = [objects firstObject];
-                cell.message.text = [NSString stringWithFormat:@"Activated: %@", challenge[@"title"]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!IsEmpty(challenge[@"title"])) {
+                        weakCell.message.text = [NSString stringWithFormat:@"Activated: %@", challenge[@"title"]];
+                    }
+                    else {
+                        weakCell.message.text = [NSString stringWithFormat:@"Activated"];
+                    }
+                });
+            }
+            else {
+                weakCell.message.text = [NSString stringWithFormat:@"Activated"];
             }
         }];
     } else if (notification[@"challenge_closed"]) { //<><><><><><><><><><>
@@ -255,11 +281,26 @@
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
         challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
+        weakCell.message.text = @"Closed: loading...";
+
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
+                    return;
+                }
+
                 PFChallenges *challenge = [objects firstObject];
-                cell.message.text = [NSString stringWithFormat:@"Closed: %@", challenge[@"title"]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!IsEmpty(challenge[@"title"])) {
+                        weakCell.message.text = [NSString stringWithFormat:@"Closed: %@", challenge[@"title"]];
+                    }
+                    else {
+                        weakCell.message.text = [NSString stringWithFormat:@"Closed"];
+                    }
+                });
+            }
+            else {
+                weakCell.message.text = [NSString stringWithFormat:@"Closed"];
             }
         }];
     } else if (notification[@"challenge_completed"]) { //<><><><><><><><><><>
@@ -268,12 +309,28 @@
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
         challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
+        weakCell.message.text = @"Completed: loading...";
+
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
+                    return;
+                }
+
                 PFChallenges *challenge = [objects firstObject];
-                cell.message.text = [NSString stringWithFormat:@"Completed: %@", challenge[@"title"]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!IsEmpty(challenge[@"title"])) {
+                        weakCell.message.text = [NSString stringWithFormat:@"Completed: %@", challenge[@"title"]];
+                    }
+                    else {
+                        weakCell.message.text = [NSString stringWithFormat:@"Completed"];
+                    }
+                });
             }
+            else {
+                weakCell.message.text = [NSString stringWithFormat:@"Completed"];
+            }
+
         }];
     } else if (notification[@"challenge_started"]) { //<><><><><><><><><><>
         NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
@@ -281,14 +338,34 @@
         [challengeQuery whereKeyDoesNotExist:@"school"];
         [challengeQuery whereKeyDoesNotExist:@"class"];
         challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
+        weakCell.message.text = @"Started: loading...";
+
         [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
+                    return;
+                }
+
                 PFChallenges *challenge = [objects firstObject];
-                cell.message.text = [NSString stringWithFormat:@"Started: %@", challenge[@"title"]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (!IsEmpty(challenge[@"title"])) {
+                        weakCell.message.text = [NSString stringWithFormat:@"Started: %@", challenge[@"title"]];
+                    }
+                    else {
+                        weakCell.message.text = [NSString stringWithFormat:@"Started"];
+                    }
+                });
+            }
+            else {
+                weakCell.message.text = [NSString stringWithFormat:@"Started"];
             }
         }];
     }
+    else {
+        // Shouldn't get here but let's print out for debugging.
+        NSLog(@"Notification: %@", notification);
+    }
+    
     
     return cell;
 }

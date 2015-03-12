@@ -14,4 +14,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *message;
 @property (strong, nonatomic) IBOutlet UILabel *agePosted;
 
+@property (nonatomic, strong) NSIndexPath *currentIndexPath;
+
 @end

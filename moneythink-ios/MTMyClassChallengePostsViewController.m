@@ -27,19 +27,8 @@
     return self;
 }
 
-- (void)viewDidLoad
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    
-}
-
-- (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:NO];
     
     NSPredicate *findAllChallengePosts = [NSPredicate predicateWithFormat:@"challenge_number = %d AND class = %@", self.challengeNumber, [PFUser currentUser][@"class"]];
@@ -54,13 +43,8 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning
+- (IBAction)tappedExploreMyClass:(id)sender
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-- (IBAction)tappedExploreMyClass:(id)sender {
     
 }
 
@@ -75,8 +59,8 @@
 }
  */
 
-#pragma mark - UITableViewController delegate methods
 
+#pragma mark - UITableViewController delegate methods
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return [self.posts count];
@@ -103,11 +87,11 @@
 
 
 #pragma mark - UITableViewDelegate methods
-
     // Called after the user changes the selection.
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
     [self performSegueWithIdentifier:@"viewPost" sender:self];
 }
+
 
 @end

@@ -38,6 +38,13 @@
     self.userName.text = nil;
     self.message.text = nil;
     self.agePosted.text = nil;
+    self.currentIndexPath = nil;
 }
+
+-(UIEdgeInsets)layoutMargins
+{
+    return UIEdgeInsetsZero;
+}
+
 
 @end

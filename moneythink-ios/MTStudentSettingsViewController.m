@@ -330,12 +330,10 @@ static NSString *stageString = @"";
     }
     else if ([self.sections[section] isEqualToString:@"SHARE SIGN UP CODE"]) {
         
-        NSString *type = @"";
         NSString *msg = @"";
         
         switch (indexPath.row) {
             case 0: {
-                type = @"student";
                 msg = @"Student";
                 
                 // Mark user invited students
@@ -345,7 +343,6 @@ static NSString *stageString = @"";
                 break;
                 
             default: {
-                type = @"mentor";
                 msg = @"Mentor";
             }
                 break;

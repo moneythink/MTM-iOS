@@ -20,6 +20,7 @@
 @property (nonatomic) BOOL queriedAvailableChallenges;
 @property (nonatomic) BOOL queriedFutureChallenges;
 @property (nonatomic) BOOL queriedForActivationsOn;
+@property (nonatomic) NSInteger queryForActivationCount;
 
 @end
 
@@ -41,6 +42,7 @@
     self.queriedAvailableChallenges = NO;
     self.queriedFutureChallenges = NO;
     self.queriedForActivationsOn = NO;
+    self.queryForActivationCount = 0;
     
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     
@@ -118,7 +120,7 @@
         }
             
         default:
-            height = 40.0f;
+            height = 44.0f;
             break;
     }
     
@@ -360,53 +362,31 @@
     MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"scheduleActivations" withParameters:@{@"user_id": userID} block:^(id object, NSError *error) {
         if (!error) {
-            
-            // Make sure we have future challenges, otherwise display message
-            NSString *nameClass = [PFUser currentUser][@"class"];
-            NSString *nameSchool = [PFUser currentUser][@"school"];
-            
-            NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
-            PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
-            scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
-            
-            MTMakeWeakSelf();
-            [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^(void) {
-                    weakSelf.autoReleaseSwitch.enabled = YES;
-
-                    if (!error) {
-                        weakSelf.scheduledActivationsOn = (number > 0);
-                        
-                        if (number == 0) {
-                            [weakSelf.tableView reloadData];
-                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                            [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"All of the Challenges in this schedule have been activated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                            return;
-                        }
-                        
-                    }
-                    else {
-                        weakSelf.scheduledActivationsOn = NO;
-                        
-                        // Log error but fail silently, we'll call loadData again anyway
-                        NSLog(@"error - %@", error);
-                    }
-                    
-                    [weakSelf loadData];
-                });
-            }];
-            
+            [weakSelf checkForAllChallengesActivated];
         }
         else {
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                
-                NSLog(@"error - %@", error);
-                NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn ON schedules. %ld: %@", (long)error.code, [error localizedDescription]];
-                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                weakSelf.scheduledActivationsOn = NO;
-                [weakSelf.tableView reloadData];
-            });
+            if (error.code == 141) {
+                // Try again for 141 error code, interim fix for cloud code timeouts.
+                [weakSelf queryForActivations];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    weakSelf.scheduledActivationsOn = NO;
+                    weakSelf.autoReleaseSwitch.enabled = YES;
+                    [weakSelf.tableView reloadData];
+
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    
+                    NSLog(@"error - %@", error);
+                    if (![MTUtil internetReachable]) {
+                        [UIAlertView showNoInternetAlert];
+                    }
+                    else {
+                        NSString *errorMessage = [NSString stringWithFormat:@"Unable to turn ON schedules. %ld: %@", (long)error.code, [error localizedDescription]];
+                        [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    }
+                });
+            }
         }
     }];
 }
@@ -573,6 +553,93 @@
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         });
     }
+}
+
+- (void)queryForActivations
+{
+    NSLog(@"Querying for Activations, count: %ld", (long)self.queryForActivationCount);
+    
+    // Query for activations on
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date = nil", nameClass, nameSchool];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    MTMakeWeakSelf();
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        if (!error) {
+            // If we have no challenges with nil activation_date, then it should be activated, continue on.
+            if (number == 0) {
+                [weakSelf checkForAllChallengesActivated];
+            }
+            else {
+                [weakSelf checkForActivationRequery];
+            }
+            
+        } else {
+            NSLog(@"error - %@", error);
+            [weakSelf checkForActivationRequery];
+        }
+    }];
+}
+
+- (void)checkForActivationRequery
+{
+    if (self.queryForActivationCount < 6) {
+        self.queryForActivationCount++;
+        [self performSelector:@selector(queryForActivations) withObject:nil afterDelay:5.0f];
+    }
+    else {
+        // Failure scenario, failed to activate, reset.
+        self.queryForActivationCount = 0;
+        self.scheduledActivationsOn = NO;
+        
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            self.autoReleaseSwitch.enabled = YES;
+            [self.tableView reloadData];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"Unable to turn ON schedules. Please try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        });
+    }
+}
+
+- (void)checkForAllChallengesActivated
+{
+    // Make sure we have future challenges, otherwise display message
+    NSString *nameClass = [PFUser currentUser][@"class"];
+    NSString *nameSchool = [PFUser currentUser][@"school"];
+    
+    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
+    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
+    scheduledActivations.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    MTMakeWeakSelf();
+    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            weakSelf.autoReleaseSwitch.enabled = YES;
+            
+            if (!error) {
+                weakSelf.scheduledActivationsOn = (number > 0);
+                
+                if (number == 0) {
+                    [weakSelf.tableView reloadData];
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [[[UIAlertView alloc] initWithTitle:@"Update Error" message:@"All of the Challenges in this schedule have been activated." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    return;
+                }
+            }
+            else {
+                weakSelf.scheduledActivationsOn = NO;
+                
+                // Log error but fail silently, we'll call loadData again anyway
+                NSLog(@"error - %@", error);
+            }
+            
+            // FYI, loadData eventually clears the HUD by calling checkForRefresh
+            [weakSelf loadData];
+        });
+    }];
 }
 
 
