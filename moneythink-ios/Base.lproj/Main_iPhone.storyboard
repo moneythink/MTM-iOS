@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D87h" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14D113c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <deployment version="2048" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
@@ -2533,7 +2533,7 @@
                                                         <action selector="verifiedTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="PnZ-VQ-skI"/>
                                                     </connections>
                                                 </button>
-                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="k2g-Es-h3P" userLabel="Verified Label">
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.70000000000000018" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k2g-Es-h3P" userLabel="Verified Label">
                                                     <rect key="frame" x="161" y="16" width="50" height="15"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="15" id="Nc6-Qd-NPj"/>
@@ -2852,6 +2852,20 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QT4-r7-ufF" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="117" y="383" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="vn3-g4-86v"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7n2-Yx-8qT" userLabel="Verified Label">
+                                            <rect key="frame" x="155" y="383" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADr-4h-mJc" userLabel="Delete Button (x)">
                                             <rect key="frame" x="275" y="385" width="40" height="36"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -2886,6 +2900,8 @@
                                     <outlet property="postedWhen" destination="wpu-F8-PK5" id="Rhx-ON-dWD"/>
                                     <outlet property="profileImage" destination="KpO-O7-xUz" id="zf6-Eh-T3W"/>
                                     <outlet property="userName" destination="QeF-c5-9yr" id="6bt-6m-zlq"/>
+                                    <outlet property="verfiedLabel" destination="7n2-Yx-8qT" id="ooZ-qk-TNP"/>
+                                    <outlet property="verifiedCheckBox" destination="QT4-r7-ufF" id="yPR-XG-thI"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImage" rowHeight="150" id="HnJ-ci-Sih" customClass="MTPostsTableViewCell">
@@ -2921,7 +2937,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUJ-bW-Rmw" userLabel="Like Button">
-                                            <rect key="frame" x="15" y="101" width="29" height="26"/>
+                                            <rect key="frame" x="10" y="96" width="39" height="36"/>
                                             <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
                                             <state key="normal" image="like_normal.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -2934,7 +2950,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sJx-A5-cNc" userLabel="Comment Button">
-                                            <rect key="frame" x="69" y="104" width="17" height="20"/>
+                                            <rect key="frame" x="59" y="94" width="37" height="40"/>
                                             <state key="normal" image="comment.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -2946,6 +2962,20 @@
                                             <rect key="frame" x="94" y="107" width="13" height="14"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="11"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H1m-Uc-jAN" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="94" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="ytF-zp-Kj4"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PF0-qF-D6y" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="104" width="50" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwF-lc-hku" userLabel="Delete Button (X)">
@@ -2981,6 +3011,8 @@
                                     <outlet property="postedWhen" destination="73d-iI-rUz" id="kYn-sc-NCC"/>
                                     <outlet property="profileImage" destination="DTw-x6-ZdE" id="nXH-fj-aSA"/>
                                     <outlet property="userName" destination="SLA-7Z-pKu" id="p9r-lf-I9q"/>
+                                    <outlet property="verfiedLabel" destination="PF0-qF-D6y" id="M45-ag-vvN"/>
+                                    <outlet property="verifiedCheckBox" destination="H1m-Uc-jAN" id="xA0-FY-Uq1"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellWithButtons" rowHeight="456" id="2rR-a1-kgR" customClass="MTPostsTableViewCell">
@@ -3031,7 +3063,7 @@
                                             </state>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jbJ-d7-apH" userLabel="Like Button">
-                                            <rect key="frame" x="15" y="414" width="29" height="26"/>
+                                            <rect key="frame" x="10" y="409" width="39" height="36"/>
                                             <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
                                             <state key="normal" image="like_normal.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3044,7 +3076,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5Ng-mN-G04" userLabel="Comment Button">
-                                            <rect key="frame" x="69" y="417" width="17" height="20"/>
+                                            <rect key="frame" x="59" y="407" width="37" height="40"/>
                                             <state key="normal" image="comment.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -3058,6 +3090,20 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Caj-Ht-wQ8" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="407" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J6O-3b-WXH" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="407" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="Xgn-vQ-J4T"/>
+                                            </connections>
+                                        </button>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Tg-KG-fYo" userLabel="Delete Button (x)">
                                             <rect key="frame" x="275" y="409" width="40" height="36"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -3094,6 +3140,8 @@
                                     <outlet property="postedWhen" destination="0XS-Ol-FOc" id="Pex-6D-eYo"/>
                                     <outlet property="profileImage" destination="Ik7-2m-EuX" id="j7q-r4-Uf8"/>
                                     <outlet property="userName" destination="UWu-sx-UKH" id="IU8-WI-MQg"/>
+                                    <outlet property="verfiedLabel" destination="Caj-Ht-wQ8" id="pxh-IG-ujT"/>
+                                    <outlet property="verifiedCheckBox" destination="J6O-3b-WXH" id="GnX-Cp-ei3"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithButtons" rowHeight="180" id="z1M-tx-OTJ" customClass="MTPostsTableViewCell">
@@ -3141,7 +3189,7 @@
                                             </state>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hp9-uy-xD2" userLabel="Like Button">
-                                            <rect key="frame" x="15" y="133" width="29" height="26"/>
+                                            <rect key="frame" x="10" y="128" width="39" height="36"/>
                                             <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
                                             <state key="normal" image="like_normal.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3154,7 +3202,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mqp-kZ-fm6" userLabel="Comment Button">
-                                            <rect key="frame" x="69" y="136" width="17" height="20"/>
+                                            <rect key="frame" x="59" y="126" width="37" height="40"/>
                                             <state key="normal" image="comment.png">
                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                             </state>
@@ -3168,6 +3216,20 @@
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4E2-1g-uzV" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="126" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZKZ-90-VXX" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="126" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="PRb-vh-To5"/>
+                                            </connections>
+                                        </button>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozk-lg-fTP" userLabel="Delete Button (x)">
                                             <rect key="frame" x="275" y="128" width="40" height="36"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
@@ -3203,6 +3265,8 @@
                                     <outlet property="postedWhen" destination="Ori-QR-4iV" id="DiU-BM-B8m"/>
                                     <outlet property="profileImage" destination="gl2-dx-1QJ" id="py2-Li-aoz"/>
                                     <outlet property="userName" destination="hjI-XK-27P" id="uP0-Kq-U6d"/>
+                                    <outlet property="verfiedLabel" destination="4E2-1g-uzV" id="Lbs-uA-q6h"/>
+                                    <outlet property="verifiedCheckBox" destination="ZKZ-90-VXX" id="9m5-U8-qtB"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -4015,14 +4079,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="0Hm-VR-maT"/>
         <segue reference="3av-NC-tBU"/>
+        <segue reference="0Hm-VR-maT"/>
         <segue reference="fGY-fc-BPd"/>
+        <segue reference="7JS-73-w9v"/>
         <segue reference="eZ1-MC-FDS"/>
         <segue reference="NwG-bn-vTI"/>
         <segue reference="Gdm-gL-5Rd"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="a3W-fR-2k0"/>
-        <segue reference="Dm1-SI-6eC"/>
+        <segue reference="nYB-OV-yVU"/>
+        <segue reference="LS9-Mg-yad"/>
     </inferredMetricsTieBreakers>
 </document>

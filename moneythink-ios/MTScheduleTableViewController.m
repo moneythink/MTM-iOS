@@ -221,7 +221,7 @@
                 return nil;
             }
             
-            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", indexPath.row+1];
+            cell.challengeNumber.text = [NSString stringWithFormat:@"%d)", indexPath.row+1];
 
         }
             break;
@@ -236,7 +236,7 @@
             }
             
             NSInteger starting = [self.availableChallenges count]+1;
-            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", indexPath.row + starting];
+            cell.challengeNumber.text = [NSString stringWithFormat:@"%d)", indexPath.row + starting];
         }
             break;
     }

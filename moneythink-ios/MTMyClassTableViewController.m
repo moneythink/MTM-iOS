@@ -241,6 +241,24 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     cell.post = post;
     
+    // Setup Verify
+    PFUser *currentUser = [PFUser currentUser];
+    BOOL isMentor = [currentUser[@"type"] isEqualToString:@"mentor"];
+    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    BOOL hideVerifySwitch = !isMentor || autoVerify;
+
+    cell.verifiedCheckBox.hidden = hideVerifySwitch;
+    BOOL isChecked = (post[@"verified_by"] != nil);
+    [cell.verifiedCheckBox setIsChecked:isChecked];
+    
+    cell.verfiedLabel.hidden = hideVerifySwitch;
+    if (isChecked) {
+        cell.verfiedLabel.text = @"Verified";
+    }
+    else {
+        cell.verfiedLabel.text = @"Verify";
+    }
+    
     BOOL canDelete = NO;
     if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
         canDelete = YES;
@@ -622,7 +640,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 }
 
 
-#pragma mark - IBAction methods
+#pragma mark - Actions -
 - (IBAction)unwindToMyClassTableView:(UIStoryboardSegue *)sender
 {
 }
@@ -904,6 +922,61 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             
             button.enabled = YES;
         }];
+    } afterDelay:0.35f];
+}
+
+- (IBAction)verifiedTapped:(id)sender
+{
+    __block MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
+    __block PFChallengePost *post = postCell.post;
+    __block PFUser *currentUser = [PFUser currentUser];
+
+    NSString *postID = [post objectId];
+    NSString *verifiedBy = [currentUser objectId];
+
+    BOOL isChecked = (post[@"verified_by"] != nil);
+    
+    if (isChecked) {
+        verifiedBy = @"";
+    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (isChecked) {
+        hud.labelText = @"Removing Verification...";
+    }
+    else {
+        hud.labelText = @"Verifying...";
+    }
+    hud.dimBackground = YES;
+    
+    postCell.verfiedLabel.text = @"Updating...";
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
+            
+            if (error) {
+                NSLog(@"error - %@", error);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+                
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                [weakSelf.tableView reloadData];
+                
+            } else {
+                [currentUser fetchInBackground];
+                [weakSelf.challenge fetchInBackground];
+                
+                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        [weakSelf.tableView reloadData];
+                    });
+                }];
+            }
+        }];
+        
     } afterDelay:0.35f];
 }
 

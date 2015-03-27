@@ -275,11 +275,14 @@
 
         self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
         
-        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+        if (self.challenge[@"challenge_number"]) {
+            self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+        }
+        
+        self.challengePost[@"post_text"] = self.postText.text;
         self.challengePost[@"class"] = [PFUser currentUser][@"class"];
         self.challengePost[@"school"] = [PFUser currentUser][@"school"];
         self.challengePost[@"user"] = [PFUser currentUser];
-        self.challengePost[@"post_text"] = self.postText.text;
         
         if (self.postImage.image)
         {

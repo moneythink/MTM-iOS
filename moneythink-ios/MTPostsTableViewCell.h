@@ -7,6 +7,7 @@
 //
 
 #import <Parse/Parse.h>
+#import "MICheckBox.h"
 
 @interface MTPostsTableViewCell : PFTableViewCell
 
@@ -25,6 +26,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *deletePost;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) IBOutlet UIView *loadingView;
+@property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
+@property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
 
 @property (strong, nonatomic) NSArray *postsLiked;
 @property (assign, nonatomic) NSInteger postLikesCount;

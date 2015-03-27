@@ -483,26 +483,32 @@ typedef enum {
     }
     hud.dimBackground = YES;
     
+    likeCommentCell.verfiedLabel.text = @"Updating...";
+    
     MTMakeWeakSelf();
     [self bk_performBlock:^(id obj) {
         [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
             
             if (error) {
                 NSLog(@"error - %@", error);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                
+                [weakSelf.tableView reloadData];
+
             } else {
-                [weakSelf.currentUser fetch];
-                [weakSelf.challenge fetch];
-                [weakSelf.challengePost fetch];
+                [weakSelf.currentUser fetchInBackground];
+                [weakSelf.challenge fetchInBackground];
                 
-                [likeCommentCell.verifiedCheckBox setIsChecked:!isChecked];
+                [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        [weakSelf.tableView reloadData];
+                    });
+                }];
             }
-            
-            [weakSelf.tableView reloadData];
         }];
         
     } afterDelay:0.35f];
@@ -1051,10 +1057,17 @@ typedef enum {
                 likeCommentCell.commentCount.text = @"0";
             }
             
-            likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
             BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
             [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
+            
+            likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
+            if (isChecked) {
+                likeCommentCell.verfiedLabel.text = @"Verified";
+            }
+            else {
+                likeCommentCell.verfiedLabel.text = @"Verify";
+            }
 
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
