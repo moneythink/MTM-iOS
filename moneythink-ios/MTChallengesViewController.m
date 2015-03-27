@@ -116,8 +116,6 @@
 
 - (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
 {
-    [MTUtil setDisplayingCustomPlaylist:YES];
-    
     PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
     [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
     [allCustomChallenges orderByAscending:@"ordering"];
@@ -176,8 +174,6 @@
 
 - (void)loadDefaultChallenges
 {
-    [MTUtil setDisplayingCustomPlaylist:NO];
-    
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challenge_number"];
     [allChallenges whereKeyDoesNotExist:@"school"];
@@ -238,21 +234,7 @@
     
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
-    
-    if ([MTUtil displayingCustomPlaylist]) {
-        NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
-        if (ordering != -1) {
-            // Set ordering at +1 (starts at 0 in Parse) to match Android
-            challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", (long)ordering+1];
-        }
-        else {
-            challengeContentViewController.challengeNumberText = @"";
-        }
-    }
-    else {
-        challengeContentViewController.challengeNumberText = [challenge[@"challenge_number"] stringValue];
-    }
-    
+    challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", index+1];
     challengeContentViewController.challengeDescriptionText = challenge[@"student_instructions"];
     challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     

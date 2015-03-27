@@ -279,9 +279,6 @@
 
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
 {
-    // Default to no custom playlist
-    [MTUtil setDisplayingCustomPlaylist:YES];
-
     // Only need to do this if we have custom playlists
     NSString *userClass = [PFUser currentUser][@"class"];
     NSString *userSchool = [PFUser currentUser][@"school"];
@@ -290,8 +287,6 @@
     [userClassQuery whereKey:@"name" equalTo:userClass];
     [userClassQuery whereKey:@"school" equalTo:userSchool];
     userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    [MTUtil setDisplayingCustomPlaylist:NO];
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     if (refresh) {
@@ -319,7 +314,6 @@
                         if (!error) {
                             if (!IsEmpty(playlistObjects)) {
                                 // Pre-load the content
-                                [MTUtil setDisplayingCustomPlaylist:YES];
                                 [weakSelf loadCustomChallengesForPlaylist:[playlistObjects firstObject]];
                             }
                             else {
@@ -404,8 +398,6 @@
 #pragma mark - Private Methods -
 - (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
 {
-    [MTUtil setDisplayingCustomPlaylist:YES];
-    
     PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
     [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
     [allCustomChallenges orderByAscending:@"ordering"];

@@ -24,17 +24,6 @@
     return [UIApplication sharedApplication].delegate;
 }
 
-+ (BOOL)displayingCustomPlaylist
-{
-    return [[NSUserDefaults standardUserDefaults] boolForKey:@"DisplayingCustomPlaylist"];
-}
-
-+ (void)setDisplayingCustomPlaylist:(BOOL)diplayingCustomPlaylist
-{
-    [[NSUserDefaults standardUserDefaults] setBool:diplayingCustomPlaylist forKey:@"DisplayingCustomPlaylist"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-}
-
 + (NSInteger)orderingForChallengeObjectId:(NSString *)objectId
 {
     if (IsEmpty(objectId)) {

@@ -1,4 +1,4 @@
-
+//
 //  MTScheduleTableViewController.m
 //  moneythink-ios
 //
@@ -216,9 +216,13 @@
         {
             if (available > 0) {
                 activation = self.availableChallenges[row];
-            } else {
+            }
+            else {
                 return nil;
             }
+            
+            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", indexPath.row+1];
+
         }
             break;
             
@@ -226,63 +230,75 @@
         {
             if (future > 0) {
                 activation = self.futureChallenges[row];
-            } else {
+            }
+            else {
                 return nil;
             }
+            
+            NSInteger starting = [self.availableChallenges count]+1;
+            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", indexPath.row + starting];
         }
             break;
     }
     
-    id challengeNumber = activation[@"challenge_number"];
-    
-    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
-    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:challengePredicate];
-    [challengeQuery whereKeyDoesNotExist:@"school"];
-    [challengeQuery whereKeyDoesNotExist:@"class"];
+    PFChallenges *challenge = activation[@"challenge"];
 
-    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    if (challenge) {
+        if (!IsEmpty(challenge[@"title"])) {
+            cell.challengeTitle.text = challenge[@"title"];
+        }
+        else {
+            cell.challengeTitle.text = @"";
+        }
+        
+        NSDate *activationDate = activation[@"activation_date"];
+        
+        if (activationDate) {
+            NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+            [dateFormat setDateFormat:@"MM-dd-yyyy"];
+            cell.activationDate.text = [dateFormat stringFromDate:activationDate];
+        }
+        else {
+            cell.activationDate.text = @"Paused";
+        }
+    }
+    else {
+        // Backwards compatible
+        id challengeNumber = activation[@"challenge_number"];
 
-    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (challenge) {
-                    if ([MTUtil displayingCustomPlaylist]) {
-                        NSInteger ordering = [MTUtil orderingForChallengeObjectId:challenge.objectId];
-                        if (ordering != -1) {
-                            // Set ordering at +1 (starts at 0 in Parse) to match Android
-                            cell.challengeNumber.text = [NSString stringWithFormat:@"%lu)", (long)ordering+1];
-                        }
-                        else {
-                            cell.challengeNumber.text = @"";
-                        }
+        NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challengeNumber];
+        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:challengePredicate];
+        [challengeQuery whereKeyDoesNotExist:@"school"];
+        [challengeQuery whereKeyDoesNotExist:@"class"];
+        
+        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
+        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                PFChallenges *challenge = (PFChallenges *)[objects firstObject];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (challenge && !IsEmpty(challenge[@"title"])) {
+                        cell.challengeTitle.text = challenge[@"title"];
                     }
                     else {
-                        cell.challengeNumber.text = [NSString stringWithFormat:@"%@)", [challengeNumber stringValue]];
+                        cell.challengeTitle.text = @"";
                     }
                     
+                    NSDate *activationDate = activation[@"activation_date"];
                     
-                    cell.challengeTitle.text = challenge[@"title"];
-                }
-                else {
-                    cell.challengeNumber.text = @"";
-                    cell.challengeTitle.text = @"";
-                }
-                
-                NSDate *activationDate = activation[@"activation_date"];
-                
-                if (activationDate) {
-                    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-                    [dateFormat setDateFormat:@"MM-dd-yyyy"];
-                    cell.activationDate.text = [dateFormat stringFromDate:activationDate];
-                }
-                else {
-                    cell.activationDate.text = @"Paused";
-                }
-            });
-        }
-    }];
+                    if (activationDate) {
+                        NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+                        [dateFormat setDateFormat:@"MM-dd-yyyy"];
+                        cell.activationDate.text = [dateFormat stringFromDate:activationDate];
+                    }
+                    else {
+                        cell.activationDate.text = @"Paused";
+                    }
+                });
+            }
+        }];
+    }
     
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     return cell;
@@ -470,9 +486,9 @@
     [queryActivations whereKey:@"activated" equalTo:@YES];
     [queryActivations whereKey:@"school" equalTo:userSchool];
     [queryActivations whereKey:@"class" equalTo:userClass];
+    [queryActivations includeKey:@"challenge"];
     
     [queryActivations orderByAscending:@"activation_date"];
-    [queryActivations addAscendingOrder:@"challenge_number"];
     queryActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     MTMakeWeakSelf();
@@ -491,14 +507,9 @@
     [queryFuture whereKey:@"activated" equalTo:@NO];
     [queryFuture whereKey:@"school" equalTo:userSchool];
     [queryFuture whereKey:@"class" equalTo:userClass];
-    
+    [queryFuture includeKey:@"challenge"];
+
     [queryFuture orderByAscending:@"activation_date"];
-    
-    // TODO: Should determine proper sorting for custom playlist when "Paused"
-    if (![MTUtil displayingCustomPlaylist]) {
-        [queryFuture addAscendingOrder:@"challenge_number"];
-    }
-    
     queryFuture.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [queryFuture findObjectsInBackgroundWithBlock:^(NSArray *scheduledObjects, NSError *error) {
