@@ -234,7 +234,9 @@
     
     challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
-    challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%u", index+1];
+    
+    NSInteger indexNum = index +1;
+    challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", (long)indexNum];
     challengeContentViewController.challengeDescriptionText = challenge[@"student_instructions"];
     challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
     
