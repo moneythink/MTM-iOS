@@ -17,7 +17,6 @@
 
 @interface MTSignUpViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *view;
 @property (weak, nonatomic) IBOutlet UITextField *firstName;
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
 @property (weak, nonatomic) IBOutlet UITextField *email;

@@ -11,8 +11,6 @@
 
 @interface MTChallengePostsViewController ()
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-
 @end
 
 @implementation MTChallengePostsViewController

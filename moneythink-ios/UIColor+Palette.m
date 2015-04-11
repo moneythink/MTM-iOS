@@ -40,6 +40,11 @@
     return [UIColor colorWithHexString:@"#a1d4b0"];
 }
 
++ (UIColor *)lightGreen;
+{
+    return [UIColor colorWithHexString:@"#c6f0e5"];
+}
+
 + (UIColor *)darkGrey;
 {
     return [UIColor colorWithHexString:@"#58595b"];
@@ -68,6 +73,11 @@
 + (UIColor *)redOrange;
 {
     return [UIColor colorWithHexString:@"#fe4e00"];
+}
+
++ (UIColor *)lightRedOrange
+{
+    return [UIColor colorWithHexString:@"#ffd2c0"];
 }
 
 

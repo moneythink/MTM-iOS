@@ -10,8 +10,6 @@
 
 @interface MTScheduleTableViewController ()
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-
 @property (strong, nonatomic) NSArray *availableChallenges;
 @property (strong, nonatomic) NSArray *futureChallenges;
 @property (nonatomic, strong) UISwitch *autoReleaseSwitch;

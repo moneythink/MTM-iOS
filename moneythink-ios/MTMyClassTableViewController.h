@@ -16,7 +16,7 @@ extern NSString *const kSavedMyClassChallengePostsdNotification;
 extern NSString *const kFailedMyClassChallengePostsdNotification;
 extern NSString *const kWillSaveNewPostCommentNotification;
 
-@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTPostViewControllerDelegate>
+@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTPostViewControllerDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;

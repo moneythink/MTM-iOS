@@ -24,12 +24,16 @@ typedef enum {
 
 @end
 
-@interface MTPostViewController : UIViewController <MTCommentViewProtocol, UITableViewDataSource, UITableViewDelegate>
+@interface MTPostViewController : UIViewController <MTCommentViewProtocol, UITableViewDataSource, UITableViewDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic, weak) id<MTPostViewControllerDelegate> delegate;
 
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;
 @property (nonatomic) MTPostType postType;
+@property (nonatomic) BOOL hasButtons;
+@property (nonatomic) BOOL hasSecondaryButtons;
+@property (nonatomic, strong) NSDictionary *buttonsTapped;
+@property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 
 @end

@@ -279,6 +279,10 @@
             self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
         }
         
+        if (self.challenge) {
+            self.challengePost[@"challenge"] = self.challenge;
+        }
+        
         self.challengePost[@"post_text"] = self.postText.text;
         self.challengePost[@"class"] = [PFUser currentUser][@"class"];
         self.challengePost[@"school"] = [PFUser currentUser][@"school"];

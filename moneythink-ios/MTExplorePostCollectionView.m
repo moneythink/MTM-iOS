@@ -16,7 +16,9 @@
 @property (strong, nonatomic) NSArray *posts;
 
 @property (strong, nonatomic) IBOutlet UICollectionView *exploreCollectionView;
-@property (assign, nonatomic) BOOL hasButtons;
+@property (nonatomic) BOOL hasButtons;
+@property (nonatomic) BOOL hasSecondaryButtons;
+
 @property (nonatomic, strong) UIImage *postImage;
 
 @end
@@ -57,7 +59,18 @@
             weakSelf.posts = objects;
             
             NSArray *buttons = weakSelf.challenge[@"buttons"];
-            weakSelf.hasButtons = buttons.count;
+            NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
+            BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+
+            if (!IsEmpty(buttons)) {
+                weakSelf.hasButtons = YES;
+            }
+            else if (!IsEmpty(secondaryButtons) && !isMentor) {
+                weakSelf.hasSecondaryButtons = YES;
+            }
+            else {
+                weakSelf.hasButtons = NO;
+            }
             
             [weakSelf.exploreCollectionView reloadData];
         } else {
@@ -218,20 +231,35 @@
         destinationViewController.challengePost = (PFChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
         
-        if (self.hasButtons && self.postImage) {
-            destinationViewController.postType = MTPostTypeWithButtonsWithImage;
-        }
-        else if (self.hasButtons) {
-            destinationViewController.postType = MTPostTypeWithButtonsNoImage;
-        }
-        else if (self.postImage) {
-            destinationViewController.postType = MTPostTypeNoButtonsWithImage;
-        }
-        else {
-            destinationViewController.postType = MTPostTypeNoButtonsNoImage;
+        PFChallengePost *post = (PFChallengePost*)sender;
+        PFUser *user = post[@"user"];
+        
+        BOOL myPost = NO;
+        if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+            myPost = YES;
         }
 
-    } else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
+        BOOL showButtons = NO;
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+            showButtons = YES;
+        }
+        
+        if (showButtons) {
+            destinationViewController.hasButtons = self.hasButtons;
+            destinationViewController.hasSecondaryButtons = self.hasSecondaryButtons;
+        }
+        
+        if (showButtons && self.postImage)
+            destinationViewController.postType = MTPostTypeWithButtonsWithImage;
+        else if (showButtons)
+            destinationViewController.postType = MTPostTypeWithButtonsNoImage;
+        else if (self.postImage)
+            destinationViewController.postType = MTPostTypeNoButtonsWithImage;
+        else
+            destinationViewController.postType = MTPostTypeNoButtonsNoImage;
+        
+    }
+    else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
         
     }
 }

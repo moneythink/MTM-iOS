@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>894FC87F-CD49-4118-AB4F-603602D0D933</string>
 	<key>IDESourceControlProjectName</key>
-	<string>moneythink-ios</string>
+	<string>project</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>7160B8432B546BBB28347B15BBCBD95C28576DD7</key>
 		<string>bitbucket.org:hidef/moneythink-ios.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>moneythink-ios.xcodeproj</string>
+	<string>moneythink-ios.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>7160B8432B546BBB28347B15BBCBD95C28576DD7</key>

@@ -27,12 +27,14 @@
 + (UIColor *)primaryGreen;
 + (UIColor *)primaryGreenDark;
 + (UIColor *)mutedGreen;
++ (UIColor *)lightGreen;
 + (UIColor *)darkGrey;
 + (UIColor *)grey;
 + (UIColor *)lightGrey;
 + (UIColor *)lightTan;
 + (UIColor *)white;
 + (UIColor *)redOrange;
++ (UIColor *)lightRedOrange;
 
 + (UIColor *) colorWithHexString: (NSString *) hexString;
 

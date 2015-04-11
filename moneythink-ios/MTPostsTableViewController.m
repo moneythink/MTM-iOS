@@ -14,7 +14,6 @@
 @interface MTPostsTableViewController()
 
 @property (strong, nonatomic) IBOutlet UITabBarItem *postsTabBarItem;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 

@@ -49,6 +49,7 @@
 #import "PFChallengeBanner.h"
 #import "PFChallengePost.h"
 #import "PFChallengePostButtonsClicked.h"
+#import "PFChallengePostSecondaryButtonsClicked.h"
 #import "PFChallengePostComment.h"
 #import "PFChallenges.h"
 #import "PFChallengesActivated.h"
