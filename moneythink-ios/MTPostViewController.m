@@ -865,7 +865,7 @@ typedef enum {
     NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": [NSNumber numberWithInt:0], @"increase": increaseNumber};
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = increment ? @"Incrementing..." : @"Decrementing...";
+    hud.labelText = @"Processing Points...";
     hud.dimBackground = YES;
     
     MTMakeWeakSelf();
