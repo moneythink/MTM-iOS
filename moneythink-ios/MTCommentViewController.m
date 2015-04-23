@@ -304,7 +304,7 @@
             
             [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (!error) {
-                    // TODO Update User
+                    [[PFUser currentUser] fetchInBackground];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
                     });
@@ -326,7 +326,7 @@
             
             [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
                 if (!error) {
-                    // TODO Update User
+                    [[PFUser currentUser] fetchInBackground];
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
                     });
@@ -438,7 +438,7 @@
         
         [self.challengePostComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (!error) {
-                // TODO Update User
+                [[PFUser currentUser] fetchInBackground];
             }
             else {
                 NSLog(@"Post text comment error - %@", error);

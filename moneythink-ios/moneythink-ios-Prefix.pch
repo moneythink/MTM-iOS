@@ -61,6 +61,7 @@
 #import "PFSchools.h"
 #import "PFSignupCodes.h"
 #import "PFStudentPointDetails.h"
+#import "PFChallengePostsLiked.h"
 
 static inline BOOL IsEmpty(id thing) {
     return thing == nil ||

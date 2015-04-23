@@ -21,6 +21,7 @@ typedef enum {
 @protocol MTPostViewControllerDelegate <NSObject>
 
 - (void)didDeletePost:(PFChallengePost *)challengePost;
+- (void)didUpdatePostsLiked:(NSArray *)postsLiked;
 
 @end
 
@@ -35,5 +36,6 @@ typedef enum {
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic, strong) NSDictionary *buttonsTapped;
 @property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
+@property (nonatomic, strong) NSArray *postsLiked;
 
 @end

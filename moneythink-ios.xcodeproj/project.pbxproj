@@ -180,6 +180,7 @@
 		8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065119DA1F52000CFBF6 /* mentorSignupButton@2x.png */; };
 		8921065819DA1F52000CFBF6 /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065219DA1F52000CFBF6 /* studentSignupButton.png */; };
 		8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */; };
+		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C78A1A77F79500BE125E /* challenges-icon.png */; };
@@ -508,6 +509,8 @@
 		8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
 		8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
 		8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
+		892573851AE5950C002FF871 /* PFChallengePostsLiked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostsLiked.h; path = "Data Classes/PFChallengePostsLiked.h"; sourceTree = "<group>"; };
+		892573861AE59515002FF871 /* PFChallengePostsLiked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostsLiked.m; path = "Data Classes/PFChallengePostsLiked.m"; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
@@ -692,6 +695,8 @@
 				58669F4D19772D00009BC13C /* PFChallenges.m */,
 				58669F4E19772D00009BC13C /* PFChallengesActivated.h */,
 				58669F4F19772D00009BC13C /* PFChallengesActivated.m */,
+				892573851AE5950C002FF871 /* PFChallengePostsLiked.h */,
+				892573861AE59515002FF871 /* PFChallengePostsLiked.m */,
 				58669F5019772D00009BC13C /* PFClasses.h */,
 				58669F5119772D00009BC13C /* PFClasses.m */,
 				89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */,
@@ -1371,6 +1376,7 @@
 				5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */,
 				58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
+				892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,

@@ -33,6 +33,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
+@property (nonatomic) BOOL didUpdateLikedPosts;
 
 @end
 
@@ -79,44 +80,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
     
     if (!self.postingNewComment && !self.deletingPost) {
-        
-        NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
-        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-        [challengeQuery includeKey:@"verified_by"];
-        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-
-        MTMakeWeakSelf();
-        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-                weakSelf.challenge = challenge;
-                
-                NSArray *buttons = challenge[@"buttons"];
-                NSArray *secondaryButtons = challenge[@"secondary_buttons"];
-
-                if (!IsEmpty(buttons)) {
-                    weakSelf.hasButtons = YES;
-                    [weakSelf userButtonsTapped];
-                }
-                else if (!IsEmpty(secondaryButtons) && !self.isMentor) {
-                    weakSelf.hasSecondaryButtons = YES;
-                    [weakSelf updateSecondaryButtonsTapped];
-                }
-                else {
-                    weakSelf.hasButtons = NO;
-                }
-                
-                if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                        hud.labelText = @"Loading...";
-                        hud.dimBackground = YES;
-                    });
-                }
-                
-                [weakSelf loadObjects];
-            }
-        }];
+        [self updateButtons];
+        [self updateLikes];
     }
 }
 
@@ -487,6 +452,81 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }
 }
 
+- (void)updateButtons
+{
+    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
+    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
+    [challengeQuery includeKey:@"verified_by"];
+    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    MTMakeWeakSelf();
+    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
+            weakSelf.challenge = challenge;
+            
+            NSArray *buttons = challenge[@"buttons"];
+            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
+            
+            if (!IsEmpty(buttons)) {
+                weakSelf.hasButtons = YES;
+                [weakSelf userButtonsTapped];
+            }
+            else if (!IsEmpty(secondaryButtons) && !self.isMentor) {
+                weakSelf.hasSecondaryButtons = YES;
+                [weakSelf updateSecondaryButtonsTapped];
+            }
+            else {
+                weakSelf.hasButtons = NO;
+            }
+            
+            if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+                    hud.labelText = @"Loading...";
+                    hud.dimBackground = YES;
+                });
+            }
+            
+            [weakSelf loadObjects];
+        }
+    }];
+}
+
+- (void)updateLikes
+{
+    MTMakeWeakSelf();
+    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
+    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
+    [myLikesQuery selectKeys:[NSArray arrayWithObject:@"post"]];
+    
+    if (self.didUpdateLikedPosts) {
+        myLikesQuery.cachePolicy = kPFCachePolicyNetworkOnly;
+        self.didUpdateLikedPosts = NO;
+        [self.tableView reloadData];
+    }
+    else {
+        myLikesQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    }
+    
+    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *mutableLiked = [NSMutableArray array];
+            for (PFChallengePostsLiked *thisPostLiked in objects) {
+                PFChallengePost *post = thisPostLiked[@"post"];
+                if (!IsEmpty(post.objectId)) {
+                    [mutableLiked addObject:post.objectId];
+                }
+            }
+            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadObjects];
+            });
+        }
+    }];
+}
+
 
 #pragma mark - MBProgressHUDDelegate Methods -
 - (void)hudWasHidden:(MBProgressHUD *)hud
@@ -641,7 +681,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     // Set Like
     NSString *postID = [post objectId];
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
     BOOL like = [self.postsLiked containsObject:postID];
     
     if (like) {
@@ -815,6 +854,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     return newImage;
 }
 
+
+#pragma mark - Segue -
 - (void)prepareForSegue:(UIStoryboardSegue*)segue sender:(id)sender
 {
     NSString *segueIdentifier = [segue identifier];
@@ -834,6 +875,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         destinationViewController.challengePost = (PFChallengePost*)sender;
         destinationViewController.challenge = self.challenge;
         destinationViewController.delegate = self;
+        destinationViewController.postsLiked = self.postsLiked;
         
         PFChallengePost *post = (PFChallengePost*)sender;
         PFUser *user = post[@"user"];
@@ -906,6 +948,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     } afterDelay:0.35f];
 }
 
+- (void)didUpdatePostsLiked:(NSArray *)postsLiked
+{
+    self.didUpdateLikedPosts = YES;
+    self.postsLiked = postsLiked;
+}
+
 
 #pragma mark - Actions -
 - (IBAction)unwindToMyClassTableView:(UIStoryboardSegue *)sender
@@ -955,13 +1003,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
                                          }];
 
                                          [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                                             //[weakSelf loadObjects];
                                              if (error) {
                                                  [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                                                  NSLog(@"error - %@", error);
                                              }
                                              else {
-                                                 // TODO Update User
+                                                 [[PFUser currentUser] fetchInBackground];
                                              }
                                          }];
                                      }];
@@ -984,13 +1031,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
                 }];
                 
                 [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                    //[weakSelf loadObjects];
                     if (error) {
                         [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                         NSLog(@"error - %@", error);
                     }
                     else {
-                        // TODO Update User
+                        [[PFUser currentUser] fetchInBackground];
                     }
                 }];
                 
@@ -1026,16 +1072,18 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     __block UIButton *button = sender;
     
     __block MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
+    __block PFChallengePost *post = cell.post;
 
     PFUser *user = [PFUser currentUser];
 
     NSString *userID = [user objectId];
     NSString *postID = [post objectId];
     
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
     BOOL like = [self.postsLiked containsObject:postID];
     
+    __block NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSInteger oldLikesCount = [post[@"likes"] intValue];
+
     NSMutableArray *likes = [NSMutableArray arrayWithArray:self.postsLiked];
     NSInteger likesCount = [post[@"likes"] intValue];
     NSString *likePostString = nil;
@@ -1051,7 +1099,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     post[@"likes"] = [NSNumber numberWithInteger:likesCount];
     self.postsLiked = likes;
-    [PFUser currentUser][@"posts_liked"] = self.postsLiked;
     
     // Optimistically update view (can roll back on error below)
     cell.likes.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
@@ -1089,7 +1136,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
         
         if (!error) {
-            [user fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 // Load/update the objects but don't clear the table
                 [weakSelf loadObjects];
@@ -1097,10 +1143,24 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
         else {
             NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            weakSelf.postsLiked = oldLikePosts;
+            post[@"likes"] = [NSNumber numberWithInteger:oldLikesCount];
             
-            // Reload to revert optimistic update
-            [weakSelf loadObjects];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+
+                // Revert locally if network down
+                [weakSelf.tableView reloadData];
+                
+                // Then, sync with server
+                if ([MTUtil internetReachable]) {
+                    [weakSelf updateLikes];
+                    [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        // Load/update the objects but don't clear the table
+                        [weakSelf loadObjects];
+                    }];
+                }
+            });
         }
     }];
 }

@@ -24,6 +24,7 @@
 @property (strong, nonatomic) IBOutlet UIView *fieldBackground;
 @property (strong, nonatomic) IBOutlet UITextField *userSchool;
 @property (strong, nonatomic) IBOutlet UITextField *userClassName;
+@property (strong, nonatomic) IBOutlet UITextField *phoneNumber;
 
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UIButton *saveButton;
@@ -91,6 +92,7 @@
     self.firstName.text = self.userCurrent[@"first_name"];
     self.lastName.text = self.userCurrent[@"last_name"];
     self.email.text = self.userCurrent[@"email"];
+    self.phoneNumber.text = self.userCurrent[@"phone_number"];
     
     [self.profileImageLabel setBackgroundColor:[UIColor clearColor]];
 
@@ -475,6 +477,9 @@
     if (![self.email.text isEqualToString:self.userCurrent[@"email"]]) {
         dirty = YES;
     }
+    if (![self.phoneNumber.text isEqualToString:self.userCurrent[@"phone_number"]]) {
+        dirty = YES;
+    }
 
     if (dirty) {
         if ([UIAlertController class]) {
@@ -623,6 +628,21 @@
     [self.email setBackgroundColor:[UIColor white]];
     
     bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                            self.phoneNumber.frame.size.height - 1.0f,
+                                                            self.phoneNumber.frame.size.width,
+                                                            1.0f)];
+    bottomBorder.backgroundColor = [UIColor primaryOrange];
+    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.phoneNumber.frame.size.width - 1.0f,
+                                                           0.0f,
+                                                           1.0f,
+                                                           self.phoneNumber.frame.size.height)];
+    rightBorder.backgroundColor = [UIColor primaryOrange];
+    
+    [self.phoneNumber addSubview:bottomBorder];
+    [self.phoneNumber addSubview:rightBorder];
+    [self.phoneNumber setBackgroundColor:[UIColor white]];
+
+    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
                                                             self.userPassword.frame.size.height - 1.0f,
                                                             self.userPassword.frame.size.width,
                                                             1.0f)];
@@ -685,11 +705,11 @@
     CGFloat w = fieldsFrame.size.width;
     CGFloat h = kbTop + 380.0f;
     
-    CGRect fieldsContentRect = CGRectMake( x, y, w, h);
+    CGRect fieldsContentRect = CGRectMake(x, y, w, h);
     
     [UIView animateWithDuration:0.35f animations:^{
         self.viewFields.contentSize = fieldsContentRect.size;
-        self.viewFields.contentOffset = CGPointMake(0.0f, 184.0f);
+        self.viewFields.contentOffset = CGPointMake(0.0f, 214.0f);
     }];
 }
 
@@ -743,6 +763,10 @@
         self.userCurrent[@"last_name"] = self.lastName.text;
     }
     
+    if (self.phoneNumber.text) {
+        self.userCurrent[@"phone_number"] = self.phoneNumber.text;
+    }
+
     BOOL passwordsMatch = [self.userPassword.text isEqualToString:self.confirmPassword.text];
     if (![self.self.userPassword.text isEqual:@""] && passwordsMatch) {
         self.userCurrent.password = self.userPassword.text;
@@ -757,7 +781,6 @@
         createSchool[@"name"] = self.userSchool.text;
         [createSchool saveInBackground];
     }
-    
     
     if (self.classIsNew) {
         PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];

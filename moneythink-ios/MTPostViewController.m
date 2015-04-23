@@ -29,7 +29,6 @@ typedef enum {
 
 @property (strong, nonatomic) PFUser *currentUser;
 @property (strong, nonatomic) PFUser *postUser;
-@property (strong, nonatomic) NSArray *postsLiked;
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (assign, nonatomic) BOOL iLike;
 @property (assign, nonatomic) BOOL isMyClass;
@@ -62,7 +61,6 @@ typedef enum {
 {
     [super viewDidLoad];
     
-    self.postsLiked = [PFUser currentUser][@"posts_liked"];
     NSString *postID = [self.challengePost objectId];
     self.iLike = [self.postsLiked containsObject:postID];
 }
@@ -533,7 +531,6 @@ typedef enum {
     }
     
     self.postsLiked = likePosts;
-    [PFUser currentUser][@"posts_liked"] = self.postsLiked;
     self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
     likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
     
@@ -548,12 +545,16 @@ typedef enum {
         }
 
         if (!error) {
-            [weakSelf.currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {}];
             [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.tableView reloadData];
                 });
             }];
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:)]) {
+                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked];
+            }
+
         } else {
             NSLog(@"Error updating: %@", [error localizedDescription]);
             
@@ -561,7 +562,6 @@ typedef enum {
             weakSelf.iLike = !weakSelf.iLike;
             weakSelf.postsLiked = oldLikePosts;
             weakSelf.postLikesCount = oldPostLikesCount;
-            [PFUser currentUser][@"posts_liked"] = oldLikePosts;
             weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
             
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -632,9 +632,10 @@ typedef enum {
         NSString *userID = [self.postUser objectId];
         NSString *postID = [self.challengePost objectId];
         
+        MTMakeWeakSelf();
         [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
             if (!error) {
-                // TODO Update User
+                [weakSelf.currentUser fetchInBackground];
                 [self.navigationController popViewControllerAnimated:NO];
             } else {
                 NSLog(@"error - %@", error);

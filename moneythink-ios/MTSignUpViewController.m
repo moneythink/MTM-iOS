@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *firstName;
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
 @property (weak, nonatomic) IBOutlet UITextField *email;
+@property (weak, nonatomic) IBOutlet UITextField *phoneNumber;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *registrationCode;
 @property (weak, nonatomic) IBOutlet UITextField *error;
@@ -144,16 +145,6 @@
     }];
     swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeDown];
-    
-    if (IS_RETINA) {
-        for (UIView *thisSeparatorView in self.separatorViews) {
-            thisSeparatorView.frame = ({
-                CGRect newFrame = thisSeparatorView.frame;
-                newFrame.size.height = 0.5f;
-                newFrame;
-            });
-        }
-    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -420,6 +411,10 @@
                         user[@"first_name"] = weakSelf.firstName.text;
                         user[@"last_name"] = weakSelf.lastName.text;
                         
+                        if (!IsEmpty(weakSelf.phoneNumber.text)) {
+                            user[@"phone_number"] = weakSelf.phoneNumber.text;
+                        }
+                        
                         user[@"type"] = weakSelf.signUpType;
                         
                         if (weakSelf.schoolIsNew) {
@@ -441,7 +436,6 @@
                             signupCodeForStudent[@"type"] = @"student";
                             
                             [signupCodeForStudent saveInBackground];
-                            
                         }
                         
                         if (isMentor) {
