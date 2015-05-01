@@ -108,6 +108,7 @@
 		890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */ = {isa = PBXBuildFile; fileRef = 890587461A01816000DB8CD4 /* EndUserAgreement.html */; };
 		890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = 890587481A01816900DB8CD4 /* PrivacyPolicy.html */; };
 		8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8905874B1A0181F500DB8CD4 /* MTWebViewController.m */; };
+		89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89154ABC1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
 		8921060919DA1F37000CFBF6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */; };
 		8921060A19DA1F37000CFBF6 /* bg_money_maker_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C619DA1F37000CFBF6 /* bg_money_maker_2.png */; };
@@ -434,6 +435,8 @@
 		890587481A01816900DB8CD4 /* PrivacyPolicy.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = PrivacyPolicy.html; sourceTree = "<group>"; };
 		8905874A1A0181F500DB8CD4 /* MTWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTWebViewController.h; sourceTree = "<group>"; };
 		8905874B1A0181F500DB8CD4 /* MTWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTWebViewController.m; sourceTree = "<group>"; };
+		89154ABB1AF29A520075D4A6 /* MTPostLikeUserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostLikeUserTableViewCell.h; sourceTree = "<group>"; };
+		89154ABC1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostLikeUserTableViewCell.m; sourceTree = "<group>"; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
 		892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_maker_1.png; sourceTree = "<group>"; };
@@ -778,7 +781,7 @@
 				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
 				892105C119DA1EEA000CFBF6 /* MTPostViewController.h */,
 				892105C219DA1EEA000CFBF6 /* MTPostViewController.m */,
-				8901D8B319FFEDB5006E9168 /* MTPost TableViewCells */,
+				8901D8B319FFEDB5006E9168 /* MTPostTableViewCells */,
 				5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */,
 				5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */,
 				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
@@ -944,11 +947,13 @@
 			name = Subclasses;
 			sourceTree = "<group>";
 		};
-		8901D8B319FFEDB5006E9168 /* MTPost TableViewCells */ = {
+		8901D8B319FFEDB5006E9168 /* MTPostTableViewCells */ = {
 			isa = PBXGroup;
 			children = (
 				8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */,
 				8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */,
+				89154ABB1AF29A520075D4A6 /* MTPostLikeUserTableViewCell.h */,
+				89154ABC1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m */,
 				8901D89F19FAB2FA006E9168 /* MTPostImageTableViewCell.h */,
 				8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */,
 				8901D8A219FAB39F006E9168 /* MTPostCommentTableViewCell.h */,
@@ -958,7 +963,7 @@
 				8901D8AC19FF2662006E9168 /* MTPostCommentItemsTableViewCell.h */,
 				8901D8AD19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m */,
 			);
-			name = "MTPost TableViewCells";
+			name = MTPostTableViewCells;
 			sourceTree = "<group>";
 		};
 		892105C419DA1F37000CFBF6 /* Assets */ = {
@@ -1367,6 +1372,7 @@
 				5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
 				58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */,
+				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
 				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
 				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,

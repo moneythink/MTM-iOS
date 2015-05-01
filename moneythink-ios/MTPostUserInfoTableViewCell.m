@@ -16,7 +16,9 @@
 
 
 - (void)awakeFromNib {
-    self.postImage = [[PFImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.postUserButton.frame.size.width, self.postUserButton.frame.size.height)];
+    self.postImage = [[PFImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.postUserImageView.frame.size.width, self.postUserImageView.frame.size.height)];
+    self.postUserImageView.layer.cornerRadius = round(self.postUserImageView.frame.size.width / 2.0f);
+    self.postUserImageView.layer.masksToBounds = YES;
 }
 
 - (void)prepareForReuse

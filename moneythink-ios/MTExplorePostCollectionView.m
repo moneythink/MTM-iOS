@@ -124,16 +124,21 @@
         }];
         
         cell.postUserImage.file = user[@"profile_picture"];
+        cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
+        cell.postUserImage.layer.masksToBounds = YES;
+        cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
         
         [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
                 if (image) {
-                    CGRect frame = cell.postUserImage.frame;
-                    cell.postUserImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                    [self.view setNeedsDisplay];
-                } else {
-                    cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
+                    cell.postUserImage.image = image;
+                    [cell setNeedsDisplay];
                 }
+                else {
+                    image = nil;
+                }
+            } else {
+                NSLog(@"error - %@", error);
             }
         }];
         

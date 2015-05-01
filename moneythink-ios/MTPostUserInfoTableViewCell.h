@@ -10,7 +10,7 @@
 
 @interface MTPostUserInfoTableViewCell : UITableViewCell
 
-@property (weak, nonatomic) IBOutlet UIButton *postUserButton;
+@property (weak, nonatomic) IBOutlet UIImageView *postUserImageView;
 @property (weak, nonatomic) IBOutlet UILabel *postUsername;
 @property (weak, nonatomic) IBOutlet UIButton *deletePost;
 @property (weak, nonatomic) IBOutlet UILabel *whenPosted;

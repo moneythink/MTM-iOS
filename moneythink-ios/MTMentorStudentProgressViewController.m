@@ -86,6 +86,7 @@
     
     imageView.layer.cornerRadius = round(imageView.frame.size.width / 2.0f);
     imageView.layer.masksToBounds = YES;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;
     
     if (profileImageFile) {
         // Load/update the profile image
@@ -276,6 +277,7 @@
     cell.userProfileImage.image = [UIImage imageNamed:@"profile_image.png"];
     cell.userProfileImage.layer.cornerRadius = round(cell.userProfileImage.frame.size.width / 2.0f);
     cell.userProfileImage.layer.masksToBounds = YES;
+    cell.userProfileImage.contentMode = UIViewContentModeScaleAspectFill;
 
     cell.userProfileImage.file = rowStudent[@"profile_picture"];
     [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {

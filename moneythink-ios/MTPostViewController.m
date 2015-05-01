@@ -13,6 +13,7 @@
 #import "MTPostCommentTableViewCell.h"
 #import "MTPostLikeCommentTableViewCell.h"
 #import "MTPostCommentItemsTableViewCell.h"
+#import "MTPostLikeUserTableViewCell.h"
 
 typedef enum {
     MTPostTableCellTypeUserInfo = 0,
@@ -20,19 +21,21 @@ typedef enum {
     MTPostTableCellTypeCommentText,
     MTPostTableCellTypeButtons,
     MTPostTableCellTypeLikeComment,
-    MTPostTableCellTypePostComments
+    MTPostTableCellTypePostComments,
+    MTPostTableCellTypeLikeUsers
 } MTPostTableCellType;
 
 @interface MTPostViewController ()
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
-@property (strong, nonatomic) PFUser *currentUser;
-@property (strong, nonatomic) PFUser *postUser;
+@property (nonatomic, strong) PFUser *currentUser;
+@property (nonatomic, strong) PFUser *postUser;
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (assign, nonatomic) BOOL iLike;
 @property (assign, nonatomic) BOOL isMyClass;
-@property (strong, nonatomic) NSArray *comments;
+@property (nonatomic, strong) NSArray *comments;
+@property (nonatomic, strong) NSArray *challengePostsLikedUsers;
 @property (nonatomic) NSInteger likeActionCount;
 @property (nonatomic, strong) UIImage *userAvatarImage;
 @property (nonatomic, strong) UIImage *postImage;
@@ -101,6 +104,7 @@ typedef enum {
     
     [self loadComments];
     [self loadPostText];
+    [self loadLikesWithCache:YES];
     [self loadChallengePost];
 }
 
@@ -124,6 +128,37 @@ typedef enum {
     [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             weakSelf.comments = objects;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.tableView reloadData];
+            });
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
+
+- (void)loadLikesWithCache:(BOOL)withCache
+{
+    MTMakeWeakSelf();
+    PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
+    [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
+    [queryPostLikes includeKey:@"user"];
+    
+    if (withCache) {
+        queryPostLikes.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    }
+    else {
+        queryPostLikes.cachePolicy = kPFCachePolicyNetworkOnly;
+    }
+    
+    [queryPostLikes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *users = [NSMutableArray array];
+            for (PFChallengePostsLiked *thisLike in objects) {
+                PFUser *thisUser = thisLike[@"user"];
+                [users addObject:thisUser];
+            }
+            weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.tableView reloadData];
             });
@@ -536,6 +571,36 @@ typedef enum {
     
     NSString *likeString = [NSString stringWithFormat:@"%d", self.iLike];
     
+    // Optimistically, add/remove myself from like users
+    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
+    if (self.iLike) {
+        if (IsEmpty(newMutableArray)) {
+            [newMutableArray addObject:self.currentUser];
+        }
+        else {
+            BOOL hasUser = NO;
+            for (PFUser *thisUser in self.challengePostsLikedUsers) {
+                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
+                    hasUser = YES;
+                    break;
+                }
+                if (!hasUser) {
+                    [newMutableArray addObject:self.currentUser];
+                }
+            }
+        }
+    }
+    else {
+        for (PFUser *thisUser in self.challengePostsLikedUsers) {
+            if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
+                [newMutableArray removeObject:thisUser];
+                break;
+            }
+        }
+    }
+    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
+    [self.tableView reloadData];
+    
     MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
         
@@ -554,6 +619,8 @@ typedef enum {
             if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:)]) {
                 [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked];
             }
+            
+            [weakSelf loadLikesWithCache:NO];
 
         } else {
             NSLog(@"Error updating: %@", [error localizedDescription]);
@@ -569,7 +636,10 @@ typedef enum {
                 [weakSelf.tableView reloadData];
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             });
+            
+            [weakSelf loadLikesWithCache:YES];
         }
+        
     }];
 }
 
@@ -1056,6 +1126,11 @@ typedef enum {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         destinationVC.student = self.challengePost[@"user"];
     }
+    else if ([segueIdentifier isEqualToString:@"postDetailStudentProfileView"]) {
+        MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
+        PFUser *student = sender;
+        destinationVC.student = student;
+    }
 }
 
 
@@ -1087,6 +1162,9 @@ typedef enum {
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
                     break;
+                case MTPostTableCellTypeLikeUsers:
+                    height = 44.0f;
+                    break;
                     
                 default:
                     break;
@@ -1115,6 +1193,9 @@ typedef enum {
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
                     break;
+                case MTPostTableCellTypeLikeUsers:
+                    height = 44.0f;
+                    break;
                     
                 default:
                     break;
@@ -1141,6 +1222,9 @@ typedef enum {
                     break;
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
+                    break;
+                case MTPostTableCellTypeLikeUsers:
+                    height = 44.0f;
                     break;
                     
                 default:
@@ -1169,6 +1253,9 @@ typedef enum {
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
                     break;
+                case MTPostTableCellTypeLikeUsers:
+                    height = 44.0f;
+                    break;
                     
                 default:
                     break;
@@ -1183,9 +1270,72 @@ typedef enum {
     return height;
 }
 
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;    // fixed font style. use custom view (UILabel) if you want something different
+{
+    
+    switch (section) {
+        case MTPostTableCellTypeUserInfo:
+            return @"";
+            break;
+        case MTPostTableCellTypeImage:
+            return @"";
+            break;
+        case MTPostTableCellTypeCommentText:
+            return @"";
+            break;
+        case MTPostTableCellTypeButtons:
+            return @"";
+            break;
+        case MTPostTableCellTypeLikeComment:
+            return @"";
+            break;
+        case MTPostTableCellTypePostComments:
+            return [self.comments count] > 0 ? @"Comments" : @"";
+            break;
+        case MTPostTableCellTypeLikeUsers:
+            return [self.challengePostsLikedUsers count] > 0 ? @"Likes" : @"";
+            break;
+            
+        default:
+            return @"";
+            break;
+    }
+
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    CGFloat height = 0.0f;
+    
+    switch (section) {
+        case MTPostTableCellTypeUserInfo:
+            break;
+        case MTPostTableCellTypeImage:
+            break;
+        case MTPostTableCellTypeCommentText:
+            break;
+        case MTPostTableCellTypeButtons:
+            break;
+        case MTPostTableCellTypeLikeComment:
+            break;
+        case MTPostTableCellTypePostComments:
+            height = [self.comments count] > 0 ? 30.0f : 0.0f;
+            break;
+        case MTPostTableCellTypeLikeUsers:
+            height = [self.challengePostsLikedUsers count] > 0 ? 30.0f : 0.0f;
+            break;
+            
+        default:
+            break;
+    }
+    
+    return height;
+}
+
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 6;
+    return 7;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -1213,6 +1363,9 @@ typedef enum {
                     break;
                 case MTPostTableCellTypePostComments:
                     rows = self.comments.count;
+                    break;
+                case MTPostTableCellTypeLikeUsers:
+                    rows = self.challengePostsLikedUsers.count;
                     break;
    
                 default:
@@ -1242,6 +1395,9 @@ typedef enum {
                 case MTPostTableCellTypePostComments:
                     rows = self.comments.count;
                     break;
+                case MTPostTableCellTypeLikeUsers:
+                    rows = self.challengePostsLikedUsers.count;
+                    break;
                     
                 default:
                     break;
@@ -1268,6 +1424,9 @@ typedef enum {
                     break;
                 case MTPostTableCellTypePostComments:
                     rows = self.comments.count;
+                    break;
+                case MTPostTableCellTypeLikeUsers:
+                    rows = self.challengePostsLikedUsers.count;
                     break;
                     
                 default:
@@ -1296,6 +1455,9 @@ typedef enum {
                 case MTPostTableCellTypePostComments:
                     rows = self.comments.count;
                     break;
+                case MTPostTableCellTypeLikeUsers:
+                    rows = self.challengePostsLikedUsers.count;
+                    break;
                     
                 default:
                     break;
@@ -1318,15 +1480,17 @@ typedef enum {
         case MTPostTableCellTypeUserInfo:
         {
             __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
-            
+            userInfoCell.selectionStyle = UITableViewCellSelectionStyleNone;
+
             NSString *firstName = self.postUser[@"first_name"];
             NSString *lastName = self.postUser[@"last_name"];
             userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             
             userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+            userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
 
             if (self.userAvatarImage) {
-                [userInfoCell.postUserButton setImage:self.userAvatarImage forState:UIControlStateNormal];
+                [userInfoCell.postUserImageView setImage:self.userAvatarImage];
             }
             else {
                 userInfoCell.postImage.file = self.postUser[@"profile_picture"];
@@ -1334,25 +1498,11 @@ typedef enum {
                 MTMakeWeakSelf();
                 [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
                     weakSelf.userAvatarImage = image;
-                    
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        CGRect frame = userInfoCell.postUserButton.frame;
-                        
-                        if (weakSelf.userAvatarImage.size.width > frame.size.width) {
-                            CGFloat scale = frame.size.width / weakSelf.userAvatarImage.size.width;
-                            CGFloat heightNew = scale * weakSelf.userAvatarImage.size.height;
-                            CGSize sizeNew = CGSizeMake(frame.size.width, heightNew);
-                            UIGraphicsBeginImageContext(sizeNew);
-                            [weakSelf.userAvatarImage drawInRect:CGRectMake(0.0f, 0.0f, sizeNew.width, sizeNew.height)];
-                            weakSelf.userAvatarImage = UIGraphicsGetImageFromCurrentImageContext();
-                            UIGraphicsEndImageContext();
-                        }
-                        
                         if (weakSelf.userAvatarImage) {
-                            [userInfoCell.postUserButton setImage:weakSelf.userAvatarImage forState:UIControlStateNormal];
+                            [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
                         }
                     });
-                    
                 }];
             }
             
@@ -1372,7 +1522,7 @@ typedef enum {
         case MTPostTableCellTypeImage:
         {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
-            
+            imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             imageCell.postImage.file = self.challengePost[@"picture"];
             
             MTMakeWeakSelf();
@@ -1399,6 +1549,7 @@ typedef enum {
         {
             MTPostCommentTableViewCell *commentTextCell = [tableView dequeueReusableCellWithIdentifier:@"CommentTextCell" forIndexPath:indexPath];
             commentTextCell.postText.attributedText = self.postText;
+            commentTextCell.selectionStyle = UITableViewCellSelectionStyleNone;
             cell = commentTextCell;
             
             break;
@@ -1406,7 +1557,8 @@ typedef enum {
         case MTPostTableCellTypeButtons:
         {
             UITableViewCell *buttonsCell = [tableView dequeueReusableCellWithIdentifier:@"ButtonsCell" forIndexPath:indexPath];
-            
+            buttonsCell.selectionStyle = UITableViewCellSelectionStyleNone;
+
             if (self.hasSecondaryButtons) {
                 [self setupSecondaryButtonsForCell:buttonsCell];
             }
@@ -1420,7 +1572,8 @@ typedef enum {
         case MTPostTableCellTypeLikeComment:
         {
             MTPostLikeCommentTableViewCell *likeCommentCell = [tableView dequeueReusableCellWithIdentifier:@"LikeCommentCell" forIndexPath:indexPath];
-            
+            likeCommentCell.selectionStyle = UITableViewCellSelectionStyleNone;
+
             NSString *likesString;
         
             if (self.postLikesCount > 0) {
@@ -1486,7 +1639,57 @@ typedef enum {
             
             [defaultCell setAccessoryType:UITableViewCellAccessoryNone];
             
+            // If last row and has likes, don't show separator
+            if ((indexPath.row == [self.comments count]-1) && !IsEmpty(self.challengePostsLikedUsers)) {
+                defaultCell.separatorView.hidden = YES;
+            }
+            else {
+                defaultCell.separatorView.hidden = NO;
+            }
+            
             cell = defaultCell;
+            
+            break;
+        }
+        case MTPostTableCellTypeLikeUsers:
+        {
+            __block MTPostLikeUserTableViewCell *likeUserCell = [tableView dequeueReusableCellWithIdentifier:@"LikeUserCell" forIndexPath:indexPath];
+            likeUserCell.selectionStyle = UITableViewCellSelectionStyleGray;
+            
+            PFUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
+            
+            [likeUserCell setAccessoryType:UITableViewCellAccessoryNone];
+            
+            NSString *firstName = likeUser[@"first_name"];
+            NSString *lastName = likeUser[@"last_name"];
+            likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            likeUserCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+            
+            if (likeUserCell.userAvatarImage) {
+                [likeUserCell.userAvatarImageView setImage:likeUserCell.userAvatarImage];
+            }
+            else {
+                if (!likeUser[@"profile_picture"]) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [likeUserCell.userAvatarImageView setImage:[UIImage imageNamed:@"profile_image"]];
+                    });
+                }
+                else {
+                    likeUserCell.userAvatarImageView.file = likeUser[@"profile_picture"];
+                    
+                    [likeUserCell.userAvatarImageView loadInBackground:^(UIImage *image, NSError *error) {
+                        likeUserCell.userAvatarImage = image;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (likeUserCell.userAvatarImage) {
+                                [likeUserCell.userAvatarImageView setImage:likeUserCell.userAvatarImage];
+                            }
+                        });
+                    }];
+                }
+            }
+            
+            cell = likeUserCell;
 
             break;
         }
@@ -1495,8 +1698,18 @@ typedef enum {
             break;
     }
 
-    ((UITableViewCell *)cell).selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section != MTPostTableCellTypeLikeUsers) {
+        return;
+    }
+    
+    PFUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
+    
+    [self performSegueWithIdentifier:@"postDetailStudentProfileView" sender:likeUser];
 }
 
 - (IBAction)unwindToPostView:(UIStoryboardSegue *)sender

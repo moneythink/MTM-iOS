@@ -13,4 +13,6 @@
 
 @property (nonatomic, weak) IBOutlet MTLabel *commentLabel;
 @property (nonatomic, weak) IBOutlet MTLabel *userLabel;
+@property (nonatomic, weak) IBOutlet UIView *separatorView;
+
 @end

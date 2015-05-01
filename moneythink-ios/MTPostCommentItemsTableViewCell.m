@@ -14,6 +14,12 @@
     // Initialization code
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    self.separatorView.hidden = NO;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
     [super setSelected:selected animated:animated];
 

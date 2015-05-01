@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="XQp-cy-BoM">
     <dependencies>
         <deployment version="2048" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
@@ -1792,11 +1792,11 @@
                         <viewControllerLayoutGuide type="bottom" id="Lup-rP-ttr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6an-Ex-hZp">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="110" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="x8M-C9-wsX">
-                                <rect key="frame" x="0.0" y="240" width="320" height="240"/>
+                                <rect key="frame" x="0.0" y="196" width="320" height="372"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="320" id="NQO-ME-d5V"/>
                                 </constraints>
@@ -2003,7 +2003,7 @@
                                 </connections>
                             </tableView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Money Maker" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="60" translatesAutoresizingMaskIntoConstraints="NO" id="9nc-Vc-xuM">
-                                <rect key="frame" x="20" y="172" width="60" height="38"/>
+                                <rect key="frame" x="20" y="128" width="60" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="38" id="9aB-Eg-uTt"/>
                                     <constraint firstAttribute="width" constant="60" id="qEb-Hp-y8c"/>
@@ -2012,7 +2012,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Money Manager" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="60" translatesAutoresizingMaskIntoConstraints="NO" id="dDS-ib-ffE">
-                                <rect key="frame" x="240" y="172" width="60" height="38"/>
+                                <rect key="frame" x="240" y="128" width="60" height="38"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="60" id="Orv-2m-KDj"/>
                                     <constraint firstAttribute="height" constant="38" id="nI4-BA-iYG"/>
@@ -2021,7 +2021,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Points" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qcn-0v-SCe">
-                                <rect key="frame" x="122" y="201" width="77" height="21"/>
+                                <rect key="frame" x="122" y="157" width="77" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="77" id="2B4-Kw-633"/>
                                     <constraint firstAttribute="height" constant="21" id="FVw-v8-xyA"/>
@@ -2030,35 +2030,35 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" customClass="PFImageView">
-                                <rect key="frame" x="115" y="74" width="90" height="90"/>
+                                <rect key="frame" x="115" y="30" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="esJ-hw-DJW"/>
                                     <constraint firstAttribute="width" constant="90" id="oAR-RR-YrJ"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_money.png" translatesAutoresizingMaskIntoConstraints="NO" id="RUv-pg-BkD">
-                                <rect key="frame" x="38" y="108" width="24" height="46"/>
+                                <rect key="frame" x="38" y="64" width="24" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="24" id="NQ7-1b-Z5G"/>
                                     <constraint firstAttribute="height" constant="46" id="vgi-dC-7s6"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_pig.png" translatesAutoresizingMaskIntoConstraints="NO" id="f83-52-pWz">
-                                <rect key="frame" x="243" y="115" width="54" height="39"/>
+                                <rect key="frame" x="243" y="71" width="54" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="39" id="S3e-c2-cZL"/>
                                     <constraint firstAttribute="width" constant="54" id="c8J-8p-SDY"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_money_mananger_1.png" translatesAutoresizingMaskIntoConstraints="NO" id="Qoy-H3-5C5">
-                                <rect key="frame" x="234" y="99" width="73" height="72"/>
+                                <rect key="frame" x="234" y="55" width="73" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="73" id="8Sb-J4-0FX"/>
                                     <constraint firstAttribute="height" constant="72" id="IOw-lh-cNr"/>
                                 </constraints>
                             </imageView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="bg_money_maker_1.png" translatesAutoresizingMaskIntoConstraints="NO" id="gCb-Zo-X4L">
-                                <rect key="frame" x="14" y="95" width="73" height="72"/>
+                                <rect key="frame" x="14" y="51" width="73" height="72"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="72" id="5K8-Mm-i7o"/>
                                     <constraint firstAttribute="width" constant="73" id="TtM-K4-252"/>
@@ -2361,7 +2361,14 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kmZ-AW-VGW" id="BGB-7K-GdI">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ku6-Et-cFA" userLabel="User Avatar Button">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="AyB-jI-2FA" userLabel="User Avatar Image View">
+                                                    <rect key="frame" x="14" y="10" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="6M6-Tp-t8A"/>
+                                                        <constraint firstAttribute="height" constant="30" id="K58-2I-Eui"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ku6-Et-cFA" userLabel="User Avatar Button">
                                                     <rect key="frame" x="14" y="10" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="30" id="SDv-1h-ga3"/>
@@ -2406,9 +2413,11 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailing" secondItem="ZzI-ny-N2I" secondAttribute="trailing" id="4Xz-77-kwh"/>
+                                                <constraint firstItem="AyB-jI-2FA" firstAttribute="leading" secondItem="BGB-7K-GdI" secondAttribute="leading" constant="14" id="C8k-Jf-0MH"/>
                                                 <constraint firstItem="ZzI-ny-N2I" firstAttribute="leading" secondItem="YiL-f7-k5m" secondAttribute="trailing" constant="13" id="Dvj-97-Sqw"/>
                                                 <constraint firstItem="aRO-fN-VIt" firstAttribute="leading" secondItem="YiL-f7-k5m" secondAttribute="leading" id="FhA-CU-Ze6"/>
                                                 <constraint firstAttribute="trailing" secondItem="aRO-fN-VIt" secondAttribute="trailing" constant="53" id="L8t-NA-65X"/>
+                                                <constraint firstItem="AyB-jI-2FA" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="10" id="Lvp-vL-kta"/>
                                                 <constraint firstItem="ku6-Et-cFA" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="10" id="PdZ-7L-F99"/>
                                                 <constraint firstItem="YiL-f7-k5m" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="2" id="Pir-lF-VWb"/>
                                                 <constraint firstItem="ku6-Et-cFA" firstAttribute="leading" secondItem="BGB-7K-GdI" secondAttribute="leading" constant="14" id="Q1Y-Rp-2d9"/>
@@ -2419,7 +2428,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="deletePost" destination="ZzI-ny-N2I" id="gNR-9t-beC"/>
-                                            <outlet property="postUserButton" destination="ku6-Et-cFA" id="2e4-fg-Bte"/>
+                                            <outlet property="postUserImageView" destination="AyB-jI-2FA" id="k6Y-Nx-Nr0"/>
                                             <outlet property="postUsername" destination="YiL-f7-k5m" id="ozS-SA-sBQ"/>
                                             <outlet property="whenPosted" destination="aRO-fN-VIt" id="hhC-0Z-hvC"/>
                                         </connections>
@@ -2628,6 +2637,42 @@
                                             <outlet property="verifiedCheckBox" destination="83d-3l-hNb" id="Jzy-dq-XqC"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LikeUserCell" id="3Wf-Pk-De7" customClass="MTPostLikeUserTableViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Wf-Pk-De7" id="GeD-9Y-0Ae">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="NSl-O4-gOU" userLabel="Avatar Image View" customClass="PFImageView">
+                                                    <rect key="frame" x="15" y="7" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="MLz-XY-1FH"/>
+                                                        <constraint firstAttribute="height" constant="30" id="TUg-WS-iLu"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="user" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" enabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vFN-kW-sjN" userLabel="User Name Label">
+                                                    <rect key="frame" x="52" y="7" width="261" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="d3H-Xr-Dcq"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="22"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailing" secondItem="vFN-kW-sjN" secondAttribute="trailing" constant="7" id="BHK-j2-jcY"/>
+                                                <constraint firstItem="vFN-kW-sjN" firstAttribute="leading" secondItem="NSl-O4-gOU" secondAttribute="trailing" constant="7" id="GkR-FJ-xRS"/>
+                                                <constraint firstItem="vFN-kW-sjN" firstAttribute="top" secondItem="GeD-9Y-0Ae" secondAttribute="top" constant="7" id="T7x-X1-byl"/>
+                                                <constraint firstItem="NSl-O4-gOU" firstAttribute="top" secondItem="GeD-9Y-0Ae" secondAttribute="top" constant="7" id="uAl-sS-eod"/>
+                                                <constraint firstItem="NSl-O4-gOU" firstAttribute="leading" secondItem="GeD-9Y-0Ae" secondAttribute="leading" constant="15" id="yU7-5f-WN6"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="userAvatarImageView" destination="NSl-O4-gOU" id="D71-78-XIq"/>
+                                            <outlet property="username" destination="vFN-kW-sjN" id="eVu-O6-DLL"/>
+                                        </connections>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PostCommentItemsCell" rowHeight="55" id="KPN-jL-6Tt" customClass="MTPostCommentItemsTableViewCell">
                                         <rect key="frame" x="0.0" y="1" width="300" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
@@ -2670,6 +2715,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="commentLabel" destination="p94-5J-g8p" id="i9O-ae-r0f"/>
+                                            <outlet property="separatorView" destination="Aoz-1g-gs8" id="RcZ-Fk-Nh5"/>
                                             <outlet property="userLabel" destination="i0J-pX-mBT" id="2FY-UE-tll"/>
                                         </connections>
                                     </tableViewCell>
@@ -2698,12 +2744,13 @@
                         <outlet property="tableView" destination="h3G-HX-aV0" id="Dca-Rb-spY"/>
                         <segue destination="ltS-05-clY" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="5DG-I6-ZyH"/>
                         <segue destination="9DK-c8-e6q" kind="modal" identifier="commentOnPost" id="a3W-fR-2k0"/>
+                        <segue destination="Pk4-FW-8FD" kind="push" identifier="postDetailStudentProfileView" id="o0E-h6-NZi"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ltS-05-clY" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="537" y="-2815"/>
+            <point key="canvasLocation" x="553" y="-2815"/>
         </scene>
         <!--Student Tab Bar -->
         <scene sceneID="PIP-Ah-Zib">
@@ -2838,7 +2885,7 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VWk-dC-RPZ" userLabel="Post Image View" customClass="PFImageView">
                                             <rect key="frame" x="20" y="58" width="280" height="280"/>
                                         </imageView>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KpO-O7-xUz" userLabel="User Image View" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KpO-O7-xUz" userLabel="User Image View" customClass="PFImageView">
                                             <rect key="frame" x="20" y="20" width="30" height="30"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QeF-c5-9yr" userLabel="Username Label">
@@ -4140,14 +4187,15 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="fGY-fc-BPd"/>
-        <segue reference="kgD-Kv-M6F"/>
-        <segue reference="eZ1-MC-FDS"/>
-        <segue reference="Gdm-gL-5Rd"/>
-        <segue reference="NwG-bn-vTI"/>
-        <segue reference="7JS-73-w9v"/>
-        <segue reference="qYv-0w-I0f"/>
         <segue reference="a3W-fR-2k0"/>
         <segue reference="LS9-Mg-yad"/>
+        <segue reference="o0E-h6-NZi"/>
+        <segue reference="fGY-fc-BPd"/>
+        <segue reference="kgD-Kv-M6F"/>
+        <segue reference="7JS-73-w9v"/>
+        <segue reference="eZ1-MC-FDS"/>
+        <segue reference="NwG-bn-vTI"/>
+        <segue reference="Gdm-gL-5Rd"/>
+        <segue reference="qYv-0w-I0f"/>
     </inferredMetricsTieBreakers>
 </document>

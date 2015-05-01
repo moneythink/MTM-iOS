@@ -618,12 +618,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];
-    
+    cell.profileImage.layer.cornerRadius = round(cell.profileImage.frame.size.width / 2.0f);
+    cell.profileImage.layer.masksToBounds = YES;
+
     [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
             if (image) {
-                CGRect frame = cell.contentView.frame;
-                image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
                 cell.profileImage.image = image;
                 [cell setNeedsDisplay];
             }
