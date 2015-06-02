@@ -10,17 +10,6 @@
 
 @interface UIColor (Palette)
 
-//@property (nonatomic, strong) UIColor *primaryOrange;
-//@property (nonatomic, strong) UIColor *mutedOrange;
-//@property (nonatomic, strong) UIColor *primaryGreen;
-//@property (nonatomic, strong) UIColor *mutedGreen;
-//@property (nonatomic, strong) UIColor *DarkGrey;
-//@property (nonatomic, strong) UIColor *Grey;
-//@property (nonatomic, strong) UIColor *lightGrey;
-//@property (nonatomic, strong) UIColor *lightTan;
-//@property (nonatomic, strong) UIColor *white;
-//@property (nonatomic, strong) UIColor *redOrange;
-
 + (UIColor *)primaryOrange;
 + (UIColor *)primaryOrangeDark;
 + (UIColor *)mutedOrange;
@@ -28,13 +17,27 @@
 + (UIColor *)primaryGreenDark;
 + (UIColor *)mutedGreen;
 + (UIColor *)lightGreen;
++ (UIColor *)menuLightGreen;
++ (UIColor *)menuDarkGreen;
++ (UIColor *)menuHightlightGreen;
 + (UIColor *)darkGrey;
 + (UIColor *)grey;
 + (UIColor *)lightGrey;
++ (UIColor *)navbarGrey;
 + (UIColor *)lightTan;
 + (UIColor *)white;
 + (UIColor *)redOrange;
 + (UIColor *)lightRedOrange;
+
++ (UIColor *)challengeViewToggleButtonBackgroundNormal;
++ (UIColor *)challengeViewToggleButtonBackgroundHighlighted;
++ (UIColor *)challengeViewToggleButtonBackgroundSelected;
+
++ (UIColor *)challengeViewToggleButtonTitleNormal;
++ (UIColor *)challengeViewToggleButtonTitleHighlighted;
++ (UIColor *)challengeViewToggleButtonTitleSelected;
+
++ (UIColor *)challengeViewToggleHighlightNormal;
 
 + (UIColor *) colorWithHexString: (NSString *) hexString;
 

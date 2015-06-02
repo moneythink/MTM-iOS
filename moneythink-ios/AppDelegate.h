@@ -8,12 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "Reachability.h"
+#import "MTLoginViewController.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
-@property (strong, nonatomic) UIWindow *window;
+@property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic) BOOL reachable;
+@property (nonatomic, strong) UINavigationController *userViewController;
 
 - (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;

@@ -1,16 +1,14 @@
 //
 //  MTSignUpViewController.m
-//  LogInAndSignUpDemo
+//  moneythink-ios
 //
-//  Created by Mattieu Gamache-Asselin on 6/15/12.
-//  Copyright (c) 2013 Parse. All rights reserved.
+//  Created by dsica on 5/27/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTSignUpViewController.h"
 #import <QuartzCore/QuartzCore.h>
 #import "UIColor+Palette.h"
-#import "MTStudentTabBarViewController.h"
-#import "MTMentorTabBarViewControlle.h"
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
 #import "MTWebViewController.h"
@@ -188,7 +186,9 @@
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
-        [names addObject:object[@"name"]];
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
     }
     
     NSArray *sortedNames = [names sortedArrayUsingSelector:
@@ -300,7 +300,9 @@
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
-        [names addObject:object[@"name"]];
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
     }
     
     NSArray *sortedNames = [names sortedArrayUsingSelector:

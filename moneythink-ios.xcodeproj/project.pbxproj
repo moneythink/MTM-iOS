@@ -23,32 +23,19 @@
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
-		580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */; };
 		580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */; };
-		580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */; };
-		580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */; };
+		580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580B5AF01982EC740092AA9C /* MTSupportViewController.m */; };
 		581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */; };
-		5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */; };
-		583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */; };
-		585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTChallengesViewController.m */; };
-		58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509428197C05BD00EDC969 /* MTUserInformationViewController.m */; };
-		5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942B197C060700EDC969 /* MTStudentMainViewController.m */; };
-		5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */; };
-		58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */; };
+		583787DE19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 583787DD19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.m */; };
+		585093FE197B37DE00EDC969 /* MTOldChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585093FD197B37DE00EDC969 /* MTOldChallengesViewController.m */; };
+		58509432197C063D00EDC969 /* MTChallengesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509431197C063D00EDC969 /* MTChallengesViewController.m */; };
 		58509438197C068000EDC969 /* MTCommentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509437197C068000EDC969 /* MTCommentViewController.m */; };
-		5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */; };
-		58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTChallengesContentViewController.m */; };
+		58509441197C386100EDC969 /* MTOldChallengesContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58509440197C386100EDC969 /* MTOldChallengesContentViewController.m */; };
 		58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */; };
 		585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */; };
-		585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */; };
-		5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */; };
+		5860BF361986B0E4007D9BB3 /* MTNotificationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF351986B0E4007D9BB3 /* MTNotificationViewController.m */; };
 		5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */; };
-		5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */; };
-		5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */; };
-		5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */; };
-		5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */; };
-		5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */; };
-		5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */; };
+		5860BF3F19870C4F007D9BB3 /* MTMentorDashboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5860BF3E19870C4F007D9BB3 /* MTMentorDashboardViewController.m */; };
 		58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4519772D00009BC13C /* PFChallengeBanner.m */; };
 		58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4719772D00009BC13C /* PFChallengePost.m */; };
 		58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */; };
@@ -62,7 +49,7 @@
 		58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F5B19772D00009BC13C /* PFSignupCodes.m */; };
 		58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */ = {isa = PBXBuildFile; fileRef = 58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */; };
 		58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1C1974273E0070F604 /* MTSignUpViewController.m */; };
-		58676B231974273E0070F604 /* MTUserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTUserViewController.m */; };
+		58676B231974273E0070F604 /* MTLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58676B1E1974273E0070F604 /* MTLoginViewController.m */; };
 		5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5869D459199446D20037B517 /* MTExplorePostCollectionView.m */; };
 		5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2A8196F2C1F00C176EC /* Foundation.framework */; };
 		5876E2AB196F2C1F00C176EC /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */; };
@@ -71,7 +58,6 @@
 		5876E2B5196F2C1F00C176EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B4196F2C1F00C176EC /* main.m */; };
 		5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B8196F2C1F00C176EC /* AppDelegate.m */; };
 		5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
-		5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */; };
 		5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2C3196F2C1F00C176EC /* Images.xcassets */; };
 		5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E2196F2C8500C176EC /* AudioToolbox.framework */; };
 		5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E4196F2C8E00C176EC /* CFNetwork.framework */; };
@@ -81,19 +67,13 @@
 		5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2EC196F2CBC00C176EC /* QuartzCore.framework */; };
 		5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2EE196F2CC200C176EC /* Security.framework */; };
 		5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */; };
-		5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */; };
 		5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */; };
 		5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */ = {isa = PBXBuildFile; fileRef = 5890F7461976DDAF0042AC2F /* UIColor+Palette.m */; };
-		58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */; };
-		58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */; };
-		58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */; };
+		58B7C28B1993305D0039E238 /* MTChallengeInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58B7C28A1993305D0039E238 /* MTChallengeInfoViewController.m */; };
 		58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */; };
-		58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */; };
 		58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
-		58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */; };
 		58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */; };
-		58DE6D98199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */; };
 		58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */; };
 		58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */; };
 		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
@@ -109,6 +89,16 @@
 		890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */ = {isa = PBXBuildFile; fileRef = 890587481A01816900DB8CD4 /* PrivacyPolicy.html */; };
 		8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8905874B1A0181F500DB8CD4 /* MTWebViewController.m */; };
 		89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89154ABC1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m */; };
+		8918B3221B18F6C800880E62 /* arrow_left_white_disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31A1B18F6C800880E62 /* arrow_left_white_disabled.png */; };
+		8918B3231B18F6C800880E62 /* arrow_left_white_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31B1B18F6C800880E62 /* arrow_left_white_disabled@2x.png */; };
+		8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31C1B18F6C800880E62 /* arrow_left_white_normal.png */; };
+		8918B3251B18F6C800880E62 /* arrow_left_white_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31D1B18F6C800880E62 /* arrow_left_white_normal@2x.png */; };
+		8918B3261B18F6C800880E62 /* arrow_right_white_disabled.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31E1B18F6C800880E62 /* arrow_right_white_disabled.png */; };
+		8918B3271B18F6C800880E62 /* arrow_right_white_disabled@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B31F1B18F6C800880E62 /* arrow_right_white_disabled@2x.png */; };
+		8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */; };
+		8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */; };
+		8918B32C1B18F6EF00880E62 /* icon_list_challenges.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B32A1B18F6EF00880E62 /* icon_list_challenges.png */; };
+		8918B32D1B18F6EF00880E62 /* icon_list_challenges@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B32B1B18F6EF00880E62 /* icon_list_challenges@2x.png */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
 		8921060919DA1F37000CFBF6 /* bg_money_maker_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */; };
 		8921060A19DA1F37000CFBF6 /* bg_money_maker_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105C619DA1F37000CFBF6 /* bg_money_maker_2.png */; };
@@ -184,10 +174,30 @@
 		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
+		8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */; };
+		8952510F1B1A667E008068C6 /* MTChallengeListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510E1B1A667E008068C6 /* MTChallengeListTableViewCell.m */; };
+		895F78951B16451600055759 /* nav-icons-challenges.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78931B16451600055759 /* nav-icons-challenges.png */; };
+		895F78961B16451600055759 /* nav-icons-challenges@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78941B16451600055759 /* nav-icons-challenges@2x.png */; };
+		895F78991B16452A00055759 /* nav-icons-editprofile.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78971B16452A00055759 /* nav-icons-editprofile.png */; };
+		895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78981B16452A00055759 /* nav-icons-editprofile@2x.png */; };
+		895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F789B1B16453800055759 /* nav-icons-leaderboard.png */; };
+		895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */; };
+		895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F789F1B16454400055759 /* nav-icons-notifications.png */; };
+		895F78A21B16454400055759 /* nav-icons-notifications@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A01B16454400055759 /* nav-icons-notifications@2x.png */; };
+		895F78A51B16455300055759 /* nav-icons-studentsignup.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A31B16455300055759 /* nav-icons-studentsignup.png */; };
+		895F78A61B16455300055759 /* nav-icons-studentsignup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */; };
+		895F78A91B16456000055759 /* nav-icons-support.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A71B16456000055759 /* nav-icons-support.png */; };
+		895F78AA1B16456000055759 /* nav-icons-support@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A81B16456000055759 /* nav-icons-support@2x.png */; };
+		895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */; };
+		895F78AE1B1650E700055759 /* nav-icons-arrow-backwards@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78AC1B1650E700055759 /* nav-icons-arrow-backwards@2x.png */; };
+		895F78B01B166BB600055759 /* logo_actionbar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78AF1B166BB600055759 /* logo_actionbar@2x.png */; };
+		895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895F78B21B167C4B00055759 /* MTLeaderboardViewController.m */; };
+		895F78C01B17A2C300055759 /* MTChallengeContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 895F78BF1B17A2C300055759 /* MTChallengeContentViewController.m */; };
 		8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C78A1A77F79500BE125E /* challenges-icon.png */; };
 		8967C78D1A77F79500BE125E /* challenges-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C78B1A77F79500BE125E /* challenges-icon@2x.png */; };
 		8967C7981A77F7E300BE125E /* schedule-check.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7961A77F7E300BE125E /* schedule-check.png */; };
 		8967C7991A77F7E300BE125E /* schedule-check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7971A77F7E300BE125E /* schedule-check@2x.png */; };
+		898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */; };
 		8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906721AD46B5D007A4F3E /* icon_button_check_normal.png */; };
 		8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */; };
 		8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */; };
@@ -203,14 +213,23 @@
 		899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309619F16948004F6B10 /* check-unactive@2x.png */; };
 		899F309D19F2C87E004F6B10 /* UIImage+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
+		89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */; };
+		89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */; };
+		89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */; };
+		89C3E80F1B15468D0084EA48 /* nav-icons-dashboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */; };
+		89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */; };
 		89C6792C19E315660054E890 /* UIAlertView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */; };
 		89C6792F19E317340054E890 /* MTUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C6792E19E317340054E890 /* MTUtil.m */; };
+		89CE54131B152829000825FB /* MTViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89CE54121B152829000825FB /* MTViewController.m */; };
+		89CE54161B152A44000825FB /* icon_main_nav.png in Resources */ = {isa = PBXBuildFile; fileRef = 89CE54141B152A44000825FB /* icon_main_nav.png */; };
+		89CE54171B152A44000825FB /* icon_main_nav@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89CE54151B152A44000825FB /* icon_main_nav@2x.png */; };
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
 		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
 		89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */; };
 		89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */; };
 		89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E51A09638400F02CC7 /* PFCustomChallenges.m */; };
+		89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */; };
 		89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF35591A81792C0025735E /* Bolts.framework */; };
 		89FF355C1A8179350025735E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355B1A8179350025735E /* Crashlytics.framework */; };
 		89FF355E1A8179400025735E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355D1A8179400025735E /* Fabric.framework */; };
@@ -276,58 +295,32 @@
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
-		580B5AE91982CF690092AA9C /* MTImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTImagePickerViewController.h; sourceTree = "<group>"; };
-		580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTImagePickerViewController.m; sourceTree = "<group>"; };
 		580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTEditProfileViewController.h; sourceTree = "<group>"; };
 		580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTEditProfileViewController.m; sourceTree = "<group>"; };
-		580B5AEF1982EC740092AA9C /* MTStudentSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentSettingsViewController.h; sourceTree = "<group>"; };
-		580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentSettingsViewController.m; sourceTree = "<group>"; };
-		580B5AF21982EDAA0092AA9C /* MTStudentFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentFilterViewController.h; sourceTree = "<group>"; };
-		580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentFilterViewController.m; sourceTree = "<group>"; };
+		580B5AEF1982EC740092AA9C /* MTSupportViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSupportViewController.h; sourceTree = "<group>"; };
+		580B5AF01982EC740092AA9C /* MTSupportViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSupportViewController.m; sourceTree = "<group>"; };
 		581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTableViewCell.h; sourceTree = "<group>"; };
 		581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewCell.m; sourceTree = "<group>"; };
-		5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTabBarViewController.h; sourceTree = "<group>"; };
-		5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTabBarViewController.m; sourceTree = "<group>"; };
-		583787DC19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentChallengeRoomContentViewController.h; sourceTree = "<group>"; };
-		583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentChallengeRoomContentViewController.m; sourceTree = "<group>"; };
-		585093FC197B37DE00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
-		585093FD197B37DE00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
-		58509427197C05BD00EDC969 /* MTUserInformationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserInformationViewController.h; sourceTree = "<group>"; };
-		58509428197C05BD00EDC969 /* MTUserInformationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserInformationViewController.m; sourceTree = "<group>"; };
-		5850942A197C060700EDC969 /* MTStudentMainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentMainViewController.h; sourceTree = "<group>"; };
-		5850942B197C060700EDC969 /* MTStudentMainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentMainViewController.m; sourceTree = "<group>"; };
-		5850942D197C062A00EDC969 /* MTStudentInstructionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentInstructionsViewController.h; sourceTree = "<group>"; };
-		5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentInstructionsViewController.m; sourceTree = "<group>"; };
-		58509430197C063D00EDC969 /* MTStudentChallengeRoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentChallengeRoomViewController.h; sourceTree = "<group>"; };
-		58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentChallengeRoomViewController.m; sourceTree = "<group>"; };
+		583787DC19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOldStudentChallengeRoomContentViewController.h; sourceTree = "<group>"; };
+		583787DD19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOldStudentChallengeRoomContentViewController.m; sourceTree = "<group>"; };
+		585093FC197B37DE00EDC969 /* MTOldChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOldChallengesViewController.h; sourceTree = "<group>"; };
+		585093FD197B37DE00EDC969 /* MTOldChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOldChallengesViewController.m; sourceTree = "<group>"; };
+		58509430197C063D00EDC969 /* MTChallengesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesViewController.h; sourceTree = "<group>"; };
+		58509431197C063D00EDC969 /* MTChallengesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesViewController.m; sourceTree = "<group>"; };
 		58509436197C068000EDC969 /* MTCommentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCommentViewController.h; sourceTree = "<group>"; };
 		58509437197C068000EDC969 /* MTCommentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTCommentViewController.m; sourceTree = "<group>"; };
-		58509439197C068D00EDC969 /* MTPeerProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPeerProfileViewController.h; sourceTree = "<group>"; };
-		5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPeerProfileViewController.m; sourceTree = "<group>"; };
-		5850943F197C386100EDC969 /* MTChallengesContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengesContentViewController.h; sourceTree = "<group>"; };
-		58509440197C386100EDC969 /* MTChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengesContentViewController.m; sourceTree = "<group>"; };
+		5850943F197C386100EDC969 /* MTOldChallengesContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOldChallengesContentViewController.h; sourceTree = "<group>"; };
+		58509440197C386100EDC969 /* MTOldChallengesContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOldChallengesContentViewController.m; sourceTree = "<group>"; };
 		58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNotificationTableViewCell.h; sourceTree = "<group>"; };
 		58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationTableViewCell.m; sourceTree = "<group>"; };
 		585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExploreCollectionViewCell.h; sourceTree = "<group>"; };
 		585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExploreCollectionViewCell.m; sourceTree = "<group>"; };
-		585E25C81997F8DC005A896D /* MTCollectionNavigationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCollectionNavigationViewController.h; sourceTree = "<group>"; };
-		585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTCollectionNavigationViewController.m; sourceTree = "<group>"; };
-		5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorNotificationViewController.h; sourceTree = "<group>"; };
-		5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorNotificationViewController.m; sourceTree = "<group>"; };
+		5860BF341986B0E4007D9BB3 /* MTNotificationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNotificationViewController.h; sourceTree = "<group>"; };
+		5860BF351986B0E4007D9BB3 /* MTNotificationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNotificationViewController.m; sourceTree = "<group>"; };
 		5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProfileViewController.h; sourceTree = "<group>"; };
 		5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProfileViewController.m; sourceTree = "<group>"; };
-		5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProgressViewController.h; sourceTree = "<group>"; };
-		5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProgressViewController.m; sourceTree = "<group>"; };
-		5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentFollowViewController.h; sourceTree = "<group>"; };
-		5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentFollowViewController.m; sourceTree = "<group>"; };
-		5860BF461987118F007D9BB3 /* MTMentorInstructionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorInstructionsViewController.h; sourceTree = "<group>"; };
-		5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorInstructionsViewController.m; sourceTree = "<group>"; };
-		5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeRoomViewController.h; sourceTree = "<group>"; };
-		5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallengeRoomViewController.m; sourceTree = "<group>"; };
-		5860BF4C198711BA007D9BB3 /* MTMentorFilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorFilterViewController.h; sourceTree = "<group>"; };
-		5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorFilterViewController.m; sourceTree = "<group>"; };
-		5860BF5219876023007D9BB3 /* MTStudentProgressTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTabBarViewController.h; sourceTree = "<group>"; };
-		5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTabBarViewController.m; sourceTree = "<group>"; };
+		5860BF3D19870C4F007D9BB3 /* MTMentorDashboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorDashboardViewController.h; sourceTree = "<group>"; };
+		5860BF3E19870C4F007D9BB3 /* MTMentorDashboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorDashboardViewController.m; sourceTree = "<group>"; };
 		58669F4419772D00009BC13C /* PFChallengeBanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengeBanner.h; path = "Data Classes/PFChallengeBanner.h"; sourceTree = "<group>"; };
 		58669F4519772D00009BC13C /* PFChallengeBanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengeBanner.m; path = "Data Classes/PFChallengeBanner.m"; sourceTree = "<group>"; };
 		58669F4619772D00009BC13C /* PFChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePost.h; path = "Data Classes/PFChallengePost.h"; sourceTree = "<group>"; };
@@ -353,9 +346,9 @@
 		58669F7B19785AE8009BC13C /* PFStudentPointDetails.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFStudentPointDetails.h; path = "Data Classes/PFStudentPointDetails.h"; sourceTree = "<group>"; };
 		58669F7C19785AE8009BC13C /* PFStudentPointDetails.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFStudentPointDetails.m; path = "Data Classes/PFStudentPointDetails.m"; sourceTree = "<group>"; };
 		58676B171974273E0070F604 /* MTSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTSignUpViewController.h; sourceTree = "<group>"; };
-		58676B191974273E0070F604 /* MTUserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUserViewController.h; sourceTree = "<group>"; };
+		58676B191974273E0070F604 /* MTLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLoginViewController.h; sourceTree = "<group>"; };
 		58676B1C1974273E0070F604 /* MTSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTSignUpViewController.m; sourceTree = "<group>"; };
-		58676B1E1974273E0070F604 /* MTUserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUserViewController.m; sourceTree = "<group>"; };
+		58676B1E1974273E0070F604 /* MTLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoginViewController.m; sourceTree = "<group>"; };
 		5869D458199446D20037B517 /* MTExplorePostCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExplorePostCollectionView.h; sourceTree = "<group>"; };
 		5869D459199446D20037B517 /* MTExplorePostCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExplorePostCollectionView.m; sourceTree = "<group>"; };
 		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -370,8 +363,6 @@
 		5876E2B8196F2C1F00C176EC /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = AppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		5876E2BB196F2C1F00C176EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		5876E2BE196F2C1F00C176EC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = MTHomeViewController.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
-		5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MTHomeViewController.m; sourceTree = "<group>"; };
 		5876E2C3196F2C1F00C176EC /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5876E2D2196F2C1F00C176EC /* moneythink-iosTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "moneythink-iosTests-Info.plist"; sourceTree = "<group>"; };
 		5876E2D4196F2C1F00C176EC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -384,32 +375,20 @@
 		5876E2EC196F2CBC00C176EC /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		5876E2EE196F2CC200C176EC /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProgressTableViewController.h; sourceTree = "<group>"; };
-		5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProgressTableViewController.m; sourceTree = "<group>"; };
 		5885B3A6198FF94D0079A8D5 /* MTMyClassTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMyClassTableViewController.h; sourceTree = "<group>"; };
 		5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassTableViewController.m; sourceTree = "<group>"; };
 		5890F7451976DDAF0042AC2F /* UIColor+Palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "UIColor+Palette.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		5890F7461976DDAF0042AC2F /* UIColor+Palette.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "UIColor+Palette.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
-		58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMyClassChallengePostsViewController.h; sourceTree = "<group>"; };
-		58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMyClassChallengePostsViewController.m; sourceTree = "<group>"; };
-		58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorChallengeInfoViewController.h; sourceTree = "<group>"; };
-		58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorChallengeInfoViewController.m; sourceTree = "<group>"; };
-		58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewController.h; sourceTree = "<group>"; };
-		58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTableViewController.m; sourceTree = "<group>"; };
+		58B7C2891993305D0039E238 /* MTChallengeInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengeInfoViewController.h; sourceTree = "<group>"; };
+		58B7C28A1993305D0039E238 /* MTChallengeInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeInfoViewController.m; sourceTree = "<group>"; };
 		58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostsTableViewCell.h; sourceTree = "<group>"; };
 		58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostsTableViewCell.m; sourceTree = "<group>"; };
-		58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentTabBarViewController.h; sourceTree = "<group>"; };
-		58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentTabBarViewController.m; sourceTree = "<group>"; };
 		58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProfileTableViewCell.h; sourceTree = "<group>"; };
 		58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProfileTableViewCell.m; sourceTree = "<group>"; };
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
-		58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorTabBarViewControlle.h; sourceTree = "<group>"; };
-		58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorTabBarViewControlle.m; sourceTree = "<group>"; };
 		58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTActivationTableViewCell.h; sourceTree = "<group>"; };
 		58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTActivationTableViewCell.m; sourceTree = "<group>"; };
-		58DE6D91199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentPostsTableViewCell.h; sourceTree = "<group>"; };
-		58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentPostsTableViewCell.m; sourceTree = "<group>"; };
 		58DE6D93199D0ABD00F1534C /* MTScheduleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTScheduleTableViewController.h; sourceTree = "<group>"; };
 		58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTScheduleTableViewController.m; sourceTree = "<group>"; };
 		58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -437,6 +416,16 @@
 		8905874B1A0181F500DB8CD4 /* MTWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTWebViewController.m; sourceTree = "<group>"; };
 		89154ABB1AF29A520075D4A6 /* MTPostLikeUserTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostLikeUserTableViewCell.h; sourceTree = "<group>"; };
 		89154ABC1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostLikeUserTableViewCell.m; sourceTree = "<group>"; };
+		8918B31A1B18F6C800880E62 /* arrow_left_white_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_white_disabled.png; path = "moneythink-ios/assets/arrow_left_white_disabled.png"; sourceTree = SOURCE_ROOT; };
+		8918B31B1B18F6C800880E62 /* arrow_left_white_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_left_white_disabled@2x.png"; path = "moneythink-ios/assets/arrow_left_white_disabled@2x.png"; sourceTree = SOURCE_ROOT; };
+		8918B31C1B18F6C800880E62 /* arrow_left_white_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_left_white_normal.png; path = "moneythink-ios/assets/arrow_left_white_normal.png"; sourceTree = SOURCE_ROOT; };
+		8918B31D1B18F6C800880E62 /* arrow_left_white_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_left_white_normal@2x.png"; path = "moneythink-ios/assets/arrow_left_white_normal@2x.png"; sourceTree = SOURCE_ROOT; };
+		8918B31E1B18F6C800880E62 /* arrow_right_white_disabled.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_right_white_disabled.png; path = "moneythink-ios/assets/arrow_right_white_disabled.png"; sourceTree = SOURCE_ROOT; };
+		8918B31F1B18F6C800880E62 /* arrow_right_white_disabled@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_right_white_disabled@2x.png"; path = "moneythink-ios/assets/arrow_right_white_disabled@2x.png"; sourceTree = SOURCE_ROOT; };
+		8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = arrow_right_white_normal.png; path = "moneythink-ios/assets/arrow_right_white_normal.png"; sourceTree = SOURCE_ROOT; };
+		8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_right_white_normal@2x.png"; path = "moneythink-ios/assets/arrow_right_white_normal@2x.png"; sourceTree = SOURCE_ROOT; };
+		8918B32A1B18F6EF00880E62 /* icon_list_challenges.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon_list_challenges.png; path = "moneythink-ios/assets/icon_list_challenges.png"; sourceTree = SOURCE_ROOT; };
+		8918B32B1B18F6EF00880E62 /* icon_list_challenges@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_list_challenges@2x.png"; path = "moneythink-ios/assets/icon_list_challenges@2x.png"; sourceTree = SOURCE_ROOT; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
 		892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_money_maker_1.png; sourceTree = "<group>"; };
@@ -518,10 +507,35 @@
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
 		8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MTAdditions.m"; sourceTree = "<group>"; };
+		8952510A1B193ABD008068C6 /* MTChallengeListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengeListViewController.h; sourceTree = "<group>"; };
+		8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeListViewController.m; sourceTree = "<group>"; };
+		8952510D1B1A667E008068C6 /* MTChallengeListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengeListTableViewCell.h; sourceTree = "<group>"; };
+		8952510E1B1A667E008068C6 /* MTChallengeListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeListTableViewCell.m; sourceTree = "<group>"; };
+		895F78931B16451600055759 /* nav-icons-challenges.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-challenges.png"; sourceTree = "<group>"; };
+		895F78941B16451600055759 /* nav-icons-challenges@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-challenges@2x.png"; sourceTree = "<group>"; };
+		895F78971B16452A00055759 /* nav-icons-editprofile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-editprofile.png"; sourceTree = "<group>"; };
+		895F78981B16452A00055759 /* nav-icons-editprofile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-editprofile@2x.png"; sourceTree = "<group>"; };
+		895F789B1B16453800055759 /* nav-icons-leaderboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-leaderboard.png"; sourceTree = "<group>"; };
+		895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-leaderboard@2x.png"; sourceTree = "<group>"; };
+		895F789F1B16454400055759 /* nav-icons-notifications.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-notifications.png"; sourceTree = "<group>"; };
+		895F78A01B16454400055759 /* nav-icons-notifications@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-notifications@2x.png"; sourceTree = "<group>"; };
+		895F78A31B16455300055759 /* nav-icons-studentsignup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-studentsignup.png"; sourceTree = "<group>"; };
+		895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-studentsignup@2x.png"; sourceTree = "<group>"; };
+		895F78A71B16456000055759 /* nav-icons-support.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-support.png"; sourceTree = "<group>"; };
+		895F78A81B16456000055759 /* nav-icons-support@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-support@2x.png"; sourceTree = "<group>"; };
+		895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow-backwards.png"; sourceTree = "<group>"; };
+		895F78AC1B1650E700055759 /* nav-icons-arrow-backwards@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow-backwards@2x.png"; sourceTree = "<group>"; };
+		895F78AF1B166BB600055759 /* logo_actionbar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_actionbar@2x.png"; sourceTree = "<group>"; };
+		895F78B11B167C4B00055759 /* MTLeaderboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLeaderboardViewController.h; sourceTree = "<group>"; };
+		895F78B21B167C4B00055759 /* MTLeaderboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLeaderboardViewController.m; sourceTree = "<group>"; };
+		895F78BE1B17A2C300055759 /* MTChallengeContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengeContentViewController.h; sourceTree = "<group>"; };
+		895F78BF1B17A2C300055759 /* MTChallengeContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeContentViewController.m; sourceTree = "<group>"; };
 		8967C78A1A77F79500BE125E /* challenges-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "challenges-icon.png"; sourceTree = "<group>"; };
 		8967C78B1A77F79500BE125E /* challenges-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "challenges-icon@2x.png"; sourceTree = "<group>"; };
 		8967C7961A77F7E300BE125E /* schedule-check.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schedule-check.png"; sourceTree = "<group>"; };
 		8967C7971A77F7E300BE125E /* schedule-check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schedule-check@2x.png"; sourceTree = "<group>"; };
+		898FBE5E1B0D2A6B0058F3B4 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		899906721AD46B5D007A4F3E /* icon_button_check_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_normal.png; sourceTree = "<group>"; };
 		899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_button_check_normal@2x.png"; sourceTree = "<group>"; };
 		899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_pressed.png; sourceTree = "<group>"; };
@@ -539,10 +553,20 @@
 		899F309B19F2C87E004F6B10 /* UIImage+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MTAdditions.h"; sourceTree = "<group>"; };
 		899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MTAdditions.m"; sourceTree = "<group>"; };
 		89A50CEC19DE0141003BE1D8 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
+		89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow.png"; sourceTree = "<group>"; };
+		89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow@2x.png"; sourceTree = "<group>"; };
+		89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard.png"; sourceTree = "<group>"; };
+		89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard@2x.png"; sourceTree = "<group>"; };
+		89C3E8111B1547B10084EA48 /* MTMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuTableViewCell.h; sourceTree = "<group>"; };
+		89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuTableViewCell.m; sourceTree = "<group>"; };
 		89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+MTAdditions.h"; sourceTree = "<group>"; };
 		89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+MTAdditions.m"; sourceTree = "<group>"; };
 		89C6792D19E317340054E890 /* MTUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTUtil.h; sourceTree = "<group>"; };
 		89C6792E19E317340054E890 /* MTUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTUtil.m; sourceTree = "<group>"; };
+		89CE54111B152829000825FB /* MTViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTViewController.h; sourceTree = "<group>"; };
+		89CE54121B152829000825FB /* MTViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTViewController.m; sourceTree = "<group>"; };
+		89CE54141B152A44000825FB /* icon_main_nav.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_main_nav.png; sourceTree = "<group>"; };
+		89CE54151B152A44000825FB /* icon_main_nav@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_main_nav@2x.png"; sourceTree = "<group>"; };
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		89E56D281A0448A300C187C9 /* login-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header.png"; sourceTree = "<group>"; };
 		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
@@ -552,6 +576,8 @@
 		89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylistChallenges.m; path = "Data Classes/PFPlaylistChallenges.m"; sourceTree = "<group>"; };
 		89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFCustomChallenges.h; path = "Data Classes/PFCustomChallenges.h"; sourceTree = "<group>"; };
 		89F250E51A09638400F02CC7 /* PFCustomChallenges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFCustomChallenges.m; path = "Data Classes/PFCustomChallenges.m"; sourceTree = "<group>"; };
+		89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuViewController.h; sourceTree = "<group>"; };
+		89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuViewController.m; sourceTree = "<group>"; };
 		89FF35591A81792C0025735E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
 		89FF355B1A8179350025735E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		89FF355D1A8179400025735E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
@@ -658,6 +684,7 @@
 			isa = PBXGroup;
 			children = (
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
+				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
 				106309731A3A3C4D0093C209 /* MBProgressHUD.h */,
 				106309741A3A3C4D0093C209 /* MBProgressHUD.m */,
 				1063097E1A3A3C4D0093C209 /* Reachability.h */,
@@ -725,101 +752,15 @@
 		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */,
-				58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */,
-				58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */,
-				58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */,
-				58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */,
-				58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */,
-				58D60AE21984636100DF247E /* MTChallengePostsViewController.h */,
-				58D60AE31984636100DF247E /* MTChallengePostsViewController.m */,
-				5850943F197C386100EDC969 /* MTChallengesContentViewController.h */,
-				58509440197C386100EDC969 /* MTChallengesContentViewController.m */,
-				585093FC197B37DE00EDC969 /* MTChallengesViewController.h */,
-				585093FD197B37DE00EDC969 /* MTChallengesViewController.m */,
-				585E25C81997F8DC005A896D /* MTCollectionNavigationViewController.h */,
-				585E25C91997F8DC005A896D /* MTCollectionNavigationViewController.m */,
-				58509436197C068000EDC969 /* MTCommentViewController.h */,
-				58509437197C068000EDC969 /* MTCommentViewController.m */,
-				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
-				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
-				585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */,
-				585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */,
-				5869D458199446D20037B517 /* MTExplorePostCollectionView.h */,
-				5869D459199446D20037B517 /* MTExplorePostCollectionView.m */,
-				5876E2C0196F2C1F00C176EC /* MTHomeViewController.h */,
-				5876E2C1196F2C1F00C176EC /* MTHomeViewController.m */,
-				580B5AE91982CF690092AA9C /* MTImagePickerViewController.h */,
-				580B5AEA1982CF690092AA9C /* MTImagePickerViewController.m */,
-				58B7C2891993305D0039E238 /* MTMentorChallengeInfoViewController.h */,
-				58B7C28A1993305D0039E238 /* MTMentorChallengeInfoViewController.m */,
-				5860BF49198711A5007D9BB3 /* MTMentorChallengeRoomViewController.h */,
-				5860BF4A198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m */,
-				5860BF4C198711BA007D9BB3 /* MTMentorFilterViewController.h */,
-				5860BF4D198711BA007D9BB3 /* MTMentorFilterViewController.m */,
-				5860BF461987118F007D9BB3 /* MTMentorInstructionsViewController.h */,
-				5860BF471987118F007D9BB3 /* MTMentorInstructionsViewController.m */,
-				5860BF341986B0E4007D9BB3 /* MTMentorNotificationViewController.h */,
-				5860BF351986B0E4007D9BB3 /* MTMentorNotificationViewController.m */,
-				5860BF4019870C7B007D9BB3 /* MTMentorStudentFollowViewController.h */,
-				5860BF4119870C7B007D9BB3 /* MTMentorStudentFollowViewController.m */,
-				58DE6D91199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.h */,
-				58DE6D92199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m */,
-				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
-				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
-				5860BF3D19870C4F007D9BB3 /* MTMentorStudentProgressViewController.h */,
-				5860BF3E19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m */,
-				58DCBE991989A8ED00547F2E /* MTMentorTabBarViewControlle.h */,
-				58DCBE9A1989A8ED00547F2E /* MTMentorTabBarViewControlle.m */,
-				58A356901980D9810018FC61 /* MTMyClassChallengePostsViewController.h */,
-				58A356911980D9810018FC61 /* MTMyClassChallengePostsViewController.m */,
-				5885B3A6198FF94D0079A8D5 /* MTMyClassTableViewController.h */,
-				5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */,
-				58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */,
-				58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */,
-				58509439197C068D00EDC969 /* MTPeerProfileViewController.h */,
-				5850943A197C068D00EDC969 /* MTPeerProfileViewController.m */,
-				892105C119DA1EEA000CFBF6 /* MTPostViewController.h */,
-				892105C219DA1EEA000CFBF6 /* MTPostViewController.m */,
-				8901D8B319FFEDB5006E9168 /* MTPostTableViewCells */,
-				5828C00719858DFC00369C3B /* MTPostsTabBarViewController.h */,
-				5828C00819858DFC00369C3B /* MTPostsTabBarViewController.m */,
-				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
-				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
-				58BC233C198AA89B00FCE3BC /* MTPostsTableViewController.h */,
-				58BC233D198AA89B00FCE3BC /* MTPostsTableViewController.m */,
-				58DE6D93199D0ABD00F1534C /* MTScheduleTableViewController.h */,
-				58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */,
-				58676B171974273E0070F604 /* MTSignUpViewController.h */,
-				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
-				583787DC19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.h */,
-				583787DD19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m */,
-				58509430197C063D00EDC969 /* MTStudentChallengeRoomViewController.h */,
-				58509431197C063D00EDC969 /* MTStudentChallengeRoomViewController.m */,
-				580B5AF21982EDAA0092AA9C /* MTStudentFilterViewController.h */,
-				580B5AF31982EDAA0092AA9C /* MTStudentFilterViewController.m */,
-				5850942D197C062A00EDC969 /* MTStudentInstructionsViewController.h */,
-				5850942E197C062A00EDC969 /* MTStudentInstructionsViewController.m */,
-				5850942A197C060700EDC969 /* MTStudentMainViewController.h */,
-				5850942B197C060700EDC969 /* MTStudentMainViewController.m */,
-				58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */,
-				58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */,
-				5860BF5219876023007D9BB3 /* MTStudentProgressTabBarViewController.h */,
-				5860BF5319876023007D9BB3 /* MTStudentProgressTabBarViewController.m */,
-				581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */,
-				581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */,
-				5885B3A3198FDD730079A8D5 /* MTStudentProgressTableViewController.h */,
-				5885B3A4198FDD730079A8D5 /* MTStudentProgressTableViewController.m */,
-				580B5AEF1982EC740092AA9C /* MTStudentSettingsViewController.h */,
-				580B5AF01982EC740092AA9C /* MTStudentSettingsViewController.m */,
-				58C87403198311A9000F5296 /* MTStudentTabBarViewController.h */,
-				58C87404198311A9000F5296 /* MTStudentTabBarViewController.m */,
-				58509427197C05BD00EDC969 /* MTUserInformationViewController.h */,
-				58509428197C05BD00EDC969 /* MTUserInformationViewController.m */,
-				58676B191974273E0070F604 /* MTUserViewController.h */,
-				58676B1E1974273E0070F604 /* MTUserViewController.m */,
-				8905874A1A0181F500DB8CD4 /* MTWebViewController.h */,
-				8905874B1A0181F500DB8CD4 /* MTWebViewController.m */,
+				895F78BB1B167DA200055759 /* Common */,
+				895F78BA1B167D0300055759 /* Login */,
+				89C3E8101B1547680084EA48 /* Menu */,
+				895F78B41B167C5F00055759 /* Mentor Dashboard */,
+				895F78B51B167C6800055759 /* Challenges */,
+				895F78B71B167C8600055759 /* Leaderboard */,
+				895F78B61B167C7600055759 /* Notifications */,
+				895F78B81B167C9400055759 /* Edit Profile */,
+				895F78B91B167C9B00055759 /* Support */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -943,6 +884,8 @@
 			children = (
 				8901D8B019FFDF00006E9168 /* MTLabel.h */,
 				8901D8B119FFDF00006E9168 /* MTLabel.m */,
+				89CE54111B152829000825FB /* MTViewController.h */,
+				89CE54121B152829000825FB /* MTViewController.m */,
 			);
 			name = Subclasses;
 			sourceTree = "<group>";
@@ -966,12 +909,82 @@
 			name = MTPostTableViewCells;
 			sourceTree = "<group>";
 		};
+		8918B3171B18F65000880E62 /* icons */ = {
+			isa = PBXGroup;
+			children = (
+				899906721AD46B5D007A4F3E /* icon_button_check_normal.png */,
+				899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */,
+				899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */,
+				899906751AD46B5D007A4F3E /* icon_button_check_pressed@2x.png */,
+				899906761AD46B5D007A4F3E /* icon_button_dollar_normal.png */,
+				899906771AD46B5D007A4F3E /* icon_button_dollar_normal@2x.png */,
+				899906781AD46B5D007A4F3E /* icon_button_dollar_pressed.png */,
+				899906791AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png */,
+				892105DD19DA1F37000CFBF6 /* icon_challenge_future.png */,
+				892105DE19DA1F37000CFBF6 /* icon_challenge_future@2x.png */,
+				892105DF19DA1F37000CFBF6 /* icon_challenge_open.png */,
+				892105E019DA1F37000CFBF6 /* icon_challenge_open@2x.png */,
+				89CE54141B152A44000825FB /* icon_main_nav.png */,
+				89CE54151B152A44000825FB /* icon_main_nav@2x.png */,
+				892105E119DA1F37000CFBF6 /* icon_money.png */,
+				892105E219DA1F37000CFBF6 /* icon_money@2x.png */,
+				892105E319DA1F37000CFBF6 /* icon_pig.png */,
+				892105E419DA1F37000CFBF6 /* icon_pig@2x.png */,
+			);
+			name = icons;
+			sourceTree = "<group>";
+		};
+		8918B3181B18F66D00880E62 /* nav-icons */ = {
+			isa = PBXGroup;
+			children = (
+				89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */,
+				89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */,
+				895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */,
+				895F78AC1B1650E700055759 /* nav-icons-arrow-backwards@2x.png */,
+				895F78931B16451600055759 /* nav-icons-challenges.png */,
+				895F78941B16451600055759 /* nav-icons-challenges@2x.png */,
+				89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */,
+				89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */,
+				895F78971B16452A00055759 /* nav-icons-editprofile.png */,
+				895F78981B16452A00055759 /* nav-icons-editprofile@2x.png */,
+				895F789B1B16453800055759 /* nav-icons-leaderboard.png */,
+				895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */,
+				895F789F1B16454400055759 /* nav-icons-notifications.png */,
+				895F78A01B16454400055759 /* nav-icons-notifications@2x.png */,
+				895F78A31B16455300055759 /* nav-icons-studentsignup.png */,
+				895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */,
+				895F78A71B16456000055759 /* nav-icons-support.png */,
+				895F78A81B16456000055759 /* nav-icons-support@2x.png */,
+			);
+			name = "nav-icons";
+			sourceTree = "<group>";
+		};
+		8918B3191B18F6AC00880E62 /* challenge bar */ = {
+			isa = PBXGroup;
+			children = (
+				8918B31A1B18F6C800880E62 /* arrow_left_white_disabled.png */,
+				8918B31B1B18F6C800880E62 /* arrow_left_white_disabled@2x.png */,
+				8918B31C1B18F6C800880E62 /* arrow_left_white_normal.png */,
+				8918B31D1B18F6C800880E62 /* arrow_left_white_normal@2x.png */,
+				8918B31E1B18F6C800880E62 /* arrow_right_white_disabled.png */,
+				8918B31F1B18F6C800880E62 /* arrow_right_white_disabled@2x.png */,
+				8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */,
+				8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */,
+				8918B32A1B18F6EF00880E62 /* icon_list_challenges.png */,
+				8918B32B1B18F6EF00880E62 /* icon_list_challenges@2x.png */,
+			);
+			name = "challenge bar";
+			sourceTree = "<group>";
+		};
 		892105C419DA1F37000CFBF6 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				8918B3191B18F6AC00880E62 /* challenge bar */,
+				8921064D19DA1F52000CFBF6 /* button images */,
+				8918B3171B18F65000880E62 /* icons */,
+				8918B3181B18F66D00880E62 /* nav-icons */,
 				890587461A01816000DB8CD4 /* EndUserAgreement.html */,
 				890587481A01816900DB8CD4 /* PrivacyPolicy.html */,
-				8921064D19DA1F52000CFBF6 /* button images */,
 				892105C519DA1F37000CFBF6 /* bg_money_maker_1.png */,
 				892105C619DA1F37000CFBF6 /* bg_money_maker_2.png */,
 				892105C719DA1F37000CFBF6 /* bg_money_mananger_1.png */,
@@ -1002,22 +1015,6 @@
 				899F309619F16948004F6B10 /* check-unactive@2x.png */,
 				892105DB19DA1F37000CFBF6 /* comment.png */,
 				892105DC19DA1F37000CFBF6 /* comment@2x.png */,
-				899906721AD46B5D007A4F3E /* icon_button_check_normal.png */,
-				899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */,
-				899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */,
-				899906751AD46B5D007A4F3E /* icon_button_check_pressed@2x.png */,
-				899906761AD46B5D007A4F3E /* icon_button_dollar_normal.png */,
-				899906771AD46B5D007A4F3E /* icon_button_dollar_normal@2x.png */,
-				899906781AD46B5D007A4F3E /* icon_button_dollar_pressed.png */,
-				899906791AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png */,
-				892105DD19DA1F37000CFBF6 /* icon_challenge_future.png */,
-				892105DE19DA1F37000CFBF6 /* icon_challenge_future@2x.png */,
-				892105DF19DA1F37000CFBF6 /* icon_challenge_open.png */,
-				892105E019DA1F37000CFBF6 /* icon_challenge_open@2x.png */,
-				892105E119DA1F37000CFBF6 /* icon_money.png */,
-				892105E219DA1F37000CFBF6 /* icon_money@2x.png */,
-				892105E319DA1F37000CFBF6 /* icon_pig.png */,
-				892105E419DA1F37000CFBF6 /* icon_pig@2x.png */,
 				892105E519DA1F37000CFBF6 /* info_icon.png */,
 				892105E619DA1F37000CFBF6 /* info_icon@2x.png */,
 				8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */,
@@ -1029,6 +1026,7 @@
 				89E56D281A0448A300C187C9 /* login-header.png */,
 				89E56D291A0448A300C187C9 /* login-header@2x.png */,
 				892105EE19DA1F37000CFBF6 /* logo_actionbar.png */,
+				895F78AF1B166BB600055759 /* logo_actionbar@2x.png */,
 				892105EF19DA1F37000CFBF6 /* menu_button.png */,
 				892105F019DA1F37000CFBF6 /* menu_button@2x.png */,
 				892105F119DA1F37000CFBF6 /* moneythink_icon_logo.png */,
@@ -1072,6 +1070,161 @@
 				8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */,
 			);
 			path = "button images";
+			sourceTree = "<group>";
+		};
+		895F78B41B167C5F00055759 /* Mentor Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				895F78BC1B167E0A00055759 /* Schedule */,
+				5860BF3D19870C4F007D9BB3 /* MTMentorDashboardViewController.h */,
+				5860BF3E19870C4F007D9BB3 /* MTMentorDashboardViewController.m */,
+				581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */,
+				581E8843198F500800AD3CF4 /* MTStudentProgressTableViewCell.m */,
+			);
+			name = "Mentor Dashboard";
+			sourceTree = "<group>";
+		};
+		895F78B51B167C6800055759 /* Challenges */ = {
+			isa = PBXGroup;
+			children = (
+				8901D8B319FFEDB5006E9168 /* MTPostTableViewCells */,
+				58509430197C063D00EDC969 /* MTChallengesViewController.h */,
+				58509431197C063D00EDC969 /* MTChallengesViewController.m */,
+				895F78BE1B17A2C300055759 /* MTChallengeContentViewController.h */,
+				895F78BF1B17A2C300055759 /* MTChallengeContentViewController.m */,
+				8952510A1B193ABD008068C6 /* MTChallengeListViewController.h */,
+				8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */,
+				8952510D1B1A667E008068C6 /* MTChallengeListTableViewCell.h */,
+				8952510E1B1A667E008068C6 /* MTChallengeListTableViewCell.m */,
+				58D60AE21984636100DF247E /* MTChallengePostsViewController.h */,
+				58D60AE31984636100DF247E /* MTChallengePostsViewController.m */,
+				58509436197C068000EDC969 /* MTCommentViewController.h */,
+				58509437197C068000EDC969 /* MTCommentViewController.m */,
+				585E25C51997D79E005A896D /* MTExploreCollectionViewCell.h */,
+				585E25C61997D79E005A896D /* MTExploreCollectionViewCell.m */,
+				5869D458199446D20037B517 /* MTExplorePostCollectionView.h */,
+				5869D459199446D20037B517 /* MTExplorePostCollectionView.m */,
+				58B7C2891993305D0039E238 /* MTChallengeInfoViewController.h */,
+				58B7C28A1993305D0039E238 /* MTChallengeInfoViewController.m */,
+				5885B3A6198FF94D0079A8D5 /* MTMyClassTableViewController.h */,
+				5885B3A7198FF94D0079A8D5 /* MTMyClassTableViewController.m */,
+				892105C119DA1EEA000CFBF6 /* MTPostViewController.h */,
+				892105C219DA1EEA000CFBF6 /* MTPostViewController.m */,
+				58BC233F198AD84700FCE3BC /* MTPostsTableViewCell.h */,
+				58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */,
+				895F78BD1B16990B00055759 /* Deprecated */,
+			);
+			name = Challenges;
+			sourceTree = "<group>";
+		};
+		895F78B61B167C7600055759 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				5860BF341986B0E4007D9BB3 /* MTNotificationViewController.h */,
+				5860BF351986B0E4007D9BB3 /* MTNotificationViewController.m */,
+				58536FE4199C286E002AC2E1 /* MTNotificationTableViewCell.h */,
+				58536FE5199C286E002AC2E1 /* MTNotificationTableViewCell.m */,
+			);
+			name = Notifications;
+			sourceTree = "<group>";
+		};
+		895F78B71B167C8600055759 /* Leaderboard */ = {
+			isa = PBXGroup;
+			children = (
+				895F78B11B167C4B00055759 /* MTLeaderboardViewController.h */,
+				895F78B21B167C4B00055759 /* MTLeaderboardViewController.m */,
+			);
+			name = Leaderboard;
+			sourceTree = "<group>";
+		};
+		895F78B81B167C9400055759 /* Edit Profile */ = {
+			isa = PBXGroup;
+			children = (
+				580B5AEC1982D3C70092AA9C /* MTEditProfileViewController.h */,
+				580B5AED1982D3C70092AA9C /* MTEditProfileViewController.m */,
+			);
+			name = "Edit Profile";
+			sourceTree = "<group>";
+		};
+		895F78B91B167C9B00055759 /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				580B5AEF1982EC740092AA9C /* MTSupportViewController.h */,
+				580B5AF01982EC740092AA9C /* MTSupportViewController.m */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		895F78BA1B167D0300055759 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				58676B171974273E0070F604 /* MTSignUpViewController.h */,
+				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
+				58676B191974273E0070F604 /* MTLoginViewController.h */,
+				58676B1E1974273E0070F604 /* MTLoginViewController.m */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		895F78BB1B167DA200055759 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */,
+				58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */,
+				58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */,
+				58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */,
+				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
+				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
+				58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */,
+				58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */,
+				8905874A1A0181F500DB8CD4 /* MTWebViewController.h */,
+				8905874B1A0181F500DB8CD4 /* MTWebViewController.m */,
+			);
+			name = Common;
+			sourceTree = "<group>";
+		};
+		895F78BC1B167E0A00055759 /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */,
+				58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */,
+				58DE6D93199D0ABD00F1534C /* MTScheduleTableViewController.h */,
+				58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */,
+			);
+			name = Schedule;
+			sourceTree = "<group>";
+		};
+		895F78BD1B16990B00055759 /* Deprecated */ = {
+			isa = PBXGroup;
+			children = (
+				583787DC19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.h */,
+				583787DD19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.m */,
+				585093FC197B37DE00EDC969 /* MTOldChallengesViewController.h */,
+				585093FD197B37DE00EDC969 /* MTOldChallengesViewController.m */,
+				5850943F197C386100EDC969 /* MTOldChallengesContentViewController.h */,
+				58509440197C386100EDC969 /* MTOldChallengesContentViewController.m */,
+			);
+			name = Deprecated;
+			sourceTree = "<group>";
+		};
+		898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				898FBE5E1B0D2A6B0058F3B4 /* SWRevealViewController.h */,
+				898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		89C3E8101B1547680084EA48 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */,
+				89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */,
+				89C3E8111B1547B10084EA48 /* MTMenuTableViewCell.h */,
+				89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */,
+			);
+			name = Menu;
 			sourceTree = "<group>";
 		};
 		89FF35581A8178540025735E /* Bundles */ = {
@@ -1161,19 +1314,27 @@
 				8921063B19DA1F37000CFBF6 /* photo_post.png in Resources */,
 				8921065519DA1F52000CFBF6 /* loginButton@2x.png in Resources */,
 				8921064019DA1F37000CFBF6 /* profile_image@2x.png in Resources */,
+				89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */,
 				8921061A19DA1F37000CFBF6 /* bg_progress_white3.png in Resources */,
 				8921064319DA1F37000CFBF6 /* settings_normal.png in Resources */,
 				8921064519DA1F37000CFBF6 /* students_active.png in Resources */,
+				8918B3221B18F6C800880E62 /* arrow_left_white_disabled.png in Resources */,
+				895F78B01B166BB600055759 /* logo_actionbar@2x.png in Resources */,
 				8921062819DA1F37000CFBF6 /* icon_pig@2x.png in Resources */,
 				8999067E1AD46B5D007A4F3E /* icon_button_dollar_normal.png in Resources */,
 				8921061D19DA1F37000CFBF6 /* challenges_normal.png in Resources */,
 				8921063219DA1F37000CFBF6 /* logo_actionbar.png in Resources */,
 				106309951A3A3DD80093C209 /* checkbox_not_ticked@2x.png in Resources */,
+				895F78A51B16455300055759 /* nav-icons-studentsignup.png in Resources */,
+				8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */,
 				8921062F19DA1F37000CFBF6 /* like_normal.png in Resources */,
 				8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */,
 				8921062719DA1F37000CFBF6 /* icon_pig.png in Resources */,
+				8918B3251B18F6C800880E62 /* arrow_left_white_normal@2x.png in Resources */,
 				106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */,
+				89CE54161B152A44000825FB /* icon_main_nav.png in Resources */,
 				8921063319DA1F37000CFBF6 /* menu_button.png in Resources */,
+				8918B32D1B18F6EF00880E62 /* icon_list_challenges@2x.png in Resources */,
 				8921060D19DA1F37000CFBF6 /* bg_money_mananger_3.png in Resources */,
 				8921061C19DA1F37000CFBF6 /* challenges_active@2x.png in Resources */,
 				8921061119DA1F37000CFBF6 /* bg_money_mananger_7.png in Resources */,
@@ -1186,42 +1347,56 @@
 				8921062419DA1F37000CFBF6 /* icon_challenge_open@2x.png in Resources */,
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
 				899F309819F16948004F6B10 /* check-active@2x.png in Resources */,
+				895F78961B16451600055759 /* nav-icons-challenges@2x.png in Resources */,
+				895F78A61B16455300055759 /* nav-icons-studentsignup@2x.png in Resources */,
 				8921064619DA1F37000CFBF6 /* students_active@2x.png in Resources */,
 				89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */,
 				89E56D2A1A0448A300C187C9 /* login-header.png in Resources */,
 				8921064419DA1F37000CFBF6 /* settings_normal@2x.png in Resources */,
 				8921062619DA1F37000CFBF6 /* icon_money@2x.png in Resources */,
+				89CE54171B152A44000825FB /* icon_main_nav@2x.png in Resources */,
 				8921064719DA1F37000CFBF6 /* students_normal.png in Resources */,
+				8918B3231B18F6C800880E62 /* arrow_left_white_disabled@2x.png in Resources */,
 				8921061019DA1F37000CFBF6 /* bg_money_mananger_6.png in Resources */,
 				8921063C19DA1F37000CFBF6 /* photo_post@2x.png in Resources */,
 				8921063719DA1F37000CFBF6 /* notifications_active.png in Resources */,
 				8921064219DA1F37000CFBF6 /* settings_active@2x.png in Resources */,
 				8921063619DA1F37000CFBF6 /* moneythink_icon_logo@2x.png in Resources */,
+				895F78951B16451600055759 /* nav-icons-challenges.png in Resources */,
+				8918B3261B18F6C800880E62 /* arrow_right_white_disabled.png in Resources */,
 				8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */,
 				5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */,
 				8967C78D1A77F79500BE125E /* challenges-icon@2x.png in Resources */,
 				8921065419DA1F52000CFBF6 /* loginButton.png in Resources */,
 				899906801AD46B5D007A4F3E /* icon_button_dollar_pressed.png in Resources */,
 				8999067F1AD46B5D007A4F3E /* icon_button_dollar_normal@2x.png in Resources */,
+				89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */,
 				8921061F19DA1F37000CFBF6 /* comment.png in Resources */,
 				8921061719DA1F37000CFBF6 /* bg_progress_orange3.png in Resources */,
+				895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */,
 				8921063E19DA1F37000CFBF6 /* post@2x.png in Resources */,
 				8921065619DA1F52000CFBF6 /* mentorSignupButton.png in Resources */,
 				8921063019DA1F37000CFBF6 /* like_normal@2x.png in Resources */,
 				8921061819DA1F37000CFBF6 /* bg_progress_white1.png in Resources */,
 				8921063819DA1F37000CFBF6 /* notifications_active@2x.png in Resources */,
+				895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */,
 				8921063A19DA1F37000CFBF6 /* notifications_normal@2x.png in Resources */,
 				8921063F19DA1F37000CFBF6 /* profile_image.png in Resources */,
+				8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */,
+				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				8921061419DA1F37000CFBF6 /* bg_progress_green3.png in Resources */,
 				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
 				8921063419DA1F37000CFBF6 /* menu_button@2x.png in Resources */,
 				1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */,
+				89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */,
+				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
 				8921062219DA1F37000CFBF6 /* icon_challenge_future@2x.png in Resources */,
 				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8921062019DA1F37000CFBF6 /* comment@2x.png in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
 				8921064B19DA1F37000CFBF6 /* verify_normal.png in Resources */,
 				8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */,
+				895F78AE1B1650E700055759 /* nav-icons-arrow-backwards@2x.png in Resources */,
 				89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */,
 				8921063519DA1F37000CFBF6 /* moneythink_icon_logo.png in Resources */,
 				8921064919DA1F37000CFBF6 /* verify_active.png in Resources */,
@@ -1229,6 +1404,7 @@
 				899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */,
 				8921062D19DA1F37000CFBF6 /* like_active.png in Resources */,
 				8921061319DA1F37000CFBF6 /* bg_progress_green2.png in Resources */,
+				89C3E80F1B15468D0084EA48 /* nav-icons-dashboard@2x.png in Resources */,
 				8921064C19DA1F37000CFBF6 /* verify_normal@2x.png in Resources */,
 				8921061619DA1F37000CFBF6 /* bg_progress_orange2.png in Resources */,
 				106309961A3A3DD80093C209 /* checkbox_ticked.png in Resources */,
@@ -1236,6 +1412,7 @@
 				8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */,
 				8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */,
 				8921061E19DA1F37000CFBF6 /* challenges_normal@2x.png in Resources */,
+				8918B3271B18F6C800880E62 /* arrow_right_white_disabled@2x.png in Resources */,
 				8921060F19DA1F37000CFBF6 /* bg_money_mananger_5.png in Resources */,
 				8921060C19DA1F37000CFBF6 /* bg_money_mananger_2.png in Resources */,
 				8921060B19DA1F37000CFBF6 /* bg_money_mananger_1.png in Resources */,
@@ -1243,17 +1420,24 @@
 				8921062119DA1F37000CFBF6 /* icon_challenge_future.png in Resources */,
 				8921061919DA1F37000CFBF6 /* bg_progress_white2.png in Resources */,
 				8921062319DA1F37000CFBF6 /* icon_challenge_open.png in Resources */,
+				895F78A21B16454400055759 /* nav-icons-notifications@2x.png in Resources */,
 				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
 				8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */,
 				8921061B19DA1F37000CFBF6 /* challenges_active.png in Resources */,
 				8921063D19DA1F37000CFBF6 /* post.png in Resources */,
 				8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */,
+				8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */,
 				8921060E19DA1F37000CFBF6 /* bg_money_mananger_4.png in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
+				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
+				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921060A19DA1F37000CFBF6 /* bg_money_maker_2.png in Resources */,
+				8918B32C1B18F6EF00880E62 /* icon_list_challenges.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
+				895F78AA1B16456000055759 /* nav-icons-support@2x.png in Resources */,
 				8921061519DA1F37000CFBF6 /* bg_progress_orange1.png in Resources */,
 				899F309919F16948004F6B10 /* check-unactive.png in Resources */,
+				895F78991B16452A00055759 /* nav-icons-editprofile.png in Resources */,
 				899F309719F16948004F6B10 /* check-active.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1307,24 +1491,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5860BF4E198711BA007D9BB3 /* MTMentorFilterViewController.m in Sources */,
-				583787DE19B6DA0200A260B1 /* MTStudentChallengeRoomContentViewController.m in Sources */,
+				583787DE19B6DA0200A260B1 /* MTOldStudentChallengeRoomContentViewController.m in Sources */,
 				899906841AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m in Sources */,
-				5860BF5419876023007D9BB3 /* MTStudentProgressTabBarViewController.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */,
-				5828C00919858DFC00369C3B /* MTPostsTabBarViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
-				58509441197C386100EDC969 /* MTChallengesContentViewController.m in Sources */,
+				58509441197C386100EDC969 /* MTOldChallengesContentViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
+				89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */,
 				899F309D19F2C87E004F6B10 /* UIImage+MTAdditions.m in Sources */,
-				58DE6D98199D0ABD00F1534C /* MTMentorStudentPostsTableViewCell.m in Sources */,
-				58DCBE9B1989A8ED00547F2E /* MTMentorTabBarViewControlle.m in Sources */,
-				58BC233E198AA89B00FCE3BC /* MTPostsTableViewController.m in Sources */,
 				58669F6119772D00009BC13C /* PFChallengesActivated.m in Sources */,
 				58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */,
 				8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */,
@@ -1332,61 +1511,54 @@
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
 				8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */,
 				892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */,
-				585E25CA1997F8DC005A896D /* MTCollectionNavigationViewController.m in Sources */,
-				5876E2C2196F2C1F00C176EC /* MTHomeViewController.m in Sources */,
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
-				585093FE197B37DE00EDC969 /* MTChallengesViewController.m in Sources */,
-				5885B3A5198FDD730079A8D5 /* MTStudentProgressTableViewController.m in Sources */,
-				5860BF4219870C7B007D9BB3 /* MTMentorStudentFollowViewController.m in Sources */,
+				585093FE197B37DE00EDC969 /* MTOldChallengesViewController.m in Sources */,
 				58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */,
-				58C87405198311A9000F5296 /* MTStudentTabBarViewController.m in Sources */,
+				898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
-				580B5AEB1982CF690092AA9C /* MTImagePickerViewController.m in Sources */,
 				89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */,
 				8901D8A419FAB39F006E9168 /* MTPostCommentTableViewCell.m in Sources */,
 				58669F5E19772D00009BC13C /* PFChallengePostButtonsClicked.m in Sources */,
-				5860BF361986B0E4007D9BB3 /* MTMentorNotificationViewController.m in Sources */,
+				5860BF361986B0E4007D9BB3 /* MTNotificationViewController.m in Sources */,
 				5890F7471976DDAF0042AC2F /* UIColor+Palette.m in Sources */,
-				5850943B197C068D00EDC969 /* MTPeerProfileViewController.m in Sources */,
 				5885B3A8198FF94D0079A8D5 /* MTMyClassTableViewController.m in Sources */,
 				89C6792C19E315660054E890 /* UIAlertView+MTAdditions.m in Sources */,
 				89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */,
-				580B5AF41982EDAA0092AA9C /* MTStudentFilterViewController.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
 				89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */,
+				89CE54131B152829000825FB /* MTViewController.m in Sources */,
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
+				8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */,
 				106309881A3A3C4D0093C209 /* Reachability.m in Sources */,
-				5860BF481987118F007D9BB3 /* MTMentorInstructionsViewController.m in Sources */,
-				58A356921980D9810018FC61 /* MTMyClassChallengePostsViewController.m in Sources */,
-				58509429197C05BD00EDC969 /* MTUserInformationViewController.m in Sources */,
-				5850942C197C060700EDC969 /* MTStudentMainViewController.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
-				58509432197C063D00EDC969 /* MTStudentChallengeRoomViewController.m in Sources */,
+				58509432197C063D00EDC969 /* MTChallengesViewController.m in Sources */,
 				58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */,
-				5860BF3F19870C4F007D9BB3 /* MTMentorStudentProgressViewController.m in Sources */,
+				5860BF3F19870C4F007D9BB3 /* MTMentorDashboardViewController.m in Sources */,
 				89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */,
-				5860BF4B198711A5007D9BB3 /* MTMentorChallengeRoomViewController.m in Sources */,
-				580B5AF11982EC740092AA9C /* MTStudentSettingsViewController.m in Sources */,
+				580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */,
 				58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */,
 				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
 				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
-				58676B231974273E0070F604 /* MTUserViewController.m in Sources */,
+				58676B231974273E0070F604 /* MTLoginViewController.m in Sources */,
 				585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */,
 				58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */,
 				58669F6719772D00009BC13C /* PFSignupCodes.m in Sources */,
-				5850942F197C062A00EDC969 /* MTStudentInstructionsViewController.m in Sources */,
-				58B7C28B1993305D0039E238 /* MTMentorChallengeInfoViewController.m in Sources */,
+				89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */,
+				58B7C28B1993305D0039E238 /* MTChallengeInfoViewController.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */,
+				895F78C01B17A2C300055759 /* MTChallengeContentViewController.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
+				8952510F1B1A667E008068C6 /* MTChallengeListTableViewCell.m in Sources */,
 				106309981A3A3DD80093C209 /* MICheckBox.m in Sources */,
+				895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */,
 				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
 				8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,

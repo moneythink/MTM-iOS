@@ -7,7 +7,6 @@
 //
 
 #import "MTExplorePostCollectionView.h"
-#import "MTPostsTabBarViewController.h"
 #import "MTExploreCollectionViewCell.h"
 #import "MTPostViewController.h"
 
@@ -42,11 +41,26 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self loadPosts];
+}
 
+- (void)objectsWillLoad
+{
+    
+}
+
+- (void)objectsDidLoad:(NSError *)error
+{
+    
+}
+
+#pragma mark - Private Methods -
+- (void)loadPosts
+{
     NSInteger challengeNumber = [self.challenge[@"challenge_number"] intValue];
     NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d AND picture != nil", challengeNumber];
     PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
-
+    
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
@@ -61,7 +75,7 @@
             NSArray *buttons = weakSelf.challenge[@"buttons"];
             NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
             BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
-
+            
             if (!IsEmpty(buttons)) {
                 weakSelf.hasButtons = YES;
             }
@@ -79,18 +93,19 @@
     }];
 }
 
-- (void)objectsWillLoad
+
+#pragma mark - Public -
+- (void)setChallenge:(PFChallenges *)challenge
 {
-    
+    if (_challenge != challenge) {
+        _challenge = challenge;
+        
+        [self loadPosts];
+    }
 }
 
-- (void)objectsDidLoad:(NSError *)error
-{
-    
-}
 
-
-# pragma mark - Collection View data source -
+# pragma mark - UICollectionViewDataSource Methods -
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     NSInteger itemCount = self.posts.count;
@@ -212,7 +227,6 @@
     
     return newImage;
 }
-
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {

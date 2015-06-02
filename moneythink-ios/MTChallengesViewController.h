@@ -2,17 +2,17 @@
 //  MTChallengesViewController.h
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/19/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 5/27/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
-#import "MTChallengesContentViewController.h"
 
-@interface MTChallengesViewController : UIViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+#import "MTCommentViewController.h"
+#import "MTChallengeContentViewController.h"
+#import "MTChallengeListViewController.h"
 
-@property (strong, nonatomic) UIPageViewController *pageViewController;
+@interface MTChallengesViewController : MTViewController <MTCommentViewProtocol, UIPageViewControllerDelegate, UIPageViewControllerDataSource, MTChallengeContentViewControllerDelegate, MTChallengeListViewControllerDelegate>
 
-@property (strong, nonatomic) NSArray *challenges;
 
 @end

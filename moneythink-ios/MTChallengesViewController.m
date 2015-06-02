@@ -2,56 +2,194 @@
 //  MTChallengesViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/19/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 5/27/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTChallengesViewController.h"
+#import "MTExplorePostCollectionView.h"
+#import "MTChallengeInfoViewController.h"
+#import "MTMyClassTableViewController.h"
 
 @interface MTChallengesViewController ()
 
-@property (assign, nonatomic) NSInteger pendingPageIndex;
-@property (assign, nonatomic) NSInteger pageIndex;
+@property (nonatomic, strong) IBOutlet UIView *challengesView;
+@property (nonatomic, strong) IBOutlet UIView *feedExploreToggleView;
+@property (nonatomic, strong) IBOutlet UIView *myClassView;
 
-@property (strong, nonatomic) MTChallengesContentViewController *viewControllerBefore;
-@property (strong, nonatomic) MTChallengesContentViewController *viewControllerAfter;
+@property (nonatomic, strong) IBOutlet UIButton *myFeedButton;
+@property (nonatomic, strong) IBOutlet UIView *myFeedHighlightView;
+@property (nonatomic, strong) IBOutlet UIButton *exploreButton;
+@property (nonatomic, strong) IBOutlet UIView *exploreHighlightView;
+
+@property (nonatomic) NSInteger challengesPageIndex;
+@property (nonatomic, strong) MTChallengeContentViewController *challengeContentViewControllerBefore;
+@property (nonatomic, strong) MTChallengeContentViewController *challengeContentViewControllerAfter;
 @property (nonatomic) BOOL userChangedClass;
+@property (nonatomic, strong) PFChallenges *currentChallenge;
+@property (nonatomic, strong) NSArray *challenges;
+@property (nonatomic, strong) NSArray *viewControllers;
+@property (nonatomic, strong) NSArray *pageViewControllers;
+@property (nonatomic, strong) UIPageViewController *myClassPageViewController;
+@property (nonatomic, strong) UIPageViewController *challengesPageViewController;
+@property (nonatomic, assign) NSInteger challengesPendingIndex;
+@property (nonatomic, strong) MTExplorePostCollectionView *exploreCollectionView;
+@property (nonatomic, strong) MTMyClassTableViewController  *myClassTableView;
+@property (nonatomic, strong) MTChallengeInfoViewController *challengeInfoView;
+@property (nonatomic, strong) MTChallengeListViewController *challengeListView;
 
 @end
 
 @implementation MTChallengesViewController
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
+#pragma mark - Lifecycle -
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+        
+    UIImage *postImage = [UIImage imageNamed:@"post"];
+    UIBarButtonItem *postComment = [[UIBarButtonItem alloc]
+                                    initWithImage:postImage
+                                    style:UIBarButtonItemStyleBordered
+                                    target:self
+                                    action:@selector(postCommentTapped)];
+    
+    self.navigationItem.rightBarButtonItem = postComment;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidChangeClass:) name:kUserDidChangeClass object:nil];
+
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+
+    [self setupViews];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     if (IsEmpty(self.challenges)) {
         [self loadChallenges];
     }
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // If already loaded, need to do this in ViewDidAppear vs ViewWillAppear
+    if (!IsEmpty(self.challenges)) {
+        MTChallengeContentViewController *startingViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+        NSArray *viewControllers = @[startingViewController];
+        [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    }
+}
 
-#pragma mark - Private -
+- (void)didReceiveMemoryWarnng
+{
+    [super didReceiveMemoryWarning];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+#pragma mark - Private Methods -
+- (void)setupViews
+{
+    self.myClassPageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsPageViewController"];
+    self.myClassPageViewController.view.frame = ({
+        CGRect newFrame = self.myClassPageViewController.view.frame;
+        newFrame.size.height = self.myClassView.frame.size.height;
+        newFrame;
+    });
+
+    self.myClassPageViewController.dataSource = self;
+    self.myClassPageViewController.delegate = self;
+    
+    self.exploreCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"exploreCollectionView"];
+    self.exploreCollectionView.view.frame = self.myClassView.frame;
+    
+    self.myClassTableView = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsTableView"];
+    self.myClassTableView.view.frame = self.myClassView.frame;
+    
+    self.challengeInfoView = [self.storyboard instantiateViewControllerWithIdentifier:@"challengeInfoModal"];
+    
+    self.viewControllers = @[self.myClassTableView, self.exploreCollectionView];
+    self.pageViewControllers = @[self.myClassTableView];
+    
+    [self.myClassPageViewController setViewControllers:self.pageViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    
+    [self addChildViewController:self.myClassPageViewController];
+    [self.myClassView addSubview:self.myClassPageViewController.view];
+    [self.myClassPageViewController didMoveToParentViewController:self];
+    
+    [self.myFeedButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundNormal] size:self.myFeedButton.frame.size] forState:UIControlStateNormal];
+    [self.myFeedButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundHighlighted] size:self.myFeedButton.frame.size] forState:UIControlStateHighlighted];
+    [self.myFeedButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundSelected] size:self.myFeedButton.frame.size] forState:UIControlStateSelected];
+    [self.myFeedButton setTitleColor:[UIColor challengeViewToggleButtonTitleNormal] forState:UIControlStateNormal];
+    [self.myFeedButton setTitleColor:[UIColor challengeViewToggleButtonTitleHighlighted] forState:UIControlStateHighlighted];
+    [self.myFeedButton setTitleColor:[UIColor challengeViewToggleButtonTitleSelected] forState:UIControlStateSelected];
+    self.myFeedButton.selected = YES;
+
+    [self.exploreButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundNormal] size:self.myFeedButton.frame.size] forState:UIControlStateNormal];
+    [self.exploreButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundHighlighted] size:self.myFeedButton.frame.size] forState:UIControlStateHighlighted];
+    [self.exploreButton setBackgroundImage:[UIImage imageWithColor:[UIColor challengeViewToggleButtonBackgroundSelected] size:self.myFeedButton.frame.size] forState:UIControlStateSelected];
+    [self.exploreButton setTitleColor:[UIColor challengeViewToggleButtonTitleNormal] forState:UIControlStateNormal];
+    [self.exploreButton setTitleColor:[UIColor challengeViewToggleButtonTitleHighlighted] forState:UIControlStateHighlighted];
+    [self.exploreButton setTitleColor:[UIColor challengeViewToggleButtonTitleSelected] forState:UIControlStateSelected];
+    
+    [self.myFeedHighlightView setBackgroundColor:[UIColor primaryGreen]];
+    [self.exploreHighlightView setBackgroundColor:[UIColor challengeViewToggleHighlightNormal]];
+    
+    self.challengeListView = [self.storyboard instantiateViewControllerWithIdentifier:@"challengeListModal"];
+    self.challengeListView.delegate = self;
+    self.challengeListView.view.frame = ({
+        CGRect newFrame = self.myClassView.frame;
+        newFrame.origin.y = -self.myClassView.frame.size.height;
+        newFrame.size.height = self.view.frame.size.height - self.challengesView.frame.size.height;
+        newFrame;
+    });
+    
+    [self addChildViewController:self.challengeListView];
+    [self.view insertSubview:self.challengeListView.view belowSubview:self.challengesView];
+    
+    self.challengeListView.tableView.scrollsToTop = NO;
+    self.exploreCollectionView.collectionView.scrollsToTop = NO;
+    self.myClassTableView.tableView.scrollsToTop = YES;
+}
+
+- (void)updateViews
+{
+    self.myClassTableView.challenge = self.currentChallenge;
+    self.exploreCollectionView.challenge = self.currentChallenge;
+    self.challengeInfoView.challenge = self.currentChallenge;
+}
+
+- (void)toggleFeedExploreControl
+{
+    if (self.myFeedButton.selected) {
+        self.myClassTableView.tableView.scrollsToTop = NO;
+        self.exploreCollectionView.collectionView.scrollsToTop = YES;
+        
+        self.exploreButton.selected = YES;
+        self.myFeedButton.selected = NO;
+        self.exploreHighlightView.backgroundColor = [UIColor primaryGreen];
+        self.myFeedHighlightView.backgroundColor = [UIColor challengeViewToggleHighlightNormal];
+    }
+    else {
+        self.exploreCollectionView.collectionView.scrollsToTop = NO;
+        self.myClassTableView.tableView.scrollsToTop = YES;
+
+        self.myFeedButton.selected = YES;
+        self.exploreButton.selected = NO;
+        self.myFeedHighlightView.backgroundColor = [UIColor primaryGreen];
+        self.exploreHighlightView.backgroundColor = [UIColor challengeViewToggleHighlightNormal];
+    }
+}
+
+
+#pragma mark - Load Challenges Private Methods -
 - (void)loadChallenges
 {
-    self.pageViewController.view.alpha = 0.0f;
-
     NSString *userClass = [PFUser currentUser][@"class"];
     NSString *userSchool = [PFUser currentUser][@"school"];
     
@@ -61,7 +199,7 @@
     userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     if (self.userChangedClass) {
         self.userChangedClass = NO;
@@ -120,7 +258,7 @@
     [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
     [allCustomChallenges orderByAscending:@"ordering"];
     [allCustomChallenges includeKey:@"challenge"];
-
+    
     MTMakeWeakSelf();
     [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -140,31 +278,33 @@
             weakSelf.challenges = [NSArray arrayWithArray:customChallenges];
             
             // Create page view controller
-            if (!weakSelf.pageViewController) {
-                weakSelf.pageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-                CGRect frame = weakSelf.pageViewController.view.frame;
-                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
-                weakSelf.pageViewController.view.frame = frame;
-                weakSelf.pageViewController.dataSource = weakSelf;
-                weakSelf.pageViewController.delegate = weakSelf;
+            if (!weakSelf.challengesPageViewController) {
+                weakSelf.challengesPageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                CGRect frame = weakSelf.challengesPageViewController.view.frame;
+                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 84.0f);
+                weakSelf.challengesPageViewController.view.frame = frame;
+                weakSelf.challengesPageViewController.dataSource = weakSelf;
+                weakSelf.challengesPageViewController.delegate = weakSelf;
                 
-                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                MTChallengeContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
                 NSArray *viewControllers = @[startingViewController];
-                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                [weakSelf.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
                 
-                [weakSelf addChildViewController:weakSelf.pageViewController];
-                [weakSelf.view addSubview:weakSelf.pageViewController.view];
-                [weakSelf.pageViewController didMoveToParentViewController:weakSelf];
+                [weakSelf addChildViewController:weakSelf.challengesPageViewController];
+                [weakSelf.challengesView addSubview:weakSelf.challengesPageViewController.view];
+                [weakSelf.challengesPageViewController didMoveToParentViewController:weakSelf];
             }
             else {
-                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                MTChallengeContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
                 NSArray *viewControllers = @[startingViewController];
-                [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                [weakSelf.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
             }
             
-            [UIView animateWithDuration:0.2f animations:^{
-                weakSelf.pageViewController.view.alpha = 1.0f;
-            }];
+            if (!IsEmpty(weakSelf.challenges)) {
+                weakSelf.currentChallenge = [weakSelf.challenges objectAtIndex:0];
+            }
+            
+            [weakSelf updateViews];
         }
         else {
             NSLog(@"Unable to load custom challenges");
@@ -184,121 +324,380 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         });
-
+        
         if (!error) {
             weakSelf.challenges = objects;
             
             // Create page view controller
-            if (!weakSelf.pageViewController) {
-                weakSelf.pageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
-                CGRect frame = weakSelf.pageViewController.view.frame;
-                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
-                weakSelf.pageViewController.view.frame = frame;
-                weakSelf.pageViewController.dataSource = weakSelf;
-                weakSelf.pageViewController.delegate = weakSelf;
+            if (!weakSelf.challengesPageViewController) {
+                weakSelf.challengesPageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengeContentPageViewController"];
+                CGRect frame = weakSelf.challengesPageViewController.view.frame;
+                frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 84.0f);
+                weakSelf.challengesPageViewController.view.frame = frame;
+                weakSelf.challengesPageViewController.dataSource = weakSelf;
+                weakSelf.challengesPageViewController.delegate = weakSelf;
                 
-                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                MTChallengeContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
                 NSArray *viewControllers = @[startingViewController];
-                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                [weakSelf.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
                 
-                [weakSelf addChildViewController:weakSelf.pageViewController];
-                [weakSelf.view addSubview:weakSelf.pageViewController.view];
-                [weakSelf.pageViewController didMoveToParentViewController:weakSelf];
+                [weakSelf addChildViewController:weakSelf.challengesPageViewController];
+                [weakSelf.challengesView addSubview:weakSelf.challengesPageViewController.view];
+                [weakSelf.challengesPageViewController didMoveToParentViewController:weakSelf];
             }
             else {
-                MTChallengesContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
+                MTChallengeContentViewController *startingViewController = [weakSelf viewControllerAtIndex:0];
                 NSArray *viewControllers = @[startingViewController];
-                [weakSelf.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                [weakSelf.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
             }
             
-            [UIView animateWithDuration:0.2f animations:^{
-                weakSelf.pageViewController.view.alpha = 1.0f;
-            }];
+            if (!IsEmpty(weakSelf.challenges)) {
+                weakSelf.currentChallenge = [weakSelf.challenges objectAtIndex:0];
+            }
+            
+            [weakSelf updateViews];
         }
     }];
 }
 
-- (MTChallengesContentViewController *)viewControllerAtIndex:(NSUInteger)index
+- (MTChallengeContentViewController *)viewControllerAtIndex:(NSUInteger)index
 {
     if (([self.challenges count] <= 0) || (index >= [self.challenges count])) {
         return nil;
     }
     
     // Create a new view controller and pass suitable data.
-    MTChallengesContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengesContentViewController"];
-    CGRect frame = self.pageViewController.view.frame;
-    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 235.0f);
+    MTChallengeContentViewController *challengeContentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ChallengeContentViewController"];
+    CGRect frame = self.challengesPageViewController.view.frame;
+    frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 84.0f);
     challengeContentViewController.view.frame = frame;
-
+    
     PFChallenges *challenge = self.challenges[index];
     
-    challengeContentViewController.challengePillarText = challenge[@"pillar"];
     challengeContentViewController.challengeTitleText = challenge[@"title"];
-    
-    NSInteger indexNum = index +1;
-    challengeContentViewController.challengeNumberText = [NSString stringWithFormat:@"%lu", (long)indexNum];
-    challengeContentViewController.challengeDescriptionText = challenge[@"student_instructions"];
-    challengeContentViewController.challengePointsText= [challenge[@"max_points"] stringValue];
-    
     challengeContentViewController.pageIndex = index;
     challengeContentViewController.challenge = challenge;
+    challengeContentViewController.challenges = self.challenges;
+    
+    challengeContentViewController.leftButton.enabled = YES;
+    challengeContentViewController.rightButton.enabled = YES;
+    challengeContentViewController.delegate = self;
 
+    if (index == 0) {
+        challengeContentViewController.leftButton.enabled = NO;
+    }
+    
+    if (index == [self.challenges count]-1) {
+        challengeContentViewController.rightButton.enabled = NO;
+    }
+    
     return challengeContentViewController;
 }
 
 
-#pragma mark - Page View Controller Data Source
+#pragma mark - Actions -
+- (IBAction)myFeedButtonAction:(id)sender
+{
+    if (!self.myFeedButton.selected) {
+        [self toggleFeedExploreControl];
+        
+        self.pageViewControllers = @[self.myClassTableView];
+        [self.myClassPageViewController setViewControllers:self.pageViewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+    }
+}
+
+- (IBAction)exploreButtonAction:(id)sender
+{
+    if (!self.exploreButton.selected) {
+        [self toggleFeedExploreControl];
+        
+        self.pageViewControllers = @[self.exploreCollectionView];
+        [self.myClassPageViewController setViewControllers:self.pageViewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    }
+}
+
+- (void)postCommentTapped
+{
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+    
+    self.navigationItem.title = @"Cancel";
+    [self performSegueWithIdentifier:@"commentSegue" sender:self];
+}
+
+- (void)dismissCommentView
+{
+}
+
+- (IBAction) unwindToChallengeRoom:(UIStoryboardSegue*) sender
+{
+    // segue from MTCommentViewController
+}
+
+
+#pragma mark - UIPageViewControllerDataSource/Delegate Methods -
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
+{
+    if (pageViewController == self.myClassPageViewController) {
+        [self myClassPageViewController:pageViewController didFinishAnimating:finished previousViewControllers:previousViewControllers transitionCompleted:completed];
+    }
+    else {
+        [self challengesPageViewController:pageViewController didFinishAnimating:finished previousViewControllers:previousViewControllers transitionCompleted:completed];
+    }
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
+{
+    if (pageViewController == self.myClassPageViewController) {
+        // do nothing
+    }
+    else {
+        [self challengesPageViewController:pageViewController willTransitionToViewControllers:pendingViewControllers];
+    }
+}
+
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
-    return self.viewControllerBefore;
+    if (pageViewController == self.myClassPageViewController) {
+        return [self myClassPageViewController:pageViewController viewControllerBeforeViewController:viewController];
+    }
+    else {
+        return [self challengesPageViewController:pageViewController viewControllerBeforeViewController:viewController];
+    }
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
-    return self.viewControllerAfter;
+    if (pageViewController == self.myClassPageViewController) {
+        return [self myClassPageViewController:pageViewController viewControllerAfterViewController:viewController];
+    }
+    else {
+        return [self challengesPageViewController:pageViewController viewControllerAfterViewController:viewController];
+    }
+
 }
 
 - (NSInteger)presentationCountForPageViewController:(UIPageViewController *)pageViewController
 {
-    return [self.challenges count];
+    // return 0 to remove paging dots
+    if (pageViewController == self.myClassPageViewController) {
+        return 0;
+    }
+    else {
+        return [self challengesPresentationCountForPageViewController:pageViewController];
+    }
 }
 
 - (NSInteger)presentationIndexForPageViewController:(UIPageViewController *)pageViewController
 {
-    self.pageIndex = 0;
-    self.viewControllerBefore = nil;
-    self.viewControllerAfter = [self viewControllerAtIndex:1];
-    return self.pageIndex;
-}
-
-
-#pragma mark - Page View Controller Delegate
-
-- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
-    self.pendingPageIndex = ((MTChallengesContentViewController *)[pendingViewControllers firstObject]).pageIndex;
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
-    if (completed) {
-        self.pageIndex = self.pendingPageIndex;
-        if ((self.pageIndex == 0) || (self.pageIndex >= self.challenges.count)) {
-            self.viewControllerBefore = nil;
-        } else {
-            self.viewControllerBefore = [self viewControllerAtIndex:(self.pageIndex - 1)];
-        }
-        
-        if (self.pageIndex >= (self.challenges.count - 1)) {
-            self.viewControllerAfter = nil;
-        } else {
-            self.viewControllerAfter = [self viewControllerAtIndex:(self.pageIndex + 1)];
-        }
+    if (pageViewController == self.myClassPageViewController) {
+        return 0;
+    }
+    else {
+        return [self challengesPresentationIndexForPageViewController:pageViewController];
     }
 }
 
 
-#pragma mark - Navigation
-- (IBAction)unwindToMainMenu:(UIStoryboardSegue *)sender
+#pragma mark - MyClass/Explore UIPageViewControllerDataSource/Delegate Methods -
+- (void)myClassPageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed {
+    if (completed) {
+        if ([[[pageViewController viewControllers] firstObject] isKindOfClass:[MTMyClassTableViewController class]]) {
+            [self myFeedButtonAction:self.myFeedButton];
+        }
+        else {
+            [self exploreButtonAction:self.exploreButton];
+        }
+    }
+}
+
+- (UIViewController *)myClassPageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
+    NSUInteger index = [self.viewControllers indexOfObject:viewController];
+    
+    if ((index == 0) || (index == NSNotFound)) {
+        return nil;
+    }
+    
+    index--;
+    return self.viewControllers[index];
+}
+
+- (UIViewController *)myClassPageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
+{
+    NSUInteger index = [self.viewControllers indexOfObject:viewController];
+    
+    if (index == NSNotFound) {
+        return nil;
+    }
+    
+    index++;
+    if (index == [self.viewControllers count]) {
+        return nil;
+    }
+    
+    return self.viewControllers[index];
+}
+
+
+#pragma mark - Challenges UIPageViewControllerDataSource/Delegate Methods -
+- (void)challengesPageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
+{
+    self.challengesPendingIndex = ((MTChallengeContentViewController *)[pendingViewControllers firstObject]).pageIndex;
+}
+
+- (void)challengesPageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
+{
+    if (completed) {
+        self.challengesPageIndex = self.challengesPendingIndex;
+        if ((self.challengesPageIndex == 0) || (self.challengesPageIndex >= self.challenges.count)) {
+            self.challengeContentViewControllerBefore = nil;
+        } else {
+            self.challengeContentViewControllerBefore = [self viewControllerAtIndex:(self.challengesPageIndex - 1)];
+        }
+        
+        if (self.challengesPageIndex >= (self.challenges.count - 1)) {
+            self.challengeContentViewControllerAfter = nil;
+        } else {
+            self.challengeContentViewControllerAfter = [self viewControllerAtIndex:(self.challengesPageIndex + 1)];
+        }
+        
+        if ([self.challenges count] > self.challengesPageIndex) {
+            [self closeChallengeList];
+            self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
+            [self updateViews];
+        }
+    }
+}
+
+- (UIViewController *)challengesPageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
+{
+    return self.challengeContentViewControllerBefore;
+}
+
+- (UIViewController *)challengesPageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
+{
+    return self.challengeContentViewControllerAfter;
+}
+
+- (NSInteger)challengesPresentationCountForPageViewController:(UIPageViewController *)pageViewController
+{
+    return [self.challenges count];
+}
+
+- (NSInteger)challengesPresentationIndexForPageViewController:(UIPageViewController *)pageViewController
+{
+    if (self.challengesPageIndex == 0) {
+        self.challengeContentViewControllerBefore = nil;
+        self.challengeContentViewControllerAfter = [self viewControllerAtIndex:1];
+    }
+    else if (self.challengesPageIndex == [self.challenges count]-1) {
+        self.challengeContentViewControllerBefore = [self viewControllerAtIndex:self.challengesPageIndex-1];
+        self.challengeContentViewControllerAfter = nil;
+    }
+    else {
+        self.challengeContentViewControllerBefore = [self viewControllerAtIndex:self.challengesPageIndex-1];
+        self.challengeContentViewControllerAfter = [self viewControllerAtIndex:self.challengesPageIndex+1];
+    }
+    
+    return self.challengesPageIndex;
+}
+
+
+#pragma mark - MTChallengeContentViewControllerDelegate Methods -
+- (void)leftButtonTapped
+{
+    [self closeChallengeList];
+    self.challengesPageIndex--;
+    
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    NSArray *viewControllers = @[newViewController];
+    [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+    
+    self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
+    [self updateViews];
+}
+
+- (void)rightButtonTapped
+{
+    [self closeChallengeList];
+    self.challengesPageIndex++;
+    
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    NSArray *viewControllers = @[newViewController];
+    [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    
+    self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
+    [self updateViews];
+}
+
+- (void)didSelectChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index
+{
+    self.challengesPageIndex = index;
+    
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    NSArray *viewControllers = @[newViewController];
+    [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    
+    self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
+    [self updateViews];
+    
+    [self didTapChallengeList];
+}
+
+- (void)closeChallengeList
+{
+    if (self.challengeListView.view.frame.origin.y > 0.0f) {
+        [self didTapChallengeList];
+    }
+}
+
+- (void)didTapChallengeList
+{
+    if (self.challengeListView.view.frame.origin.y > 0.0f) {
+        // Hide
+        self.challengeListView.tableView.scrollsToTop = NO;
+        if (!self.myFeedButton.selected) {
+            self.myClassTableView.tableView.scrollsToTop = NO;
+            self.exploreCollectionView.collectionView.scrollsToTop = YES;
+        }
+        else {
+            self.exploreCollectionView.collectionView.scrollsToTop = NO;
+            self.myClassTableView.tableView.scrollsToTop = YES;
+        }
+
+        [UIView animateWithDuration:0.3f animations:^{
+            self.challengeListView.view.frame = ({
+                CGRect newFrame = self.challengeListView.view.frame;
+                newFrame.origin.y = -self.challengeListView.view.frame.size.height;
+                newFrame;
+            });
+        } completion:^(BOOL finished) {
+            [self.view bringSubviewToFront:self.myClassView];
+            [self.view bringSubviewToFront:self.feedExploreToggleView];
+        }];
+    }
+    else {
+        // Show
+        self.myClassTableView.tableView.scrollsToTop = NO;
+        self.exploreCollectionView.collectionView.scrollsToTop = NO;
+        self.challengeListView.tableView.scrollsToTop = YES;
+
+        [self.view sendSubviewToBack:self.myClassView];
+        [self.view sendSubviewToBack:self.feedExploreToggleView];
+        self.challengeListView.challenges = self.challenges;
+        self.challengeListView.currentChallenge = self.currentChallenge;
+        
+        [UIView animateWithDuration:0.3f animations:^{
+            self.challengeListView.view.frame = ({
+                CGRect newFrame = self.challengeListView.view.frame;
+                newFrame.origin.y = self.challengesView.frame.size.height;
+                newFrame;
+            });
+        }];
+    }
 }
 
 
@@ -307,6 +706,19 @@
 {
     self.userChangedClass = YES;
     self.challenges = nil;
+}
+
+
+#pragma mark - Navigation -
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString *segueID = [segue identifier];
+    
+    if ([segueID isEqualToString:@"commentSegue"]) {
+        MTCommentViewController *destinationVC = (MTCommentViewController *)[segue destinationViewController];
+        destinationVC.challenge = self.currentChallenge;
+        destinationVC.delegate = self;
+    }
 }
 
 

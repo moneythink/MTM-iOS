@@ -1,9 +1,9 @@
 //
 //  MTSignUpViewController.h
-//  LogInAndSignUpDemo
+//  moneythink-ios
 //
-//  Created by Mattieu Gamache-Asselin on 6/15/12.
-//  Copyright (c) 2013 Parse. All rights reserved.
+//  Created by dsica on 5/27/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MICheckBox.h"

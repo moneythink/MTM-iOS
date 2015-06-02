@@ -35,6 +35,21 @@
     return [UIColor colorWithHexString:@"#00976F"];
 }
 
++ (UIColor *)menuLightGreen;
+{
+    return [UIColor colorWithHexString:@"#23a275"];
+}
+
++ (UIColor *)menuDarkGreen;
+{
+    return [UIColor colorWithHexString:@"#2b906a"];
+}
+
++ (UIColor *)menuHightlightGreen
+{
+    return [UIColor colorWithHexString:@"#79c09f"];
+}
+
 + (UIColor *)mutedGreen;
 {
     return [UIColor colorWithHexString:@"#a1d4b0"];
@@ -60,6 +75,11 @@
     return [UIColor colorWithHexString:@"#ecedef"];
 }
 
++ (UIColor *)navbarGrey
+{
+    return [UIColor colorWithHexString:@"#677377"];
+}
+
 + (UIColor *)lightTan;
 {
     return [UIColor colorWithHexString:@"#f7f6f3"];
@@ -80,6 +100,40 @@
     return [UIColor colorWithHexString:@"#ffd2c0"];
 }
 
++ (UIColor *)challengeViewToggleButtonBackgroundNormal;
+{
+    return [UIColor colorWithHexString:@"#f4f5f4"];
+}
+
++ (UIColor *)challengeViewToggleButtonBackgroundHighlighted;
+{
+    return [UIColor colorWithHexString:@"#e7ebe8"];
+}
+
++ (UIColor *)challengeViewToggleButtonBackgroundSelected;
+{
+    return [UIColor colorWithHexString:@"#e7ebe8"];
+}
+
++ (UIColor *)challengeViewToggleButtonTitleNormal;
+{
+    return [UIColor colorWithHexString:@"#687377"];
+}
+
++ (UIColor *)challengeViewToggleButtonTitleHighlighted;
+{
+    return [UIColor colorWithHexString:@"#687377"];
+}
+
++ (UIColor *)challengeViewToggleButtonTitleSelected;
+{
+    return [UIColor colorWithHexString:@"#292c2d"];
+}
+
++ (UIColor *)challengeViewToggleHighlightNormal;
+{
+    return [UIColor colorWithHexString:@"#bbbebd"];
+}
 
 + (UIColor *) colorWithHexString: (NSString *) hexString {
     NSString *colorString = [[hexString stringByReplacingOccurrencesOfString: @"#" withString: @""] uppercaseString];

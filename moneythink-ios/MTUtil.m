@@ -67,5 +67,15 @@
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
 }
 
++ (BOOL)isCurrentUserMentor
+{
+    if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
+        return NO;
+    } else {
+        return YES;
+    }
+
+}
+
 
 @end

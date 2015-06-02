@@ -44,6 +44,8 @@
 #import "UIActionSheet+BlocksKit.h"
 #import "UIAlertView+BlocksKit.h"
 #import "MBProgressHUD.h"
+#import "SWRevealViewController.h"
+#import "MTViewController.h"
 
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"

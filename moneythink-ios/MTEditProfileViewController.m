@@ -199,12 +199,8 @@
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
         [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
     }
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.parentViewController.navigationItem.title = @"Settings";
+    
+    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -254,7 +250,9 @@
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
-        [names addObject:object[@"name"]];
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
     }
     
     NSArray *sortedNames = [names sortedArrayUsingSelector:
@@ -283,17 +281,7 @@
                                          self.schoolIsNew = NO;
                                      }];
             
-            UIAlertAction *destruct = [UIAlertAction
-                                       actionWithTitle:@"New school"
-                                       style:UIAlertActionStyleDestructive
-                                       handler:^(UIAlertAction *action) {
-                                           self.schoolIsNew = YES;
-                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
-                                       }];
-            
             UIAlertAction *schoolName;
-            
-            [schoolSheet addAction:destruct];
             
             for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
                 schoolName = [UIAlertAction
@@ -307,10 +295,20 @@
                 [schoolSheet addAction:schoolName];
             }
             
+            UIAlertAction *destruct = [UIAlertAction
+                                       actionWithTitle:@"New school"
+                                       style:UIAlertActionStyleDestructive
+                                       handler:^(UIAlertAction *action) {
+                                           self.schoolIsNew = YES;
+                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
+                                       }];
+            [schoolSheet addAction:destruct];
+            
             [schoolSheet addAction:cancel];
             
             [self presentViewController:schoolSheet animated:YES completion:nil];
         } else {
+            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
             UIActionSheet *schoolSheet = [[UIActionSheet alloc]
                                           initWithTitle:@"Choose School"
                                           delegate:self
@@ -322,8 +320,7 @@
                 [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
             }
             
-            [schoolSheet addButtonWithTitle:@"Cancel"];
-            schoolSheet.cancelButtonIndex = schoolNames.count + 1;
+            schoolSheet.cancelButtonIndex = [schoolSheet addButtonWithTitle:@"Cancel"];
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:self.view]) {
@@ -367,7 +364,9 @@
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
     for (id object in objects) {
-        [names addObject:object[@"name"]];
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
     }
     
     NSArray *sortedNames = [names sortedArrayUsingSelector:
@@ -397,17 +396,7 @@
                                          weakSelf.classIsNew = NO;
                                      }];
             
-            UIAlertAction *destruct = [UIAlertAction
-                                       actionWithTitle:@"New class"
-                                       style:UIAlertActionStyleDestructive
-                                       handler:^(UIAlertAction *action) {
-                                           weakSelf.classIsNew = YES;
-                                           [weakSelf performSegueWithIdentifier:@"addClass" sender:weakSelf];
-                                       }];
-            
             UIAlertAction *className;
-            
-            [classSheet addAction:destruct];
             
             for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
                 className = [UIAlertAction
@@ -420,18 +409,32 @@
                 [classSheet addAction:className];
             }
             
+            UIAlertAction *destruct = [UIAlertAction
+                                       actionWithTitle:@"New class"
+                                       style:UIAlertActionStyleDestructive
+                                       handler:^(UIAlertAction *action) {
+                                           weakSelf.classIsNew = YES;
+                                           [weakSelf performSegueWithIdentifier:@"addClass" sender:weakSelf];
+                                       }];
+            [classSheet addAction:destruct];
+
+            
             [classSheet addAction:cancel];
             
             [weakSelf presentViewController:classSheet animated:YES completion:nil];
         } else {
-            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
+            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
+            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class"
+                                                                    delegate:weakSelf
+                                                           cancelButtonTitle:nil
+                                                      destructiveButtonTitle:@"New class"
+                                                           otherButtonTitles:nil, nil];
             
             for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
                 [classSheet addButtonWithTitle:classNames[buttonItem]];
             }
             
-            [classSheet addButtonWithTitle:@"Cancel"];
-            classSheet.cancelButtonIndex = classNames.count + 1;
+            classSheet.cancelButtonIndex = [classSheet addButtonWithTitle:@"Cancel"];
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:weakSelf.view]) {
@@ -537,7 +540,7 @@
 }
 
 
-#pragma mark - Private
+#pragma mark - Private -
 - (NSString *)stringWithoutConfirmation:(NSString *)oldString
 {
     if ([oldString hasPrefix:self.confirmationString]) {
@@ -728,7 +731,7 @@
 }
 
 
-#pragma mark - Get and save image
+#pragma mark - Get and save image -
 - (void)saveProfileChanges
 {
     BOOL newClass = NO;
@@ -837,7 +840,8 @@
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (IBAction)editProfileImageButton:(id)sender {
+- (IBAction)editProfileImageButton:(id)sender
+{
     [self.view endEditing:YES];
     
     if ([UIAlertController class]) {
@@ -923,11 +927,13 @@
     }];
 }
 
-- (void)choosePicture {
+- (void)choosePicture
+{
     [self showImagePickerForSourceType:UIImagePickerControllerSourceTypePhotoLibrary];
 }
 
-- (void)removePicture {
+- (void)removePicture
+{
     self.updatedProfileImage = nil;
     self.removedProfilePhoto = YES;
     [self.profileImage setFile:nil];
@@ -964,7 +970,7 @@
 }
 
 
-#pragma mark - UIActionSheetDelegate methods
+#pragma mark - UIActionSheetDelegate methods -
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
@@ -1018,7 +1024,7 @@
 }
 
 
-#pragma mark - UIImagePickerControllerDelegate methods
+#pragma mark - UIImagePickerControllerDelegate methods -
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
@@ -1066,33 +1072,39 @@
 }
 
 
-#pragma mark - UITextFieldDelegate delegate methods
-
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+#pragma mark - UITextFieldDelegate delegate methods -
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
     return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
     
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
     return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField {
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
     
 }
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
+{
     return YES;
 }
 
-- (BOOL)textFieldShouldClear:(UITextField *)textField {
+- (BOOL)textFieldShouldClear:(UITextField *)textField
+{
     return YES;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
     NSInteger nextTag = textField.tag + 1;
     // Try to find next responder
     UIResponder* nextResponder = [textField.superview viewWithTag:nextTag];
@@ -1107,7 +1119,7 @@
 }
 
 
-#pragma mark - Notification
+#pragma mark - Notification -
 -(void)reachabilityChanged:(NSNotification*)note
 {
     Reachability * reach = [note object];
@@ -1120,8 +1132,9 @@
 }
 
 
-#pragma mark - Unwind
-- (IBAction)unwindToEditProfileView:(UIStoryboardSegue *)sender {
+#pragma mark - Unwind -
+- (IBAction)unwindToEditProfileView:(UIStoryboardSegue *)sender
+{
     self.unwinding = YES;
     
     UIStoryboardSegue *returned = sender;

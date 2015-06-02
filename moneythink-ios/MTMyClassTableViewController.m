@@ -7,7 +7,6 @@
 //
 
 #import "MTMyClassTableViewController.h"
-#import "MTPostsTabBarViewController.h"
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
 
@@ -34,6 +33,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
 @property (nonatomic) BOOL didUpdateLikedPosts;
+@property (nonatomic, strong) UILabel *firstPromptLabel;
+@property (nonatomic) BOOL updatedButtonsAndLikes;
 
 @end
 
@@ -42,22 +43,16 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 - (id)initWithCoder:(NSCoder *)aCoder {
     self = [super initWithCoder:aCoder];
     if (self) {
-        // Custom the table
-        self.myObjects = [NSMutableArray array];
-        
         // The className to query on
         self.parseClassName = [PFChallengePost parseClassName];
         
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"post_text";
         
-        // The title for this table in the Navigation Controller.
-        self.title = @"My Class";
-        
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
-        
     }
+    
     return self;
 }
 
@@ -70,6 +65,19 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
+    
+    self.firstPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 100.0f, 300.0f, 40.0f)];
+    self.firstPromptLabel.textColor = [UIColor blackColor];
+    self.firstPromptLabel.font = [UIFont mtFontOfSize:16.0f];
+    self.firstPromptLabel.numberOfLines = 2;
+    self.firstPromptLabel.text = @"Be the first to post to this Challenge!";
+    self.firstPromptLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.firstPromptLabel];
+    
+    self.firstPromptLabel.alpha = 0.0f;
+    self.didUpdateLikedPosts = NO;
+    self.updatedButtonsAndLikes = NO;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -78,11 +86,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     self.title = @"My Class";
     self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
-    
-    if (!self.postingNewComment && !self.deletingPost) {
-        [self updateButtons];
-        [self updateLikes];
-    }
 }
 
 
@@ -94,6 +97,9 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     
     self.myObjects = [NSMutableArray arrayWithArray:self.objects];
+    
+    [self updateNoContentTableStyling];
+    
     [self.tableView reloadData];
 }
 
@@ -121,6 +127,25 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
 
     return query;
+}
+
+
+#pragma mark - Public -
+- (void)setChallenge:(PFChallenges *)challenge
+{
+    if (_challenge != challenge) {
+        _challenge = challenge;
+        
+        self.myObjects = nil;
+        self.didUpdateLikedPosts = NO;
+        self.updatedButtonsAndLikes = NO;
+        self.firstPromptLabel.alpha = 0.0f;
+
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        [self.tableView reloadData];
+        
+        [self updateButtonsAndLikes];
+    }
 }
 
 
@@ -216,6 +241,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     PFChallengePost *newPost = notif.object;
     [self.myObjects insertObject:newPost atIndex:0];
     
+    [self updateNoContentTableStyling];
     [self.tableView reloadData];
 }
 
@@ -452,18 +478,30 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }
 }
 
+- (void)updateButtonsAndLikes
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
+
+    // Call updateButtons first which will then call updateLikes when done
+    [self performSelector:@selector(updateButtons) withObject:nil afterDelay:0.3f];
+}
+
 - (void)updateButtons
 {
     NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
     PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
     [challengeQuery includeKey:@"verified_by"];
-    challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     MTMakeWeakSelf();
     [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            weakSelf.challenge = challenge;
+            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
+                weakSelf.challenge = challenge;
+            }
             
             NSArray *buttons = challenge[@"buttons"];
             NSArray *secondaryButtons = challenge[@"secondary_buttons"];
@@ -479,17 +517,11 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             else {
                 weakSelf.hasButtons = NO;
             }
-            
-            if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                    hud.labelText = @"Loading...";
-                    hud.dimBackground = YES;
-                });
-            }
-            
-            [weakSelf loadObjects];
         }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf updateLikes];
+        });
     }];
 }
 
@@ -506,7 +538,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         [self.tableView reloadData];
     }
     else {
-        myLikesQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
     }
     
     [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -519,12 +551,24 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
                 }
             }
             weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf loadObjects];
-            });
         }
+        
+        weakSelf.updatedButtonsAndLikes = YES;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadObjects];
+        });
     }];
+}
+
+- (void)updateNoContentTableStyling
+{
+    if (IsEmpty(self.myObjects) && self.updatedButtonsAndLikes) {
+        self.firstPromptLabel.alpha = 1.0f;
+    }
+    else {
+        self.firstPromptLabel.alpha = 0.0f;
+    }
 }
 
 
@@ -782,9 +826,9 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
 
         if (showButtons && postImage) {
-            height = 456.0f;
+            height = 466.0f;
         } else if (showButtons) {
-            height = 180.0f;
+            height = 190.0f;
         } else if (postImage) {
             height = 436.0f;
         } else {

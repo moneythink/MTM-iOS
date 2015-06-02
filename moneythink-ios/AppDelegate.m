@@ -8,14 +8,11 @@
 
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
-#import "MTHomeViewController.h"
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import "UIColor+Palette.h"
-#import "MTMentorTabBarViewControlle.h"
-#import "MTStudentTabBarViewController.h"
-#import "MTMentorNotificationViewController.h"
-#import "MTStudentSettingsViewController.h"
+#import "MTNotificationViewController.h"
+#import "MTSupportViewController.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -59,7 +56,7 @@
     [defaultACL setPublicReadAccess:YES];
     [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
-    [self setDefaultNavBarAppearanceForNavigationBar:nil];
+    [self setWhiteNavBarAppearanceForNavigationBar:nil];
     
     [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
     [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];
@@ -84,7 +81,7 @@
     self.reachability = [Reachability reachabilityForInternetConnection];
     self.reachable = [MTUtil internetReachable];
     [self.reachability startNotifier];
-    
+
     return YES;
 }
 
@@ -142,40 +139,42 @@
         }
         
         NSInteger indexOfNotificationVC = -1;
+        
+        // TODO: Fix push notifications for new UX
 
-        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
-            // Mentor
-            NSInteger index = 0;
-            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
-            for (UIViewController *vc in viewControllers) {
-                if ([vc isKindOfClass:[UINavigationController class]]) {
-                    id topVC = ((UINavigationController *)vc).topViewController;
-                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
-                        indexOfNotificationVC = index;
-                        break;
-                    }
-                }
-                index++;
-            }
-        }
-        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
-            // Student
-            NSInteger index = 0;
-            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
-            for (UIViewController *vc in viewControllers) {
-                if ([vc isKindOfClass:[UINavigationController class]]) {
-                    id topVC = ((UINavigationController *)vc).topViewController;
-                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
-                        indexOfNotificationVC = index;
-                        break;
-                    }
-                }
-                index++;
-            }
-        }
-        else {
-            return;
-        }
+//        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
+//            // Mentor
+//            NSInteger index = 0;
+//            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
+//            for (UIViewController *vc in viewControllers) {
+//                if ([vc isKindOfClass:[UINavigationController class]]) {
+//                    id topVC = ((UINavigationController *)vc).topViewController;
+//                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
+//                        indexOfNotificationVC = index;
+//                        break;
+//                    }
+//                }
+//                index++;
+//            }
+//        }
+//        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
+//            // Student
+//            NSInteger index = 0;
+//            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
+//            for (UIViewController *vc in viewControllers) {
+//                if ([vc isKindOfClass:[UINavigationController class]]) {
+//                    id topVC = ((UINavigationController *)vc).topViewController;
+//                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
+//                        indexOfNotificationVC = index;
+//                        break;
+//                    }
+//                }
+//                index++;
+//            }
+//        }
+//        else {
+//            return;
+//        }
         
         NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
         if (indexOfNotificationVC != -1 && [viewControllers count] > indexOfNotificationVC) {
@@ -208,12 +207,15 @@
 #pragma mark - Public Methods -
 - (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
 {
-    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
-    [[UINavigationBar appearance] setTintColor:[UIColor white]];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
+    
+    [[UINavigationBar appearance] setTintColor:[UIColor navbarGrey]];
+
+//    [[UINavigationBar appearance] setTintColor:[UIColor white]];
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
-    [navigationBar setBarTintColor:[UIColor primaryOrange]];
-    [navigationBar setTintColor:[UIColor white]];
+//    [navigationBar setBarTintColor:[UIColor primaryOrange]];
+//    [navigationBar setTintColor:[UIColor white]];
     [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
@@ -221,12 +223,15 @@
 
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
 {
-    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+//    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
+//    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
+    
+    [[UINavigationBar appearance] setTintColor:[UIColor navbarGrey]];
+
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
-    [navigationBar setBarTintColor:[UIColor whiteColor]];
-    [navigationBar setTintColor:[UIColor primaryOrange]];
+//    [navigationBar setBarTintColor:[UIColor whiteColor]];
+//    [navigationBar setTintColor:[UIColor primaryOrange]];
     [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
@@ -348,6 +353,7 @@
 
 - (void)selectSettingsTabView
 {
+    // TODO: Update for new UX
     id rootVC = self.window.rootViewController;
     if ([rootVC isKindOfClass:[UINavigationController class]]) {
         UINavigationController *nav = (UINavigationController *)rootVC;
@@ -359,38 +365,50 @@
         
         NSInteger indexOSettingsVC = -1;
         
-        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
-            // Mentor
-            NSInteger index = 0;
-            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
-            for (UIViewController *vc in viewControllers) {
-                if ([vc isKindOfClass:[MTStudentSettingsViewController class]]) {
-                    indexOSettingsVC = index;
-                    break;
-                }
-                index++;
-            }
-        }
-        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
-            // Student
-            NSInteger index = 0;
-            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
-            for (UIViewController *vc in viewControllers) {
-                if ([vc isKindOfClass:[MTStudentSettingsViewController class]]) {
-                    indexOSettingsVC = index;
-                    break;
-                }
-                index++;
-            }
-        }
-        else {
-            return;
-        }
+//        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
+//            // Mentor
+//            NSInteger index = 0;
+//            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
+//            for (UIViewController *vc in viewControllers) {
+//                if ([vc isKindOfClass:[MTSupportViewController class]]) {
+//                    indexOSettingsVC = index;
+//                    break;
+//                }
+//                index++;
+//            }
+//        }
+//        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
+//            // Student
+//            NSInteger index = 0;
+//            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
+//            for (UIViewController *vc in viewControllers) {
+//                if ([vc isKindOfClass:[MTSupportViewController class]]) {
+//                    indexOSettingsVC = index;
+//                    break;
+//                }
+//                index++;
+//            }
+//        }
+//        else {
+//            return;
+//        }
         
         NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
         if (indexOSettingsVC != -1 && [viewControllers count] > indexOSettingsVC) {
             [((UITabBarController *)tabBar) setSelectedIndex:indexOSettingsVC];
         }
+    }
+}
+
+- (UINavigationController *)userViewController
+{
+    if (_userViewController) {
+        return _userViewController;
+    }
+    else {
+        id userVC = [self.window.rootViewController.storyboard instantiateViewControllerWithIdentifier:@"mtUserViewControllerNav"];
+        self.userViewController = userVC;
+        return userVC;
     }
 }
 

@@ -52,7 +52,23 @@
     self.schoolName = self.schoolNameText.text;
     [self.schoolNameText resignFirstResponder];
 
-    if ([self.presentingViewController isKindOfClass:[MTEditProfileViewController class]]) {
+    BOOL fromEditProfile = NO;
+    id presentingVC = self.presentingViewController;
+    
+    if ([presentingVC isKindOfClass:[SWRevealViewController class]]) {
+        id frontViewController = ((SWRevealViewController *)presentingVC).frontViewController;
+        if ([frontViewController isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *nav = (UINavigationController *)frontViewController;
+            if ([nav.topViewController isKindOfClass:[MTEditProfileViewController class]]) {
+                fromEditProfile = YES;
+            }
+        }
+    }
+    else if ([presentingVC isKindOfClass:[MTEditProfileViewController class]]) {
+        fromEditProfile = YES;
+    }
+    
+    if (fromEditProfile) {
         [self performSegueWithIdentifier:@"unwindToEditProfileView" sender:self];
     }
     else {
