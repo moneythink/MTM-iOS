@@ -28,14 +28,6 @@
 {
     [super viewDidLoad];
     
-    [self.tableView reloadData];
-    if ([MTUtil isCurrentUserMentor]) {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-    else {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    }
-    
     self.headerView.backgroundColor = [UIColor menuDarkGreen];
     self.footerView.backgroundColor = [UIColor menuLightGreen];
     self.tableView.backgroundColor = [UIColor menuLightGreen];
@@ -49,11 +41,19 @@
 
     PFUser *user = [PFUser currentUser];
     self.profileName.text = user[@"first_name"];
-    NSString *myPoints = user[@"points"] ? user[@"points"] : @"0";
-    self.profilePoints.text = [NSString stringWithFormat:@"%@pts", myPoints];
+    
+    id userPoints = user[@"points"];
+    NSString *points = @"0";
+    if (userPoints && userPoints != [NSNull null]) {
+        points = [userPoints stringValue];
+    }
+
+    self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
     
     NSString *userClass = user[@"class"];
     NSString *userSchool = user[@"school"];
+    
+    __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
     
     if ([MTUtil isCurrentUserMentor]) {
         NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
@@ -64,21 +64,43 @@
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
                 weakSelf.signUpCodes = objects;
-                
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:2] withRowAnimation:UITableViewRowAnimationNone];
+                    [weakSelf.tableView reloadData];
+                    if (!indexPathForSelected) {
+                        if ([MTUtil isCurrentUserMentor]) {
+                            [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                        }
+                        else {
+                            [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+                        }
+                    }
+                    else {
+                        [weakSelf.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
+                    }
                 });
             }
         }];
     }
     
-    [[MTUtil getAppDelegate] setDefaultNavBarAppearanceForNavigationBar:nil];
+    [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
+    [self.tableView reloadData];
+
+    if (!indexPathForSelected) {
+        if ([MTUtil isCurrentUserMentor]) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+        else {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
+    else {
+        [self.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:nil];
 }
 
@@ -188,7 +210,7 @@
                     break;
 
                 case 4:
-                    CellIdentifier = @"Support";
+                    CellIdentifier = @"Talk to Moneythink";
                     break;
 
                 default:
@@ -302,6 +324,12 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 
     [MTUtil logout];
+    [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
+    NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
+    if (selectedIndexPath) {
+        [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
+    }
+
     [self.revealViewController setFrontViewController:[[MTUtil getAppDelegate] userViewController] animated:YES];
     [self.revealViewController revealToggleAnimated:YES];
 }

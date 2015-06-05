@@ -18,5 +18,6 @@
 + (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId;
 + (void)logout;
 + (BOOL)isCurrentUserMentor;
++ (BOOL)isUserMe:(PFUser *)user;
 
 @end

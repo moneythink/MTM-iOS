@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MTCommentViewController.h"
 #import "MTPostViewController.h"
+#import "MTEmojiPickerCollectionView.h"
 
 extern NSString *const kWillSaveNewChallengePostNotification;
 extern NSString *const kSavingWithPhotoNewChallengePostNotification;
@@ -16,7 +17,7 @@ extern NSString *const kSavedMyClassChallengePostsdNotification;
 extern NSString *const kFailedMyClassChallengePostsdNotification;
 extern NSString *const kWillSaveNewPostCommentNotification;
 
-@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTPostViewControllerDelegate, MBProgressHUDDelegate>
+@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
@@ -24,6 +25,9 @@ extern NSString *const kWillSaveNewPostCommentNotification;
 @property (nonatomic, strong) NSString *schoolName;
 
 @property (nonatomic, strong) NSString *comment;
+@property (nonatomic, strong) NSArray *emojiObjects;
+
+- (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post;
 
 @end
 

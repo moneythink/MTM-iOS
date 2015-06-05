@@ -2,13 +2,15 @@
 //  MTPostViewController.h
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/20/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 6/4/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 #import "MICheckBox.h"
 #import "MTCommentViewController.h"
+
+@class MTMyClassTableViewController;
 
 typedef enum {
     MTPostTypeWithButtonsWithImage,
@@ -21,7 +23,7 @@ typedef enum {
 @protocol MTPostViewControllerDelegate <NSObject>
 
 - (void)didDeletePost:(PFChallengePost *)challengePost;
-- (void)didUpdatePostsLiked:(NSArray *)postsLiked;
+- (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
 
 @end
 
@@ -29,6 +31,7 @@ typedef enum {
 
 @property (nonatomic, weak) id<MTPostViewControllerDelegate> delegate;
 
+@property (nonatomic, strong) MTMyClassTableViewController *myClassTableViewController;
 @property (strong, nonatomic) PFChallenges *challenge;
 @property (strong, nonatomic) PFChallengePost *challengePost;
 @property (nonatomic) MTPostType postType;
@@ -37,5 +40,9 @@ typedef enum {
 @property (nonatomic, strong) NSDictionary *buttonsTapped;
 @property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 @property (nonatomic, strong) NSArray *postsLiked;
+@property (nonatomic, strong) NSArray *postsLikedFull;
+@property (nonatomic, strong) NSArray *emojiArray;
+
+- (void)emojiLiked:(PFEmoji *)emoji;
 
 @end

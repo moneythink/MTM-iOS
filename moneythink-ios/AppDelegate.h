@@ -17,9 +17,8 @@
 @property (nonatomic) BOOL reachable;
 @property (nonatomic, strong) UINavigationController *userViewController;
 
-- (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
+- (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
-- (void)setGrayNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)updateParseInstallationState;
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
 - (void)selectSettingsTabView;

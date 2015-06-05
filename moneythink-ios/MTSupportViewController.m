@@ -52,19 +52,16 @@ static NSString *stageString = @"";
     [self.tableview reloadData];
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
-    [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+    // Set the gesture
+    //  Add tag = 5000 so panGestureRecognizer can be re-added
+    self.navigationController.navigationBar.tag = 5000;
+    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     [[MTUtil getAppDelegate] configureZendesk];
 }
 
@@ -77,7 +74,7 @@ static NSString *stageString = @"";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    return 5;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -98,21 +95,33 @@ static NSString *stageString = @"";
     
     switch (row) {
         case 0:
-            cell.textLabel.text = @"Contact Us";
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.textLabel.text = @"FAQs";
             [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
             break;
             
         case 1:
-            cell.textLabel.text = @"My Tickets";
+            cell.textLabel.text = @"Report a problem";
+            cell.accessoryType = UITableViewCellAccessoryNone;
             [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
             break;
             
         case 2:
-            cell.textLabel.text = @"Support";
+            cell.textLabel.text = @"Ask a question";
+            cell.accessoryType = UITableViewCellAccessoryNone;
             [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
             break;
-            
+          
+        case 3:
+            cell.textLabel.text = @"Suggest an improvement";
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+            break;
+
+        case 4:
+            cell.textLabel.text = @"My Conversations";
+            [cell setSelectionStyle:UITableViewCellSelectionStyleDefault];
+            break;
+
         default:
             break;
     }
@@ -143,19 +152,32 @@ static NSString *stageString = @"";
     switch (indexPath.row) {
         case 0:
         {
-            [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+            [ZDKHelpCenter showHelpCenterWithNavController:self.navigationController];
             break;
         }
             
         case 1:
         {
-            [ZDKRequests showRequestListWithNavController:self.navigationController];
+            [ZDKRequests showRequestCreationWithNavController:self.navigationController];
             break;
         }
             
         case 2:
         {
-            [ZDKHelpCenter showHelpCenterWithNavController:self.navigationController];
+            [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+            break;
+        }
+            
+        case 3:
+        {
+            [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+            break;
+        }
+
+            
+        case 4:
+        {
+            [ZDKRequests showRequestListWithNavController:self.navigationController];
             break;
         }
     }

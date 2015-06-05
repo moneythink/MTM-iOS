@@ -37,6 +37,7 @@
 @property (nonatomic, strong) MTMyClassTableViewController  *myClassTableView;
 @property (nonatomic, strong) MTChallengeInfoViewController *challengeInfoView;
 @property (nonatomic, strong) MTChallengeListViewController *challengeListView;
+@property (nonatomic, strong) NSArray *emojiObjects;
 
 @end
 
@@ -62,6 +63,12 @@
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
 
     [self setupViews];
+    [self loadEmoji];
+    
+    // Set the gesture
+    //  Add tag = 5000 so panGestureRecognizer can be re-added
+    self.navigationController.navigationBar.tag = 5000;
+    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -186,6 +193,23 @@
     }
 }
 
+- (void)loadEmoji
+{
+    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
+    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    MTMakeWeakSelf();
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.emojiObjects = objects;
+            weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
+            [weakSelf.myClassTableView.tableView reloadData];
+        } else {
+            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
+        }
+    }];
+}
+
 
 #pragma mark - Load Challenges Private Methods -
 - (void)loadChallenges
@@ -279,7 +303,7 @@
             
             // Create page view controller
             if (!weakSelf.challengesPageViewController) {
-                weakSelf.challengesPageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengesViewController"];
+                weakSelf.challengesPageViewController = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"ChallengeContentPageViewController"];
                 CGRect frame = weakSelf.challengesPageViewController.view.frame;
                 frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, 84.0f);
                 weakSelf.challengesPageViewController.view.frame = frame;
@@ -635,11 +659,15 @@
 
 - (void)didSelectChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index
 {
+    UIPageViewControllerNavigationDirection direction = UIPageViewControllerNavigationDirectionForward;
+    if (index < self.challengesPageIndex) {
+        direction = UIPageViewControllerNavigationDirectionReverse;
+    }
     self.challengesPageIndex = index;
     
     MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
     NSArray *viewControllers = @[newViewController];
-    [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
+    [self.challengesPageViewController setViewControllers:viewControllers direction:direction animated:YES completion:nil];
     
     self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
     [self updateViews];

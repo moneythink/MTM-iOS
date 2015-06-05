@@ -77,5 +77,15 @@
 
 }
 
++ (BOOL)isUserMe:(PFUser *)user
+{
+    if ([[PFUser currentUser].objectId isEqualToString:user.objectId]) {
+        return YES;
+    }
+    else{
+        return NO;
+    }
+}
+
 
 @end

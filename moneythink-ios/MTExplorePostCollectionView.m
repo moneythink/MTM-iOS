@@ -125,7 +125,6 @@
         cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
         
         cell.postImage.file = post[@"picture"];
-        [cell.postImage loadInBackground];
         [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
                 if (image) {

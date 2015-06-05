@@ -52,9 +52,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     [self loadData];
-    [[MTUtil getAppDelegate] setGrayNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView

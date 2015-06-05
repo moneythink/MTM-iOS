@@ -11,8 +11,9 @@
 #import "MTCommentViewController.h"
 #import "MTChallengeContentViewController.h"
 #import "MTChallengeListViewController.h"
+#import "MTEmojiPickerCollectionView.h"
+
 
 @interface MTChallengesViewController : MTViewController <MTCommentViewProtocol, UIPageViewControllerDelegate, UIPageViewControllerDataSource, MTChallengeContentViewControllerDelegate, MTChallengeListViewControllerDelegate>
-
 
 @end

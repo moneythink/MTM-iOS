@@ -456,6 +456,8 @@
                             [weakSelf bk_performBlock:^(id obj) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     if (!error) {
+                                        weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
+
                                         [[PFUser currentUser] fetchInBackgroundWithTarget:weakSelf selector:nil];
                                         
                                         // Update for Push Notifications
@@ -464,11 +466,17 @@
                                         // Check for custom playlist for this class
                                         [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
                                         
+                                        [self.navigationController popViewControllerAnimated:NO];
+                                        
                                         if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                            [weakSelf performSegueWithIdentifier:@"studentSignedUp" sender:weakSelf];
+                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                                            
                                         } else {
-                                            [weakSelf performSegueWithIdentifier:@"pushMentorSignedUp" sender:weakSelf];
+                                            id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorDashboardNav"];
+                                            [weakSelf.revealViewController setFrontViewController:mentorDashboardVC animated:YES];
                                         }
+
                                         
                                     } else {
                                         // Ignore parse cache errors for now

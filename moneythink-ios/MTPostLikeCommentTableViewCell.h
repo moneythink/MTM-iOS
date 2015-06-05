@@ -11,12 +11,13 @@
 
 @interface MTPostLikeCommentTableViewCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UIButton *likePost;
-@property (strong, nonatomic) IBOutlet UILabel *postLikes;
-@property (strong, nonatomic) IBOutlet UIButton *comment;
-@property (strong, nonatomic) IBOutlet UILabel *commentCount;
-@property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckBox;
-@property (strong, nonatomic) IBOutlet UILabel *verfiedLabel;
-@property (strong, nonatomic) IBOutlet UIButton *commentPost;
+@property (nonatomic, strong) IBOutlet UIButton *likePost;
+@property (nonatomic, strong) IBOutlet UILabel *postLikes;
+@property (nonatomic, strong) IBOutlet UIButton *comment;
+@property (nonatomic, strong) IBOutlet UILabel *commentCount;
+@property (nonatomic, strong) IBOutlet MICheckBox *verifiedCheckBox;
+@property (nonatomic, strong) IBOutlet UILabel *verfiedLabel;
+@property (nonatomic, strong) IBOutlet UIButton *commentPost;
+@property (nonatomic, strong) IBOutlet UIView *emojiContainerView;
 
 @end

@@ -2,8 +2,8 @@
 //  MTPostViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/20/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 6/4/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTPostViewController.h"
@@ -14,6 +14,8 @@
 #import "MTPostLikeCommentTableViewCell.h"
 #import "MTPostCommentItemsTableViewCell.h"
 #import "MTPostLikeUserTableViewCell.h"
+#import "MTMyClassTableViewController.h"
+#import "MTPostsTableViewCell.h"
 
 typedef enum {
     MTPostTableCellTypeUserInfo = 0,
@@ -32,11 +34,10 @@ typedef enum {
 @property (nonatomic, strong) PFUser *currentUser;
 @property (nonatomic, strong) PFUser *postUser;
 @property (assign, nonatomic) NSInteger postLikesCount;
-@property (assign, nonatomic) BOOL iLike;
 @property (assign, nonatomic) BOOL isMyClass;
 @property (nonatomic, strong) NSArray *comments;
 @property (nonatomic, strong) NSArray *challengePostsLikedUsers;
-@property (nonatomic) NSInteger likeActionCount;
+@property (nonatomic, strong) NSArray *challengePostsLiked;
 @property (nonatomic, strong) UIImage *userAvatarImage;
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) NSMutableAttributedString *postText;
@@ -46,6 +47,7 @@ typedef enum {
 @property (nonatomic) BOOL hideVerifySwitch;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
+@property (nonatomic, strong) MTPostLikeCommentTableViewCell *postLikeCommentCell;
 
 @end
 
@@ -60,19 +62,11 @@ typedef enum {
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-    
-    NSString *postID = [self.challengePost objectId];
-    self.iLike = [self.postsLiked containsObject:postID];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    self.title = self.challenge[@"title"];
+    self.title = @"Post Detail";
     self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
     self.postLikesCount = 0;
@@ -143,7 +137,8 @@ typedef enum {
     PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
     [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
     [queryPostLikes includeKey:@"user"];
-    
+    [queryPostLikes includeKey:@"emoji"];
+
     if (withCache) {
         queryPostLikes.cachePolicy = kPFCachePolicyCacheThenNetwork;
     }
@@ -154,11 +149,14 @@ typedef enum {
     [queryPostLikes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSMutableArray *users = [NSMutableArray array];
+            NSMutableArray *challengesPostsLiked = [NSMutableArray array];
             for (PFChallengePostsLiked *thisLike in objects) {
                 PFUser *thisUser = thisLike[@"user"];
                 [users addObject:thisUser];
+                [challengesPostsLiked addObject:thisLike];
             }
             weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
+            weakSelf.challengePostsLiked = [NSArray arrayWithArray:challengesPostsLiked];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.tableView reloadData];
             });
@@ -461,6 +459,163 @@ typedef enum {
 }
 
 
+#pragma mark - Public Methods -
+- (void)emojiLiked:(PFEmoji *)emoji
+{
+    NSString *emojiName = emoji[@"name"];
+
+    __block MTPostLikeCommentTableViewCell *likeCommentCell = self.postLikeCommentCell;
+
+    __block NSString *postID = [self.challengePost objectId];
+    NSString *userID = [self.currentUser objectId];
+
+    BOOL like = [self.postsLiked containsObject:postID];
+
+    NSInteger oldPostLikesCount = self.postLikesCount;
+    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
+
+    if (!like) {
+        [likePosts addObject:postID];
+
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+        self.postLikesCount += 1;
+
+        // Animations are borked on < iOS 8.0 because of autolayout?
+        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
+        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
+            // no animation
+        } else {
+            [UIView animateWithDuration:0.2f animations:^{
+                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.2f animations:^{
+                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
+                } completion:NULL];
+            }];
+        }
+
+    }
+    else {
+        // Replacing current emoji like
+        BOOL foundMatch = NO;
+        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
+            PFChallengePost *post = thisPostLiked[@"post"];
+            if ([post.objectId isEqualToString:self.challengePost.objectId]) {
+                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
+                thisPostLiked[@"emoji"] = emoji;
+                
+                for (PFEmoji *thisEmoji in self.emojiArray) {
+                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
+                        [newEmojiArray removeObject:thisEmoji];
+                        foundMatch = YES;
+                        break;
+                    }
+                }
+            }
+            
+            if (foundMatch) {
+                break;
+            }
+        }
+    }
+
+    self.postsLiked = likePosts;
+    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
+    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+
+    // Optimistically, add/remove myself from like users and update emoji
+    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
+    if (!like) {
+        if (IsEmpty(newMutableArray)) {
+            [newMutableArray addObject:self.currentUser];
+        }
+        else {
+            BOOL hasUser = NO;
+            for (PFUser *thisUser in self.challengePostsLikedUsers) {
+                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
+                    hasUser = YES;
+                    break;
+                }
+                if (!hasUser) {
+                    [newMutableArray addObject:self.currentUser];
+                }
+            }
+        }
+    }
+    
+    // Optimistically update the emoji likes
+    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
+    [newEmojiArray insertObject:emoji atIndex:0];
+    self.emojiArray = [NSArray arrayWithArray:newEmojiArray];
+    
+    // Update my emoji
+    BOOL foundMe = NO;
+    for (PFChallengePostsLiked *thisChallengePostsLiked in self.challengePostsLiked) {
+        PFUser *thisUser = thisChallengePostsLiked[@"user"];
+        if ([MTUtil isUserMe:thisUser]) {
+            thisChallengePostsLiked[@"emoji"] = emoji;
+            foundMe = YES;
+            break;
+        }
+    }
+    if (!foundMe) {
+        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] init];
+        newOne[@"user"] = [PFUser currentUser];
+        newOne[@"emoji"] = emoji;
+        
+        NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.challengePostsLiked];
+        [newArray addObject:newOne];
+        self.challengePostsLiked = newArray;
+    }
+
+    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
+    [self.tableView reloadData];
+    
+    // Optimistically update parent view
+    if ([self.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
+        [self.delegate didUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
+    }
+
+    MTMakeWeakSelf();
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
+
+        if (!error) {
+            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.tableView reloadData];
+                });
+            }];
+
+            [weakSelf loadLikesWithCache:NO];
+
+        } else {
+            NSLog(@"Error updating: %@", [error localizedDescription]);
+
+            // Rollback
+            weakSelf.postsLiked = oldLikePosts;
+            weakSelf.postLikesCount = oldPostLikesCount;
+            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
+            weakSelf.emojiArray = oldEmojiArray;
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
+                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
+            }
+
+            dispatch_async(dispatch_get_main_queue(), ^{
+                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+
+            [weakSelf loadLikesWithCache:YES];
+        }
+    }];
+}
+
+
 #pragma mark - Variable Cell Height calculations -
 - (CGFloat)heightForPostTextCellAtIndexPath:(NSIndexPath *)indexPath {
     static MTPostCommentTableViewCell *sizingCell = nil;
@@ -521,126 +676,8 @@ typedef enum {
 #pragma mark - Actions -
 - (IBAction)likeButtonTapped:(id)sender
 {
-    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
-    
-    self.likeActionCount++;
-    
-    __block NSString *postID = [self.challengePost objectId];
-    NSString *userID = [self.currentUser objectId];
-    
-    self.iLike = !self.iLike;
-    
-    NSInteger oldPostLikesCount = self.postLikesCount;
-    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    
-    if (self.iLike) {
-        [likePosts addObject:postID];
-        
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-        self.postLikesCount += 1;
-        
-        // Animations are borked on < iOS 8.0 because of autolayout?
-        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
-        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
-            // no animation
-        } else {
-            [UIView animateWithDuration:0.2f animations:^{
-                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.2f animations:^{
-                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
-                } completion:NULL];
-            }];
-        }
-
-    }
-    else {
-        [likePosts removeObject:postID];
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-        if (self.postLikesCount > 0) {
-            self.postLikesCount -= 1;
-        }
-    }
-    
-    self.postsLiked = likePosts;
-    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
-    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-    
-    NSString *likeString = [NSString stringWithFormat:@"%d", self.iLike];
-    
-    // Optimistically, add/remove myself from like users
-    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
-    if (self.iLike) {
-        if (IsEmpty(newMutableArray)) {
-            [newMutableArray addObject:self.currentUser];
-        }
-        else {
-            BOOL hasUser = NO;
-            for (PFUser *thisUser in self.challengePostsLikedUsers) {
-                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
-                    hasUser = YES;
-                    break;
-                }
-                if (!hasUser) {
-                    [newMutableArray addObject:self.currentUser];
-                }
-            }
-        }
-    }
-    else {
-        for (PFUser *thisUser in self.challengePostsLikedUsers) {
-            if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
-                [newMutableArray removeObject:thisUser];
-                break;
-            }
-        }
-    }
-    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
-    [self.tableView reloadData];
-    
-    MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likeString} block:^(id object, NSError *error) {
-        
-        weakSelf.likeActionCount--;
-        if (weakSelf.likeActionCount > 0) {
-            return;
-        }
-
-        if (!error) {
-            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
-                });
-            }];
-            
-            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:)]) {
-                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked];
-            }
-            
-            [weakSelf loadLikesWithCache:NO];
-
-        } else {
-            NSLog(@"Error updating: %@", [error localizedDescription]);
-            
-            // Rollback
-            weakSelf.iLike = !weakSelf.iLike;
-            weakSelf.postsLiked = oldLikePosts;
-            weakSelf.postLikesCount = oldPostLikesCount;
-            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
-                [weakSelf.tableView reloadData];
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            });
-            
-            [weakSelf loadLikesWithCache:YES];
-        }
-        
-    }];
+    self.postLikeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+    [self.myClassTableViewController didSelectLikeWithEmojiForPost:self.challengePost];
 }
 
 - (IBAction)commentTapped:(id)sender
@@ -1157,7 +1194,7 @@ typedef enum {
                     height = 44.0f;
                     break;
                 case MTPostTableCellTypeLikeComment:
-                    height = 46.0f;
+                    height = 92.0f;
                     break;
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
@@ -1188,7 +1225,7 @@ typedef enum {
                     height = 44.0f;
                     break;
                 case MTPostTableCellTypeLikeComment:
-                    height = 46.0f;
+                    height = 92.0f;
                     break;
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
@@ -1218,7 +1255,7 @@ typedef enum {
                     height = 0.0f;
                     break;
                 case MTPostTableCellTypeLikeComment:
-                    height = 46.0f;
+                    height = 92.0f;
                     break;
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
@@ -1248,7 +1285,7 @@ typedef enum {
                     height = 0.0f;
                     break;
                 case MTPostTableCellTypeLikeComment:
-                    height = 46.0f;
+                    height = 92.0f;
                     break;
                 case MTPostTableCellTypePostComments:
                     height = [self heightForPostCommentsCellAtIndexPath:indexPath];
@@ -1585,7 +1622,8 @@ typedef enum {
         
             likeCommentCell.postLikes.text = likesString;
         
-            if (self.iLike) {
+            BOOL like = [self.postsLiked containsObject:self.challengePost.objectId];
+            if (like) {
                 [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
                 [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
             }
@@ -1615,6 +1653,8 @@ typedef enum {
 
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
+            
+            [MTPostsTableViewCell layoutEmojiForContainerView:likeCommentCell.emojiContainerView withEmojiArray:self.emojiArray];
 
             cell = likeCommentCell;
             
@@ -1686,6 +1726,41 @@ typedef enum {
                             }
                         });
                     }];
+                }
+            }
+            
+            // Load Emoji like for this user
+            if ([self.challengePostsLiked count] > indexPath.row) {
+                PFChallengePostsLiked *thisLiked = [self.challengePostsLiked objectAtIndex:indexPath.row];
+                PFEmoji *thisEmoji = thisLiked[@"emoji"];
+                
+                if (thisEmoji) {
+                    PFFile *imageFile = nil;
+                    if (IS_RETINA) {
+                        imageFile = thisEmoji[@"image_2x"];
+                    }
+                    else {
+                        imageFile = thisEmoji[@"image"];
+                    }
+                    
+                    likeUserCell.emojiView.contentMode = UIViewContentModeScaleAspectFill;
+                    likeUserCell.emojiView.file = imageFile;
+                    
+                    [likeUserCell.emojiView loadInBackground:^(UIImage *image, NSError *error) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (!error) {
+                                if (image) {
+                                    likeUserCell.emojiView.image = image;
+                                    [likeUserCell setNeedsDisplay];
+                                }
+                            } else {
+                                NSLog(@"error - %@", error);
+                            }
+                        });
+                    }];
+                }
+                else {
+                    likeUserCell.emojiView.image = nil;
                 }
             }
             

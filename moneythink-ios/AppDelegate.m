@@ -205,48 +205,26 @@
 
 
 #pragma mark - Public Methods -
-- (void)setDefaultNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
+- (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
 {
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor primaryOrange]];
-    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTintColor:[UIColor navbarGrey]];
-
-//    [[UINavigationBar appearance] setTintColor:[UIColor white]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
-//    [navigationBar setBarTintColor:[UIColor primaryOrange]];
-//    [navigationBar setTintColor:[UIColor white]];
-    [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor white], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
+    [navigationBar setTintColor:[UIColor white]];
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleLightContent;
 }
 
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
 {
-//    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
-//    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
-    
+    [[UINavigationBar appearance] setBarTintColor:[UIColor whiteColor]];
     [[UINavigationBar appearance] setTintColor:[UIColor navbarGrey]];
-
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
-//    [navigationBar setBarTintColor:[UIColor whiteColor]];
-//    [navigationBar setTintColor:[UIColor primaryOrange]];
+    [navigationBar setBarTintColor:[UIColor whiteColor]];
+    [navigationBar setTintColor:[UIColor whiteColor]];
     [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
-    [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
-}
-
-- (void)setGrayNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar
-{
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithHexString:@"ECEBF3"]];
-    [[UINavigationBar appearance] setTintColor:[UIColor primaryOrange]];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
-    
-    [navigationBar setBarTintColor:[UIColor colorWithHexString:@"ECEBF3"]];
-    [navigationBar setTintColor:[UIColor primaryOrange]];
-    [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
-    
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
@@ -628,6 +606,53 @@
         newIdentity.email = userCurrent[@"email"];
         newIdentity.externalId = [userCurrent objectId];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
+    }
+}
+
+
+#pragma mark - SWRevealViewControllerDelegate Methods -
+- (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
+{
+    if (revealController.frontViewPosition == FrontViewPositionRight) {
+        UIView *lockingView = [UIView new];
+        lockingView.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:revealController action:@selector(revealToggle:)];
+        
+        __block SWRevealViewController *weakReveal = revealController;
+        tap = [[UITapGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+            if (weakReveal.frontViewPosition == FrontViewPositionRight) {
+                [weakReveal revealToggle:nil];
+            }
+            [[revealController.frontViewController.view viewWithTag:1000] removeFromSuperview];
+        }];
+        [lockingView addGestureRecognizer:tap];
+        [lockingView addGestureRecognizer:revealController.panGestureRecognizer];
+        [lockingView setTag:1000];
+        [revealController.frontViewController.view addSubview:lockingView];
+        
+        NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(lockingView);
+        
+        [revealController.frontViewController.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:@"|[lockingView]|"
+                                                 options:0
+                                                 metrics:nil
+                                                   views:viewsDictionary]];
+        [revealController.frontViewController.view addConstraints:
+         [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[lockingView]|"
+                                                 options:0
+                                                 metrics:nil
+                                                   views:viewsDictionary]];
+        [lockingView sizeToFit];
+    }
+    else {
+        [[revealController.frontViewController.view viewWithTag:1000] removeFromSuperview];
+        
+        UIView *frontView = [revealController.frontViewController.view viewWithTag:5000];
+        if (frontView) {
+            [frontView removeGestureRecognizer:revealController.panGestureRecognizer];
+            [frontView addGestureRecognizer:revealController.panGestureRecognizer];
+        }
     }
 }
 

@@ -9,6 +9,7 @@
 #import "MTMyClassTableViewController.h"
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
+#import "MTEmojiPickerCollectionView.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
@@ -22,10 +23,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL isMentor;
 @property (nonatomic, strong) NSArray *postsLiked;
+@property (nonatomic, strong) NSArray *postsLikedFull;
 @property (nonatomic, strong) NSDictionary *buttonsTapped;
 @property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 @property (nonatomic) BOOL iLike;
-@property (nonatomic) NSInteger likeActionCount;
 @property (nonatomic, strong) NSMutableArray *myObjects;
 @property (nonatomic) BOOL postingNewComment;
 @property (nonatomic) BOOL deletingPost;
@@ -35,6 +36,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic) BOOL didUpdateLikedPosts;
 @property (nonatomic, strong) UILabel *firstPromptLabel;
 @property (nonatomic) BOOL updatedButtonsAndLikes;
+@property (nonatomic, strong) MTEmojiPickerCollectionView *emojiCollectionView;
+@property (nonatomic, strong) UIView *emojiDimView;
+@property (nonatomic, strong) UIView *emojiContainerView;
+@property (nonatomic, strong) MTPostViewController *postViewController;
 
 @end
 
@@ -88,6 +93,13 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    self.postViewController = nil;
+}
+
 
 #pragma mark - Parse -
 - (void)objectsDidLoad:(NSError *)error
@@ -97,9 +109,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     
     self.myObjects = [NSMutableArray arrayWithArray:self.objects];
-    
     [self updateNoContentTableStyling];
-    
     [self.tableView reloadData];
 }
 
@@ -146,6 +156,86 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         
         [self updateButtonsAndLikes];
     }
+}
+
+- (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post
+{
+    CGRect keyWindowFrame = [UIApplication sharedApplication].keyWindow.frame;
+    self.emojiDimView = [[UIView alloc] initWithFrame:keyWindowFrame];
+    self.emojiDimView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+    self.emojiDimView.alpha = 0.0f;
+    
+    self.emojiContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 184.0f, 184.0f + 25.0f)];
+    self.emojiContainerView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
+    self.emojiContainerView.layer.cornerRadius = 4.0f;
+    self.emojiContainerView.clipsToBounds = YES;
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 5.0f, 164.0f, 20.0f)];
+    title.backgroundColor = [UIColor clearColor];
+    title.text = @"Like with Emoji";
+    title.font = [UIFont mtFontOfSize:15.0f];
+    title.textColor = [UIColor blackColor];
+    title.textAlignment = NSTextAlignmentCenter;
+    [self.emojiContainerView addSubview:title];
+    
+    self.emojiCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"EmojiPickerCollectionView"];
+    self.emojiCollectionView.collectionView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
+    self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 184.0f, 184.0f);
+    
+    // Sort by name, so consistent in presentation
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSArray *sortedEmojiArray = [self.emojiObjects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+    
+    self.emojiCollectionView.emojiObjects = sortedEmojiArray;
+    self.emojiCollectionView.post = post;
+    self.emojiCollectionView.delegate = self;
+    
+    self.emojiContainerView.frame = ({
+        CGRect newFrame = self.emojiContainerView.frame;
+        newFrame.size.height = 0.0f;
+        newFrame.size.width = 0.0f;
+        newFrame.origin.y = keyWindowFrame.size.height/2.0f;
+        newFrame.origin.x = keyWindowFrame.size.width/2.0f;
+        
+        newFrame;
+    });
+    
+    UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    dismissButton.frame = self.emojiDimView.frame;
+    dismissButton.backgroundColor = [UIColor clearColor];
+    [dismissButton addTarget:self action:@selector(dismissEmojiPrompt) forControlEvents:UIControlEventTouchUpInside];
+    [self.emojiDimView addSubview:dismissButton];
+    
+    [self.emojiDimView addSubview:self.emojiContainerView];
+    [[UIApplication sharedApplication].keyWindow addSubview:self.emojiDimView];
+    
+    self.emojiCollectionView.collectionView.alpha = 0.0f;
+    title.alpha = 0.0f;
+    
+    // Animate In
+    [UIView animateWithDuration:0.2f animations:^{
+        self.emojiDimView.alpha = 1.0f;
+        self.emojiContainerView.frame = ({
+            CGRect newFrame = self.emojiContainerView.frame;
+            newFrame.size.height = 204.0f;
+            newFrame.size.width = 184.0f;
+            newFrame.origin.y = (keyWindowFrame.size.height - 184.0f - 25.0f)/2.0f;
+            newFrame.origin.x = (keyWindowFrame.size.width - 184.0f)/2.0f;
+            
+            newFrame;
+        });
+        
+    } completion:^(BOOL finished) {
+        [self addChildViewController:self.emojiCollectionView];
+        [self.emojiContainerView addSubview:self.emojiCollectionView.collectionView];
+        [self.emojiCollectionView didMoveToParentViewController:self];
+        
+        [UIView animateWithDuration:0.1f animations:^{
+            title.alpha = 1.0f;
+            self.emojiCollectionView.collectionView.alpha = 1.0f;
+        } completion:^(BOOL finished) {
+        }];
+    }];
 }
 
 
@@ -530,7 +620,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     MTMakeWeakSelf();
     NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
     PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
-    [myLikesQuery selectKeys:[NSArray arrayWithObject:@"post"]];
+    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
     
     if (self.didUpdateLikedPosts) {
         myLikesQuery.cachePolicy = kPFCachePolicyNetworkOnly;
@@ -544,13 +634,18 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             NSMutableArray *mutableLiked = [NSMutableArray array];
+            NSMutableArray *mutableLikedFull = [NSMutableArray array];
+
             for (PFChallengePostsLiked *thisPostLiked in objects) {
                 PFChallengePost *post = thisPostLiked[@"post"];
                 if (!IsEmpty(post.objectId)) {
                     [mutableLiked addObject:post.objectId];
+                    [mutableLikedFull addObject:thisPostLiked];
                 }
             }
+            
             weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
         }
         
         weakSelf.updatedButtonsAndLikes = YES;
@@ -569,6 +664,86 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     else {
         self.firstPromptLabel.alpha = 0.0f;
     }
+}
+
+- (void)likeWithEmojiPrompt:(id)sender
+{
+    MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
+    PFChallengePost *post = cell.post;
+    
+    [self didSelectLikeWithEmojiForPost:post];
+}
+
+- (void)loadLikesForPost:(PFChallengePost *)post withCell:(MTPostsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    if (![cell.post.objectId isEqualToString:post.objectId]) {
+        return;
+    }
+    
+    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
+    [queryPostEmojis whereKey:@"post" equalTo:post];
+    [queryPostEmojis includeKey:@"emoji"];
+    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *emojiArray = [NSMutableArray array];
+            for (PFChallengePostsLiked *thisLike in objects) {
+                PFEmoji *thisEmoji = thisLike[@"emoji"];
+                if (thisEmoji) {
+                    [emojiArray addObject:thisEmoji];
+                }
+            }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                cell.emojiArray = emojiArray;
+            });
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+}
+
+- (void)dismissEmojiPrompt
+{
+    CGRect keyWindowFrame = [UIApplication sharedApplication].keyWindow.frame;
+    
+    [UIView animateWithDuration:0.1f animations:^{
+        for (UIView *subview in [self.emojiContainerView subviews]) {
+            subview.alpha = 0.0f;
+        }
+        
+    } completion:^(BOOL finished) {
+        
+        [UIView animateWithDuration:0.3f animations:^{
+            self.emojiDimView.alpha = 0.0f;
+            self.emojiContainerView.frame = ({
+                CGRect newFrame = self.emojiContainerView.frame;
+                newFrame.size.height = 0.0f;
+                newFrame.size.width = 0.0f;
+                newFrame.origin.y = keyWindowFrame.size.height/2.0f;
+                newFrame.origin.x = keyWindowFrame.size.width/2.0f;
+                
+                newFrame;
+            });
+            
+            self.emojiContainerView.alpha = 0.0f;
+            
+        } completion:^(BOOL finished) {
+            
+            [self.emojiCollectionView willMoveToParentViewController:nil];
+            [self.emojiCollectionView.view removeFromSuperview];
+            [self.emojiCollectionView.collectionView removeFromSuperview];
+            [self.emojiCollectionView removeFromParentViewController];
+            
+            [self.emojiContainerView removeFromSuperview];
+            [self.emojiDimView removeFromSuperview];
+            self.emojiCollectionView = nil;
+            self.emojiContainerView = nil;
+            self.emojiDimView = nil;
+        }];
+        
+    }];
 }
 
 
@@ -623,6 +798,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     cell.post = post;
+    
+    [self loadLikesForPost:post withCell:cell atIndexPath:indexPath];
     
     // Setup Verify
     PFUser *currentUser = [PFUser currentUser];
@@ -746,8 +923,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }
     cell.likes.text = likesString;
     
-    [cell.likeButton removeTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.likeButton addTarget:self action:@selector(likeButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.likeButton removeTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.likeButton addTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
     
     if (dateObject) {
         // Don't retrieve comment count on newly created objects
@@ -799,7 +976,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     PFChallengePost *rowObject = self.myObjects[indexPath.row];
     self.postImage = rowObject[@"picture"];
     
-    [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
+    [self performSegueWithIdentifier:@"pushViewPost" sender:cell];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -915,15 +1092,20 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         [destinationViewController setDelegate:self];
     }
     else {
-        MTPostViewController *destinationViewController = (MTPostViewController*)[segue destinationViewController];
-        destinationViewController.challengePost = (PFChallengePost*)sender;
-        destinationViewController.challenge = self.challenge;
-        destinationViewController.delegate = self;
-        destinationViewController.postsLiked = self.postsLiked;
-        
-        PFChallengePost *post = (PFChallengePost*)sender;
+        MTPostsTableViewCell *cell = (MTPostsTableViewCell *)sender;
+        PFChallengePost *post = cell.post;
+
+        self.postViewController = (MTPostViewController*)[segue destinationViewController];
+        self.postViewController.challengePost = post;
+        self.postViewController.challenge = self.challenge;
+        self.postViewController.delegate = self;
+        self.postViewController.postsLiked = self.postsLiked;
+        self.postViewController.postsLikedFull = self.postsLikedFull;
+        self.postViewController.emojiArray = cell.emojiArray;
+        self.postViewController.myClassTableViewController = self;
+
         PFUser *user = post[@"user"];
-        
+
         BOOL myPost = NO;
         if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
             myPost = YES;
@@ -935,20 +1117,20 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
         
         if (showButtons) {
-            destinationViewController.hasButtons = self.hasButtons;
-            destinationViewController.hasSecondaryButtons = self.hasSecondaryButtons;
-            destinationViewController.buttonsTapped = self.buttonsTapped;
-            destinationViewController.secondaryButtonsTapped = self.secondaryButtonsTapped;
+            self.postViewController.hasButtons = self.hasButtons;
+            self.postViewController.hasSecondaryButtons = self.hasSecondaryButtons;
+            self.postViewController.buttonsTapped = self.buttonsTapped;
+            self.postViewController.secondaryButtonsTapped = self.secondaryButtonsTapped;
         }
 
         if (showButtons && self.postImage)
-            destinationViewController.postType = MTPostTypeWithButtonsWithImage;
+            self.postViewController.postType = MTPostTypeWithButtonsWithImage;
         else if (showButtons)
-            destinationViewController.postType = MTPostTypeWithButtonsNoImage;
+            self.postViewController.postType = MTPostTypeWithButtonsNoImage;
         else if (self.postImage)
-            destinationViewController.postType = MTPostTypeNoButtonsWithImage;
+            self.postViewController.postType = MTPostTypeNoButtonsWithImage;
         else
-            destinationViewController.postType = MTPostTypeNoButtonsNoImage;
+            self.postViewController.postType = MTPostTypeNoButtonsNoImage;
     }
 }
 
@@ -992,10 +1174,13 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     } afterDelay:0.35f];
 }
 
-- (void)didUpdatePostsLiked:(NSArray *)postsLiked
+- (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull
 {
     self.didUpdateLikedPosts = YES;
     self.postsLiked = postsLiked;
+    self.postsLikedFull = postsLikedFull;
+    [self.tableView reloadData];
+    [self updateLikes];
 }
 
 
@@ -1107,106 +1292,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             }
         }];
     }
-}
-
-- (void)likeButtonTapped:(id)sender
-{
-    self.likeActionCount++;
-    
-    __block UIButton *button = sender;
-    
-    __block MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-    __block PFChallengePost *post = cell.post;
-
-    PFUser *user = [PFUser currentUser];
-
-    NSString *userID = [user objectId];
-    NSString *postID = [post objectId];
-    
-    BOOL like = [self.postsLiked containsObject:postID];
-    
-    __block NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSInteger oldLikesCount = [post[@"likes"] intValue];
-
-    NSMutableArray *likes = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSInteger likesCount = [post[@"likes"] intValue];
-    NSString *likePostString = nil;
-    if (!like) {
-        likePostString = @"1";
-        likesCount += 1;
-        [likes addObject:postID];
-    } else {
-        likePostString = @"0";
-        likesCount -= 1;
-        [likes removeObject:postID];
-    }
-    
-    post[@"likes"] = [NSNumber numberWithInteger:likesCount];
-    self.postsLiked = likes;
-    
-    // Optimistically update view (can roll back on error below)
-    cell.likes.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
-    
-    if (!like) {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-        
-        // Animations are borked on < iOS 8.0 because of autolayout?
-        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
-        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
-            // no animation
-        } else {
-            [UIView animateWithDuration:0.2f animations:^{
-                cell.likeButton.transform = CGAffineTransformMakeScale(1.5, 1.5);
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.2f animations:^{
-                    cell.likeButton.transform = CGAffineTransformMakeScale(1, 1);
-                } completion:NULL];
-            }];
-        }
-
-    }
-    else {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-    }
-    
-    MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : likePostString} block:^(id object, NSError *error) {
-        
-        weakSelf.likeActionCount--;
-        if (weakSelf.likeActionCount > 0) {
-            return;
-        }
-        
-        if (!error) {
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                // Load/update the objects but don't clear the table
-                [weakSelf loadObjects];
-            }];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            weakSelf.postsLiked = oldLikePosts;
-            post[@"likes"] = [NSNumber numberWithInteger:oldLikesCount];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-
-                // Revert locally if network down
-                [weakSelf.tableView reloadData];
-                
-                // Then, sync with server
-                if ([MTUtil internetReachable]) {
-                    [weakSelf updateLikes];
-                    [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                        // Load/update the objects but don't clear the table
-                        [weakSelf loadObjects];
-                    }];
-                }
-            });
-        }
-    }];
 }
 
 - (void)button1Tapped:(id)sender
@@ -1557,6 +1642,143 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             weakSelf.secondaryButton2.enabled = YES;
         }];
     } afterDelay:0.35f];
+}
+
+- (void)emojiLikedForPost:(PFChallengePost *)likedPost withEmoji:(PFEmoji *)emoji
+{
+    NSUInteger row = [self.myObjects indexOfObject:likedPost];
+    if (row == NSNotFound) {
+        return;
+    }
+    
+    NSString *emojiName = emoji[@"name"];
+    
+    __block MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
+    __block PFChallengePost *post = likedPost;
+    
+    PFUser *user = [PFUser currentUser];
+    
+    NSString *userID = [user objectId];
+    NSString *postID = [post objectId];
+    
+    BOOL like = [self.postsLiked containsObject:postID];
+    
+    __block NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSInteger oldLikesCount = [post[@"likes"] intValue];
+    
+    NSMutableArray *likes = [NSMutableArray arrayWithArray:self.postsLiked];
+    NSInteger likesCount = [post[@"likes"] intValue];
+    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:cell.emojiArray];
+    
+    if (!like) {
+        likesCount += 1;
+        [likes addObject:postID];
+    }
+    else {
+        // We're replacing existing emoji like
+        BOOL foundMatch = NO;
+        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
+            PFChallengePost *post = thisPostLiked[@"post"];
+            if ([post.objectId isEqualToString:cell.post.objectId]) {
+                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
+                thisPostLiked[@"emoji"] = emoji;
+                
+                for (PFEmoji *thisEmoji in cell.emojiArray) {
+                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
+                        [newEmojiArray removeObject:thisEmoji];
+                        foundMatch = YES;
+                        break;
+                    }
+                }
+            }
+            
+            if (foundMatch) {
+                break;
+            }
+        }
+    }
+    
+    post[@"likes"] = [NSNumber numberWithInteger:likesCount];
+    self.postsLiked = likes;
+    
+    // Optimistically update view (can roll back on error below)
+    cell.likes.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
+    
+    // Optimistically update the emoji likes
+    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:cell.emojiArray];
+    [newEmojiArray insertObject:emoji atIndex:0];
+    cell.emojiArray = [NSArray arrayWithArray:newEmojiArray];
+    
+    // First, like, animate
+    if (!like) {
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+        
+        // Animations are borked on < iOS 8.0 because of autolayout?
+        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
+        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
+            // no animation
+        } else {
+            [UIView animateWithDuration:0.2f animations:^{
+                cell.likeButton.transform = CGAffineTransformMakeScale(1.5, 1.5);
+            } completion:^(BOOL finished) {
+                [UIView animateWithDuration:0.2f animations:^{
+                    cell.likeButton.transform = CGAffineTransformMakeScale(1, 1);
+                } completion:NULL];
+            }];
+        }
+        
+    }
+    
+    MTMakeWeakSelf();
+    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
+        
+        if (!error) {
+            [weakSelf updateLikes];
+            
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                // Load/update the objects but don't clear the table
+                [weakSelf loadObjects];
+            }];
+        }
+        else {
+            NSLog(@"error - %@", error);
+            weakSelf.postsLiked = oldLikePosts;
+            post[@"likes"] = [NSNumber numberWithInteger:oldLikesCount];
+            
+            cell.emojiArray = oldEmojiArray;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                
+                // Revert locally if network down
+                [weakSelf.tableView reloadData];
+                
+                // Then, sync with server
+                if ([MTUtil internetReachable]) {
+                    [weakSelf updateLikes];
+                    [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                        // Load/update the objects but don't clear the table
+                        [weakSelf loadObjects];
+                    }];
+                }
+            });
+        }
+    }];
+}
+
+
+#pragma mark - MTEmojiPickerCollectionViewDelegate Methods -
+- (void)didSelectEmoji:(PFEmoji *)emoji withPost:(PFChallengePost *)post;
+{
+    if (self.postViewController) {
+        [self.postViewController emojiLiked:emoji];
+    }
+    else {
+        [self emojiLikedForPost:post withEmoji:emoji];
+    }
+    
+    [self dismissEmojiPrompt];
 }
 
 

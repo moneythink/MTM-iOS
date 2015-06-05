@@ -74,7 +74,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetBecameReachable:) name:kInternetDidBecomeReachableNotification object:nil];
     
-    [[MTUtil getAppDelegate] setDefaultNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+    [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
 - (void)viewWillDisappear:(BOOL) animated
@@ -136,6 +136,8 @@
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
                 
+                weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
+
                 [[MTUtil getAppDelegate] configureZendesk];
                 
                 if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
@@ -147,7 +149,6 @@
                     id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorDashboardNav"];
 //                    id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
 
-                    
                     [weakSelf.revealViewController setFrontViewController:mentorDashboardVC animated:YES];
                 }
             } else {
@@ -265,6 +266,8 @@
         NSString *errorString = [error userInfo][@"error"];
         
         if (!error) {
+            weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
+
             [[MTUtil getAppDelegate] configureZendesk];
 
             // Update for Push Notifications
@@ -272,9 +275,9 @@
             
             // Check for custom playlist for this class
             [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-
+            
             if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                id mentorChallengeRoom = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorChallengeRoom"];
+                id mentorChallengeRoom = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                 [weakSelf.revealViewController setFrontViewController:mentorChallengeRoom animated:YES];
                 
             } else {
