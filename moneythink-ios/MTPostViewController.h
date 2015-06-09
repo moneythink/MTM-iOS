@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic, strong) NSArray *postsLiked;
 @property (nonatomic, strong) NSArray *postsLikedFull;
 @property (nonatomic, strong) NSArray *emojiArray;
+@property (nonatomic, strong) PFNotifications *notification;
 
 - (void)emojiLiked:(PFEmoji *)emoji;
 

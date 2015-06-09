@@ -16,10 +16,18 @@
 #define MTMakeStrongSelf() __typeof__(self) strongSelf = weakSelf
 
 #define kInternetDidBecomeReachableNotification @"kInternetDidBecomeReachableNotification"
-#define kUserDidChangeClass @"kUserDidChangeClass"
-#define kUserSavedProfileChanges @"kUserSavedProfileChanges"
-#define kUserActivatedChallenges @"kUserActivatedChallenges"
-#define kUserInvitedStudents @"kUserInvitedStudents"
+#define kWillMoveToOpenMenuPositionNotification @"kWillMoveToOpenMenuPositionNotification"
+#define kUserDidChangeClass         @"kUserDidChangeClass"
+#define kUserSavedProfileChanges    @"kUserSavedProfileChanges"
+#define kUserActivatedChallenges    @"kUserActivatedChallenges"
+#define kUserInvitedStudents        @"kUserInvitedStudents"
+#define kNotificationNewChallenge   @"new_challenge"
+#define kNotificationPostComment    @"post_comment"
+#define kNotificationPostLiked      @"post_liked"
+#define kNotificationInactivity     @"inactivity"
+#define kNotificationLeaderOn       @"leader_on"
+#define kNotificationLeaderOff      @"leader_off"
+#define kNotificationVerifyPost     @"verify_post"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

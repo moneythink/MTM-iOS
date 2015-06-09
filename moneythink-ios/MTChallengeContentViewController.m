@@ -12,6 +12,7 @@
 @interface MTChallengeContentViewController ()
 
 @property (nonatomic, weak) IBOutlet UILabel *challengeTitle;
+@property (nonatomic, weak) IBOutlet UIButton *challengeListButton;
 
 @end
 

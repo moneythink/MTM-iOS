@@ -124,6 +124,7 @@
         cell.postText.text = post[@"post_text"];
         cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
         
+        cell.postImage.image = [UIImage imageNamed:@"photo_post"];
         cell.postImage.file = post[@"picture"];
         [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
@@ -137,6 +138,7 @@
             }
         }];
         
+        cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
         cell.postUserImage.file = user[@"profile_picture"];
         cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
         cell.postUserImage.layer.masksToBounds = YES;
@@ -149,7 +151,7 @@
                     [cell setNeedsDisplay];
                 }
                 else {
-                    image = nil;
+                    cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
                 }
             } else {
                 NSLog(@"error - %@", error);

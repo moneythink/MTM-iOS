@@ -215,6 +215,8 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openMenuAction:) name:kWillMoveToOpenMenuPositionNotification object:nil];
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -468,22 +470,33 @@
         }
     }
     
-    if (![self.userSchool.text isEqualToString:self.userCurrent[@"school"]]) {
+    NSString *school = self.userCurrent[@"school"] ? self.userCurrent[@"school"] : @"";
+    if (![self.userSchool.text isEqualToString:school]) {
         dirty = YES;
     }
-    if (![self.userClassName.text isEqualToString:self.userCurrent[@"class"]]) {
+    
+    NSString *className = self.userCurrent[@"class"] ? self.userCurrent[@"class"] : @"";
+    if (![self.userClassName.text isEqualToString:className]) {
         dirty = YES;
     }
-    if (![self.firstName.text isEqualToString:self.userCurrent[@"first_name"]]) {
+    
+    NSString *first = self.userCurrent[@"first_name"] ? self.userCurrent[@"first_name"] : @"";
+    if (![self.firstName.text isEqualToString:first]) {
         dirty = YES;
     }
-    if (![self.lastName.text isEqualToString:self.userCurrent[@"last_name"]]) {
+    
+    NSString *last = self.userCurrent[@"last_name"] ? self.userCurrent[@"last_name"] : @"";
+    if (![self.lastName.text isEqualToString:last]) {
         dirty = YES;
     }
-    if (![self.email.text isEqualToString:self.userCurrent[@"email"]]) {
+    
+    NSString *emailAddress = self.userCurrent[@"email"] ? self.userCurrent[@"email"] : @"";
+    if (![self.email.text isEqualToString:emailAddress]) {
         dirty = YES;
     }
-    if (![self.phoneNumber.text isEqualToString:self.userCurrent[@"phone_number"]]) {
+    
+    NSString *phone = self.userCurrent[@"phone_number"] ? self.userCurrent[@"phone_number"] : @"";
+    if (![self.phoneNumber.text isEqualToString:phone]) {
         dirty = YES;
     }
 
@@ -688,6 +701,8 @@
     [self.view endEditing:YES];
 }
 
+
+#pragma mark - Notifications -
 - (void)keyboardDidShow:(NSNotification *)nsNotification
 {
     self.showingKeyboard = YES;
@@ -731,6 +746,11 @@
             self.viewFields.contentSize = self.oldViewFieldsContentSize;
         }];
     }
+}
+
+- (void)openMenuAction:(NSNotification *)notification
+{
+    [self cancelChanges:nil];
 }
 
 

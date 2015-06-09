@@ -30,6 +30,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *challengeNumber;
 @property (nonatomic, strong) IBOutlet UIView *challengeNumberView;
 @property (nonatomic, strong) IBOutlet UILabel *challengeTitle;
+@property (nonatomic, strong) IBOutlet UIButton *closeButton;
 
 @end
 

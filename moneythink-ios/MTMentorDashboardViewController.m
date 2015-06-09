@@ -81,7 +81,7 @@
 
 - (void)presentInviteStudents
 {
-    [[MTUtil getAppDelegate] selectSettingsTabView];
+    [self.revealViewController setFrontViewPosition:FrontViewPositionRight animated:YES];
 }
 
 

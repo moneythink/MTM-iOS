@@ -169,6 +169,9 @@
 		8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065119DA1F52000CFBF6 /* mentorSignupButton@2x.png */; };
 		8921065819DA1F52000CFBF6 /* studentSignupButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065219DA1F52000CFBF6 /* studentSignupButton.png */; };
 		8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */; };
+		8921ED081B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */; };
+		8921ED0B1B25FCEF00010E3F /* nav-icons-signup.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED091B25FCEF00010E3F /* nav-icons-signup.png */; };
+		8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */; };
 		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
@@ -182,8 +185,6 @@
 		895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */; };
 		895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F789F1B16454400055759 /* nav-icons-notifications.png */; };
 		895F78A21B16454400055759 /* nav-icons-notifications@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A01B16454400055759 /* nav-icons-notifications@2x.png */; };
-		895F78A51B16455300055759 /* nav-icons-studentsignup.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A31B16455300055759 /* nav-icons-studentsignup.png */; };
-		895F78A61B16455300055759 /* nav-icons-studentsignup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */; };
 		895F78A91B16456000055759 /* nav-icons-support.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A71B16456000055759 /* nav-icons-support.png */; };
 		895F78AA1B16456000055759 /* nav-icons-support@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78A81B16456000055759 /* nav-icons-support@2x.png */; };
 		895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */ = {isa = PBXBuildFile; fileRef = 895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */; };
@@ -198,6 +199,10 @@
 		8977E3DD1B1E1F6C009AD452 /* PFEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 8977E3DC1B1E1F6C009AD452 /* PFEmoji.m */; };
 		8977E3E01B1E26E1009AD452 /* MTEmojiPickerCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8977E3DF1B1E26E1009AD452 /* MTEmojiPickerCollectionView.m */; };
 		8977E3E31B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8977E3E21B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m */; };
+		8977E3E61B223E16009AD452 /* like_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E41B223E16009AD452 /* like_highlighted.png */; };
+		8977E3E71B223E16009AD452 /* like_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E51B223E16009AD452 /* like_highlighted@2x.png */; };
+		8977E3EA1B223E41009AD452 /* comment_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E81B223E41009AD452 /* comment_highlighted.png */; };
+		8977E3EB1B223E41009AD452 /* comment_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */; };
 		898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */; };
 		8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906721AD46B5D007A4F3E /* icon_button_check_normal.png */; };
 		8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */; };
@@ -500,6 +505,10 @@
 		8921065319DA1F52000CFBF6 /* studentSignupButton@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "studentSignupButton@2x.png"; sourceTree = "<group>"; };
 		8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork512; sourceTree = "<group>"; };
 		8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */ = {isa = PBXFileReference; lastKnownFileType = file; path = iTunesArtwork1024; sourceTree = "<group>"; };
+		8921ED061B24FB4A00010E3F /* UIScrollView+EmptyDataSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+EmptyDataSet.h"; sourceTree = "<group>"; };
+		8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
+		8921ED091B25FCEF00010E3F /* nav-icons-signup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup.png"; sourceTree = "<group>"; };
+		8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup@2x.png"; sourceTree = "<group>"; };
 		892573851AE5950C002FF871 /* PFChallengePostsLiked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostsLiked.h; path = "Data Classes/PFChallengePostsLiked.h"; sourceTree = "<group>"; };
 		892573861AE59515002FF871 /* PFChallengePostsLiked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostsLiked.m; path = "Data Classes/PFChallengePostsLiked.m"; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
@@ -518,8 +527,6 @@
 		895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-leaderboard@2x.png"; sourceTree = "<group>"; };
 		895F789F1B16454400055759 /* nav-icons-notifications.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-notifications.png"; sourceTree = "<group>"; };
 		895F78A01B16454400055759 /* nav-icons-notifications@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-notifications@2x.png"; sourceTree = "<group>"; };
-		895F78A31B16455300055759 /* nav-icons-studentsignup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-studentsignup.png"; sourceTree = "<group>"; };
-		895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-studentsignup@2x.png"; sourceTree = "<group>"; };
 		895F78A71B16456000055759 /* nav-icons-support.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-support.png"; sourceTree = "<group>"; };
 		895F78A81B16456000055759 /* nav-icons-support@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-support@2x.png"; sourceTree = "<group>"; };
 		895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow-backwards.png"; sourceTree = "<group>"; };
@@ -539,6 +546,10 @@
 		8977E3DF1B1E26E1009AD452 /* MTEmojiPickerCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTEmojiPickerCollectionView.m; sourceTree = "<group>"; };
 		8977E3E11B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTEmojiPickerCollectionViewCell.h; sourceTree = "<group>"; };
 		8977E3E21B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTEmojiPickerCollectionViewCell.m; sourceTree = "<group>"; };
+		8977E3E41B223E16009AD452 /* like_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like_highlighted.png; sourceTree = "<group>"; };
+		8977E3E51B223E16009AD452 /* like_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "like_highlighted@2x.png"; sourceTree = "<group>"; };
+		8977E3E81B223E41009AD452 /* comment_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment_highlighted.png; sourceTree = "<group>"; };
+		8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment_highlighted@2x.png"; sourceTree = "<group>"; };
 		898FBE5E1B0D2A6B0058F3B4 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		899906721AD46B5D007A4F3E /* icon_button_check_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_normal.png; sourceTree = "<group>"; };
@@ -694,6 +705,8 @@
 				106309741A3A3C4D0093C209 /* MBProgressHUD.m */,
 				1063097E1A3A3C4D0093C209 /* Reachability.h */,
 				1063097F1A3A3C4D0093C209 /* Reachability.m */,
+				8921ED061B24FB4A00010E3F /* UIScrollView+EmptyDataSet.h */,
+				8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */,
 			);
 			path = ThirdParty;
 			sourceTree = SOURCE_ROOT;
@@ -958,8 +971,8 @@
 				895F789C1B16453800055759 /* nav-icons-leaderboard@2x.png */,
 				895F789F1B16454400055759 /* nav-icons-notifications.png */,
 				895F78A01B16454400055759 /* nav-icons-notifications@2x.png */,
-				895F78A31B16455300055759 /* nav-icons-studentsignup.png */,
-				895F78A41B16455300055759 /* nav-icons-studentsignup@2x.png */,
+				8921ED091B25FCEF00010E3F /* nav-icons-signup.png */,
+				8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */,
 				895F78A71B16456000055759 /* nav-icons-support.png */,
 				895F78A81B16456000055759 /* nav-icons-support@2x.png */,
 			);
@@ -1020,12 +1033,16 @@
 				899F309619F16948004F6B10 /* check-unactive@2x.png */,
 				892105DB19DA1F37000CFBF6 /* comment.png */,
 				892105DC19DA1F37000CFBF6 /* comment@2x.png */,
+				8977E3E81B223E41009AD452 /* comment_highlighted.png */,
+				8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */,
 				892105E519DA1F37000CFBF6 /* info_icon.png */,
 				892105E619DA1F37000CFBF6 /* info_icon@2x.png */,
 				8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */,
 				8921065B19DA1F77000CFBF6 /* iTunesArtwork1024 */,
 				892105E919DA1F37000CFBF6 /* like_active.png */,
 				892105EA19DA1F37000CFBF6 /* like_active@2x.png */,
+				8977E3E41B223E16009AD452 /* like_highlighted.png */,
+				8977E3E51B223E16009AD452 /* like_highlighted@2x.png */,
 				892105EB19DA1F37000CFBF6 /* like_normal.png */,
 				892105EC19DA1F37000CFBF6 /* like_normal@2x.png */,
 				89E56D281A0448A300C187C9 /* login-header.png */,
@@ -1282,7 +1299,7 @@
 						DevelopmentTeam = YN5DHE47NH;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
-								enabled = 0;
+								enabled = 1;
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -1334,13 +1351,13 @@
 				8921061D19DA1F37000CFBF6 /* challenges_normal.png in Resources */,
 				8921063219DA1F37000CFBF6 /* logo_actionbar.png in Resources */,
 				106309951A3A3DD80093C209 /* checkbox_not_ticked@2x.png in Resources */,
-				895F78A51B16455300055759 /* nav-icons-studentsignup.png in Resources */,
 				8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */,
 				8921062F19DA1F37000CFBF6 /* like_normal.png in Resources */,
 				8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */,
 				8921062719DA1F37000CFBF6 /* icon_pig.png in Resources */,
 				8918B3251B18F6C800880E62 /* arrow_left_white_normal@2x.png in Resources */,
 				106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */,
+				8977E3E61B223E16009AD452 /* like_highlighted.png in Resources */,
 				89CE54161B152A44000825FB /* icon_main_nav.png in Resources */,
 				8921063319DA1F37000CFBF6 /* menu_button.png in Resources */,
 				8921060D19DA1F37000CFBF6 /* bg_money_mananger_3.png in Resources */,
@@ -1356,7 +1373,6 @@
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
 				899F309819F16948004F6B10 /* check-active@2x.png in Resources */,
 				895F78961B16451600055759 /* nav-icons-challenges@2x.png in Resources */,
-				895F78A61B16455300055759 /* nav-icons-studentsignup@2x.png in Resources */,
 				8921064619DA1F37000CFBF6 /* students_active@2x.png in Resources */,
 				89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */,
 				89E56D2A1A0448A300C187C9 /* login-header.png in Resources */,
@@ -1371,6 +1387,7 @@
 				8921064219DA1F37000CFBF6 /* settings_active@2x.png in Resources */,
 				8921063619DA1F37000CFBF6 /* moneythink_icon_logo@2x.png in Resources */,
 				895F78951B16451600055759 /* nav-icons-challenges.png in Resources */,
+				8977E3EB1B223E41009AD452 /* comment_highlighted@2x.png in Resources */,
 				8918B3261B18F6C800880E62 /* arrow_right_white_disabled.png in Resources */,
 				8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */,
 				5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */,
@@ -1390,6 +1407,8 @@
 				895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */,
 				8921063A19DA1F37000CFBF6 /* notifications_normal@2x.png in Resources */,
 				8921063F19DA1F37000CFBF6 /* profile_image.png in Resources */,
+				8977E3E71B223E16009AD452 /* like_highlighted@2x.png in Resources */,
+				8977E3EA1B223E41009AD452 /* comment_highlighted.png in Resources */,
 				8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */,
 				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				8921061419DA1F37000CFBF6 /* bg_progress_green3.png in Resources */,
@@ -1419,6 +1438,7 @@
 				890587491A01816900DB8CD4 /* PrivacyPolicy.html in Resources */,
 				8921065919DA1F52000CFBF6 /* studentSignupButton@2x.png in Resources */,
 				8921065719DA1F52000CFBF6 /* mentorSignupButton@2x.png in Resources */,
+				8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */,
 				8921061E19DA1F37000CFBF6 /* challenges_normal@2x.png in Resources */,
 				8918B3271B18F6C800880E62 /* arrow_right_white_disabled@2x.png in Resources */,
 				8921060F19DA1F37000CFBF6 /* bg_money_mananger_5.png in Resources */,
@@ -1436,6 +1456,7 @@
 				8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */,
 				8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */,
 				8921060E19DA1F37000CFBF6 /* bg_money_mananger_4.png in Resources */,
+				8921ED0B1B25FCEF00010E3F /* nav-icons-signup.png in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
 				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
@@ -1502,6 +1523,7 @@
 				899906841AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */,
+				8921ED081B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */,

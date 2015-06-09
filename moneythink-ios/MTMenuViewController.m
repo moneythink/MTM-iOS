@@ -8,6 +8,9 @@
 
 #import "MTMenuViewController.h"
 #import "MTMenuTableViewCell.h"
+#import "MTNotificationViewController.h"
+#import "MTChallengesViewController.h"
+#import "MTLeaderboardViewController.h"
 
 @interface MTMenuViewController ()
 
@@ -383,6 +386,39 @@
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         [self logoutAction];
     }
+}
+
+
+#pragma mark - Public Methods -
+- (void)openLeaderboard
+{
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    
+    UINavigationController *leaderboardVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"leaderboardVCNav"];
+    [self.revealViewController setFrontViewController:leaderboardVCNav animated:YES];
+}
+
+- (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType
+{
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+
+    UINavigationController *notificationsVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorNotificationsNav"];
+    MTNotificationViewController *notificationVC = (MTNotificationViewController *)notificationsVCNav.topViewController;
+    notificationVC.actionableNotificationId = notificationId;
+    notificationVC.actionableNotificationId = @"27mQgxxw6L";
+
+    [self.revealViewController setFrontViewController:notificationsVCNav animated:YES];
+}
+
+- (void)openChallengesForChallenge:(PFChallenges *)challenge
+{
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    
+    UINavigationController *challengesVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+    MTChallengesViewController *challengesVC = (MTChallengesViewController *)challengesVCNav.topViewController;
+    challengesVC.actionableChallenge = challenge;
+    
+    [self.revealViewController setFrontViewController:challengesVCNav animated:YES];
 }
 
 

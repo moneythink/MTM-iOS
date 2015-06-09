@@ -16,4 +16,6 @@
 
 @interface MTChallengesViewController : MTViewController <MTCommentViewProtocol, UIPageViewControllerDelegate, UIPageViewControllerDataSource, MTChallengeContentViewControllerDelegate, MTChallengeListViewControllerDelegate>
 
+@property (nonatomic, strong) PFChallenges *actionableChallenge;
+
 @end

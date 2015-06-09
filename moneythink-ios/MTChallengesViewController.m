@@ -166,6 +166,23 @@
 
 - (void)updateViews
 {
+    if (self.actionableChallenge) {
+        PFChallenges *foundActionableChallenge = nil;
+        for (PFChallenges *thisChallenge in self.challenges) {
+            if ([thisChallenge.objectId isEqualToString:self.actionableChallenge.objectId]) {
+                foundActionableChallenge = thisChallenge;
+                break;
+            }
+        }
+        
+        self.actionableChallenge = nil;
+        
+        if (foundActionableChallenge) {
+            self.currentChallenge = foundActionableChallenge;
+            [self loadChallenge:self.currentChallenge withIndex:[self.challenges indexOfObject:self.currentChallenge] toggleChallengeList:NO];
+        }
+    }
+    
     self.myClassTableView.challenge = self.currentChallenge;
     self.exploreCollectionView.challenge = self.currentChallenge;
     self.challengeInfoView.challenge = self.currentChallenge;
@@ -208,6 +225,26 @@
             NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
         }
     }];
+}
+
+- (void)loadChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index toggleChallengeList:(BOOL)toggleChallengeList
+{
+    UIPageViewControllerNavigationDirection direction = UIPageViewControllerNavigationDirectionForward;
+    if (index < self.challengesPageIndex) {
+        direction = UIPageViewControllerNavigationDirectionReverse;
+    }
+    self.challengesPageIndex = index;
+    
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    NSArray *viewControllers = @[newViewController];
+    [self.challengesPageViewController setViewControllers:viewControllers direction:direction animated:YES completion:nil];
+    
+    self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
+    [self updateViews];
+    
+    if (toggleChallengeList) {
+        [self didTapChallengeList];
+    }
 }
 
 
@@ -659,20 +696,7 @@
 
 - (void)didSelectChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index
 {
-    UIPageViewControllerNavigationDirection direction = UIPageViewControllerNavigationDirectionForward;
-    if (index < self.challengesPageIndex) {
-        direction = UIPageViewControllerNavigationDirectionReverse;
-    }
-    self.challengesPageIndex = index;
-    
-    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
-    NSArray *viewControllers = @[newViewController];
-    [self.challengesPageViewController setViewControllers:viewControllers direction:direction animated:YES completion:nil];
-    
-    self.currentChallenge = [self.challenges objectAtIndex:self.challengesPageIndex];
-    [self updateViews];
-    
-    [self didTapChallengeList];
+    [self loadChallenge:challenge withIndex:index toggleChallengeList:YES];
 }
 
 - (void)closeChallengeList

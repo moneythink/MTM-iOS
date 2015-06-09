@@ -1,15 +1,17 @@
 //
-//  MTMentorNotificationViewController.m
+//  MTNotificationViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/28/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 6/9/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTNotificationViewController.h"
 #import "MTMentorStudentProfileViewController.h"
 #import "MTMentorDashboardViewController.h"
 #import "MTNotificationTableViewCell.h"
+#import "MTPostViewController.h"
+#import "MTMenuViewController.h"
 
 @interface MTNotificationViewController ()
 
@@ -68,9 +70,6 @@
         // The key of the PFObject to display in the label of the default cell style
         self.textKey = @"challenge_started";
         
-        // The title for this table in the Navigation Controller.
-        self.title = @"Notifications";
-        
         // Whether the built-in pull-to-refresh is enabled
         self.pullToRefreshEnabled = YES;
         self.loadingViewEnabled = NO;
@@ -87,8 +86,6 @@
     
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorInset = UIEdgeInsetsZero;
-    
-    self.navigationItem.title = self.title;
     
     // Add a no notifications view
     self.noNotificationsView = [[UIView alloc] initWithFrame:self.tableView.frame];
@@ -119,8 +116,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-//    self.navigationController.parentViewController.navigationItem.title = @"Notifications";
     [self loadObjects];
+    
+    if (self.actionableNotificationId) {
+        [self handleActionableNotification];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -136,7 +136,7 @@
     [super objectsDidLoad:error];
     
     // This method is called every time objects are loaded from Parse via the PFQuery
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     
     if (!IsEmpty(self.objects)) {
         self.noNotificationsView.alpha = 0.0f;
@@ -153,7 +153,7 @@
     [super objectsWillLoad];
     
     // This method is called before a PFQuery is fired to get more objects
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     
     if ([self.objects count] == 0) {
         hud.labelText = @"Loading...";
@@ -173,45 +173,46 @@
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
 
-    PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryNoOne whereKeyDoesNotExist:@"recipient"];
-    [queryNoOne whereKey:@"class" equalTo:className];
-    [queryNoOne whereKey:@"school" equalTo:schoolName];
+    PFQuery *queryClass = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryClass whereKeyDoesNotExist:@"recipient"];
+    [queryClass whereKey:@"class" equalTo:className];
+    [queryClass whereKey:@"school" equalTo:schoolName];
     
-    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryActivated whereKeyExists:@"challenge_activated"];
-    [queryActivated whereKey:@"class" equalTo:className];
-    [queryActivated whereKey:@"school" equalTo:schoolName];
-    
-    PFQuery *queryClosed = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryClosed whereKeyExists:@"challenge_closed"];
-    [queryClosed whereKey:@"class" equalTo:className];
-    [queryClosed whereKey:@"school" equalTo:schoolName];
-
-    PFQuery *queryCompleted = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryCompleted whereKeyExists:@"challenge_completed"];
-    [queryCompleted whereKey:@"class" equalTo:className];
-    [queryCompleted whereKey:@"school" equalTo:schoolName];
-
-    PFQuery *queryStarted = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-    [queryStarted whereKeyExists:@"challenge_started"];
-    [queryStarted whereKey:@"class" equalTo:className];
-    [queryStarted whereKey:@"school" equalTo:schoolName];
-
-    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne, queryActivated,
-                                                      queryClosed, queryCompleted, queryStarted]];
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryClass]];
     // Always pull latest from Network if available
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [query orderByDescending:@"createdAt"];
     
-    [query includeKey:@"comment"];
-    [query includeKey:@"post_liked"];
-    [query includeKey:@"post_verified"];
-    [query includeKey:@"recipient"];
+    [query includeKey:@"comment.challenge_post.challenge"];
+    [query includeKey:@"comment.challenge_post.user"];
+    [query includeKey:@"post_liked.user"];
+    [query includeKey:@"post_verified.user"];
     [query includeKey:@"user"];
-    
+    [query includeKey:@"recipient"];
+    [query includeKey:@"challenge_activated_ref"];
+
     return query;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 20.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 20.0f)];
+    headerView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 300.0f, 20.0f)];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.textColor = [UIColor colorWithHexString:@"#1a1a1a"];
+    headerLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+    headerLabel.text = @"NOTIFICATIONS";
+    [headerView addSubview:headerLabel];
+    
+    return headerView;
 }
 
 // Override to customize the look of a cell representing an object. The default is to display
@@ -224,206 +225,281 @@
         cell = [[MTNotificationTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuserIdentifier];
     }
     
-    __block NSIndexPath *weakIndexPath = indexPath;
     cell.currentIndexPath = indexPath;
-    
-    __block MTNotificationTableViewCell *weakCell = cell;
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [cell setSelectionStyle:UITableViewCellSelectionStyleGray];
     
     PFNotifications *notification = (PFNotifications *)object;
     
+    PFUser *user = nil;
+    NSString *username = nil;
     if (notification[@"user"]) {
-        PFUser *user = notification[@"user"];
-        cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        user = notification[@"user"];
+        if ([MTUtil isUserMe:user]) {
+            username = @"You";
+        }
+        else {
+            username = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        }
     }
-    else {
-        cell.userName.text = @"";
+    
+    cell.avatarImageView.image = [UIImage imageNamed:@"profile_image"];
+    cell.avatarImageView.layer.cornerRadius = round(cell.avatarImageView.frame.size.width / 2.0f);
+    cell.avatarImageView.layer.masksToBounds = YES;
+    
+    if (user[@"profile_picture"]) {
+        cell.avatarImageView.file = user[@"profile_picture"];
+        [cell.avatarImageView loadInBackground:^(UIImage *image, NSError *error) {
+            if (!error) {
+                if (image) {
+                    cell.avatarImageView.image = image;
+                    [cell setNeedsDisplay];
+                }
+                else {
+                    cell.avatarImageView.image = nil;
+                }
+            } else {
+                NSLog(@"error - %@", error);
+            }
+        }];
     }
     
     cell.agePosted.text = [[notification createdAt] niceRelativeTimeFromNow];
-    cell.message.text = @"";
+    cell.agePosted.textColor = [UIColor primaryGreen];
     
-    //<><><><><><><><><><> - Challenge
-    // ****************** - Post
+    NSString *notificationType = notification[@"notification_type"];
     
-    if (notification[@"comment"]) { // ******************
+    // TODO, remove hard code, get actual values
+    if (notification[@"comment"]) {
+        notificationType = kNotificationPostComment;
+    }
+    else if (notification[@"challenge_activated_ref"]) {
+        notificationType = kNotificationNewChallenge;
+    }
+    else if (notification[@"post_liked"]) {
+        notificationType = kNotificationPostLiked;
+    }
+    else if (notification[@"leader_on"]) {
+        notificationType = kNotificationLeaderOn;
+    }
+    else if (notification[@"leader_off"]) {
+        notificationType = kNotificationLeaderOff;
+    }
+    else if (notification[@"inactivity"]) {
+        notificationType = kNotificationInactivity;
+    }
+    else if (notification[@"verify_post"]) {
+        notificationType = kNotificationVerifyPost;
+    }
+    
+    cell.messageTextView.textContainerInset = UIEdgeInsetsZero;
+    cell.messageTextView.textContainer.lineFragmentPadding = 0;
+
+    if ([notificationType isEqualToString:kNotificationPostComment]) {
         PFChallengePostComment *post = notification[@"comment"];
-        cell.message.text = [NSString stringWithFormat:@"Comment: %@", post[@"comment_text"]];
+        
+        if (!IsEmpty(username)) {
+            NSString *theMessage = [NSString stringWithFormat:@"%@ commented on your post: %@",username, post[@"comment_text"]];
+            NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
+            [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
+            
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:username]];
+            
+            NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+            NSRange rangeAll = NSMakeRange(0, theMessage.length);
+            [hashtags enumerateMatchesInString:theMessage options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            }];
+
+            cell.messageTextView.attributedText = theAttributedTitle;
+        }
+        else {
+            cell.messageTextView.text = [NSString stringWithFormat:@"Someone commented on your post: %@", post[@"comment_text"]];
+        }
         
     }
-    else if (notification[@"post_liked"]) { // ******************
+    else if ([notificationType isEqualToString:kNotificationPostLiked]) {
         PFChallengePost *post = notification[@"post_liked"];
-        cell.message.text = [NSString stringWithFormat:@"Liked: %@", post[@"post_text"]];
+        
+        if (!IsEmpty(username)) {
+            NSString *theMessage = [NSString stringWithFormat:@"%@ liked your post: %@", username, post[@"post_text"]];
+            NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
+            [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
+            
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:username]];
+            
+            NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+            NSRange rangeAll = NSMakeRange(0, theMessage.length);
+            [hashtags enumerateMatchesInString:theMessage options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            }];
+
+            cell.messageTextView.attributedText = theAttributedTitle;
+        }
+        else {
+            cell.messageTextView.text = [NSString stringWithFormat:@"Someone liked your post: %@", post[@"post_text"]];
+        }
         
     }
-    else if (notification[@"post_verified"]) { // ******************
-        PFChallengePost *post = notification[@"post_verified"];
-        cell.message.text = [NSString stringWithFormat:@"Verified: %@", post[@"post_text"]];
+    else if ([notificationType isEqualToString:kNotificationNewChallenge]) {
         
+        PFChallenges *challenge = notification[@"challenge_activated_ref"];
+        if (!IsEmpty(challenge[@"title"])) {
+            cell.messageTextView.text = [NSString stringWithFormat:@"Heads up!  New challenge unlocked: %@", challenge[@"title"]];
+        }
+        else {
+            cell.messageTextView.text = [NSString stringWithFormat:@"Heads up!  New challenge unlocked"];
+        }
+
     }
-    else if (notification[@"challenge_activated"]) { //<><><><><><><><><><>
-        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_activated"]];
-        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challengeQuery whereKeyDoesNotExist:@"school"];
-        [challengeQuery whereKeyDoesNotExist:@"class"];
-        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        weakCell.message.text = @"Activated: loading...";
-
-        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
-                    return;
-                }
-                
-                PFChallenges *challenge = [objects firstObject];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (!IsEmpty(challenge[@"title"])) {
-                        weakCell.message.text = [NSString stringWithFormat:@"Activated: %@", challenge[@"title"]];
-                    }
-                    else {
-                        weakCell.message.text = [NSString stringWithFormat:@"Activated"];
-                    }
-                });
-            }
-            else {
-                weakCell.message.text = [NSString stringWithFormat:@"Activated"];
-            }
-        }];
-    } else if (notification[@"challenge_closed"]) { //<><><><><><><><><><>
-        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_closed"]];
-        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challengeQuery whereKeyDoesNotExist:@"school"];
-        [challengeQuery whereKeyDoesNotExist:@"class"];
-        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        weakCell.message.text = @"Closed: loading...";
-
-        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
-                    return;
-                }
-
-                PFChallenges *challenge = [objects firstObject];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (!IsEmpty(challenge[@"title"])) {
-                        weakCell.message.text = [NSString stringWithFormat:@"Closed: %@", challenge[@"title"]];
-                    }
-                    else {
-                        weakCell.message.text = [NSString stringWithFormat:@"Closed"];
-                    }
-                });
-            }
-            else {
-                weakCell.message.text = [NSString stringWithFormat:@"Closed"];
-            }
-        }];
-    } else if (notification[@"challenge_completed"]) { //<><><><><><><><><><>
-        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_completed"]];
-        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challengeQuery whereKeyDoesNotExist:@"school"];
-        [challengeQuery whereKeyDoesNotExist:@"class"];
-        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        weakCell.message.text = @"Completed: loading...";
-
-        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
-                    return;
-                }
-
-                PFChallenges *challenge = [objects firstObject];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (!IsEmpty(challenge[@"title"])) {
-                        weakCell.message.text = [NSString stringWithFormat:@"Completed: %@", challenge[@"title"]];
-                    }
-                    else {
-                        weakCell.message.text = [NSString stringWithFormat:@"Completed"];
-                    }
-                });
-            }
-            else {
-                weakCell.message.text = [NSString stringWithFormat:@"Completed"];
-            }
-
-        }];
-    } else if (notification[@"challenge_started"]) { //<><><><><><><><><><>
-        NSPredicate *predChallenge = [NSPredicate predicateWithFormat:@"challenge_number = %@", notification[@"challenge_started"]];
-        PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:predChallenge];
-        [challengeQuery whereKeyDoesNotExist:@"school"];
-        [challengeQuery whereKeyDoesNotExist:@"class"];
-        challengeQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        weakCell.message.text = @"Started: loading...";
-
-        [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!weakCell.currentIndexPath || (weakIndexPath.row != weakCell.currentIndexPath.row)) {
-                    return;
-                }
-
-                PFChallenges *challenge = [objects firstObject];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (!IsEmpty(challenge[@"title"])) {
-                        weakCell.message.text = [NSString stringWithFormat:@"Started: %@", challenge[@"title"]];
-                    }
-                    else {
-                        weakCell.message.text = [NSString stringWithFormat:@"Started"];
-                    }
-                });
-            }
-            else {
-                weakCell.message.text = [NSString stringWithFormat:@"Started"];
-            }
-        }];
+    else if ([notificationType isEqualToString:kNotificationLeaderOn]) {
+        cell.messageTextView.text = @"Congrats, you're top of the leaderboard.";
+    }
+    else if ([notificationType isEqualToString:kNotificationLeaderOff]) {
+        cell.messageTextView.text = @"Watch out - your classmate is now top of the leaderboard.";
+    }
+    else if ([notificationType isEqualToString:kNotificationInactivity]) {
+        cell.messageTextView.text = @"Where’d you go? Check out what your friends are posting.";
+    }
+    else if ([notificationType isEqualToString:kNotificationVerifyPost]) {
+        cell.messageTextView.text = @"Your class has posts that need verification!";
     }
     else {
         // Shouldn't get here but let's print out for debugging.
         NSLog(@"Notification: %@", notification);
     }
     
-    
     return cell;
 }
 
--(void)exploreChallenge:(PFChallenges *)challenge
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSPredicate *challengePredicate = [NSPredicate predicateWithFormat:@"challenge_number = %@", challenge[@"challenge_number"]];
-    PFQuery *queryActivated = [PFQuery queryWithClassName:[PFChallengesActivated parseClassName] predicate:challengePredicate];
+    [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    __block NSInteger count;
-    
-    queryActivated.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [queryActivated countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            count = number;
-            
-            NSString *type = [PFUser currentUser][@"type"];
-            switch (count) {
-                case 0: // not activated
-                    if ([type isEqualToString:@"mentor"]) {
-                        [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
-                    }
-                    break;
-                    
-                default: {
-                    [self performSegueWithIdentifier:@"exploreChallenge" sender:self];
-                }
-                    break;
-            }
-        }
-    }];
+    PFNotifications *notification = (PFNotifications *)[self objectAtIndexPath:indexPath];
+    [self actionForNotification:notification];
 }
 
 
-#pragma mark - Navigation
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+#pragma mark - Actionable Notification Methods -
+- (void)handleActionableNotification
 {
-//    MTPostsTabBarViewController *destination = (MTPostsTabBarViewController *)[segue destinationViewController];
-//    PFChallenges *challenge = sender;
-//    
-//    destination.challenge = challenge;
-//    destination.challengeNumber = challenge[@"challenge_number"];
+    // Load Notification Object
+    PFQuery *queryNotification = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryNotification whereKey:@"objectId" equalTo:self.actionableNotificationId];
+    [queryNotification includeKey:@"comment.challenge_post.challenge"];
+    [queryNotification includeKey:@"comment.challenge_post.user"];
+    [queryNotification includeKey:@"post_liked.user"];
+    [queryNotification includeKey:@"post_verified.user"];
+    [queryNotification includeKey:@"user"];
+    [queryNotification includeKey:@"challenge_activated_ref"];
+
+    queryNotification.cachePolicy = kPFCachePolicyNetworkOnly;
+    
+    MTMakeWeakSelf();
+    [queryNotification findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error && !IsEmpty(objects)) {
+            PFNotifications *notification = [objects objectAtIndex:0];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf displayPostDetailForNotification:notification];
+            });
+            
+        } else {
+            NSLog(@"error - %@", error);
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        }
+        
+        weakSelf.actionableNotificationId = nil;
+    }];
+}
+
+- (void)actionForNotification:(PFNotifications *)notification
+{
+    NSString *notificationType = notification[@"notification_type"];
+    
+    // TODO, remove hard code, get actual values
+    if (notification[@"comment"]) {
+        notificationType = kNotificationPostComment;
+    }
+    else if (notification[@"challenge_activated_ref"]) {
+        notificationType = kNotificationNewChallenge;
+    }
+    else if (notification[@"post_liked"]) {
+        notificationType = kNotificationPostLiked;
+    }
+
+    // Someone commented on your post (mentor/student)
+    //
+    //  Action: Bring user to post with new comment
+    if ([notificationType isEqualToString:kNotificationPostComment]) {
+        [self displayPostDetailForNotification:notification];
+    }
+    
+    // Someone liked your post (mentor/student)
+    //
+    //  Action: Bring user to liked post
+    else if ([notificationType isEqualToString:kNotificationPostLiked]) {
+        [self displayPostDetailForNotification:notification];
+    }
+    
+    // New challenge unlocked (student)
+    //
+    //  Action: Take user to new challenge
+    else if ([notificationType isEqualToString:kNotificationNewChallenge]) {
+        
+        if (notification[@"challenge_activated_ref"]) {
+            PFChallenges *challengeActivated = notification[@"challenge_activated_ref"];
+            [self displayChallengesViewForChallenge:challengeActivated];
+        }
+    }
+    
+    // Leaderboard (student)
+    //  You're on top of leaderboard or your classmate is now at top
+    //
+    //  Action: Take user to leaderboard
+    else if ([notificationType isEqualToString:kNotificationLeaderOn] ||
+             [notificationType isEqualToString:kNotificationLeaderOff]) {
+        
+        MTMenuViewController *menuVC = (MTMenuViewController *)self.revealViewController.rearViewController;
+        [menuVC openLeaderboard];
+    }
+    
+    // Posts need verification (mentor)
+    //
+    //  Action: Take user to relevant challenge
+    else if ([notificationType isEqualToString:kNotificationVerifyPost]) {
+        if (notification[@"verify_post"]) {
+            [self displayPostDetailForNotification:notification];
+        }
+    }
+
+    // Inactivity
+    //  Students and Mentors have unique messages
+    //
+    //  Action: Take user to current open challenge
+    else if ([notificationType isEqualToString:kNotificationInactivity]) {
+        if (notification[@"challenge_open"]) {
+            PFChallenges *challengeOpen = notification[@"challenge_open"];
+            [self displayChallengesViewForChallenge:challengeOpen];
+        }
+    }
+}
+
+- (void)displayPostDetailForNotification:(PFNotifications *)notification
+{
+    MTPostViewController *postVC = (MTPostViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"challengePost"];
+    postVC.notification = notification;
+    
+    __block UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postVC];
+    [self.revealViewController presentViewController:nav animated:YES completion:nil];
+}
+
+- (void)displayChallengesViewForChallenge:(PFChallenges *)challenge
+{
+    MTMenuViewController *menuVC = (MTMenuViewController *)self.revealViewController.rearViewController;
+    [menuVC openChallengesForChallenge:challenge];
 }
 
 

@@ -77,9 +77,24 @@
 
 
 #pragma mark - UITableViewDataSource methods -
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section;    // fixed font style. use custom view (UILabel) if you want something different
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return @"Leaderboard";
+    return 20.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, tableView.frame.size.width, 20.0f)];
+    headerView.backgroundColor = [UIColor colorWithHexString:@"#f5f5f5"];
+    
+    UILabel *headerLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 0.0f, 300.0f, 20.0f)];
+    headerLabel.backgroundColor = [UIColor clearColor];
+    headerLabel.textColor = [UIColor colorWithHexString:@"#1a1a1a"];
+    headerLabel.font = [UIFont boldSystemFontOfSize:13.0f];
+    headerLabel.text = @"LEADERBOARD";
+    [headerView addSubview:headerLabel];
+    
+    return headerView;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

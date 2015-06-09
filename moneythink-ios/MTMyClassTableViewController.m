@@ -10,6 +10,7 @@
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
 #import "MTEmojiPickerCollectionView.h"
+#import "UIScrollView+EmptyDataSet.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
@@ -17,7 +18,7 @@ NSString *const kSavedMyClassChallengePostsdNotification = @"kSavedMyClassChalle
 NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
 
-@interface MTMyClassTableViewController ()
+@interface MTMyClassTableViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
@@ -34,12 +35,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
 @property (nonatomic) BOOL didUpdateLikedPosts;
-@property (nonatomic, strong) UILabel *firstPromptLabel;
 @property (nonatomic) BOOL updatedButtonsAndLikes;
 @property (nonatomic, strong) MTEmojiPickerCollectionView *emojiCollectionView;
 @property (nonatomic, strong) UIView *emojiDimView;
 @property (nonatomic, strong) UIView *emojiContainerView;
-@property (nonatomic, strong) MTPostViewController *postViewController;
 
 @end
 
@@ -61,6 +60,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     return self;
 }
 
+
+#pragma mark - Lifecycle -
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -71,18 +72,15 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
     
-    self.firstPromptLabel = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 100.0f, 300.0f, 40.0f)];
-    self.firstPromptLabel.textColor = [UIColor blackColor];
-    self.firstPromptLabel.font = [UIFont mtFontOfSize:16.0f];
-    self.firstPromptLabel.numberOfLines = 2;
-    self.firstPromptLabel.text = @"Be the first to post to this Challenge!";
-    self.firstPromptLabel.textAlignment = NSTextAlignmentCenter;
-    [self.view addSubview:self.firstPromptLabel];
-    
-    self.firstPromptLabel.alpha = 0.0f;
     self.didUpdateLikedPosts = NO;
     self.updatedButtonsAndLikes = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
+    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
+    
+    // A little trick for removing the cell separators
+    self.tableView.tableFooterView = [UIView new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -100,6 +98,14 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     self.postViewController = nil;
 }
 
+- (void)dealloc
+{
+    if ([self isViewLoaded]) {
+        self.tableView.emptyDataSetSource = nil;
+        self.tableView.emptyDataSetDelegate = nil;
+    }
+}
+
 
 #pragma mark - Parse -
 - (void)objectsDidLoad:(NSError *)error
@@ -109,7 +115,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     
     self.myObjects = [NSMutableArray arrayWithArray:self.objects];
-    [self updateNoContentTableStyling];
     [self.tableView reloadData];
 }
 
@@ -149,7 +154,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         self.myObjects = nil;
         self.didUpdateLikedPosts = NO;
         self.updatedButtonsAndLikes = NO;
-        self.firstPromptLabel.alpha = 0.0f;
 
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView reloadData];
@@ -331,7 +335,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     PFChallengePost *newPost = notif.object;
     [self.myObjects insertObject:newPost atIndex:0];
     
-    [self updateNoContentTableStyling];
     [self.tableView reloadData];
 }
 
@@ -656,16 +659,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }];
 }
 
-- (void)updateNoContentTableStyling
-{
-    if (IsEmpty(self.myObjects) && self.updatedButtonsAndLikes) {
-        self.firstPromptLabel.alpha = 1.0f;
-    }
-    else {
-        self.firstPromptLabel.alpha = 0.0f;
-    }
-}
-
 - (void)likeWithEmojiPrompt:(id)sender
 {
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
@@ -731,6 +724,9 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             
         } completion:^(BOOL finished) {
             
+            _emojiCollectionView.collectionView.dataSource = nil;
+            _emojiCollectionView.collectionView.delegate = nil;
+
             [self.emojiCollectionView willMoveToParentViewController:nil];
             [self.emojiCollectionView.view removeFromSuperview];
             [self.emojiCollectionView.collectionView removeFromSuperview];
@@ -738,11 +734,11 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             
             [self.emojiContainerView removeFromSuperview];
             [self.emojiDimView removeFromSuperview];
-            self.emojiCollectionView = nil;
-            self.emojiContainerView = nil;
-            self.emojiDimView = nil;
+            
+            _emojiCollectionView = nil;
+            _emojiContainerView = nil;
+            _emojiDimView = nil;
         }];
-        
     }];
 }
 
@@ -1779,6 +1775,53 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     }
     
     [self dismissEmojiPrompt];
+}
+
+
+#pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Posts";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"Be the first to post to this Challenge!";
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    if (IsEmpty(self.myObjects) && self.updatedButtonsAndLikes) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor whiteColor];
+}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, -56.0f);
 }
 
 

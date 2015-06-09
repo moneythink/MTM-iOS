@@ -13,6 +13,8 @@
 #import "UIColor+Palette.h"
 #import "MTNotificationViewController.h"
 #import "MTSupportViewController.h"
+#import "MTMenuViewController.h"
+#import "MTPostViewController.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -85,6 +87,8 @@
     return YES;
 }
 
+
+#pragma mark - Push Notifications -
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
     // Store the deviceToken in the current installation and save it to Parse.
@@ -103,24 +107,27 @@
 
 }
 
-// TODO Create Common Methods to handle both types of pushes and add this method for background pushes.
-//      Also be sure to enable background modes.
-
-//- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
-//{
-//    if (handler) {
-//        handler(UIBackgroundFetchResultNewData);
-//    }
-//}
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    [self handleRemoveNotificationForApplication:application withUserInfo:userInfo];
+    if (handler) {
+        handler(UIBackgroundFetchResultNewData);
+    }
+}
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
     [PFPush handlePush:userInfo];
-    
-    // Open Notifications tab, if appropriate
+    [self handleRemoveNotificationForApplication:application withUserInfo:userInfo];
+}
+
+- (void)handleRemoveNotificationForApplication:(UIApplication *)application withUserInfo:(NSDictionary *)userInfo
+{
     NSDictionary *apsDict = [userInfo objectForKey:@"aps"];
+    NSString *category = nil;
+
     if ([apsDict valueForKey:@"category"]) {
-        NSString *category = [apsDict valueForKey:@"category"];
+        category = [apsDict valueForKey:@"category"];
         if (![[category uppercaseString] isEqualToString:@"NOTIFICATIONS"]) {
             return;
         }
@@ -129,58 +136,27 @@
         return;
     }
     
-    id rootVC = self.window.rootViewController;
-    if ([rootVC isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nav = (UINavigationController *)rootVC;
+    // TODO: Pull out the type and ID
+    NSString *notificationType = @"";
+    NSString *notificationId = @"";
+    
+    if (!IsEmpty(notificationId) &&
+        ([notificationType isEqualToString:kNotificationPostComment] ||
+        [notificationType isEqualToString:kNotificationNewChallenge] ||
+        [notificationType isEqualToString:kNotificationPostLiked] ||
+        [notificationType isEqualToString:kNotificationInactivity] ||
+        [notificationType isEqualToString:kNotificationVerifyPost])) {
         
-        id tabBar = nav.topViewController;
-        if (![tabBar isKindOfClass:[UITabBarController class]]) {
-            return;
-        }
+        SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
+        MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
+        [menuVC openNotificationsWithId:notificationId withType:notificationType];
+    }
+    else if ([notificationType isEqualToString:kNotificationLeaderOn] ||
+             [notificationType isEqualToString:kNotificationLeaderOff]) {
         
-        NSInteger indexOfNotificationVC = -1;
-        
-        // TODO: Fix push notifications for new UX
-
-//        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
-//            // Mentor
-//            NSInteger index = 0;
-//            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
-//            for (UIViewController *vc in viewControllers) {
-//                if ([vc isKindOfClass:[UINavigationController class]]) {
-//                    id topVC = ((UINavigationController *)vc).topViewController;
-//                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
-//                        indexOfNotificationVC = index;
-//                        break;
-//                    }
-//                }
-//                index++;
-//            }
-//        }
-//        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
-//            // Student
-//            NSInteger index = 0;
-//            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
-//            for (UIViewController *vc in viewControllers) {
-//                if ([vc isKindOfClass:[UINavigationController class]]) {
-//                    id topVC = ((UINavigationController *)vc).topViewController;
-//                    if ([topVC isKindOfClass:[MTMentorNotificationViewController class]]) {
-//                        indexOfNotificationVC = index;
-//                        break;
-//                    }
-//                }
-//                index++;
-//            }
-//        }
-//        else {
-//            return;
-//        }
-        
-        NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
-        if (indexOfNotificationVC != -1 && [viewControllers count] > indexOfNotificationVC) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [((UITabBarController *)tabBar) setSelectedIndex:indexOfNotificationVC];
-        }
+        SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
+        MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
+        [menuVC openLeaderboard];
     }
 }
 
@@ -222,7 +198,7 @@
     [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
     
     [navigationBar setBarTintColor:[UIColor whiteColor]];
-    [navigationBar setTintColor:[UIColor whiteColor]];
+    [navigationBar setTintColor:[UIColor navbarGrey]];
     [navigationBar setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor blackColor], NSFontAttributeName: [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0f]}];
 
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
@@ -327,55 +303,6 @@
             }
         }];
     } afterDelay:0.35f];
-}
-
-- (void)selectSettingsTabView
-{
-    // TODO: Update for new UX
-    id rootVC = self.window.rootViewController;
-    if ([rootVC isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nav = (UINavigationController *)rootVC;
-        
-        id tabBar = nav.topViewController;
-        if (![tabBar isKindOfClass:[UITabBarController class]]) {
-            return;
-        }
-        
-        NSInteger indexOSettingsVC = -1;
-        
-//        if ([tabBar isKindOfClass:[MTMentorTabBarViewController class]]) {
-//            // Mentor
-//            NSInteger index = 0;
-//            NSArray *viewControllers = ((MTMentorTabBarViewController *)tabBar).viewControllers;
-//            for (UIViewController *vc in viewControllers) {
-//                if ([vc isKindOfClass:[MTSupportViewController class]]) {
-//                    indexOSettingsVC = index;
-//                    break;
-//                }
-//                index++;
-//            }
-//        }
-//        else if ([tabBar isKindOfClass:[MTStudentTabBarViewController class]]) {
-//            // Student
-//            NSInteger index = 0;
-//            NSArray *viewControllers = ((MTStudentTabBarViewController *)tabBar).viewControllers;
-//            for (UIViewController *vc in viewControllers) {
-//                if ([vc isKindOfClass:[MTSupportViewController class]]) {
-//                    indexOSettingsVC = index;
-//                    break;
-//                }
-//                index++;
-//            }
-//        }
-//        else {
-//            return;
-//        }
-        
-        NSArray *viewControllers = ((UITabBarController *)tabBar).viewControllers;
-        if (indexOSettingsVC != -1 && [viewControllers count] > indexOSettingsVC) {
-            [((UITabBarController *)tabBar) setSelectedIndex:indexOSettingsVC];
-        }
-    }
 }
 
 - (UINavigationController *)userViewController
@@ -611,6 +538,13 @@
 
 
 #pragma mark - SWRevealViewControllerDelegate Methods -
+- (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position;
+{
+    if (position == FrontViewPositionRight) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillMoveToOpenMenuPositionNotification object:nil];
+    }
+}
+
 - (void)revealController:(SWRevealViewController *)revealController didMoveToPosition:(FrontViewPosition)position
 {
     if (revealController.frontViewPosition == FrontViewPositionRight) {

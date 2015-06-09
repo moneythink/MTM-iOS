@@ -48,18 +48,23 @@ typedef enum {
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
 @property (nonatomic, strong) MTPostLikeCommentTableViewCell *postLikeCommentCell;
+@property (nonatomic, strong) PFChallengePostComment *postComment;
+@property (nonatomic, strong) NSArray *emojiPickerObjects;
+
 
 @end
 
 @implementation MTPostViewController
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+
+- (void)viewDidLoad
 {
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        
+    [super viewDidLoad];
+    
+    if (self.notification) {
+        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"" style: UIBarButtonItemStyleBordered target: nil action: nil];
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(closeTouched:)];
     }
-    return self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,39 +72,47 @@ typedef enum {
     [super viewWillAppear:animated];
     
     self.title = @"Post Detail";
-    self.postUser = self.challengePost[@"user"];
-    self.currentUser = [PFUser currentUser];
-    self.postLikesCount = 0;
-    if (self.challengePost[@"likes"]) {
-        self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    
+    if (self.notification) {
+        self.postType = MTPostTypeNoButtonsNoImage;
+        [self.tableView reloadData];
+        [self loadFromNotification];
     }
-    
-    NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
-    PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
-    
-    findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    MTMakeWeakSelf();
-    [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.postUser = [objects firstObject];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-            });
+    else {
+        self.postUser = self.challengePost[@"user"];
+        self.currentUser = [PFUser currentUser];
+        self.postLikesCount = 0;
+        if (self.challengePost[@"likes"]) {
+            self.postLikesCount = [self.challengePost[@"likes"] intValue];
         }
-    }];
-    
-    if (self.hasButtons && IsEmpty(self.buttonsTapped)) {
-        [self updateButtonsTapped];
+        
+        NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
+        PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
+        
+        findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        
+        MTMakeWeakSelf();
+        [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                weakSelf.postUser = [objects firstObject];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf.tableView reloadData];
+                });
+            }
+        }];
+        
+        if (self.hasButtons && IsEmpty(self.buttonsTapped)) {
+            [self updateButtonsTapped];
+        }
+        if (self.hasSecondaryButtons && IsEmpty(self.secondaryButtonsTapped)) {
+            [self updateSecondaryButtonsTapped];
+        }
+        
+        [self loadComments];
+        [self loadPostText];
+        [self loadLikesWithCache:YES];
+        [self loadChallengePost];
     }
-    if (self.hasSecondaryButtons && IsEmpty(self.secondaryButtonsTapped)) {
-        [self updateSecondaryButtonsTapped];
-    }
-    
-    [self loadComments];
-    [self loadPostText];
-    [self loadLikesWithCache:YES];
-    [self loadChallengePost];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -120,6 +133,8 @@ typedef enum {
     queryPostComments.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+
         if (!error) {
             weakSelf.comments = objects;
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -458,6 +473,235 @@ typedef enum {
     }
 }
 
+- (void)closeTouched:(id)sender
+{
+    self.myClassTableViewController = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+#pragma mark - Load from Notification Methods -
+- (void)loadFromNotification
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
+    
+    // Load Emoji for picker
+    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
+    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    
+    MTMakeWeakSelf();
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.emojiPickerObjects = objects;
+        } else {
+            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
+        }
+    }];
+    
+    if (self.notification[@"comment"]) {
+        PFChallengePostComment *comment = self.notification[@"comment"];
+        self.postComment = comment;
+        
+        if (comment[@"challenge_post"]) {
+            PFChallengePost *post = comment[@"challenge_post"];
+            self.challengePost = post;
+            
+            self.postLikesCount = 0;
+            if (self.challengePost[@"likes"]) {
+                self.postLikesCount = [self.challengePost[@"likes"] intValue];
+            }
+            
+            self.postImage = self.challengePost[@"picture"];
+            
+            self.postUser = self.challengePost[@"user"];
+            self.currentUser = [PFUser currentUser];
+            [self loadPostText];
+            [self loadLikesWithCache:NO];
+            
+            if (post[@"challenge"]) {
+                PFChallenges *challenge = post[@"challenge"];
+                self.challenge = challenge;
+            }
+        }
+    }
+    else if (self.notification[@"post_liked"]) {
+        PFChallengePost *post = self.notification[@"post_liked"];
+        self.challengePost = post;
+        
+        self.postLikesCount = 0;
+        if (self.challengePost[@"likes"]) {
+            self.postLikesCount = [self.challengePost[@"likes"] intValue];
+        }
+        
+        self.postImage = self.challengePost[@"picture"];
+        
+        self.postUser = self.challengePost[@"user"];
+        self.currentUser = [PFUser currentUser];
+        [self loadPostText];
+        [self loadLikesWithCache:NO];
+        
+        if (post[@"challenge"]) {
+            PFChallenges *challenge = post[@"challenge"];
+            self.challenge = challenge;
+        }
+    }
+    else if (self.notification[@"verify_post"]) {
+        PFChallengePost *post = self.notification[@"verify_post"];
+        self.challengePost = post;
+        
+        self.postLikesCount = 0;
+        if (self.challengePost[@"likes"]) {
+            self.postLikesCount = [self.challengePost[@"likes"] intValue];
+        }
+        
+        self.postImage = self.challengePost[@"picture"];
+        
+        self.postUser = self.challengePost[@"user"];
+        self.currentUser = [PFUser currentUser];
+        [self loadPostText];
+        [self loadLikesWithCache:NO];
+        
+        if (post[@"challenge"]) {
+            PFChallenges *challenge = post[@"challenge"];
+            self.challenge = challenge;
+        }
+    }
+    
+    [self.tableView reloadData];
+    [self updateLikes];
+}
+
+- (void)updateLikes
+{
+    MTMakeWeakSelf();
+    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
+    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
+    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
+    myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *mutableLiked = [NSMutableArray array];
+            NSMutableArray *mutableLikedFull = [NSMutableArray array];
+            
+            for (PFChallengePostsLiked *thisPostLiked in objects) {
+                PFChallengePost *post = thisPostLiked[@"post"];
+                if (!IsEmpty(post.objectId)) {
+                    [mutableLiked addObject:post.objectId];
+                    [mutableLikedFull addObject:thisPostLiked];
+                }
+            }
+            
+            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadEmojiLikes];
+            });
+        }
+        else {
+            NSLog(@"error - %@", error);
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        }
+        
+    }];
+}
+
+- (void)loadEmojiLikes
+{
+    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
+    [queryPostEmojis whereKey:@"post" equalTo:self.challengePost];
+    [queryPostEmojis includeKey:@"emoji"];
+    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            NSMutableArray *emojiArray = [NSMutableArray array];
+            for (PFChallengePostsLiked *thisLike in objects) {
+                PFEmoji *thisEmoji = thisLike[@"emoji"];
+                if (thisEmoji) {
+                    [emojiArray addObject:thisEmoji];
+                }
+            }
+            
+            weakSelf.emojiArray = emojiArray;
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadButtons];
+            });
+        } else {
+            NSLog(@"error - %@", error);
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        }
+    }];
+}
+
+- (void)loadButtons
+{
+    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
+    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
+    [challengeQuery includeKey:@"verified_by"];
+    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
+            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
+                weakSelf.challenge = challenge;
+            }
+            
+            NSArray *buttons = challenge[@"buttons"];
+            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
+            
+            if (!IsEmpty(buttons)) {
+                weakSelf.hasButtons = YES;
+                [weakSelf updateButtonsTapped];
+            }
+            else if (!IsEmpty(secondaryButtons) && !self.isMentor) {
+                weakSelf.hasSecondaryButtons = YES;
+                [weakSelf updateSecondaryButtonsTapped];
+            }
+            else {
+                weakSelf.hasButtons = NO;
+            }
+        }
+        
+        PFUser *user = self.challengePost[@"user"];
+        
+        BOOL myPost = NO;
+        if ([MTUtil isUserMe:user]) {
+            myPost = YES;
+        }
+        
+        BOOL showButtons = NO;
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+            showButtons = YES;
+        }
+        
+        //        if (showButtons) {
+        //            self.hasButtons = self.hasButtons;
+        //            self.hasSecondaryButtons = self.hasSecondaryButtons;
+        //        }
+        
+        if (showButtons && self.postImage)
+            self.postType = MTPostTypeWithButtonsWithImage;
+        else if (showButtons)
+            self.postType = MTPostTypeWithButtonsNoImage;
+        else if (self.postImage)
+            self.postType = MTPostTypeNoButtonsWithImage;
+        else
+            self.postType = MTPostTypeNoButtonsNoImage;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadComments];
+        });
+    }];
+}
+
 
 #pragma mark - Public Methods -
 - (void)emojiLiked:(PFEmoji *)emoji
@@ -676,6 +920,13 @@ typedef enum {
 #pragma mark - Actions -
 - (IBAction)likeButtonTapped:(id)sender
 {
+    // Load for Notification-loaded case
+    if (!self.myClassTableViewController) {
+        self.myClassTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsTableView"];
+        self.myClassTableViewController.emojiObjects = self.emojiPickerObjects;
+        self.myClassTableViewController.postViewController = self;
+    }
+    
     self.postLikeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
     [self.myClassTableViewController didSelectLikeWithEmojiForPost:self.challengePost];
 }
@@ -1519,8 +1770,8 @@ typedef enum {
             __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
             userInfoCell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-            NSString *firstName = self.postUser[@"first_name"];
-            NSString *lastName = self.postUser[@"last_name"];
+            NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
+            NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
             userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             
             userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
@@ -1548,6 +1799,11 @@ typedef enum {
                 userInfoCell.deletePost.enabled = YES;
             }
             else {
+                userInfoCell.deletePost.hidden = YES;
+                userInfoCell.deletePost.enabled = NO;
+            }
+            
+            if (self.notification) {
                 userInfoCell.deletePost.hidden = YES;
                 userInfoCell.deletePost.enabled = NO;
             }

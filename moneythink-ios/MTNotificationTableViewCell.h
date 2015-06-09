@@ -2,17 +2,17 @@
 //  MTNotificationTableViewCell.h
 //  moneythink-ios
 //
-//  Created by jdburgie on 8/13/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 6/9/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @interface MTNotificationTableViewCell : PFTableViewCell
 
-@property (strong, nonatomic) IBOutlet UILabel *userName;
-@property (strong, nonatomic) IBOutlet UILabel *message;
+@property (strong, nonatomic) IBOutlet UITextView *messageTextView;
 @property (strong, nonatomic) IBOutlet UILabel *agePosted;
+@property (nonatomic, strong) IBOutlet PFImageView *avatarImageView;
 
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 

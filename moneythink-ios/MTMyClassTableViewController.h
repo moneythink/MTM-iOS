@@ -26,6 +26,7 @@ extern NSString *const kWillSaveNewPostCommentNotification;
 
 @property (nonatomic, strong) NSString *comment;
 @property (nonatomic, strong) NSArray *emojiObjects;
+@property (nonatomic, strong) MTPostViewController *postViewController;
 
 - (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post;
 

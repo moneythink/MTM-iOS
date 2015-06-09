@@ -10,4 +10,8 @@
 
 @interface MTMenuViewController : UIViewController <UIActionSheetDelegate>
 
+- (void)openLeaderboard;
+- (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType;
+- (void)openChallengesForChallenge:(PFChallenges *)challenge;
+
 @end
