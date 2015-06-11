@@ -10,7 +10,7 @@
 #import "MTExploreCollectionViewCell.h"
 #import "MTPostViewController.h"
 
-@interface MTExplorePostCollectionView ()
+@interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (strong, nonatomic) NSArray *posts;
 
@@ -19,53 +19,49 @@
 @property (nonatomic) BOOL hasSecondaryButtons;
 
 @property (nonatomic, strong) UIImage *postImage;
+@property (nonatomic) BOOL pulledData;
 
 @end
 
 @implementation MTExplorePostCollectionView
 
-- (id)initWithCoder:(NSCoder *)aCoder {
-    self = [super initWithCoder:aCoder];
-    if (self) {
-        // The title for this table in the Navigation Controller.
-        self.title = @"Explore";
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.collectionView.emptyDataSetSource = self;
+    self.collectionView.emptyDataSetDelegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.pulledData = NO;
     [self loadPosts];
 }
 
-- (void)objectsWillLoad
+- (void)dealloc
 {
-    
+    if ([self isViewLoaded]) {
+        self.collectionView.emptyDataSetSource = nil;
+        self.collectionView.emptyDataSetDelegate = nil;
+    }
 }
 
-- (void)objectsDidLoad:(NSError *)error
-{
-    
-}
 
 #pragma mark - Private Methods -
 - (void)loadPosts
 {
-    NSInteger challengeNumber = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *challengeNumberPredicate = [NSPredicate predicateWithFormat:@"challenge_number = %d AND picture != nil", challengeNumber];
-    PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:challengeNumberPredicate];
+    NSPredicate *postsWithPicturePredicate = [NSPredicate predicateWithFormat:@"picture != nil"];
+    PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:postsWithPicturePredicate];
     
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
     [query includeKey:@"reference_post"];
+    [query whereKey:@"challenge" equalTo:self.challenge];
+    [query setLimit:20];
     
-    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    query.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     MTMakeWeakSelf();
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -76,16 +72,17 @@
             NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
             BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
             
-            if (!IsEmpty(buttons)) {
+            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
                 weakSelf.hasButtons = YES;
             }
-            else if (!IsEmpty(secondaryButtons) && !isMentor) {
+            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
             }
             else {
                 weakSelf.hasButtons = NO;
             }
             
+            weakSelf.pulledData = YES;
             [weakSelf.exploreCollectionView reloadData];
         } else {
             NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
@@ -239,6 +236,18 @@
     [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.backgroundColor = [UIColor colorWithHexString:@"#d1d1d1"];
+}
+
+- (void)collectionView:(UICollectionView *)collectionView didUnhighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+    cell.backgroundColor = [UIColor whiteColor];
+}
+
 
 #pragma mark - Navigation -
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -282,6 +291,53 @@
     else if ([segueIdentifier isEqualToString:@"pushStudentProgressViewController"]) {
         
     }
+}
+
+
+#pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Posts";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"Be the first to post to this Challenge!";
+    
+    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
+    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
+    paragraph.alignment = NSTextAlignmentCenter;
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
+                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
+                                 NSParagraphStyleAttributeName: paragraph};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    if (IsEmpty(self.posts) && self.pulledData) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor whiteColor];
+}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, -56.0f);
 }
 
 

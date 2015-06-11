@@ -10,8 +10,8 @@
 
 @interface MTNotificationTableViewCell : PFTableViewCell
 
-@property (strong, nonatomic) IBOutlet UITextView *messageTextView;
-@property (strong, nonatomic) IBOutlet UILabel *agePosted;
+@property (nonatomic, strong) IBOutlet UITextView *messageTextView;
+@property (nonatomic, strong) IBOutlet UILabel *agePosted;
 @property (nonatomic, strong) IBOutlet PFImageView *avatarImageView;
 
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;

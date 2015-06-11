@@ -13,11 +13,12 @@
 #import "MTPostViewController.h"
 #import "MTMenuViewController.h"
 
-@interface MTNotificationViewController ()
+@interface MTNotificationViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *revealButtonItem;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *markAllReadButtonItem;
 
-@property (nonatomic, strong) UIView *noNotificationsView;
+@property (nonatomic) BOOL updatedObjects;
 
 @end
 
@@ -27,43 +28,6 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        PFUser *user = [PFUser currentUser];
-        NSString *userID = [user objectId];
-        NSString *className = user[@"class"];
-        NSString *schoolName = user[@"school"];
-        
-        [PFCloud callFunctionInBackground:@"markAllNotificationsRead" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
-            if (!error) {
-                PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-                [queryMe whereKey:@"recipient" equalTo:user];
-                [queryMe whereKey:@"class" equalTo:className];
-                [queryMe whereKey:@"school" equalTo:schoolName];
-                [queryMe whereKey:@"read_by" notEqualTo:userID];
-                
-                PFQuery *queryNoOne = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
-                [queryNoOne whereKeyDoesNotExist:@"recipient"];
-                [queryNoOne whereKey:@"class" equalTo:className];
-                [queryNoOne whereKey:@"school" equalTo:schoolName];
-                [queryNoOne whereKey:@"read_by" notEqualTo:userID];
-                
-                PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryNoOne]];
-                query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-                
-                [query countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-                    if (number > 0) {
-                        NSString *badgeNumber = [NSString stringWithFormat:@"%d", number];
-                        [self.navigationController.tabBarItem setBadgeValue:badgeNumber];
-                    } else {
-                        [self.navigationController.tabBarItem setBadgeValue:nil];
-                    }
-                }];
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-        
-        // Custom the table
-        
         // The className to query on
         self.parseClassName = [PFNotifications parseClassName];
         
@@ -71,7 +35,7 @@
         self.textKey = @"challenge_started";
         
         // Whether the built-in pull-to-refresh is enabled
-        self.pullToRefreshEnabled = YES;
+        self.pullToRefreshEnabled = NO;
         self.loadingViewEnabled = NO;
         
         self.paginationEnabled = NO;
@@ -87,21 +51,17 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorInset = UIEdgeInsetsZero;
     
-    // Add a no notifications view
-    self.noNotificationsView = [[UIView alloc] initWithFrame:self.tableView.frame];
-    self.noNotificationsView.backgroundColor = [UIColor whiteColor];
-    UILabel *noNotificationsLabel = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, 20.0f, self.view.frame.size.width, 44.0f)];
-    noNotificationsLabel.backgroundColor = [UIColor clearColor];
-    noNotificationsLabel.text = @"No Notifications";
-    noNotificationsLabel.font = [UIFont mtFontOfSize:18.0f];
-    noNotificationsLabel.textAlignment = NSTextAlignmentCenter;
-    [self.noNotificationsView addSubview:noNotificationsLabel];
-    [self.view addSubview:self.noNotificationsView];
+    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
+    
+    // A little trick for removing the cell separators
+    self.tableView.tableFooterView = [UIView new];
     
     SWRevealViewController *revealViewController = self.revealViewController;
     if (revealViewController) {
         [self.revealButtonItem setTarget: self.revealViewController];
         [self.revealButtonItem setAction: @selector(revealToggle:)];
+        self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
         [self.navigationController.navigationBar addGestureRecognizer: self.revealViewController.panGestureRecognizer];
     }
     
@@ -111,22 +71,38 @@
     //  Add tag = 5000 so panGestureRecognizer can be re-added
     self.navigationController.navigationBar.tag = 5000;
     [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
+    
+    [self.markAllReadButtonItem setTarget:self];
+    [self.markAllReadButtonItem setAction:@selector(markAllRead)];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.updatedObjects = NO;
     [self loadObjects];
     
     if (self.actionableNotificationId) {
         [self handleActionableNotification];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
+    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)dealloc
+{
+    if ([self isViewLoaded]) {
+        self.tableView.emptyDataSetSource = nil;
+        self.tableView.emptyDataSetDelegate = nil;
+    }
 }
 
 
@@ -138,14 +114,8 @@
     // This method is called every time objects are loaded from Parse via the PFQuery
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     
-    if (!IsEmpty(self.objects)) {
-        self.noNotificationsView.alpha = 0.0f;
-        [self.view bringSubviewToFront:self.tableView];
-    }
-    else {
-        self.noNotificationsView.alpha = 1.0f;
-        [self.view bringSubviewToFront:self.noNotificationsView];
-    }
+    self.updatedObjects = YES;
+    [self.tableView reloadData];
 }
 
 - (void)objectsWillLoad
@@ -153,6 +123,7 @@
     [super objectsWillLoad];
     
     // This method is called before a PFQuery is fired to get more objects
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     
     if ([self.objects count] == 0) {
@@ -266,29 +237,23 @@
     cell.agePosted.text = [[notification createdAt] niceRelativeTimeFromNow];
     cell.agePosted.textColor = [UIColor primaryGreen];
     
-    NSString *notificationType = notification[@"notification_type"];
-    
-    // TODO, remove hard code, get actual values
-    if (notification[@"comment"]) {
-        notificationType = kNotificationPostComment;
-    }
-    else if (notification[@"challenge_activated_ref"]) {
-        notificationType = kNotificationNewChallenge;
-    }
-    else if (notification[@"post_liked"]) {
-        notificationType = kNotificationPostLiked;
-    }
-    else if (notification[@"leader_on"]) {
-        notificationType = kNotificationLeaderOn;
-    }
-    else if (notification[@"leader_off"]) {
-        notificationType = kNotificationLeaderOff;
-    }
-    else if (notification[@"inactivity"]) {
-        notificationType = kNotificationInactivity;
-    }
-    else if (notification[@"verify_post"]) {
-        notificationType = kNotificationVerifyPost;
+    NSString *notificationType = notification[@"notificationType"];
+    NSString *notificationMessage = notification[@"notificationMessage"];
+
+    if (IsEmpty(notificationType)) {
+        // Support legacy notifications
+        if (notification[@"comment"]) {
+            notificationType = kNotificationPostComment;
+        }
+        else if (notification[@"challenge_activated_ref"]) {
+            notificationType = kNotificationNewChallenge;
+        }
+        else if (notification[@"post_liked"]) {
+            notificationType = kNotificationPostLiked;
+        }
+        else if (notification[@"post_verified"]) {
+            notificationType = kNotificationPostVerified;
+        }
     }
     
     cell.messageTextView.textContainerInset = UIEdgeInsetsZero;
@@ -354,21 +319,95 @@
 
     }
     else if ([notificationType isEqualToString:kNotificationLeaderOn]) {
-        cell.messageTextView.text = @"Congrats, you're top of the leaderboard.";
+        if (!IsEmpty(notificationMessage)) {
+            cell.messageTextView.text = notificationMessage;
+        }
+        else {
+            cell.messageTextView.text = @"Congrats, you're top of the leaderboard.";
+        }
+        
+        if (!user[@"profile_picture"]) {
+            cell.avatarImageView.image = [UIImage imageNamed:@"mt_avatar"];
+        }
+
     }
     else if ([notificationType isEqualToString:kNotificationLeaderOff]) {
-        cell.messageTextView.text = @"Watch out - your classmate is now top of the leaderboard.";
+        if (!IsEmpty(notificationMessage)) {
+            cell.messageTextView.text = notificationMessage;
+        }
+        else {
+            cell.messageTextView.text = @"Watch out - your classmate is now top of the leaderboard.";
+        }
+        
+        if (!user[@"profile_picture"]) {
+            cell.avatarImageView.image = [UIImage imageNamed:@"mt_avatar"];
+        }
+
     }
-    else if ([notificationType isEqualToString:kNotificationInactivity]) {
-        cell.messageTextView.text = @"Where’d you go? Check out what your friends are posting.";
+    else if ([notificationType hasPrefix:kNotificationInactivity]) {
+        
+        if (!IsEmpty(notificationMessage)) {
+            cell.messageTextView.text = notificationMessage;
+        }
+        else {
+            cell.messageTextView.text = @"Where’d you go? Check out what your friends are posting.";
+        }
+        
+        if (!user[@"profile_picture"]) {
+            cell.avatarImageView.image = [UIImage imageNamed:@"mt_avatar"];
+        }
+        
     }
     else if ([notificationType isEqualToString:kNotificationVerifyPost]) {
-        cell.messageTextView.text = @"Your class has posts that need verification!";
+        if (!IsEmpty(notificationMessage)) {
+            cell.messageTextView.text = notificationMessage;
+        }
+        else {
+            cell.messageTextView.text = @"Your class has posts that need verification!";
+        }
+
+    }
+    else if ([notificationType isEqualToString:kNotificationPostVerified]) {
+        PFChallengePostComment *post = notification[@"post_verified"];
+
+        if (!IsEmpty(username)) {
+            NSString *theMessage = [NSString stringWithFormat:@"%@ verified your post: %@",username, post[@"post_text"]];
+            NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
+            [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
+            
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
+            [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:username]];
+            
+            NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+            NSRange rangeAll = NSMakeRange(0, theMessage.length);
+            [hashtags enumerateMatchesInString:theMessage options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+                [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            }];
+            
+            cell.messageTextView.attributedText = theAttributedTitle;
+        }
+        else {
+            cell.messageTextView.text = [NSString stringWithFormat:@"Someone verified your post: %@", post[@"comment_text"]];
+        }
+        
     }
     else {
         // Shouldn't get here but let's print out for debugging.
         NSLog(@"Notification: %@", notification);
     }
+    
+    NSArray *readByArray = notification[@"read_by"];
+    PFUser *meUser = [PFUser currentUser];
+    cell.avatarImageView.layer.borderColor = [UIColor primaryGreen].CGColor;
+
+    if (![readByArray containsObject:[meUser objectId]]) {
+        cell.avatarImageView.layer.borderWidth = 2.0f;
+    }
+    else {
+        cell.avatarImageView.layer.borderWidth = 0.0f;
+    }
+    
+    cell.messageTextView.userInteractionEnabled = NO;
     
     return cell;
 }
@@ -378,6 +417,7 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     PFNotifications *notification = (PFNotifications *)[self objectAtIndexPath:indexPath];
+    [MTNotificationViewController markReadForNotification:notification];
     [self actionForNotification:notification];
 }
 
@@ -385,6 +425,10 @@
 #pragma mark - Actionable Notification Methods -
 - (void)handleActionableNotification
 {
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
+
     // Load Notification Object
     PFQuery *queryNotification = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryNotification whereKey:@"objectId" equalTo:self.actionableNotificationId];
@@ -399,16 +443,19 @@
     
     MTMakeWeakSelf();
     [queryNotification findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+
         if (!error && !IsEmpty(objects)) {
             PFNotifications *notification = [objects objectAtIndex:0];
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf displayPostDetailForNotification:notification];
+                if (notification) {
+                    [weakSelf actionForNotification:notification];
+                }
             });
             
         } else {
             NSLog(@"error - %@", error);
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         }
         
         weakSelf.actionableNotificationId = nil;
@@ -417,19 +464,29 @@
 
 - (void)actionForNotification:(PFNotifications *)notification
 {
-    NSString *notificationType = notification[@"notification_type"];
+    NSString *notificationType = notification[@"notificationType"];
     
-    // TODO, remove hard code, get actual values
-    if (notification[@"comment"]) {
-        notificationType = kNotificationPostComment;
+    if (IsEmpty(notificationType)) {
+        
+        // Handle some legacy notifications without type
+        if (notification[@"comment"]) {
+            notificationType = kNotificationPostComment;
+        }
+        else if (notification[@"challenge_activated_ref"]) {
+            notificationType = kNotificationNewChallenge;
+        }
+        else if (notification[@"post_liked"]) {
+            notificationType = kNotificationPostLiked;
+        }
+        else if (notification[@"post_verified"]) {
+            notificationType = kNotificationPostVerified;
+        }
     }
-    else if (notification[@"challenge_activated_ref"]) {
-        notificationType = kNotificationNewChallenge;
+    
+    if (IsEmpty(notificationType)) {
+        return;
     }
-    else if (notification[@"post_liked"]) {
-        notificationType = kNotificationPostLiked;
-    }
-
+    
     // Someone commented on your post (mentor/student)
     //
     //  Action: Bring user to post with new comment
@@ -451,7 +508,7 @@
         
         if (notification[@"challenge_activated_ref"]) {
             PFChallenges *challengeActivated = notification[@"challenge_activated_ref"];
-            [self displayChallengesViewForChallenge:challengeActivated];
+            [self displayChallengesViewForChallengeId:challengeActivated.objectId];
         }
     }
     
@@ -470,7 +527,7 @@
     //
     //  Action: Take user to relevant challenge
     else if ([notificationType isEqualToString:kNotificationVerifyPost]) {
-        if (notification[@"verify_post"]) {
+        if (notification[@"post_to_verify"]) {
             [self displayPostDetailForNotification:notification];
         }
     }
@@ -478,13 +535,20 @@
     // Inactivity
     //  Students and Mentors have unique messages
     //
-    //  Action: Take user to current open challenge
-    else if ([notificationType isEqualToString:kNotificationInactivity]) {
-        if (notification[@"challenge_open"]) {
-            PFChallenges *challengeOpen = notification[@"challenge_open"];
-            [self displayChallengesViewForChallenge:challengeOpen];
+    //  Action: Take user to last open challenge
+    else if ([notificationType hasPrefix:kNotificationInactivity]) {
+        [self displayChallengesViewForChallengeId:[MTUtil lastViewedChallengeId]];
+    }
+    
+    // Post Verified (unsupported)
+    //
+    //  Action: Take user to the post
+    else if ([notificationType hasPrefix:kNotificationPostVerified]) {
+        if (notification[@"post_verified"]) {
+            [self displayPostDetailForNotification:notification];
         }
     }
+
 }
 
 - (void)displayPostDetailForNotification:(PFNotifications *)notification
@@ -496,10 +560,171 @@
     [self.revealViewController presentViewController:nav animated:YES completion:nil];
 }
 
-- (void)displayChallengesViewForChallenge:(PFChallenges *)challenge
+- (void)displayChallengesViewForChallengeId:(NSString *)challengeId
 {
     MTMenuViewController *menuVC = (MTMenuViewController *)self.revealViewController.rearViewController;
-    [menuVC openChallengesForChallenge:challenge];
+    [menuVC openChallengesForChallengeId:challengeId];
+}
+
+
+#pragma mark - Actions -
+- (void)markAllRead
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Marking All Read...";
+    hud.dimBackground = YES;
+
+    PFUser *user = [PFUser currentUser];
+    
+    [PFCloud callFunctionInBackground:@"markAllNotificationsRead" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
+        if (error) {
+            NSLog(@"markAllRead, error:%@", [error localizedDescription]);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+        });
+    }];
+}
+
+
+#pragma mark - Public Methods -
++ (void)markReadForNotificationId:(NSString *)notificationId
+{
+    PFUser *user = [PFUser currentUser];
+    [PFCloud callFunctionInBackground:@"markNotificationRead" withParameters:@{@"user_id": [user objectId], @"notification_id": notificationId} block:^(id object, NSError *error) {
+        if (error) {
+            NSLog(@"markReadForNotification, error:%@", [error localizedDescription]);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+        });
+    }];
+}
+
++ (void)markReadForNotification:(PFNotifications *)notification
+{
+    PFUser *user = [PFUser currentUser];
+    
+    // Proactively, decrement notification count
+    NSInteger currentCount = ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount;
+    if (currentCount > 0) {
+        currentCount--;
+    }
+    
+    if (notification[@"read_by"]) {
+        NSArray *currentReadByArray = notification[@"read_by"];
+        NSMutableArray *newReadByArray = [NSMutableArray arrayWithArray:currentReadByArray];
+        [newReadByArray addObject:[user objectId]];
+        notification[@"read_by"] = [NSArray arrayWithArray:newReadByArray];
+    }
+    
+    ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = currentCount;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:currentCount]];
+    
+    [PFCloud callFunctionInBackground:@"markNotificationRead" withParameters:@{@"user_id": [user objectId], @"notification_id": [notification objectId]} block:^(id object, NSError *error) {
+        if (error) {
+            NSLog(@"markReadForNotification, error:%@", [error localizedDescription]);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+        });
+    }];
+}
+
++ (void)requestNotificationUnreadCountUpdateUsingCache:(BOOL)useCache
+{
+    PFUser *user = [PFUser currentUser];
+    if (!user) {
+        return;
+    }
+    
+    NSString *className = user[@"class"];
+    NSString *schoolName = user[@"school"];
+    
+    PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryMe whereKey:@"recipient" equalTo:user];
+    
+    PFQuery *queryClass = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
+    [queryClass whereKeyDoesNotExist:@"recipient"];
+    [queryClass whereKey:@"class" equalTo:className];
+    [queryClass whereKey:@"school" equalTo:schoolName];
+    
+    PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryClass]];
+    
+    if (useCache) {
+        query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    }
+    else {
+        query.cachePolicy = kPFCachePolicyNetworkOnly;
+    }
+    
+    [query includeKey:@"read_by"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSInteger count = 0;
+        PFUser *meUser = [PFUser currentUser];
+        for (PFNotifications *thisNotif in objects) {
+            if (thisNotif[@"read_by"]) {
+                NSArray *readByArray = thisNotif[@"read_by"];
+                if (![readByArray containsObject:[meUser objectId]]) {
+                    count++;
+                }
+            }
+            else {
+                count++;
+            }
+        }
+        
+        ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = count;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:count]];
+        });
+    }];
+}
+
+
+#pragma mark - Notifications -
+- (void)unreadCountUpdate:(NSNotification *)note
+{
+    NSNumber *count = note.object;
+    self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", [count integerValue]];
+    [self loadObjects];
+}
+
+
+#pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
+- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
+{
+    NSString *text = @"No Notifications";
+    
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
+                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]};
+    
+    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
+}
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    if (IsEmpty(self.objects) && self.updatedObjects) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor whiteColor];
+}
+
+- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return CGPointMake(0, -56.0f);
 }
 
 

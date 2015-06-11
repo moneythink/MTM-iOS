@@ -12,6 +12,6 @@
 
 - (void)openLeaderboard;
 - (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType;
-- (void)openChallengesForChallenge:(PFChallenges *)challenge;
+- (void)openChallengesForChallengeId:(NSString *)challengeId;
 
 @end

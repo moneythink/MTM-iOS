@@ -92,10 +92,17 @@
     }
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [MTUtil setLastViewedChallengedId:self.currentChallenge.objectId];
+}
+
 - (void)didReceiveMemoryWarnng
 {
     [super didReceiveMemoryWarning];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [MTUtil setLastViewedChallengedId:self.currentChallenge.objectId];
 }
 
 
@@ -166,21 +173,48 @@
 
 - (void)updateViews
 {
-    if (self.actionableChallenge) {
-        PFChallenges *foundActionableChallenge = nil;
-        for (PFChallenges *thisChallenge in self.challenges) {
-            if ([thisChallenge.objectId isEqualToString:self.actionableChallenge.objectId]) {
-                foundActionableChallenge = thisChallenge;
-                break;
+    PFChallenges *challengeToGoTo = nil;
+    if (!IsEmpty(self.actionableChallengeId)) {
+        // If we're at this challenge, no need to animate
+        if ([self.actionableChallengeId isEqualToString:self.currentChallenge.objectId]) {
+            // do nothing
+        }
+        else {
+            for (PFChallenges *thisChallenge in self.challenges) {
+                if ([thisChallenge.objectId isEqualToString:self.actionableChallengeId]) {
+                    challengeToGoTo = thisChallenge;
+                    break;
+                }
             }
         }
+    }
+    else if (!IsEmpty([MTUtil lastViewedChallengeId])) {
+        NSString *lastOne = [MTUtil lastViewedChallengeId];
         
-        self.actionableChallenge = nil;
-        
-        if (foundActionableChallenge) {
-            self.currentChallenge = foundActionableChallenge;
-            [self loadChallenge:self.currentChallenge withIndex:[self.challenges indexOfObject:self.currentChallenge] toggleChallengeList:NO];
+        if (!IsEmpty(lastOne)) {
+            // If first Challenge, no need to go to that one
+            PFChallenges *firstChallenge = [self.challenges firstObject];
+            if ([firstChallenge.objectId isEqualToString:lastOne]) {
+                // do nothing
+            }
+            else {
+                for (PFChallenges *thisChallenge in self.challenges) {
+                    if ([thisChallenge.objectId isEqualToString:lastOne]) {
+                        challengeToGoTo = thisChallenge;
+                        break;
+                    }
+                }
+            }
         }
+    }
+    
+    // Reset to avoid infinite loop
+    [MTUtil setLastViewedChallengedId:nil];
+    self.actionableChallengeId = nil;
+    
+    if (challengeToGoTo) {
+        self.currentChallenge = challengeToGoTo;
+        [self loadChallenge:self.currentChallenge withIndex:[self.challenges indexOfObject:self.currentChallenge] toggleChallengeList:NO];
     }
     
     self.myClassTableView.challenge = self.currentChallenge;

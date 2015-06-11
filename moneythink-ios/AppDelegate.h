@@ -16,6 +16,7 @@
 @property (nonatomic, strong) Reachability *reachability;
 @property (nonatomic) BOOL reachable;
 @property (nonatomic, strong) UINavigationController *userViewController;
+@property (nonatomic) NSInteger currentUnreadCount;
 
 - (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;

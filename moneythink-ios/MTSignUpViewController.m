@@ -470,15 +470,8 @@
                                         
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
-                                        if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                                            
-                                        } else {
-                                            id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorDashboardNav"];
-                                            [weakSelf.revealViewController setFrontViewController:mentorDashboardVC animated:YES];
-                                        }
-
+                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                        [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                         
                                     } else {
                                         // Ignore parse cache errors for now

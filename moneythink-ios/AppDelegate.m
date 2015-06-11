@@ -83,8 +83,22 @@
     self.reachability = [Reachability reachabilityForInternetConnection];
     self.reachable = [MTUtil internetReachable];
     [self.reachability startNotifier];
+    
+    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
+    
+    if ([PFUser currentUser] && [MTUtil internetReachable]) {
+        [[PFUser currentUser] fetchInBackground];
+    }
 
     return YES;
+}
+
+- (void)applicationWillEnterForeground:(UIApplication *)application
+{
+    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
+    if ([PFUser currentUser] && [MTUtil internetReachable]) {
+        [[PFUser currentUser] fetchInBackground];
+    }
 }
 
 
@@ -109,43 +123,118 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    [self handleRemoveNotificationForApplication:application withUserInfo:userInfo];
-    if (handler) {
-        handler(UIBackgroundFetchResultNewData);
-    }
+    [self handleRemoteNotificationForApplication:application withUserInfo:userInfo fetchCompletionHandler:handler];
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    [PFPush handlePush:userInfo];
-    [self handleRemoveNotificationForApplication:application withUserInfo:userInfo];
+    [self handleRemoteNotificationForApplication:application withUserInfo:userInfo fetchCompletionHandler:nil];
 }
 
-- (void)handleRemoveNotificationForApplication:(UIApplication *)application withUserInfo:(NSDictionary *)userInfo
+- (void)handleRemoteNotificationForApplication:(UIApplication *)application withUserInfo:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
     NSDictionary *apsDict = [userInfo objectForKey:@"aps"];
     NSString *category = nil;
+    NSString *alertMessage = [apsDict objectForKey:@"alert"];
 
     if ([apsDict valueForKey:@"category"]) {
         category = [apsDict valueForKey:@"category"];
-        if (![[category uppercaseString] isEqualToString:@"NOTIFICATIONS"]) {
+        if ([[category uppercaseString] isEqualToString:@"NOTIFICATIONS"]) {
+            
+            UIApplicationState state = [application applicationState];
+
+            if (state == UIApplicationStateActive) {
+                NSString *title = @"Moneythink Alert";
+                NSString *messageToDisplay = !IsEmpty(alertMessage) ? alertMessage : @"";
+
+                if ([UIAlertController class]) {
+                    UIAlertController *changeSheet = [UIAlertController
+                                                      alertControllerWithTitle:title
+                                                      message:messageToDisplay
+                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *close = [UIAlertAction
+                                             actionWithTitle:@"Close"
+                                             style:UIAlertActionStyleCancel
+                                             handler:^(UIAlertAction *action) {
+                                             }];
+                    
+                    UIAlertAction *view = [UIAlertAction
+                                               actionWithTitle:@"View"
+                                               style:UIAlertActionStyleDefault
+                                               handler:^(UIAlertAction *action) {
+                                                   dispatch_async(dispatch_get_main_queue(), ^{
+                                                       [self handleActionNotificationWithUserInfo:userInfo];
+                                                   });
+                                               }];
+                    
+                    [changeSheet addAction:close];
+                    [changeSheet addAction:view];
+                    
+                    [self.window.rootViewController presentViewController:changeSheet animated:YES completion:nil];
+                } else {
+                    MTMakeWeakSelf();
+                    __block NSDictionary *weakUserInfo = userInfo;
+                    [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:[NSArray arrayWithObject:@"View"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                        if (buttonIndex != alertView.cancelButtonIndex) {
+                            [weakSelf handleActionNotificationWithUserInfo:weakUserInfo];
+                        }
+                    }];
+                }
+
+            }
+            else {
+                [self handleActionNotificationWithUserInfo:userInfo];
+            }
+
+        }
+        else if ([[category uppercaseString] isEqualToString:@"USER_UPDATE"]) {
+            [self handleUserUpdateWithfetchCompletionHandler:handler];
             return;
         }
     }
+    
+    // Make sure this gets called if not caught with "USER_UPDATE", shouldn't get here
+    if (handler) {
+        handler(UIBackgroundFetchResultNoData);
+    }
+}
+
+
+- (void)handleUserUpdateWithfetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    // Update Current User
+    PFUser *currentUser = [PFUser currentUser];
+    if (currentUser && [MTUtil internetReachable]) {
+        [currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (handler) {
+                handler(UIBackgroundFetchResultNewData);
+            }
+        }];
+    }
     else {
+        if (handler) {
+            handler(UIBackgroundFetchResultNoData);
+        }
+    }
+}
+
+- (void)handleActionNotificationWithUserInfo:(NSDictionary *)userInfo
+{
+    NSString *notificationType = [userInfo valueForKey:@"notificationType"];
+    NSString *notificationId = [userInfo valueForKey:@"notificationId"];
+    
+    if (IsEmpty(notificationType) || IsEmpty(notificationId)) {
         return;
     }
     
-    // TODO: Pull out the type and ID
-    NSString *notificationType = @"";
-    NSString *notificationId = @"";
+    [MTNotificationViewController markReadForNotificationId:notificationId];
     
-    if (!IsEmpty(notificationId) &&
-        ([notificationType isEqualToString:kNotificationPostComment] ||
+    if ([notificationType isEqualToString:kNotificationPostComment] ||
         [notificationType isEqualToString:kNotificationNewChallenge] ||
         [notificationType isEqualToString:kNotificationPostLiked] ||
-        [notificationType isEqualToString:kNotificationInactivity] ||
-        [notificationType isEqualToString:kNotificationVerifyPost])) {
+        [notificationType hasPrefix:kNotificationInactivity] ||
+        [notificationType isEqualToString:kNotificationVerifyPost]) {
         
         SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
         MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;

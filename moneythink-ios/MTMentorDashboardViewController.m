@@ -40,7 +40,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     self.scheduledActivationsOn = NO;
     self.queriedForActivationsOn = NO;
     self.queriedForStudents = NO;
@@ -146,6 +146,8 @@
 
         activatedChallenges = YES;
     }
+    // Temporarily, disable Schedule Your Challenges prompt
+    activatedChallenges = YES;
     
     BOOL invitedStudents = NO;
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserInvitedStudents] ||
@@ -319,7 +321,8 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    if (section == MTProgressSectionStudents) {
+    // Release 2.0 takes out Challenge Schedule, temporarily remove this way
+    if (section == MTProgressSectionStudents || section == MTProgressSectionChallenges) {
         return nil;
     }
 
@@ -517,7 +520,7 @@
             break;
             
         case MTProgressSectionChallenges:
-            height = 60.0f;
+            height = 0.0f;
             break;
 
         case MTProgressSectionStudents:

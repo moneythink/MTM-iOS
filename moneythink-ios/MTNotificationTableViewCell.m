@@ -10,6 +10,7 @@
 
 @implementation MTNotificationTableViewCell
 
+
 - (void)prepareForReuse
 {
     [super prepareForReuse];

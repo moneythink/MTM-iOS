@@ -20,6 +20,9 @@
     // Initialization code
     
     self.separatorView.backgroundColor = [UIColor menuHightlightGreen];
+    self.unreadCountView.layer.cornerRadius = self.unreadCountView.frame.size.height/2.0f;
+    self.unreadCountView.backgroundColor = [UIColor redColor];
+    self.unreadCountView.layer.masksToBounds = YES;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

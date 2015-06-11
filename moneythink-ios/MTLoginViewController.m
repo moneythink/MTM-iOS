@@ -140,17 +140,8 @@
 
                 [[MTUtil getAppDelegate] configureZendesk];
                 
-                if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-
-                } else {
-                    // TODO: Change back to Dashboard on launch/login
-                    id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorDashboardNav"];
-//                    id mentorDashboardVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-
-                    [weakSelf.revealViewController setFrontViewController:mentorDashboardVC animated:YES];
-                }
+                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
             } else {
                 NSLog(@"error - %@", error);
                 
@@ -276,15 +267,8 @@
             // Check for custom playlist for this class
             [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
             
-            if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-                id mentorChallengeRoom = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                [weakSelf.revealViewController setFrontViewController:mentorChallengeRoom animated:YES];
-                
-            } else {
-                id mentorProgressVC = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorDashboardNav"];
-                [weakSelf.revealViewController setFrontViewController:mentorProgressVC animated:YES];
-            }
-
+            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
         }
         else {
             [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];

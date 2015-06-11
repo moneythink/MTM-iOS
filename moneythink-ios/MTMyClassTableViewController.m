@@ -10,7 +10,6 @@
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
 #import "MTEmojiPickerCollectionView.h"
-#import "UIScrollView+EmptyDataSet.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
@@ -599,11 +598,11 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             NSArray *buttons = challenge[@"buttons"];
             NSArray *secondaryButtons = challenge[@"secondary_buttons"];
             
-            if (!IsEmpty(buttons)) {
+            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
                 weakSelf.hasButtons = YES;
                 [weakSelf userButtonsTapped];
             }
-            else if (!IsEmpty(secondaryButtons) && !self.isMentor) {
+            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
                 [weakSelf updateSecondaryButtonsTapped];
             }
@@ -772,10 +771,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     NSString *CellIdentifier = @"";
     UIImage *postImage = post[@"picture"];
     
-    BOOL myPost = NO;
-    if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
-        myPost = YES;
-    }
+    BOOL myPost = [MTUtil isUserMe:user];
     
     BOOL showButtons = NO;
     if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
@@ -831,7 +827,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
     }
     
-    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+    if ([MTUtil isUserMe:user]) {
+        cell.userName.text = @"Me";
+    }
+    else {
+        cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+    }
     
     cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];

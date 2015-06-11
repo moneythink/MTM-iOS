@@ -136,14 +136,15 @@
     
     queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
     
+    MTMakeWeakSelf();
     [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             PFChallengeBanner *banner = [objects firstObject];
             PFFile *bannerFile = banner[@"image_mdpi"];
-            self.challengeBanner.file = bannerFile;
-            [self.challengeBanner loadInBackground:^(UIImage *image, NSError *error) {
+            weakSelf.challengeBanner.file = bannerFile;
+            [weakSelf.challengeBanner loadInBackground:^(UIImage *image, NSError *error) {
                 if (!error) {
-                    self.challengeBanner.image = [self imageByScalingAndCroppingForSize:self.challengeBanner.frame.size withImage:image];
+                    weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:image];
                 }
             }];
         }

@@ -568,6 +568,27 @@ typedef enum {
             self.challenge = challenge;
         }
     }
+    else if (self.notification[@"post_verified"]) {
+        PFChallengePost *post = self.notification[@"post_verified"];
+        self.challengePost = post;
+        
+        self.postLikesCount = 0;
+        if (self.challengePost[@"likes"]) {
+            self.postLikesCount = [self.challengePost[@"likes"] intValue];
+        }
+        
+        self.postImage = self.challengePost[@"picture"];
+        
+        self.postUser = self.challengePost[@"user"];
+        self.currentUser = [PFUser currentUser];
+        [self loadPostText];
+        [self loadLikesWithCache:NO];
+        
+        if (post[@"challenge"]) {
+            PFChallenges *challenge = post[@"challenge"];
+            self.challenge = challenge;
+        }
+    }
     
     [self.tableView reloadData];
     [self updateLikes];
@@ -657,11 +678,11 @@ typedef enum {
             NSArray *buttons = challenge[@"buttons"];
             NSArray *secondaryButtons = challenge[@"secondary_buttons"];
             
-            if (!IsEmpty(buttons)) {
+            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
                 weakSelf.hasButtons = YES;
                 [weakSelf updateButtonsTapped];
             }
-            else if (!IsEmpty(secondaryButtons) && !self.isMentor) {
+            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
                 [weakSelf updateSecondaryButtonsTapped];
             }
@@ -681,12 +702,7 @@ typedef enum {
         if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
             showButtons = YES;
         }
-        
-        //        if (showButtons) {
-        //            self.hasButtons = self.hasButtons;
-        //            self.hasSecondaryButtons = self.hasSecondaryButtons;
-        //        }
-        
+                
         if (showButtons && self.postImage)
             self.postType = MTPostTypeWithButtonsWithImage;
         else if (showButtons)

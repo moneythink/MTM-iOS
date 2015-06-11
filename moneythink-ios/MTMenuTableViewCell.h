@@ -12,5 +12,7 @@
 
 @property (nonatomic, weak) IBOutlet UILabel *signupLabel;
 @property (nonatomic, weak) IBOutlet UILabel *signupCode;
+@property (nonatomic, weak) IBOutlet UIView *unreadCountView;
+@property (nonatomic, weak) IBOutlet UILabel *unreadCountLabel;
 
 @end

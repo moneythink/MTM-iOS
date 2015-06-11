@@ -20,4 +20,7 @@
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMe:(PFUser *)user;
 
++ (NSString *)lastViewedChallengeId;
++ (void)setLastViewedChallengedId:(NSString *)challengeId;
+
 @end

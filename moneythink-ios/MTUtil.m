@@ -49,6 +49,30 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
++ (NSString *)lastViewedChallengeId
+{
+    NSString *challengeId = [[NSUserDefaults standardUserDefaults] objectForKey:kLastViewedChallengeId];
+    if (!IsEmpty(challengeId)) {
+        return challengeId;
+    }
+    else {
+        return nil;
+    }
+}
+
++ (void)setLastViewedChallengedId:(NSString *)challengeId
+{
+    if (IsEmpty(challengeId)) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastViewedChallengeId];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setObject:challengeId forKey:kLastViewedChallengeId];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+
 + (void)logout
 {
     // Removes all keys

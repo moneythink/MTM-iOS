@@ -34,6 +34,8 @@
     self.headerView.backgroundColor = [UIColor menuDarkGreen];
     self.footerView.backgroundColor = [UIColor menuLightGreen];
     self.tableView.backgroundColor = [UIColor menuLightGreen];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -70,12 +72,7 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.tableView reloadData];
                     if (!indexPathForSelected) {
-                        if ([MTUtil isCurrentUserMentor]) {
-                            [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-                        }
-                        else {
-                            [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-                        }
+                        [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
                     }
                     else {
                         [weakSelf.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -89,12 +86,7 @@
     [self.tableView reloadData];
 
     if (!indexPathForSelected) {
-        if ([MTUtil isCurrentUserMentor]) {
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
-        }
-        else {
-            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-        }
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     else {
         [self.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -249,6 +241,16 @@
     if (indexPath.section == 2) {
         cell.signupLabel.text = msg;
         cell.signupCode.text = code;
+    }
+    
+    if (indexPath.section == 1 && indexPath.row == 2) {
+        cell.unreadCountLabel.text = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        if (((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount > 0) {
+            cell.unreadCountView.hidden = NO;
+        }
+        else {
+            cell.unreadCountView.hidden = YES;
+        }
     }
  
     return cell;
@@ -405,20 +407,42 @@
     UINavigationController *notificationsVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorNotificationsNav"];
     MTNotificationViewController *notificationVC = (MTNotificationViewController *)notificationsVCNav.topViewController;
     notificationVC.actionableNotificationId = notificationId;
-    notificationVC.actionableNotificationId = @"27mQgxxw6L";
 
     [self.revealViewController setFrontViewController:notificationsVCNav animated:YES];
 }
 
-- (void)openChallengesForChallenge:(PFChallenges *)challenge
+- (void)openChallengesForChallengeId:(NSString *)challengeId
 {
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
     
     UINavigationController *challengesVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
     MTChallengesViewController *challengesVC = (MTChallengesViewController *)challengesVCNav.topViewController;
-    challengesVC.actionableChallenge = challenge;
+    
+    if (!IsEmpty(challengeId)) {
+        challengesVC.actionableChallengeId = challengeId;
+    }
     
     [self.revealViewController setFrontViewController:challengesVCNav animated:YES];
+}
+
+
+#pragma mark - Notifications -
+- (void)unreadCountUpdate:(NSNotification *)note
+{
+    __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
+    [self.tableView reloadData];
+
+    if (!indexPathForSelected) {
+        if ([MTUtil isCurrentUserMentor]) {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+        else {
+            [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+        }
+    }
+    else {
+        [self.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
+    }
 }
 
 
