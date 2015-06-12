@@ -14,14 +14,7 @@
 @property (nonatomic, strong) IBOutlet PFImageView *challengeBanner;
 
 @property (nonatomic, strong) IBOutlet UIView *rewardsView;
-@property (nonatomic, strong) IBOutlet UILabel *levelLabel;
 @property (nonatomic, strong) IBOutlet UILabel *rewardLabel;
-@property (nonatomic, strong) IBOutlet UILabel *pointsPerPost;
-@property (nonatomic, strong) IBOutlet UILabel *maxPoints;
-@property (nonatomic, strong) IBOutlet UIImageView *levelImage1;
-@property (nonatomic, strong) IBOutlet UIImageView *levelImage2;
-@property (nonatomic, strong) IBOutlet UIImageView *levelImage3;
-@property (nonatomic, strong) IBOutlet UIImageView *pillarImage;
 @property (nonatomic, strong) IBOutlet UIView *missionView;
 @property (nonatomic, strong) IBOutlet UITextView *tagline;
 @property (nonatomic, strong) IBOutlet UIView *instructionsView;
@@ -149,27 +142,7 @@
             }];
         }
     }];
-    
-    NSString *pillar = self.challenge[@"pillar"];
-    if ([pillar isEqualToString:@"Money Maker"]) {
-        UIImage *money = [UIImage imageNamed:@"icon_money"];
-        CGRect reFrame = CGRectMake(self.pillarImage.frame.origin.x,
-                                    self.pillarImage.frame.origin.y,
-                                    money.size.width,
-                                    money.size.height);
-        self.pillarImage.frame = reFrame;
-        self.pillarImage.image = money;
-    } else {
-        UIImage *pig = [UIImage imageNamed:@"icon_pig"];
-        CGRect reFrame = CGRectMake(self.pillarImage.frame.origin.x,
-                                    self.pillarImage.frame.origin.y,
-                                    pig.size.width,
-                                    pig.size.height);
-        self.pillarImage.frame = reFrame;
-        self.pillarImage.image = pig;
-    }
-    self.pillarImage.contentMode = UIViewContentModeScaleAspectFit;
-    
+        
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
     
@@ -180,25 +153,16 @@
     [self.missionView setNeedsUpdateConstraints];
     [self.missionView setNeedsLayout];
     
-    [self.levelLabel setTextColor:[UIColor primaryOrange]];
-    [self.rewardLabel setTextColor:[UIColor primaryOrange]];
-    self.pointsPerPost.text = [NSString stringWithFormat:@"%@ pts x post", self.challenge[@"points_per_post"]];
-    self.maxPoints.text = [NSString stringWithFormat:@"(up to %@ pts)", self.challenge[@"max_points"]];
-    
-    NSInteger level = [self.challenge[@"level"] intValue];
-    if (level < 3) {
-        self.levelImage1.image = [UIImage imageNamed:@"bg_progress_orange1"];
-        self.levelImage2.image = [UIImage imageNamed:@"bg_progress_white2"];
-        self.levelImage3.image = [UIImage imageNamed:@"bg_progress_white3"];
-    } else if (level < 7) {
-        self.levelImage1.image = [UIImage imageNamed:@"bg_progress_orange1"];
-        self.levelImage2.image = [UIImage imageNamed:@"bg_progress_white2"];
-        self.levelImage3.image = [UIImage imageNamed:@"bg_progress_orange3"];
-    } else {
-        self.levelImage1.image = [UIImage imageNamed:@"bg_progress_orange1"];
-        self.levelImage2.image = [UIImage imageNamed:@"bg_progress_orange2"];
-        self.levelImage3.image = [UIImage imageNamed:@"bg_progress_orange3"];
-    }
+    NSString *pointsPerPostString = [NSString stringWithFormat:@"%@ pts x post", self.challenge[@"points_per_post"]];
+    NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ (up to %@ pts)", pointsPerPostString, self.challenge[@"max_points"]];
+    NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
+    [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
+    [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
+
+    [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:[theMessage rangeOfString:@"Reward:"]];
+    [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:pointsPerPostString]];
+
+    self.rewardLabel.attributedText = theAttributedTitle;
     
     if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
         self.mentorInstructions.text = self.challenge[@"mentor_instructions"];

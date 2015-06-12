@@ -38,6 +38,7 @@
 @property (nonatomic, strong) MTChallengeInfoViewController *challengeInfoView;
 @property (nonatomic, strong) MTChallengeListViewController *challengeListView;
 @property (nonatomic, strong) NSArray *emojiObjects;
+@property (nonatomic) BOOL shouldLoadPreviousChallenge;
 
 @end
 
@@ -65,10 +66,7 @@
     [self setupViews];
     [self loadEmoji];
     
-    // Set the gesture
-    //  Add tag = 5000 so panGestureRecognizer can be re-added
-    self.navigationController.navigationBar.tag = 5000;
-    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
+    self.shouldLoadPreviousChallenge = YES;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -85,7 +83,7 @@
     [super viewDidAppear:animated];
     
     // If already loaded, need to do this in ViewDidAppear vs ViewWillAppear
-    if (!IsEmpty(self.challenges)) {
+    if (!IsEmpty(self.challenges) && IsEmpty([self.challengesPageViewController viewControllers])) {
         MTChallengeContentViewController *startingViewController = [self viewControllerAtIndex:self.challengesPageIndex];
         NSArray *viewControllers = @[startingViewController];
         [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
@@ -173,48 +171,52 @@
 
 - (void)updateViews
 {
-    PFChallenges *challengeToGoTo = nil;
-    if (!IsEmpty(self.actionableChallengeId)) {
-        // If we're at this challenge, no need to animate
-        if ([self.actionableChallengeId isEqualToString:self.currentChallenge.objectId]) {
-            // do nothing
-        }
-        else {
-            for (PFChallenges *thisChallenge in self.challenges) {
-                if ([thisChallenge.objectId isEqualToString:self.actionableChallengeId]) {
-                    challengeToGoTo = thisChallenge;
-                    break;
-                }
-            }
-        }
-    }
-    else if (!IsEmpty([MTUtil lastViewedChallengeId])) {
-        NSString *lastOne = [MTUtil lastViewedChallengeId];
+    if (self.shouldLoadPreviousChallenge) {
+        self.shouldLoadPreviousChallenge = NO;
         
-        if (!IsEmpty(lastOne)) {
-            // If first Challenge, no need to go to that one
-            PFChallenges *firstChallenge = [self.challenges firstObject];
-            if ([firstChallenge.objectId isEqualToString:lastOne]) {
+        PFChallenges *challengeToGoTo = nil;
+        if (!IsEmpty(self.actionableChallengeId)) {
+            // If we're at this challenge, no need to animate
+            if ([self.actionableChallengeId isEqualToString:self.currentChallenge.objectId]) {
                 // do nothing
             }
             else {
                 for (PFChallenges *thisChallenge in self.challenges) {
-                    if ([thisChallenge.objectId isEqualToString:lastOne]) {
+                    if ([thisChallenge.objectId isEqualToString:self.actionableChallengeId]) {
                         challengeToGoTo = thisChallenge;
                         break;
                     }
                 }
             }
         }
-    }
-    
-    // Reset to avoid infinite loop
-    [MTUtil setLastViewedChallengedId:nil];
-    self.actionableChallengeId = nil;
-    
-    if (challengeToGoTo) {
-        self.currentChallenge = challengeToGoTo;
-        [self loadChallenge:self.currentChallenge withIndex:[self.challenges indexOfObject:self.currentChallenge] toggleChallengeList:NO];
+        else if (!IsEmpty([MTUtil lastViewedChallengeId])) {
+            NSString *lastOne = [MTUtil lastViewedChallengeId];
+            
+            if (!IsEmpty(lastOne)) {
+                // If first Challenge, no need to go to that one
+                PFChallenges *firstChallenge = [self.challenges firstObject];
+                if ([firstChallenge.objectId isEqualToString:lastOne]) {
+                    // do nothing
+                }
+                else {
+                    for (PFChallenges *thisChallenge in self.challenges) {
+                        if ([thisChallenge.objectId isEqualToString:lastOne]) {
+                            challengeToGoTo = thisChallenge;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Reset to avoid infinite loop
+        [MTUtil setLastViewedChallengedId:nil];
+        self.actionableChallengeId = nil;
+        
+        if (challengeToGoTo) {
+            self.currentChallenge = challengeToGoTo;
+            [self loadChallenge:self.currentChallenge withIndex:[self.challenges indexOfObject:self.currentChallenge] toggleChallengeList:NO];
+        }
     }
     
     self.myClassTableView.challenge = self.currentChallenge;

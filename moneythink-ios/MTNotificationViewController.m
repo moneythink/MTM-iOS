@@ -70,7 +70,6 @@
     // Set the gesture
     //  Add tag = 5000 so panGestureRecognizer can be re-added
     self.navigationController.navigationBar.tag = 5000;
-    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
     
     [self.markAllReadButtonItem setTarget:self];
     [self.markAllReadButtonItem setAction:@selector(markAllRead)];
@@ -285,9 +284,13 @@
     }
     else if ([notificationType isEqualToString:kNotificationPostLiked]) {
         PFChallengePost *post = notification[@"post_liked"];
+        NSString *postMessage = post[@"post_text"];
         
         if (!IsEmpty(username)) {
-            NSString *theMessage = [NSString stringWithFormat:@"%@ liked your post: %@", username, post[@"post_text"]];
+            NSString *theMessage = [NSString stringWithFormat:@"%@ liked your post: %@", username, postMessage];
+            if (IsEmpty(postMessage)) {
+                theMessage = [NSString stringWithFormat:@"%@ liked your post.", username];
+            }
             NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
             [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
             
@@ -303,7 +306,12 @@
             cell.messageTextView.attributedText = theAttributedTitle;
         }
         else {
-            cell.messageTextView.text = [NSString stringWithFormat:@"Someone liked your post: %@", post[@"post_text"]];
+            if (!IsEmpty(postMessage)) {
+                cell.messageTextView.text = [NSString stringWithFormat:@"Someone liked your post: %@", postMessage];
+            }
+            else {
+                cell.messageTextView.text = @"Someone liked your post.";
+            }
         }
         
     }
@@ -556,8 +564,34 @@
     MTPostViewController *postVC = (MTPostViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"challengePost"];
     postVC.notification = notification;
     
-    __block UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postVC];
-    [self.revealViewController presentViewController:nav animated:YES completion:nil];
+    if ([postVC canPopulateForNotification:notification populate:NO]) {
+        __block UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postVC];
+        [self.revealViewController presentViewController:nav animated:YES completion:nil];
+    }
+    else {
+        NSString *title = @"Unable to load Notification";
+        NSString *messageToDisplay = @"Data may have been previously deleted.";
+
+        if ([UIAlertController class]) {
+            UIAlertController *changeSheet = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:messageToDisplay
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *close = [UIAlertAction
+                                    actionWithTitle:@"Close"
+                                    style:UIAlertActionStyleCancel
+                                    handler:^(UIAlertAction *action) {
+                                    }];
+            
+            [changeSheet addAction:close];
+            
+            [self presentViewController:changeSheet animated:YES completion:nil];
+        } else {
+            [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            }];
+        }
+    }
 }
 
 - (void)displayChallengesViewForChallengeId:(NSString *)challengeId

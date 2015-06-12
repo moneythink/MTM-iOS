@@ -23,6 +23,7 @@ typedef enum {
 @protocol MTPostViewControllerDelegate <NSObject>
 
 - (void)didDeletePost:(PFChallengePost *)challengePost;
+- (void)willUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
 - (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
 
 @end
@@ -45,5 +46,6 @@ typedef enum {
 @property (nonatomic, strong) PFNotifications *notification;
 
 - (void)emojiLiked:(PFEmoji *)emoji;
+- (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate;
 
 @end

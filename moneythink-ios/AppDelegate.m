@@ -157,6 +157,7 @@
                                              actionWithTitle:@"Close"
                                              style:UIAlertActionStyleCancel
                                              handler:^(UIAlertAction *action) {
+                                                 [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                              }];
                     
                     UIAlertAction *view = [UIAlertAction
@@ -178,6 +179,9 @@
                     [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:[NSArray arrayWithObject:@"View"] handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
                         if (buttonIndex != alertView.cancelButtonIndex) {
                             [weakSelf handleActionNotificationWithUserInfo:weakUserInfo];
+                        }
+                        else {
+                            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                         }
                     }];
                 }
@@ -203,7 +207,6 @@
 
 - (void)handleUserUpdateWithfetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    // Update Current User
     PFUser *currentUser = [PFUser currentUser];
     if (currentUser && [MTUtil internetReachable]) {
         [currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {

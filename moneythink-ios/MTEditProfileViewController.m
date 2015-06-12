@@ -201,11 +201,6 @@
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
-    
-    // Set the gesture
-    //  Add tag = 5000 so panGestureRecognizer can be re-added
-    self.navigationController.navigationBar.tag = 5000;
-    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 - (void)viewDidAppear:(BOOL)animated

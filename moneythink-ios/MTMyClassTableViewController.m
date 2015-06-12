@@ -168,12 +168,12 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     self.emojiDimView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
     self.emojiDimView.alpha = 0.0f;
     
-    self.emojiContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 184.0f, 184.0f + 25.0f)];
+    self.emojiContainerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 242.0f, 126.0f + 25.0f)];
     self.emojiContainerView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
     self.emojiContainerView.layer.cornerRadius = 4.0f;
     self.emojiContainerView.clipsToBounds = YES;
     
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 5.0f, 164.0f, 20.0f)];
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10.0f, 5.0f, 222.0f, 20.0f)];
     title.backgroundColor = [UIColor clearColor];
     title.text = @"Like with Emoji";
     title.font = [UIFont mtFontOfSize:15.0f];
@@ -183,7 +183,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     self.emojiCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"EmojiPickerCollectionView"];
     self.emojiCollectionView.collectionView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
-    self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 184.0f, 184.0f);
+    self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 242.0f, 126.0f);
     
     // Sort by name, so consistent in presentation
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
@@ -220,10 +220,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         self.emojiDimView.alpha = 1.0f;
         self.emojiContainerView.frame = ({
             CGRect newFrame = self.emojiContainerView.frame;
-            newFrame.size.height = 204.0f;
-            newFrame.size.width = 184.0f;
-            newFrame.origin.y = (keyWindowFrame.size.height - 184.0f - 25.0f)/2.0f;
-            newFrame.origin.x = (keyWindowFrame.size.width - 184.0f)/2.0f;
+            newFrame.size.height = 151.0f;
+            newFrame.size.width = 242.0f;
+            newFrame.origin.y = (keyWindowFrame.size.height - 126.0f - 25.0f)/2.0f;
+            newFrame.origin.x = (keyWindowFrame.size.width - 242.0f)/2.0f;
             
             newFrame;
         });
@@ -1171,12 +1171,18 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     } afterDelay:0.35f];
 }
 
+- (void)willUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
+{
+    self.postsLiked = postsLiked;
+    self.postsLikedFull = postsLikedFull;
+    [self.tableView reloadData];
+}
+
 - (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull
 {
     self.didUpdateLikedPosts = YES;
     self.postsLiked = postsLiked;
     self.postsLikedFull = postsLikedFull;
-    [self.tableView reloadData];
     [self updateLikes];
 }
 

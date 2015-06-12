@@ -11,7 +11,6 @@
 
 @interface MTChallengeContentViewController ()
 
-@property (nonatomic, weak) IBOutlet UILabel *challengeTitle;
 @property (nonatomic, weak) IBOutlet UIButton *challengeListButton;
 
 @end
@@ -22,8 +21,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.challengeTitle.text = self.challengeTitleText;
+    [self.challengeListButton setTitle:self.challengeTitleText forState:UIControlStateNormal];
 }
 
 

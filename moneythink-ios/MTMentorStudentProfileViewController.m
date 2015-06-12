@@ -16,8 +16,6 @@
 @property (strong, nonatomic) NSArray *studentPosts;
 
 @property (strong, nonatomic) IBOutlet UILabel *userPoints;
-@property (strong, nonatomic) IBOutlet UIImageView *managerProgress;
-@property (strong, nonatomic) IBOutlet UIImageView *makerProgress;
 
 @end
 
@@ -40,6 +38,7 @@
         points = [studentPoints stringValue];
     }
     self.userPoints.text = [points stringByAppendingString:@" pts"];
+    self.title = [NSString stringWithFormat:@"%@ %@", self.student[@"first_name"], self.student[@"last_name"]];
     
     self.profileImage.file = self.student[@"profile_picture"];
     self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
@@ -60,35 +59,6 @@
             }
         });
     }];
-    
-    NSInteger managerProgressValue = [self.student[@"money_manager"] intValue];
-    NSInteger makerProgressValue = [self.student[@"money_maker"] intValue];
-    
-    if (makerProgressValue == 100) {
-        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_2"];
-    } else if (makerProgressValue >= 50) {
-        self.makerProgress.image = [UIImage imageNamed:@"bg_money_maker_1"];
-    } else {
-        self.makerProgress.image = nil;
-    }
-
-    if (managerProgressValue == 100) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_7"];
-    } else if (managerProgressValue >= 86) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_6"];
-    } else if (managerProgressValue >= 72) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_5"];
-    } else if (managerProgressValue >= 58) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_4"];
-    } else if (managerProgressValue >= 44) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_3"];
-    } else if (managerProgressValue >= 30) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_2"];
-    } else if (managerProgressValue >= 16) {
-        self.managerProgress.image = [UIImage imageNamed:@"bg_money_mananger_1"];
-    } else {
-        self.managerProgress.image = nil;
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -19,7 +19,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self customSetup];
 }
 
@@ -42,6 +41,10 @@
         [self.revealButtonItem setTarget: self.revealViewController];
         [self.revealButtonItem setAction: @selector(revealToggle:)];
         self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        
+        // Set the gesture
+        //  Add tag = 5000 so panGestureRecognizer can be re-added
+        self.navigationController.navigationBar.tag = 5000;
         [self.navigationController.navigationBar addGestureRecognizer: self.revealViewController.panGestureRecognizer];
     }
 }

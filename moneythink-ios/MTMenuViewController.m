@@ -63,7 +63,7 @@
     if ([MTUtil isCurrentUserMentor]) {
         NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
         PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-        querySignUpCodes.cachePolicy = kPFCachePolicyCacheThenNetwork;
+        querySignUpCodes.cachePolicy = kPFCachePolicyNetworkElseCache;
         
         MTMakeWeakSelf();
         [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -395,6 +395,9 @@
 - (void)openLeaderboard
 {
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
+        [self.revealViewController revealToggleAnimated:NO];
+    }
     
     UINavigationController *leaderboardVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"leaderboardVCNav"];
     [self.revealViewController setFrontViewController:leaderboardVCNav animated:YES];
@@ -403,6 +406,9 @@
 - (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType
 {
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
+        [self.revealViewController revealToggleAnimated:NO];
+    }
 
     UINavigationController *notificationsVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"mentorNotificationsNav"];
     MTNotificationViewController *notificationVC = (MTNotificationViewController *)notificationsVCNav.topViewController;
@@ -414,7 +420,10 @@
 - (void)openChallengesForChallengeId:(NSString *)challengeId
 {
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-    
+    if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
+        [self.revealViewController revealToggleAnimated:NO];
+    }
+
     UINavigationController *challengesVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
     MTChallengesViewController *challengesVC = (MTChallengesViewController *)challengesVCNav.topViewController;
     

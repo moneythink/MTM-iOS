@@ -500,96 +500,7 @@ typedef enum {
         }
     }];
     
-    if (self.notification[@"comment"]) {
-        PFChallengePostComment *comment = self.notification[@"comment"];
-        self.postComment = comment;
-        
-        if (comment[@"challenge_post"]) {
-            PFChallengePost *post = comment[@"challenge_post"];
-            self.challengePost = post;
-            
-            self.postLikesCount = 0;
-            if (self.challengePost[@"likes"]) {
-                self.postLikesCount = [self.challengePost[@"likes"] intValue];
-            }
-            
-            self.postImage = self.challengePost[@"picture"];
-            
-            self.postUser = self.challengePost[@"user"];
-            self.currentUser = [PFUser currentUser];
-            [self loadPostText];
-            [self loadLikesWithCache:NO];
-            
-            if (post[@"challenge"]) {
-                PFChallenges *challenge = post[@"challenge"];
-                self.challenge = challenge;
-            }
-        }
-    }
-    else if (self.notification[@"post_liked"]) {
-        PFChallengePost *post = self.notification[@"post_liked"];
-        self.challengePost = post;
-        
-        self.postLikesCount = 0;
-        if (self.challengePost[@"likes"]) {
-            self.postLikesCount = [self.challengePost[@"likes"] intValue];
-        }
-        
-        self.postImage = self.challengePost[@"picture"];
-        
-        self.postUser = self.challengePost[@"user"];
-        self.currentUser = [PFUser currentUser];
-        [self loadPostText];
-        [self loadLikesWithCache:NO];
-        
-        if (post[@"challenge"]) {
-            PFChallenges *challenge = post[@"challenge"];
-            self.challenge = challenge;
-        }
-    }
-    else if (self.notification[@"verify_post"]) {
-        PFChallengePost *post = self.notification[@"verify_post"];
-        self.challengePost = post;
-        
-        self.postLikesCount = 0;
-        if (self.challengePost[@"likes"]) {
-            self.postLikesCount = [self.challengePost[@"likes"] intValue];
-        }
-        
-        self.postImage = self.challengePost[@"picture"];
-        
-        self.postUser = self.challengePost[@"user"];
-        self.currentUser = [PFUser currentUser];
-        [self loadPostText];
-        [self loadLikesWithCache:NO];
-        
-        if (post[@"challenge"]) {
-            PFChallenges *challenge = post[@"challenge"];
-            self.challenge = challenge;
-        }
-    }
-    else if (self.notification[@"post_verified"]) {
-        PFChallengePost *post = self.notification[@"post_verified"];
-        self.challengePost = post;
-        
-        self.postLikesCount = 0;
-        if (self.challengePost[@"likes"]) {
-            self.postLikesCount = [self.challengePost[@"likes"] intValue];
-        }
-        
-        self.postImage = self.challengePost[@"picture"];
-        
-        self.postUser = self.challengePost[@"user"];
-        self.currentUser = [PFUser currentUser];
-        [self loadPostText];
-        [self loadLikesWithCache:NO];
-        
-        if (post[@"challenge"]) {
-            PFChallenges *challenge = post[@"challenge"];
-            self.challenge = challenge;
-        }
-    }
-    
+    [self canPopulateForNotification:self.notification populate:YES];
     [self.tableView reloadData];
     [self updateLikes];
 }
@@ -720,6 +631,130 @@ typedef enum {
 
 
 #pragma mark - Public Methods -
+- (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate
+{
+    PFChallenges *challenge = nil;
+    PFChallengePost *post = nil;
+    
+    if (self.notification[@"comment"]) {
+        PFChallengePostComment *comment = self.notification[@"comment"];
+        
+        if (comment[@"challenge_post"]) {
+            post = comment[@"challenge_post"];
+            
+            if (populate) {
+                self.postComment = comment;
+                self.challengePost = post;
+                
+                self.postLikesCount = 0;
+                if (self.challengePost[@"likes"]) {
+                    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+                }
+                
+                self.postImage = self.challengePost[@"picture"];
+                
+                self.postUser = self.challengePost[@"user"];
+                self.currentUser = [PFUser currentUser];
+                [self loadPostText];
+                [self loadLikesWithCache:NO];
+                
+                if (post[@"challenge"]) {
+                    challenge = post[@"challenge"];
+                    self.challenge = challenge;
+                }
+            }
+        }
+    }
+    else if (self.notification[@"post_liked"]) {
+        post = self.notification[@"post_liked"];
+        
+        if (post[@"challenge"]) {
+            challenge = post[@"challenge"];
+        }
+
+        if (populate) {
+            if (post[@"challenge"]) {
+                self.challenge = challenge;
+            }
+
+            self.challengePost = post;
+            
+            self.postLikesCount = 0;
+            if (self.challengePost[@"likes"]) {
+                self.postLikesCount = [self.challengePost[@"likes"] intValue];
+            }
+            
+            self.postImage = self.challengePost[@"picture"];
+            
+            self.postUser = self.challengePost[@"user"];
+            self.currentUser = [PFUser currentUser];
+            [self loadPostText];
+            [self loadLikesWithCache:NO];
+        }
+        
+    }
+    else if (self.notification[@"verify_post"]) {
+        post = self.notification[@"verify_post"];
+        
+        if (post[@"challenge"]) {
+            challenge = post[@"challenge"];
+        }
+
+        if (populate) {
+            self.challengePost = post;
+            
+            self.postLikesCount = 0;
+            if (self.challengePost[@"likes"]) {
+                self.postLikesCount = [self.challengePost[@"likes"] intValue];
+            }
+            
+            self.postImage = self.challengePost[@"picture"];
+            
+            self.postUser = self.challengePost[@"user"];
+            self.currentUser = [PFUser currentUser];
+            [self loadPostText];
+            [self loadLikesWithCache:NO];
+            
+            if (post[@"challenge"]) {
+                self.challenge = challenge;
+            }
+        }
+    }
+    else if (self.notification[@"post_verified"]) {
+        post = self.notification[@"post_verified"];
+        if (post[@"challenge"]) {
+            challenge = post[@"challenge"];
+        }
+
+        if (populate) {
+            self.challengePost = post;
+            
+            self.postLikesCount = 0;
+            if (self.challengePost[@"likes"]) {
+                self.postLikesCount = [self.challengePost[@"likes"] intValue];
+            }
+            
+            self.postImage = self.challengePost[@"picture"];
+            
+            self.postUser = self.challengePost[@"user"];
+            self.currentUser = [PFUser currentUser];
+            [self loadPostText];
+            [self loadLikesWithCache:NO];
+            
+            if (post[@"challenge"]) {
+                self.challenge = challenge;
+            }
+        }
+    }
+    
+    if (post) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 - (void)emojiLiked:(PFEmoji *)emoji
 {
     NSString *emojiName = emoji[@"name"];
@@ -835,8 +870,8 @@ typedef enum {
     [self.tableView reloadData];
     
     // Optimistically update parent view
-    if ([self.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
-        [self.delegate didUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
+    if ([self.delegate respondsToSelector:@selector(willUpdatePostsLiked:withPostLikedFull:)]) {
+        [self.delegate willUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
     }
 
     MTMakeWeakSelf();
@@ -872,6 +907,11 @@ typedef enum {
 
             [weakSelf loadLikesWithCache:YES];
         }
+        
+        if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
+            [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
+        }
+
     }];
 }
 
