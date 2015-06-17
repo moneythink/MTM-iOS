@@ -190,7 +190,7 @@
             //Not granted access to mediaType
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[[UIAlertView alloc] initWithTitle:@"Camera Access Alert!"
-                                            message:@"Monrythink doesn't have permission to use Camera, please change privacy settings"
+                                            message:@"Moneythink doesn't have permission to use Camera, please change privacy settings"
                                            delegate:self
                                   cancelButtonTitle:@"OK"
                                   otherButtonTitles:nil] show];

@@ -140,8 +140,11 @@
 
                 [[MTUtil getAppDelegate] configureZendesk];
                 
-                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                if (![onboardingController checkForOnboarding]) {
+                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                }
             } else {
                 NSLog(@"error - %@", error);
                 
@@ -267,8 +270,11 @@
             // Check for custom playlist for this class
             [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
             
-            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+            MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+            if (![onboardingController checkForOnboarding]) {
+                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+            }
         }
         else {
             [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];

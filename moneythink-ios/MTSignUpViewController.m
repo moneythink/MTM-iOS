@@ -470,8 +470,11 @@
                                         
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
-                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                        [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                                        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                                        if (![onboardingController checkForOnboarding]) {
+                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                                        }
                                         
                                     } else {
                                         // Ignore parse cache errors for now

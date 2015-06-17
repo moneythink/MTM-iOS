@@ -170,6 +170,9 @@
 		89A793B71B29F104000BFA40 /* mt_avatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B51B29F104000BFA40 /* mt_avatar@2x.png */; };
 		89A793BA1B2B80D6000BFA40 /* challenge-list-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */; };
 		89A793BB1B2B80D6000BFA40 /* challenge-list-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */; };
+		89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */; };
+		89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */; };
+		89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */; };
 		89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */; };
 		89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */; };
 		89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */; };
@@ -470,6 +473,12 @@
 		89A793B51B29F104000BFA40 /* mt_avatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mt_avatar@2x.png"; sourceTree = "<group>"; };
 		89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "challenge-list-icon.png"; sourceTree = "<group>"; };
 		89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "challenge-list-icon@2x.png"; sourceTree = "<group>"; };
+		89A793BD1B2F25CA000BFA40 /* OnboardingContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnboardingContentViewController.h; sourceTree = "<group>"; };
+		89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingContentViewController.m; sourceTree = "<group>"; };
+		89A793BF1B2F25CA000BFA40 /* OnboardingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnboardingViewController.h; sourceTree = "<group>"; };
+		89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingViewController.m; sourceTree = "<group>"; };
+		89A793C41B2F2C80000BFA40 /* MTOnboardingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOnboardingController.h; sourceTree = "<group>"; };
+		89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOnboardingController.m; sourceTree = "<group>"; };
 		89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow.png"; sourceTree = "<group>"; };
 		89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow@2x.png"; sourceTree = "<group>"; };
 		89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard.png"; sourceTree = "<group>"; };
@@ -601,6 +610,7 @@
 			isa = PBXGroup;
 			children = (
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
+				89A793BC1B2F25CA000BFA40 /* Onboard */,
 				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
 				89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */,
 				106309731A3A3C4D0093C209 /* MBProgressHUD.h */,
@@ -760,6 +770,8 @@
 				5876E2B6196F2C1F00C176EC /* moneythink-ios-Prefix.pch */,
 				89C6792D19E317340054E890 /* MTUtil.h */,
 				89C6792E19E317340054E890 /* MTUtil.m */,
+				89A793C41B2F2C80000BFA40 /* MTOnboardingController.h */,
+				89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1085,6 +1097,17 @@
 			path = "UIBarButtonItem-Badge";
 			sourceTree = "<group>";
 		};
+		89A793BC1B2F25CA000BFA40 /* Onboard */ = {
+			isa = PBXGroup;
+			children = (
+				89A793BD1B2F25CA000BFA40 /* OnboardingContentViewController.h */,
+				89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */,
+				89A793BF1B2F25CA000BFA40 /* OnboardingViewController.h */,
+				89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */,
+			);
+			path = Onboard;
+			sourceTree = "<group>";
+		};
 		89C3E8101B1547680084EA48 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -1357,6 +1380,7 @@
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */,
+				89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */,
 				106309881A3A3C4D0093C209 /* Reachability.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58509432197C063D00EDC969 /* MTChallengesViewController.m in Sources */,
@@ -1381,11 +1405,13 @@
 				895F78C01B17A2C300055759 /* MTChallengeContentViewController.m in Sources */,
 				58669F6219772D00009BC13C /* PFClasses.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
+				89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
 				8952510F1B1A667E008068C6 /* MTChallengeListTableViewCell.m in Sources */,
 				106309981A3A3DD80093C209 /* MICheckBox.m in Sources */,
 				895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */,
 				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
+				89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */,
 				8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */,
 				58669F5F19772D00009BC13C /* PFChallengePostComment.m in Sources */,
 			);
@@ -1571,7 +1597,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "a36d1224-1b89-49a1-926d-7f3a8e81a763";
+				PROVISIONING_PROFILE = "fbae0706-9107-4823-bc87-6053a3e43c5b";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1649,7 +1675,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e40d3b03-37e9-4fed-8e80-1b4a8516622e";
+				PROVISIONING_PROFILE = "6ba5f552-4423-4a1a-abdb-11f5df02afec";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1726,7 +1752,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e40d3b03-37e9-4fed-8e80-1b4a8516622e";
+				PROVISIONING_PROFILE = "6ba5f552-4423-4a1a-abdb-11f5df02afec";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1803,7 +1829,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "a36d1224-1b89-49a1-926d-7f3a8e81a763";
+				PROVISIONING_PROFILE = "fbae0706-9107-4823-bc87-6053a3e43c5b";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

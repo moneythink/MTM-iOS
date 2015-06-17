@@ -840,11 +840,26 @@
         if (self.removedProfilePhoto) {
             self.profileImage = nil;
             [self.userCurrent removeObjectForKey:@"profile_picture"];
+            self.removedProfilePhoto = NO;
         }
     }
     
+    MTMakeWeakSelf();
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                if (weakSelf.presentingViewController) {
+                    [weakSelf dismissViewControllerAnimated:YES completion:nil];
+                }
+                else {
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+                    hud.labelText = @"Saved!";
+                    hud.mode = MBProgressHUDModeText;
+                    [hud hide:YES afterDelay:1.0f];
+                }
+            });
+
             [[PFUser currentUser] fetchInBackground];
             
             // Update for Push Notifications
@@ -854,8 +869,11 @@
             NSLog(@"error - %@", error);
         }
     }];
-    
-    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+- (void)dismiss
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)editProfileImageButton:(id)sender
@@ -936,7 +954,7 @@
             //Not granted access to mediaType
             dispatch_async(dispatch_get_main_queue(), ^{
                 [[[UIAlertView alloc] initWithTitle:@"Camera Access Alert!"
-                                            message:@"Monrythink doesn't have permission to use Camera, please change privacy settings"
+                                            message:@"Moneythink doesn't have permission to use Camera, please change privacy settings"
                                            delegate:self
                                   cancelButtonTitle:@"OK"
                                   otherButtonTitles:nil] show];

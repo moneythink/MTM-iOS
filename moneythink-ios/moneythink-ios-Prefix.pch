@@ -9,6 +9,7 @@
 #define HEIGHT_IPHONE_5 568
 #define HEIGHT_IPHONE_4 480
 
+#define isPadDevice (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone && [[[UIDevice currentDevice] model] hasPrefix:@"iPad"])
 #define IS_RETINA ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0))
 #define IS_IPHONE_5 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_5 )
 #define IS_IPHONE_4 ( [ [ UIScreen mainScreen ] bounds ].size.height == HEIGHT_IPHONE_4 )
@@ -87,6 +88,8 @@
 #import "PFSignupCodes.h"
 #import "PFStudentPointDetails.h"
 #import "PFChallengePostsLiked.h"
+
+#import "MTOnboardingController.h"
 
 static inline BOOL IsEmpty(id thing) {
     return thing == nil ||

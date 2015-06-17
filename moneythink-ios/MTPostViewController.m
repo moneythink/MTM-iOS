@@ -490,6 +490,7 @@ typedef enum {
     // Load Emoji for picker
     PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
     query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    [query addAscendingOrder:@"emoji_order"];
     
     MTMakeWeakSelf();
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -1828,7 +1829,13 @@ typedef enum {
 
             NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
             NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
-            userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            
+            if ([MTUtil isUserMe:self.postUser]) {
+                userInfoCell.postUsername.text = @"Me";
+            }
+            else {
+                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            }
             
             userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
             userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -1983,8 +1990,12 @@ typedef enum {
             defaultCell.commentLabel.textColor = [UIColor darkGrey];
             
             PFUser *commentPoster = comment[@"user"];
-            
             NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+            
+            if ([MTUtil isUserMe:commentPoster]) {
+                detailString = @"Me";
+            }
+
             defaultCell.userLabel.text = detailString;
             [defaultCell.userLabel setFont:[UIFont mtLightFontOfSize:11.0f]];
             defaultCell.userLabel.textColor = [UIColor darkGrey];
@@ -2014,7 +2025,14 @@ typedef enum {
             
             NSString *firstName = likeUser[@"first_name"];
             NSString *lastName = likeUser[@"last_name"];
-            likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            
+            if ([MTUtil isUserMe:likeUser]) {
+                likeUserCell.username.text = @"Me";
+            }
+            else {
+                likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+            }
+
             likeUserCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
             
             if (likeUserCell.userAvatarImage) {

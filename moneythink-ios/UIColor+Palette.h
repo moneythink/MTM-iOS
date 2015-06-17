@@ -39,6 +39,8 @@
 
 + (UIColor *)challengeViewToggleHighlightNormal;
 
-+ (UIColor *) colorWithHexString: (NSString *) hexString;
++ (UIColor *)colorWithHexString: (NSString *) hexString;
++ (UIColor *)lighterColorForColor:(UIColor *)c;
++ (UIColor *)darkerColorForColor:(UIColor *)c;
 
 @end

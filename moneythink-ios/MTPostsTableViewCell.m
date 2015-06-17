@@ -26,7 +26,9 @@
     self.loadingView.alpha = 0.0f;
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-    
+    [self.commentButton setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
+    [self.commentButton setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateDisabled];
+
     for (UIView *thisView in [self.emojiContainerView subviews]) {
         [thisView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];
     }
@@ -61,7 +63,7 @@
     }
     
     // Sort by name, so consistent in presentation
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"emoji_order" ascending:YES];
     NSArray *sortedUniqueEmojiArray = [uniqueEmojiArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
     NSInteger otherCount = [emojiArray count]-[uniqueEmojiArray count];

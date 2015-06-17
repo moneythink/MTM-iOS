@@ -63,11 +63,7 @@
     [[UITabBar appearance] setTintColor:[UIColor primaryOrange]];
     [[UITabBar appearance] setBarTintColor:[UIColor lightGrey]];
     [[UISwitch appearance] setOnTintColor:[UIColor primaryGreen]];
-    
-    UIPageControl *pageControl = [UIPageControl appearance];
-    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
-    pageControl.currentPageIndicatorTintColor = [UIColor blackColor];
-    
+        
     // Register for push notifications
     if ([application respondsToSelector:@selector(registerForRemoteNotifications)]) {
         [application registerForRemoteNotifications];

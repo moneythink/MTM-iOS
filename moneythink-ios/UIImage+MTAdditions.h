@@ -11,5 +11,6 @@
 @interface UIImage (MTAdditions)
 
 + (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
++ (UIImage *)convertImageToGrayScale:(UIImage *)image;
 
 @end

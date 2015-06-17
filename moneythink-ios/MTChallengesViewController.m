@@ -250,6 +250,7 @@
 {
     PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
     query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+    [query orderByAscending:@"emoji_order"];
     
     MTMakeWeakSelf();
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {

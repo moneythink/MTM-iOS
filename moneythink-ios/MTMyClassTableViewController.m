@@ -186,7 +186,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 242.0f, 126.0f);
     
     // Sort by name, so consistent in presentation
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"emoji_order" ascending:YES];
     NSArray *sortedEmojiArray = [self.emojiObjects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
     self.emojiCollectionView.emojiObjects = sortedEmojiArray;

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E33b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Cxl-3f-cyL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E36b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Cxl-3f-cyL">
     <dependencies>
         <deployment version="2048" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -3195,7 +3195,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activityIndicator" destination="jMm-ql-KU1" id="gFi-jK-e6J"/>
-                                    <outlet property="commentBUtton" destination="96E-EQ-y2e" id="U8R-Cq-qAn"/>
+                                    <outlet property="commentButton" destination="96E-EQ-y2e" id="f2p-TD-p2v"/>
                                     <outlet property="comments" destination="3Zd-61-sE1" id="bld-SI-uSN"/>
                                     <outlet property="deletePost" destination="ADr-4h-mJc" id="yfO-MT-JdO"/>
                                     <outlet property="emojiContainerView" destination="67w-wS-MW6" id="SH8-vE-Nvr"/>
@@ -3344,7 +3344,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="activityIndicator" destination="SGh-Ed-zIq" id="UuH-Xo-nvO"/>
-                                    <outlet property="commentBUtton" destination="sJx-A5-cNc" id="Bid-DY-Ecs"/>
+                                    <outlet property="commentButton" destination="sJx-A5-cNc" id="yJ3-QI-pZ2"/>
                                     <outlet property="comments" destination="gq7-MJ-Eej" id="ktm-kb-bZC"/>
                                     <outlet property="deletePost" destination="TwF-lc-hku" id="2CC-ZS-Yri"/>
                                     <outlet property="emojiContainerView" destination="7WI-VB-5vF" id="Dqw-4c-6Jh"/>
@@ -3509,7 +3509,7 @@
                                     <outlet property="activityIndicator" destination="Tie-dM-1r1" id="enP-oZ-JDm"/>
                                     <outlet property="button1" destination="BUW-Vd-xnh" id="bp4-66-H5A"/>
                                     <outlet property="button2" destination="sgd-Gl-hrD" id="qx3-UN-npz"/>
-                                    <outlet property="commentBUtton" destination="5Ng-mN-G04" id="lEo-HY-Q4y"/>
+                                    <outlet property="commentButton" destination="5Ng-mN-G04" id="hTb-03-aO4"/>
                                     <outlet property="comments" destination="WO4-mu-h8r" id="ubB-TM-zzv"/>
                                     <outlet property="deletePost" destination="0Tg-KG-fYo" id="iCU-Bg-8SF"/>
                                     <outlet property="emojiContainerView" destination="qQ2-Lp-oZs" id="NxX-xh-b96"/>
@@ -3670,7 +3670,7 @@
                                     <outlet property="activityIndicator" destination="xt5-nH-uB8" id="xTA-hh-oid"/>
                                     <outlet property="button1" destination="b62-xy-Ish" id="si7-6K-1Ky"/>
                                     <outlet property="button2" destination="fgi-eY-8lw" id="LHN-rz-T5b"/>
-                                    <outlet property="commentBUtton" destination="Mqp-kZ-fm6" id="B5p-gB-4fu"/>
+                                    <outlet property="commentButton" destination="Mqp-kZ-fm6" id="7Zg-LU-5UG"/>
                                     <outlet property="comments" destination="jcQ-PX-Wea" id="Jmo-vX-C7Q"/>
                                     <outlet property="deletePost" destination="Ozk-lg-fTP" id="mv1-Ek-gyz"/>
                                     <outlet property="emojiContainerView" destination="a2d-7K-rAs" id="Dmz-6K-OT8"/>

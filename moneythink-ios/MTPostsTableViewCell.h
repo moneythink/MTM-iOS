@@ -20,7 +20,7 @@
 @property (nonatomic, strong) IBOutlet UILabel *likes;
 @property (nonatomic, strong) IBOutlet UILabel *comments;
 @property (nonatomic, strong) IBOutlet UIButton *likeButton;
-@property (nonatomic, strong) IBOutlet UIButton *commentBUtton;
+@property (nonatomic, strong) IBOutlet UIButton *commentButton;
 @property (nonatomic, strong) IBOutlet UIButton *button1;
 @property (nonatomic, strong) IBOutlet UIButton *button2;
 @property (nonatomic, strong) IBOutlet UIButton *deletePost;
