@@ -16,12 +16,25 @@
 
 #import <Foundation/Foundation.h>
 #import "ZDKHelpCenterSearch.h"
+#import "ZDKHelpCenterDeflection.h"
 
 /**
  * Callback block.
  *
  */
 typedef void (^ZDKHelpCenterCallback)(NSArray *items, NSError *error);
+
+
+/**
+ *  Callback for Help Center simple responses, i.e. Status codes.
+ *
+ *  @since 1.3.0.1
+ *
+ *  @param response The response for a request
+ *  @param error    An error, nil if no error occurred.
+ */
+typedef void (^ZDKHelpCenterGenericCallback)(id response, NSError *error);
+
 
 @interface ZDKHelpCenterProvider : NSObject
 
@@ -67,7 +80,7 @@ typedef void (^ZDKHelpCenterCallback)(NSArray *items, NSError *error);
 - (void) searchForArticlesUsingQuery:(NSString *)query andLabels:(NSArray *)labels withCallback: (ZDKHelpCenterCallback) callback;
 
 /**
- *  This method will search articles in your Help Center filtered by the parameters in the given ZDKHelpCenterSearch
+ *  This method will search articles in your Help Center filtered by the parameters in the given ZDKHelpCenterSearch model.
  *  
  *  @param search   The search to perform.
  *  @param callback The callback which will be called upon a successful or an erroneous response.
@@ -90,5 +103,49 @@ typedef void (^ZDKHelpCenterCallback)(NSArray *items, NSError *error);
  *  @param callback the callback that is invoked when a request is either successful or has errors
  */
 - (void) getArticlesByLabels:(NSArray *)labels withCallback: (ZDKHelpCenterCallback) callback;
+
+
+/**
+ *  Fetch a list of suggested articles filtered by the parameters in the given ZDKHelpCenterDeflection model.
+ *
+ *  @since 1.2.0.1
+ *
+ *  @param search   The search to preform
+ *  @param callback The callback that is invoked when a request is either successful or has error.
+ */
+- (void) getSuggestedArticles:(ZDKHelpCenterDeflection*)search withCallback:(ZDKHelpCenterCallback)callback;
+
+
+/**
+ *  Post an upvote for a given article. If a vote already exists for the source object it is updated.
+ *
+ *  @since 1.3.0.1
+ *
+ *  @param articleId The id of the article to upvote.
+ *  @param callback  The callback that is invoked when a request is either successful or has error. Returns the vote object.
+ */
+- (void) upvoteArticleWithId:(NSString *)articleId withCallback:(ZDKHelpCenterCallback)callback;
+
+
+/**
+ *  Post a downvote for a given article. If a vote already exists for the source object it is updated.
+ *
+ *  @since 1.3.0.1
+ *
+ *  @param articleId The id of the article to upvote.
+ *  @param callback  The callback that is invoked when a request is either successful or has error. Returns the vote object.
+ */
+- (void) downvoteArticleWithId:(NSString *)articleId withCallback:(ZDKHelpCenterCallback)callback;
+
+
+/**
+ *  Deletes a vote for a given id
+ *
+ *  @since 1.3.0.1
+ *
+ *  @param voteId The id of the vote to delete
+ *  @param callback  The callback that is invoked when a request is either successful or has error. Returns a status code
+ */
+- (void) deleteVoteWithId:(NSString*)voteId withCallback:(ZDKHelpCenterGenericCallback)callback;
 
 @end

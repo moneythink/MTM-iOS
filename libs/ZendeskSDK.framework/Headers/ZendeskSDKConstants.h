@@ -147,6 +147,22 @@ extern NSString * const ZDKAPI_DeleteUploadSuccess;
  */
 extern NSString * const ZDKAPI_DeleteUploadError;
 
+/**
+ * Notification that a request is about to be retrieved.
+ */
+extern NSString * const ZDKAPI_RequestByIdStarting;
+
+/**
+ * Notification that a request was successfulyl retrieved.
+ */
+extern NSString * const ZDKAPI_RequestByIdSuccess;
+
+/**
+ * Notification that there was an error while retrieving a request.
+ */
+extern NSString * const ZDKAPI_RequestByIdError;
+
+
 
 #pragma mark - Help Center
 
@@ -218,11 +234,72 @@ extern NSString * const ZD_HC_CategorySelected;
  */
 extern NSString * const ZD_HC_SectionSelected;
 
-
-/**
+/*
  * Notification that a help centre article was selected.
  */
 extern NSString * const ZD_HC_SectionArticle;
+
+/**
+ *  Notification that a help center deflection search was started.
+ */
+extern NSString * const ZD_HC_DeflectionSearchStarting;
+
+/**
+ *  Notification that a help center deflection search succeed.
+ */
+extern NSString * const ZD_HC_DeflectionSearchSuccess;
+
+/**
+ *  Notification that a help center deflection search failed.
+ */
+extern NSString * const ZD_HC_DeflectionSearchError;
+
+
+/**
+ *  Notificaion that a Help Center article upvote request started
+ */
+extern NSString * const ZD_HC_UpvoteStarting;
+
+/**
+ *  Notificaion that a Help Center article upvote request succeeded
+ */
+extern NSString * const ZD_HC_UpvoteSuccess;
+
+/**
+ *  Notificaion that a Help Center article upvote request failed
+ */
+extern NSString * const ZD_HC_UpvoteError;
+
+
+/**
+ *  Notificaion that a Help Center article downvote request started
+ */
+extern NSString * const ZD_HC_DownvoteStarting;
+
+/**
+ *  Notificaion that a Help Center article downvote request succeeded
+ */
+extern NSString * const ZD_HC_DownvoteSuccess;
+
+/**
+ *  Notificaion that a Help Center article downvote request failed
+ */
+extern NSString * const ZD_HC_DownvoteError;
+
+/**
+ *  Notificaion that a Help Center vote deletion request started
+ */
+extern NSString * const ZD_HC_VoteDeleteStarting;
+
+/**
+ *  Notificaion that a Help Center vote deletion request succeeded
+ */
+extern NSString * const ZD_HC_VoteDeleteSuccess;
+
+/**
+ *  Notificaion that a Help Center vote deletion request failed
+ */
+extern NSString * const ZD_HC_VoteDeleteError;
 
 
 /**

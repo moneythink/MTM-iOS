@@ -11,7 +11,7 @@
 @interface MTMenuViewController : UIViewController <UIActionSheetDelegate>
 
 - (void)openLeaderboard;
-- (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType;
+- (void)openNotificationsWithId:(NSString *)notificationId;
 - (void)openChallengesForChallengeId:(NSString *)challengeId;
 
 @end

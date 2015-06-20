@@ -22,4 +22,9 @@
     return [self fontWithName:fontName size:fontSize];
 }
 
++ (UIFont *)mtBoldFontOfSize:(CGFloat)fontSize {
+    NSString *fontName = @"HelveticaNeue-Bold";
+    return [self fontWithName:fontName size:fontSize];
+}
+
 @end

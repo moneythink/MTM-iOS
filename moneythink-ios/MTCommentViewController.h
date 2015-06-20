@@ -17,9 +17,11 @@
 
 @interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
-@property (weak, nonatomic) id <MTCommentViewProtocol> delegate;
-@property (strong, nonatomic) PFChallenges *challenge;
-@property (strong, nonatomic) PFChallengePost *post;
-@property (strong, nonatomic) PFChallengePostComment *challengePostComment;
+@property (nonatomic, weak) id <MTCommentViewProtocol> delegate;
+
+@property (nonatomic, strong) PFChallenges *challenge;
+@property (nonatomic, strong) PFChallengePost *post;
+@property (nonatomic, strong) PFChallengePostComment *challengePostComment;
+@property (nonatomic) BOOL editPost;
 
 @end

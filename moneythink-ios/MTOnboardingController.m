@@ -10,8 +10,6 @@
 #import "OnboardingViewController.h"
 #import "OnboardingContentViewController.h"
 
-static NSString * const kUserHasOnboardedKey = @"user_has_onboarded";
-
 @interface MTOnboardingController ()
 
 @property (nonatomic, strong) OnboardingViewController *onboardingVC;
@@ -49,7 +47,8 @@ static NSString * const kUserHasOnboardedKey = @"user_has_onboarded";
 - (OnboardingViewController *)generateWelcomeVC {
     MTMakeWeakSelf();
     
-    OnboardingContentViewController *welcomePage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_1"] buttonText:@"Take A Tour" action:^{
+    UIImage *onboarding1 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_1_mentor"] : [UIImage imageNamed:@"onboarding_1_student"];
+    OnboardingContentViewController *welcomePage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding1 buttonText:@"Take A Tour" action:^{
     }];
     welcomePage.movesToNextViewController = YES;
     welcomePage.buttonFontName = @"HelveticaNeue-Bold";
@@ -58,25 +57,32 @@ static NSString * const kUserHasOnboardedKey = @"user_has_onboarded";
     welcomePage.viewWillAppearBlock = ^{
     };
 
-    OnboardingContentViewController *secondPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_2"] buttonText:nil action:^{
+    UIImage *onboarding2 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_2_mentor"] : [UIImage imageNamed:@"onboarding_2_student"];
+    OnboardingContentViewController *secondPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding2 buttonText:nil action:^{
     }];
     
-    OnboardingContentViewController *thirdPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_3"] buttonText:nil action:^{
+    UIImage *onboarding3 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_3_mentor"] :[UIImage imageNamed:@"onboarding_3_student"];
+    OnboardingContentViewController *thirdPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding3 buttonText:nil action:^{
     }];
     
-    OnboardingContentViewController *fourthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_4"] buttonText:nil action:^{
+    UIImage *onboarding4 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_4_mentor"] : [UIImage imageNamed:@"onboarding_4_student"];
+    OnboardingContentViewController *fourthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding4 buttonText:nil action:^{
     }];
 
-    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_5"] buttonText:nil action:^{
+    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
+    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
     }];
 
-    OnboardingContentViewController *sixthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_6"] buttonText:nil action:^{
+    UIImage *onboarding6 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_6_mentor"] : [UIImage imageNamed:@"onboarding_6_student"];
+    OnboardingContentViewController *sixthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding6 buttonText:nil action:^{
     }];
 
-    OnboardingContentViewController *seventhPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_7"] buttonText:nil action:^{
+    UIImage *onboarding7 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_7_mentor"] : [UIImage imageNamed:@"onboarding_7_student"];
+    OnboardingContentViewController *seventhPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding7 buttonText:nil action:^{
     }];
 
-    OnboardingContentViewController *photoUploadPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_8"] buttonText:nil action:^{
+    UIImage *onboarding8 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_8_mentor"] : [UIImage imageNamed:@"onboarding_8_student"];
+    OnboardingContentViewController *photoUploadPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding8 buttonText:nil action:^{
         [self handleOnboardingCompletion];
     }];
     photoUploadPage.hasProfileImagePickerButton = YES;
@@ -100,7 +106,8 @@ static NSString * const kUserHasOnboardedKey = @"user_has_onboarded";
         }
     };
     
-    OnboardingContentViewController *lastPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:[UIImage imageNamed:@"onboarding_9"] buttonText:@"Let's Do This!" action:^{
+    UIImage *onboarding9 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_9_mentor"] : [UIImage imageNamed:@"onboarding_9_student"];
+    OnboardingContentViewController *lastPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding9 buttonText:@"Let's Do This!" action:^{
         [self handleOnboardingCompletion];
     }];
     lastPage.hasProfileImagePickerButton = YES;
@@ -109,11 +116,11 @@ static NSString * const kUserHasOnboardedKey = @"user_has_onboarded";
     lastPage.buttonFontSize = 20.0f;
 
     if (IS_IPHONE_4) {
-        lastPage.bottomPadding = -10.0f;
-        lastPage.underProfileImagePickerPadding = 100.0f;
+        lastPage.bottomPadding = -35.0f;
+        lastPage.underProfileImagePickerPadding = 71.0f;
     }
     else {
-        lastPage.underProfileImagePickerPadding = 160.0f;
+        lastPage.underProfileImagePickerPadding = 112.0f;
     }
 
     __block OnboardingContentViewController *weakLastPage = lastPage;

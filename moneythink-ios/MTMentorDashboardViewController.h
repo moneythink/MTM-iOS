@@ -9,18 +9,10 @@
 #import <UIKit/UIKit.h>
 
 typedef enum {
-    MTProgressSectionNextStep = 0,
-    MTProgressSectionEditProfile,
-    MTProgressSectionChallenges,
+    MTProgressSectionEditProfile=0,
     MTProgressSectionStudents
 } MTProgressSectionType;
 
-typedef enum {
-    MTProgressNextStepStateEditProfile = 0,
-    MTProgressNextStepStateScheduleChallenges,
-    MTProgressNextStepStateInviteStudents,
-    MTProgressNextStepStateDone
-} MTProgressNextStepState;
 
 @interface MTMentorDashboardViewController : MTViewController <UITableViewDataSource, UITableViewDelegate>
 

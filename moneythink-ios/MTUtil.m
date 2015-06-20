@@ -75,12 +75,14 @@
 
 + (void)logout
 {
-    // Removes all keys
+    // Removes all keys, except onboarding
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        NSLog(@"removing user pref for %@", key);
-        [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        if (![key isEqualToString:kUserHasOnboardedKey]) {
+            NSLog(@"removing user pref for %@", key);
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
     }
 
     [[NSUserDefaults standardUserDefaults] synchronize];

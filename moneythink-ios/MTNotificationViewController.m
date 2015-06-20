@@ -565,8 +565,7 @@
     postVC.notification = notification;
     
     if ([postVC canPopulateForNotification:notification populate:NO]) {
-        __block UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:postVC];
-        [self.revealViewController presentViewController:nav animated:YES completion:nil];
+        [self.navigationController pushViewController:postVC animated:YES];
     }
     else {
         NSString *title = @"Unable to load Notification";

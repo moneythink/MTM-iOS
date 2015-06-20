@@ -32,6 +32,7 @@
 
     NSArray *tags;
     NSString *additionalRequestInfo;
+    NSString *subject;
 
 }
 
@@ -46,6 +47,13 @@
  * Additional free text to be appended to the request description.
  */
 @property (strong) NSString *additionalRequestInfo;
+
+/**
+ *  Request subject.
+ *
+ *  @since 1.3.0.1
+ */
+@property (strong) NSString *subject;
 
 
 /**
@@ -124,7 +132,7 @@ typedef void (^ZDSDKConfigBlock) (ZDKAccount *account, ZDKRequestCreationConfig 
 /**
  *  Displays a request list view controller modally. 
  *
- *  @param navController A navigation controller from which to push the request creation view.
+ *  @param navController A navigation controller from which to push the request list view.
  */
 + (void) presentRequestListWithNavController:(UINavigationController *)navController;
 
@@ -132,7 +140,7 @@ typedef void (^ZDSDKConfigBlock) (ZDKAccount *account, ZDKRequestCreationConfig 
 /**
  *  Displays a request list view controller.
  *
- *  @param navController A navigation controller from which to push the request creation view.
+ *  @param navController A navigation controller from which to push the request list view.
  */
 + (void) showRequestListWithNavController:(UINavigationController *)navController;
 
@@ -140,12 +148,14 @@ typedef void (^ZDSDKConfigBlock) (ZDKAccount *account, ZDKRequestCreationConfig 
 /**
  *  Displays a request list view controller.
  *
- *  @param navController A navigation controller from which to push the request creation view.
- *  @param aGuide        Should the request list respect top and bottom layout guide? Pass in 
- *                       one of the const values, ZDKLayoutRespectAll, ZDKLayoutRespectNone, 
+ *  @since 1.2.0.1
+ *
+ *  @param navController A navigation controller from which to push the request list view.
+ *  @param aGuide        Should the request list respect top and bottom layout guide? Pass in
+ *                       one of the const values, ZDKLayoutRespectAll, ZDKLayoutRespectNone,
  *                       ZDKLayoutRespectTop and ZDKLayoutRespectBottom.
  */
-+ (void) showRequestListWithNavController:(UINavigationController *)navController layoutGudie:(ZDKLayoutGuide)aGuide;
++ (void) showRequestListWithNavController:(UINavigationController *)navController layoutGuide:(ZDKLayoutGuide)aGuide;
 
 
 /**

@@ -16,6 +16,9 @@ NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhot
 NSString *const kSavedMyClassChallengePostsdNotification = @"kSavedMyClassChallengePostsdNotification";
 NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
+NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification";
+NSString *const kDidSaveEditPostNotification = @"kDidSaveEditPostNotification";
+NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotification";
 
 @interface MTMyClassTableViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -28,7 +31,6 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 @property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 @property (nonatomic) BOOL iLike;
 @property (nonatomic, strong) NSMutableArray *myObjects;
-@property (nonatomic) BOOL postingNewComment;
 @property (nonatomic) BOOL deletingPost;
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) UIButton *secondaryButton1;
@@ -70,7 +72,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
+
     self.didUpdateLikedPosts = NO;
     self.updatedButtonsAndLikes = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -111,7 +116,9 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 {
     [super objectsDidLoad:error];
     
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (self.updatedButtonsAndLikes) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    }
     
     self.myObjects = [NSMutableArray arrayWithArray:self.objects];
     [self.tableView reloadData];
@@ -327,43 +334,59 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 
 
 #pragma mark - NSNotification Methods -
-- (void)willSaveNewChallengePost:(NSNotification*)notif
+- (void)willSaveNewChallengePost:(NSNotification *)notif
 {
-    self.postingNewComment = YES;
-
     PFChallengePost *newPost = notif.object;
     [self.myObjects insertObject:newPost atIndex:0];
     
     [self.tableView reloadData];
 }
 
-- (void)savingWithPhoto:(NSNotificationCenter*)notif
+- (void)savingWithPhoto:(NSNotificationCenter *)notif
 {
     [self.tableView reloadData];
 }
 
 - (void)postSucceeded
 {
-    self.postingNewComment = NO;
     [self loadObjects];
 }
 
 - (void)postFailed
 {
-    self.postingNewComment = NO;
     [self loadObjects];
     
-    UIActionSheet *updateMessage = [[UIActionSheet alloc] initWithTitle:@"Your post failed to upload." delegate:nil cancelButtonTitle:@"OK" destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-    UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-    if ([window.subviews containsObject:self.view])
-        [updateMessage showInView:self.view];
-    else
-        [updateMessage showInView:window];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Your post failed to upload.";
+    hud.dimBackground = NO;
+    hud.mode = MBProgressHUDModeText;
+    [hud hide:YES afterDelay:1.5f];
 }
 
-- (void)willSaveNewPostComment:(NSNotification*)notif
+- (void)willSaveNewPostComment:(NSNotification *)notif
 {
     [self.tableView reloadData];
+}
+
+- (void)willSaveEditPost:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+}
+
+- (void)didSaveEditPost:(NSNotification *)notif
+{
+    [self loadObjects];
+}
+
+- (void)failedSaveEditPost:(NSNotification *)notif
+{
+    [self loadObjects];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Your edit post failed to save.";
+    hud.dimBackground = NO;
+    hud.mode = MBProgressHUDModeText;
+    [hud hide:YES afterDelay:1.5f];
 }
 
 
@@ -572,8 +595,10 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 
 - (void)updateButtonsAndLikes
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading...";
+    NSInteger hiddenCount = [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    BOOL animated = hiddenCount > 0 ? NO : YES;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:animated];
+    hud.labelText = @"Loading Challenge Data...";
     hud.dimBackground = YES;
 
     // Call updateButtons first which will then call updateLikes when done
@@ -769,7 +794,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
 
     PFUser *user = post[@"user"];
     NSString *CellIdentifier = @"";
-    UIImage *postImage = post[@"picture"];
+    PFFile *postImage = post[@"picture"];
     
     BOOL myPost = [MTUtil isUserMe:user];
     
@@ -814,8 +839,8 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     BOOL canDelete = NO;
     if (myPost) {
         canDelete = YES;
-        [cell.deletePost removeTarget:self action:@selector(deletePostTapped:) forControlEvents:UIControlEventTouchUpInside];
-        [cell.deletePost addTarget:self action:@selector(deletePostTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.deletePost removeTarget:self action:@selector(editDeletePostTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [cell.deletePost addTarget:self action:@selector(editDeletePostTapped:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     if (showButtons) {
@@ -827,12 +852,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         }
     }
     
-    if ([MTUtil isUserMe:user]) {
-        cell.userName.text = @"Me";
-    }
-    else {
-        cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
-    }
+    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
     
     cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
     cell.profileImage.file = user[@"profile_picture"];
@@ -866,7 +886,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     if (postImage) {
         cell.postImage.image = nil;
-        cell.postImage.file = post[@"picture"];
+        cell.postImage.file = postImage;
         [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
             if (!error) {
                 if (image) {
@@ -933,8 +953,14 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
             if (!error) {
                 if (number > 0) {
+                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
+                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
+
                     weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
                 } else {
+                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
+
                     weakCell.comments.text = @"0";
                 }
             } else {
@@ -1005,6 +1031,7 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
             height = 190.0f;
         } else if (postImage) {
             height = 436.0f;
+//            height = [self heightForPostImageCellAtIndexPath:indexPath];
         } else {
             height = 150.0f;
         }
@@ -1012,6 +1039,18 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     
     return height;
 }
+
+#pragma mark - Variable Cell Height calculations -
+//- (CGFloat)heightForPostImageCellAtIndexPath:(NSIndexPath *)indexPath {
+//    static MTPostCommentTableViewCell *sizingCell = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"CommentTextCell"];
+//    });
+//    
+//    [self configurePostTextCell:sizingCell atIndexPath:indexPath];
+//    return [self calculateHeightForConfiguredSizingCell:sizingCell];
+//}
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {
@@ -1082,11 +1121,25 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
         
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
         PFChallengePost *post = cell.post;
-
+  
         MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
         destinationViewController.post = post;
         destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
+    }
+    else if ([segueIdentifier isEqualToString:@"editPostSegue"]) {
+        UIButton *button = sender;
+        
+        MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
+        PFChallengePost *post = cell.post;
+        
+        UINavigationController *destinationViewController = (UINavigationController *)[segue destinationViewController];
+        
+        MTCommentViewController *commentVC = (MTCommentViewController *)[destinationViewController topViewController];
+        commentVC.post = post;
+        commentVC.challenge = self.challenge;
+        commentVC.editPost = YES;
+        [commentVC setDelegate:self];
     }
     else {
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)sender;
@@ -1202,9 +1255,46 @@ NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentN
     [self performSegueWithIdentifier:@"commentOnPost" sender:sender];
 }
 
-- (void)deletePostTapped:(id)sender
+- (void)editDeletePostTapped:(id)sender
 {
-    [self performDeletePostWithSender:sender withConfirmation:YES];
+    __block id weakSender = sender;
+
+    // Prompt for Edit or Delete
+    if ([UIAlertController class]) {
+        UIAlertController *editDeletePostSheet = [UIAlertController alertControllerWithTitle:@"Edit or Delete this post?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        }];
+        MTMakeWeakSelf();
+        UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            [weakSelf performDeletePostWithSender:weakSender withConfirmation:YES];
+        }];
+        UIAlertAction *edit = [UIAlertAction actionWithTitle:@"Edit" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [weakSelf performEditPostWithSender:weakSender];
+        }];
+        
+        [editDeletePostSheet addAction:cancel];
+        [editDeletePostSheet addAction:edit];
+        [editDeletePostSheet addAction:delete];
+
+        [self presentViewController:editDeletePostSheet animated:YES completion:nil];
+    }
+    else {
+        MTMakeWeakSelf();
+        UIActionSheet *editDeleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
+        [editDeleteAction bk_addButtonWithTitle:@"Edit" handler:^{
+            [weakSelf performEditPostWithSender:weakSender];
+        }];
+        [editDeleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
+            [weakSelf performDeletePostWithSender:weakSender withConfirmation:YES];
+        }];
+        [editDeleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [editDeleteAction showInView:[UIApplication sharedApplication].keyWindow];
+    }
+}
+
+- (void)performEditPostWithSender:(id)sender
+{
+    [self performSegueWithIdentifier:@"editPostSegue" sender:sender];
 }
 
 - (void)performDeletePostWithSender:(id)sender withConfirmation:(BOOL)withConfirmation

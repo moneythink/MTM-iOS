@@ -223,13 +223,14 @@
     NSString *notificationType = [userInfo valueForKey:@"notificationType"];
     NSString *notificationId = [userInfo valueForKey:@"notificationId"];
     
+    BOOL unknownNotification = NO;
     if (IsEmpty(notificationType) || IsEmpty(notificationId)) {
-        return;
+        unknownNotification = YES;
     }
     
     [MTNotificationViewController markReadForNotificationId:notificationId];
     
-    if ([notificationType isEqualToString:kNotificationPostComment] ||
+    if (unknownNotification || [notificationType isEqualToString:kNotificationPostComment] ||
         [notificationType isEqualToString:kNotificationNewChallenge] ||
         [notificationType isEqualToString:kNotificationPostLiked] ||
         [notificationType hasPrefix:kNotificationInactivity] ||
@@ -237,7 +238,7 @@
         
         SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
         MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
-        [menuVC openNotificationsWithId:notificationId withType:notificationType];
+        [menuVC openNotificationsWithId:notificationId];
     }
     else if ([notificationType isEqualToString:kNotificationLeaderOn] ||
              [notificationType isEqualToString:kNotificationLeaderOff]) {
@@ -588,6 +589,9 @@
     [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
                                    zendeskUrl:@"https://moneythink.zendesk.com"
                                   andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
+    
+//    [ZDKDispatcher setDebugLogging:YES];
+//    [ZDKLogger enable:YES];
 
     [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
         

@@ -11,58 +11,81 @@
 
 @interface MTCommentViewController ()
 
-@property (nonatomic, strong) UIImagePickerController *imagePickerController;
-@property (strong, nonatomic) PFImageView *postImage;
-@property (strong, nonatomic) PFChallengePost *challengePost;
-
-@property (strong, nonatomic) IBOutlet UITextView *postText;
-@property (strong, nonatomic) IBOutlet UIScrollView *viewFields;
-@property (strong, nonatomic) IBOutlet UIButton *chooseImageButton;
-@property (strong, nonatomic) IBOutlet UIButton *cancelButton;
-@property (strong, nonatomic) IBOutlet UIButton *doneButton;
+@property (nonatomic, strong) IBOutlet UITextView *postText;
+@property (nonatomic, strong) IBOutlet UIScrollView *viewFields;
+@property (nonatomic, strong) IBOutlet UIButton *chooseImageButton;
+@property (nonatomic, strong) IBOutlet UIButton *cancelButton;
+@property (nonatomic, strong) IBOutlet UIButton *doneButton;
 @property (nonatomic, strong) IBOutlet UILabel *chooseImageLabel;
+
+@property (nonatomic, strong) UIImagePickerController *imagePickerController;
+@property (nonatomic, strong) PFImageView *postImage;
+@property (nonatomic, strong) PFChallengePost *challengePost;
+@property (nonatomic, strong) UIImage *updatedPostImage;
+@property (nonatomic) BOOL removedPostPhoto;
 
 @end
 
 @implementation MTCommentViewController
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-
-    }
-    return self;
-}
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
 
     [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 
-    self.title = @"Create Post";
-    self.postText.text = @"";
-    
-    UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(commentDoneButton)];
-    self.navigationItem.rightBarButtonItem = shareBarButton;
+    if (self.editPost) {
+        self.title = @"Edit Post";
+        self.postText.text = self.post[@"post_text"];
+        
+        if (self.post[@"picture"]) {
+            self.postImage = [[PFImageView alloc] init];
+            self.postImage.file = self.post[@"picture"];
+
+            MTMakeWeakSelf();
+            [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
+                if (!error) {
+                    if (image) {
+                        weakSelf.postImage.image = image;
+                        [weakSelf.chooseImageButton setImage:image forState:UIControlStateNormal];
+                    }
+                    else {
+                        image = nil;
+                    }
+                } else {
+                    NSLog(@"error - %@", error);
+                }
+            }];
+
+            self.chooseImageLabel.text = @"Edit Image";
+        }
+        else {
+            self.chooseImageLabel.text = @"Add Image";
+        }
+
+        UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveEdit)];
+        self.navigationItem.rightBarButtonItem = shareBarButton;
+        
+        UIBarButtonItem *cancelEditButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEdit)];
+        self.navigationItem.leftBarButtonItem = cancelEditButton;
+    }
+    else {
+        self.title = @"Create Post";
+        self.postText.text = @"";
+        
+        UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(saveNew)];
+        self.navigationItem.rightBarButtonItem = shareBarButton;
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.postText becomeFirstResponder];
+    
+    if (!self.editPost) {
+        [self.postText becomeFirstResponder];
+    }
 }
 
 
@@ -141,6 +164,8 @@
     } completion:^(BOOL finished) {
         [self.chooseImageButton setImage:[UIImage imageNamed:@"photo_post"] forState:UIControlStateNormal];
         self.chooseImageLabel.text = @"Add Image";
+        self.updatedPostImage = nil;
+        self.removedPostPhoto = YES;
         
         [UIView animateWithDuration:0.2f animations:^{
             self.chooseImageButton.alpha = 1.0f;
@@ -242,6 +267,8 @@
             self.chooseImageLabel.alpha = 0.0f;
         } completion:^(BOOL finished) {
             self.postImage = [[PFImageView alloc] initWithImage:image];
+            self.updatedPostImage = image;
+            self.removedPostPhoto = NO;
             [self.chooseImageButton setImage:image forState:UIControlStateNormal];
             self.chooseImageLabel.text = @"Edit Image";
             
@@ -258,7 +285,176 @@
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
-- (void)commentDoneButton
+#pragma mark - Edit Post Methods -
+- (void)cancelEdit
+{
+    // Confirm cancel if changes
+    BOOL dirty = NO;
+    
+    if (self.updatedPostImage) {
+        dirty = YES;
+    }
+    else {
+        if (self.removedPostPhoto) {
+            dirty = YES;
+        }
+    }
+    
+    NSString *postText = self.post[@"post_text"] ? self.post[@"post_text"] : @"";
+    if (![self.postText.text isEqualToString:postText]) {
+        dirty = YES;
+    }
+    
+    if (dirty) {
+        NSString *title = @"Save Changes?";
+        if ([UIAlertController class]) {
+            UIAlertController *saveSheet = [UIAlertController
+                                            alertControllerWithTitle:title
+                                            message:@"You have changed some post information. Choose an option:"
+                                            preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                     }];
+            
+            MTMakeWeakSelf();
+            UIAlertAction *saveAction = [UIAlertAction
+                                         actionWithTitle:@"Save Changes"
+                                         style:UIAlertActionStyleDestructive
+                                         handler:^(UIAlertAction *action) {
+                                             [weakSelf saveEdit];
+                                         }];
+            
+            UIAlertAction *discardAction = [UIAlertAction
+                                            actionWithTitle:@"Discard Changes"
+                                            style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction *action) {
+                                                [weakSelf dismissViewControllerAnimated:YES completion:NULL];
+                                            }];
+            
+            [saveSheet addAction:saveAction];
+            [saveSheet addAction:discardAction];
+            
+            [saveSheet addAction:cancel];
+            
+            [self presentViewController:saveSheet animated:YES completion:nil];
+        } else {
+            
+            MTMakeWeakSelf();
+            UIActionSheet *saveSheet = [UIActionSheet bk_actionSheetWithTitle:title];
+            
+            [saveSheet bk_setDestructiveButtonWithTitle:@"Save Changes" handler:^{
+                [weakSelf saveEdit];
+            }];
+            [saveSheet bk_addButtonWithTitle:@"Discard Changes" handler:^{
+                [weakSelf dismissViewControllerAnimated:YES completion:NULL];
+            }];
+            [saveSheet bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+            [saveSheet showInView:[UIApplication sharedApplication].keyWindow];
+        }
+        
+    }
+    else {
+        [self dismissViewControllerAnimated:YES completion:NULL];
+    }
+}
+
+- (void)saveEdit
+{
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+    
+    if (IsEmpty(self.postText.text)) {
+        
+        NSString *title = @"Text Missing";
+        NSString *message = @"Post text is required.";
+        if ([UIAlertController class]) {
+            UIAlertController *changeSheet = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:message
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *okAction = [UIAlertAction
+                                       actionWithTitle:@"OK"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action) {
+                                       }];
+            
+            [changeSheet addAction:okAction];
+            [self presentViewController:changeSheet animated:YES completion:nil];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+        
+        return;
+    }
+    
+    self.post[@"post_text"] = self.postText.text;
+    
+    if (self.updatedPostImage && self.postImage.image) {
+        NSString *fileName = @"post_image.png";
+        NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
+        
+        self.postImage.file = [PFFile fileWithName:fileName data:imageData];
+        if (self.postImage.file) {
+            // if there's a picture, then update the Parse post
+            self.post[@"picture"] = self.postImage.file;
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
+        
+        MTMakeWeakSelf();
+        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] fetchInBackground];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:self.post];
+                });
+            }
+            else {
+                NSLog(@"Post Edit Save with picture error - %@", error);
+                [weakSelf.post saveEventually];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:self];
+                });
+            }
+        }];
+    }
+    else {
+        if (self.removedPostPhoto) {
+            [self.post removeObjectForKey:@"picture"];
+        }
+
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
+        
+        MTMakeWeakSelf();
+        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] fetchInBackground];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:self];
+                });
+            }
+            else {
+                NSLog(@"Post Edit Save error - %@", error);
+                [weakSelf.challengePost saveEventually];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:self];
+                });
+            }
+        }];
+    }
+    
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
+#pragma mark - New Post Method -
+- (void)saveNew
 {
     if (![self.postText.text isEqualToString:@""])
     {
@@ -289,8 +485,7 @@
             NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
             
             self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-            if (self.postImage.file)
-            {
+            if (self.postImage.file) {
                 // if there's a picture, then update the Parse post
                 self.challengePost[@"picture"] = self.postImage.file;
             }
@@ -337,81 +532,13 @@
                 }
             }];
         }
-
-        //[[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
-
-        /*
-        if (self.postImage.image)
-        {
-            NSString *fileName = @"post_image.png";
-            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
-            
-            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-            if (self.postImage.file)
-            {
-                // if there's a picture, then update the Parse post and save it locally, we shouldn't do that on a successful Parse save only!!
-                self.challengePost[@"picture"] = self.postImage.file;
-                [self.challengePost saveEventually];
-                
-                [self.postImage.file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    if (!error)
-                    {
-                        //self.challengePost[@"picture"] = self.postImage.file;
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
-                        });
-                        
-                        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                            if (!error)
-                            {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
-                                });
-                            }
-                            else
-                            {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
-                                });
-                                NSLog(@"text error - %@", error);
-                            }
-                        }];
-                    }
-                    else
-                    {
-                        NSLog(@"picture error - %@", error);
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
-                        });
-                    }
-                }];
-            }
-        }
-        else
-        {
-            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error)
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
-                    });
-                }
-                else
-                {
-                    NSLog(@"text error - %@", error);
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
-                    });
-                }
-            }];
-        }
-        */
         
         [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
     }
 }
 
+
+#pragma mark - New Comment on Post Method -
 - (IBAction)postCommentDone:(id)sender
 {
     if (![self.postText.text isEqualToString:@""])

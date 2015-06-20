@@ -47,13 +47,18 @@
     PFUser *user = [PFUser currentUser];
     self.profileName.text = user[@"first_name"];
     
-    id userPoints = user[@"points"];
-    NSString *points = @"0";
-    if (userPoints && userPoints != [NSNull null]) {
-        points = [userPoints stringValue];
+    if ([MTUtil isCurrentUserMentor]) {
+        self.profilePoints.hidden = YES;
     }
-
-    self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
+    else {
+        id userPoints = user[@"points"];
+        NSString *points = @"0";
+        if (userPoints && userPoints != [NSNull null]) {
+            points = [userPoints stringValue];
+        }
+        
+        self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
+    }
     
     NSString *userClass = user[@"class"];
     NSString *userSchool = user[@"school"];
@@ -403,7 +408,7 @@
     [self.revealViewController setFrontViewController:leaderboardVCNav animated:YES];
 }
 
-- (void)openNotificationsWithId:(NSString *)notificationId withType:(NSString *)notificationType
+- (void)openNotificationsWithId:(NSString *)notificationId
 {
     [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {

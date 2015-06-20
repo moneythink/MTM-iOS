@@ -11,19 +11,17 @@
 @implementation MTPostCommentItemsTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    self.userAvatarImageView.layer.cornerRadius = round(self.userAvatarImageView.frame.size.width / 2.0f);
+    self.userAvatarImageView.layer.masksToBounds = YES;
 }
 
 - (void)prepareForReuse
 {
     [super prepareForReuse];
+    self.userAvatarImageView.image = nil;
+    self.userAvatarImage = nil;
     self.separatorView.hidden = NO;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
 
 @end

@@ -61,10 +61,9 @@ typedef enum {
 {
     [super viewDidLoad];
     
-    if (self.notification) {
-        self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: @"" style: UIBarButtonItemStyleBordered target: nil action: nil];
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(closeTouched:)];
-    }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -108,6 +107,9 @@ typedef enum {
             [self updateSecondaryButtonsTapped];
         }
         
+        if (IsEmpty(self.emojiPickerObjects)) {
+            [self loadEmoji];
+        }
         [self loadComments];
         [self loadPostText];
         [self loadLikesWithCache:YES];
@@ -115,9 +117,8 @@ typedef enum {
     }
 }
 
-- (void)viewWillDisappear:(BOOL)animated
+- (void)dealloc
 {
-    [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
@@ -165,11 +166,30 @@ typedef enum {
         if (!error) {
             NSMutableArray *users = [NSMutableArray array];
             NSMutableArray *challengesPostsLiked = [NSMutableArray array];
+            NSMutableArray *emojiArray = [NSMutableArray array];
+            NSMutableArray *mutableLiked = [NSMutableArray array];
+            NSMutableArray *mutableLikedFull = [NSMutableArray array];
+
             for (PFChallengePostsLiked *thisLike in objects) {
                 PFUser *thisUser = thisLike[@"user"];
                 [users addObject:thisUser];
                 [challengesPostsLiked addObject:thisLike];
+                
+                PFEmoji *thisEmoji = thisLike[@"emoji"];
+                if (thisEmoji) {
+                    [emojiArray addObject:thisEmoji];
+                }
+                
+                PFChallengePost *post = thisLike[@"post"];
+                if (!IsEmpty(post.objectId) && [MTUtil isUserMe:thisUser]) {
+                    [mutableLiked addObject:post.objectId];
+                    [mutableLikedFull addObject:thisLike];
+                }
             }
+            
+            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
+            weakSelf.emojiArray = emojiArray;
             weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
             weakSelf.challengePostsLiked = [NSArray arrayWithArray:challengesPostsLiked];
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -479,14 +499,8 @@ typedef enum {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-
-#pragma mark - Load from Notification Methods -
-- (void)loadFromNotification
+- (void)loadEmoji
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading...";
-    hud.dimBackground = YES;
-    
     // Load Emoji for picker
     PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
     query.cachePolicy = kPFCachePolicyCacheThenNetwork;
@@ -500,7 +514,17 @@ typedef enum {
             NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
         }
     }];
+}
+
+
+#pragma mark - Load from Notification Methods -
+- (void)loadFromNotification
+{
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
     
+    [self loadEmoji];
     [self canPopulateForNotification:self.notification populate:YES];
     [self.tableView reloadData];
     [self updateLikes];
@@ -965,12 +989,12 @@ typedef enum {
 - (void)configurePostCommentsCell:(MTPostCommentItemsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     PFChallengePostComment *comment = self.comments[indexPath.row];
     cell.commentLabel.text = comment[@"comment_text"];
-    [cell.commentLabel setFont:[UIFont mtLightFontOfSize:13.0f]];
+    [cell.commentLabel setFont:[UIFont mtFontOfSize:13.0f]];
     
     PFUser *commentPoster = comment[@"user"];
-    NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+    NSString *detailString = [NSString stringWithFormat:@"%@ %@:", commentPoster[@"first_name"], commentPoster[@"last_name"]];
     cell.userLabel.text = detailString;
-    [cell.userLabel setFont:[UIFont mtLightFontOfSize:11.0f]];
+    [cell.userLabel setFont:[UIFont mtBoldFontOfSize:11.0f]];
 }
 
 
@@ -999,42 +1023,46 @@ typedef enum {
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
-- (IBAction)deletePostTapped:(id)sender
+- (IBAction)editDeletePostTapped:(id)sender
 {
+    __block id weakSender = sender;
+    
+    // Prompt for Edit or Delete
     if ([UIAlertController class]) {
-        UIAlertController *deletePostSheet = [UIAlertController
-                                              alertControllerWithTitle:@"Delete this post?"
-                                              message:nil
-                                              preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleCancel
-                                 handler:^(UIAlertAction *action) {
-                                 }];
-        
+        UIAlertController *editDeletePostSheet = [UIAlertController alertControllerWithTitle:@"Edit or Delete this post?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        }];
         MTMakeWeakSelf();
-        UIAlertAction *delete = [UIAlertAction
-                                 actionWithTitle:@"Delete"
-                                 style:UIAlertActionStyleDestructive
-                                 handler:^(UIAlertAction *action) {
-                                     [weakSelf performDeletePost];
-                                 }];
-        
-        [deletePostSheet addAction:cancel];
-        [deletePostSheet addAction:delete];
-        
-        [self presentViewController:deletePostSheet animated:YES completion:nil];
-    } else {
-        
-        MTMakeWeakSelf();
-        UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
-        [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
+        UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
             [weakSelf performDeletePost];
         }];
-        [deleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
-        [deleteAction showInView:[UIApplication sharedApplication].keyWindow];
+        UIAlertAction *edit = [UIAlertAction actionWithTitle:@"Edit" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [weakSelf performEditPostWithSender:weakSender];
+        }];
+        
+        [editDeletePostSheet addAction:cancel];
+        [editDeletePostSheet addAction:edit];
+        [editDeletePostSheet addAction:delete];
+        
+        [self presentViewController:editDeletePostSheet animated:YES completion:nil];
     }
+    else {
+        MTMakeWeakSelf();
+        UIActionSheet *editDeleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
+        [editDeleteAction bk_addButtonWithTitle:@"Edit" handler:^{
+            [weakSelf performEditPostWithSender:weakSender];
+        }];
+        [editDeleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
+            [weakSelf performDeletePost];
+        }];
+        [editDeleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [editDeleteAction showInView:[UIApplication sharedApplication].keyWindow];
+    }
+}
+
+- (void)performEditPostWithSender:(id)sender
+{
+    [self performSegueWithIdentifier:@"editPostSegue" sender:sender];
 }
 
 - (void)performDeletePost
@@ -1467,6 +1495,14 @@ typedef enum {
         destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
     }
+    else if ([segueIdentifier isEqualToString:@"editPostSegue"]) {
+        UINavigationController *destinationViewController = (UINavigationController *)[segue destinationViewController];
+        MTCommentViewController *commentVC = (MTCommentViewController *)[destinationViewController topViewController];
+        commentVC.post = self.challengePost;
+        commentVC.challenge = self.challenge;
+        commentVC.editPost = YES;
+        [commentVC setDelegate:self];
+    }
     else if ([segueIdentifier isEqualToString:@"pushStudentProfileFromPost"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         destinationVC.student = self.challengePost[@"user"];
@@ -1830,13 +1866,7 @@ typedef enum {
             NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
             NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
             
-            if ([MTUtil isUserMe:self.postUser]) {
-                userInfoCell.postUsername.text = @"Me";
-            }
-            else {
-                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-            }
-            
+            userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
             userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
 
@@ -1857,7 +1887,7 @@ typedef enum {
                 }];
             }
             
-            if ([[self.postUser username] isEqualToString:[self.currentUser username]]) {
+            if ([MTUtil isUserMe:self.postUser]) {
                 userInfoCell.deletePost.hidden = NO;
                 userInfoCell.deletePost.enabled = YES;
             }
@@ -1880,6 +1910,7 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             imageCell.postImage.file = self.challengePost[@"picture"];
+            imageCell.postImage.image = nil;
             
             MTMakeWeakSelf();
             [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -1951,10 +1982,16 @@ typedef enum {
                 [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
             }
             
-            if (self.comments) {
+            if (!IsEmpty(self.comments)) {
+                [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
+                [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
+
                 likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", (unsigned long)[self.comments count]];
             }
             else {
+                [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+                [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
+                
                 likeCommentCell.commentCount.text = @"0";
             }
             
@@ -1986,18 +2023,13 @@ typedef enum {
             
             PFChallengePostComment *comment = self.comments[indexPath.row];
             defaultCell.commentLabel.text = comment[@"comment_text"];
-            [defaultCell.commentLabel setFont:[UIFont mtLightFontOfSize:13.0f]];
+            [defaultCell.commentLabel setFont:[UIFont mtFontOfSize:13.0f]];
             defaultCell.commentLabel.textColor = [UIColor darkGrey];
             
             PFUser *commentPoster = comment[@"user"];
-            NSString *detailString = [NSString stringWithFormat:@"%@ %@", commentPoster[@"first_name"], commentPoster[@"last_name"]];
-            
-            if ([MTUtil isUserMe:commentPoster]) {
-                detailString = @"Me";
-            }
-
+            NSString *detailString = [NSString stringWithFormat:@"%@ %@:", commentPoster[@"first_name"], commentPoster[@"last_name"]];
             defaultCell.userLabel.text = detailString;
-            [defaultCell.userLabel setFont:[UIFont mtLightFontOfSize:11.0f]];
+            [defaultCell.userLabel setFont:[UIFont mtBoldFontOfSize:11.0f]];
             defaultCell.userLabel.textColor = [UIColor darkGrey];
             
             [defaultCell setAccessoryType:UITableViewCellAccessoryNone];
@@ -2008,6 +2040,32 @@ typedef enum {
             }
             else {
                 defaultCell.separatorView.hidden = NO;
+            }
+            
+            defaultCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+            
+            if (defaultCell.userAvatarImage) {
+                [defaultCell.userAvatarImageView setImage:defaultCell.userAvatarImage];
+            }
+            else {
+                if (!commentPoster[@"profile_picture"]) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [defaultCell.userAvatarImageView setImage:[UIImage imageNamed:@"profile_image"]];
+                    });
+                }
+                else {
+                    defaultCell.userAvatarImageView.file = commentPoster[@"profile_picture"];
+                    
+                    [defaultCell.userAvatarImageView loadInBackground:^(UIImage *image, NSError *error) {
+                        defaultCell.userAvatarImage = image;
+                        
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (defaultCell.userAvatarImage) {
+                                [defaultCell.userAvatarImageView setImage:defaultCell.userAvatarImage];
+                            }
+                        });
+                    }];
+                }
             }
             
             cell = defaultCell;
@@ -2026,13 +2084,7 @@ typedef enum {
             NSString *firstName = likeUser[@"first_name"];
             NSString *lastName = likeUser[@"last_name"];
             
-            if ([MTUtil isUserMe:likeUser]) {
-                likeUserCell.username.text = @"Me";
-            }
-            else {
-                likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-            }
-
+            likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             likeUserCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
             
             if (likeUserCell.userAvatarImage) {
@@ -2126,6 +2178,56 @@ typedef enum {
 - (void)hudWasHidden:(MBProgressHUD *)hud
 {
     [self secondaryButton1AfterToastAction];
+}
+
+
+#pragma mark - NSNotification Methods -
+- (void)willSaveNewPostComment:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+}
+
+- (void)willSaveEditPost:(NSNotification *)notif
+{
+    BOOL myPost = NO;
+    if ([MTUtil isUserMe:self.postUser]) {
+        myPost = YES;
+    }
+    
+    BOOL showButtons = NO;
+    if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+        showButtons = YES;
+    }
+    
+    PFChallengePost *editedPost = notif.object;
+    self.postImage = editedPost[@"picture"];
+
+    if (showButtons && self.postImage)
+        self.postType = MTPostTypeWithButtonsWithImage;
+    else if (showButtons)
+        self.postType = MTPostTypeWithButtonsNoImage;
+    else if (self.postImage)
+        self.postType = MTPostTypeNoButtonsWithImage;
+    else
+        self.postType = MTPostTypeNoButtonsNoImage;
+
+    [self.tableView reloadData];
+}
+
+- (void)didSaveEditPost:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+}
+
+- (void)failedSaveEditPost:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Your edit post failed to save.";
+    hud.dimBackground = NO;
+    hud.mode = MBProgressHUDModeText;
+    [hud hide:YES afterDelay:1.5f];
 }
 
 

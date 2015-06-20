@@ -70,8 +70,6 @@
 		58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */; };
 		58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
-		58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */; };
-		58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */; };
 		58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */; };
 		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
 		58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */; };
@@ -95,8 +93,6 @@
 		8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */; };
 		8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */; };
 		892105C319DA1EEA000CFBF6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostViewController.m */; };
-		8921061F19DA1F37000CFBF6 /* comment.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105DB19DA1F37000CFBF6 /* comment.png */; };
-		8921062019DA1F37000CFBF6 /* comment@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105DC19DA1F37000CFBF6 /* comment@2x.png */; };
 		8921062919DA1F37000CFBF6 /* info_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105E519DA1F37000CFBF6 /* info_icon.png */; };
 		8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105E619DA1F37000CFBF6 /* info_icon@2x.png */; };
 		8921062D19DA1F37000CFBF6 /* like_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105E919DA1F37000CFBF6 /* like_active.png */; };
@@ -163,6 +159,10 @@
 		899F309919F16948004F6B10 /* check-unactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309519F16948004F6B10 /* check-unactive.png */; };
 		899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309619F16948004F6B10 /* check-unactive@2x.png */; };
 		899F309D19F2C87E004F6B10 /* UIImage+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */; };
+		89A0E8071B34FCBD00F01BFF /* comment_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8031B34FCBD00F01BFF /* comment_active.png */; };
+		89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */; };
+		89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8051B34FCBD00F01BFF /* comment_normal.png */; };
+		89A0E80A1B34FCBD00F01BFF /* comment_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8061B34FCBD00F01BFF /* comment_normal@2x.png */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
 		89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */; };
 		89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793B11B28A69C000BFA40 /* UIButton+Badge.m */; };
@@ -341,10 +341,6 @@
 		58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProfileTableViewCell.m; sourceTree = "<group>"; };
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
-		58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTActivationTableViewCell.h; sourceTree = "<group>"; };
-		58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTActivationTableViewCell.m; sourceTree = "<group>"; };
-		58DE6D93199D0ABD00F1534C /* MTScheduleTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTScheduleTableViewController.h; sourceTree = "<group>"; };
-		58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTScheduleTableViewController.m; sourceTree = "<group>"; };
 		58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddSchoolViewController.h; sourceTree = "<group>"; };
 		58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddSchoolViewController.m; sourceTree = "<group>"; };
@@ -380,8 +376,6 @@
 		8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_right_white_normal@2x.png"; path = "moneythink-ios/assets/arrow_right_white_normal@2x.png"; sourceTree = SOURCE_ROOT; };
 		892105C119DA1EEA000CFBF6 /* MTPostViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
-		892105DB19DA1F37000CFBF6 /* comment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment.png; sourceTree = "<group>"; };
-		892105DC19DA1F37000CFBF6 /* comment@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment@2x.png"; sourceTree = "<group>"; };
 		892105E519DA1F37000CFBF6 /* info_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_icon.png; sourceTree = "<group>"; };
 		892105E619DA1F37000CFBF6 /* info_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_icon@2x.png"; sourceTree = "<group>"; };
 		892105E919DA1F37000CFBF6 /* like_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = like_active.png; sourceTree = "<group>"; };
@@ -464,6 +458,10 @@
 		899F309619F16948004F6B10 /* check-unactive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-unactive@2x.png"; sourceTree = "<group>"; };
 		899F309B19F2C87E004F6B10 /* UIImage+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MTAdditions.h"; sourceTree = "<group>"; };
 		899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MTAdditions.m"; sourceTree = "<group>"; };
+		89A0E8031B34FCBD00F01BFF /* comment_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment_active.png; path = "moneythink-ios/assets/comment_active.png"; sourceTree = SOURCE_ROOT; };
+		89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment_active@2x.png"; path = "moneythink-ios/assets/comment_active@2x.png"; sourceTree = SOURCE_ROOT; };
+		89A0E8051B34FCBD00F01BFF /* comment_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment_normal.png; path = "moneythink-ios/assets/comment_normal.png"; sourceTree = SOURCE_ROOT; };
+		89A0E8061B34FCBD00F01BFF /* comment_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment_normal@2x.png"; path = "moneythink-ios/assets/comment_normal@2x.png"; sourceTree = SOURCE_ROOT; };
 		89A50CEC19DE0141003BE1D8 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		89A793AE1B28A69C000BFA40 /* UIBarButtonItem+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Badge.h"; sourceTree = "<group>"; };
 		89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Badge.m"; sourceTree = "<group>"; };
@@ -916,10 +914,12 @@
 				899F309419F16948004F6B10 /* check-active@2x.png */,
 				899F309519F16948004F6B10 /* check-unactive.png */,
 				899F309619F16948004F6B10 /* check-unactive@2x.png */,
-				892105DB19DA1F37000CFBF6 /* comment.png */,
-				892105DC19DA1F37000CFBF6 /* comment@2x.png */,
+				89A0E8031B34FCBD00F01BFF /* comment_active.png */,
+				89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */,
 				8977E3E81B223E41009AD452 /* comment_highlighted.png */,
 				8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */,
+				89A0E8051B34FCBD00F01BFF /* comment_normal.png */,
+				89A0E8061B34FCBD00F01BFF /* comment_normal@2x.png */,
 				892105E519DA1F37000CFBF6 /* info_icon.png */,
 				892105E619DA1F37000CFBF6 /* info_icon@2x.png */,
 				8921065A19DA1F77000CFBF6 /* iTunesArtwork512 */,
@@ -955,7 +955,6 @@
 		895F78B41B167C5F00055759 /* Mentor Dashboard */ = {
 			isa = PBXGroup;
 			children = (
-				895F78BC1B167E0A00055759 /* Schedule */,
 				5860BF3D19870C4F007D9BB3 /* MTMentorDashboardViewController.h */,
 				5860BF3E19870C4F007D9BB3 /* MTMentorDashboardViewController.m */,
 				581E8842198F500800AD3CF4 /* MTStudentProgressTableViewCell.h */,
@@ -1064,17 +1063,6 @@
 				8905874B1A0181F500DB8CD4 /* MTWebViewController.m */,
 			);
 			name = Common;
-			sourceTree = "<group>";
-		};
-		895F78BC1B167E0A00055759 /* Schedule */ = {
-			isa = PBXGroup;
-			children = (
-				58DE6D8F199D0ABD00F1534C /* MTActivationTableViewCell.h */,
-				58DE6D90199D0ABD00F1534C /* MTActivationTableViewCell.m */,
-				58DE6D93199D0ABD00F1534C /* MTScheduleTableViewController.h */,
-				58DE6D94199D0ABD00F1534C /* MTScheduleTableViewController.m */,
-			);
-			name = Schedule;
 			sourceTree = "<group>";
 		};
 		898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */ = {
@@ -1216,6 +1204,7 @@
 				8977E3E61B223E16009AD452 /* like_highlighted.png in Resources */,
 				89CE54161B152A44000825FB /* icon_main_nav.png in Resources */,
 				8921064819DA1F37000CFBF6 /* students_normal@2x.png in Resources */,
+				89A0E8071B34FCBD00F01BFF /* comment_active.png in Resources */,
 				106309991A3A3DD80093C209 /* z checkbox_not_ticked.png in Resources */,
 				5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */,
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
@@ -1238,12 +1227,12 @@
 				899906801AD46B5D007A4F3E /* icon_button_dollar_pressed.png in Resources */,
 				8999067F1AD46B5D007A4F3E /* icon_button_dollar_normal@2x.png in Resources */,
 				89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */,
-				8921061F19DA1F37000CFBF6 /* comment.png in Resources */,
 				89A793B61B29F104000BFA40 /* mt_avatar.png in Resources */,
 				895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */,
 				8921063E19DA1F37000CFBF6 /* post@2x.png in Resources */,
 				8921063019DA1F37000CFBF6 /* like_normal@2x.png in Resources */,
 				8921063819DA1F37000CFBF6 /* notifications_active@2x.png in Resources */,
+				89A0E80A1B34FCBD00F01BFF /* comment_normal@2x.png in Resources */,
 				89A793BA1B2B80D6000BFA40 /* challenge-list-icon.png in Resources */,
 				895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */,
 				8921063F19DA1F37000CFBF6 /* profile_image.png in Resources */,
@@ -1256,7 +1245,6 @@
 				89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */,
 				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
 				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
-				8921062019DA1F37000CFBF6 /* comment@2x.png in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
 				8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */,
 				895F78AE1B1650E700055759 /* nav-icons-arrow-backwards@2x.png in Resources */,
@@ -1278,6 +1266,8 @@
 				89A793B71B29F104000BFA40 /* mt_avatar@2x.png in Resources */,
 				8921ED0B1B25FCEF00010E3F /* nav-icons-signup.png in Resources */,
 				5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */,
+				89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */,
+				89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */,
 				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
@@ -1362,7 +1352,6 @@
 				58669F6519772D00009BC13C /* PFScheduledActivations.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
-				58DE6D99199D0ABD00F1534C /* MTScheduleTableViewController.m in Sources */,
 				898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */,
 				58669F6619772D00009BC13C /* PFSchools.m in Sources */,
 				89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */,
@@ -1389,7 +1378,6 @@
 				5860BF3F19870C4F007D9BB3 /* MTMentorDashboardViewController.m in Sources */,
 				89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */,
-				58DE6D97199D0ABD00F1534C /* MTActivationTableViewCell.m in Sources */,
 				89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */,
 				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
 				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
@@ -1597,7 +1585,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "fbae0706-9107-4823-bc87-6053a3e43c5b";
+				PROVISIONING_PROFILE = "8212b536-2f25-4e79-9e5c-e90fab173ffb";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1675,7 +1663,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "6ba5f552-4423-4a1a-abdb-11f5df02afec";
+				PROVISIONING_PROFILE = "0b80666c-1d7c-494d-896f-e0def0ce8a7b";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1752,7 +1740,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "6ba5f552-4423-4a1a-abdb-11f5df02afec";
+				PROVISIONING_PROFILE = "0b80666c-1d7c-494d-896f-e0def0ce8a7b";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1829,7 +1817,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "fbae0706-9107-4823-bc87-6053a3e43c5b";
+				PROVISIONING_PROFILE = "8212b536-2f25-4e79-9e5c-e90fab173ffb";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

@@ -26,8 +26,8 @@
     self.loadingView.alpha = 0.0f;
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-    [self.commentButton setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateNormal];
-    [self.commentButton setImage:[UIImage imageNamed:@"comment"] forState:UIControlStateDisabled];
+    [self.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+    [self.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
 
     for (UIView *thisView in [self.emojiContainerView subviews]) {
         [thisView.subviews makeObjectsPerformSelector:@selector(removeFromSuperview)];

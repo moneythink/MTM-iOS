@@ -40,6 +40,7 @@
     PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
     [userClassQuery whereKey:@"class" equalTo:userClass];
     [userClassQuery whereKey:@"school" equalTo:userSchool];
+    [userClassQuery whereKey:@"type" notEqualTo:@"mentor"];
     userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
     
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];

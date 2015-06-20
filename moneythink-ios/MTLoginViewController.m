@@ -92,13 +92,51 @@
 #pragma mark - Private -
 - (BOOL)validate
 {
+    NSString *title = @"Login Error";
+    NSString *message = nil;
     if (IsEmpty(self.emailTextField.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Login Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        
+        message = @"Email is required";
+        if ([UIAlertController class]) {
+            UIAlertController *changeSheet = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:message
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *okAction = [UIAlertAction
+                                       actionWithTitle:@"OK"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action) {
+                                       }];
+            
+            [changeSheet addAction:okAction];
+            [self presentViewController:changeSheet animated:YES completion:nil];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+
         return NO;
     }
     
     if (IsEmpty(self.passwordTextField.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Login Error" message:@"Password is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        message = @"Password is required";
+        if ([UIAlertController class]) {
+            UIAlertController *changeSheet = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:message
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *okAction = [UIAlertAction
+                                       actionWithTitle:@"OK"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action) {
+                                       }];
+            
+            [changeSheet addAction:okAction];
+            [self presentViewController:changeSheet animated:YES completion:nil];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+
         return NO;
     }
     
@@ -287,7 +325,55 @@
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (buttonIndex != alertView.cancelButtonIndex) {
-        [PFUser requestPasswordResetForEmailInBackground:self.emailTextField.text];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Sending Password Reset...";
+
+        MTMakeWeakSelf();
+        [self bk_performBlock:^(id obj) {
+            NSError *error = nil;
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+
+            if (error) {
+                NSLog(@"Error resetting password: %@", [error localizedDescription]);
+            }
+            
+            [PFUser requestPasswordResetForEmailInBackground:weakSelf.emailTextField.text block:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+                    hud.labelText = @"Reset successfully sent.";
+                    hud.mode = MBProgressHUDModeText;
+                    [hud hide:YES afterDelay:1.5f];
+                }
+                else {
+                    NSString *title = @"Reset Failed";
+                    NSString *detailMessage = [NSString stringWithFormat:@"No account was found with email %@.", weakSelf.emailTextField.text];
+                    
+                    NSString *generatedError = [[error userInfo] valueForKey:@"error"];
+                    if (!IsEmpty(generatedError)) {
+                        detailMessage = generatedError;
+                    }
+                    
+                    if ([UIAlertController class]) {
+                        UIAlertController *changeSheet = [UIAlertController
+                                                          alertControllerWithTitle:title
+                                                          message:detailMessage
+                                                          preferredStyle:UIAlertControllerStyleAlert];
+                        
+                        UIAlertAction *okAction = [UIAlertAction
+                                                   actionWithTitle:@"OK"
+                                                   style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction *action) {
+                                                   }];
+                        
+                        [changeSheet addAction:okAction];
+                        [self presentViewController:changeSheet animated:YES completion:nil];
+                    } else {
+                        [[[UIAlertView alloc] initWithTitle:title message:detailMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                    }
+                }
+            }];
+            
+        } afterDelay:0.35f];
     }
 }
 

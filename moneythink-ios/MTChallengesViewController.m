@@ -360,7 +360,10 @@
     MTMakeWeakSelf();
     [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            MBProgressHUD *currentHUD = [MBProgressHUD HUDForView:[UIApplication sharedApplication].keyWindow];
+            if ([currentHUD.labelText isEqualToString:@"Updating Challenges..."] || [currentHUD.labelText isEqualToString:@"Loading Challenges..."]) {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            }
         });
         
         if (!error) {

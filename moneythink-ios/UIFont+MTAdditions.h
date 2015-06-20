@@ -12,5 +12,6 @@
 
 + (UIFont *)mtFontOfSize:(CGFloat)fontSize;
 + (UIFont *)mtLightFontOfSize:(CGFloat)fontSize;
++ (UIFont *)mtBoldFontOfSize:(CGFloat)fontSize;
 
 @end

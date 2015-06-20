@@ -16,53 +16,170 @@
 
 #import <Foundation/Foundation.h>
 
-
-
+/**
+ *  A Help Center Article.
+ *
+ *  @since 0.9.3.1
+ */
 @interface ZDKHelpCenterArticle : NSObject
 
+/**
+ *  Article id.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *sid;
+
+/**
+ *  Section id.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *section_id;
+
+/**
+ *  Article title.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *title;
+
+/**
+ *  Content of the article.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *body;
+
+
+/**
+ *  Author of the article.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *author_name;
+
+/**
+ *  Id of the author.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *author_id;
+
+/**
+ *  Appears at the end of an article, contains the author name and creation date.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *article_details;
+
+/**
+ *  A string containing the category and section an article belongs to.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSString *articleParents;
+
+/**
+ *  Creation date for an article.
+ *
+ *  @since 0.9.3.1
+ */
 @property (strong, nonatomic) NSDate *created_at;
+
+/**
+ *  The articles position in it's parent section.
+ *
+ *  @since 0.9.3.1
+ */
 @property (assign, nonatomic) NSInteger position;
+
+/**
+ *  Is the article outdated?
+ *
+ *  @since 0.9.3.1
+ */
 @property (assign, nonatomic) BOOL outdated;
+
+/**
+ *  The total sum of votes on this article.
+ *
+ *  @since 1.3.0.1
+ */
+@property (nonatomic, strong) NSNumber *voteSum;
+
+/**
+ *  The number of votes cast on this article.
+ *
+ *  @since 1.3.0.1
+ */
+@property (nonatomic, strong) NSNumber *voteCount;
+
+/**
+ *  The locale of this article
+ * 
+ *  @since 1.3.0.1
+ */
+@property (nonatomic, strong) NSString *locale;
 
 
 
 /**
- * Parses a single Help Center json article object.
+ *  Gets the number of upvotes for this aricle.
  *
- * @return A new ZDKHelpCenterArticle.
+ *  @since 1.3.0.1
+ *
+ *  @return The number of upvotes for this article or -1 if the number of votes cannot be determined due to an error
+ */
+- (NSInteger) getUpvoteCount;
+
+/**
+ *  Get the number of downvotes for this article.
+ *
+ *  @since 1.3.0.1
+ *
+ *  @return The number of downvotes for this article or -1 if the number of votes cannot be determned due to an error.
+ */
+- (NSInteger) getDownvoteCount;
+
+
+/**
+ *  Parses a single Help Center json article object.
+ *
+ *  @since 0.9.3.1
+ *
+ *  @return A new ZDKHelpCenterArticle.
  */
 + (ZDKHelpCenterArticle *) parseArticle:(NSDictionary *)articleJson;
 
 
 /**
- * Parses a collection of Help Center json article objects.
+ *  Parses a collection of Help Center json article objects.
  *
- * @return An array of ZDKHelpCenterArticle objects.
+ *  @since 0.9.3.1
+ *
+ *  @return An array of ZDKHelpCenterArticle objects.
  */
 + (NSArray *) parseArticles:(NSDictionary *)json;
 
 
 /**
- * Parses a collection of Help Center search results into an array of article objects.
+ *  Parses a collection of Help Center search results into an array of article objects.
  *
- * @return An array of ZDKHelpCenterArticle objects.
+ *  @since 0.9.3.1
+ *
+ *  @return An array of ZDKHelpCenterArticle objects.
  */
 + (NSArray *) parseArticleSearchResults:(NSDictionary *)json;
 
 
 /**
- * Parse a collection of Help Center json article objects beginning at root
+ *  Parse a collection of Help Center json article objects beginning at root
  *
- * @param root Root key in json
- * @return An array of ZDKHelpCenter Article objects.
+ *  @since 0.9.3.1
+ *
+ *  @param root Root key in json
+ *  @return An array of ZDKHelpCenter Article objects.
  */
 + (NSArray *) parseArticlesWithRootKey:(NSDictionary *)json withRootKey:(NSString *)root;
 

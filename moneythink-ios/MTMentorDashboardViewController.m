@@ -10,16 +10,11 @@
 #import "MTStudentProgressTableViewCell.h"
 #import "MICheckBox.h"
 #import "MTMentorStudentProfileViewController.h"
-#import "MTScheduleTableViewController.h"
 
 @interface MTMentorDashboardViewController ()
 
-@property (nonatomic) BOOL scheduledActivationsOn;
 @property (nonatomic, strong) PFImageView *profileImage;
 @property (nonatomic, strong) PFUser *userCurrent;
-@property (nonatomic) MTProgressNextStepState nextStepState;
-@property (nonatomic) BOOL queriedForActivationsOn;
-@property (nonatomic) BOOL queriedForStudents;
 
 @end
 
@@ -36,11 +31,6 @@
 {
     [super viewWillAppear:animated];
 
-    self.scheduledActivationsOn = NO;
-    self.queriedForActivationsOn = NO;
-    self.queriedForStudents = NO;
-    
-    [self setNextStepState];
     [self.tableView reloadData];
     
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
@@ -63,23 +53,6 @@
 }
 
 
-#pragma mark - Actions -
-- (void)presentEditProfile
-{
-    [self performSegueWithIdentifier:@"presentEditProfile" sender:self];
-}
-
-- (void)presentChallengeSchedule
-{
-    [self performSegueWithIdentifier:@"pushScheduleView" sender:self];
-}
-
-- (void)presentInviteStudents
-{
-    [self.revealViewController setFrontViewPosition:FrontViewPositionRight animated:YES];
-}
-
-
 #pragma mark - Private Methods -
 - (void)loadProfileImageForImageView:(UIImageView *)imageView
 {
@@ -98,7 +71,6 @@
     
     if (profileImageFile) {
         // Load/update the profile image
-        
         [self bk_performBlock:^(id obj) {
             self.profileImage = [[PFImageView alloc] init];
             [self.profileImage setFile:profileImageFile];
@@ -121,90 +93,11 @@
     }
 }
 
-- (void)setNextStepState
-{
-    BOOL savedProfile = NO;
-    if ([PFUser currentUser][@"profile_picture"] || [[NSUserDefaults standardUserDefaults] boolForKey:kUserSavedProfileChanges]) {
-        // Make sure to set in case of upgrade
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        savedProfile = YES;
-    }
-    
-    BOOL activatedChallenges = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserActivatedChallenges] ||
-        (self.scheduledActivationsOn && self.queriedForActivationsOn)) {
-        // Make sure to set in case of upgrade
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserActivatedChallenges];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
-        activatedChallenges = YES;
-    }
-    // Temporarily, disable Schedule Your Challenges prompt
-    activatedChallenges = YES;
-    
-    BOOL invitedStudents = NO;
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:kUserInvitedStudents] ||
-        ([self.classStudents count] > 0 && self.queriedForStudents)) {
-        // Make sure to set in case of upgrade
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserInvitedStudents];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-        
-        invitedStudents = YES;
-    }
-    
-    if (!savedProfile) {
-        self.nextStepState = MTProgressNextStepStateEditProfile;
-    }
-    else if (self.queriedForActivationsOn && !activatedChallenges) {
-        self.nextStepState = MTProgressNextStepStateScheduleChallenges;
-    }
-    else if (self.queriedForStudents && !invitedStudents) {
-        self.nextStepState = MTProgressNextStepStateInviteStudents;
-    }
-    else {
-        self.nextStepState = MTProgressNextStepStateDone;
-    }
-}
-
 - (void)loadData
 {
     NSString *nameClass = [PFUser currentUser][@"class"];
     NSString *nameSchool = [PFUser currentUser][@"school"];
-    
-    NSPredicate *futureActivations = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND activation_date != nil AND activated = NO", nameClass, nameSchool];
-    PFQuery *scheduledActivations = [PFQuery queryWithClassName:[PFScheduledActivations parseClassName] predicate:futureActivations];
-    scheduledActivations.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MTMakeWeakSelf();
-    [scheduledActivations countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
-        if (!error) {
-            weakSelf.scheduledActivationsOn = (number > 0);
-            
-        } else {
-            NSLog(@"error - %@", error);
-            if (![MTUtil internetReachable]) {
-                [UIAlertView showNoInternetAlert];
-            }
-            else {
-                NSString *errorMessage = [NSString stringWithFormat:@"Unable to update Auto-Release information. %ld: %@", (long)error.code, [error localizedDescription]];
-                [[[UIAlertView alloc] initWithTitle:@"Update Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            }
-        }
-        
-        weakSelf.queriedForActivationsOn = YES;
-        
-        if (weakSelf.queriedForStudents) {
-            [weakSelf setNextStepState];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-        }
-    }];
-    
+
     NSString *type = @"student";
     NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
     PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
@@ -212,18 +105,14 @@
     [studentsForClass orderByAscending:@"last_name"];
     studentsForClass.cachePolicy = kPFCachePolicyNetworkElseCache;
     
+    MTMakeWeakSelf();
     [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         weakSelf.classStudents = objects;
-        weakSelf.queriedForStudents = YES;
         
-        if (weakSelf.queriedForActivationsOn) {
-            [weakSelf setNextStepState];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
     }];
 }
 
@@ -301,7 +190,7 @@
     return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 4;
 }
@@ -316,27 +205,11 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    // Release 2.0 takes out Challenge Schedule, temporarily remove this way
-    if (section == MTProgressSectionStudents || section == MTProgressSectionChallenges) {
+    if (section != MTProgressSectionEditProfile) {
         return nil;
     }
-
-    static NSString *CellIdentifier = @"NextStepHeaderView";
     
-    switch (section) {
-        case MTProgressSectionNextStep:
-            CellIdentifier = @"NextStepHeaderView";
-            break;
-        case MTProgressSectionEditProfile:
-            CellIdentifier = @"UserDetailHeaderView";
-            break;
-        case MTProgressSectionChallenges:
-            CellIdentifier = @"ChallengesHeaderView";
-            break;
-    
-        default:
-            break;
-    }
+    static NSString *CellIdentifier = @"UserDetailHeaderView";
     
     UITableViewCell *headerView = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (headerView == nil){
@@ -350,127 +223,18 @@
         [headerView.contentView removeGestureRecognizer:[headerView.contentView.gestureRecognizers objectAtIndex:0]];
     }
     
-    switch (section) {
-        case MTProgressSectionNextStep:
-        {
-            UIButton *nextStepButton = (UIButton *)[headerView viewWithTag:98];
-            [nextStepButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:nextStepButton.frame.size] forState:UIControlStateHighlighted];
-            [nextStepButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:nextStepButton.frame.size] forState:UIControlStateNormal];
-            [nextStepButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-            [nextStepButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            
-            [nextStepButton removeTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
-            [nextStepButton removeTarget:self action:@selector(presentChallengeSchedule) forControlEvents:UIControlEventTouchUpInside];
-            [nextStepButton removeTarget:self action:@selector(presentInviteStudents) forControlEvents:UIControlEventTouchUpInside];
-
-            NSString *nextStepText;
-
-            switch (self.nextStepState) {
-                case MTProgressNextStepStateEditProfile:
-                {
-                    nextStepText = @"▶︎ NEXT STEP: Add Your Profile Photo";
-                    [nextStepButton addTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
-                    break;
-                }
-                    
-                case MTProgressNextStepStateScheduleChallenges:
-                {
-                    nextStepText = @"▶︎ NEXT STEP: Schedule Your Challenges";
-                    [nextStepButton addTarget:self action:@selector(presentChallengeSchedule) forControlEvents:UIControlEventTouchUpInside];
-                    break;
-                }
-                    
-                case MTProgressNextStepStateInviteStudents:
-                {
-                    nextStepText = @"▶︎ NEXT STEP: Invite Students";
-                    [nextStepButton addTarget:self action:@selector(presentInviteStudents) forControlEvents:UIControlEventTouchUpInside];
-                    break;
-                }
-  
-                case MTProgressNextStepStateDone:
-                {
-                    return nil;
-                    break;
-                }
-   
-                default:
-                    break;
-            }
-            
-            if (nextStepButton) {
-                [nextStepButton setTitle:nextStepText forState:UIControlStateNormal];
-            }
-            
-            break;
-        }
-        case MTProgressSectionEditProfile:
-        {
-            UIImageView *profileView = (UIImageView *)[headerView viewWithTag:200];
-            profileView.layer.masksToBounds = YES;
-            [self loadProfileImageForImageView:profileView];
-            
-            self.userCurrent = [PFUser currentUser];
-            
-            UILabel *userNameLabel = (UILabel *)[headerView viewWithTag:201];
-            userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.userCurrent[@"first_name"], self.userCurrent[@"last_name"]];
-            UILabel *schoolLabel = (UILabel *)[headerView viewWithTag:202];
-            schoolLabel.text = self.userCurrent[@"school"];
-            UILabel *classLabel = (UILabel *)[headerView viewWithTag:203];
-            classLabel.text = self.userCurrent[@"class"];
-            UIButton *editButton = (UIButton *)[headerView viewWithTag:204];
-            editButton.layer.cornerRadius = 15.0f;
-            editButton.layer.masksToBounds = YES;
-            [editButton setBackgroundImage:[UIImage imageWithColor:[UIColor darkGrayColor] size:editButton.frame.size] forState:UIControlStateHighlighted];
-            [editButton setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithHexString:@"F2F2F2"] size:editButton.frame.size] forState:UIControlStateNormal];
-            [editButton setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
-            [editButton setTitleColor:[UIColor colorWithHexString:@"58595b"] forState:UIControlStateNormal];
-            [editButton addTarget:self action:@selector(presentEditProfile) forControlEvents:UIControlEventTouchUpInside];
-
-            break;
-        }
-        case MTProgressSectionChallenges:
-        {
-            UIButton *challengesButton = (UIButton *)[headerView viewWithTag:300];
-            challengesButton.layer.cornerRadius = 15.0f;
-            challengesButton.layer.masksToBounds = YES;
-            
-            if (self.queriedForActivationsOn) {
-                // Now, style appropriately
-
-                if (self.scheduledActivationsOn) {
-                    [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:challengesButton.frame.size] forState:UIControlStateHighlighted];
-                    [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:challengesButton.frame.size] forState:UIControlStateNormal];
-                    [challengesButton setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-                    [challengesButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-                    [challengesButton setImage:[UIImage imageNamed:@"schedule-check.png"] forState:UIControlStateNormal];
-                }
-                else {
-                    [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor] size:challengesButton.frame.size] forState:UIControlStateHighlighted];
-                    [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithHexString:@"58595b"] size:challengesButton.frame.size] forState:UIControlStateNormal];
-                    [challengesButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
-                    [challengesButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-                    [challengesButton setImage:nil forState:UIControlStateNormal];
-                }
-            }
-            else {
-                // Just default to inactive style
-                [challengesButton setImage:nil forState:UIControlStateNormal];
-                [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor grayColor] size:challengesButton.frame.size] forState:UIControlStateHighlighted];
-                [challengesButton setBackgroundImage:[UIImage imageWithColor:[UIColor colorWithHexString:@"58595b"] size:challengesButton.frame.size] forState:UIControlStateNormal];
-                [challengesButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
-                [challengesButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-
-            }
-            
-            [challengesButton addTarget:self action:@selector(presentChallengeSchedule) forControlEvents:UIControlEventTouchUpInside];
-
-            break;
-        }
-        default:
-            break;
-    }
+    UIImageView *profileView = (UIImageView *)[headerView viewWithTag:200];
+    profileView.layer.masksToBounds = YES;
+    [self loadProfileImageForImageView:profileView];
+    
+    self.userCurrent = [PFUser currentUser];
+    
+    UILabel *userNameLabel = (UILabel *)[headerView viewWithTag:201];
+    userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.userCurrent[@"first_name"], self.userCurrent[@"last_name"]];
+    UILabel *schoolLabel = (UILabel *)[headerView viewWithTag:202];
+    schoolLabel.text = self.userCurrent[@"school"];
+    UILabel *classLabel = (UILabel *)[headerView viewWithTag:203];
+    classLabel.text = self.userCurrent[@"class"];
     
     return headerView.contentView;
 }
@@ -499,25 +263,9 @@
     CGFloat height;
     
     switch (section) {
-        case MTProgressSectionNextStep:
-        {
-            if (self.nextStepState == MTProgressNextStepStateDone) {
-                height = 0.0f;
-            }
-            else {
-                height = 50.0f;
-            }
-            break;
-        }
-            
         case MTProgressSectionEditProfile:
             height = 90.0f;
             break;
-            
-        case MTProgressSectionChallenges:
-            height = 0.0f;
-            break;
-
         case MTProgressSectionStudents:
             height = 0.0f;
             break;

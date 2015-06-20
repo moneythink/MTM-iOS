@@ -40,6 +40,8 @@
 #define kNotificationInactivity6        @"inactivity_6"
 #define kNotificationInactivityMentor   @"inactivity_mentor"
 #define kLastViewedChallengeId          @"kLastViewedChallengeId"
+#define kUserHasOnboardedKey            @"user_has_onboarded"
+
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

@@ -835,6 +835,7 @@
             self.userCurrent[@"profile_picture"] = self.profileImage.file;
             [self.profileImage.file saveInBackground];
         }
+        self.updatedProfileImage = nil;
     }
     else {
         if (self.removedProfilePhoto) {
@@ -853,6 +854,7 @@
                     [weakSelf dismissViewControllerAnimated:YES completion:nil];
                 }
                 else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
                     hud.labelText = @"Saved!";
                     hud.mode = MBProgressHUDModeText;
