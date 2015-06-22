@@ -57,7 +57,6 @@
     
     [query orderByDescending:@"createdAt"];
     [query includeKey:@"user"];
-    [query includeKey:@"reference_post"];
     [query whereKey:@"challenge" equalTo:self.challenge];
     [query setLimit:20];
     

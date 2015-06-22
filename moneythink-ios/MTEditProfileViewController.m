@@ -170,7 +170,7 @@
                     } completion:^(BOOL finished) {
                         if (!error) {
                             if (image) {
-                                self.profileImageLabel.text = @"Edit Photo";
+                                self.profileImageLabel.text = @"Change Photo";
                                 self.profileImage.image = image;
                             } else {
                                 self.profileImageLabel.text = @"Add Photo";
@@ -822,11 +822,6 @@
     [self.userCurrent setUsername:self.email.text];
     
     if (self.updatedProfileImage) {
-        
-        // Mark user saved profile changes
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserSavedProfileChanges];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-
         self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
         NSString *fileName = @"profile_image.png";
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.8f);
@@ -849,6 +844,8 @@
     [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                
+                [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
                 
                 if (weakSelf.presentingViewController) {
                     [weakSelf dismissViewControllerAnimated:YES completion:nil];
@@ -909,7 +906,7 @@
 
         [editProfileImage addAction:cancel];
         
-        if ([self.profileImageLabel.text isEqualToString:@"Edit Photo"]) {
+        if ([self.profileImageLabel.text isEqualToString:@"Change Photo"]) {
             UIAlertAction *removePhoto = [UIAlertAction
                                           actionWithTitle:@"Remove Existing Photo"
                                           style:UIAlertActionStyleDestructive
@@ -927,7 +924,7 @@
     } else {
         UIActionSheet *editProfileImage = nil;
         
-        if ([self.profileImageLabel.text isEqualToString:@"Edit Photo"]) {
+        if ([self.profileImageLabel.text isEqualToString:@"Change Photo"]) {
             editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         }
         else {
@@ -1090,7 +1087,7 @@
         } completion:^(BOOL finished) {
             [weakSelf.userProfileButton setImage:self.updatedProfileImage forState:UIControlStateNormal];
 
-            weakSelf.profileImageLabel.text = @"Edit Photo";
+            weakSelf.profileImageLabel.text = @"Change Photo";
 
             [UIView animateWithDuration:0.2f animations:^{
                 weakSelf.userProfileButton.alpha = 1.0f;

@@ -399,6 +399,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         button = [buttonID intValue];
     }
     
+    [self resetButtonsForCell:cell];
+
     [cell.button1 layer].masksToBounds = YES;
     [cell.button2 layer].masksToBounds = YES;
 
@@ -459,10 +461,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [[cell.button1 layer] setCornerRadius:5.0f];
     [[cell.button2 layer] setCornerRadius:5.0f];
     
-    [cell.button1 removeTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [cell.button2 removeTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     
     NSArray *buttonTitles = self.challenge[@"buttons"];
@@ -499,6 +498,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     NSInteger button1Count = [[buttonDict objectForKey:@0] integerValue];
     NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
     
+    [self resetButtonsForCell:cell];
+    
     // Configure Button 1
     [[cell.button1 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
     [[cell.button1 layer] setBorderWidth:1.0f];
@@ -519,7 +520,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [cell.button1 setTitle:@"" forState:UIControlStateNormal];
     }
 
-    [cell.button1 removeTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
 
     // Configure Button 2
@@ -554,8 +554,29 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [cell.button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:cell.button2.frame.size] forState:UIControlStateHighlighted];
     }
     
-    [cell.button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)resetButtonsForCell:(MTPostsTableViewCell *)cell
+{
+    // Reset buttons
+    cell.button1.enabled = YES;
+    cell.button2.enabled = YES;
+    
+    [cell.button1 setImage:nil forState:UIControlStateNormal];
+    [cell.button1 setImage:nil forState:UIControlStateHighlighted];
+    [cell.button1 setBackgroundImage:nil forState:UIControlStateNormal];
+    [cell.button1 setBackgroundImage:nil forState:UIControlStateHighlighted];
+
+    [cell.button2 setImage:nil forState:UIControlStateNormal];
+    [cell.button2 setImage:nil forState:UIControlStateHighlighted];
+    [cell.button2 setBackgroundImage:nil forState:UIControlStateNormal];
+    [cell.button2 setBackgroundImage:nil forState:UIControlStateHighlighted];
+    
+    [cell.button1 removeTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.button2 removeTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.button1 removeTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)showFirstTimeToastNotification
@@ -623,6 +644,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             NSArray *buttons = challenge[@"buttons"];
             NSArray *secondaryButtons = challenge[@"secondary_buttons"];
             
+            weakSelf.hasButtons = NO;
+            weakSelf.hasSecondaryButtons = NO;
+            
             if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
                 weakSelf.hasButtons = YES;
                 [weakSelf userButtonsTapped];
@@ -630,9 +654,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
                 [weakSelf updateSecondaryButtonsTapped];
-            }
-            else {
-                weakSelf.hasButtons = NO;
             }
         }
         
@@ -844,11 +865,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     }
     
     if (showButtons) {
-        if (self.hasButtons) {
-            [self configureButtonsForCell:cell];
+        if (self.hasSecondaryButtons) {
+            [self configureSecondaryButtonsForCell:cell];
         }
         else {
-            [self configureSecondaryButtonsForCell:cell];
+            [self configureButtonsForCell:cell];
         }
     }
     
@@ -943,6 +964,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.likeButton removeTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
     [cell.likeButton addTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
     
+    [cell.commentButton setImage:[UIImage imageNamed:@"comment_highlighted"] forState:UIControlStateHighlighted];
+
     if (dateObject) {
         // Don't retrieve comment count on newly created objects
         PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];

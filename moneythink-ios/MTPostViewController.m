@@ -376,20 +376,30 @@ typedef enum {
     [[button1 layer] setCornerRadius:5.0f];
     [[button2 layer] setCornerRadius:5.0f];
 
-    NSArray *buttonTitles = self.challenge[@"buttons"];
-    NSArray *buttonsClicked = self.challengePost [@"buttons_clicked"];
-
-    if (buttonTitles.count > 0) {
+    NSArray *buttonTitles = nil;
+    if (self.challenge && [self.challenge isDataAvailable]) {
+        buttonTitles = self.challenge[@"buttons"];
+    }
+    
+    NSArray *buttonsClicked = nil;
+    if (self.challengePost && [self.challengePost isDataAvailable]) {
+        buttonsClicked = self.challengePost[@"buttons_clicked"];
+    }
+    
+    if (!IsEmpty(buttonTitles) && [buttonTitles count] == 2) {
+        button1.hidden = NO;
+        button2.hidden = NO;
+        
         NSString *button1Title;
         NSString *button2Title;
-
-        if (buttonsClicked.count > 0) {
+        
+        if (!IsEmpty(buttonsClicked)) {
             button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
         } else {
             button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
         }
-
-        if (buttonsClicked.count > 1) {
+        
+        if ([buttonsClicked count] > 1) {
             button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
         } else {
             button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
@@ -397,6 +407,10 @@ typedef enum {
         
         [button1 setTitle:button1Title forState:UIControlStateNormal];
         [button2 setTitle:button2Title forState:UIControlStateNormal];
+    }
+    else {
+        button1.hidden = YES;
+        button2.hidden = YES;
     }
 }
 
@@ -528,6 +542,14 @@ typedef enum {
     [self canPopulateForNotification:self.notification populate:YES];
     [self.tableView reloadData];
     [self updateLikes];
+
+    if (self.challenge && ![self.challenge isDataAvailable]) {
+        [self.challenge fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
+    }
+    
+    if (self.challengePost && ![self.challengePost isDataAvailable]) {
+        [self.challengePost fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
+    }
 }
 
 - (void)updateLikes

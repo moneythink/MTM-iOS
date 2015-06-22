@@ -36,13 +36,14 @@
     self.tableView.backgroundColor = [UIColor menuLightGreen];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSavedProfileChanges:) name:kUserSavedProfileChanges object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     
-    [self loadProfileImageForImageView:self.profileImage];
+    [self loadProfileImage];
 
     PFUser *user = [PFUser currentUser];
     self.profileName.text = user[@"first_name"];
@@ -329,10 +330,6 @@
 
 - (void)logoutAction
 {
-    // Reset user profile check for next user
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserSavedProfileChanges];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-
     [MTUtil logout];
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
@@ -344,33 +341,28 @@
     [self.revealViewController revealToggleAnimated:YES];
 }
 
-- (void)loadProfileImageForImageView:(UIImageView *)imageView
+- (void)loadProfileImage
 {
     __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     
-    if (self.profileImage.image) {
-        imageView.image = self.profileImage.image;
-    }
-    else {
-        imageView.image = [UIImage imageNamed:@"profile_image.png"];
+    if (!self.profileImage.image) {
+        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
     }
     
-    imageView.layer.cornerRadius = round(imageView.frame.size.width / 2.0f);
-    imageView.layer.borderColor = [UIColor whiteColor].CGColor;
-    imageView.layer.borderWidth = 1.0f;
-    imageView.layer.masksToBounds = YES;
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
+    self.profileImage.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.profileImage.layer.borderWidth = 1.0f;
+    self.profileImage.layer.masksToBounds = YES;
+    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
     
     if (profileImageFile) {
         // Load/update the profile image
-        
+        MTMakeWeakSelf();
         [self bk_performBlock:^(id obj) {
-            self.profileImage = [[PFImageView alloc] init];
             [self.profileImage setFile:profileImageFile];
-            
             [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [imageView setImage:self.profileImage.image];
+                    weakSelf.profileImage.image = image;
                 });
                 
                 [[PFUser currentUser] fetchInBackground];
@@ -379,10 +371,8 @@
     }
     else {
         // Set to default
-        self.profileImage = [[PFImageView alloc] init];
         [self.profileImage setFile:nil];
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-        [imageView setImage:self.profileImage.image];
     }
 }
 
@@ -457,6 +447,11 @@
     else {
         [self.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
+}
+
+- (void)userSavedProfileChanges:(NSNotification *)note
+{
+    [self loadProfileImage];
 }
 
 

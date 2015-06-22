@@ -801,7 +801,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Image" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zN0-cK-nan">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Photo" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zN0-cK-nan">
                                         <rect key="frame" x="15" y="127" width="81" height="21"/>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -902,7 +902,7 @@
                                             <action selector="editProfileImageButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="SQx-AL-Ix5"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EDIT PHOTO" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="whb-yp-d4u" userLabel="Edit Photo Label">
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Change Photo" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="whb-yp-d4u" userLabel="Change Photo Label">
                                         <rect key="frame" x="0.0" y="140" width="320" height="13"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -2151,17 +2151,17 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZzI-ny-N2I" userLabel="Delete (X) Button">
-                                                    <rect key="frame" x="280" y="10" width="40" height="36"/>
+                                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZzI-ny-N2I" userLabel="Edit/Delete Toggle">
+                                                    <rect key="frame" x="270" y="10" width="40" height="36"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="36" id="iNh-Fb-W9u"/>
                                                         <constraint firstAttribute="width" constant="40" id="po6-GJ-dSi"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="16"/>
-                                                    <state key="normal" title="X">
+                                                    <state key="normal" image="picker.png">
                                                         <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                                         <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <state key="highlighted" image="picker_highlighted.png"/>
                                                     <connections>
                                                         <action selector="editDeletePostTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="d6T-V2-4U4"/>
                                                     </connections>
@@ -2177,10 +2177,10 @@
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstAttribute="trailing" secondItem="ZzI-ny-N2I" secondAttribute="trailing" id="4Xz-77-kwh"/>
+                                                <constraint firstAttribute="trailing" secondItem="ZzI-ny-N2I" secondAttribute="trailing" constant="10" id="4Xz-77-kwh"/>
                                                 <constraint firstItem="aMJ-4M-Vc6" firstAttribute="leading" secondItem="YiL-f7-k5m" secondAttribute="leading" id="Bcf-MO-Twd"/>
                                                 <constraint firstItem="AyB-jI-2FA" firstAttribute="leading" secondItem="BGB-7K-GdI" secondAttribute="leading" constant="10" id="C8k-Jf-0MH"/>
-                                                <constraint firstItem="ZzI-ny-N2I" firstAttribute="leading" secondItem="YiL-f7-k5m" secondAttribute="trailing" constant="13" id="Dvj-97-Sqw"/>
+                                                <constraint firstItem="ZzI-ny-N2I" firstAttribute="leading" secondItem="YiL-f7-k5m" secondAttribute="trailing" constant="3" id="Dvj-97-Sqw"/>
                                                 <constraint firstItem="AyB-jI-2FA" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="10" id="Lvp-vL-kta"/>
                                                 <constraint firstItem="ku6-Et-cFA" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="10" id="PdZ-7L-F99"/>
                                                 <constraint firstItem="YiL-f7-k5m" firstAttribute="top" secondItem="BGB-7K-GdI" secondAttribute="top" constant="2" id="Pir-lF-VWb"/>
@@ -2255,24 +2255,24 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0EI-Ic-hRX" id="dXs-EZ-yTJ">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VYo-gL-vkD">
+                                                <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VYo-gL-vkD" userLabel="Button 1">
                                                     <rect key="frame" x="36" y="5" width="120" height="34"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="120" id="9DH-xT-ORf"/>
                                                     </constraints>
-                                                    <state key="normal" title="button 1">
+                                                    <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="button1Tapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="S4H-nE-66g"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hvy-xV-zhy">
+                                                <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hvy-xV-zhy" userLabel="Button 2">
                                                     <rect key="frame" x="164" y="5" width="120" height="34"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="120" id="8xl-CQ-Edf"/>
                                                     </constraints>
-                                                    <state key="normal" title="button 2">
+                                                    <state key="normal">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -2988,20 +2988,21 @@
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADr-4h-mJc" userLabel="Delete Button (x)">
-                                            <rect key="frame" x="275" y="393" width="40" height="36"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADr-4h-mJc" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="395" width="48" height="32"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <state key="normal" title="X">
+                                            <state key="normal" image="picker.png">
                                                 <color key="titleColor" red="0.5490196078431373" green="0.5490196078431373" blue="0.5490196078431373" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
                                         <view alpha="0.29999999999999999" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bQf-JR-1hF" userLabel="Loading View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jMm-ql-KU1">
-                                            <rect key="frame" x="285" y="401" width="20" height="20"/>
+                                            <rect key="frame" x="274" y="401" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3137,20 +3138,21 @@
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwF-lc-hku" userLabel="Delete Button (X)">
-                                            <rect key="frame" x="275" y="96" width="40" height="36"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwF-lc-hku" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="98" width="48" height="32"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <state key="normal" title="X">
+                                            <state key="normal" image="picker.png">
                                                 <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
                                         <view alpha="0.29999999999999999" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cop-qJ-Da8" userLabel="Loading View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="SGh-Ed-zIq">
-                                            <rect key="frame" x="285" y="104" width="20" height="20"/>
+                                            <rect key="frame" x="274" y="104" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3300,20 +3302,21 @@
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Tg-KG-fYo" userLabel="Delete Button (x)">
-                                            <rect key="frame" x="275" y="429" width="40" height="36"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Tg-KG-fYo" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="431" width="48" height="32"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <state key="normal" title="X">
+                                            <state key="normal" image="picker.png">
                                                 <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
                                         <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k9G-wH-nAn" userLabel="Loading View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="466"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Tie-dM-1r1">
-                                            <rect key="frame" x="285" y="437" width="20" height="20"/>
+                                            <rect key="frame" x="274" y="437" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3461,20 +3464,21 @@
                                             <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozk-lg-fTP" userLabel="Delete Button (x)">
-                                            <rect key="frame" x="275" y="142" width="40" height="36"/>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozk-lg-fTP" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="144" width="48" height="32"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                            <state key="normal" title="X">
+                                            <state key="normal" image="picker.png">
                                                 <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
                                                 <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
                                         <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3V-ew-UZA" userLabel="Loading View">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="xt5-nH-uB8">
-                                            <rect key="frame" x="285" y="150" width="20" height="20"/>
+                                            <rect key="frame" x="274" y="150" width="20" height="20"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -4312,6 +4316,8 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <image name="nav-icons-support.png" width="32" height="42"/>
         <image name="notifications_active.png" width="25" height="25"/>
         <image name="photo_post.png" width="71" height="71"/>
+        <image name="picker.png" width="36" height="24"/>
+        <image name="picker_highlighted.png" width="36" height="24"/>
         <image name="profile_image.png" width="90" height="90"/>
         <image name="students_normal.png" width="31" height="24"/>
     </resources>

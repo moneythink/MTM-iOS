@@ -163,6 +163,10 @@
 		89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */; };
 		89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8051B34FCBD00F01BFF /* comment_normal.png */; };
 		89A0E80A1B34FCBD00F01BFF /* comment_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8061B34FCBD00F01BFF /* comment_normal@2x.png */; };
+		89A0E80D1B38678100F01BFF /* picker.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E80B1B38678000F01BFF /* picker.png */; };
+		89A0E80E1B38678100F01BFF /* picker@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E80C1B38678000F01BFF /* picker@2x.png */; };
+		89A0E8111B38A01000F01BFF /* picker_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E80F1B38A01000F01BFF /* picker_highlighted.png */; };
+		89A0E8121B38A01000F01BFF /* picker_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8101B38A01000F01BFF /* picker_highlighted@2x.png */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
 		89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */; };
 		89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793B11B28A69C000BFA40 /* UIButton+Badge.m */; };
@@ -462,6 +466,10 @@
 		89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment_active@2x.png"; path = "moneythink-ios/assets/comment_active@2x.png"; sourceTree = SOURCE_ROOT; };
 		89A0E8051B34FCBD00F01BFF /* comment_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment_normal.png; path = "moneythink-ios/assets/comment_normal.png"; sourceTree = SOURCE_ROOT; };
 		89A0E8061B34FCBD00F01BFF /* comment_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment_normal@2x.png"; path = "moneythink-ios/assets/comment_normal@2x.png"; sourceTree = SOURCE_ROOT; };
+		89A0E80B1B38678000F01BFF /* picker.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = picker.png; sourceTree = "<group>"; };
+		89A0E80C1B38678000F01BFF /* picker@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker@2x.png"; sourceTree = "<group>"; };
+		89A0E80F1B38A01000F01BFF /* picker_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = picker_highlighted.png; sourceTree = "<group>"; };
+		89A0E8101B38A01000F01BFF /* picker_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_highlighted@2x.png"; sourceTree = "<group>"; };
 		89A50CEC19DE0141003BE1D8 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
 		89A793AE1B28A69C000BFA40 /* UIBarButtonItem+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Badge.h"; sourceTree = "<group>"; };
 		89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Badge.m"; sourceTree = "<group>"; };
@@ -940,6 +948,10 @@
 				892105F419DA1F37000CFBF6 /* notifications_active@2x.png */,
 				892105F719DA1F37000CFBF6 /* photo_post.png */,
 				892105F819DA1F37000CFBF6 /* photo_post@2x.png */,
+				89A0E80B1B38678000F01BFF /* picker.png */,
+				89A0E80C1B38678000F01BFF /* picker@2x.png */,
+				89A0E80F1B38A01000F01BFF /* picker_highlighted.png */,
+				89A0E8101B38A01000F01BFF /* picker_highlighted@2x.png */,
 				892105F919DA1F37000CFBF6 /* post.png */,
 				892105FA19DA1F37000CFBF6 /* post@2x.png */,
 				892105FB19DA1F37000CFBF6 /* profile_image.png */,
@@ -1188,6 +1200,7 @@
 				8967C7991A77F7E300BE125E /* schedule-check@2x.png in Resources */,
 				106309941A3A3DD80093C209 /* checkbox_not_ticked.png in Resources */,
 				8999067D1AD46B5D007A4F3E /* icon_button_check_pressed@2x.png in Resources */,
+				89A0E8111B38A01000F01BFF /* picker_highlighted.png in Resources */,
 				8921063B19DA1F37000CFBF6 /* photo_post.png in Resources */,
 				8921064019DA1F37000CFBF6 /* profile_image@2x.png in Resources */,
 				89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */,
@@ -1260,6 +1273,7 @@
 				895F78A21B16454400055759 /* nav-icons-notifications@2x.png in Resources */,
 				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
 				8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */,
+				89A0E8121B38A01000F01BFF /* picker_highlighted@2x.png in Resources */,
 				8921063D19DA1F37000CFBF6 /* post.png in Resources */,
 				8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */,
 				8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */,
@@ -1269,12 +1283,14 @@
 				89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */,
 				89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */,
 				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
+				89A0E80E1B38678100F01BFF /* picker@2x.png in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
 				895F78AA1B16456000055759 /* nav-icons-support@2x.png in Resources */,
 				899F309919F16948004F6B10 /* check-unactive.png in Resources */,
 				895F78991B16452A00055759 /* nav-icons-editprofile.png in Resources */,
 				899F309719F16948004F6B10 /* check-active.png in Resources */,
+				89A0E80D1B38678100F01BFF /* picker.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

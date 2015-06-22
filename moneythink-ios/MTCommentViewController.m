@@ -58,10 +58,10 @@
                 }
             }];
 
-            self.chooseImageLabel.text = @"Edit Image";
+            self.chooseImageLabel.text = @"Change Photo";
         }
         else {
-            self.chooseImageLabel.text = @"Add Image";
+            self.chooseImageLabel.text = @"Add Photo";
         }
 
         UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveEdit)];
@@ -138,10 +138,10 @@
     else {
         UIActionSheet *addPostImage = nil;
         if (self.postImage) {
-            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Edit Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Change Photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         }
         else {
-            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Add Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
+            addPostImage = [[UIActionSheet alloc] initWithTitle:@"Add Photo" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         }
 
         UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
@@ -163,7 +163,7 @@
         self.chooseImageLabel.alpha = 0.0f;
     } completion:^(BOOL finished) {
         [self.chooseImageButton setImage:[UIImage imageNamed:@"photo_post"] forState:UIControlStateNormal];
-        self.chooseImageLabel.text = @"Add Image";
+        self.chooseImageLabel.text = @"Add Photo";
         self.updatedPostImage = nil;
         self.removedPostPhoto = YES;
         
@@ -270,7 +270,7 @@
             self.updatedPostImage = image;
             self.removedPostPhoto = NO;
             [self.chooseImageButton setImage:image forState:UIControlStateNormal];
-            self.chooseImageLabel.text = @"Edit Image";
+            self.chooseImageLabel.text = @"Change Photo";
             
             [UIView animateWithDuration:0.2f animations:^{
                 self.chooseImageButton.alpha = 1.0f;
