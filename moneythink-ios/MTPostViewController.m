@@ -542,6 +542,32 @@ typedef enum {
     [self canPopulateForNotification:self.notification populate:YES];
     [self.tableView reloadData];
     [self updateLikes];
+}
+
+- (void)continueLoadingFromNotificationWithPost:(PFChallengePost *)post withComment:(PFChallengePostComment *)comment
+{
+    self.postComment = comment;
+    self.challengePost = post;
+    
+    self.postLikesCount = 0;
+    if (self.challengePost[@"likes"]) {
+        self.postLikesCount = [self.challengePost[@"likes"] intValue];
+    }
+    
+    self.postImage = self.challengePost[@"picture"];
+    
+    self.postUser = self.challengePost[@"user"];
+    self.currentUser = [PFUser currentUser];
+    [self loadPostText];
+    [self loadLikesWithCache:NO];
+    
+    if (post[@"challenge"]) {
+        self.challenge = post[@"challenge"];
+    }
+    
+    if (self.postUser && ![self.postUser isDataAvailable]) {
+        [self.postUser fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
+    }
 
     if (self.challenge && ![self.challenge isDataAvailable]) {
         [self.challenge fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
@@ -680,126 +706,93 @@ typedef enum {
 #pragma mark - Public Methods -
 - (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate
 {
-    PFChallenges *challenge = nil;
-    PFChallengePost *post = nil;
-    
     if (self.notification[@"comment"]) {
         PFChallengePostComment *comment = self.notification[@"comment"];
         
-        if (comment[@"challenge_post"]) {
-            post = comment[@"challenge_post"];
-            
-            if (populate) {
-                self.postComment = comment;
-                self.challengePost = post;
-                
-                self.postLikesCount = 0;
-                if (self.challengePost[@"likes"]) {
-                    self.postLikesCount = [self.challengePost[@"likes"] intValue];
+        if (![comment isDataAvailable]) {
+            MTMakeWeakSelf();
+            [comment fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                PFChallengePostComment *thisComment = (PFChallengePostComment *)object;
+                PFChallengePost *thisPost = nil;
+                if (thisComment[@"challenge_post"]) {
+                    thisPost = thisComment[@"challenge_post"];
                 }
-                
-                self.postImage = self.challengePost[@"picture"];
-                
-                self.postUser = self.challengePost[@"user"];
-                self.currentUser = [PFUser currentUser];
-                [self loadPostText];
-                [self loadLikesWithCache:NO];
-                
-                if (post[@"challenge"]) {
-                    challenge = post[@"challenge"];
-                    self.challenge = challenge;
-                }
-            }
-        }
-    }
-    else if (self.notification[@"post_liked"]) {
-        post = self.notification[@"post_liked"];
-        
-        if (post[@"challenge"]) {
-            challenge = post[@"challenge"];
-        }
 
-        if (populate) {
-            if (post[@"challenge"]) {
-                self.challenge = challenge;
-            }
-
-            self.challengePost = post;
-            
-            self.postLikesCount = 0;
-            if (self.challengePost[@"likes"]) {
-                self.postLikesCount = [self.challengePost[@"likes"] intValue];
-            }
-            
-            self.postImage = self.challengePost[@"picture"];
-            
-            self.postUser = self.challengePost[@"user"];
-            self.currentUser = [PFUser currentUser];
-            [self loadPostText];
-            [self loadLikesWithCache:NO];
+                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+            }];
+        }
+        else if (populate) {
+            [self continueLoadingFromNotificationWithPost:comment[@"challenge_post"] withComment:comment];
         }
         
-    }
-    else if (self.notification[@"verify_post"]) {
-        post = self.notification[@"verify_post"];
-        
-        if (post[@"challenge"]) {
-            challenge = post[@"challenge"];
-        }
-
-        if (populate) {
-            self.challengePost = post;
-            
-            self.postLikesCount = 0;
-            if (self.challengePost[@"likes"]) {
-                self.postLikesCount = [self.challengePost[@"likes"] intValue];
-            }
-            
-            self.postImage = self.challengePost[@"picture"];
-            
-            self.postUser = self.challengePost[@"user"];
-            self.currentUser = [PFUser currentUser];
-            [self loadPostText];
-            [self loadLikesWithCache:NO];
-            
-            if (post[@"challenge"]) {
-                self.challenge = challenge;
-            }
-        }
-    }
-    else if (self.notification[@"post_verified"]) {
-        post = self.notification[@"post_verified"];
-        if (post[@"challenge"]) {
-            challenge = post[@"challenge"];
-        }
-
-        if (populate) {
-            self.challengePost = post;
-            
-            self.postLikesCount = 0;
-            if (self.challengePost[@"likes"]) {
-                self.postLikesCount = [self.challengePost[@"likes"] intValue];
-            }
-            
-            self.postImage = self.challengePost[@"picture"];
-            
-            self.postUser = self.challengePost[@"user"];
-            self.currentUser = [PFUser currentUser];
-            [self loadPostText];
-            [self loadLikesWithCache:NO];
-            
-            if (post[@"challenge"]) {
-                self.challenge = challenge;
-            }
-        }
-    }
-    
-    if (post) {
         return YES;
     }
-    else {
-        return NO;
+    else if (self.notification[@"post_liked"]) {
+        PFChallengePost *post = self.notification[@"post_liked"];
+        
+        if (![post isDataAvailable]) {
+            MTMakeWeakSelf();
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                PFChallengePost *thisPost = (PFChallengePost *)object;
+                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+            }];
+        }
+        else if (populate) {
+            [self continueLoadingFromNotificationWithPost:post withComment:nil];
+        }
+        
+        return YES;
     }
+    else if (self.notification[@"verify_post"]) {
+        PFChallengePost *post = self.notification[@"verify_post"];
+        
+        if (![post isDataAvailable]) {
+            MTMakeWeakSelf();
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                PFChallengePost *thisPost = (PFChallengePost *)object;
+                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+            }];
+        }
+        else if (populate) {
+            [self continueLoadingFromNotificationWithPost:post withComment:nil];
+        }
+        
+        return YES;
+    }
+    else if (self.notification[@"post_verified"]) {
+        PFChallengePost *post = self.notification[@"post_verified"];
+        
+        if (![post isDataAvailable]) {
+            MTMakeWeakSelf();
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                PFChallengePost *thisPost = (PFChallengePost *)object;
+                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+            }];
+        }
+        else if (populate) {
+            [self continueLoadingFromNotificationWithPost:post withComment:nil];
+        }
+        
+        return YES;
+    }
+    else if (self.notification[@"post_to_verify"]) {
+        PFChallengePost *post = self.notification[@"post_to_verify"];
+        
+        if (![post isDataAvailable]) {
+            MTMakeWeakSelf();
+            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                PFChallengePost *thisPost = (PFChallengePost *)object;
+                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+            }];
+        }
+        else if (populate) {
+            [self continueLoadingFromNotificationWithPost:post withComment:nil];
+        }
+        
+        return YES;
+    }
+
+    return NO;
 }
 
 - (void)emojiLiked:(PFEmoji *)emoji
@@ -1885,29 +1878,35 @@ typedef enum {
             __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
             userInfoCell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-            NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
-            NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
-            
-            userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-            userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
-            userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
-
-            if (self.userAvatarImage) {
-                [userInfoCell.postUserImageView setImage:self.userAvatarImage];
+            if (self.postUser && [self.postUser isDataAvailable]) {
+                NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
+                NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
+                
+                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                
+                if (self.userAvatarImage) {
+                    [userInfoCell.postUserImageView setImage:self.userAvatarImage];
+                }
+                else {
+                    userInfoCell.postImage.file = self.postUser[@"profile_picture"];
+                    
+                    MTMakeWeakSelf();
+                    [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+                        weakSelf.userAvatarImage = image;
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            if (weakSelf.userAvatarImage) {
+                                [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
+                            }
+                        });
+                    }];
+                }
             }
             else {
-                userInfoCell.postImage.file = self.postUser[@"profile_picture"];
-                
-                MTMakeWeakSelf();
-                [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-                    weakSelf.userAvatarImage = image;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (weakSelf.userAvatarImage) {
-                            [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
-                        }
-                    });
-                }];
+                userInfoCell.postUsername.text = @"";
             }
+            
+            userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+            userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
             
             if ([MTUtil isUserMe:self.postUser]) {
                 userInfoCell.deletePost.hidden = NO;

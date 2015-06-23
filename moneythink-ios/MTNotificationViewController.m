@@ -79,7 +79,6 @@
 {
     [super viewWillAppear:animated];
     self.updatedObjects = NO;
-    [self loadObjects];
     
     if (self.actionableNotificationId) {
         [self handleActionableNotification];
