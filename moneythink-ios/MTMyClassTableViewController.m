@@ -16,6 +16,7 @@ NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhot
 NSString *const kSavedMyClassChallengePostsdNotification = @"kSavedMyClassChallengePostsdNotification";
 NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
+NSString *const kDidSaveNewPostCommentNotification = @"kDidSaveNewPostCommentNotification";
 NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification";
 NSString *const kDidSaveEditPostNotification = @"kDidSaveEditPostNotification";
 NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotification";
@@ -72,6 +73,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
@@ -364,6 +366,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 }
 
 - (void)willSaveNewPostComment:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+}
+
+- (void)didSaveNewPostComment:(NSNotification *)notif
 {
     [self.tableView reloadData];
 }
@@ -975,17 +982,20 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         __block MTPostsTableViewCell *weakCell = cell;
         [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
             if (!error) {
-                if (number > 0) {
-                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
-                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (number > 0) {
+                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
+                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
+                        
+                        weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
+                    } else {
+                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
+                        
+                        weakCell.comments.text = @"0";
+                    }
+                });
 
-                    weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
-                } else {
-                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
-                    [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
-
-                    weakCell.comments.text = @"0";
-                }
             } else {
                 NSLog(@"error - %@", error);
             }
@@ -1343,9 +1353,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                                          [weakSelf.myObjects removeObject:post];
                                          NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                                          [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                                         [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                                             [weakSelf loadObjects];
-                                         }];
 
                                          [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
                                              if (error) {
@@ -1355,6 +1362,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                                              else {
                                                  [[PFUser currentUser] fetchInBackground];
                                              }
+                                             
+                                             dispatch_async(dispatch_get_main_queue(), ^{
+                                                 [weakSelf loadObjects];
+                                             });
                                          }];
                                      }];
             
@@ -1371,9 +1382,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [weakSelf.myObjects removeObject:post];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];\
-                [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                    [weakSelf loadObjects];
-                }];
                 
                 [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
                     if (error) {
@@ -1383,6 +1391,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     else {
                         [[PFUser currentUser] fetchInBackground];
                     }
+                    
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf loadObjects];
+                    });
                 }];
                 
             }];
@@ -1396,16 +1408,16 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [self.myObjects removeObject:post];
         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
         [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [post deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            [weakSelf loadObjects];
-        }];
         
         [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-            //[weakSelf loadObjects];
             if (error) {
                 NSLog(@"error - %@", error);
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadObjects];
+            });
         }];
     }
 }

@@ -28,6 +28,7 @@
 
 + (UIAlertView *)networkAlertViewWithError:(NSError *)error
 {
+    NSLog(@"networkAlertViewWithError: %@", [error localizedDescription]);
     NSString *title = @"Network Error";
     if (error != nil) {
         title = [title stringByAppendingFormat:@" (%lu)", (long)error.code];

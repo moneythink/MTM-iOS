@@ -18,6 +18,7 @@
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *revealButtonItem;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *markAllReadButtonItem;
 
+@property (nonatomic) BOOL showingAlert;
 @property (nonatomic) BOOL updatedObjects;
 
 @end
@@ -122,15 +123,17 @@
     
     // This method is called before a PFQuery is fired to get more objects
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     
-    if ([self.objects count] == 0) {
-        hud.labelText = @"Loading...";
+    if (!self.showingAlert) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        if ([self.objects count] == 0) {
+            hud.labelText = @"Loading...";
+        }
+        else {
+            hud.labelText = @"Refreshing...";
+        }
+        hud.dimBackground = YES;
     }
-    else {
-        hud.labelText = @"Refreshing...";
-    }
-    hud.dimBackground = YES;
 }
 
 - (PFQuery *)queryForTable
@@ -567,9 +570,10 @@
         [self.navigationController pushViewController:postVC animated:YES];
     }
     else {
+        self.showingAlert = YES;
         NSString *title = @"Unable to load Notification";
-        NSString *messageToDisplay = @"Data may have been previously deleted.";
-
+        NSString *messageToDisplay = @"Post may have been previously deleted.";
+        
         if ([UIAlertController class]) {
             UIAlertController *changeSheet = [UIAlertController
                                               alertControllerWithTitle:title
@@ -580,13 +584,16 @@
                                     actionWithTitle:@"Close"
                                     style:UIAlertActionStyleCancel
                                     handler:^(UIAlertAction *action) {
+                                        self.showingAlert = NO;
                                     }];
             
             [changeSheet addAction:close];
             
             [self presentViewController:changeSheet animated:YES completion:nil];
         } else {
+            MTMakeWeakSelf();
             [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                weakSelf.showingAlert = NO;
             }];
         }
     }
@@ -653,7 +660,7 @@
     }
     
     ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = currentCount;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:currentCount]];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:currentCount]];
     
     [PFCloud callFunctionInBackground:@"markNotificationRead" withParameters:@{@"user_id": [user objectId], @"notification_id": [notification objectId]} block:^(id object, NSError *error) {
         if (error) {

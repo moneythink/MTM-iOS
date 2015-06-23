@@ -43,7 +43,6 @@ typedef enum {
 @property (nonatomic, strong) NSMutableAttributedString *postText;
 @property (nonatomic) CGFloat postTextHeight;
 @property (nonatomic) BOOL isMentor;
-@property (nonatomic) BOOL autoVerify;
 @property (nonatomic) BOOL hideVerifySwitch;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
@@ -74,6 +73,9 @@ typedef enum {
     
     if (self.notification) {
         self.postType = MTPostTypeNoButtonsNoImage;
+        self.isMentor = NO;
+        self.hideVerifySwitch = YES;
+
         [self.tableView reloadData];
         [self loadFromNotification];
     }
@@ -113,7 +115,7 @@ typedef enum {
         [self loadComments];
         [self loadPostText];
         [self loadLikesWithCache:YES];
-        [self loadChallengePost];
+        [self configureChallengePermissions];
     }
 }
 
@@ -126,6 +128,10 @@ typedef enum {
 #pragma mark - Private Methods -
 - (void)loadComments
 {
+    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+        return;
+    }
+
     MTMakeWeakSelf();
     PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
     [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
@@ -149,6 +155,10 @@ typedef enum {
 
 - (void)loadLikesWithCache:(BOOL)withCache
 {
+    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+        return;
+    }
+    
     MTMakeWeakSelf();
     PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
     [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
@@ -204,6 +214,10 @@ typedef enum {
 - (void)loadPostText
 {
     NSString *textString = self.challengePost[@"post_text"];
+    if (IsEmpty(textString)) {
+        return;
+    }
+    
     self.postText = [[NSMutableAttributedString alloc] initWithString:textString];
     
     NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -216,6 +230,8 @@ typedef enum {
         
         self.postText = hashtag;
     }];
+    
+    [self.tableView reloadData];
 }
 
 - (void)updateButtonsTapped
@@ -298,11 +314,11 @@ typedef enum {
     }];
 }
 
-- (void)loadChallengePost
+- (void)configureChallengePermissions
 {
     self.isMentor = [self.currentUser[@"type"] isEqualToString:@"mentor"];
-    self.autoVerify = [self.challenge[@"auto_verify"] boolValue];
-    self.hideVerifySwitch = !self.isMentor || self.autoVerify;
+    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    self.hideVerifySwitch = !self.isMentor || autoVerify;
 }
 
 - (void)setupButtonsForCell:(UITableViewCell *)cell
@@ -541,7 +557,6 @@ typedef enum {
     [self loadEmoji];
     [self canPopulateForNotification:self.notification populate:YES];
     [self.tableView reloadData];
-    [self updateLikes];
 }
 
 - (void)continueLoadingFromNotificationWithPost:(PFChallengePost *)post withComment:(PFChallengePostComment *)comment
@@ -554,28 +569,84 @@ typedef enum {
         self.postLikesCount = [self.challengePost[@"likes"] intValue];
     }
     
-    self.postImage = self.challengePost[@"picture"];
-    
-    self.postUser = self.challengePost[@"user"];
     self.currentUser = [PFUser currentUser];
-    [self loadPostText];
-    [self loadLikesWithCache:NO];
+
+    MTMakeWeakSelf();
+    if (self.challengePost && ![self.challengePost isDataAvailable]) {
+        [self.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                weakSelf.challengePost = (PFChallengePost *)object;
+                [weakSelf finishLoadingChallengePostData];
+            }
+            else {
+                [UIAlertView showNetworkAlertWithError:error];
+            }
+        }];
+    }
+    else {
+        self.postImage = self.challengePost[@"picture"];
+        self.postUser = self.challengePost[@"user"];
+        
+        if (self.postUser && ![self.postUser isDataAvailable]) {
+            [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                if (!error) {
+                    weakSelf.postUser = (PFUser *)object;
+                    [weakSelf.tableView reloadData];
+                }
+                else {
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
+            }];
+        }
+        
+        [self updateLikes];
+        [self loadPostText];
+        [self loadLikesWithCache:NO];
+    }
     
     if (post[@"challenge"]) {
         self.challenge = post[@"challenge"];
     }
     
+    if (self.challenge && ![self.challenge isDataAvailable]) {
+        [self.challenge fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                weakSelf.challenge = (PFChallenges *)object;
+                [weakSelf.tableView reloadData];
+                [weakSelf configureChallengePermissions];
+            }
+            else {
+                [UIAlertView showNetworkAlertWithError:error];
+            }
+        }];
+    }
+    else {
+        [self configureChallengePermissions];
+    }
+}
+
+- (void)finishLoadingChallengePostData
+{
+    self.postImage = self.challengePost[@"picture"];
+    self.postUser = self.challengePost[@"user"];
+    
+    [self loadLikesWithCache:NO];
+
     if (self.postUser && ![self.postUser isDataAvailable]) {
-        [self.postUser fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
+        MTMakeWeakSelf();
+        [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+            if (!error) {
+                weakSelf.postUser = (PFUser *)object;
+                [weakSelf.tableView reloadData];
+            }
+            else {
+                [UIAlertView showNetworkAlertWithError:error];
+            }
+        }];
     }
 
-    if (self.challenge && ![self.challenge isDataAvailable]) {
-        [self.challenge fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
-    }
-    
-    if (self.challengePost && ![self.challengePost isDataAvailable]) {
-        [self.challengePost fetchIfNeededInBackgroundWithTarget:self.tableView selector:@selector(reloadData)];
-    }
+    [self updateLikes];
+    [self loadPostText];
 }
 
 - (void)updateLikes
@@ -616,6 +687,10 @@ typedef enum {
 
 - (void)loadEmojiLikes
 {
+    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+        return;
+    }
+
     PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
     [queryPostEmojis whereKey:@"post" equalTo:self.challengePost];
     [queryPostEmojis includeKey:@"emoji"];
@@ -703,26 +778,117 @@ typedef enum {
 }
 
 
+#pragma mark - Private Methods -
+- (void)showNoDataAlertAndPopView:(BOOL)popView
+{
+    NSString *title = @"Unable to load Notification";
+    NSString *messageToDisplay = @"Post may have been previously deleted.";
+    
+    if ([UIAlertController class]) {
+        UIAlertController *changeSheet = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:messageToDisplay
+                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *close = [UIAlertAction
+                                actionWithTitle:@"Close"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction *action) {
+                                    if (popView) {
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                    }
+                                }];
+        
+        [changeSheet addAction:close];
+        
+        [self presentViewController:changeSheet animated:YES completion:nil];
+    } else {
+        MTMakeWeakSelf();
+        [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if (popView) {
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+            }
+        }];
+    }
+}
+
+
 #pragma mark - Public Methods -
 - (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate
 {
     if (self.notification[@"comment"]) {
         PFChallengePostComment *comment = self.notification[@"comment"];
         
-        if (![comment isDataAvailable]) {
+        if (!comment) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+
+            if (populate) {
+                [self showNoDataAlertAndPopView:NO];
+            }
+            return NO;
+        }
+        else if (![comment isDataAvailable]) {
             MTMakeWeakSelf();
             [comment fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                PFChallengePostComment *thisComment = (PFChallengePostComment *)object;
-                PFChallengePost *thisPost = nil;
-                if (thisComment[@"challenge_post"]) {
-                    thisPost = thisComment[@"challenge_post"];
+                if (!error) {
+                    __block PFChallengePostComment *thisComment = (PFChallengePostComment *)object;
+                    PFChallengePost *thisPost = nil;
+                    if (thisComment[@"challenge_post"]) {
+                        thisPost = thisComment[@"challenge_post"];
+                        
+                        if (![thisPost isDataAvailable]) {
+                            MTMakeWeakSelf();
+                            [thisPost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                                if (!error) {
+                                    PFChallengePost *thisPost = (PFChallengePost *)object;
+                                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+                                }
+                                else {
+                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                    [UIAlertView showNetworkAlertWithError:error];
+                                }
+                            }];
+                        }
+                        else {
+                            [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+                        }
+                    }
+                    else {
+                        NSLog(@"Unable to load challenge_post");
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        [UIAlertView showNetworkAlertWithError:error];
+                    }
                 }
-
-                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+                else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
             }];
         }
         else if (populate) {
-            [self continueLoadingFromNotificationWithPost:comment[@"challenge_post"] withComment:comment];
+            PFChallengePost *post = comment[@"challenge_post"];
+            __block PFChallengePostComment *weakComment = comment;
+            if (!post) {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [self showNoDataAlertAndPopView:YES];
+                return NO;
+            }
+            else if (![post isDataAvailable]) {
+                MTMakeWeakSelf();
+                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+                    if (!error) {
+                        PFChallengePost *thisPost = (PFChallengePost *)object;
+                        [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:weakComment];
+                    }
+                    else {
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        [UIAlertView showNetworkAlertWithError:error];
+                    }
+                }];
+            }
+            else {
+                [self continueLoadingFromNotificationWithPost:post withComment:comment];
+            }
         }
         
         return YES;
@@ -730,11 +896,24 @@ typedef enum {
     else if (self.notification[@"post_liked"]) {
         PFChallengePost *post = self.notification[@"post_liked"];
         
-        if (![post isDataAvailable]) {
+        if (!post) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            if (populate) {
+                [self showNoDataAlertAndPopView:NO];
+            }
+            return NO;
+        }
+        else if (![post isDataAvailable]) {
             MTMakeWeakSelf();
             [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                PFChallengePost *thisPost = (PFChallengePost *)object;
-                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                if (!error) {
+                    PFChallengePost *thisPost = (PFChallengePost *)object;
+                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                }
+                else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
             }];
         }
         else if (populate) {
@@ -746,11 +925,24 @@ typedef enum {
     else if (self.notification[@"verify_post"]) {
         PFChallengePost *post = self.notification[@"verify_post"];
         
-        if (![post isDataAvailable]) {
+        if (!post) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            if (populate) {
+                [self showNoDataAlertAndPopView:NO];
+            }
+            return NO;
+        }
+        else if (![post isDataAvailable]) {
             MTMakeWeakSelf();
             [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                PFChallengePost *thisPost = (PFChallengePost *)object;
-                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                if (!error) {
+                    PFChallengePost *thisPost = (PFChallengePost *)object;
+                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                }
+                else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
             }];
         }
         else if (populate) {
@@ -762,11 +954,24 @@ typedef enum {
     else if (self.notification[@"post_verified"]) {
         PFChallengePost *post = self.notification[@"post_verified"];
         
-        if (![post isDataAvailable]) {
+        if (!post) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            if (populate) {
+                [self showNoDataAlertAndPopView:NO];
+            }
+            return NO;
+        }
+        else if (![post isDataAvailable]) {
             MTMakeWeakSelf();
             [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                PFChallengePost *thisPost = (PFChallengePost *)object;
-                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                if (!error) {
+                    PFChallengePost *thisPost = (PFChallengePost *)object;
+                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                }
+                else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
             }];
         }
         else if (populate) {
@@ -778,11 +983,24 @@ typedef enum {
     else if (self.notification[@"post_to_verify"]) {
         PFChallengePost *post = self.notification[@"post_to_verify"];
         
-        if (![post isDataAvailable]) {
+        if (!post) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            if (populate) {
+                [self showNoDataAlertAndPopView:NO];
+            }
+            return NO;
+        }
+        else if (![post isDataAvailable]) {
             MTMakeWeakSelf();
             [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                PFChallengePost *thisPost = (PFChallengePost *)object;
-                [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                if (!error) {
+                    PFChallengePost *thisPost = (PFChallengePost *)object;
+                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+                }
+                else {
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
             }];
         }
         else if (populate) {
@@ -792,6 +1010,7 @@ typedef enum {
         return YES;
     }
 
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     return NO;
 }
 
@@ -918,6 +1137,7 @@ typedef enum {
     [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
 
         if (!error) {
+            
             [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [weakSelf.tableView reloadData];
@@ -1049,7 +1269,7 @@ typedef enum {
         }];
         MTMakeWeakSelf();
         UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-            [weakSelf performDeletePost];
+            [weakSelf promptForDelete];
         }];
         UIAlertAction *edit = [UIAlertAction actionWithTitle:@"Edit" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
             [weakSelf performEditPostWithSender:weakSender];
@@ -1063,12 +1283,12 @@ typedef enum {
     }
     else {
         MTMakeWeakSelf();
-        UIActionSheet *editDeleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
+        UIActionSheet *editDeleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Edit or Delete this post?"];
         [editDeleteAction bk_addButtonWithTitle:@"Edit" handler:^{
             [weakSelf performEditPostWithSender:weakSender];
         }];
         [editDeleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
-            [weakSelf performDeletePost];
+            [weakSelf promptForDelete];
         }];
         [editDeleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
         [editDeleteAction showInView:[UIApplication sharedApplication].keyWindow];
@@ -1078,6 +1298,33 @@ typedef enum {
 - (void)performEditPostWithSender:(id)sender
 {
     [self performSegueWithIdentifier:@"editPostSegue" sender:sender];
+}
+
+- (void)promptForDelete
+{
+    if ([UIAlertController class]) {
+        UIAlertController *deletePostSheet = [UIAlertController alertControllerWithTitle:@"Delete this post?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+        }];
+        MTMakeWeakSelf();
+        UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
+            [weakSelf performDeletePost];
+        }];
+        
+        [deletePostSheet addAction:cancel];
+        [deletePostSheet addAction:delete];
+        
+        [self presentViewController:deletePostSheet animated:YES completion:nil];
+    }
+    else {
+        MTMakeWeakSelf();
+        UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
+        [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
+            [weakSelf performDeletePost];
+        }];
+        [deleteAction bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
+        [deleteAction showInView:[UIApplication sharedApplication].keyWindow];
+    }
 }
 
 - (void)performDeletePost
@@ -1905,7 +2152,13 @@ typedef enum {
                 userInfoCell.postUsername.text = @"";
             }
             
-            userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+            if ([self.challengePost isDataAvailable]) {
+                userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+            }
+            else {
+                userInfoCell.whenPosted.text = @"";
+            }
+            
             userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
             
             if ([MTUtil isUserMe:self.postUser]) {
@@ -1930,24 +2183,27 @@ typedef enum {
         {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
-            imageCell.postImage.file = self.challengePost[@"picture"];
-            imageCell.postImage.image = nil;
             
-            MTMakeWeakSelf();
-            [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-                if (!error) {
-                    if (image) {
-                        CGRect frame = imageCell.postImage.frame;
-                        imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
+            if ([self.challengePost isDataAvailable]) {
+                imageCell.postImage.file = self.challengePost[@"picture"];
+                imageCell.postImage.image = nil;
+                
+                MTMakeWeakSelf();
+                [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+                    if (!error) {
+                        if (image) {
+                            CGRect frame = imageCell.postImage.frame;
+                            imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
+                        }
+                        else {
+                            imageCell.postImage.image = nil;
+                        }
                     }
                     else {
-                        imageCell.postImage.image = nil;
+                        NSLog(@"error - %@", error);
                     }
-                }
-                else {
-                    NSLog(@"error - %@", error);
-                }
-            }];
+                }];
+            }
 
             cell = imageCell;
 
@@ -1992,6 +2248,15 @@ typedef enum {
             }
         
             likeCommentCell.postLikes.text = likesString;
+            
+            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+                likeCommentCell.likePost.enabled = NO;
+                likeCommentCell.comment.enabled = NO;
+            }
+            else {
+                likeCommentCell.likePost.enabled = YES;
+                likeCommentCell.comment.enabled = YES;
+            }
         
             BOOL like = [self.postsLiked containsObject:self.challengePost.objectId];
             if (like) {
@@ -2017,17 +2282,29 @@ typedef enum {
             }
             
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
-            BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
-            [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
             
-            likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
-            if (isChecked) {
-                likeCommentCell.verfiedLabel.text = @"Verified";
+            if ([self.challengePost isDataAvailable]) {
+                BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
+                [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
+                
+                likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
+                if (isChecked) {
+                    likeCommentCell.verfiedLabel.text = @"Verified";
+                }
+                else {
+                    likeCommentCell.verfiedLabel.text = @"Verify";
+                }
             }
             else {
-                likeCommentCell.verfiedLabel.text = @"Verify";
+                likeCommentCell.verfiedLabel.text = @"";
             }
 
+            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+                likeCommentCell.commentPost.enabled = NO;
+            }
+            else {
+                likeCommentCell.commentPost.enabled = YES;
+            }
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
             
@@ -2204,6 +2481,11 @@ typedef enum {
 
 #pragma mark - NSNotification Methods -
 - (void)willSaveNewPostComment:(NSNotification *)notif
+{
+    [self.tableView reloadData];
+}
+
+- (void)didSaveNewPostComment:(NSNotification *)notif
 {
     [self.tableView reloadData];
 }

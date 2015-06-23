@@ -143,6 +143,8 @@ static NSString *stageString = @"";
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     [[MTUtil getAppDelegate] configureZendesk];
+//    [ZDKHelpCenter setConversationsBarButtonImage:@"comment_active.png"];
+    [ZDKHelpCenter setNavBarConversationsUIType:ZDKNavBarConversationsUITypeLocalizedLabel];
 
     switch (indexPath.row) {
         case 0:
@@ -177,6 +179,24 @@ static NSString *stageString = @"";
         }
     }
 }
+
+
+#pragma mark - ZDKHelpCenterConversationsUIDelegate Methods -
+//- (ZDKNavBarConversationsUIType) navBarConversationsUIType
+//{
+//    
+//}
+//
+//- (UIImage *) conversationsBarButtonImage
+//{
+//    
+//}
+//
+//- (NSString *) conversationsBarButtonLocalizedLabel
+//{
+//    
+//}
+//
 
 
 @end

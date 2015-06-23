@@ -456,98 +456,116 @@
 #pragma mark - New Post Method -
 - (void)saveNew
 {
-    if (![self.postText.text isEqualToString:@""])
-    {
-        if (![MTUtil internetReachable])
-        {
-            [UIAlertView showNoInternetAlert];
-            return;
+    if (IsEmpty(self.postText.text)) {
+        NSString *title = @"Text Missing";
+        NSString *message = @"Post text is required.";
+        if ([UIAlertController class]) {
+            UIAlertController *changeSheet = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:message
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *okAction = [UIAlertAction
+                                       actionWithTitle:@"OK"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action) {
+                                       }];
+            
+            [changeSheet addAction:okAction];
+            [self presentViewController:changeSheet animated:YES completion:nil];
+        } else {
+            [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         }
 
-        self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
-        
-        if (self.challenge[@"challenge_number"]) {
-            self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
-        }
-        
-        if (self.challenge) {
-            self.challengePost[@"challenge"] = self.challenge;
-        }
-        
-        self.challengePost[@"post_text"] = self.postText.text;
-        self.challengePost[@"class"] = [PFUser currentUser][@"class"];
-        self.challengePost[@"school"] = [PFUser currentUser][@"school"];
-        self.challengePost[@"user"] = [PFUser currentUser];
-        
-        if (self.postImage.image)
-        {
-            NSString *fileName = @"post_image.png";
-            NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
-            
-            self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-            if (self.postImage.file) {
-                // if there's a picture, then update the Parse post
-                self.challengePost[@"picture"] = self.postImage.file;
-            }
-            
-            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
-            
-            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    [[PFUser currentUser] fetchInBackground];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
-                    });
-                }
-                else {
-                    NSLog(@"Post with picture error - %@", error);
-                    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post with picture error" message:[NSString stringWithFormat:@"%@", error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    //[alert show];
-                    [self.challengePost saveEventually];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
-                    });
-                }
-            }];
-        }
-        else
-        {
-            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
-            
-            [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-                if (!error) {
-                    [[PFUser currentUser] fetchInBackground];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
-                    });
-                }
-                else {
-                    NSLog(@"Post error - %@", error);
-                    //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Post error" message:[NSString stringWithFormat:@"%@", error] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                    //[alert show];
-                    [self.challengePost saveEventually];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
-                    });
-                }
-            }];
-        }
-        
-        [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
+        return;
     }
+    
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+        return;
+    }
+
+    self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
+    
+    if (self.challenge[@"challenge_number"]) {
+        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+    }
+    
+    if (self.challenge) {
+        self.challengePost[@"challenge"] = self.challenge;
+    }
+    
+    self.challengePost[@"post_text"] = self.postText.text;
+    self.challengePost[@"class"] = [PFUser currentUser][@"class"];
+    self.challengePost[@"school"] = [PFUser currentUser][@"school"];
+    self.challengePost[@"user"] = [PFUser currentUser];
+    
+    if (self.postImage.image)
+    {
+        NSString *fileName = @"post_image.png";
+        NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
+        
+        self.postImage.file = [PFFile fileWithName:fileName data:imageData];
+        if (self.postImage.file) {
+            // if there's a picture, then update the Parse post
+            self.challengePost[@"picture"] = self.postImage.file;
+        }
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+        
+        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] fetchInBackground];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
+                });
+            }
+            else {
+                NSLog(@"Post with picture error - %@", error);
+                [self.challengePost saveEventually];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                });
+            }
+        }];
+    }
+    else
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
+        
+        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            if (!error) {
+                [[PFUser currentUser] fetchInBackground];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
+                });
+            }
+            else {
+                NSLog(@"Post error - %@", error);
+                [self.challengePost saveEventually];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                });
+            }
+        }];
+    }
+    
+    [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
 }
 
 
 #pragma mark - New Comment on Post Method -
 - (IBAction)postCommentDone:(id)sender
 {
-    if (![self.postText.text isEqualToString:@""])
-    {
-        if (![MTUtil internetReachable])
-        {
+    if (![self.postText.text isEqualToString:@""]) {
+        if (![MTUtil internetReachable]) {
             [UIAlertView showNoInternetAlert];
             return;
         }
+
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Posting Comment...";
+        hud.dimBackground = YES;
 
         self.challengePostComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
         self.challengePostComment[@"challenge_post"] = self.post;
@@ -558,13 +576,19 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewPostCommentNotification object:nil];
         
+        MTMakeWeakSelf();
         [self.challengePostComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveNewPostCommentNotification object:nil];
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
             }
             else {
                 NSLog(@"Post text comment error - %@", error);
-                [self.challengePostComment saveEventually];
+                [weakSelf.challengePostComment saveEventually];
             }
         }];
     }

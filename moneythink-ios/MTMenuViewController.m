@@ -52,6 +52,8 @@
         self.profilePoints.hidden = YES;
     }
     else {
+        self.profilePoints.hidden = NO;
+
         id userPoints = user[@"points"];
         NSString *points = @"0";
         if (userPoints && userPoints != [NSNull null]) {
