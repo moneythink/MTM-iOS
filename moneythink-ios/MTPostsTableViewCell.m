@@ -93,7 +93,7 @@
         if (otherCount > 99) {
             otherCount = 99;
         }
-        counterLabel.text = [NSString stringWithFormat:@"%lu+", otherCount];
+        counterLabel.text = [NSString stringWithFormat:@"+%lu", otherCount];
         
         [labelView addSubview:counterLabel];
         [counterView addSubview:labelView];

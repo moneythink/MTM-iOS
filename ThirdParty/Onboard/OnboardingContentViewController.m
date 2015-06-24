@@ -30,8 +30,6 @@ static CGFloat const kMainPageControlHeight = 35;
 
 @interface OnboardingContentViewController () <UIActionSheetDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
-@property (nonatomic, strong) UIButton *profileImageButton;
-@property (nonatomic, strong) UIImage *profileImage;
 @property (nonatomic, strong) UIButton *doLaterButton;
 @property (nonatomic, strong) UIImageView *profileBackgroundImageView;
 
@@ -303,12 +301,12 @@ static CGFloat const kMainPageControlHeight = 35;
     [profileImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
         if (!error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                UIImage *profileImage = [UIImage imageWithData:data];
+                self.profileImage = [UIImage imageWithData:data];
 
                 [UIView animateWithDuration:0.2f animations:^{
                     weakSelf.profileImageButton.alpha = 0.0f;
                 } completion:^(BOOL finished) {
-                    [weakSelf.profileImageButton setImage:profileImage forState:UIControlStateNormal];
+                    [weakSelf.profileImageButton setImage:self.profileImage forState:UIControlStateNormal];
                     [weakSelf.profileImageButton setImage:nil forState:UIControlStateHighlighted];
 
                     [UIView animateWithDuration:0.2f animations:^{
@@ -522,6 +520,7 @@ static CGFloat const kMainPageControlHeight = 35;
     }
     
     self.profileImage = image;
+    self.changedProfileImage = YES;
     [self saveUserPhoto];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }

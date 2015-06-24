@@ -144,12 +144,14 @@
 
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
+    [queryMe whereKeyExists:@"notificationType"];
 
     PFQuery *queryClass = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryClass whereKeyDoesNotExist:@"recipient"];
     [queryClass whereKey:@"class" equalTo:className];
     [queryClass whereKey:@"school" equalTo:schoolName];
-    
+    [queryClass whereKeyExists:@"notificationType"];
+
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryClass]];
     // Always pull latest from Network if available
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
@@ -220,14 +222,19 @@
     
     if (user[@"profile_picture"]) {
         cell.avatarImageView.file = user[@"profile_picture"];
+        __block MTNotificationTableViewCell *weakCell = cell;
+        __block NSIndexPath *oldIndexPath = indexPath;
         [cell.avatarImageView loadInBackground:^(UIImage *image, NSError *error) {
+            if (oldIndexPath.row != weakCell.currentIndexPath.row) {
+                return;
+            }
             if (!error) {
                 if (image) {
-                    cell.avatarImageView.image = image;
-                    [cell setNeedsDisplay];
+                    weakCell.avatarImageView.image = image;
+                    [weakCell setNeedsDisplay];
                 }
                 else {
-                    cell.avatarImageView.image = nil;
+                    weakCell.avatarImageView.image = nil;
                 }
             } else {
                 NSLog(@"error - %@", error);
@@ -264,7 +271,12 @@
         PFChallengePostComment *post = notification[@"comment"];
         
         if (!IsEmpty(username)) {
-            NSString *theMessage = [NSString stringWithFormat:@"%@ commented on your post: %@",username, post[@"comment_text"]];
+            NSString *postMessage = IsEmpty(post[@"comment_text"]) ? @"" : post[@"comment_text"];
+            NSString *theMessage = [NSString stringWithFormat:@"%@ commented on your post: %@",username, postMessage];
+            
+            if (IsEmpty(postMessage)) {
+                theMessage = [NSString stringWithFormat:@"%@ commented on your post.",username];
+            }
             NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
             [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
             
@@ -379,9 +391,13 @@
     }
     else if ([notificationType isEqualToString:kNotificationPostVerified]) {
         PFChallengePostComment *post = notification[@"post_verified"];
+        NSString *postMessage = IsEmpty(post[@"post_text"]) ? @"" : post[@"post_text"];
 
         if (!IsEmpty(username)) {
-            NSString *theMessage = [NSString stringWithFormat:@"%@ verified your post: %@",username, post[@"post_text"]];
+            NSString *theMessage = [NSString stringWithFormat:@"%@ verified your post: %@",username, postMessage];
+            if (IsEmpty(postMessage)) {
+                theMessage = [NSString stringWithFormat:@"%@ verified your post.",username];
+            }
             NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
             [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
             
@@ -397,7 +413,12 @@
             cell.messageTextView.attributedText = theAttributedTitle;
         }
         else {
-            cell.messageTextView.text = [NSString stringWithFormat:@"Someone verified your post: %@", post[@"comment_text"]];
+            NSString *theMessage = [NSString stringWithFormat:@"Someone verified your post: %@", postMessage];
+            if (IsEmpty(postMessage)) {
+                theMessage = @"Someone verified your post.";
+            }
+
+            cell.messageTextView.text = theMessage;
         }
         
     }

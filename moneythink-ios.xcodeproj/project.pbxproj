@@ -177,8 +177,6 @@
 		89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */; };
 		89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */; };
 		89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */; };
-		89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */; };
-		89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */; };
 		89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */; };
 		89C3E80F1B15468D0084EA48 /* nav-icons-dashboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */; };
 		89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */; };
@@ -485,8 +483,6 @@
 		89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingViewController.m; sourceTree = "<group>"; };
 		89A793C41B2F2C80000BFA40 /* MTOnboardingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOnboardingController.h; sourceTree = "<group>"; };
 		89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOnboardingController.m; sourceTree = "<group>"; };
-		89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow.png"; sourceTree = "<group>"; };
-		89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-arrow@2x.png"; sourceTree = "<group>"; };
 		89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard.png"; sourceTree = "<group>"; };
 		89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard@2x.png"; sourceTree = "<group>"; };
 		89C3E8111B1547B10084EA48 /* MTMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuTableViewCell.h; sourceTree = "<group>"; };
@@ -869,8 +865,6 @@
 		8918B3181B18F66D00880E62 /* nav-icons */ = {
 			isa = PBXGroup;
 			children = (
-				89C3E8081B1545CD0084EA48 /* nav-icons-arrow.png */,
-				89C3E8091B1545CD0084EA48 /* nav-icons-arrow@2x.png */,
 				895F78AB1B1650E700055759 /* nav-icons-arrow-backwards.png */,
 				895F78AC1B1650E700055759 /* nav-icons-arrow-backwards@2x.png */,
 				895F78931B16451600055759 /* nav-icons-challenges.png */,
@@ -1239,7 +1233,6 @@
 				8967C78D1A77F79500BE125E /* challenges-icon@2x.png in Resources */,
 				899906801AD46B5D007A4F3E /* icon_button_dollar_pressed.png in Resources */,
 				8999067F1AD46B5D007A4F3E /* icon_button_dollar_normal@2x.png in Resources */,
-				89C3E80B1B1545CD0084EA48 /* nav-icons-arrow@2x.png in Resources */,
 				89A793B61B29F104000BFA40 /* mt_avatar.png in Resources */,
 				895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */,
 				8921063E19DA1F37000CFBF6 /* post@2x.png in Resources */,
@@ -1255,7 +1248,6 @@
 				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
 				1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */,
-				89C3E80A1B1545CD0084EA48 /* nav-icons-arrow.png in Resources */,
 				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
 				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,

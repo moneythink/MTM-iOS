@@ -68,6 +68,7 @@
     PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
     [studentPostsQuery whereKey:@"user" equalTo:self.student];
     [studentPostsQuery includeKey:@"verified_by"];
+    [studentPostsQuery includeKey:@"user"];
     [studentPostsQuery orderByDescending:@"createdAt"];
     
     studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
@@ -104,7 +105,29 @@
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
     }
     
-    cell.rowPost = self.studentPosts[row];
+    PFChallengePost *post = self.studentPosts[row];
+    PFUser *user = post[@"user"];
+    
+    cell.postProfileImage.image = [UIImage imageNamed:@"profile_image"];
+    cell.postProfileImage.file = user[@"profile_picture"];
+    cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
+    cell.postProfileImage.layer.masksToBounds = YES;
+    
+    [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
+        if (!error) {
+            if (image) {
+                cell.postProfileImage.image = image;
+                [cell setNeedsDisplay];
+            }
+            else {
+                image = nil;
+            }
+        } else {
+            NSLog(@"error - %@", error);
+        }
+    }];
+
+    cell.rowPost = post;
     
     NSDate *dateObject = [cell.rowPost createdAt];
     

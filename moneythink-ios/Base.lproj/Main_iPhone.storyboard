@@ -1754,13 +1754,13 @@
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="David" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.60000000000000009" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I76-c9-Bpj">
                                         <rect key="frame" x="70" y="20" width="108" height="54"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="102pts" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.60000000000000009" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ikQ-if-GdO">
                                         <rect key="frame" x="183" y="20" width="62" height="54"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -1784,22 +1784,14 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dashboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdi-rd-W9W">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="7GK-M5-RnS">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4qt-SH-XeF" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="separatorView" destination="4qt-SH-XeF" id="GHJ-bB-Fui"/>
                                             <segue destination="Z58-Qd-jFF" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="ovD-yt-Uio"/>
                                         </connections>
                                     </tableViewCell>
@@ -1813,22 +1805,14 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenges" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53e-8i-4dt">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="jXE-L3-Twr">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8M5-Ny-ETe" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="separatorView" destination="8M5-Ny-ETe" id="oFV-N8-3Cx"/>
                                             <segue destination="AcO-mI-oxr" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="BTw-kc-jSv"/>
                                         </connections>
                                     </tableViewCell>
@@ -1842,22 +1826,14 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leaderboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yal-6m-7Yt">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="kCP-LH-ly7">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Vv-AX-DvE" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="separatorView" destination="5Vv-AX-DvE" id="LHF-fm-gRR"/>
                                             <segue destination="W1e-NZ-6tK" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="Rp3-jZ-NGW"/>
                                         </connections>
                                     </tableViewCell>
@@ -1871,7 +1847,7 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notifications" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6z3-K6-UTG">
                                                     <rect key="frame" x="52" y="0.0" width="120" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1887,18 +1863,10 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="W3z-1R-uRH">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2BJ-pQ-irs" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="separatorView" destination="2BJ-pQ-irs" id="sQk-Ke-p1X"/>
                                             <outlet property="unreadCountLabel" destination="Qqm-el-NL3" id="TYm-Vf-ad6"/>
                                             <outlet property="unreadCountView" destination="vbI-xK-hAV" id="Vg4-Oq-LKE"/>
                                             <segue destination="sjw-tE-ynH" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="XS6-KU-wsU"/>
@@ -1914,22 +1882,14 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGY-3w-mwS">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="EIz-oz-72F">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oc6-bR-CI7" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                         <connections>
-                                            <outlet property="separatorView" destination="oc6-bR-CI7" id="Yub-Xb-wea"/>
                                             <segue destination="KzZ-6x-7nb" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="Z9g-r6-Vvo"/>
                                         </connections>
                                     </tableViewCell>
@@ -1943,17 +1903,10 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Talk to Moneythink" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zxf-dE-Jlg">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-arrow.png" translatesAutoresizingMaskIntoConstraints="NO" id="FuX-Vp-4Wq">
-                                                    <rect key="frame" x="230" y="7" width="16" height="30"/>
-                                                </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="h5q-qe-Zv0" userLabel="Separator View">
-                                                    <rect key="frame" x="15" y="43" width="231" height="1"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                </view>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
@@ -1971,13 +1924,13 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Student Sign Up Code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bi3-ei-bCt">
                                                     <rect key="frame" x="52" y="0.0" width="140" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Y2Mw5" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.60000000000000009" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XFN-12-shI">
                                                     <rect key="frame" x="192" y="0.0" width="53" height="44"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="12"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -2001,6 +1954,7 @@
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uKO-0i-Cfh">
                                         <rect key="frame" x="15" y="10" width="100" height="30"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="18"/>
                                         <inset key="imageEdgeInsets" minX="-24" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="Logout" image="nav-icons-arrow-backwards.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -3001,8 +2955,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="jMm-ql-KU1">
-                                            <rect key="frame" x="274" y="401" width="20" height="20"/>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jMm-ql-KU1">
+                                            <rect key="frame" x="142" y="172" width="37" height="37"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3151,8 +3105,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="SGh-Ed-zIq">
-                                            <rect key="frame" x="274" y="104" width="20" height="20"/>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SGh-Ed-zIq">
+                                            <rect key="frame" x="142" y="57" width="37" height="37"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3315,8 +3269,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="466"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="Tie-dM-1r1">
-                                            <rect key="frame" x="274" y="437" width="20" height="20"/>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Tie-dM-1r1">
+                                            <rect key="frame" x="142" y="172" width="37" height="37"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -3477,8 +3431,8 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="xt5-nH-uB8">
-                                            <rect key="frame" x="274" y="150" width="20" height="20"/>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="xt5-nH-uB8">
+                                            <rect key="frame" x="142" y="77" width="37" height="37"/>
                                         </activityIndicatorView>
                                     </subviews>
                                     <constraints>
@@ -4306,7 +4260,6 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <image name="like_normal.png" width="32" height="32"/>
         <image name="login-header.png" width="320" height="166"/>
         <image name="nav-icons-arrow-backwards.png" width="16" height="30"/>
-        <image name="nav-icons-arrow.png" width="16" height="30"/>
         <image name="nav-icons-challenges.png" width="32" height="32"/>
         <image name="nav-icons-dashboard.png" width="32" height="32"/>
         <image name="nav-icons-editprofile.png" width="32" height="32"/>
@@ -4327,13 +4280,13 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="NwG-bn-vTI"/>
-        <segue reference="Gdm-gL-5Rd"/>
         <segue reference="yad-P5-d3y"/>
+        <segue reference="Gdm-gL-5Rd"/>
+        <segue reference="NwG-bn-vTI"/>
         <segue reference="o0E-h6-NZi"/>
         <segue reference="LS9-Mg-yad"/>
-        <segue reference="a3W-fR-2k0"/>
-        <segue reference="48k-xo-w1Z"/>
+        <segue reference="vqR-nj-yuL"/>
+        <segue reference="nYB-OV-yVU"/>
         <segue reference="xm4-7b-aI0"/>
     </inferredMetricsTieBreakers>
 </document>

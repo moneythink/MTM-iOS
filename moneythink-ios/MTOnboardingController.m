@@ -69,9 +69,10 @@
     OnboardingContentViewController *fourthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding4 buttonText:nil action:^{
     }];
 
-    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
-    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
-    }];
+    // Skipping this until progress bar is complete
+//    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
+//    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
+//    }];
 
     UIImage *onboarding6 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_6_mentor"] : [UIImage imageNamed:@"onboarding_6_student"];
     OnboardingContentViewController *sixthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding6 buttonText:nil action:^{
@@ -123,10 +124,45 @@
         lastPage.underProfileImagePickerPadding = 112.0f;
     }
 
+
+    self.onboardingVC = nil;
+    if ([PFUser currentUser][@"profile_picture"]) {
+        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, sixthPage, seventhPage, lastPage]];
+        self.onboardingVC.fadePageControlOnLastPage = YES;
+    }
+    else {
+        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, sixthPage, seventhPage, photoUploadPage, lastPage]];
+        self.onboardingVC.fadePageControlOnLastTwoPages = YES;
+    }
+    
     __block OnboardingContentViewController *weakLastPage = lastPage;
+    __block OnboardingViewController *weakOnboaringVC = self.onboardingVC;
+
     lastPage.viewDidAppearBlock = ^{
-        weakSelf.onboardingVC.swipingEnabled = NO;
-        if (weakLastPage.profileFile) {
+        weakSelf.onboardingVC.swipingEnabled = YES;
+        if (weakLastPage.profileImage) {
+            // just use existing in case they have scrolled away and back to this view
+            if (weakLastPage.changedProfileImage) {
+                // animate
+                [UIView animateWithDuration:0.15f animations:^{
+                    weakLastPage.profileImageButton.alpha = 0.0f;
+                } completion:^(BOOL finished) {
+                    [weakLastPage.profileImageButton setImage:weakLastPage.profileImage forState:UIControlStateNormal];
+                    [weakLastPage.profileImageButton setImage:nil forState:UIControlStateHighlighted];
+                    
+                    [UIView animateWithDuration:0.15f animations:^{
+                        weakLastPage.profileImageButton.alpha = 1.0f;
+                    }];
+                }];
+                
+                weakLastPage.changedProfileImage = NO;
+            }
+            else {
+                [weakLastPage.profileImageButton setImage:weakLastPage.profileImage forState:UIControlStateNormal];
+                [weakLastPage.profileImageButton setImage:nil forState:UIControlStateHighlighted];
+            }
+        }
+        else if (weakLastPage.profileFile) {
             [weakLastPage setProfileImageFile:weakLastPage.profileFile];
         }
         else {
@@ -135,17 +171,22 @@
                 [weakLastPage setProfileImageFile:profileImageFile];
             }
         }
+        
+        // Remove photoUploadPage if it exists
+        NSMutableArray *newArray = [NSMutableArray arrayWithArray:[weakOnboaringVC viewControllers]];
+        for (UIViewController *thisVC in [self.onboardingVC viewControllers]) {
+            if (thisVC == weakPhotoUploadPage) {
+                [newArray removeObject:thisVC];
+            }
+        }
+        
+        if ([newArray count] != [[weakOnboaringVC viewControllers] count]) {
+            weakOnboaringVC.viewControllers = [NSArray arrayWithArray:newArray];
+            weakOnboaringVC.fadePageControlOnLastTwoPages = NO;
+            weakOnboaringVC.fadePageControlOnLastPage = YES;
+            weakOnboaringVC.pageControl.numberOfPages = [newArray count];
+        }
     };
-
-    self.onboardingVC = nil;
-    if ([PFUser currentUser][@"profile_picture"]) {
-        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, fifthPage, sixthPage, seventhPage, lastPage]];
-        self.onboardingVC.fadePageControlOnLastPage = YES;
-    }
-    else {
-        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, fifthPage, sixthPage, seventhPage, photoUploadPage, lastPage]];
-        self.onboardingVC.fadePageControlOnLastTwoPages = YES;
-    }
     
     self.onboardingVC.shouldMaskBackground = NO;
     self.onboardingVC.shouldFadeTransitions = YES;

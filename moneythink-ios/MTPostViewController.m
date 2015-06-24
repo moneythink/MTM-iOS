@@ -2268,18 +2268,25 @@ typedef enum {
                 [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
             }
             
-            if (!IsEmpty(self.comments)) {
+            BOOL containsMe = NO;
+            for (PFChallengePostComment *thisPostComment in self.comments) {
+                PFUser *thisUser = thisPostComment[@"user"];
+                if ([MTUtil isUserMe:thisUser]) {
+                    containsMe = YES;
+                    break;
+                }
+            }
+
+            if (containsMe) {
                 [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
                 [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
-
-                likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", (unsigned long)[self.comments count]];
             }
             else {
                 [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
                 [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
-                
-                likeCommentCell.commentCount.text = @"0";
             }
+            likeCommentCell.commentCount.text = [NSString stringWithFormat:@"%ld", (unsigned long)[self.comments count]];
+
             
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
             

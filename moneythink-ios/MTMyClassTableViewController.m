@@ -971,29 +971,42 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.likeButton removeTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
     [cell.likeButton addTarget:self action:@selector(likeWithEmojiPrompt:) forControlEvents:UIControlEventTouchUpInside];
     
+    // Default comment
     [cell.commentButton setImage:[UIImage imageNamed:@"comment_highlighted"] forState:UIControlStateHighlighted];
+    [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+    [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
+    cell.comments.text = @"";
 
     if (dateObject) {
         // Don't retrieve comment count on newly created objects
         PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
         [commentQuery whereKey:@"challenge_post" equalTo:post];
+        [commentQuery includeKey:@"user"];
+
         commentQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
         
         __block MTPostsTableViewCell *weakCell = cell;
-        [commentQuery countObjectsInBackgroundWithBlock:^(int number, NSError *error) {
+        [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
             if (!error) {
+                BOOL containsMe = NO;
+                for (PFChallengePostComment *thisPostComment in objects) {
+                    PFUser *thisUser = thisPostComment[@"user"];
+                    if ([MTUtil isUserMe:thisUser]) {
+                        containsMe = YES;
+                        break;
+                    }
+                }
+
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (number > 0) {
+                    if (containsMe) {
                         [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
                         [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
-                        
-                        weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)number];
                     } else {
                         [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
                         [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
-                        
-                        weakCell.comments.text = @"0";
                     }
+                    
+                    weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)[objects count]];
                 });
 
             } else {
