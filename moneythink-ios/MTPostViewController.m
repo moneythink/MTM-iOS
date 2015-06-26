@@ -63,6 +63,8 @@ typedef enum {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -2495,6 +2497,7 @@ typedef enum {
 - (void)didSaveNewPostComment:(NSNotification *)notif
 {
     [self.tableView reloadData];
+    [self loadComments];
 }
 
 - (void)willSaveEditPost:(NSNotification *)notif

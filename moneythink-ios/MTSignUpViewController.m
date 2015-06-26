@@ -458,8 +458,6 @@
                             [weakSelf bk_performBlock:^(id obj) {
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     if (!error) {
-                                        weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
-
                                         [[PFUser currentUser] fetchInBackgroundWithTarget:weakSelf selector:nil];
                                         
                                         // Update for Push Notifications

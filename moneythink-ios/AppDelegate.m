@@ -81,7 +81,11 @@
     [self.reachability startNotifier];
     
     [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
-    
+    id revealVC = self.window.rootViewController;
+    if ([revealVC isKindOfClass:[SWRevealViewController class]]) {
+        ((SWRevealViewController *)revealVC).delegate = [MTUtil getAppDelegate];
+    }
+
     if ([PFUser currentUser] && [MTUtil internetReachable]) {
         [[PFUser currentUser] fetchInBackground];
     }
@@ -220,6 +224,10 @@
 
 - (void)handleActionNotificationWithUserInfo:(NSDictionary *)userInfo
 {
+    if (![PFUser currentUser]) {
+        return;
+    }
+
     NSString *notificationType = [userInfo valueForKey:@"notificationType"];
     NSString *notificationId = [userInfo valueForKey:@"notificationId"];
     

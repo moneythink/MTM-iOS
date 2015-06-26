@@ -19,6 +19,7 @@
 
 @property (strong, nonatomic) IBOutlet MICheckBox *verifiedCheckbox;
 @property (strong, nonatomic) IBOutlet UISwitch *verified;
+@property (strong, nonatomic) IBOutlet UILabel *verifiedLabel;
 
 @property (strong, nonatomic) IBOutlet UIImageView *likes;
 @property (strong, nonatomic) IBOutlet UILabel *likeCount;

@@ -21,6 +21,8 @@
 @property (nonatomic, strong) IBOutlet UIView *myFeedHighlightView;
 @property (nonatomic, strong) IBOutlet UIButton *exploreButton;
 @property (nonatomic, strong) IBOutlet UIView *exploreHighlightView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalSpaceConstraint;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *challengeBarHeightConstraint;
 
 @property (nonatomic) NSInteger challengesPageIndex;
 @property (nonatomic, strong) MTChallengeContentViewController *challengeContentViewControllerBefore;
@@ -72,7 +74,30 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
+    
+    // Do this to work around bug with challenge bar when in-call status bar showing
+    // Still need to handle challenge list resizing when in-call status bar change occur while in view.
+    CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
+    if (statusBarHeight > 20.0f) {
+        self.verticalSpaceConstraint.constant = -20.0f;
+        self.challengeBarHeightConstraint.constant = 68.0f;
+        self.myClassPageViewController.view.frame = ({
+            CGRect newFrame = self.myClassPageViewController.view.frame;
+            newFrame.origin.y = 0.0f;
+            newFrame;
+        });
+    }
+    else {
+        self.verticalSpaceConstraint.constant = 0.0f;
+        self.challengeBarHeightConstraint.constant = 48.0f;
+    }
+    
+    self.myClassPageViewController.view.frame = ({
+        CGRect newFrame = self.myClassPageViewController.view.frame;
+        newFrame.origin.y = 0.0f;
+        newFrame;
+    });
+    
     if (IsEmpty(self.challenges)) {
         [self loadChallenges];
     }
@@ -154,6 +179,7 @@
     
     self.challengeListView = [self.storyboard instantiateViewControllerWithIdentifier:@"challengeListModal"];
     self.challengeListView.delegate = self;
+
     self.challengeListView.view.frame = ({
         CGRect newFrame = self.myClassView.frame;
         newFrame.origin.y = -self.myClassView.frame.size.height;
@@ -759,7 +785,6 @@
             self.exploreCollectionView.collectionView.scrollsToTop = NO;
             self.myClassTableView.tableView.scrollsToTop = YES;
         }
-
         [UIView animateWithDuration:0.3f animations:^{
             self.challengeListView.view.frame = ({
                 CGRect newFrame = self.challengeListView.view.frame;
@@ -781,7 +806,7 @@
         [self.view sendSubviewToBack:self.feedExploreToggleView];
         self.challengeListView.challenges = self.challenges;
         self.challengeListView.currentChallenge = self.currentChallenge;
-        
+
         [UIView animateWithDuration:0.3f animations:^{
             self.challengeListView.view.frame = ({
                 CGRect newFrame = self.challengeListView.view.frame;

@@ -135,8 +135,14 @@
         cell.timeSince.text = [dateObject niceRelativeTimeFromNow];
     }
     
-    PFUser *verifier = cell.rowPost[@"verified_by"];
-    cell.verified.on = ![[verifier username] isEqualToString:@""];
+    // Only show verified assets if current user is Mentor
+    cell.verifiedCheckbox.hidden = ![MTUtil isCurrentUserMentor];
+    cell.verifiedLabel.hidden = ![MTUtil isCurrentUserMentor];
+
+    if ([MTUtil isCurrentUserMentor]) {
+        PFUser *verifier = cell.rowPost[@"verified_by"];
+        cell.verified.on = ![[verifier username] isEqualToString:@""];
+    }
     
     // >>>>> Attributed hashtag
     cell.postText.text = cell.rowPost[@"post_text"];

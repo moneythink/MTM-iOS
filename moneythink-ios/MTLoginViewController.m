@@ -173,9 +173,6 @@
         [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
             [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
             if (!error) {
-                
-                weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
-
                 [[MTUtil getAppDelegate] configureZendesk];
                 
                 MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
@@ -298,8 +295,6 @@
         NSString *errorString = [error userInfo][@"error"];
         
         if (!error) {
-            weakSelf.revealViewController.delegate = [MTUtil getAppDelegate];
-
             [[MTUtil getAppDelegate] configureZendesk];
 
             // Update for Push Notifications

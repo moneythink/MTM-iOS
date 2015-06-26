@@ -737,9 +737,9 @@
                             <constraint firstItem="814-89-5X9" firstAttribute="leading" secondItem="MdN-ZG-jsW" secondAttribute="leading" id="N8J-VV-wTh"/>
                             <constraint firstAttribute="trailing" secondItem="814-89-5X9" secondAttribute="trailing" id="Q2M-d8-yRU"/>
                             <constraint firstAttribute="trailing" secondItem="YfQ-Jg-GZQ" secondAttribute="trailing" constant="10" id="Q7j-3b-D8j"/>
+                            <constraint firstAttribute="bottom" secondItem="nuR-Uq-az0" secondAttribute="bottom" id="QMg-yZ-HYc"/>
                             <constraint firstItem="nuR-Uq-az0" firstAttribute="top" secondItem="YfQ-Jg-GZQ" secondAttribute="bottom" id="cfs-if-PTT"/>
                             <constraint firstAttribute="trailing" secondItem="nuR-Uq-az0" secondAttribute="trailing" id="gp2-uq-Yul"/>
-                            <constraint firstItem="wZT-04-o1A" firstAttribute="top" secondItem="nuR-Uq-az0" secondAttribute="bottom" id="kug-aN-4tT"/>
                             <constraint firstItem="nuR-Uq-az0" firstAttribute="leading" secondItem="MdN-ZG-jsW" secondAttribute="leading" id="u4z-Lb-nV3"/>
                         </constraints>
                     </view>
@@ -748,6 +748,7 @@
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="challengeBarHeightConstraint" destination="EBu-Dy-R0a" id="AZs-8r-8Wv"/>
                         <outlet property="challengesView" destination="814-89-5X9" id="q3E-Nl-Qei"/>
                         <outlet property="exploreButton" destination="doj-L6-AGe" id="OjT-u8-mgO"/>
                         <outlet property="exploreHighlightView" destination="3qL-BZ-9b7" id="uup-a6-bLM"/>
@@ -756,6 +757,7 @@
                         <outlet property="myFeedButton" destination="DNT-UB-O6p" id="f8j-US-YHa"/>
                         <outlet property="myFeedHighlightView" destination="anL-fj-W6z" id="2Zf-ZC-RIL"/>
                         <outlet property="revealButtonItem" destination="ira-BL-xrW" id="OWN-Pb-myu"/>
+                        <outlet property="verticalSpaceConstraint" destination="FXg-GM-dYy" id="hJx-Pl-qx4"/>
                         <segue destination="XpV-Kx-YNN" kind="push" identifier="commentSegue" id="FBG-cj-gjr"/>
                     </connections>
                 </viewController>
@@ -1594,6 +1596,7 @@
                                             <outlet property="postText" destination="p7v-K9-Lf0" id="bKX-9j-Vj1"/>
                                             <outlet property="timeSince" destination="4px-Qa-43u" id="lmK-in-CkK"/>
                                             <outlet property="verified" destination="qpY-ej-bZO" id="dxl-Hm-h3w"/>
+                                            <outlet property="verifiedLabel" destination="Akd-2a-b3P" id="vSh-q2-lm2"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studentPostsWithImage" id="Cc6-Aj-VRo" customClass="MTStudentProfileTableViewCell">
@@ -1691,6 +1694,7 @@
                                             <outlet property="postText" destination="sAT-4d-bhU" id="hvS-Xb-jbM"/>
                                             <outlet property="timeSince" destination="YFA-7D-VKx" id="UE3-ev-wDK"/>
                                             <outlet property="verified" destination="LOW-ol-4nK" id="20D-S2-Qau"/>
+                                            <outlet property="verifiedLabel" destination="yz2-zr-vcq" id="ilR-dI-Mvi"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -2700,14 +2704,14 @@
                             <constraint firstItem="sTk-iU-h3o" firstAttribute="leading" secondItem="sSW-YT-6TP" secondAttribute="trailing" id="7IG-Ty-nqY"/>
                             <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="z2a-Cq-KhL" secondAttribute="trailing" id="ABn-bF-mDU"/>
                             <constraint firstItem="z2a-Cq-KhL" firstAttribute="leading" secondItem="sTk-iU-h3o" secondAttribute="trailing" id="AdI-nb-7CJ"/>
+                            <constraint firstItem="sSW-YT-6TP" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="Ei2-yU-wQn"/>
                             <constraint firstItem="sSW-YT-6TP" firstAttribute="leading" secondItem="ssS-mX-HpA" secondAttribute="leading" id="LEu-uH-7jl"/>
-                            <constraint firstItem="cBs-iN-1GZ" firstAttribute="top" secondItem="z2a-Cq-KhL" secondAttribute="bottom" id="MLa-XA-utI"/>
-                            <constraint firstItem="cBs-iN-1GZ" firstAttribute="top" secondItem="sTk-iU-h3o" secondAttribute="bottom" id="QQn-Ae-Z8i"/>
+                            <constraint firstAttribute="bottom" secondItem="z2a-Cq-KhL" secondAttribute="bottom" id="RWD-aN-LrG"/>
+                            <constraint firstAttribute="bottom" secondItem="sSW-YT-6TP" secondAttribute="bottom" id="Rvb-fl-sJL"/>
                             <constraint firstItem="sTk-iU-h3o" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="TLy-Ro-cdl"/>
-                            <constraint firstItem="cBs-iN-1GZ" firstAttribute="top" secondItem="0hk-AS-0iD" secondAttribute="bottom" id="cqx-tw-08h"/>
+                            <constraint firstAttribute="bottom" secondItem="sTk-iU-h3o" secondAttribute="bottom" id="ej2-AC-NGc"/>
                             <constraint firstItem="0hk-AS-0iD" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="f7s-Wg-QFc"/>
-                            <constraint firstItem="cBs-iN-1GZ" firstAttribute="top" secondItem="sSW-YT-6TP" secondAttribute="bottom" id="lIb-74-kzv"/>
-                            <constraint firstItem="sSW-YT-6TP" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="sVq-7m-5Up"/>
+                            <constraint firstAttribute="bottom" secondItem="0hk-AS-0iD" secondAttribute="bottom" id="kaY-Wa-FYQ"/>
                             <constraint firstAttribute="trailing" secondItem="0hk-AS-0iD" secondAttribute="trailing" id="wH9-9k-Vx9"/>
                         </constraints>
                     </view>
@@ -4281,12 +4285,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="yad-P5-d3y"/>
-        <segue reference="Gdm-gL-5Rd"/>
         <segue reference="NwG-bn-vTI"/>
-        <segue reference="o0E-h6-NZi"/>
+        <segue reference="Gdm-gL-5Rd"/>
+        <segue reference="FBG-cj-gjr"/>
+        <segue reference="nYB-OV-yVU"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="vqR-nj-yuL"/>
-        <segue reference="nYB-OV-yVU"/>
-        <segue reference="xm4-7b-aI0"/>
+        <segue reference="o0E-h6-NZi"/>
     </inferredMetricsTieBreakers>
 </document>

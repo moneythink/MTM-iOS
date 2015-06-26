@@ -1077,7 +1077,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             height = 190.0f;
         } else if (postImage) {
             height = 436.0f;
-//            height = [self heightForPostImageCellAtIndexPath:indexPath];
         } else {
             height = 150.0f;
         }
@@ -1085,18 +1084,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     return height;
 }
-
-#pragma mark - Variable Cell Height calculations -
-//- (CGFloat)heightForPostImageCellAtIndexPath:(NSIndexPath *)indexPath {
-//    static MTPostCommentTableViewCell *sizingCell = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"CommentTextCell"];
-//    });
-//    
-//    [self configurePostTextCell:sizingCell atIndexPath:indexPath];
-//    return [self calculateHeightForConfiguredSizingCell:sizingCell];
-//}
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
 {

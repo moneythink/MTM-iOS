@@ -21,7 +21,8 @@
 @property (nonatomic, strong) IBOutlet UIView *footerView;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 
-@property (strong, nonatomic) NSArray *signUpCodes;
+@property (nonatomic, strong) NSArray *signUpCodes;
+@property (nonatomic, strong) NSIndexPath *currentlySelectedIndexPath;
 
 @end
 
@@ -67,6 +68,10 @@
     NSString *userSchool = user[@"school"];
     
     __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
+    if (self.currentlySelectedIndexPath) {
+        indexPathForSelected = [NSIndexPath indexPathForRow:self.currentlySelectedIndexPath.row inSection:self.currentlySelectedIndexPath.section];
+        self.currentlySelectedIndexPath = nil;
+    }
     
     if ([MTUtil isCurrentUserMentor]) {
         NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
@@ -391,7 +396,8 @@
 #pragma mark - Public Methods -
 - (void)openLeaderboard
 {
-    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+    [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];
     }
@@ -402,7 +408,8 @@
 
 - (void)openNotificationsWithId:(NSString *)notificationId
 {
-    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:2 inSection:1];
+    [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];
     }
@@ -416,7 +423,8 @@
 
 - (void)openChallengesForChallengeId:(NSString *)challengeId
 {
-    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];
     }

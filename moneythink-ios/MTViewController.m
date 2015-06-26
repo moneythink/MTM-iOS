@@ -26,12 +26,16 @@
 {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
+    [self.navigationController.navigationBar addGestureRecognizer:self.revealViewController.panGestureRecognizer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    for (UIGestureRecognizer *thisGesture in [self.navigationController.navigationBar gestureRecognizers]) {
+        [self.navigationController.navigationBar removeGestureRecognizer:thisGesture];
+    }
 }
 
 - (void)customSetup
@@ -45,7 +49,6 @@
         // Set the gesture
         //  Add tag = 5000 so panGestureRecognizer can be re-added
         self.navigationController.navigationBar.tag = 5000;
-        [self.navigationController.navigationBar addGestureRecognizer: self.revealViewController.panGestureRecognizer];
     }
 }
 
