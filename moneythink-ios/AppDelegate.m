@@ -15,6 +15,7 @@
 #import "MTSupportViewController.h"
 #import "MTMenuViewController.h"
 #import "MTPostViewController.h"
+#import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -38,6 +39,8 @@
     [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+    
+//    [self setupRealm];
     
     [PFChallengeBanner registerSubclass];
     [PFChallengePost registerSubclass];
@@ -89,6 +92,8 @@
     if ([PFUser currentUser] && [MTUtil internetReachable]) {
         [[PFUser currentUser] fetchInBackground];
     }
+    
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 
     return YES;
 }
@@ -688,6 +693,66 @@
             [frontView addGestureRecognizer:revealController.panGestureRecognizer];
         }
     }
+}
+
+
+#pragma mark - Realm Methods -
+- (void)setupRealm
+{
+    // TODO: Clear for testing
+    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
+    
+    MTOrganization *testO = [[MTOrganization alloc] init];
+    testO.name = @"PSD";
+    
+    MTClass *testClass = [[MTClass alloc] init];
+    testClass.name = @"Riffenburgh";
+    
+    // Create a standalone object
+    MTUser *meUser = [[MTUser alloc] init];
+    
+    // Set & read properties
+    meUser.username = @"";
+    meUser.firstName = @"David";
+    meUser.lastName = @"Sica";
+    meUser.currentUser = YES;
+    meUser.organization = testO;
+    meUser.userClass = testClass;
+    NSLog(@"Me: %@", meUser.firstName);
+    
+    // Realms are used to group data together
+    RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
+    
+    // Save your object
+    [realm beginWriteTransaction];
+    [realm addObject:testO];
+    [realm addObject:testClass];
+    [realm addObject:meUser];
+    [realm commitWriteTransaction];
+    
+    // Query
+    RLMResults *results = [MTUser objectsInRealm:realm where:@"firstName contains 'D'"];
+    NSLog(@"Number of users: %li", (unsigned long)results.count);
+}
+
+- (void)performRealmMigration
+{
+    // Notice setSchemaVersion is set to 1, this is always set manually. It must be
+    // higher than the previous version (oldSchemaVersion) or an RLMException is thrown
+    [RLMRealm setSchemaVersion:1
+                forRealmAtPath:[RLMRealm defaultRealmPath]
+            withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
+                // We haven’t migrated anything yet, so oldSchemaVersion == 0
+                if (oldSchemaVersion < 1) {
+                    // Nothing to do!
+                    // Realm will automatically detect new properties and removed properties
+                    // And will update the schema on disk automatically
+                }
+            }];
+    
+    // now that we have called `setSchemaVersion:withMigrationBlock:`, opening an outdated
+    // Realm will automatically perform the migration and opening the Realm will succeed
+    [RLMRealm defaultRealm];
 }
 
 

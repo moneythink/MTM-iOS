@@ -337,6 +337,9 @@
 
 - (void)logoutAction
 {
+    [MTUser logout];
+    
+    // TODO: Remove
     [MTUtil logout];
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];

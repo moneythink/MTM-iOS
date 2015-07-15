@@ -20,28 +20,28 @@
 #define kWillMoveToOpenMenuPositionNotification @"kWillMoveToOpenMenuPositionNotification"
 #define kUnreadNotificationCountNotification    @"kUnreadNotificationCountNotification"
 
-#define kUserDidChangeClass             @"kUserDidChangeClass"
-#define kUserSavedProfileChanges        @"kUserSavedProfileChanges"
-#define kUserActivatedChallenges        @"kUserActivatedChallenges"
-#define kUserInvitedStudents            @"kUserInvitedStudents"
-#define kNotificationNewChallenge       @"new_challenge"
-#define kNotificationPostComment        @"post_comment"
-#define kNotificationPostLiked          @"post_liked"
-#define kNotificationPostVerified       @"post_verified"
-#define kNotificationLeaderOn           @"leader_on"
-#define kNotificationLeaderOff          @"leader_off"
-#define kNotificationVerifyPost         @"verify_post"
-#define kNotificationInactivity         @"inactivity"
-#define kNotificationInactivity1        @"inactivity_1"
-#define kNotificationInactivity2        @"inactivity_2"
-#define kNotificationInactivity3        @"inactivity_3"
-#define kNotificationInactivity4        @"inactivity_4"
-#define kNotificationInactivity5        @"inactivity_5"
-#define kNotificationInactivity6        @"inactivity_6"
-#define kNotificationInactivityMentor   @"inactivity_mentor"
-#define kLastViewedChallengeId          @"kLastViewedChallengeId"
-#define kUserHasOnboardedKey            @"user_has_onboarded"
-
+#define kUserDidChangeClass                 @"kUserDidChangeClass"
+#define kUserSavedProfileChanges            @"kUserSavedProfileChanges"
+#define kUserActivatedChallenges            @"kUserActivatedChallenges"
+#define kUserInvitedStudents                @"kUserInvitedStudents"
+#define kNotificationNewChallenge           @"new_challenge"
+#define kNotificationPostComment            @"post_comment"
+#define kNotificationPostLiked              @"post_liked"
+#define kNotificationPostVerified           @"post_verified"
+#define kNotificationLeaderOn               @"leader_on"
+#define kNotificationLeaderOff              @"leader_off"
+#define kNotificationVerifyPost             @"verify_post"
+#define kNotificationInactivity             @"inactivity"
+#define kNotificationInactivity1            @"inactivity_1"
+#define kNotificationInactivity2            @"inactivity_2"
+#define kNotificationInactivity3            @"inactivity_3"
+#define kNotificationInactivity4            @"inactivity_4"
+#define kNotificationInactivity5            @"inactivity_5"
+#define kNotificationInactivity6            @"inactivity_6"
+#define kNotificationInactivityMentor       @"inactivity_mentor"
+#define kLastViewedChallengeId              @"kLastViewedChallengeId"
+#define kUserHasOnboardedKey                @"user_has_onboarded"
+#define MTNetworkServiceOAuthCredentialKey  @"MTNetworkServiceOAuthCredentialKey"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
@@ -51,6 +51,7 @@
 #import <Parse/Parse.h>
 #import <ParseUI/ParseUI.h>
 #import <ZendeskSDK/ZendeskSDK.h>
+#import <Realm/Realm.h>
 
 #import "MTUtil.h"
 #import "UIColor+Palette.h"
@@ -91,7 +92,13 @@
 #import "PFStudentPointDetails.h"
 #import "PFChallengePostsLiked.h"
 
+#import "MTUser.h"
+#import "MTOrganization.h"
+#import "MTClass.h"
+
 #import "MTOnboardingController.h"
+#import "AFNetworking.h"
+#import "MTNetworkManager.h"
 
 static inline BOOL IsEmpty(id thing) {
     return thing == nil ||

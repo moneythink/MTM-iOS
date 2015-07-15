@@ -40,7 +40,10 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     SWRevealViewController *rootVC = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
-    id challengesVC = [rootVC.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+    
+    // TODO: change back
+//    id challengesVC = [rootVC.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+    id challengesVC = [rootVC.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
     [rootVC setFrontViewController:challengesVC animated:YES];
 }
 

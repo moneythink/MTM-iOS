@@ -90,6 +90,15 @@
 
 
 #pragma mark - Private -
+- (void)login
+{
+    [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:@"mentor" withPassword:@"123456" success:^(id responseData) {
+        //
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to login, error: %@", [error localizedDescription]);
+    }];
+}
+
 - (BOOL)validate
 {
     NSString *title = @"Login Error";
@@ -150,7 +159,9 @@
 
 - (void)updateView
 {
-    if ([PFUser currentUser]) {
+    if ([MTUser isUserLoggedIn]) {
+        [[MTUtil getAppDelegate] configureZendesk];
+        
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;
         self.passwordLabel.hidden = YES;
@@ -164,33 +175,42 @@
         for (UIView *thisView in self.separatorViews) {
             thisView.hidden = YES;
         }
-
-        PFUser *user = [PFUser currentUser];
         
-        MTMakeWeakSelf();
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = @"Loading...";
-        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (!error) {
-                [[MTUtil getAppDelegate] configureZendesk];
-                
-                MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                if (![onboardingController checkForOnboarding]) {
-                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-                
-                if (![MTUtil internetReachable]) {
-                    [UIAlertView showNoInternetAlert];
-                }
-                else {
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }
-        }];
+        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+        if (![onboardingController checkForOnboarding]) {
+            
+            // TODO: change back
+//            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+            [self.revealViewController setFrontViewController:challengesVC animated:YES];
+        }
+
+//        PFUser *user = [PFUser currentUser];
+//        
+//        MTMakeWeakSelf();
+//        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+//        hud.labelText = @"Loading...";
+//        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
+//            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+//            if (!error) {
+//                [[MTUtil getAppDelegate] configureZendesk];
+//                
+//                MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+//                if (![onboardingController checkForOnboarding]) {
+//                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+//                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+//                }
+//            } else {
+//                NSLog(@"error - %@", error);
+//                
+//                if (![MTUtil internetReachable]) {
+//                    [UIAlertView showNoInternetAlert];
+//                }
+//                else {
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }
+//        }];
     } else {
         self.view.backgroundColor = [UIColor whiteColor];
         self.emailLabel.hidden = NO;
@@ -285,34 +305,72 @@
         return;
     }
     
-    PFUser *user = [PFUser user];
-    
-    user.username = self.emailTextField.text;
-    user.password = self.passwordTextField.text;
-    
-    MTMakeWeakSelf();
-    [PFUser logInWithUsernameInBackground:self.emailTextField.text password:self.passwordTextField.text block:^(PFUser *user, NSError *error) {
-        NSString *errorString = [error userInfo][@"error"];
-        
-        if (!error) {
-            [[MTUtil getAppDelegate] configureZendesk];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Logging In...";
 
-            // Update for Push Notifications
-            [[MTUtil getAppDelegate] updateParseInstallationState];
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
+        
+        // Get this user
+        [[MTUtil getAppDelegate] configureZendesk];
+        
+        // Update for Push Notifications
+//        [[MTUtil getAppDelegate] updateParseInstallationState];
+        
+        // Check for custom playlist for this class
+//        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+        
+        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
-            // Check for custom playlist for this class
-            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-            
-            MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {
-                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                
+                // TODO: change back
+                // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
                 [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
             }
-        }
-        else {
-            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        }
+        });
+
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        });
+
     }];
+    
+    
+//    PFUser *user = [PFUser user];
+//    user.username = self.emailTextField.text;
+//    user.password = self.passwordTextField.text;
+//
+//    [PFUser logInWithUsernameInBackground:self.emailTextField.text password:self.passwordTextField.text block:^(PFUser *user, NSError *error) {
+//        NSString *errorString = [error userInfo][@"error"];
+//        
+//        if (!error) {
+//            [[MTUtil getAppDelegate] configureZendesk];
+//
+//            // Update for Push Notifications
+//            [[MTUtil getAppDelegate] updateParseInstallationState];
+//            
+//            // Check for custom playlist for this class
+//            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+//            
+//            MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+//            if (![onboardingController checkForOnboarding]) {
+//                
+//                // TODO: change back
+//                // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+//                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+//                [self.revealViewController setFrontViewController:challengesVC animated:YES];
+//            }
+//        }
+//        else {
+//            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+//        }
+//    }];
 }
 
 
