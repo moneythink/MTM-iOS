@@ -896,6 +896,8 @@
 				8918B31F1B18F6C800880E62 /* arrow_right_white_disabled@2x.png */,
 				8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */,
 				8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */,
+				89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */,
+				89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */,
 			);
 			name = "challenge bar";
 			sourceTree = "<group>";
@@ -910,8 +912,6 @@
 				890587481A01816900DB8CD4 /* PrivacyPolicy.html */,
 				8967C78A1A77F79500BE125E /* challenges-icon.png */,
 				8967C78B1A77F79500BE125E /* challenges-icon@2x.png */,
-				89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */,
-				89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */,
 				899F309319F16948004F6B10 /* check-active.png */,
 				899F309419F16948004F6B10 /* check-active@2x.png */,
 				899F309519F16948004F6B10 /* check-unactive.png */,
@@ -1493,6 +1493,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1571,6 +1572,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1649,6 +1651,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1726,6 +1729,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1803,6 +1807,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",

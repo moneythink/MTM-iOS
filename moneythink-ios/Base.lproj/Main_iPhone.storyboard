@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E36b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Cxl-3f-cyL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F6a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Cxl-3f-cyL">
     <dependencies>
         <deployment version="2048" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
@@ -2646,9 +2646,9 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sSW-YT-6TP" userLabel="Left Button">
-                                <rect key="frame" x="0.0" y="0.0" width="37" height="48"/>
+                                <rect key="frame" x="0.0" y="0.0" width="30" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="37" id="VeS-ur-HTD"/>
+                                    <constraint firstAttribute="width" constant="30" id="VeS-ur-HTD"/>
                                 </constraints>
                                 <state key="normal" image="arrow_left_white_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -2658,8 +2658,22 @@
                                     <action selector="leftButtonAction:" destination="q5o-5p-Mhx" eventType="touchUpInside" id="pef-xL-H3G"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sTk-iU-h3o" userLabel="Challenge Info Button">
-                                <rect key="frame" x="37" y="0.0" width="198" height="48"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z2a-Cq-KhL" userLabel="Challenge List Button">
+                                <rect key="frame" x="30" y="0.0" width="30" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="30" id="elp-fk-HvA"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="challenge-list-icon.png"/>
+                                <connections>
+                                    <action selector="didTapChallengeList:" destination="q5o-5p-Mhx" eventType="touchUpInside" id="LZQ-uQ-IQw"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sTk-iU-h3o" userLabel="Challenge Info Button">
+                                <rect key="frame" x="60" y="0.0" width="145" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="145" id="c61-Ta-dVI"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
                                 <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <state key="normal" title="Challenge Name">
@@ -2673,21 +2687,51 @@
                                     <segue destination="IUs-Xj-5E6" kind="modal" identifier="challengeInfoSegue" id="7f4-88-nR2"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="z2a-Cq-KhL" userLabel="Challenge List Button">
-                                <rect key="frame" x="235" y="0.0" width="48" height="48"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GbB-xY-qSo" userLabel="Progress Container View">
+                                <rect key="frame" x="210" y="0.0" width="80" height="48"/>
+                                <subviews>
+                                    <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5Qt-tW-bex" userLabel="Background Progress View">
+                                        <rect key="frame" x="0.0" y="15" width="80" height="18"/>
+                                        <subviews>
+                                            <view clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="r0D-z1-t3X" userLabel="Foreground Progress View">
+                                                <rect key="frame" x="1" y="1" width="0.0" height="16"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oyb-Ui-TSD" userLabel="Mask Border View">
+                                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="18"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="10%" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XdR-9G-z9l" userLabel="Progress Label">
+                                                <rect key="frame" x="0.0" y="1" width="80" height="16"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="10"/>
+                                                <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.55294117647058827" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="48" id="elp-fk-HvA"/>
+                                    <constraint firstAttribute="width" constant="80" id="CX3-yK-UYm"/>
                                 </constraints>
-                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <state key="normal" image="challenge-list-icon.png"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A9q-bY-tYz" userLabel="Hidden Challenge Info Button">
+                                <rect key="frame" x="210" y="0.0" width="80" height="48"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="80" id="EK2-m4-baP"/>
+                                </constraints>
+                                <state key="normal">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
-                                    <action selector="didTapChallengeList:" destination="q5o-5p-Mhx" eventType="touchUpInside" id="LZQ-uQ-IQw"/>
+                                    <segue destination="IUs-Xj-5E6" kind="modal" identifier="challengeInfoSegue" id="2Br-mP-E3R"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0hk-AS-0iD" userLabel="Right Button">
-                                <rect key="frame" x="283" y="0.0" width="37" height="48"/>
+                                <rect key="frame" x="290" y="0.0" width="30" height="48"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="37" id="iWN-A6-gsO"/>
+                                    <constraint firstAttribute="width" constant="30" id="iWN-A6-gsO"/>
                                 </constraints>
                                 <state key="normal" image="arrow_right_white_normal.png">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -2701,25 +2745,37 @@
                         <color key="backgroundColor" red="0.96862745100000003" green="0.63921568630000003" blue="0.25490196079999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="z2a-Cq-KhL" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="6L1-mN-BQM"/>
-                            <constraint firstItem="sTk-iU-h3o" firstAttribute="leading" secondItem="sSW-YT-6TP" secondAttribute="trailing" id="7IG-Ty-nqY"/>
-                            <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="z2a-Cq-KhL" secondAttribute="trailing" id="ABn-bF-mDU"/>
-                            <constraint firstItem="z2a-Cq-KhL" firstAttribute="leading" secondItem="sTk-iU-h3o" secondAttribute="trailing" id="AdI-nb-7CJ"/>
+                            <constraint firstItem="GbB-xY-qSo" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="6Rt-d7-glG"/>
+                            <constraint firstItem="A9q-bY-tYz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sTk-iU-h3o" secondAttribute="trailing" priority="750" constant="5" id="7PC-OH-k54"/>
                             <constraint firstItem="sSW-YT-6TP" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="Ei2-yU-wQn"/>
+                            <constraint firstItem="A9q-bY-tYz" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="HY5-ip-QVb"/>
                             <constraint firstItem="sSW-YT-6TP" firstAttribute="leading" secondItem="ssS-mX-HpA" secondAttribute="leading" id="LEu-uH-7jl"/>
+                            <constraint firstItem="z2a-Cq-KhL" firstAttribute="leading" secondItem="sSW-YT-6TP" secondAttribute="trailing" id="NVD-g0-aah"/>
                             <constraint firstAttribute="bottom" secondItem="z2a-Cq-KhL" secondAttribute="bottom" id="RWD-aN-LrG"/>
                             <constraint firstAttribute="bottom" secondItem="sSW-YT-6TP" secondAttribute="bottom" id="Rvb-fl-sJL"/>
                             <constraint firstItem="sTk-iU-h3o" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="TLy-Ro-cdl"/>
+                            <constraint firstAttribute="bottom" secondItem="GbB-xY-qSo" secondAttribute="bottom" id="WLE-Zz-svW"/>
+                            <constraint firstItem="GbB-xY-qSo" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sTk-iU-h3o" secondAttribute="trailing" priority="750" constant="5" id="WrI-Ss-mnk"/>
+                            <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="GbB-xY-qSo" secondAttribute="trailing" id="aYS-B3-fpo"/>
+                            <constraint firstItem="sTk-iU-h3o" firstAttribute="leading" secondItem="z2a-Cq-KhL" secondAttribute="trailing" id="dne-PU-b0z"/>
                             <constraint firstAttribute="bottom" secondItem="sTk-iU-h3o" secondAttribute="bottom" id="ej2-AC-NGc"/>
                             <constraint firstItem="0hk-AS-0iD" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="f7s-Wg-QFc"/>
                             <constraint firstAttribute="bottom" secondItem="0hk-AS-0iD" secondAttribute="bottom" id="kaY-Wa-FYQ"/>
                             <constraint firstAttribute="trailing" secondItem="0hk-AS-0iD" secondAttribute="trailing" id="wH9-9k-Vx9"/>
+                            <constraint firstAttribute="bottom" secondItem="A9q-bY-tYz" secondAttribute="bottom" id="wa7-W0-1Jp"/>
+                            <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="A9q-bY-tYz" secondAttribute="trailing" id="ycA-SD-7T2"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="320" height="48"/>
                     <connections>
+                        <outlet property="backgroundProgressView" destination="5Qt-tW-bex" id="Eug-0j-TzV"/>
                         <outlet property="challengeListButton" destination="sTk-iU-h3o" id="3wz-Jf-nB0"/>
+                        <outlet property="foregroundProgressView" destination="r0D-z1-t3X" id="wLu-Lc-a1E"/>
                         <outlet property="leftButton" destination="sSW-YT-6TP" id="y3H-am-6R4"/>
+                        <outlet property="maskBorderView" destination="oyb-Ui-TSD" id="aDE-2y-1pT"/>
+                        <outlet property="progressLabel" destination="XdR-9G-z9l" id="sPq-AX-F3S"/>
                         <outlet property="rightButton" destination="0hk-AS-0iD" id="Y7V-0A-rf6"/>
                     </connections>
                 </viewController>
@@ -3502,7 +3558,7 @@
         <!--Support Navigation-->
         <scene sceneID="hyS-pt-ga6">
             <objects>
-                <navigationController id="JNe-ss-BLP" userLabel="Support Navigation" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="supportVCNav" id="JNe-ss-BLP" userLabel="Support Navigation" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="h2a-PT-o5o">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -3518,7 +3574,7 @@
         <!--Support-->
         <scene sceneID="TZW-hV-z9p">
             <objects>
-                <viewController storyboardIdentifier="mentorSettings" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nX0-MG-KCI" userLabel="Support" customClass="MTSupportViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="supportVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="nX0-MG-KCI" userLabel="Support" customClass="MTSupportViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Zq9-8r-dYi"/>
                         <viewControllerLayoutGuide type="bottom" id="eRv-R0-dKq"/>
@@ -4254,7 +4310,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <image name="arrow_left_white_normal.png" width="32" height="32"/>
         <image name="arrow_right_white_disabled.png" width="32" height="32"/>
         <image name="arrow_right_white_normal.png" width="32" height="32"/>
-        <image name="challenge-list-icon.png" width="56" height="56"/>
+        <image name="challenge-list-icon.png" width="30" height="48"/>
         <image name="checkbox_ticked.png" width="20" height="15"/>
         <image name="comment_highlighted.png" width="32" height="32"/>
         <image name="comment_normal.png" width="32" height="32"/>
@@ -4284,13 +4340,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="yad-P5-d3y"/>
-        <segue reference="NwG-bn-vTI"/>
-        <segue reference="Gdm-gL-5Rd"/>
         <segue reference="FBG-cj-gjr"/>
-        <segue reference="nYB-OV-yVU"/>
+        <segue reference="Gdm-gL-5Rd"/>
+        <segue reference="NwG-bn-vTI"/>
+        <segue reference="yad-P5-d3y"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="vqR-nj-yuL"/>
+        <segue reference="nYB-OV-yVU"/>
         <segue reference="o0E-h6-NZi"/>
+        <segue reference="2Br-mP-E3R"/>
     </inferredMetricsTieBreakers>
 </document>
