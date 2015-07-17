@@ -19,6 +19,9 @@
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
 @property (weak, nonatomic) IBOutlet UITextField *email;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumber;
+@property (weak, nonatomic) IBOutlet UITextField *birthdate;
+@property (weak, nonatomic) IBOutlet UITextField *zipCode;
+@property (weak, nonatomic) IBOutlet UITextField *ethnicity;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *registrationCode;
 @property (weak, nonatomic) IBOutlet UITextField *error;
@@ -42,15 +45,18 @@
 @property (nonatomic) BOOL schoolIsNew;
 @property (nonatomic) BOOL classIsNew;
 @property (nonatomic) BOOL reachable;
-@property (strong, nonatomic) NSArray *schools;
-@property (strong, nonatomic) PFSchools *school;
-@property (strong, nonatomic) UIActionSheet *schoolSheet;
-@property (strong, nonatomic) NSArray *classes;
-@property (strong, nonatomic) PFClasses *userClass;
-@property (strong, nonatomic) UIActionSheet *classSheet;
-@property (strong, nonatomic) NSString *confirmationString;
+@property (nonatomic, strong) NSArray *schools;
+@property (nonatomic, strong) PFSchools *school;
+@property (nonatomic, strong) UIActionSheet *schoolSheet;
+@property (nonatomic, strong) NSArray *classes;
+@property (nonatomic, strong) PFClasses *userClass;
+@property (nonatomic, strong) UIActionSheet *classSheet;
+@property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL keyboardShowing;
 @property (nonatomic) BOOL showPrivacy;
+@property (nonatomic, strong) NSArray *ethnicities;
+@property (nonatomic, strong) NSDate *selectedBirthdate;
+@property (nonatomic, strong) PFEthnicities *selectedEthnicity;
 
 @end
 
@@ -143,6 +149,16 @@
     }];
     swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeDown];
+    
+    if (![self.signUpType isEqualToString:@"mentor"]) {
+        [self loadEthnicities];
+        
+        UIDatePicker *datePicker = [[UIDatePicker alloc]init];
+        [datePicker setDate:[NSDate date]];
+        datePicker.datePickerMode = UIDatePickerModeDate;
+        [datePicker addTarget:self action:@selector(dateTextField:) forControlEvents:UIControlEventValueChanged];
+        [self.birthdate setInputView:datePicker];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -379,6 +395,111 @@
     } afterDelay:0.35f];
 }
 
+- (IBAction)ethnicityButton:(id)sender
+{
+    if (!IsEmpty(self.ethnicities)) {
+        [self ethnicitiesSheet:self.ethnicities error:nil];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Ethnicities...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [self bk_performBlock:^(id obj) {
+            PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
+            [queryEthnicities orderByAscending:@"order"];
+            queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
+            [queryEthnicities findObjectsInBackgroundWithTarget:weakSelf selector:@selector(ethnicitiesSheet:error:)];
+        } afterDelay:0.35f];
+    }
+}
+
+- (void)ethnicitiesSheet:(NSArray *)objects error:(NSError *)error
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    });
+    
+    if (error) {
+        [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load ethnicities. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return;
+    }
+    
+    self.ethnicities = [NSArray arrayWithArray:objects];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
+    }
+    
+    __block NSMutableArray *ethnicityNames = [NSMutableArray arrayWithCapacity:[names count]];
+    for (NSString *thisEthnicityName in names) {
+        NSString *name = thisEthnicityName;
+        if ([self.ethnicity.text isEqualToString:thisEthnicityName]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisEthnicityName];
+        }
+        [ethnicityNames addObject:name];
+    }
+    
+    [self bk_performBlock:^(id obj) {
+        if ([UIAlertController class]) {
+            UIAlertController *ethnicitySheet = [UIAlertController
+                                              alertControllerWithTitle:@""
+                                              message:@"Choose Ethnicity"
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                     }];
+            
+            UIAlertAction *ethnicityName;
+            
+            MTMakeWeakSelf();
+            for (NSInteger buttonItem = 0; buttonItem < ethnicityNames.count; buttonItem++) {
+                ethnicityName = [UIAlertAction
+                              actionWithTitle:ethnicityNames[buttonItem]
+                              style:UIAlertActionStyleDefault
+                              handler:^(UIAlertAction *action) {
+                                  weakSelf.ethnicity.text = [weakSelf stringWithoutConfirmation:ethnicityNames[buttonItem]];
+                                  weakSelf.selectedEthnicity = [weakSelf.ethnicities objectAtIndex:buttonItem];
+                              }];
+                [ethnicitySheet addAction:ethnicityName];
+            }
+            
+            [ethnicitySheet addAction:cancel];
+            
+            [self presentViewController:ethnicitySheet animated:YES completion:nil];
+        } else {
+            UIActionSheet *ethnicitySheet = [[UIActionSheet alloc]
+                                          initWithTitle:@"Choose Ethnicity"
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:nil, nil];
+            
+            for (NSInteger buttonItem = 0; buttonItem < ethnicityNames.count; buttonItem++) {
+                [ethnicitySheet addButtonWithTitle:ethnicityNames[buttonItem]];
+            }
+            
+            [ethnicitySheet addButtonWithTitle:@"Cancel"];
+            ethnicitySheet.cancelButtonIndex = ethnicityNames.count;
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:self.view]) {
+                [ethnicitySheet showInView:self.view];
+            } else {
+                [ethnicitySheet showInView:window];
+            }
+        }
+        
+    } afterDelay:0.35f];
+}
+
 - (IBAction)tappedSignUpButton:(id)sender
 {
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
@@ -448,6 +569,18 @@
                         } else {
                             user[@"school"] = code[@"school"];
                             user[@"class"] = code[@"class"];
+                            
+                            if (!IsEmpty(weakSelf.birthdate.text) && self.selectedBirthdate) {
+                                user[@"birthdate"] = weakSelf.selectedBirthdate;
+                            }
+                            
+                            if (!IsEmpty(weakSelf.zipCode.text)) {
+                                user[@"zip_code"] = weakSelf.zipCode.text;
+                            }
+                            
+                            if (!IsEmpty(weakSelf.ethnicity.text) && self.selectedEthnicity) {
+                                user[@"ethnicity"] = weakSelf.selectedEthnicity;
+                            }
                         }
                         
                         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -666,6 +799,36 @@
     }];
 }
 
+- (void)loadEthnicities
+{
+    PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
+    [queryEthnicities orderByAscending:@"order"];
+    queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [queryEthnicities findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.ethnicities = objects;
+        }
+        else {
+            NSLog(@"Unable to load Ethnicities: %@", [error localizedDescription]);
+        }
+    }];
+}
+
+- (void)dateTextField:(id)sender
+{
+    UIDatePicker *picker = (UIDatePicker *)self.birthdate.inputView;
+    [picker setMaximumDate:[NSDate date]];
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    NSDate *eventDate = picker.date;
+    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+    
+    NSString *dateString = [dateFormat stringFromDate:eventDate];
+    self.selectedBirthdate = picker.date;
+    self.birthdate.text = [NSString stringWithFormat:@"%@",dateString];
+}
+
 
 #pragma mark - UIActionSheetDelegate methods -
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
@@ -693,6 +856,14 @@
             self.className.text = [self stringWithoutConfirmation:buttonTitle];
         } else { // Cancel
             self.classIsNew = NO;
+        }
+    } else if ([title isEqualToString:@"Choose Ethnicity"]) {
+        self.ethnicity.text = [self stringWithoutConfirmation:buttonTitle];
+        for (PFEthnicities *thisEthnicity in self.ethnicities) {
+            if ([thisEthnicity[@"name"] isEqualToString:self.ethnicity.text]) {
+                self.selectedEthnicity = thisEthnicity;
+                break;
+            }
         }
     }
 }

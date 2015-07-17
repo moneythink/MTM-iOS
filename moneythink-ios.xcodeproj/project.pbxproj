@@ -113,6 +113,7 @@
 		8921ED081B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */; };
 		8921ED0B1B25FCEF00010E3F /* nav-icons-signup.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED091B25FCEF00010E3F /* nav-icons-signup.png */; };
 		8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */; };
+		8925653E1B585EFA00473AFD /* PFEthnicities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925653D1B585EFA00473AFD /* PFEthnicities.m */; };
 		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
@@ -401,6 +402,8 @@
 		8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
 		8921ED091B25FCEF00010E3F /* nav-icons-signup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup.png"; sourceTree = "<group>"; };
 		8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup@2x.png"; sourceTree = "<group>"; };
+		8925653C1B585EEE00473AFD /* PFEthnicities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFEthnicities.h; path = "Data Classes/PFEthnicities.h"; sourceTree = "<group>"; };
+		8925653D1B585EFA00473AFD /* PFEthnicities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFEthnicities.m; path = "Data Classes/PFEthnicities.m"; sourceTree = "<group>"; };
 		892573851AE5950C002FF871 /* PFChallengePostsLiked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostsLiked.h; path = "Data Classes/PFChallengePostsLiked.h"; sourceTree = "<group>"; };
 		892573861AE59515002FF871 /* PFChallengePostsLiked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostsLiked.m; path = "Data Classes/PFChallengePostsLiked.m"; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
@@ -664,6 +667,8 @@
 				89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */,
 				8977E3DB1B1E1F6C009AD452 /* PFEmoji.h */,
 				8977E3DC1B1E1F6C009AD452 /* PFEmoji.m */,
+				8925653C1B585EEE00473AFD /* PFEthnicities.h */,
+				8925653D1B585EFA00473AFD /* PFEthnicities.m */,
 				89F250E51A09638400F02CC7 /* PFCustomChallenges.m */,
 				58669F5419772D00009BC13C /* PFNotifications.h */,
 				58669F5519772D00009BC13C /* PFNotifications.m */,
@@ -1372,6 +1377,7 @@
 				89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
+				8925653E1B585EFA00473AFD /* PFEthnicities.m in Sources */,
 				89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */,
 				89CE54131B152829000825FB /* MTViewController.m in Sources */,
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,

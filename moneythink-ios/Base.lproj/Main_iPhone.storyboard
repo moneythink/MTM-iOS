@@ -211,16 +211,16 @@
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="njs-CA-xhD" userLabel="Signup View">
-                                        <rect key="frame" x="0.0" y="20" width="320" height="264"/>
+                                        <rect key="frame" x="0.0" y="20" width="320" height="306"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="First Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KgM-8o-Yfk" userLabel="First Name Label">
-                                                <rect key="frame" x="10" y="0.0" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="0.0" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Preferred First Name" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="tQ1-HJ-LR5" userLabel="First Name Text Field">
-                                                <rect key="frame" x="150" y="0.0" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="0.0" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
                                                 <connections>
@@ -228,17 +228,17 @@
                                                 </connections>
                                             </textField>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zX5-PN-GXA" userLabel="Separator View">
-                                                <rect key="frame" x="10" y="44" width="310" height="1"/>
+                                                <rect key="frame" x="10" y="34" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960784313726" green="0.74901960784313726" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Last Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="X7h-a6-vaQ" userLabel="Last Name Label">
-                                                <rect key="frame" x="10" y="44" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="34" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zTA-4O-h2u" userLabel="Last Name Text Field">
-                                                <rect key="frame" x="150" y="44" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="34" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="next"/>
                                                 <connections>
@@ -246,17 +246,17 @@
                                                 </connections>
                                             </textField>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x02-Fv-rLn" userLabel="Separator View">
-                                                <rect key="frame" x="10" y="88" width="310" height="1"/>
+                                                <rect key="frame" x="10" y="68" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="School Email" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ulf-VB-6fD" userLabel="School Email Label">
-                                                <rect key="frame" x="10" y="88" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="68" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="example@icloud.com" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="LkN-k0-F1V" userLabel="School Email Text Field">
-                                                <rect key="frame" x="150" y="88" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="68" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                                 <connections>
@@ -264,17 +264,17 @@
                                                 </connections>
                                             </textField>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Rh-Yk-Ouk" userLabel="Separator View">
-                                                <rect key="frame" x="10" y="132" width="310" height="1"/>
+                                                <rect key="frame" x="10" y="102" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Phone Number" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZdH-EQ-SEf" userLabel="Phone Number Label">
-                                                <rect key="frame" x="10" y="132" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="102" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="303-555-1212" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="6Zr-B5-gdu" userLabel="Phone Number Text Field">
-                                                <rect key="frame" x="150" y="132" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="102" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
                                                 <connections>
@@ -282,35 +282,100 @@
                                                 </connections>
                                             </textField>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sKZ-bc-HRK" userLabel="Separator View">
-                                                <rect key="frame" x="10" y="176" width="310" height="1"/>
+                                                <rect key="frame" x="10" y="136" width="310" height="1"/>
+                                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Birthdate" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RoA-9m-v93" userLabel="Birthdate Label">
+                                                <rect key="frame" x="10" y="136" width="130" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qba-mT-D2A" userLabel="Birthdate Text Field">
+                                                <rect key="frame" x="150" y="136" width="160" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="8Ue-1k-B9o" id="yXN-9b-7a3"/>
+                                                </connections>
+                                            </textField>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="24I-Kb-1Wj" userLabel="Separator View">
+                                                <rect key="frame" x="10" y="170" width="310" height="1"/>
+                                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Zip Code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9S-RN-wgZ" userLabel="Zip Code Label">
+                                                <rect key="frame" x="10" y="170" width="130" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="9Tk-dY-EOQ" userLabel="Zip Code Text Field">
+                                                <rect key="frame" x="150" y="170" width="160" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="next"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="8Ue-1k-B9o" id="CHw-kr-Sia"/>
+                                                </connections>
+                                            </textField>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nNX-DU-9aa" userLabel="Separator View">
+                                                <rect key="frame" x="10" y="204" width="310" height="1"/>
+                                                <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                            </view>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Ethnicity" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5H-Si-6N1" userLabel="Ethnicity Label">
+                                                <rect key="frame" x="10" y="204" width="130" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zvL-5N-OWu" userLabel="Ethnicity Text Field">
+                                                <rect key="frame" x="150" y="204" width="160" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next"/>
+                                                <connections>
+                                                    <outlet property="delegate" destination="8Ue-1k-B9o" id="eVg-c9-7ta"/>
+                                                </connections>
+                                            </textField>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zJo-tf-SQV" userLabel="Ethnicity Button">
+                                                <rect key="frame" x="10" y="204" width="300" height="34"/>
+                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="ethnicityButton:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="Ld1-ys-vS5"/>
+                                                </connections>
+                                            </button>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yfz-cB-mjz" userLabel="Separator View">
+                                                <rect key="frame" x="10" y="238" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Password" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ro0-AN-ac0" userLabel="Password Label">
-                                                <rect key="frame" x="10" y="176" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="238" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="6Cx-TC-ge0" userLabel="Password Text Field">
-                                                <rect key="frame" x="150" y="176" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="238" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next" secureTextEntry="YES"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="8Ue-1k-B9o" id="KhA-VU-aBa"/>
                                                 </connections>
                                             </textField>
-                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nNX-DU-9aa" userLabel="Separator View">
-                                                <rect key="frame" x="10" y="220" width="310" height="1"/>
+                                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cUK-gK-CdD" userLabel="Separator View">
+                                                <rect key="frame" x="10" y="272" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Registration Code" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wgX-iM-0SU" userLabel="Registration Code Label">
-                                                <rect key="frame" x="10" y="220" width="130" height="44"/>
+                                                <rect key="frame" x="10" y="272" width="130" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <textField opaque="NO" clipsSubviews="YES" tag="5" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="iFn-Zo-Rkq" userLabel="Registration Code Text Field">
-                                                <rect key="frame" x="150" y="220" width="160" height="44"/>
+                                                <rect key="frame" x="150" y="272" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="done"/>
                                                 <connections>
@@ -320,11 +385,11 @@
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="264" id="qWj-TV-bRF"/>
+                                            <constraint firstAttribute="height" constant="306" id="qWj-TV-bRF"/>
                                         </constraints>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="nfr-Kf-99I" userLabel="Agree Button">
-                                        <rect key="frame" x="58" y="289" width="252" height="44"/>
+                                        <rect key="frame" x="58" y="331" width="252" height="44"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="252" id="DTP-Oc-8wC"/>
                                             <constraint firstAttribute="height" constant="44" id="kj1-3o-Tlw"/>
@@ -337,8 +402,22 @@
                                             <action selector="termsAndPrivacyTapped:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="CkE-Gc-qRe"/>
                                         </connections>
                                     </button>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zrZ-kb-HRr" userLabel="Separator View">
+                                        <rect key="frame" x="0.0" y="326" width="320" height="1"/>
+                                        <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1h9-2q-KfC" userLabel="Agree Check Button" customClass="MICheckBox">
+                                        <rect key="frame" x="15" y="341" width="30" height="23"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="30" id="uty-SO-NYk"/>
+                                            <constraint firstAttribute="height" constant="23" id="xme-kN-vQe"/>
+                                        </constraints>
+                                        <state key="normal">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IfJ-eh-inN" userLabel="Sign Up Button">
-                                        <rect key="frame" x="14" y="341" width="292" height="36"/>
+                                        <rect key="frame" x="14" y="383" width="292" height="36"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="36" id="LoS-sT-up6"/>
                                         </constraints>
@@ -350,20 +429,6 @@
                                         <connections>
                                             <action selector="tappedSignUpButton:" destination="8Ue-1k-B9o" eventType="touchUpInside" id="mu2-kq-a1c"/>
                                         </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zrZ-kb-HRr" userLabel="Separator View">
-                                        <rect key="frame" x="0.0" y="284" width="320" height="1"/>
-                                        <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1h9-2q-KfC" userLabel="Agree Check Button" customClass="MICheckBox">
-                                        <rect key="frame" x="15" y="299" width="30" height="23"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="30" id="uty-SO-NYk"/>
-                                            <constraint firstAttribute="height" constant="23" id="xme-kN-vQe"/>
-                                        </constraints>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -396,8 +461,10 @@
                     <keyCommands/>
                     <connections>
                         <outlet property="agreeCheckbox" destination="1h9-2q-KfC" id="Ufk-78-2K2"/>
+                        <outlet property="birthdate" destination="qba-mT-D2A" id="pNK-zi-mhM"/>
                         <outlet property="contentView" destination="jZm-QQ-ueV" id="kJk-iV-pm7"/>
                         <outlet property="email" destination="LkN-k0-F1V" id="jAp-eF-cLf"/>
+                        <outlet property="ethnicity" destination="zvL-5N-OWu" id="Jaf-br-fw2"/>
                         <outlet property="firstName" destination="tQ1-HJ-LR5" id="Qal-mw-B2I"/>
                         <outlet property="lastName" destination="zTA-4O-h2u" id="4tY-qN-iYG"/>
                         <outlet property="password" destination="6Cx-TC-ge0" id="gn8-4W-Ff2"/>
@@ -407,6 +474,7 @@
                         <outlet property="termsButton" destination="nfr-Kf-99I" id="e3q-0h-vzs"/>
                         <outlet property="verticalSpaceConstraint" destination="Y7e-wt-ngr" id="eyA-HI-46Y"/>
                         <outlet property="view" destination="Vpg-1D-iqc" id="euh-FL-CVZ"/>
+                        <outlet property="zipCode" destination="9Tk-dY-EOQ" id="Xol-JK-XQB"/>
                         <segue destination="tGy-vH-4cW" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="0lk-YU-GDF"/>
                         <segue destination="z8Z-Rq-rRI" kind="push" identifier="showWebView" id="yad-P5-d3y"/>
                     </connections>
@@ -414,7 +482,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="-4329" y="-1040"/>
+            <point key="canvasLocation" x="-4329" y="-1102"/>
         </scene>
         <!--WebView-->
         <scene sceneID="Wi0-Zj-jXc">
@@ -3868,6 +3936,11 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="15" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="JhT-mX-LtR" userLabel="School Name Text Field">
+                                                <rect key="frame" x="150" y="204" width="160" height="34"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
+                                            </textField>
                                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1TQ-Ty-E2N" userLabel="School Name Button">
                                                 <rect key="frame" x="10" y="204" width="300" height="34"/>
                                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -3879,11 +3952,6 @@
                                                     <action selector="schoolNameButton:" destination="e6J-bE-0Mw" eventType="touchUpInside" id="s9G-SZ-5nt"/>
                                                 </connections>
                                             </button>
-                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="15" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="JhT-mX-LtR" userLabel="School Name Text Field">
-                                                <rect key="frame" x="150" y="204" width="160" height="34"/>
-                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="alphabet" returnKeyType="next"/>
-                                            </textField>
                                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KvG-Lb-Xfg" userLabel="Separator View">
                                                 <rect key="frame" x="10" y="238" width="310" height="1"/>
                                                 <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
@@ -4341,9 +4409,9 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="FBG-cj-gjr"/>
-        <segue reference="Gdm-gL-5Rd"/>
-        <segue reference="NwG-bn-vTI"/>
-        <segue reference="yad-P5-d3y"/>
+        <segue reference="kDD-cl-uw8"/>
+        <segue reference="0QY-Pc-qd8"/>
+        <segue reference="fGY-fc-BPd"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="vqR-nj-yuL"/>
         <segue reference="nYB-OV-yVU"/>
