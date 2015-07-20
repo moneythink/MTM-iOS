@@ -82,7 +82,7 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueID = [segue identifier];
-    if ([segueID isEqualToString:@"challengeInfoSegue"]) {
+    if ([segueID isEqualToString:@"challengeInfoSegue"] || [segueID isEqualToString:@"hiddenChallengeInfoSegue"]) {
         MTChallengeInfoViewController *destinationVC = (MTChallengeInfoViewController *)[segue destinationViewController];
         destinationVC.challenge = self.challenge;
         destinationVC.pageIndex = self.pageIndex;

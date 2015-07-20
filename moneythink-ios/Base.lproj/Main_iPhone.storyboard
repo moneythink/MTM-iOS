@@ -1547,7 +1547,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Lup-rP-ttr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6an-Ex-hZp">
-                        <rect key="frame" x="0.0" y="64" width="320" height="652"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="696"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image" customClass="PFImageView">
@@ -1566,7 +1566,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="110" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="x8M-C9-wsX">
-                                <rect key="frame" x="0.0" y="143" width="320" height="509"/>
+                                <rect key="frame" x="0.0" y="143" width="320" height="553"/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="studentPosts" id="Mxf-OF-CNF" customClass="MTStudentProfileTableViewCell">
@@ -2138,11 +2138,11 @@
                         <viewControllerLayoutGuide type="bottom" id="5lw-sb-Leu"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="oNf-wq-emG">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="652"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="696"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="h3G-HX-aV0">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="652"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="696"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="PostUserInfoCell" rowHeight="57" id="kmZ-AW-VGW" customClass="MTPostUserInfoTableViewCell">
@@ -2311,6 +2311,45 @@
                                                 <constraint firstItem="VYo-gL-vkD" firstAttribute="leading" secondItem="dXs-EZ-yTJ" secondAttribute="leading" constant="36" id="Dej-Lz-MBa"/>
                                                 <constraint firstAttribute="trailing" secondItem="hvy-xV-zhy" secondAttribute="trailing" constant="36" id="biq-ku-02e"/>
                                                 <constraint firstAttribute="centerY" secondItem="hvy-xV-zhy" secondAttribute="centerY" id="s6q-NC-tT8"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="QuadButtonsCell" id="KoA-De-KFi" userLabel="QuadButtonsCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KoA-De-KFi" id="Nqc-LR-VU4">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LaY-Wa-x0l" userLabel="Button 3">
+                                                    <rect key="frame" x="36" y="5" width="120" height="34"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="120" id="q3X-dc-bvp"/>
+                                                    </constraints>
+                                                    <state key="normal">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="button3Tapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="Yzo-Gl-g3o"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AQt-Am-UGG" userLabel="Button 4">
+                                                    <rect key="frame" x="164" y="5" width="120" height="34"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="120" id="fgt-aW-gFQ"/>
+                                                    </constraints>
+                                                    <state key="normal">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="button4Tapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="p4J-gs-b3k"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="centerY" secondItem="LaY-Wa-x0l" secondAttribute="centerY" id="b8r-dv-K0u"/>
+                                                <constraint firstAttribute="trailing" secondItem="AQt-Am-UGG" secondAttribute="trailing" constant="36" id="hOf-xf-WVS"/>
+                                                <constraint firstItem="LaY-Wa-x0l" firstAttribute="leading" secondItem="Nqc-LR-VU4" secondAttribute="leading" constant="36" id="hum-jj-Dm2"/>
+                                                <constraint firstAttribute="centerY" secondItem="AQt-Am-UGG" secondAttribute="centerY" id="vTi-1Z-yeW"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -2592,7 +2631,7 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="CZe-eJ-ePU"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="652"/>
+                    <size key="freeformSize" width="320" height="696"/>
                     <connections>
                         <outlet property="tableView" destination="h3G-HX-aV0" id="Dca-Rb-spY"/>
                         <segue destination="ltS-05-clY" kind="unwind" identifier="unwindToExploreChallanges" unwindAction="unwindToExploreChallanges:" id="5DG-I6-ZyH"/>
@@ -2793,7 +2832,7 @@
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="IUs-Xj-5E6" kind="modal" identifier="challengeInfoSegue" id="2Br-mP-E3R"/>
+                                    <segue destination="IUs-Xj-5E6" kind="modal" identifier="hiddenChallengeInfoSegue" id="2Br-mP-E3R"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0hk-AS-0iD" userLabel="Right Button">
@@ -2947,7 +2986,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="myClassChallengePostsTableView" title="My Class" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wSc-Em-WQ4" customClass="MTMyClassTableViewController" sceneMemberID="viewController">
                     <tableView key="view" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="CjA-Xy-9gz">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1243"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="1933"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
@@ -3426,6 +3465,187 @@
                                     <outlet property="verifiedCheckBox" destination="J6O-3b-WXH" id="GnX-Cp-ei3"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellWithQuadButtons" rowHeight="500" id="X6J-g0-eIj" userLabel="postCellImageWithQuadButtons" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="547" width="320" height="436"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="X6J-g0-eIj" id="9jM-B4-j6S">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="435"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="CcX-c6-64b" userLabel="User Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="250" fixedFrame="YES" placeholderIntrinsicWidth="160" placeholderIntrinsicHeight="30" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j1w-vL-9K5" userLabel="Username Label">
+                                            <rect key="frame" x="58" y="10" width="160" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" horizontalCompressionResistancePriority="100" placeholderIntrinsicWidth="74" placeholderIntrinsicHeight="24" text="10m ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="72H-Hy-RIx" userLabel="Posted when Label">
+                                            <rect key="frame" x="226" y="13" width="74" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" priority="750" constant="74" id="B3v-iW-1PI"/>
+                                                <constraint firstAttribute="height" constant="24" id="xFA-Kh-zYs"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x99-K8-BGC" userLabel="Post Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="45" width="280" height="290"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mDo-bJ-Jjm" userLabel="Post Text Label">
+                                            <rect key="frame" x="20" y="340" width="280" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n5z-hl-LTD">
+                                            <rect key="frame" x="36" y="364" width="120" height="30"/>
+                                            <state key="normal" title="button 1">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hJy-e1-fBH">
+                                            <rect key="frame" x="164" y="364" width="120" height="30"/>
+                                            <state key="normal" title="button 2">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CQ5-HY-L8U" userLabel="button 3">
+                                            <rect key="frame" x="36" y="398" width="120" height="30"/>
+                                            <state key="normal" title="button 3">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fxD-yY-ojb" userLabel="button 4">
+                                            <rect key="frame" x="164" y="398" width="120" height="30"/>
+                                            <state key="normal" title="button 4">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4GQ-lR-8Ai" userLabel="Like Button">
+                                            <rect key="frame" x="10" y="433" width="32" height="32"/>
+                                            <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
+                                            <state key="normal" image="like_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="like_highlighted.png"/>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v4z-2W-ouQ" userLabel="Like Label">
+                                            <rect key="frame" x="46" y="449" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vNS-Fh-Pnz" userLabel="Comment Button">
+                                            <rect key="frame" x="64" y="433" width="32" height="32"/>
+                                            <state key="normal" image="comment_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="comment_highlighted.png"/>
+                                            <connections>
+                                                <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="Mgp-P4-dyz"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="o3q-gk-Jbm" userLabel="Comment Label">
+                                            <rect key="frame" x="100" y="449" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IJI-M8-Xaq" userLabel="Emoji View">
+                                            <rect key="frame" x="118" y="438" width="182" height="26"/>
+                                            <subviews>
+                                                <view tag="7" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q2m-Aw-VWI" userLabel="Emoji View 7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="6" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WcN-m9-4TP" userLabel="Emoji View 6">
+                                                    <rect key="frame" x="26" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="67l-ya-FZO" userLabel="Emoji View 5">
+                                                    <rect key="frame" x="52" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8lu-VF-h7I" userLabel="Emoji View 4">
+                                                    <rect key="frame" x="78" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="3" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VFH-S1-q9g" userLabel="Emoji View 3">
+                                                    <rect key="frame" x="104" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jw2-6Q-q4P" userLabel="Emoji View 2">
+                                                    <rect key="frame" x="130" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="i7Y-eT-cN0" userLabel="Emoji View 1">
+                                                    <rect key="frame" x="156" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vzR-BS-aUe" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="461" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="VbD-mZ-1kk"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lq1-VT-jVs" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="461" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-vF-jV2" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="465" width="48" height="32"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" image="picker.png">
+                                                <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
+                                        </button>
+                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VYa-KE-laO" userLabel="Loading View">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Fqr-A8-CUx">
+                                            <rect key="frame" x="142" y="189" width="37" height="37"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="72H-Hy-RIx" secondAttribute="trailing" constant="20" id="eqZ-sF-buG"/>
+                                        <constraint firstItem="72H-Hy-RIx" firstAttribute="top" secondItem="9jM-B4-j6S" secondAttribute="top" constant="13" id="s8n-XT-d3j"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="Fqr-A8-CUx" id="ZuK-WF-lpc"/>
+                                    <outlet property="button1" destination="n5z-hl-LTD" id="9I4-Iu-UZm"/>
+                                    <outlet property="button2" destination="hJy-e1-fBH" id="H3C-No-dsU"/>
+                                    <outlet property="button3" destination="CQ5-HY-L8U" id="8DR-he-5jG"/>
+                                    <outlet property="button4" destination="fxD-yY-ojb" id="Q0X-Uh-2g8"/>
+                                    <outlet property="commentButton" destination="vNS-Fh-Pnz" id="tgu-qF-W9H"/>
+                                    <outlet property="comments" destination="o3q-gk-Jbm" id="mdJ-Jo-rs0"/>
+                                    <outlet property="deletePost" destination="ZaJ-vF-jV2" id="o0M-Eh-0iG"/>
+                                    <outlet property="emojiContainerView" destination="IJI-M8-Xaq" id="qt7-2L-hyd"/>
+                                    <outlet property="likeButton" destination="4GQ-lR-8Ai" id="zpX-jC-wa2"/>
+                                    <outlet property="likes" destination="v4z-2W-ouQ" id="Gpv-nw-XpM"/>
+                                    <outlet property="loadingView" destination="VYa-KE-laO" id="Abr-nS-t3L"/>
+                                    <outlet property="postImage" destination="x99-K8-BGC" id="fcw-z3-Wq4"/>
+                                    <outlet property="postText" destination="mDo-bJ-Jjm" id="wNg-5u-GfO"/>
+                                    <outlet property="postedWhen" destination="72H-Hy-RIx" id="3Xg-MM-p6X"/>
+                                    <outlet property="profileImage" destination="CcX-c6-64b" id="Vox-IA-iM9"/>
+                                    <outlet property="userName" destination="j1w-vL-9K5" id="J11-z1-E2Q"/>
+                                    <outlet property="verfiedLabel" destination="lq1-VT-jVs" id="PiX-hD-fDr"/>
+                                    <outlet property="verifiedCheckBox" destination="vzR-BS-aUe" id="kBM-7o-Rzd"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithButtons" rowHeight="190" id="z1M-tx-OTJ" customClass="MTPostsTableViewCell">
                                 <rect key="frame" x="0.0" y="983" width="320" height="160"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -3556,7 +3776,7 @@
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
                                         <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3V-ew-UZA" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="180"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="190"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </view>
                                         <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="xt5-nH-uB8">
@@ -3587,6 +3807,177 @@
                                     <outlet property="verifiedCheckBox" destination="ZKZ-90-VXX" id="9m5-U8-qtB"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithQuadButtons" rowHeight="224" id="YJX-sv-E0N" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="983" width="320" height="160"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YJX-sv-E0N" id="s0K-H7-o8S">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="159"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FZg-tN-DYe" userLabel="User Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9p3-Gj-C1a" userLabel="Username Label">
+                                            <rect key="frame" x="58" y="10" width="160" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="10m ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ETc-cG-iMu" userLabel="Posted when Label">
+                                            <rect key="frame" x="226" y="13" width="74" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" priority="750" constant="74" id="JhY-sr-V4l"/>
+                                                <constraint firstAttribute="height" constant="24" id="xZc-JF-ASD"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ryt-vl-tLw" userLabel="Post Text Label">
+                                            <rect key="frame" x="20" y="45" width="280" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vav-R1-gKi">
+                                            <rect key="frame" x="36" y="69" width="120" height="30"/>
+                                            <state key="normal" title="button 1"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWe-mv-94Q">
+                                            <rect key="frame" x="164" y="69" width="120" height="30"/>
+                                            <state key="normal" title="button 2">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q1z-gx-XOD" userLabel="button 3">
+                                            <rect key="frame" x="36" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 3"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GMe-oz-7rR" userLabel="button 4">
+                                            <rect key="frame" x="164" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 4"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fEf-vM-gHo" userLabel="Like Button">
+                                            <rect key="frame" x="10" y="138" width="32" height="32"/>
+                                            <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
+                                            <state key="normal" image="like_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="like_highlighted.png"/>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="D6T-cH-35r" userLabel="Like Label">
+                                            <rect key="frame" x="46" y="154" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKB-vE-zoW" userLabel="Comment Button">
+                                            <rect key="frame" x="64" y="138" width="32" height="32"/>
+                                            <state key="normal" image="comment_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="comment_highlighted.png"/>
+                                            <connections>
+                                                <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="Toy-cl-QQ7"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5nd-Oo-BK2" userLabel="Comment Label">
+                                            <rect key="frame" x="100" y="154" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qxk-yn-fxi" userLabel="Emoji View">
+                                            <rect key="frame" x="118" y="143" width="182" height="26"/>
+                                            <subviews>
+                                                <view tag="7" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="942-Pu-Kyf" userLabel="Emoji View 7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="6" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0JZ-Ki-hiP" userLabel="Emoji View 6">
+                                                    <rect key="frame" x="26" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="3MS-U6-aGh" userLabel="Emoji View 5">
+                                                    <rect key="frame" x="52" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PXI-eN-6tj" userLabel="Emoji View 4">
+                                                    <rect key="frame" x="78" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="3" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1g5-lN-H76" userLabel="Emoji View 3">
+                                                    <rect key="frame" x="104" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6x9-Ao-hPR" userLabel="Emoji View 2">
+                                                    <rect key="frame" x="130" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eMV-8a-uJU" userLabel="Emoji View 1">
+                                                    <rect key="frame" x="156" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="B35-9M-gUg" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="174" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="KRm-ot-MGk"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="N2l-EJ-CXP" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="174" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eG-m0-yeZ" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="178" width="48" height="32"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" image="picker.png">
+                                                <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
+                                        </button>
+                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pch-lx-8cA" userLabel="Loading View">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="224"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="IQM-mm-EjG">
+                                            <rect key="frame" x="142" y="94" width="37" height="37"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="ETc-cG-iMu" secondAttribute="trailing" constant="20" id="PGq-5x-AbS"/>
+                                        <constraint firstItem="ETc-cG-iMu" firstAttribute="top" secondItem="s0K-H7-o8S" secondAttribute="top" constant="13" id="QeP-1m-oDu"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="IQM-mm-EjG" id="fUv-Jk-jdz"/>
+                                    <outlet property="button1" destination="Vav-R1-gKi" id="1jO-j7-mrv"/>
+                                    <outlet property="button2" destination="AWe-mv-94Q" id="dS7-AD-rcH"/>
+                                    <outlet property="button3" destination="q1z-gx-XOD" id="LnY-bC-MDy"/>
+                                    <outlet property="button4" destination="GMe-oz-7rR" id="y5q-mp-jpl"/>
+                                    <outlet property="commentButton" destination="VKB-vE-zoW" id="3zt-f0-2kO"/>
+                                    <outlet property="comments" destination="5nd-Oo-BK2" id="GXj-Q8-kAJ"/>
+                                    <outlet property="deletePost" destination="8eG-m0-yeZ" id="oF4-da-6y0"/>
+                                    <outlet property="emojiContainerView" destination="qxk-yn-fxi" id="9fC-6O-qu8"/>
+                                    <outlet property="likeButton" destination="fEf-vM-gHo" id="QL1-jv-nP9"/>
+                                    <outlet property="likes" destination="D6T-cH-35r" id="rCX-km-qAN"/>
+                                    <outlet property="loadingView" destination="pch-lx-8cA" id="BgK-ad-J5w"/>
+                                    <outlet property="postText" destination="ryt-vl-tLw" id="xuh-fR-pwu"/>
+                                    <outlet property="postedWhen" destination="ETc-cG-iMu" id="GhR-S1-Zav"/>
+                                    <outlet property="profileImage" destination="FZg-tN-DYe" id="WCg-1p-4JW"/>
+                                    <outlet property="userName" destination="9p3-Gj-C1a" id="szs-In-3Vl"/>
+                                    <outlet property="verfiedLabel" destination="N2l-EJ-CXP" id="PbT-Oh-Xva"/>
+                                    <outlet property="verifiedCheckBox" destination="B35-9M-gUg" id="Ypr-hL-5gk"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="wSc-Em-WQ4" id="cF8-d6-gYM"/>
@@ -3596,7 +3987,7 @@
                     <tabBarItem key="tabBarItem" title="My Class" image="students_normal.png" id="Zdd-gT-FGs"/>
                     <navigationItem key="navigationItem" id="aWv-Qc-T0C"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="1243"/>
+                    <size key="freeformSize" width="320" height="1933"/>
                     <connections>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
                         <segue destination="9DK-c8-e6q" kind="modal" identifier="commentOnPost" id="nYB-OV-yVU"/>
@@ -4408,14 +4799,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="FBG-cj-gjr"/>
-        <segue reference="kDD-cl-uw8"/>
         <segue reference="0QY-Pc-qd8"/>
+        <segue reference="kDD-cl-uw8"/>
         <segue reference="fGY-fc-BPd"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="vqR-nj-yuL"/>
-        <segue reference="nYB-OV-yVU"/>
+        <segue reference="FBG-cj-gjr"/>
         <segue reference="o0E-h6-NZi"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="48k-xo-w1Z"/>
+        <segue reference="a3W-fR-2k0"/>
         <segue reference="2Br-mP-E3R"/>
     </inferredMetricsTieBreakers>
 </document>

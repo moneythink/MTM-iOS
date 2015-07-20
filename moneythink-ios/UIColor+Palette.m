@@ -135,6 +135,26 @@
     return [UIColor colorWithHexString:@"#bbbebd"];
 }
 
++ (UIColor *)votingRed
+{
+    return [UIColor colorWithHexString:@"#7f2a27"];
+}
+
++ (UIColor *)votingPurple
+{
+    return [UIColor colorWithHexString:@"#55406c"];
+}
+
++ (UIColor *)votingBlue
+{
+    return [UIColor colorWithHexString:@"#5284cd"];
+}
+
++ (UIColor *)votingGreen
+{
+    return [UIColor colorWithHexString:@"#668338"];
+}
+
 + (UIColor *) colorWithHexString: (NSString *) hexString {
     NSString *colorString = [[hexString stringByReplacingOccurrencesOfString: @"#" withString: @""] uppercaseString];
     CGFloat alpha, red, blue, green;

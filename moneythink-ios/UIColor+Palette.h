@@ -32,12 +32,15 @@
 + (UIColor *)challengeViewToggleButtonBackgroundNormal;
 + (UIColor *)challengeViewToggleButtonBackgroundHighlighted;
 + (UIColor *)challengeViewToggleButtonBackgroundSelected;
-
 + (UIColor *)challengeViewToggleButtonTitleNormal;
 + (UIColor *)challengeViewToggleButtonTitleHighlighted;
 + (UIColor *)challengeViewToggleButtonTitleSelected;
-
 + (UIColor *)challengeViewToggleHighlightNormal;
+
++ (UIColor *)votingRed;
++ (UIColor *)votingPurple;
++ (UIColor *)votingBlue;
++ (UIColor *)votingGreen;
 
 + (UIColor *)colorWithHexString: (NSString *) hexString;
 + (UIColor *)lighterColorForColor:(UIColor *)c;

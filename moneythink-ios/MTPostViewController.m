@@ -22,6 +22,7 @@ typedef enum {
     MTPostTableCellTypeImage,
     MTPostTableCellTypeCommentText,
     MTPostTableCellTypeButtons,
+    MTPostTableCellTypeQuadButtons,
     MTPostTableCellTypeLikeComment,
     MTPostTableCellTypePostComments,
     MTPostTableCellTypeLikeUsers
@@ -255,7 +256,14 @@ typedef enum {
                 [tappedButtonObjects setValue:button forKey:post];
             }
             weakSelf.buttonsTapped = tappedButtonObjects;
-            [weakSelf.tableView reloadData];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtonsTapped:)]) {
+                    [weakSelf.delegate didUpdateButtonsTapped:weakSelf.buttonsTapped];
+                }
+                
+                [weakSelf.tableView reloadData];
+            });
         }
         else {
             NSLog(@"Error - %@", error);
@@ -307,6 +315,10 @@ typedef enum {
             weakSelf.secondaryButtonsTapped = tappedButtonObjects;
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateSecondaryButtonsTapped:)]) {
+                    [weakSelf.delegate didUpdateSecondaryButtonsTapped:weakSelf.secondaryButtonsTapped];
+                }
+                
                 [weakSelf.tableView reloadData];
             });
             
@@ -499,6 +511,138 @@ typedef enum {
     
     [button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)setupTertiaryButtonsForCell:(UITableViewCell *)cell
+{
+    NSArray *buttonsClicked = self.challengePost[@"buttons_clicked"];
+    NSArray *buttonTitles = self.challenge[@"buttons"];
+    
+    BOOL tertiaryRow = NO;
+    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+    if (!button1) {
+        button1 = (UIButton *)[cell.contentView viewWithTag:3];
+        tertiaryRow = YES;
+    }
+    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    if (!button2) {
+        button2 = (UIButton *)[cell.contentView viewWithTag:4];
+    }
+    
+    [button1 layer].masksToBounds = YES;
+    [button2 layer].masksToBounds = YES;
+    [[button1 layer] setCornerRadius:5.0f];
+    [[button2 layer] setCornerRadius:5.0f];
+
+    NSInteger button1Count = 0;
+    NSInteger button2Count = 0;
+    
+    UIColor *button1Color;
+    UIColor *button2Color;
+    
+    if (tertiaryRow) {
+        button1Color = [UIColor votingBlue];
+        button2Color = [UIColor votingGreen];
+    }
+    else {
+        button1Color = [UIColor votingRed];
+        button2Color = [UIColor votingPurple];
+    }
+    
+    if (buttonsClicked && [buttonsClicked count] == 4) {
+        if (!tertiaryRow) {
+            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:0]) integerValue];
+            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:1]) integerValue];
+        }
+        else {
+            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:2]) integerValue];
+            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:3]) integerValue];
+        }
+    }
+    
+    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
+    NSInteger button = 0;
+    if (buttonID) {
+        button = [buttonID intValue];
+    }
+    
+    // Reset to default
+    [[button1 layer] setBorderWidth:2.0f];
+    [[button1 layer] setBorderColor:button1Color.CGColor];
+    [button1 setTintColor:button1Color];
+    [button1 setTitleColor:button1Color forState:UIControlStateNormal];
+    [button1 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+    
+    [[button2 layer] setBorderWidth:2.0f];
+    [[button2 layer] setBorderColor:button2Color.CGColor];
+    [button2 setTintColor:button2Color];
+    [button2 setTitleColor:button2Color forState:UIControlStateNormal];
+    [button2 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+    
+    if (buttonID) {
+        if ((button == 0 && !tertiaryRow) || (button == 2 && tertiaryRow)) {
+            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateNormal];
+            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateHighlighted];
+            [button1 setTintColor:[UIColor white]];
+            [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+            [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        }
+        else if ((button == 1 && !tertiaryRow) || (button == 3 && tertiaryRow)) {
+            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateNormal];
+            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateHighlighted];
+            [button2 setTintColor:[UIColor white]];
+            [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+            [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        }
+    }
+    
+    if (buttonTitles.count == 4) {
+        NSString *button1Title;
+        NSString *button2Title;
+        
+        if (!tertiaryRow) {
+            if (buttonsClicked.count > 0 && [buttonsClicked[0] intValue] > 0) {
+                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+            }
+            else {
+                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[0]];
+            }
+            
+            if (buttonsClicked.count > 1 && [buttonsClicked[1] intValue] > 0) {
+                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+            }
+            else {
+                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[1]];
+            }
+
+        }
+        else {
+            if (buttonsClicked.count > 2 && [buttonsClicked[2] intValue] > 0) {
+                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[2], buttonsClicked[2]];
+            }
+            else {
+                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[2]];
+            }
+            
+            if (buttonsClicked.count > 3 && [buttonsClicked[3] intValue] > 0) {
+                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[3], buttonsClicked[3]];
+            }
+            else {
+                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[3]];
+            }
+
+        }
+        
+        [button1 setTitle:button1Title forState:UIControlStateNormal];
+        [button2 setTitle:button2Title forState:UIControlStateNormal];
+    }
+    
+    [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
 }
 
 - (void)showFirstTimeToastNotification
@@ -739,8 +883,18 @@ typedef enum {
             NSArray *buttons = challenge[@"buttons"];
             NSArray *secondaryButtons = challenge[@"secondary_buttons"];
             
+            weakSelf.hasButtons = NO;
+            weakSelf.hasSecondaryButtons = NO;
+            weakSelf.hasTertiaryButtons = NO;
+            
             if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-                weakSelf.hasButtons = YES;
+                if ([buttons count] == 4) {
+                    weakSelf.hasTertiaryButtons = YES;
+                }
+                else {
+                    weakSelf.hasButtons = YES;
+                }
+                
                 [weakSelf updateButtonsTapped];
             }
             else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
@@ -760,7 +914,7 @@ typedef enum {
         }
         
         BOOL showButtons = NO;
-        if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
             showButtons = YES;
         }
                 
@@ -1407,6 +1561,26 @@ typedef enum {
 
 - (IBAction)button1Tapped:(id)sender
 {
+    [self submitPrimaryButtonTapped:sender withButtonNumber:0];
+}
+
+- (IBAction)button2Tapped:(id)sender
+{
+    [self submitPrimaryButtonTapped:sender withButtonNumber:1];
+}
+
+- (IBAction)button3Tapped:(id)sender
+{
+    [self submitPrimaryButtonTapped:sender withButtonNumber:2];
+}
+
+- (IBAction)button4Tapped:(id)sender
+{
+    [self submitPrimaryButtonTapped:sender withButtonNumber:3];
+}
+
+- (void)submitPrimaryButtonTapped:(id)sender withButtonNumber:(NSInteger)buttonNumber
+{
     __block id weakSender = sender;
     ((UIButton *)sender).enabled = NO;
     
@@ -1415,7 +1589,7 @@ typedef enum {
     NSString *userID = [self.currentUser objectId];
     NSString *postID = [post objectId];
     
-    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:0]};
+    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInteger:buttonNumber]};
     
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Submitting...";
@@ -1439,48 +1613,6 @@ typedef enum {
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 });
                 
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-        }];
-    } afterDelay:0.35f];
-    
-}
-
-- (IBAction)button2Tapped:(id)sender
-{
-    __block id weakSender = sender;
-    ((UIButton *)sender).enabled = NO;
-
-    PFChallengePost *post = self.challengePost;
-    
-    NSString *userID = [self.currentUser objectId];
-    NSString *postID = [post objectId];
-    
-    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInt:1]};
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Submitting...";
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [weakSelf.currentUser fetchInBackground];
-                [weakSelf.challenge fetchInBackground];
-                [weakSelf.challengePost fetchInBackground];
-                ((UIButton *)weakSender).enabled = YES;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf updateButtonsTapped];
-                });
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-
                 NSLog(@"error - %@", error);
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             }
@@ -1801,6 +1933,12 @@ typedef enum {
                 case MTPostTableCellTypeButtons:
                     height = 44.0f;
                     break;
+                case MTPostTableCellTypeQuadButtons:
+                    height = 44.0f;
+                    if (!self.hasTertiaryButtons) {
+                        height = 0.0f;
+                    }
+                    break;
                 case MTPostTableCellTypeLikeComment:
                     height = 92.0f;
                     break;
@@ -1832,6 +1970,12 @@ typedef enum {
                 case MTPostTableCellTypeButtons:
                     height = 44.0f;
                     break;
+                case MTPostTableCellTypeQuadButtons:
+                    height = 44.0f;
+                    if (!self.hasTertiaryButtons) {
+                        height = 0.0f;
+                    }
+                    break;
                 case MTPostTableCellTypeLikeComment:
                     height = 92.0f;
                     break;
@@ -1862,6 +2006,9 @@ typedef enum {
                 case MTPostTableCellTypeButtons:
                     height = 0.0f;
                     break;
+                case MTPostTableCellTypeQuadButtons:
+                    height = 0.0f;
+                    break;
                 case MTPostTableCellTypeLikeComment:
                     height = 92.0f;
                     break;
@@ -1890,6 +2037,9 @@ typedef enum {
                     height = [self heightForPostTextCellAtIndexPath:indexPath];
                     break;
                 case MTPostTableCellTypeButtons:
+                    height = 0.0f;
+                    break;
+                case MTPostTableCellTypeQuadButtons:
                     height = 0.0f;
                     break;
                 case MTPostTableCellTypeLikeComment:
@@ -1931,6 +2081,9 @@ typedef enum {
         case MTPostTableCellTypeButtons:
             return @"";
             break;
+        case MTPostTableCellTypeQuadButtons:
+            return @"";
+            break;
         case MTPostTableCellTypeLikeComment:
             return @"";
             break;
@@ -1961,6 +2114,8 @@ typedef enum {
             break;
         case MTPostTableCellTypeButtons:
             break;
+        case MTPostTableCellTypeQuadButtons:
+            break;
         case MTPostTableCellTypeLikeComment:
             break;
         case MTPostTableCellTypePostComments:
@@ -1980,7 +2135,7 @@ typedef enum {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 7;
+    return 8;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -2002,6 +2157,12 @@ typedef enum {
                     break;
                 case MTPostTableCellTypeButtons:
                     rows = 1;
+                    break;
+                case MTPostTableCellTypeQuadButtons:
+                    rows = 1;
+                    if (!self.hasTertiaryButtons) {
+                        rows = 0;
+                    }
                     break;
                 case MTPostTableCellTypeLikeComment:
                     rows = 1;
@@ -2034,6 +2195,12 @@ typedef enum {
                 case MTPostTableCellTypeButtons:
                     rows = 1;
                     break;
+                case MTPostTableCellTypeQuadButtons:
+                    rows = 1;
+                    if (!self.hasTertiaryButtons) {
+                        rows = 0;
+                    }
+                    break;
                 case MTPostTableCellTypeLikeComment:
                     rows = 1;
                     break;
@@ -2064,6 +2231,9 @@ typedef enum {
                 case MTPostTableCellTypeButtons:
                     rows = 0;
                     break;
+                case MTPostTableCellTypeQuadButtons:
+                    rows = 0;
+                    break;
                 case MTPostTableCellTypeLikeComment:
                     rows = 1;
                     break;
@@ -2092,6 +2262,9 @@ typedef enum {
                     rows = 1;
                     break;
                 case MTPostTableCellTypeButtons:
+                    rows = 0;
+                    break;
+                case MTPostTableCellTypeQuadButtons:
                     rows = 0;
                     break;
                 case MTPostTableCellTypeLikeComment:
@@ -2225,7 +2398,10 @@ typedef enum {
             UITableViewCell *buttonsCell = [tableView dequeueReusableCellWithIdentifier:@"ButtonsCell" forIndexPath:indexPath];
             buttonsCell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-            if (self.hasSecondaryButtons) {
+            if (self.hasTertiaryButtons) {
+                [self setupTertiaryButtonsForCell:buttonsCell];
+            }
+            else if (self.hasSecondaryButtons) {
                 [self setupSecondaryButtonsForCell:buttonsCell];
             }
             else {
@@ -2233,6 +2409,24 @@ typedef enum {
             }
             cell = buttonsCell;
 
+            break;
+        }
+        case MTPostTableCellTypeQuadButtons:
+        {
+            UITableViewCell *buttonsCell = [tableView dequeueReusableCellWithIdentifier:@"QuadButtonsCell" forIndexPath:indexPath];
+            buttonsCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if (self.hasTertiaryButtons) {
+                [self setupTertiaryButtonsForCell:buttonsCell];
+            }
+            else if (self.hasSecondaryButtons) {
+                [self setupSecondaryButtonsForCell:buttonsCell];
+            }
+            else {
+                [self setupButtonsForCell:buttonsCell];
+            }
+            cell = buttonsCell;
+            
             break;
         }
         case MTPostTableCellTypeLikeComment:
@@ -2508,7 +2702,7 @@ typedef enum {
     }
     
     BOOL showButtons = NO;
-    if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+    if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
         showButtons = YES;
     }
     

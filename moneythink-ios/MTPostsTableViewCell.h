@@ -23,6 +23,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *commentButton;
 @property (nonatomic, strong) IBOutlet UIButton *button1;
 @property (nonatomic, strong) IBOutlet UIButton *button2;
+@property (nonatomic, strong) IBOutlet UIButton *button3;
+@property (nonatomic, strong) IBOutlet UIButton *button4;
 @property (nonatomic, strong) IBOutlet UIButton *deletePost;
 @property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
 @property (nonatomic, strong) IBOutlet UIView *loadingView;
