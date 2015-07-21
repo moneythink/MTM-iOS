@@ -38,6 +38,6 @@ OF SUCH DAMAGE.
 @property (nonatomic, strong) UIImage *uncheckedImage;
 @property (nonatomic) BOOL isChecked;
 
--(IBAction) checkBoxClicked;
+- (IBAction)checkBoxClicked;
 
 @end

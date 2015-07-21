@@ -31,6 +31,9 @@
 @property (nonatomic, strong) IBOutlet MICheckBox *verifiedCheckBox;
 @property (nonatomic, strong) IBOutlet UILabel *verfiedLabel;
 @property (nonatomic, strong) IBOutlet UIView *emojiContainerView;
+@property (nonatomic, strong) IBOutlet UIView *spentView;
+@property (nonatomic, strong) IBOutlet UILabel *spentLabel;
+@property (nonatomic, strong) IBOutlet UILabel *savedLabel;
 
 @property (nonatomic, strong) NSArray *postsLiked;
 @property (assign, nonatomic) NSInteger postLikesCount;

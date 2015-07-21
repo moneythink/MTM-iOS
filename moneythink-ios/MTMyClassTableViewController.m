@@ -42,6 +42,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic, strong) MTEmojiPickerCollectionView *emojiCollectionView;
 @property (nonatomic, strong) UIView *emojiDimView;
 @property (nonatomic, strong) UIView *emojiContainerView;
+@property (nonatomic) BOOL displaySpentView;
 
 @end
 
@@ -163,6 +164,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         self.myObjects = nil;
         self.didUpdateLikedPosts = NO;
         self.updatedButtonsAndLikes = NO;
+        
+        self.displaySpentView = [challenge[@"display_extra_fields"] boolValue];
 
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView reloadData];
@@ -1056,6 +1059,137 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     }];
 }
 
+- (void)parseAndPopulateSpentFieldsForCell:(MTPostsTableViewCell *)cell
+{
+    if (self.displaySpentView && !IsEmpty(cell.post[@"extra_fields"])) {
+        NSData *data = [cell.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        if ([jsonArray isKindOfClass:[NSArray class]]) {
+            NSArray *spentFieldsArray = (NSArray *)jsonArray;
+            for (id thisDict in spentFieldsArray) {
+                if ([thisDict isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *dict = (NSDictionary *)thisDict;
+                    NSString *nameForDict = [dict objectForKey:@"name"];
+                    
+                    if ([nameForDict isEqualToString:@"Spent"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            NSString *currencyString = [self currencyTextForString:spentString];
+                            if (IsEmpty(currencyString)) {
+                                cell.spentLabel.text = @"";
+                            }
+                            else {
+                                cell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", currencyString];
+                                cell.spentView.hidden = NO;
+                            }
+                        }
+                        else {
+                            cell.spentLabel.text = @"";
+                        }
+                    }
+                    else if ([nameForDict isEqualToString:@"Saved"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *savedString = [[dict objectForKey:@"value"] stringValue];
+                            NSString *currencyString = [self currencyTextForString:savedString];
+
+                            if (IsEmpty(currencyString)) {
+                                cell.savedLabel.text = @"";
+                            }
+                            else {
+                                cell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", currencyString];
+                                cell.spentView.hidden = NO;
+                            }
+                        }
+                        else {
+                            cell.savedLabel.text = @"";
+                        }
+                    }
+                    else {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            cell.spentLabel.text = @"";
+                            cell.savedLabel.text = @"";
+                            cell.spentView.hidden = YES;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        cell.spentView.hidden = YES;
+    }
+}
+
+- (BOOL)hasSpentContentForPost:(PFChallengePost *)post
+{
+    BOOL hasContent = NO;
+    if (self.displaySpentView && !IsEmpty(post[@"extra_fields"])) {
+        NSData *data = [post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        if ([jsonArray isKindOfClass:[NSArray class]]) {
+            NSArray *spentFieldsArray = (NSArray *)jsonArray;
+            for (id thisDict in spentFieldsArray) {
+                if ([thisDict isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *dict = (NSDictionary *)thisDict;
+                    NSString *nameForDict = [dict objectForKey:@"name"];
+                    
+                    if ([nameForDict isEqualToString:@"Spent"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            NSString *currencyString = [self currencyTextForString:spentString];
+                            if (!IsEmpty(currencyString)) {
+                                hasContent = YES;
+                            }
+                        }
+                    }
+                    else if ([nameForDict isEqualToString:@"Saved"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *savedString = [[dict objectForKey:@"value"] stringValue];
+                            NSString *currencyString = [self currencyTextForString:savedString];
+                            
+                            if (!IsEmpty(currencyString)) {
+                                hasContent = YES;
+                            }
+                        }
+                    }
+                    else {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            hasContent = NO;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    return hasContent;
+}
+
+- (NSString *)currencyTextForString:(NSString *)string
+{
+    NSString *currencyText = nil;
+    
+    NSNumberFormatter *decimalFormatter = [[NSNumberFormatter alloc] init];
+    [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [decimalFormatter setUsesGroupingSeparator:NO];
+    [decimalFormatter setMaximumFractionDigits:2];
+    
+    NSNumber *currentNumber = [decimalFormatter numberFromString:string];
+    
+    if ([currentNumber floatValue] >= 0.01f) {
+        NSNumberFormatter *currencyformatter = [[NSNumberFormatter alloc] init];
+        [currencyformatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        currencyText = [currencyformatter stringFromNumber:currentNumber];
+    }
+    else {
+        currencyText = @"";
+    }
+    
+    return currencyText;
+}
+
 
 #pragma mark - MBProgressHUDDelegate Methods -
 - (void)hudWasHidden:(MBProgressHUD *)hud
@@ -1093,6 +1227,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         showButtons = YES;
     }
     
+    BOOL hasSpentContent = [self hasSpentContentForPost:post];
+    
     if (showButtons && postImage) {
         if (self.hasTertiaryButtons) {
             CellIdentifier = @"postCellWithQuadButtons";
@@ -1102,21 +1238,37 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         }
     } else if (showButtons) {
         if (self.hasTertiaryButtons) {
-            CellIdentifier = @"postCellNoImageWithQuadButtons";
+            if (hasSpentContent) {
+                CellIdentifier = @"postCellNoImageWithQuadButtonsSpentView";
+            }
+            else {
+                CellIdentifier = @"postCellNoImageWithQuadButtons";
+            }
         }
         else {
-            CellIdentifier = @"postCellNoImageWithButtons";
+            if (hasSpentContent) {
+                CellIdentifier = @"postCellNoImageWithButtonsSpentView";
+            }
+            else {
+                CellIdentifier = @"postCellNoImageWithButtons";
+            }
         }
     } else if (postImage) {
         CellIdentifier = @"postCell";
     } else {
-        CellIdentifier = @"postCellNoImage";
+        if (hasSpentContent) {
+            CellIdentifier = @"postCellNoImageSpentView";
+        }
+        else {
+            CellIdentifier = @"postCellNoImage";
+        }
     }
     
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     cell.post = post;
     
     [self loadLikesForPost:post withCell:cell atIndexPath:indexPath];
+    [self parseAndPopulateSpentFieldsForCell:cell];
     
     // Setup Verify
     PFUser *currentUser = [PFUser currentUser];
@@ -1345,6 +1497,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
             showButtons = YES;
         }
+        
+        BOOL hasSpentContent = [self hasSpentContentForPost:post];
 
         if (showButtons && postImage) {
             if (self.hasTertiaryButtons) {
@@ -1355,15 +1509,30 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             }
         } else if (showButtons) {
             if (self.hasTertiaryButtons) {
-                height = 224.0f;
+                if (hasSpentContent) {
+                    height = 258.0f;
+                }
+                else {
+                    height = 224.0f;
+                }
             }
             else {
-                height = 190.0f;
+                if (hasSpentContent) {
+                    height = 224.0f;
+                }
+                else {
+                    height = 190.0f;
+                }
             }
         } else if (postImage) {
             height = 436.0f;
         } else {
-            height = 150.0f;
+            if (hasSpentContent) {
+                height = 184.0f;
+            }
+            else {
+                height = 150.0f;
+            }
         }
     }
     

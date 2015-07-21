@@ -291,7 +291,7 @@
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qba-mT-D2A" userLabel="Birthdate Text Field">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qba-mT-D2A" userLabel="Birthdate Text Field">
                                                 <rect key="frame" x="150" y="136" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next"/>
@@ -309,7 +309,7 @@
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="9Tk-dY-EOQ" userLabel="Zip Code Text Field">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="9Tk-dY-EOQ" userLabel="Zip Code Text Field">
                                                 <rect key="frame" x="150" y="170" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="next"/>
@@ -327,7 +327,7 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zvL-5N-OWu" userLabel="Ethnicity Text Field">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="4" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Required" clearsOnBeginEditing="YES" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="zvL-5N-OWu" userLabel="Ethnicity Text Field">
                                                 <rect key="frame" x="150" y="204" width="160" height="34"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
                                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="alphabet" returnKeyType="next"/>
@@ -862,23 +862,10 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SaZ-o1-K9i">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="460"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
-                                        <rect key="frame" x="99" y="48" width="201" height="100"/>
-                                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
-                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Photo" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zN0-cK-nan">
-                                        <rect key="frame" x="15" y="127" width="81" height="21"/>
-                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBq-jN-NAN">
-                                        <rect key="frame" x="20" y="48" width="71" height="71"/>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xBq-jN-NAN" userLabel="Photo Button">
+                                        <rect key="frame" x="10" y="10" width="70" height="70"/>
                                         <state key="normal" image="photo_post.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -886,16 +873,149 @@
                                             <action selector="chooseImage:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="vaO-5V-9y4"/>
                                         </connections>
                                     </button>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.5" contentMode="scaleToFill" fixedFrame="YES" keyboardDismissMode="interactive" translatesAutoresizingMaskIntoConstraints="NO" id="Sfd-na-Zab">
+                                        <rect key="frame" x="90" y="10" width="220" height="90"/>
+                                        <color key="backgroundColor" red="0.93725490196078431" green="0.93725490196078431" blue="0.95686274509803926" alpha="1" colorSpace="calibratedRGB"/>
+                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="XpV-Kx-YNN" id="J9i-9V-ZX5"/>
+                                        </connections>
+                                    </textView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Add Photo" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zN0-cK-nan">
+                                        <rect key="frame" x="5" y="85" width="80" height="15"/>
+                                        <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wwb-Yf-zcX" userLabel="Spend/Save View">
+                                        <rect key="frame" x="10" y="108" width="300" height="354"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="How much did you spend or save?" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="V08-Ez-aG4">
+                                                <rect key="frame" x="79" y="5" width="201" height="21"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fnL-IS-oGP" userLabel="Spent Label">
+                                                <rect key="frame" x="10" y="29" width="71" height="30"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AYu-XF-Qk6" userLabel="Spent Checkbox" customClass="MICheckBox">
+                                                <rect key="frame" x="89" y="34" width="20" height="20"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didSelectSpent:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="Ku4-At-4VJ"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="1" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="cjz-cA-zIW" userLabel="Spent Textfield" customClass="MTTextField">
+                                                <rect key="frame" x="119" y="29" width="161" height="30"/>
+                                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" returnKeyType="done"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="padding">
+                                                        <real key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="xPadding">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="yPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <outlet property="delegate" destination="XpV-Kx-YNN" id="Oof-jK-Lgu"/>
+                                                </connections>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GJs-y2-X5a" userLabel="Saved Label">
+                                                <rect key="frame" x="10" y="64" width="71" height="30"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IQp-RD-h37" userLabel="Saved Checkbox" customClass="MICheckBox">
+                                                <rect key="frame" x="89" y="69" width="20" height="20"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didSelectSaved:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="g4q-u9-LEO"/>
+                                                </connections>
+                                            </button>
+                                            <textField opaque="NO" clipsSubviews="YES" tag="2" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="$" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fRW-V0-dUY" userLabel="Saved Textfield" customClass="MTTextField">
+                                                <rect key="frame" x="119" y="64" width="161" height="30"/>
+                                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="decimalPad" returnKeyType="done"/>
+                                                <userDefinedRuntimeAttributes>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="padding">
+                                                        <real key="value" value="10"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="xPadding">
+                                                        <real key="value" value="5"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                    <userDefinedRuntimeAttribute type="number" keyPath="yPadding">
+                                                        <real key="value" value="0.0"/>
+                                                    </userDefinedRuntimeAttribute>
+                                                </userDefinedRuntimeAttributes>
+                                                <connections>
+                                                    <outlet property="delegate" destination="XpV-Kx-YNN" id="Vgu-eF-1N0"/>
+                                                </connections>
+                                            </textField>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="I'm not sure" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hes-b3-54M" userLabel="Not Sure Label">
+                                                <rect key="frame" x="10" y="99" width="71" height="30"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vh4-IZ-xMH" userLabel="Not Sure Checkbox" customClass="MICheckBox">
+                                                <rect key="frame" x="89" y="104" width="20" height="20"/>
+                                                <state key="normal">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="didSelectNotSure:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="ufJ-Wn-Ly3"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="U5P-qz-iBV" userLabel="Done Button">
+                                                <rect key="frame" x="234" y="99" width="46" height="30"/>
+                                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                                <state key="normal" title="Done">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="doneAction:" destination="XpV-Kx-YNN" eventType="touchUpInside" id="66W-GP-Qgw"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
                                 </subviews>
                             </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="h53-4N-wd0"/>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="chooseImageButton" destination="xBq-jN-NAN" id="lnI-9o-sTq"/>
                         <outlet property="chooseImageLabel" destination="zN0-cK-nan" id="5Ny-r2-MlC"/>
+                        <outlet property="notSureCheckbox" destination="vh4-IZ-xMH" id="Nzj-iy-NbU"/>
                         <outlet property="postText" destination="Sfd-na-Zab" id="cvx-po-eHQ"/>
+                        <outlet property="savedCheckbox" destination="IQp-RD-h37" id="ZcO-Gs-3t2"/>
+                        <outlet property="savedTextField" destination="fRW-V0-dUY" id="1kj-Lj-HdP"/>
+                        <outlet property="spentCheckbox" destination="AYu-XF-Qk6" id="xKB-ZR-qTu"/>
+                        <outlet property="spentDoneButton" destination="U5P-qz-iBV" id="xRk-06-YIi"/>
+                        <outlet property="spentTextField" destination="cjz-cA-zIW" id="plr-7i-3VU"/>
+                        <outlet property="spentView" destination="Wwb-Yf-zcX" id="Dd6-uR-DFY"/>
                         <outlet property="view" destination="k9s-2f-fqh" id="Bcq-H0-dxv"/>
                         <outlet property="viewFields" destination="SaZ-o1-K9i" id="UuH-Ui-Wdy"/>
                         <segue destination="2ki-xD-kv5" kind="unwind" identifier="unwindToChallengeRoom" unwindAction="unwindToChallengeRoom:" id="2yj-O1-Kpw"/>
@@ -2237,6 +2357,28 @@
                                                         <constraint firstAttribute="height" constant="320" id="Mc5-4n-RUK"/>
                                                     </constraints>
                                                 </imageView>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1yA-Mp-m7W" userLabel="Spent View">
+                                                    <rect key="frame" x="0.0" y="286" width="320" height="34"/>
+                                                    <subviews>
+                                                        <view alpha="0.69999999999999984" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FmD-dn-Mb1" userLabel="Background View">
+                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                        </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q3l-y5-Ivx" userLabel="Spent Label">
+                                                            <rect key="frame" x="10" y="0.0" width="140" height="34"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BNw-mP-Srf" userLabel="Saved Label">
+                                                            <rect key="frame" x="170" y="0.0" width="140" height="34"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="YDe-6A-oGp" firstAttribute="top" secondItem="1gV-og-nOe" secondAttribute="top" id="mvI-rK-kz5"/>
@@ -2246,6 +2388,45 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="postImage" destination="YDe-6A-oGp" id="dQF-ZX-Fye"/>
+                                            <outlet property="savedLabel" destination="BNw-mP-Srf" id="fIs-fB-sRL"/>
+                                            <outlet property="spentLabel" destination="q3l-y5-Ivx" id="rP8-AT-Ukk"/>
+                                            <outlet property="spentView" destination="1yA-Mp-m7W" id="2Iu-hG-Tif"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="SpentSavedCell" rowHeight="34" id="onc-aR-LXX" userLabel="SpentSavedCell" customClass="MTPostImageTableViewCell">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="onc-aR-LXX" id="K7b-z1-8vl">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qli-Zu-YpM" userLabel="Spent View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <subviews>
+                                                        <view alpha="0.70000000000000018" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7QH-GX-o7z" userLabel="Background View">
+                                                            <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                            <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </view>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ibf-f2-4BO" userLabel="Spent Label">
+                                                            <rect key="frame" x="10" y="0.0" width="140" height="34"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="RqG-47-gcu" userLabel="Saved Label">
+                                                            <rect key="frame" x="170" y="0.0" width="140" height="34"/>
+                                                            <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="savedLabel" destination="RqG-47-gcu" id="QD6-kK-8Pn"/>
+                                            <outlet property="spentLabel" destination="ibf-f2-4BO" id="bZk-fm-4iw"/>
+                                            <outlet property="spentView" destination="Qli-Zu-YpM" id="2m1-oB-wq9"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="CommentTextCell" rowHeight="40" id="o7K-2j-qpr" customClass="MTPostCommentTableViewCell">
@@ -2986,7 +3167,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="myClassChallengePostsTableView" title="My Class" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="wSc-Em-WQ4" customClass="MTMyClassTableViewController" sceneMemberID="viewController">
                     <tableView key="view" autoresizesSubviews="NO" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="1" sectionFooterHeight="1" id="CjA-Xy-9gz">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="1933"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="2632"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="10" maxY="0.0"/>
@@ -3020,6 +3201,28 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VWk-dC-RPZ" userLabel="Post Image View" customClass="PFImageView">
                                             <rect key="frame" x="20" y="45" width="280" height="290"/>
                                         </imageView>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qtJ-o6-N1O" userLabel="Spent View">
+                                            <rect key="frame" x="20" y="301" width="280" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vmc-Di-ckF" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="loS-B5-JFy" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="REc-4M-wFv" userLabel="Saved Label">
+                                                    <rect key="frame" x="150" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rlC-dL-SwD" userLabel="Post Text Label">
                                             <rect key="frame" x="20" y="340" width="280" height="20"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
@@ -3144,6 +3347,9 @@
                                     <outlet property="postText" destination="rlC-dL-SwD" id="Hl7-4V-LVt"/>
                                     <outlet property="postedWhen" destination="wpu-F8-PK5" id="Rhx-ON-dWD"/>
                                     <outlet property="profileImage" destination="KpO-O7-xUz" id="zf6-Eh-T3W"/>
+                                    <outlet property="savedLabel" destination="REc-4M-wFv" id="4Gk-xK-8XT"/>
+                                    <outlet property="spentLabel" destination="loS-B5-JFy" id="KXN-Ar-dU5"/>
+                                    <outlet property="spentView" destination="qtJ-o6-N1O" id="Gar-5e-sXR"/>
                                     <outlet property="userName" destination="QeF-c5-9yr" id="6bt-6m-zlq"/>
                                     <outlet property="verfiedLabel" destination="7n2-Yx-8qT" id="ooZ-qk-TNP"/>
                                     <outlet property="verifiedCheckBox" destination="QT4-r7-ufF" id="yPR-XG-thI"/>
@@ -3298,6 +3504,180 @@
                                     <outlet property="verifiedCheckBox" destination="H1m-Uc-jAN" id="xA0-FY-Uq1"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageSpentView" rowHeight="184" id="VM5-x3-dBr" userLabel="postCellNoImageNoButtonsSpentView" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="417" width="320" height="130"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="VM5-x3-dBr" id="6u5-f3-aPG">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="129"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hk4-yf-jyV" userLabel="User Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KJV-vG-JA7" userLabel="Username Label">
+                                            <rect key="frame" x="58" y="10" width="160" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="10m ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zXO-Qh-MmR" userLabel="Posted When Label">
+                                            <rect key="frame" x="226" y="13" width="74" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="1JP-ap-JVv"/>
+                                                <constraint firstAttribute="width" priority="750" constant="74" id="dMv-KW-TTl"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vzb-wi-xB6" userLabel="Spent View">
+                                            <rect key="frame" x="0.0" y="45" width="320" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NKt-e4-Jci" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gom-Ek-fOx" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ASZ-sE-8qv" userLabel="Saved Label">
+                                                    <rect key="frame" x="170" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L8W-3m-WU2" userLabel="Post Text Label">
+                                            <rect key="frame" x="20" y="79" width="280" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BxE-y1-o4d" userLabel="Like Button">
+                                            <rect key="frame" x="10" y="103" width="32" height="32"/>
+                                            <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
+                                            <state key="normal" image="like_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="like_highlighted.png"/>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TEH-4q-FmE" userLabel="Like Label">
+                                            <rect key="frame" x="46" y="119" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vcS-hT-Vr7" userLabel="Comment Button">
+                                            <rect key="frame" x="64" y="103" width="32" height="32"/>
+                                            <state key="normal" image="comment_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="comment_highlighted.png"/>
+                                            <connections>
+                                                <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="Bne-mm-qQK"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TVp-Fw-Bga" userLabel="Comment Label">
+                                            <rect key="frame" x="100" y="119" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TVL-sZ-2yK" userLabel="Emoji View">
+                                            <rect key="frame" x="118" y="104" width="182" height="26"/>
+                                            <subviews>
+                                                <view tag="7" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k5s-KN-yxf" userLabel="Emoji View 7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="6" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="qw6-62-2mX" userLabel="Emoji View 6">
+                                                    <rect key="frame" x="26" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fiW-hl-cB3" userLabel="Emoji View 5">
+                                                    <rect key="frame" x="52" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="st2-Ag-txj" userLabel="Emoji View 4">
+                                                    <rect key="frame" x="78" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="3" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I2R-FJ-Jwd" userLabel="Emoji View 3">
+                                                    <rect key="frame" x="104" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hhc-aW-aa6" userLabel="Emoji View 2">
+                                                    <rect key="frame" x="130" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UAJ-B5-5mw" userLabel="Emoji View 1">
+                                                    <rect key="frame" x="156" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7Wx-uj-nQK" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="128" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="wYo-0R-rP9"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tcz-JS-agR" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="138" width="50" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tX2-Wm-Kbi" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="132" width="48" height="32"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" image="picker.png">
+                                                <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
+                                        </button>
+                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iI6-r7-mKP" userLabel="Loading View">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="iLB-gE-14m">
+                                            <rect key="frame" x="142" y="74" width="37" height="37"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="zXO-Qh-MmR" firstAttribute="top" secondItem="6u5-f3-aPG" secondAttribute="top" constant="13" id="tKW-b5-7Ll"/>
+                                        <constraint firstAttribute="trailing" secondItem="zXO-Qh-MmR" secondAttribute="trailing" constant="20" id="y10-IK-TN3"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="iLB-gE-14m" id="yDw-fe-GcS"/>
+                                    <outlet property="commentButton" destination="vcS-hT-Vr7" id="wtj-5G-pQr"/>
+                                    <outlet property="comments" destination="TVp-Fw-Bga" id="Trv-ql-J23"/>
+                                    <outlet property="deletePost" destination="tX2-Wm-Kbi" id="N54-Ly-zHn"/>
+                                    <outlet property="emojiContainerView" destination="TVL-sZ-2yK" id="7Zs-oR-rZM"/>
+                                    <outlet property="likeButton" destination="BxE-y1-o4d" id="2yX-He-K1B"/>
+                                    <outlet property="likes" destination="TEH-4q-FmE" id="aei-79-zUH"/>
+                                    <outlet property="loadingView" destination="iI6-r7-mKP" id="Rpj-WW-fK6"/>
+                                    <outlet property="postText" destination="L8W-3m-WU2" id="iBU-cH-Nqj"/>
+                                    <outlet property="postedWhen" destination="zXO-Qh-MmR" id="9zG-Jx-SdO"/>
+                                    <outlet property="profileImage" destination="Hk4-yf-jyV" id="MBt-Wr-eRs"/>
+                                    <outlet property="savedLabel" destination="ASZ-sE-8qv" id="vzM-Vu-tqt"/>
+                                    <outlet property="spentLabel" destination="gom-Ek-fOx" id="t4k-GC-Xl5"/>
+                                    <outlet property="spentView" destination="vzb-wi-xB6" id="r4E-an-W9Z"/>
+                                    <outlet property="userName" destination="KJV-vG-JA7" id="Qcn-ki-2BS"/>
+                                    <outlet property="verfiedLabel" destination="tcz-JS-agR" id="KdA-h3-7us"/>
+                                    <outlet property="verifiedCheckBox" destination="7Wx-uj-nQK" id="DhU-EU-ayj"/>
+                                </connections>
+                            </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellWithButtons" rowHeight="466" id="2rR-a1-kgR" userLabel="postCellImageWithButtons" customClass="MTPostsTableViewCell">
                                 <rect key="frame" x="0.0" y="547" width="320" height="436"/>
                                 <autoresizingMask key="autoresizingMask"/>
@@ -3327,6 +3707,28 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="35n-am-Bmr" userLabel="Post Image View" customClass="PFImageView">
                                             <rect key="frame" x="20" y="45" width="280" height="290"/>
                                         </imageView>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NwF-XH-Z3g" userLabel="Spent View">
+                                            <rect key="frame" x="20" y="301" width="280" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mC2-am-4z8" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fg9-2g-ne6" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6HF-Qn-8H9" userLabel="Saved Label">
+                                                    <rect key="frame" x="150" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dkx-E0-rr9" userLabel="Post Text Label">
                                             <rect key="frame" x="20" y="340" width="280" height="20"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
@@ -3460,6 +3862,9 @@
                                     <outlet property="postText" destination="dkx-E0-rr9" id="Xep-dH-DRK"/>
                                     <outlet property="postedWhen" destination="0XS-Ol-FOc" id="Pex-6D-eYo"/>
                                     <outlet property="profileImage" destination="Ik7-2m-EuX" id="j7q-r4-Uf8"/>
+                                    <outlet property="savedLabel" destination="6HF-Qn-8H9" id="Wah-HT-Epy"/>
+                                    <outlet property="spentLabel" destination="fg9-2g-ne6" id="uhb-zr-xoB"/>
+                                    <outlet property="spentView" destination="NwF-XH-Z3g" id="7tX-K5-h08"/>
                                     <outlet property="userName" destination="UWu-sx-UKH" id="IU8-WI-MQg"/>
                                     <outlet property="verfiedLabel" destination="Caj-Ht-wQ8" id="pxh-IG-ujT"/>
                                     <outlet property="verifiedCheckBox" destination="J6O-3b-WXH" id="GnX-Cp-ei3"/>
@@ -3494,6 +3899,28 @@
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="x99-K8-BGC" userLabel="Post Image View" customClass="PFImageView">
                                             <rect key="frame" x="20" y="45" width="280" height="290"/>
                                         </imageView>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aO3-Qg-ONQ" userLabel="Spent View">
+                                            <rect key="frame" x="20" y="301" width="280" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Top-a0-tRX" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="THI-Cv-4qI" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EOJ-ew-p5l" userLabel="Saved Label">
+                                                    <rect key="frame" x="150" y="0.0" width="120" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mDo-bJ-Jjm" userLabel="Post Text Label">
                                             <rect key="frame" x="20" y="340" width="280" height="20"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
@@ -3641,6 +4068,9 @@
                                     <outlet property="postText" destination="mDo-bJ-Jjm" id="wNg-5u-GfO"/>
                                     <outlet property="postedWhen" destination="72H-Hy-RIx" id="3Xg-MM-p6X"/>
                                     <outlet property="profileImage" destination="CcX-c6-64b" id="Vox-IA-iM9"/>
+                                    <outlet property="savedLabel" destination="EOJ-ew-p5l" id="UPX-g5-vNb"/>
+                                    <outlet property="spentLabel" destination="THI-Cv-4qI" id="57u-EQ-pgp"/>
+                                    <outlet property="spentView" destination="aO3-Qg-ONQ" id="eBn-Jm-fjJ"/>
                                     <outlet property="userName" destination="j1w-vL-9K5" id="J11-z1-E2Q"/>
                                     <outlet property="verfiedLabel" destination="lq1-VT-jVs" id="PiX-hD-fDr"/>
                                     <outlet property="verifiedCheckBox" destination="vzR-BS-aUe" id="kBM-7o-Rzd"/>
@@ -3805,6 +4235,192 @@
                                     <outlet property="userName" destination="hjI-XK-27P" id="uP0-Kq-U6d"/>
                                     <outlet property="verfiedLabel" destination="4E2-1g-uzV" id="Lbs-uA-q6h"/>
                                     <outlet property="verifiedCheckBox" destination="ZKZ-90-VXX" id="9m5-U8-qtB"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithButtonsSpentView" rowHeight="224" id="ZaX-7R-TQL" userLabel="postCellNoImageWithButtonsSpentView" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="983" width="320" height="160"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZaX-7R-TQL" id="rEK-0L-lMD">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="159"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Czv-X5-Zdv" userLabel="User Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KAU-6A-4zK" userLabel="Username Label">
+                                            <rect key="frame" x="58" y="10" width="160" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="10m ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LgS-Yq-2bB" userLabel="Posted when Label">
+                                            <rect key="frame" x="226" y="13" width="74" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" priority="750" constant="74" id="6wY-Jg-RpT"/>
+                                                <constraint firstAttribute="height" constant="24" id="Q5W-MS-RJf"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="e1a-L7-Edq" userLabel="Spent View">
+                                            <rect key="frame" x="0.0" y="45" width="320" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7nq-4Y-g6o" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kp0-b3-Jd7" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Jy-65-rHi" userLabel="Saved Label">
+                                                    <rect key="frame" x="170" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mfB-Aq-bGo" userLabel="Post Text Label">
+                                            <rect key="frame" x="20" y="79" width="280" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Re5-kL-xXu">
+                                            <rect key="frame" x="36" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 1"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FAB-hd-Pax">
+                                            <rect key="frame" x="164" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 2">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e5q-Ib-FrY" userLabel="Like Button">
+                                            <rect key="frame" x="10" y="138" width="32" height="32"/>
+                                            <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
+                                            <state key="normal" image="like_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="like_highlighted.png"/>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hSB-dG-hgk" userLabel="Like Label">
+                                            <rect key="frame" x="46" y="154" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eaW-94-TZ3" userLabel="Comment Button">
+                                            <rect key="frame" x="64" y="138" width="32" height="32"/>
+                                            <state key="normal" image="comment_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="comment_highlighted.png"/>
+                                            <connections>
+                                                <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="g4r-zt-ocQ"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYG-Xn-e1r" userLabel="Comment Label">
+                                            <rect key="frame" x="100" y="154" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gvv-jK-vHP" userLabel="Emoji View">
+                                            <rect key="frame" x="118" y="143" width="182" height="26"/>
+                                            <subviews>
+                                                <view tag="7" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5RC-R2-cBc" userLabel="Emoji View 7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="6" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="R81-Ey-13P" userLabel="Emoji View 6">
+                                                    <rect key="frame" x="26" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="599-Tt-ePM" userLabel="Emoji View 5">
+                                                    <rect key="frame" x="52" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uYV-Jn-4aI" userLabel="Emoji View 4">
+                                                    <rect key="frame" x="78" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="3" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jwT-TB-fCr" userLabel="Emoji View 3">
+                                                    <rect key="frame" x="104" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jhH-S2-xxP" userLabel="Emoji View 2">
+                                                    <rect key="frame" x="130" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lgV-Kq-zYs" userLabel="Emoji View 1">
+                                                    <rect key="frame" x="156" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qlL-Ge-KBz" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="174" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="FuG-Yt-2tC"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NmB-Re-GXE" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="174" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XVk-4k-QjB" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="178" width="48" height="32"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" image="picker.png">
+                                                <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
+                                        </button>
+                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ke8-w7-wHX" userLabel="Loading View">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="224"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="EBr-MZ-AWh">
+                                            <rect key="frame" x="142" y="94" width="37" height="37"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailing" secondItem="LgS-Yq-2bB" secondAttribute="trailing" constant="20" id="Mv8-9a-fWE"/>
+                                        <constraint firstItem="LgS-Yq-2bB" firstAttribute="top" secondItem="rEK-0L-lMD" secondAttribute="top" constant="13" id="Tt0-dt-PRT"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="EBr-MZ-AWh" id="y2b-Bs-fwn"/>
+                                    <outlet property="button1" destination="Re5-kL-xXu" id="fZ6-HX-cra"/>
+                                    <outlet property="button2" destination="FAB-hd-Pax" id="I0w-5l-gcJ"/>
+                                    <outlet property="commentButton" destination="eaW-94-TZ3" id="naD-F1-HqL"/>
+                                    <outlet property="comments" destination="FYG-Xn-e1r" id="HF9-dB-uaM"/>
+                                    <outlet property="deletePost" destination="XVk-4k-QjB" id="53l-3J-ht1"/>
+                                    <outlet property="emojiContainerView" destination="gvv-jK-vHP" id="mHP-lr-jcb"/>
+                                    <outlet property="likeButton" destination="e5q-Ib-FrY" id="0sO-p1-hYj"/>
+                                    <outlet property="likes" destination="hSB-dG-hgk" id="tSV-o7-uea"/>
+                                    <outlet property="loadingView" destination="Ke8-w7-wHX" id="855-I8-ubn"/>
+                                    <outlet property="postText" destination="mfB-Aq-bGo" id="ud8-Uw-R7Y"/>
+                                    <outlet property="postedWhen" destination="LgS-Yq-2bB" id="f5X-ZT-2LK"/>
+                                    <outlet property="profileImage" destination="Czv-X5-Zdv" id="i29-uS-04Q"/>
+                                    <outlet property="savedLabel" destination="6Jy-65-rHi" id="d1S-e9-W3Z"/>
+                                    <outlet property="spentLabel" destination="kp0-b3-Jd7" id="b3o-ce-hg5"/>
+                                    <outlet property="spentView" destination="e1a-L7-Edq" id="Jdb-sV-83V"/>
+                                    <outlet property="userName" destination="KAU-6A-4zK" id="XBZ-im-bGG"/>
+                                    <outlet property="verfiedLabel" destination="NmB-Re-GXE" id="EK8-qD-dbT"/>
+                                    <outlet property="verifiedCheckBox" destination="qlL-Ge-KBz" id="pR5-4G-Vuw"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithQuadButtons" rowHeight="224" id="YJX-sv-E0N" customClass="MTPostsTableViewCell">
@@ -3978,6 +4594,202 @@
                                     <outlet property="verifiedCheckBox" destination="B35-9M-gUg" id="Ypr-hL-5gk"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="postCellNoImageWithQuadButtonsSpentView" rowHeight="258" id="OIi-ja-Ofj" userLabel="postCellNoImageWithQuadButtonsSpentView" customClass="MTPostsTableViewCell">
+                                <rect key="frame" x="0.0" y="983" width="320" height="160"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="OIi-ja-Ofj" id="8De-FC-4wD">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="159"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="eRC-eq-Edg" userLabel="User Image View" customClass="PFImageView">
+                                            <rect key="frame" x="20" y="10" width="30" height="30"/>
+                                        </imageView>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="11" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d4O-eY-pqm" userLabel="Username Label">
+                                            <rect key="frame" x="58" y="10" width="160" height="30"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="10m ago" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OKF-Zr-bNN" userLabel="Posted when Label">
+                                            <rect key="frame" x="226" y="13" width="74" height="24"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="24" id="Fcw-8F-hLX"/>
+                                                <constraint firstAttribute="width" priority="750" constant="74" id="rfz-EJ-NOA"/>
+                                            </constraints>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="11"/>
+                                            <color key="textColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SIj-hj-gBm" userLabel="Spent View">
+                                            <rect key="frame" x="0.0" y="45" width="320" height="34"/>
+                                            <subviews>
+                                                <view alpha="0.69999998807907104" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PSE-rm-cWN" userLabel="Background View">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="34"/>
+                                                    <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                </view>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Spent $" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YQx-Q4-aVt" userLabel="Spent Label">
+                                                    <rect key="frame" x="10" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Saved $" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sUa-8q-vtT" userLabel="Saved Label">
+                                                    <rect key="frame" x="170" y="0.0" width="140" height="34"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Post text" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="12" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6ED-A1-OUU" userLabel="Post Text Label">
+                                            <rect key="frame" x="20" y="79" width="280" height="20"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DSe-fA-CyX">
+                                            <rect key="frame" x="36" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 1"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJM-uv-3oc">
+                                            <rect key="frame" x="164" y="103" width="120" height="30"/>
+                                            <state key="normal" title="button 2">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gaM-NW-k56" userLabel="button 3">
+                                            <rect key="frame" x="36" y="137" width="120" height="30"/>
+                                            <state key="normal" title="button 3"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ez-oT-9Zv" userLabel="button 4">
+                                            <rect key="frame" x="164" y="137" width="120" height="30"/>
+                                            <state key="normal" title="button 4"/>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ipX-hI-Q6N" userLabel="Like Button">
+                                            <rect key="frame" x="10" y="172" width="32" height="32"/>
+                                            <inset key="contentEdgeInsets" minX="-5" minY="-5" maxX="-5" maxY="-5"/>
+                                            <state key="normal" image="like_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="like_highlighted.png"/>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8R0-cz-Jww" userLabel="Like Label">
+                                            <rect key="frame" x="46" y="188" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Is-4n-K3k" userLabel="Comment Button">
+                                            <rect key="frame" x="64" y="172" width="32" height="32"/>
+                                            <state key="normal" image="comment_normal.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="comment_highlighted.png"/>
+                                            <connections>
+                                                <action selector="commentTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="okE-hc-Dch"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Nep-A1-fjR" userLabel="Comment Label">
+                                            <rect key="frame" x="100" y="188" width="13" height="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aD0-XU-eLV" userLabel="Emoji View">
+                                            <rect key="frame" x="118" y="177" width="182" height="26"/>
+                                            <subviews>
+                                                <view tag="7" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7Gt-LI-KI1" userLabel="Emoji View 7">
+                                                    <rect key="frame" x="0.0" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="6" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FVa-dP-rpH" userLabel="Emoji View 6">
+                                                    <rect key="frame" x="26" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="5" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TrZ-wH-J4V" userLabel="Emoji View 5">
+                                                    <rect key="frame" x="52" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="4" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="MM8-w7-jhi" userLabel="Emoji View 4">
+                                                    <rect key="frame" x="78" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="3" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j6o-qV-AaR" userLabel="Emoji View 3">
+                                                    <rect key="frame" x="104" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="2" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="j6V-lW-Eda" userLabel="Emoji View 2">
+                                                    <rect key="frame" x="130" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                                <view tag="1" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="TfW-1b-LVb" userLabel="Emoji View 1">
+                                                    <rect key="frame" x="156" y="0.0" width="26" height="26"/>
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </view>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akl-ip-3qU" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                            <rect key="frame" x="111" y="208" width="40" height="40"/>
+                                            <state key="normal" image="checkbox_ticked.png">
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="verifiedTapped:" destination="wSc-Em-WQ4" eventType="touchUpInside" id="WLV-fh-py1"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.69999998807907104" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZdK-Ry-uRT" userLabel="Verified Label">
+                                            <rect key="frame" x="149" y="208" width="50" height="40"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="12"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akQ-rO-6HQ" userLabel="Edit/Delete Toggle">
+                                            <rect key="frame" x="260" y="212" width="48" height="32"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <state key="normal" image="picker.png">
+                                                <color key="titleColor" red="0.54901960780000003" green="0.54901960780000003" blue="0.54901960780000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <state key="highlighted" image="picker_highlighted.png"/>
+                                        </button>
+                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7xd-rQ-AuW" userLabel="Loading View">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="258"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </view>
+                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8o2-iv-esp">
+                                            <rect key="frame" x="142" y="111" width="37" height="37"/>
+                                        </activityIndicatorView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstItem="OKF-Zr-bNN" firstAttribute="top" secondItem="8De-FC-4wD" secondAttribute="top" constant="13" id="ZdV-Nx-Puz"/>
+                                        <constraint firstAttribute="trailing" secondItem="OKF-Zr-bNN" secondAttribute="trailing" constant="20" id="ujb-oD-9ZN"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="activityIndicator" destination="8o2-iv-esp" id="Hac-SU-LvG"/>
+                                    <outlet property="button1" destination="DSe-fA-CyX" id="bsG-lG-Fca"/>
+                                    <outlet property="button2" destination="JJM-uv-3oc" id="Y4n-tu-mUF"/>
+                                    <outlet property="button3" destination="gaM-NW-k56" id="nyo-Bu-AKv"/>
+                                    <outlet property="button4" destination="0ez-oT-9Zv" id="u3z-Se-v9l"/>
+                                    <outlet property="commentButton" destination="4Is-4n-K3k" id="c4m-k6-SdG"/>
+                                    <outlet property="comments" destination="Nep-A1-fjR" id="Dmj-Hb-eUl"/>
+                                    <outlet property="deletePost" destination="akQ-rO-6HQ" id="ze8-vq-LJ7"/>
+                                    <outlet property="emojiContainerView" destination="aD0-XU-eLV" id="Xn0-Y2-Ou2"/>
+                                    <outlet property="likeButton" destination="ipX-hI-Q6N" id="8cC-Sr-2Qz"/>
+                                    <outlet property="likes" destination="8R0-cz-Jww" id="7Fv-wx-YFs"/>
+                                    <outlet property="loadingView" destination="7xd-rQ-AuW" id="d0z-sT-Uzi"/>
+                                    <outlet property="postText" destination="6ED-A1-OUU" id="JSG-k4-A4s"/>
+                                    <outlet property="postedWhen" destination="OKF-Zr-bNN" id="dJD-RB-Qyl"/>
+                                    <outlet property="profileImage" destination="eRC-eq-Edg" id="Kjl-1t-yuP"/>
+                                    <outlet property="savedLabel" destination="sUa-8q-vtT" id="APq-IO-M8a"/>
+                                    <outlet property="spentLabel" destination="YQx-Q4-aVt" id="JBN-g0-leQ"/>
+                                    <outlet property="spentView" destination="SIj-hj-gBm" id="XBU-Cg-chO"/>
+                                    <outlet property="userName" destination="d4O-eY-pqm" id="r9l-9R-49d"/>
+                                    <outlet property="verfiedLabel" destination="ZdK-Ry-uRT" id="Wog-g2-XpA"/>
+                                    <outlet property="verifiedCheckBox" destination="akl-ip-3qU" id="JRB-39-GHD"/>
+                                </connections>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="wSc-Em-WQ4" id="cF8-d6-gYM"/>
@@ -3987,7 +4799,7 @@
                     <tabBarItem key="tabBarItem" title="My Class" image="students_normal.png" id="Zdd-gT-FGs"/>
                     <navigationItem key="navigationItem" id="aWv-Qc-T0C"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="1933"/>
+                    <size key="freeformSize" width="320" height="2632"/>
                     <connections>
                         <segue destination="83z-FJ-qxJ" kind="push" identifier="pushViewPost" id="LS9-Mg-yad"/>
                         <segue destination="9DK-c8-e6q" kind="modal" identifier="commentOnPost" id="nYB-OV-yVU"/>
@@ -4799,14 +5611,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="yad-P5-d3y"/>
         <segue reference="0QY-Pc-qd8"/>
         <segue reference="kDD-cl-uw8"/>
-        <segue reference="fGY-fc-BPd"/>
-        <segue reference="FBG-cj-gjr"/>
-        <segue reference="o0E-h6-NZi"/>
+        <segue reference="vqR-nj-yuL"/>
+        <segue reference="nYB-OV-yVU"/>
         <segue reference="LS9-Mg-yad"/>
-        <segue reference="48k-xo-w1Z"/>
-        <segue reference="a3W-fR-2k0"/>
+        <segue reference="o0E-h6-NZi"/>
+        <segue reference="xm4-7b-aI0"/>
         <segue reference="2Br-mP-E3R"/>
     </inferredMetricsTieBreakers>
 </document>

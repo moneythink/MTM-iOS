@@ -17,8 +17,6 @@
 		106309961A3A3DD80093C209 /* checkbox_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098E1A3A3DD80093C209 /* checkbox_ticked.png */; };
 		106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */; };
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
-		106309991A3A3DD80093C209 /* z checkbox_not_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */; };
-		1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 106309931A3A3DD80093C209 /* z checkbox_ticked.png */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
@@ -115,6 +113,11 @@
 		8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */; };
 		8925653E1B585EFA00473AFD /* PFEthnicities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925653D1B585EFA00473AFD /* PFEthnicities.m */; };
 		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
+		89271F3D1B5DA32000C66DD8 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F391B5DA32000C66DD8 /* checked.png */; };
+		89271F3E1B5DA32000C66DD8 /* checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3A1B5DA32000C66DD8 /* checked@2x.png */; };
+		89271F3F1B5DA32000C66DD8 /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3B1B5DA32000C66DD8 /* unchecked.png */; };
+		89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */; };
+		89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 89271F421B5DAC5600C66DD8 /* MTTextField.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */; };
@@ -252,8 +255,6 @@
 		1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkbox_ticked@2x.png"; sourceTree = "<group>"; };
 		106309901A3A3DD80093C209 /* MICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MICheckBox.h; sourceTree = "<group>"; };
 		106309911A3A3DD80093C209 /* MICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MICheckBox.m; sourceTree = "<group>"; };
-		106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "z checkbox_not_ticked.png"; sourceTree = "<group>"; };
-		106309931A3A3DD80093C209 /* z checkbox_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "z checkbox_ticked.png"; sourceTree = "<group>"; };
 		1063099B1A3A3E180093C209 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -406,6 +407,12 @@
 		8925653D1B585EFA00473AFD /* PFEthnicities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFEthnicities.m; path = "Data Classes/PFEthnicities.m"; sourceTree = "<group>"; };
 		892573851AE5950C002FF871 /* PFChallengePostsLiked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostsLiked.h; path = "Data Classes/PFChallengePostsLiked.h"; sourceTree = "<group>"; };
 		892573861AE59515002FF871 /* PFChallengePostsLiked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostsLiked.m; path = "Data Classes/PFChallengePostsLiked.m"; sourceTree = "<group>"; };
+		89271F391B5DA32000C66DD8 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checked.png; sourceTree = "<group>"; };
+		89271F3A1B5DA32000C66DD8 /* checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checked@2x.png"; sourceTree = "<group>"; };
+		89271F3B1B5DA32000C66DD8 /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unchecked.png; sourceTree = "<group>"; };
+		89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unchecked@2x.png"; sourceTree = "<group>"; };
+		89271F411B5DAC5600C66DD8 /* MTTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTTextField.h; sourceTree = "<group>"; };
+		89271F421B5DAC5600C66DD8 /* MTTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTTextField.m; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
@@ -637,8 +644,10 @@
 				1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */,
 				106309901A3A3DD80093C209 /* MICheckBox.h */,
 				106309911A3A3DD80093C209 /* MICheckBox.m */,
-				106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */,
-				106309931A3A3DD80093C209 /* z checkbox_ticked.png */,
+				89271F391B5DA32000C66DD8 /* checked.png */,
+				89271F3A1B5DA32000C66DD8 /* checked@2x.png */,
+				89271F3B1B5DA32000C66DD8 /* unchecked.png */,
+				89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */,
 			);
 			path = MICheckboxUtils;
 			sourceTree = "<group>";
@@ -804,6 +813,10 @@
 		5890F7441976DD7E0042AC2F /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */,
+				8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */,
+				89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */,
+				89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */,
 				5890F7451976DDAF0042AC2F /* UIColor+Palette.h */,
 				5890F7461976DDAF0042AC2F /* UIColor+Palette.m */,
 				89007BD119F6E271008B4F8C /* UIFont+MTAdditions.h */,
@@ -812,10 +825,6 @@
 				899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */,
 				8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */,
 				8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */,
-				89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */,
-				89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */,
-				8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */,
-				8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */,
 			);
 			name = Categories;
 			sourceTree = "<group>";
@@ -825,6 +834,8 @@
 			children = (
 				8901D8B019FFDF00006E9168 /* MTLabel.h */,
 				8901D8B119FFDF00006E9168 /* MTLabel.m */,
+				89271F411B5DAC5600C66DD8 /* MTTextField.h */,
+				89271F421B5DAC5600C66DD8 /* MTTextField.m */,
 				89CE54111B152829000825FB /* MTViewController.h */,
 				89CE54121B152829000825FB /* MTViewController.m */,
 			);
@@ -1208,6 +1219,7 @@
 				8999067E1AD46B5D007A4F3E /* icon_button_dollar_normal.png in Resources */,
 				8921063219DA1F37000CFBF6 /* logo_actionbar.png in Resources */,
 				106309951A3A3DD80093C209 /* checkbox_not_ticked@2x.png in Resources */,
+				89271F3E1B5DA32000C66DD8 /* checked@2x.png in Resources */,
 				8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */,
 				8921062F19DA1F37000CFBF6 /* like_normal.png in Resources */,
 				8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */,
@@ -1217,8 +1229,8 @@
 				89CE54161B152A44000825FB /* icon_main_nav.png in Resources */,
 				8921064819DA1F37000CFBF6 /* students_normal@2x.png in Resources */,
 				89A0E8071B34FCBD00F01BFF /* comment_active.png in Resources */,
-				106309991A3A3DD80093C209 /* z checkbox_not_ticked.png in Resources */,
 				5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */,
+				89271F3F1B5DA32000C66DD8 /* unchecked.png in Resources */,
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
 				899F309819F16948004F6B10 /* check-active@2x.png in Resources */,
 				895F78961B16451600055759 /* nav-icons-challenges@2x.png in Resources */,
@@ -1252,7 +1264,6 @@
 				8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */,
 				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
-				1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */,
 				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
 				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
@@ -1280,6 +1291,8 @@
 				89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */,
 				89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */,
 				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
+				89271F3D1B5DA32000C66DD8 /* checked.png in Resources */,
+				89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */,
 				89A0E80E1B38678100F01BFF /* picker@2x.png in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
@@ -1350,6 +1363,7 @@
 				106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
+				89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
 				89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */,
 				8977E3E31B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m in Sources */,
@@ -1601,7 +1615,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "07a30cd1-ec63-422e-8ab3-69d50d21bf05";
+				PROVISIONING_PROFILE = "b794f3c6-eb8b-417c-ab1b-16612e0d0967";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1680,7 +1694,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "db03a94a-1b42-4f36-97dd-819bff14abe5";
+				PROVISIONING_PROFILE = "b58f321a-f2d4-4776-8ba5-83cd6843d45c";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1758,7 +1772,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "db03a94a-1b42-4f36-97dd-819bff14abe5";
+				PROVISIONING_PROFILE = "b58f321a-f2d4-4776-8ba5-83cd6843d45c";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1836,7 +1850,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "07a30cd1-ec63-422e-8ab3-69d50d21bf05";
+				PROVISIONING_PROFILE = "b794f3c6-eb8b-417c-ab1b-16612e0d0967";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

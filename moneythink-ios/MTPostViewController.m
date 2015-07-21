@@ -20,6 +20,7 @@
 typedef enum {
     MTPostTableCellTypeUserInfo = 0,
     MTPostTableCellTypeImage,
+    MTPostTableCellTypeSpentSaved,
     MTPostTableCellTypeCommentText,
     MTPostTableCellTypeButtons,
     MTPostTableCellTypeQuadButtons,
@@ -50,6 +51,10 @@ typedef enum {
 @property (nonatomic, strong) MTPostLikeCommentTableViewCell *postLikeCommentCell;
 @property (nonatomic, strong) PFChallengePostComment *postComment;
 @property (nonatomic, strong) NSArray *emojiPickerObjects;
+@property (nonatomic, strong) NSString *spentAmount;
+@property (nonatomic, strong) NSString *savedAmount;
+@property (nonatomic) BOOL displaySpentView;
+@property (nonatomic) BOOL hasSpentSavedContent;
 
 
 @end
@@ -83,6 +88,11 @@ typedef enum {
         [self loadFromNotification];
     }
     else {
+        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+        if (self.displaySpentView) {
+            [self parseSpentFields];
+        }
+
         self.postUser = self.challengePost[@"user"];
         self.currentUser = [PFUser currentUser];
         self.postLikesCount = 0;
@@ -745,6 +755,11 @@ typedef enum {
             }];
         }
         
+        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+        if (self.displaySpentView) {
+            [self parseSpentFields];
+        }
+
         [self updateLikes];
         [self loadPostText];
         [self loadLikesWithCache:NO];
@@ -776,6 +791,11 @@ typedef enum {
     self.postImage = self.challengePost[@"picture"];
     self.postUser = self.challengePost[@"user"];
     
+    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+    if (self.displaySpentView) {
+        [self parseSpentFields];
+    }
+
     [self loadLikesWithCache:NO];
 
     if (self.postUser && ![self.postUser isDataAvailable]) {
@@ -966,6 +986,76 @@ typedef enum {
             }
         }];
     }
+}
+
+- (void)parseSpentFields
+{
+    if (!IsEmpty(self.challengePost[@"extra_fields"])) {
+        NSData *data = [self.challengePost[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        if ([jsonArray isKindOfClass:[NSArray class]]) {
+            NSArray *spentFieldsArray = (NSArray *)jsonArray;
+            self.savedAmount = @"";
+            self.spentAmount = @"";
+
+            for (id thisDict in spentFieldsArray) {
+                if ([thisDict isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *dict = (NSDictionary *)thisDict;
+                    NSString *nameForDict = [dict objectForKey:@"name"];
+                    
+                    if ([nameForDict isEqualToString:@"Spent"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            self.spentAmount = [self currencyTextForString:spentString];
+                        }
+                    }
+                    else if ([nameForDict isEqualToString:@"Saved"]) {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            self.savedAmount = [self currencyTextForString:spentString];
+                        }
+                    }
+                    else {
+                        if ([[dict objectForKey:@"checked"] boolValue]) {
+                            self.savedAmount = @"";
+                            self.spentAmount = @"";
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    if ((!IsEmpty(self.savedAmount) || !IsEmpty(self.spentAmount))) {
+        self.hasSpentSavedContent = YES;
+    }
+    else {
+        self.hasSpentSavedContent = NO;
+    }
+}
+
+- (NSString *)currencyTextForString:(NSString *)string
+{
+    NSString *currencyText = nil;
+    
+    NSNumberFormatter *decimalFormatter = [[NSNumberFormatter alloc] init];
+    [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [decimalFormatter setUsesGroupingSeparator:NO];
+    [decimalFormatter setMaximumFractionDigits:2];
+    
+    NSNumber *currentNumber = [decimalFormatter numberFromString:string];
+    
+    if ([currentNumber floatValue] >= 0.01f) {
+        NSNumberFormatter *currencyformatter = [[NSNumberFormatter alloc] init];
+        [currencyformatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        currencyText = [currencyformatter stringFromNumber:currentNumber];
+    }
+    else {
+        currencyText = @"";
+    }
+    
+    return currencyText;
 }
 
 
@@ -1927,6 +2017,9 @@ typedef enum {
                 case MTPostTableCellTypeImage:
                     height = 320.0f;
                     break;
+                case MTPostTableCellTypeSpentSaved:
+                    height = 0.0f;
+                    break;
                 case MTPostTableCellTypeCommentText:
                     height = [self heightForPostTextCellAtIndexPath:indexPath];
                     break;
@@ -1964,6 +2057,12 @@ typedef enum {
                 case MTPostTableCellTypeImage:
                     height = 0.0f;
                     break;
+                case MTPostTableCellTypeSpentSaved:
+                    height = 0.0f;
+                    if (self.displaySpentView && self.hasSpentSavedContent) {
+                        height = 34.0f;
+                    }
+                    break;
                 case MTPostTableCellTypeCommentText:
                     height = [self heightForPostTextCellAtIndexPath:indexPath];
                     break;
@@ -2000,6 +2099,9 @@ typedef enum {
                 case MTPostTableCellTypeImage:
                     height = 320.0f;
                     break;
+                case MTPostTableCellTypeSpentSaved:
+                    height = 0.0f;
+                    break;
                 case MTPostTableCellTypeCommentText:
                     height = [self heightForPostTextCellAtIndexPath:indexPath];
                     break;
@@ -2032,6 +2134,12 @@ typedef enum {
                     break;
                 case MTPostTableCellTypeImage:
                     height = 0.0f;
+                    break;
+                case MTPostTableCellTypeSpentSaved:
+                    height = 0.0f;
+                    if (self.displaySpentView && self.hasSpentSavedContent) {
+                        height = 34.0f;
+                    }
                     break;
                 case MTPostTableCellTypeCommentText:
                     height = [self heightForPostTextCellAtIndexPath:indexPath];
@@ -2075,6 +2183,9 @@ typedef enum {
         case MTPostTableCellTypeImage:
             return @"";
             break;
+        case MTPostTableCellTypeSpentSaved:
+            return @"";
+            break;
         case MTPostTableCellTypeCommentText:
             return @"";
             break;
@@ -2110,6 +2221,8 @@ typedef enum {
             break;
         case MTPostTableCellTypeImage:
             break;
+        case MTPostTableCellTypeSpentSaved:
+            break;
         case MTPostTableCellTypeCommentText:
             break;
         case MTPostTableCellTypeButtons:
@@ -2135,7 +2248,7 @@ typedef enum {
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 8;
+    return 9;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -2151,6 +2264,9 @@ typedef enum {
                     break;
                 case MTPostTableCellTypeImage:
                     rows = 1;
+                    break;
+                case MTPostTableCellTypeSpentSaved:
+                    rows = 0;
                     break;
                 case MTPostTableCellTypeCommentText:
                     rows = 1;
@@ -2189,6 +2305,12 @@ typedef enum {
                 case MTPostTableCellTypeImage:
                     rows = 0;
                     break;
+                case MTPostTableCellTypeSpentSaved:
+                    rows = 0;
+                    if (self.displaySpentView && self.hasSpentSavedContent) {
+                        rows = 1;
+                    }
+                    break;
                 case MTPostTableCellTypeCommentText:
                     rows = 1;
                     break;
@@ -2225,6 +2347,9 @@ typedef enum {
                 case MTPostTableCellTypeImage:
                     rows = 1;
                     break;
+                case MTPostTableCellTypeSpentSaved:
+                    rows = 0;
+                    break;
                 case MTPostTableCellTypeCommentText:
                     rows = 1;
                     break;
@@ -2257,6 +2382,12 @@ typedef enum {
                     break;
                 case MTPostTableCellTypeImage:
                     rows = 0;
+                    break;
+                case MTPostTableCellTypeSpentSaved:
+                    rows = 0;
+                    if (self.displaySpentView && self.hasSpentSavedContent) {
+                        rows = 1;
+                    }
                     break;
                 case MTPostTableCellTypeCommentText:
                     rows = 1;
@@ -2378,10 +2509,47 @@ typedef enum {
                         NSLog(@"error - %@", error);
                     }
                 }];
+                
+                if (self.displaySpentView && self.hasSpentSavedContent) {
+                    imageCell.spentView.hidden = NO;
+                    if (!IsEmpty(self.savedAmount)) {
+                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+                    }
+                    if (!IsEmpty(self.spentAmount)) {
+                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+                    }
+                }
+                else {
+                    imageCell.spentView.hidden = YES;
+                }
             }
 
             cell = imageCell;
 
+            break;
+        }
+        case MTPostTableCellTypeSpentSaved:
+        {
+            __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"SpentSavedCell" forIndexPath:indexPath];
+            imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
+            
+            if ([self.challengePost isDataAvailable]) {
+                if (self.displaySpentView && self.hasSpentSavedContent) {
+                    imageCell.spentView.hidden = NO;
+                    if (!IsEmpty(self.savedAmount)) {
+                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+                    }
+                    if (!IsEmpty(self.spentAmount)) {
+                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+                    }
+                }
+                else {
+                    imageCell.spentView.hidden = YES;
+                }
+            }
+            
+            cell = imageCell;
+            
             break;
         }
         case MTPostTableCellTypeCommentText:
@@ -2707,6 +2875,11 @@ typedef enum {
     }
     
     PFChallengePost *editedPost = notif.object;
+    if (editedPost) {
+        self.challengePost = editedPost;
+        [self parseSpentFields];
+    }
+    
     self.postImage = editedPost[@"picture"];
 
     if (showButtons && self.postImage)
@@ -2723,6 +2896,12 @@ typedef enum {
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
+    PFChallengePost *editedPost = notif.object;
+    if (editedPost) {
+        self.challengePost = editedPost;
+        [self parseSpentFields];
+    }
+    
     [self.tableView reloadData];
 }
 

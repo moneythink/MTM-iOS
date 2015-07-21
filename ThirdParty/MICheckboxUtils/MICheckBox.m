@@ -50,6 +50,18 @@
 
 }
 
+- (void)setCheckedImage:(UIImage *)checkedImage
+{
+    _checkedImage = checkedImage;
+    [self initCheckBox];
+}
+
+- (void)setUncheckedImage:(UIImage *)uncheckedImage
+{
+    _uncheckedImage = uncheckedImage;
+    [self initCheckBox];
+}
+
 - (void)initCheckBox
 {
     // Initialization code
@@ -62,10 +74,11 @@
         [self setImage:[UIImage imageNamed:@"checkbox_not_ticked.png"] forState:UIControlStateNormal];
     }
     
+    [self removeTarget:self action:@selector(checkBoxClicked) forControlEvents:UIControlEventTouchUpInside];
     [self addTarget:self action:@selector(checkBoxClicked) forControlEvents:UIControlEventTouchUpInside];
 }
 
--(IBAction) checkBoxClicked
+- (IBAction)checkBoxClicked
 {
 	if(self.isChecked ==NO) {
 		self.isChecked =YES;

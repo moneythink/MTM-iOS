@@ -9,6 +9,9 @@
 #import "MTCommentViewController.h"
 #import "MTMyClassTableViewController.h"
 
+#define NUMBERS_ONLY @"1234567890."
+#define CHARACTER_LIMIT 9
+
 @interface MTCommentViewController ()
 
 @property (nonatomic, strong) IBOutlet UITextView *postText;
@@ -17,12 +20,20 @@
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UIButton *doneButton;
 @property (nonatomic, strong) IBOutlet UILabel *chooseImageLabel;
+@property (nonatomic, strong) IBOutlet UIView *spentView;
+@property (nonatomic, strong) IBOutlet UITextField *spentTextField;
+@property (nonatomic, strong) IBOutlet UITextField *savedTextField;
+@property (nonatomic, strong) IBOutlet MICheckBox *spentCheckbox;
+@property (nonatomic, strong) IBOutlet MICheckBox *savedCheckbox;
+@property (nonatomic, strong) IBOutlet MICheckBox *notSureCheckbox;
+@property (nonatomic, strong) IBOutlet UIButton *spentDoneButton;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 @property (nonatomic, strong) PFImageView *postImage;
 @property (nonatomic, strong) PFChallengePost *challengePost;
 @property (nonatomic, strong) UIImage *updatedPostImage;
 @property (nonatomic) BOOL removedPostPhoto;
+@property (nonatomic) BOOL displaySpentView;
 
 @end
 
@@ -31,7 +42,28 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
+    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+    self.spentDoneButton.hidden = YES;
+    
+    if (self.displaySpentView) {
+        self.spentView.hidden = NO;
+        
+        self.spentCheckbox.uncheckedImage = [UIImage imageNamed:@"unchecked"];
+        self.spentCheckbox.checkedImage = [UIImage imageNamed:@"checked"];
+        
+        self.savedCheckbox.uncheckedImage = [UIImage imageNamed:@"unchecked"];
+        self.savedCheckbox.checkedImage = [UIImage imageNamed:@"checked"];
+        
+        self.notSureCheckbox.uncheckedImage = [UIImage imageNamed:@"unchecked"];
+        self.notSureCheckbox.checkedImage = [UIImage imageNamed:@"checked"];
+        
+        self.spentDoneButton.tintColor = [UIColor primaryGreen];
+    }
+    else {
+        self.spentView.hidden = YES;
+    }
+    
     [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 
@@ -69,6 +101,10 @@
         
         UIBarButtonItem *cancelEditButton = [[UIBarButtonItem alloc] initWithTitle:@"Cancel" style:UIBarButtonItemStylePlain target:self action:@selector(cancelEdit)];
         self.navigationItem.leftBarButtonItem = cancelEditButton;
+        
+        if (self.displaySpentView) {
+            [self populateSpentFields];
+        }
     }
     else {
         self.title = @"Create Post";
@@ -77,12 +113,20 @@
         UIBarButtonItem *shareBarButton = [[UIBarButtonItem alloc] initWithTitle:@"Share" style:UIBarButtonItemStylePlain target:self action:@selector(saveNew)];
         self.navigationItem.rightBarButtonItem = shareBarButton;
     }
+    
+    UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(dismissKeyboard)];
+    swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
+    [self.view addGestureRecognizer:swipeDown];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissKeyboard)];
+    [self.view addGestureRecognizer:tap];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+
     if (!self.editPost) {
         [self.postText becomeFirstResponder];
     }
@@ -175,8 +219,136 @@
     }];
 }
 
+- (void)dismissKeyboard
+{
+    [self.view endEditing:YES];
+    self.spentDoneButton.hidden = YES;
+}
 
-#pragma mark - UIACtionSheetDelegate methods
+- (void)populateSpentFields
+{
+    if (!IsEmpty(self.post[@"extra_fields"])) {
+        NSData *data = [self.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+
+        if ([jsonArray isKindOfClass:[NSArray class]]) {
+            NSArray *spentFieldsArray = (NSArray *)jsonArray;
+            for (id thisDict in spentFieldsArray) {
+                if ([thisDict isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *dict = (NSDictionary *)thisDict;
+                    NSString *nameForDict = [dict objectForKey:@"name"];
+                    
+                    if ([nameForDict isEqualToString:@"Spent"]) {
+                        self.spentCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
+                        if (self.spentCheckbox.isChecked) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            self.spentTextField.text = [self currencyTextForString:spentString];
+                            if (IsEmpty(self.spentTextField.text)) {
+                                self.spentCheckbox.isChecked = NO;
+                            }
+                        }
+                    }
+                    else if ([nameForDict isEqualToString:@"Saved"]) {
+                        self.savedCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
+                        if (self.savedCheckbox.isChecked) {
+                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
+                            self.savedTextField.text = [self currencyTextForString:spentString];
+                            if (IsEmpty(self.savedTextField.text)) {
+                                self.savedCheckbox.isChecked = NO;
+                            }
+                        }
+                    }
+                    else {
+                        self.notSureCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
+                        if (self.notSureCheckbox.isChecked) {
+                            self.spentCheckbox.isChecked = NO;
+                            self.spentTextField.text = @"";
+                            self.savedCheckbox.isChecked = NO;
+                            self.savedTextField.text = @"";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+- (NSString *)jsonStringFromSpentFields
+{
+    NSString *jsonString = nil;
+    NSMutableArray *myArray = [NSMutableArray array];
+    
+    NSDictionary *spentDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0f], @"value", @NO, @"checked", @"Spent", @"name", nil];
+    NSDictionary *savedDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0f], @"value", @NO, @"checked", @"Saved", @"name", nil];
+    NSDictionary *notSureDict;
+
+    if (self.notSureCheckbox.isChecked) {
+        notSureDict = [NSDictionary dictionaryWithObjectsAndKeys:@YES, @"checked", @"I'm not sure", @"name", nil];
+    }
+    else {
+        notSureDict = [NSDictionary dictionaryWithObjectsAndKeys:@NO, @"checked", @"I'm not sure", @"name", nil];
+        
+        if (!IsEmpty(self.spentTextField.text)) {
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+            NSNumber *number = [formatter numberFromString:self.spentTextField.text];
+            NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
+            [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
+            [formatterOut setUsesGroupingSeparator:NO];
+            
+            NSString *amountSpent = [formatterOut stringFromNumber:number];
+            spentDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[amountSpent floatValue]], @"value", @YES, @"checked", @"Spent", @"name", nil];
+        }
+        
+        if (!IsEmpty(self.savedTextField.text)) {
+            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+            [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+            NSNumber *number = [formatter numberFromString:self.savedTextField.text];
+            NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
+            [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
+            [formatterOut setUsesGroupingSeparator:NO];
+            
+            NSString *amountSaved = [formatterOut stringFromNumber:number];
+            savedDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[amountSaved floatValue]], @"value", @YES, @"checked", @"Saved", @"name", nil];
+        }
+    }
+    
+    [myArray addObject:spentDict];
+    [myArray addObject:savedDict];
+    [myArray addObject:notSureDict];
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:myArray options:0 error:&error];
+    jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    return jsonString;
+}
+
+- (NSString *)currencyTextForString:(NSString *)string
+{
+    NSString *currencyText = nil;
+    
+    NSNumberFormatter *decimalFormatter = [[NSNumberFormatter alloc] init];
+    [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [decimalFormatter setUsesGroupingSeparator:NO];
+    [decimalFormatter setMaximumFractionDigits:2];
+    
+    NSNumber *currentNumber = [decimalFormatter numberFromString:string];
+    
+    if ([currentNumber floatValue] >= 0.01f) {
+        NSNumberFormatter *currencyformatter = [[NSNumberFormatter alloc] init];
+        [currencyformatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        currencyText = [currencyformatter stringFromNumber:currentNumber];
+    }
+    else {
+        currencyText = @"";
+    }
+    
+    return currencyText;
+}
+
+
+#pragma mark - UIActionSheetDelegate methods
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
 {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
@@ -395,6 +567,10 @@
     
     self.post[@"post_text"] = self.postText.text;
     
+    if (self.displaySpentView) {
+        self.post[@"extra_fields"] = [self jsonStringFromSpentFields];
+    }
+    
     if (self.updatedPostImage && self.postImage.image) {
         NSString *fileName = @"post_image.png";
         NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
@@ -412,14 +588,14 @@
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:self.post];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakSelf.post];
                 });
             }
             else {
                 NSLog(@"Post Edit Save with picture error - %@", error);
                 [weakSelf.post saveEventually];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
                 });
             }
         }];
@@ -431,19 +607,21 @@
 
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
         
+        __block PFChallengePost *weakPost = self.post;
+        
         MTMakeWeakSelf();
         [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakPost];
                 });
             }
             else {
                 NSLog(@"Post Edit Save error - %@", error);
                 [weakSelf.challengePost saveEventually];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
                 });
             }
         }];
@@ -499,6 +677,10 @@
     self.challengePost[@"class"] = [PFUser currentUser][@"class"];
     self.challengePost[@"school"] = [PFUser currentUser][@"school"];
     self.challengePost[@"user"] = [PFUser currentUser];
+    
+    if (self.displaySpentView) {
+        self.challengePost[@"extra_fields"] = [self jsonStringFromSpentFields];
+    }
     
     if (self.postImage.image)
     {
@@ -601,6 +783,166 @@
 {
     self.postText.text = @"";
     [self postCommentDone:nil];
+}
+
+
+#pragma mark - UITextFieldDelegate methods -
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    NSInteger nextTag = textField.tag + 1;
+    UIResponder *nextResponder = [textField.superview viewWithTag:nextTag];
+    if (nextResponder) {
+        [nextResponder becomeFirstResponder];
+    } else {
+        [textField resignFirstResponder];
+    }
+    return NO;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    self.navigationItem.rightBarButtonItem.enabled = NO;
+    
+    CGPoint scrollPoint = CGPointMake(0, textField.frame.origin.y - 30.0f);
+    [self.viewFields setContentOffset:scrollPoint animated:YES];
+    
+    self.spentDoneButton.hidden = NO;
+    
+    if (!IsEmpty(textField.text)) {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        
+        NSNumber *number = [formatter numberFromString:textField.text];
+        
+        NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
+        [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
+        [formatterOut setUsesGroupingSeparator:NO];
+
+        textField.text = [formatterOut stringFromNumber:number];
+    }
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    
+    [self.viewFields setContentOffset:CGPointMake(0.0f, -64.0f) animated:YES];
+    
+    self.spentDoneButton.hidden = YES;
+    
+    if (IsEmpty(textField.text)) {
+        if (textField == self.spentTextField) {
+            self.spentCheckbox.isChecked = NO;
+        }
+        else if (textField == self.savedTextField) {
+            self.savedCheckbox.isChecked = NO;
+        }
+    }
+    else {
+        textField.text = [self currencyTextForString:textField.text];
+        if (IsEmpty(textField.text)) {
+            if (textField == self.spentTextField) {
+                self.spentCheckbox.isChecked = NO;
+            }
+            else if (textField == self.savedTextField) {
+                self.savedCheckbox.isChecked = NO;
+            }
+        }
+    }
+    
+    [self jsonStringFromSpentFields];
+}
+
+- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;   // return NO to not change text
+{
+    if ([textField.text containsString:@"."] && [string containsString:@"."]) {
+        return NO;
+    }
+    
+    NSUInteger newLength = [textField.text length] + [string length] - range.length;
+    NSCharacterSet *cs = [[NSCharacterSet characterSetWithCharactersInString:NUMBERS_ONLY] invertedSet];
+    NSString *filtered = [[string componentsSeparatedByCharactersInSet:cs] componentsJoinedByString:@""];
+    if ((![string isEqualToString:filtered]) || (newLength > CHARACTER_LIMIT)) {
+        return NO;
+    }
+
+    NSString *newText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    CGFloat newFloat = [newText floatValue];
+    
+    if (newFloat > 999999.0f) {
+        return NO;
+    }
+
+    if (!IsEmpty(newText)) {
+        if (textField == self.spentTextField) {
+            self.spentCheckbox.isChecked = YES;
+        }
+        else if (textField == self.savedTextField) {
+            self.savedCheckbox.isChecked = YES;
+        }
+    }
+    
+    return YES;
+}
+
+
+#pragma mark - UITextViewDelegate methods -
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    [self.viewFields setContentOffset:CGPointMake(0.0f, -64.0f) animated:YES];
+}
+
+
+#pragma mark - Actions -
+- (IBAction)didSelectSpent:(MICheckBox *)sender
+{
+    if (sender.isChecked) {
+        self.spentTextField.text = @"";
+    }
+    else {
+        [self.spentTextField becomeFirstResponder];
+    }
+    
+    if (self.notSureCheckbox.isChecked) {
+        self.notSureCheckbox.isChecked = NO;
+    }
+}
+
+- (IBAction)didSelectSaved:(MICheckBox *)sender
+{
+    if (sender.isChecked) {
+        self.savedTextField.text = @"";
+    }
+    else {
+        [self.savedTextField becomeFirstResponder];
+    }
+
+    
+    if (self.notSureCheckbox.isChecked) {
+        self.notSureCheckbox.isChecked = NO;
+    }
+}
+
+- (IBAction)didSelectNotSure:(id)sender
+{
+    if (self.spentCheckbox.isChecked) {
+        self.spentCheckbox.isChecked = NO;
+    }
+    if (self.savedCheckbox.isChecked) {
+        self.savedCheckbox.isChecked = NO;
+    }
+
+    [self.spentTextField resignFirstResponder];
+    [self.savedTextField resignFirstResponder];
+    
+    self.spentTextField.text = @"";
+    self.savedTextField.text = @"";
+    
+    [self jsonStringFromSpentFields];
+}
+
+- (IBAction)doneAction:(id)sender
+{
+    [self dismissKeyboard];
+    self.spentDoneButton.hidden = YES;
 }
 
 

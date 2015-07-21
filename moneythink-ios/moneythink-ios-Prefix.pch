@@ -59,6 +59,7 @@
 #import "NSDate+MTAdditions.h"
 #import "UIImage+MTAdditions.h"
 #import "UIFont+MTAdditions.h"
+#import "MTTextField.h"
 
 #import "Reachability.h"
 #import "BlocksKit.h"
