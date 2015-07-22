@@ -29,10 +29,15 @@
         return NO;
     }
     
-    SWRevealViewController *revealViewController = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
-    [revealViewController setFrontViewController:[self generateWelcomeVC] animated:YES];
+    [self initiateOnboarding];
     
     return YES;
+}
+
+- (void)initiateOnboarding
+{
+    SWRevealViewController *revealViewController = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
+    [revealViewController setFrontViewController:[self generateWelcomeVC] animated:YES];
 }
 
 - (void)handleOnboardingCompletion {

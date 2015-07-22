@@ -7,6 +7,7 @@
 //
 
 #import "MTLoginViewController.h"
+#import "MTNotificationViewController.h"
 
 @interface MTLoginViewController ()
 
@@ -175,6 +176,9 @@
             if (!error) {
                 [[MTUtil getAppDelegate] configureZendesk];
                 
+                // Update Notification count for this user.
+                [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                
                 MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                 if (![onboardingController checkForOnboarding]) {
                     id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
@@ -302,6 +306,9 @@
             
             // Check for custom playlist for this class
             [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+            
+            // Update Notification count for this user.
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
             
             MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {

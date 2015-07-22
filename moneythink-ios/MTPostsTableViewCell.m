@@ -60,10 +60,10 @@
     [super setHighlighted:highlighted animated:animated];
     
     if (highlighted) {
-        self.spentView.alpha = 0.0f;
+        self.spentView.backgroundColor = [[UIColor colorWithHexString:@"#d1d1d1"] colorWithAlphaComponent:0.7f];
     }
     else {
-        self.spentView.alpha = 1.0f;
+        self.spentView.backgroundColor = [UIColor clearColor];
     }
 }
 

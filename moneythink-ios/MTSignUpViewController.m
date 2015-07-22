@@ -12,6 +12,7 @@
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
 #import "MTWebViewController.h"
+#import "MTNotificationViewController.h"
 
 @interface MTSignUpViewController ()
 
@@ -599,13 +600,15 @@
                                         // Check for custom playlist for this class
                                         [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
                                         
+                                        // Update Notification count for new user
+                                        //  Should be none but check anyway in case we decide to generate notifications for
+                                        //  new users.
+                                        [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                        
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
                                         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                                        if (![onboardingController checkForOnboarding]) {
-                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                                        }
+                                        [onboardingController initiateOnboarding];
                                         
                                     } else {
                                         // Ignore parse cache errors for now
@@ -677,6 +680,11 @@
         return NO;
     }
     
+    if (IsEmpty(self.email.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
+    
     if (IsEmpty(self.password.text)) {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Password is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return NO;
@@ -687,19 +695,21 @@
         return NO;
     }
 
-    if (IsEmpty(self.birthdate.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Birthdate is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        return NO;
-    }
-    
-    if (IsEmpty(self.zipCode.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Zip Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        return NO;
-    }
-    
-    if (IsEmpty(self.ethnicity.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Ethnicity is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        return NO;
+    if (!isMentor) {
+        if (IsEmpty(self.birthdate.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Birthdate is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
+        
+        if (IsEmpty(self.zipCode.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Zip Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
+        
+        if (IsEmpty(self.ethnicity.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Ethnicity is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
     }
 
     if (isMentor && IsEmpty(self.schoolName.text)) {

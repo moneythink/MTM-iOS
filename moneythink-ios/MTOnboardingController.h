@@ -11,5 +11,6 @@
 @interface MTOnboardingController : NSObject
 
 - (BOOL)checkForOnboarding;
+- (void)initiateOnboarding;
 
 @end

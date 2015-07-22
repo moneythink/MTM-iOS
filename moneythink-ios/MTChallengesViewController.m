@@ -737,9 +737,13 @@
 - (void)leftButtonTapped
 {
     [self closeChallengeList];
-    self.challengesPageIndex--;
     
-    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex-1];
+    if (!newViewController) {
+        return;
+    }
+
+    self.challengesPageIndex--;
     NSArray *viewControllers = @[newViewController];
     [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
     
@@ -750,9 +754,13 @@
 - (void)rightButtonTapped
 {
     [self closeChallengeList];
-    self.challengesPageIndex++;
     
-    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex+1];
+    if (!newViewController) {
+        return;
+    }
+    
+    self.challengesPageIndex++;
     NSArray *viewControllers = @[newViewController];
     [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
     

@@ -817,24 +817,36 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.button1 setImage:nil forState:UIControlStateHighlighted];
     [cell.button1 setBackgroundImage:nil forState:UIControlStateNormal];
     [cell.button1 setBackgroundImage:nil forState:UIControlStateHighlighted];
+    [cell.button1.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    cell.button1.titleEdgeInsets = UIEdgeInsetsZero;
+    [cell.button1 setTitle:@"" forState:UIControlStateNormal];
 
     [cell.button2.titleLabel setFont:[UIFont systemFontOfSize:18.0f]];
     [cell.button2 setImage:nil forState:UIControlStateNormal];
     [cell.button2 setImage:nil forState:UIControlStateHighlighted];
     [cell.button2 setBackgroundImage:nil forState:UIControlStateNormal];
     [cell.button2 setBackgroundImage:nil forState:UIControlStateHighlighted];
-    
+    [cell.button2.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    cell.button2.titleEdgeInsets = UIEdgeInsetsZero;
+    [cell.button1 setTitle:@"" forState:UIControlStateNormal];
+
     [cell.button3.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     [cell.button3 setImage:nil forState:UIControlStateNormal];
     [cell.button3 setImage:nil forState:UIControlStateHighlighted];
     [cell.button3 setBackgroundImage:nil forState:UIControlStateNormal];
     [cell.button3 setBackgroundImage:nil forState:UIControlStateHighlighted];
+    [cell.button3.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    cell.button3.titleEdgeInsets = UIEdgeInsetsZero;
+    [cell.button1 setTitle:@"" forState:UIControlStateNormal];
 
     [cell.button4.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     [cell.button4 setImage:nil forState:UIControlStateNormal];
     [cell.button4 setImage:nil forState:UIControlStateHighlighted];
     [cell.button4 setBackgroundImage:nil forState:UIControlStateNormal];
     [cell.button4 setBackgroundImage:nil forState:UIControlStateHighlighted];
+    [cell.button4.titleLabel setTextAlignment:NSTextAlignmentCenter];
+    cell.button4.titleEdgeInsets = UIEdgeInsetsZero;
+    [cell.button1 setTitle:@"" forState:UIControlStateNormal];
 
     [cell.button1 removeTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button2 removeTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];

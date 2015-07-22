@@ -91,6 +91,9 @@
     [[ZDKConfig instance] setUserIdentity:nil];
     [[ZDKSdkStorage instance] clearUserData];
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
+    
+    // Clear any notification count
+    ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = 0;
 }
 
 + (BOOL)isCurrentUserMentor

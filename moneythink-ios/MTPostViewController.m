@@ -755,11 +755,6 @@ typedef enum {
             }];
         }
         
-        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
-        if (self.displaySpentView) {
-            [self parseSpentFields];
-        }
-
         [self updateLikes];
         [self loadPostText];
         [self loadLikesWithCache:NO];
@@ -773,6 +768,12 @@ typedef enum {
         [self.challenge fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
             if (!error) {
                 weakSelf.challenge = (PFChallenges *)object;
+                
+                weakSelf.displaySpentView = [weakSelf.challenge[@"display_extra_fields"] boolValue];
+                if (weakSelf.challengePost && [weakSelf.challengePost isDataAvailable] && weakSelf.displaySpentView) {
+                    [weakSelf parseSpentFields];
+                }
+
                 [weakSelf.tableView reloadData];
                 [weakSelf configureChallengePermissions];
             }
@@ -782,6 +783,11 @@ typedef enum {
         }];
     }
     else {
+        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+        if (self.challengePost && [self.challengePost isDataAvailable] && self.displaySpentView) {
+            [self parseSpentFields];
+        }
+
         [self configureChallengePermissions];
     }
 }
@@ -1362,7 +1368,7 @@ typedef enum {
         }
     }
     if (!foundMe) {
-        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] init];
+        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] initWithClassName:[PFChallengePostsLiked parseClassName]];
         newOne[@"user"] = [PFUser currentUser];
         newOne[@"emoji"] = emoji;
         
