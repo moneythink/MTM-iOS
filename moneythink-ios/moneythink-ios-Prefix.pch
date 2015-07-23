@@ -92,6 +92,7 @@
 #import "PFStudentPointDetails.h"
 #import "PFChallengePostsLiked.h"
 #import "PFEthnicities.h"
+#import "PFMoneyOptions.h"
 
 #import "MTOnboardingController.h"
 

@@ -149,6 +149,8 @@
 		8977E3EA1B223E41009AD452 /* comment_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E81B223E41009AD452 /* comment_highlighted.png */; };
 		8977E3EB1B223E41009AD452 /* comment_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */; };
 		898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */; };
+		899232791B6052B9009C63B9 /* PFMoneyOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899232781B6052B9009C63B9 /* PFMoneyOptions.m */; };
+		8992327D1B614202009C63B9 /* JGActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8992327C1B614202009C63B9 /* JGActionSheet.m */; };
 		8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906721AD46B5D007A4F3E /* icon_button_check_normal.png */; };
 		8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */; };
 		8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */; };
@@ -454,6 +456,10 @@
 		8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment_highlighted@2x.png"; sourceTree = "<group>"; };
 		898FBE5E1B0D2A6B0058F3B4 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		899232771B6052B0009C63B9 /* PFMoneyOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoneyOptions.h; path = "Data Classes/PFMoneyOptions.h"; sourceTree = "<group>"; };
+		899232781B6052B9009C63B9 /* PFMoneyOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoneyOptions.m; path = "Data Classes/PFMoneyOptions.m"; sourceTree = "<group>"; };
+		8992327B1B614202009C63B9 /* JGActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGActionSheet.h; sourceTree = "<group>"; };
+		8992327C1B614202009C63B9 /* JGActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGActionSheet.m; sourceTree = "<group>"; };
 		899906721AD46B5D007A4F3E /* icon_button_check_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_normal.png; sourceTree = "<group>"; };
 		899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_button_check_normal@2x.png"; sourceTree = "<group>"; };
 		899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_pressed.png; sourceTree = "<group>"; };
@@ -621,6 +627,7 @@
 		106309721A3A3C4D0093C209 /* ThirdParty */ = {
 			isa = PBXGroup;
 			children = (
+				8992327A1B614202009C63B9 /* JGActionSheet */,
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
 				89A793BC1B2F25CA000BFA40 /* Onboard */,
 				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
@@ -661,24 +668,26 @@
 				58669F4719772D00009BC13C /* PFChallengePost.m */,
 				58669F4819772D00009BC13C /* PFChallengePostButtonsClicked.h */,
 				58669F4919772D00009BC13C /* PFChallengePostButtonsClicked.m */,
-				899906851AD47198007A4F3E /* PFChallengePostSecondaryButtonsClicked.h */,
-				899906831AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m */,
 				58669F4A19772D00009BC13C /* PFChallengePostComment.h */,
 				58669F4B19772D00009BC13C /* PFChallengePostComment.m */,
+				899906851AD47198007A4F3E /* PFChallengePostSecondaryButtonsClicked.h */,
+				899906831AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m */,
+				892573851AE5950C002FF871 /* PFChallengePostsLiked.h */,
+				892573861AE59515002FF871 /* PFChallengePostsLiked.m */,
 				58669F4C19772D00009BC13C /* PFChallenges.h */,
 				58669F4D19772D00009BC13C /* PFChallenges.m */,
 				58669F4E19772D00009BC13C /* PFChallengesActivated.h */,
 				58669F4F19772D00009BC13C /* PFChallengesActivated.m */,
-				892573851AE5950C002FF871 /* PFChallengePostsLiked.h */,
-				892573861AE59515002FF871 /* PFChallengePostsLiked.m */,
 				58669F5019772D00009BC13C /* PFClasses.h */,
 				58669F5119772D00009BC13C /* PFClasses.m */,
 				89F250E41A09637A00F02CC7 /* PFCustomChallenges.h */,
+				89F250E51A09638400F02CC7 /* PFCustomChallenges.m */,
 				8977E3DB1B1E1F6C009AD452 /* PFEmoji.h */,
 				8977E3DC1B1E1F6C009AD452 /* PFEmoji.m */,
 				8925653C1B585EEE00473AFD /* PFEthnicities.h */,
 				8925653D1B585EFA00473AFD /* PFEthnicities.m */,
-				89F250E51A09638400F02CC7 /* PFCustomChallenges.m */,
+				899232771B6052B0009C63B9 /* PFMoneyOptions.h */,
+				899232781B6052B9009C63B9 /* PFMoneyOptions.m */,
 				58669F5419772D00009BC13C /* PFNotifications.h */,
 				58669F5519772D00009BC13C /* PFNotifications.m */,
 				89F250DE1A09629000F02CC7 /* PFPlaylist.h */,
@@ -1096,6 +1105,15 @@
 			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
+		8992327A1B614202009C63B9 /* JGActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				8992327B1B614202009C63B9 /* JGActionSheet.h */,
+				8992327C1B614202009C63B9 /* JGActionSheet.m */,
+			);
+			path = JGActionSheet;
+			sourceTree = "<group>";
+		};
 		89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */ = {
 			isa = PBXGroup;
 			children = (
@@ -1395,6 +1413,7 @@
 				89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */,
 				89CE54131B152829000825FB /* MTViewController.m in Sources */,
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
+				8992327D1B614202009C63B9 /* JGActionSheet.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */,
 				89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */,
@@ -1410,6 +1429,7 @@
 				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
 				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
+				899232791B6052B9009C63B9 /* PFMoneyOptions.m in Sources */,
 				58676B231974273E0070F604 /* MTLoginViewController.m in Sources */,
 				585E25C71997D79E005A896D /* MTExploreCollectionViewCell.m in Sources */,
 				58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */,
