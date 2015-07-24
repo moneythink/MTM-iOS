@@ -90,15 +90,6 @@
 
 
 #pragma mark - Private -
-- (void)login
-{
-    [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:@"mentor" withPassword:@"123456" success:^(id responseData) {
-        //
-    } failure:^(NSError *error) {
-        NSLog(@"Failed to login, error: %@", [error localizedDescription]);
-    }];
-}
-
 - (BOOL)validate
 {
     NSString *title = @"Login Error";

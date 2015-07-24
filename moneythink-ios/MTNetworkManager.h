@@ -18,10 +18,32 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 + (MTNetworkManager *)sharedMTNetworkManager;
 
-// Authentication
+// Authentication/Login/Signup Methods
 - (void)authenticateForUsername:(NSString *)username withPassword:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (MTUser *)getMeUser;
+- (void)studentSignupForEmail:(NSString *)email
+                        password:(NSString *)password
+                      signupCode:(NSString *)signupCode
+                       firstName:(NSString *)firstName
+                        lastName:(NSString *)lastName
+                         zipCode:(NSString *)zipCode
+                     phoneNumber:(NSString *)phoneNumber
+                       ethnicity:(NSString *)ethnicity
+                    moneyOptions:(NSArray *)moneyOptions
+                         success:(MTNetworkSuccessBlock)success
+                         failure:(MTNetworkFailureBlock)failure;
+- (void)mentorSignupForEmail:(NSString *)email
+                    password:(NSString *)password
+                  signupCode:(NSString *)signupCode
+                   firstName:(NSString *)firstName
+                    lastName:(NSString *)lastName
+                 phoneNumber:(NSString *)phoneNumber
+                     success:(MTNetworkSuccessBlock)success
+                     failure:(MTNetworkFailureBlock)failure;
+- (NSArray *)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (NSArray *)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (NSArray *)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
-- (void)getOrganizationsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+// Misc
+- (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end

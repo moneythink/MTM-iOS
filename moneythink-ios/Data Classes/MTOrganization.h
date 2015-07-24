@@ -13,6 +13,7 @@
 @property NSInteger organizationId;
 @property NSString *name;
 @property NSString *mentorSignupCode;
+@property BOOL isActive;
 
 @end
 

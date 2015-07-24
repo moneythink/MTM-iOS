@@ -40,7 +40,7 @@
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-//    [self setupRealm];
+    [self setupRealm];
     
     [PFChallengeBanner registerSubclass];
     [PFChallengePost registerSubclass];
@@ -701,38 +701,41 @@
 {
     // TODO: Clear for testing
     [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
+    [MTUser logout];
+
+    [RLMRealm defaultRealm];
     
-    MTOrganization *testO = [[MTOrganization alloc] init];
-    testO.name = @"PSD";
-    
-    MTClass *testClass = [[MTClass alloc] init];
-    testClass.name = @"Riffenburgh";
-    
-    // Create a standalone object
-    MTUser *meUser = [[MTUser alloc] init];
-    
-    // Set & read properties
-    meUser.username = @"";
-    meUser.firstName = @"David";
-    meUser.lastName = @"Sica";
-    meUser.currentUser = YES;
-    meUser.organization = testO;
-    meUser.userClass = testClass;
-    NSLog(@"Me: %@", meUser.firstName);
-    
-    // Realms are used to group data together
-    RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
-    
-    // Save your object
-    [realm beginWriteTransaction];
-    [realm addObject:testO];
-    [realm addObject:testClass];
-    [realm addObject:meUser];
-    [realm commitWriteTransaction];
-    
-    // Query
-    RLMResults *results = [MTUser objectsInRealm:realm where:@"firstName contains 'D'"];
-    NSLog(@"Number of users: %li", (unsigned long)results.count);
+//    MTOrganization *testO = [[MTOrganization alloc] init];
+//    testO.name = @"PSD";
+//    
+//    MTClass *testClass = [[MTClass alloc] init];
+//    testClass.name = @"Riffenburgh";
+//    
+//    // Create a standalone object
+//    MTUser *meUser = [[MTUser alloc] init];
+//    
+//    // Set & read properties
+//    meUser.username = @"";
+//    meUser.firstName = @"David";
+//    meUser.lastName = @"Sica";
+//    meUser.currentUser = YES;
+//    meUser.organization = testO;
+//    meUser.userClass = testClass;
+//    NSLog(@"Me: %@", meUser.firstName);
+//    
+//    // Realms are used to group data together
+//    RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
+//    
+//    // Save your object
+//    [realm beginWriteTransaction];
+//    [realm addObject:testO];
+//    [realm addObject:testClass];
+//    [realm addObject:meUser];
+//    [realm commitWriteTransaction];
+//
+//    // Query
+//    RLMResults *results = [MTUser objectsInRealm:realm where:@"firstName contains 'D'"];
+//    NSLog(@"Number of users: %li", (unsigned long)results.count);
 }
 
 - (void)performRealmMigration

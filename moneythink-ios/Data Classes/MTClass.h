@@ -14,6 +14,7 @@
 
 @property NSInteger classId;
 @property NSString *name;
+@property NSString *studentSignupCode;
 
 @property MTOrganization *organization;
 

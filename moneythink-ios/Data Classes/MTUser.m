@@ -12,10 +12,9 @@
 
 // Specify default values for properties
 
-//+ (NSDictionary *)defaultPropertyValues
-//{
-//    return @{};
-//}
++ (NSDictionary *)defaultPropertyValues {
+    return @{@"username" : @"", @"email": @"", @"firstName": @"", @"lastName": @"", @"phoneNumber": @"", @"roleCode": @"", @"avatar": @""};
+}
 
 // Specify properties to ignore (Realm won't persist these)
 
@@ -23,6 +22,10 @@
 //{
 //    return @[];
 //}
+
++ (NSString *)primaryKey {
+    return @"userId";
+}
 
 
 #pragma mark - Custom Methods -
@@ -45,6 +48,9 @@
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
     
     // TODO: Clear out database?
+    [[RLMRealm defaultRealm] beginWriteTransaction];
+    [[RLMRealm defaultRealm] deleteAllObjects];
+    [[RLMRealm defaultRealm] commitWriteTransaction];
     
     [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
 }
@@ -69,6 +75,11 @@
     else {
         return NO;
     }
+}
+
++ (MTUser *)getMeUser
+{
+    return nil;
 }
 
 

@@ -12,10 +12,9 @@
 
 // Specify default values for properties
 
-//+ (NSDictionary *)defaultPropertyValues
-//{
-//    return @{};
-//}
++ (NSDictionary *)defaultPropertyValues {
+    return @{@"name" : @"", @"studentSignupCode": @""};
+}
 
 // Specify properties to ignore (Realm won't persist these)
 
@@ -23,5 +22,9 @@
 //{
 //    return @[];
 //}
+
++ (NSString *)primaryKey {
+    return @"classId";
+}
 
 @end

@@ -13,12 +13,14 @@
 
 @interface MTUser : RLMObject
 
+@property NSInteger userId;
 @property NSString *username;
 @property NSString *email;
 @property NSString *firstName;
 @property NSString *lastName;
 @property NSString *phoneNumber;
 @property NSString *roleCode;
+@property NSString *avatar;
 @property BOOL currentUser;
 
 @property MTOrganization *organization;
@@ -28,6 +30,7 @@
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMe:(MTUser *)user;
 + (BOOL)isUserLoggedIn;
++ (MTUser *)getMeUser;
 
 @end
 
