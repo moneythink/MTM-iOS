@@ -996,14 +996,17 @@ typedef enum {
 
 - (void)parseSpentFields
 {
+    // Assume blank
+    self.hasSpentSavedContent = NO;
+    self.savedAmount = @"";
+    self.spentAmount = @"";
+    
     if (!IsEmpty(self.challengePost[@"extra_fields"])) {
         NSData *data = [self.challengePost[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
         id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
         if ([jsonArray isKindOfClass:[NSArray class]]) {
             NSArray *spentFieldsArray = (NSArray *)jsonArray;
-            self.savedAmount = @"";
-            self.spentAmount = @"";
 
             for (id thisDict in spentFieldsArray) {
                 if ([thisDict isKindOfClass:[NSDictionary class]]) {
@@ -1035,9 +1038,6 @@ typedef enum {
     
     if ((!IsEmpty(self.savedAmount) || !IsEmpty(self.spentAmount))) {
         self.hasSpentSavedContent = YES;
-    }
-    else {
-        self.hasSpentSavedContent = NO;
     }
 }
 
@@ -2518,6 +2518,9 @@ typedef enum {
                 
                 if (self.displaySpentView && self.hasSpentSavedContent) {
                     imageCell.spentView.hidden = NO;
+                    imageCell.savedLabel.text = @"";
+                    imageCell.spentLabel.text = @"";
+
                     if (!IsEmpty(self.savedAmount)) {
                         imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
                     }
@@ -2542,6 +2545,9 @@ typedef enum {
             if ([self.challengePost isDataAvailable]) {
                 if (self.displaySpentView && self.hasSpentSavedContent) {
                     imageCell.spentView.hidden = NO;
+                    imageCell.savedLabel.text = @"";
+                    imageCell.spentLabel.text = @"";
+
                     if (!IsEmpty(self.savedAmount)) {
                         imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
                     }

@@ -12,9 +12,10 @@
 #import "MTEmojiPickerCollectionView.h"
 
 extern NSString *const kWillSaveNewChallengePostNotification;
+extern NSString *const kDidDeleteChallengePostNotification;
 extern NSString *const kSavingWithPhotoNewChallengePostNotification;
-extern NSString *const kSavedMyClassChallengePostsdNotification;
-extern NSString *const kFailedMyClassChallengePostsdNotification;
+extern NSString *const kSavedMyClassChallengePostNotification;
+extern NSString *const kFailedMyClassChallengePostNotification;
 extern NSString *const kWillSaveNewPostCommentNotification;
 extern NSString *const kDidSaveNewPostCommentNotification;
 extern NSString *const kWillSaveEditPostNotification;

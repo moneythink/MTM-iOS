@@ -2987,6 +2987,20 @@
                                     <action selector="didTapChallengeList:" destination="q5o-5p-Mhx" eventType="touchUpInside" id="LZQ-uQ-IQw"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vc2-He-o6d" userLabel="Mentor Challenge Info Button">
+                                <rect key="frame" x="60" y="0.0" width="230" height="48"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Bold" family="Helvetica Neue" pointSize="14"/>
+                                <inset key="titleEdgeInsets" minX="5" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                <state key="normal" title="Challenge Name">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" red="0.47058823529999999" green="0.45882352939999999" blue="0.45098039220000002" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <segue destination="IUs-Xj-5E6" kind="modal" identifier="mentorChallengeInfoModal" id="nWx-Jd-e9Z"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="tailTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sTk-iU-h3o" userLabel="Challenge Info Button">
                                 <rect key="frame" x="60" y="0.0" width="145" height="48"/>
                                 <constraints>
@@ -3062,9 +3076,11 @@
                         </subviews>
                         <color key="backgroundColor" red="0.96862745100000003" green="0.63921568630000003" blue="0.25490196079999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="vc2-He-o6d" secondAttribute="trailing" id="0zC-ES-fOl"/>
                             <constraint firstItem="z2a-Cq-KhL" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="6L1-mN-BQM"/>
                             <constraint firstItem="GbB-xY-qSo" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="6Rt-d7-glG"/>
                             <constraint firstItem="A9q-bY-tYz" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="sTk-iU-h3o" secondAttribute="trailing" priority="750" constant="5" id="7PC-OH-k54"/>
+                            <constraint firstItem="vc2-He-o6d" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="9KJ-Sv-ISQ"/>
                             <constraint firstItem="sSW-YT-6TP" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="Ei2-yU-wQn"/>
                             <constraint firstItem="A9q-bY-tYz" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="HY5-ip-QVb"/>
                             <constraint firstItem="sSW-YT-6TP" firstAttribute="leading" secondItem="ssS-mX-HpA" secondAttribute="leading" id="LEu-uH-7jl"/>
@@ -3078,9 +3094,11 @@
                             <constraint firstItem="sTk-iU-h3o" firstAttribute="leading" secondItem="z2a-Cq-KhL" secondAttribute="trailing" id="dne-PU-b0z"/>
                             <constraint firstAttribute="bottom" secondItem="sTk-iU-h3o" secondAttribute="bottom" id="ej2-AC-NGc"/>
                             <constraint firstItem="0hk-AS-0iD" firstAttribute="top" secondItem="ssS-mX-HpA" secondAttribute="top" id="f7s-Wg-QFc"/>
+                            <constraint firstAttribute="bottom" secondItem="vc2-He-o6d" secondAttribute="bottom" id="jfD-hN-Ztq"/>
                             <constraint firstAttribute="bottom" secondItem="0hk-AS-0iD" secondAttribute="bottom" id="kaY-Wa-FYQ"/>
                             <constraint firstAttribute="trailing" secondItem="0hk-AS-0iD" secondAttribute="trailing" id="wH9-9k-Vx9"/>
                             <constraint firstAttribute="bottom" secondItem="A9q-bY-tYz" secondAttribute="bottom" id="wa7-W0-1Jp"/>
+                            <constraint firstItem="vc2-He-o6d" firstAttribute="leading" secondItem="z2a-Cq-KhL" secondAttribute="trailing" id="x0S-t1-rC6"/>
                             <constraint firstItem="0hk-AS-0iD" firstAttribute="leading" secondItem="A9q-bY-tYz" secondAttribute="trailing" id="ycA-SD-7T2"/>
                         </constraints>
                     </view>
@@ -3089,10 +3107,13 @@
                     <size key="freeformSize" width="320" height="48"/>
                     <connections>
                         <outlet property="backgroundProgressView" destination="5Qt-tW-bex" id="Eug-0j-TzV"/>
-                        <outlet property="challengeListButton" destination="sTk-iU-h3o" id="3wz-Jf-nB0"/>
+                        <outlet property="challengeInfoButton" destination="sTk-iU-h3o" id="ne4-jz-3uk"/>
                         <outlet property="foregroundProgressView" destination="r0D-z1-t3X" id="wLu-Lc-a1E"/>
+                        <outlet property="hiddenChallengeInfoButton" destination="A9q-bY-tYz" id="lZK-Q7-PsN"/>
                         <outlet property="leftButton" destination="sSW-YT-6TP" id="y3H-am-6R4"/>
                         <outlet property="maskBorderView" destination="oyb-Ui-TSD" id="aDE-2y-1pT"/>
+                        <outlet property="mentorChallengeInfoButton" destination="vc2-He-o6d" id="6vQ-Bv-Wzy"/>
+                        <outlet property="progressContainerView" destination="GbB-xY-qSo" id="V35-4f-8Je"/>
                         <outlet property="progressLabel" destination="XdR-9G-z9l" id="sPq-AX-F3S"/>
                         <outlet property="rightButton" destination="0hk-AS-0iD" id="Y7V-0A-rf6"/>
                     </connections>
@@ -5649,14 +5670,14 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="vqR-nj-yuL"/>
-        <segue reference="nYB-OV-yVU"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="xm4-7b-aI0"/>
-        <segue reference="o0E-h6-NZi"/>
+        <segue reference="yad-P5-d3y"/>
         <segue reference="0QY-Pc-qd8"/>
         <segue reference="kDD-cl-uw8"/>
-        <segue reference="yad-P5-d3y"/>
-        <segue reference="2Br-mP-E3R"/>
+        <segue reference="o0E-h6-NZi"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="nYB-OV-yVU"/>
+        <segue reference="vqR-nj-yuL"/>
+        <segue reference="xm4-7b-aI0"/>
+        <segue reference="nWx-Jd-e9Z"/>
     </inferredMetricsTieBreakers>
 </document>

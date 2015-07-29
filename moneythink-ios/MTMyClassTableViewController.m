@@ -12,9 +12,10 @@
 #import "MTEmojiPickerCollectionView.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
+NSString *const kDidDeleteChallengePostNotification = @"kDidDeleteChallengePostNotification";
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
-NSString *const kSavedMyClassChallengePostsdNotification = @"kSavedMyClassChallengePostsdNotification";
-NSString *const kFailedMyClassChallengePostsdNotification = @"kFailedMyClassChallengePostsdNotification";
+NSString *const kSavedMyClassChallengePostNotification = @"kSavedMyClassChallengePostNotification";
+NSString *const kFailedMyClassChallengePostNotification = @"kFailedMyClassChallengePostNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
 NSString *const kDidSaveNewPostCommentNotification = @"kDidSaveNewPostCommentNotification";
 NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification";
@@ -72,8 +73,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewChallengePost:) name:kWillSaveNewChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savingWithPhoto:) name:kSavingWithPhotoNewChallengePostNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostsdNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostsdNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
@@ -1073,6 +1074,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)parseAndPopulateSpentFieldsForCell:(MTPostsTableViewCell *)cell
 {
+    // Assume blank
+    cell.spentView.hidden = YES;
+    cell.spentLabel.text = @"";
+    cell.savedLabel.text = @"";
+
     if (self.displaySpentView && !IsEmpty(cell.post[@"extra_fields"])) {
         NSData *data = [cell.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
         id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -1088,16 +1094,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                         if ([[dict objectForKey:@"checked"] boolValue]) {
                             NSString *spentString = [[dict objectForKey:@"value"] stringValue];
                             NSString *currencyString = [self currencyTextForString:spentString];
-                            if (IsEmpty(currencyString)) {
-                                cell.spentLabel.text = @"";
-                            }
-                            else {
+                            if (!IsEmpty(currencyString)) {
                                 cell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", currencyString];
                                 cell.spentView.hidden = NO;
                             }
-                        }
-                        else {
-                            cell.spentLabel.text = @"";
                         }
                     }
                     else if ([nameForDict isEqualToString:@"Saved"]) {
@@ -1105,16 +1105,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                             NSString *savedString = [[dict objectForKey:@"value"] stringValue];
                             NSString *currencyString = [self currencyTextForString:savedString];
 
-                            if (IsEmpty(currencyString)) {
-                                cell.savedLabel.text = @"";
-                            }
-                            else {
+                            if (!IsEmpty(currencyString)) {
                                 cell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", currencyString];
                                 cell.spentView.hidden = NO;
                             }
-                        }
-                        else {
-                            cell.savedLabel.text = @"";
                         }
                     }
                     else {
@@ -1127,9 +1121,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 }
             }
         }
-    }
-    else {
-        cell.spentView.hidden = YES;
     }
 }
 
@@ -1840,6 +1831,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                                              }
                                              else {
                                                  [[PFUser currentUser] fetchInBackground];
+                                                 dispatch_async(dispatch_get_main_queue(), ^{
+                                                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
+                                                 });
                                              }
                                              
                                              dispatch_async(dispatch_get_main_queue(), ^{
@@ -1869,6 +1863,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     }
                     else {
                         [[PFUser currentUser] fetchInBackground];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
+                        });
                     }
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -1895,6 +1892,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
                 [weakSelf loadObjects];
             });
         }];

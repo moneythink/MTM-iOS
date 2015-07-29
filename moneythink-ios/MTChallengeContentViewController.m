@@ -11,14 +11,19 @@
 
 @interface MTChallengeContentViewController ()
 
-@property (nonatomic, weak) IBOutlet UIButton *challengeListButton;
+@property (nonatomic, weak) IBOutlet UIView *progressContainerView;
+@property (nonatomic, weak) IBOutlet UIButton *hiddenChallengeInfoButton;
+@property (nonatomic, weak) IBOutlet UIButton *challengeInfoButton;
+@property (nonatomic, weak) IBOutlet UIButton *mentorChallengeInfoButton;
 @property (nonatomic, weak) IBOutlet UIView *backgroundProgressView;
 @property (nonatomic, weak) IBOutlet UIView *foregroundProgressView;
 @property (nonatomic, weak) IBOutlet UIView *maskBorderView;
 @property (nonatomic, weak) IBOutlet UILabel *progressLabel;
+
 @property (nonatomic) BOOL challengeInfoModal;
 
 @property (nonatomic) NSInteger challengeProgress;
+@property (nonatomic) NSInteger oldChallengeProgress;
 
 @end
 
@@ -29,29 +34,50 @@
 {
     [super viewDidLoad];
     
-    [self resetChallengeProgress];
+    if ([MTUtil isCurrentUserMentor]) {
+        [self.progressContainerView removeFromSuperview];
+        [self.hiddenChallengeInfoButton removeFromSuperview];
+        self.challengeInfoButton.hidden = YES;
+        self.mentorChallengeInfoButton.hidden = NO;
+    }
+    else {
+        self.challengeInfoButton.hidden = NO;
+        self.mentorChallengeInfoButton.hidden = YES;
+        [self resetChallengeProgress];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.challengeListButton setTitle:self.challengeTitleText forState:UIControlStateNormal];
+    [self.challengeInfoButton setTitle:self.challengeTitleText forState:UIControlStateNormal];
+    [self.mentorChallengeInfoButton setTitle:self.challengeTitleText forState:UIControlStateNormal];
     
-    if (!self.challengeInfoModal) {
+    if (![MTUtil isCurrentUserMentor] && !self.challengeInfoModal) {
         [self resetChallengeProgress];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeleteChallengePost:) name:kDidDeleteChallengePostNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    if (self.challengeInfoModal) {
-        self.challengeInfoModal = NO;
+    if (![MTUtil isCurrentUserMentor]) {
+        if (self.challengeInfoModal) {
+            self.challengeInfoModal = NO;
+        }
+        else {
+            [self loadChallengeProgress];
+        }
     }
-    else {
-        [self loadChallengeProgress];
-    }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -78,11 +104,21 @@
 }
 
 
+#pragma mark - Notifications -
+- (void)didDeleteChallengePost:(NSNotification *)notif
+{
+    PFChallenges *challenge = notif.object;
+    if ([challenge.objectId isEqualToString:self.challenge.objectId]) {
+        [self loadChallengeProgress];
+    }
+}
+
+
 #pragma mark - Navigation -
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     NSString *segueID = [segue identifier];
-    if ([segueID isEqualToString:@"challengeInfoSegue"] || [segueID isEqualToString:@"hiddenChallengeInfoSegue"]) {
+    if ([segueID isEqualToString:@"challengeInfoSegue"] || [segueID isEqualToString:@"hiddenChallengeInfoSegue"] || [segueID isEqualToString:@"mentorChallengeInfoModal"]) {
         MTChallengeInfoViewController *destinationVC = (MTChallengeInfoViewController *)[segue destinationViewController];
         destinationVC.challenge = self.challenge;
         destinationVC.pageIndex = self.pageIndex;
@@ -96,6 +132,7 @@
 {
     NSString *userID = [PFUser currentUser].objectId;
     NSString *challengeID = self.challenge.objectId;
+    self.oldChallengeProgress = self.challengeProgress;
     
     MTMakeWeakSelf();
     [PFCloud callFunctionInBackground:@"getChallengeProgress" withParameters:@{@"user_id": userID, @"challenge_id": challengeID} block:^(id object, NSError *error) {
@@ -113,6 +150,7 @@
 - (void)updateChallengeProgress
 {
     CGFloat factor = self.challengeProgress;
+
     CGFloat newWidth = factor/100.0f * (self.backgroundProgressView.frame.size.width - 2.0f);
     CGFloat maskPadding = 3.0f;
     
@@ -130,22 +168,61 @@
     }
     
     if (factor == 0.0f) {
-        self.progressLabel.text = @"New Challenge";
-        self.progressLabel.textColor = [UIColor colorWithHexString:@"8e8e8d"];
-        self.progressLabel.textAlignment = NSTextAlignmentCenter;
-        self.progressLabel.frame = ({
-            CGRect newFrame = self.progressLabel.frame;
-            newFrame.origin.x = 0.0f;
-            newFrame.size.width = self.backgroundProgressView.frame.size.width;
-            newFrame;
-        });
         
-        [UIView animateWithDuration:0.3f animations:^{
-            self.progressLabel.alpha = 1.0f;
-        }];
+        if (self.oldChallengeProgress > 0.0f) {
+            self.oldChallengeProgress = 0.0f;
+            
+            // animate down first
+            [UIView animateWithDuration:0.3f animations:^{
+                self.progressLabel.alpha = 0.0f;
+                self.maskBorderView.frame = ({
+                    CGRect newFrame = self.maskBorderView.frame;
+                    newFrame.size.width = 0.0f;
+                    newFrame;
+                });
+                
+                self.foregroundProgressView.frame = ({
+                    CGRect newFrame = self.foregroundProgressView.frame;
+                    newFrame.size.width = 0.0f;
+                    newFrame;
+                });
+            } completion:^(BOOL finished) {
+                self.progressLabel.text = @"New Challenge";
+                self.progressLabel.textColor = [UIColor colorWithHexString:@"8e8e8d"];
+                self.progressLabel.textAlignment = NSTextAlignmentCenter;
+                self.progressLabel.frame = ({
+                    CGRect newFrame = self.progressLabel.frame;
+                    newFrame.origin.x = 0.0f;
+                    newFrame.size.width = self.backgroundProgressView.frame.size.width;
+                    newFrame;
+                });
+
+                [UIView animateWithDuration:0.3f animations:^{
+                    self.progressLabel.alpha = 1.0f;
+                }];
+            }];
+
+        }
+        else {
+            self.progressLabel.text = @"New Challenge";
+            self.progressLabel.textColor = [UIColor colorWithHexString:@"8e8e8d"];
+            self.progressLabel.textAlignment = NSTextAlignmentCenter;
+            self.progressLabel.frame = ({
+                CGRect newFrame = self.progressLabel.frame;
+                newFrame.origin.x = 0.0f;
+                newFrame.size.width = self.backgroundProgressView.frame.size.width;
+                newFrame;
+            });
+
+            [UIView animateWithDuration:0.3f animations:^{
+                self.progressLabel.alpha = 1.0f;
+            }];
+        }
+        
     }
     else {
         [UIView animateWithDuration:0.5f animations:^{
+            self.progressLabel.alpha = 0.0f;
             self.maskBorderView.frame = ({
                 CGRect newFrame = self.maskBorderView.frame;
                 newFrame.size.width = newWidth + maskPadding;

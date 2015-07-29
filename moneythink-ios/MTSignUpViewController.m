@@ -64,6 +64,8 @@
 @property (nonatomic, strong) NSMutableArray *selectedMoneyOptions;
 @property (nonatomic) BOOL allowEmptyEthnicities;
 @property (nonatomic) BOOL allowEmptyMoneyOptions;
+@property (nonatomic, strong) NSArray *sortedClasses;
+@property (nonatomic, strong) PFClasses *selectedClass;
 
 @end
 
@@ -328,20 +330,22 @@
     });
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
+    NSMutableArray *classes = [NSMutableArray array];
     for (id object in objects) {
         if (!IsEmpty(object[@"name"])) {
             [names addObject:object[@"name"]];
+            [classes addObject:object];
         }
     }
     
-    NSArray *sortedNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-    for (NSString *thisClassName in sortedNames) {
-        NSString *name = thisClassName;
-        if ([self.className.text isEqualToString:thisClassName]) {
-            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisClassName];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    self.sortedClasses = [classes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+
+    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[self.sortedClasses count]];
+    for (PFClasses *thisClass in self.sortedClasses) {
+        NSString *name = thisClass[@"name"];
+        if ([self.className.text isEqualToString:name]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, name];
         }
         [classNames addObject:name];
     }
@@ -379,6 +383,7 @@
                              handler:^(UIAlertAction *action) {
                                  weakSelf.classIsNew = NO;
                                  weakSelf.className.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
+                                 weakSelf.selectedClass = weakSelf.sortedClasses[buttonItem];
                              }];
                 [classSheet addAction:className];
             }
@@ -639,12 +644,6 @@
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
 
     if ([self validate]) {
-        NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
-        
-        PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
-        
-        findCode.cachePolicy = kPFCachePolicyNetworkOnly;
-        
         __block BOOL showedSignupError = NO;
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -653,13 +652,26 @@
         
         MTMakeWeakSelf();
         [self bk_performBlock:^(id obj) {
-            [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            NSDictionary *parameters = @{@"type": weakSelf.signUpType, @"code": weakSelf.registrationCode.text};
+            [PFCloud callFunctionInBackground:@"checkSignupCode" withParameters:parameters block:^(id object, NSError *error) {
                 if (!error) {
-                    NSArray *codes = objects;
+                    BOOL validCode = NO;
+                    PFClasses *foundClass = nil;
+
+                    if (isMentor) {
+                        validCode = YES;
+                    }
+                    else {
+                        if ([object isKindOfClass:[PFObject class]]) {
+                            PFObject *parseObject = (PFObject *)object;
+                            if ([parseObject.parseClassName isEqualToString:[PFClasses parseClassName]]) {
+                                foundClass = (PFClasses *)object;
+                                validCode = YES;
+                            }
+                        }
+                    }
                     
-                    if ([codes count] > 0) {
-                        PFSignupCodes *code = [codes firstObject];
-                        
+                    if (validCode) {
                         PFUser *user = [PFUser user];
                         
                         user.username = weakSelf.email.text;
@@ -682,11 +694,11 @@
                             [createSchool saveInBackground];
                         }
                         
+                        PFClasses *createClass = nil;
                         if (weakSelf.classIsNew) {
-                            PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
+                            createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
                             createClass[@"name"] = weakSelf.className.text;
                             createClass[@"school"] = weakSelf.schoolName.text;
-                            [createClass saveInBackground];
                             
                             PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
                             signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
@@ -700,11 +712,34 @@
                         if (isMentor) {
                             user[@"school"] = weakSelf.schoolName.text;
                             user[@"class"] = weakSelf.className.text;
+                            if (createClass) {
+                                NSError *error;
+                                [createClass save:&error];
+                                if (error && error.code != 120) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                    });
+                                    
+                                    [weakSelf bk_performBlock:^(id obj) {
+                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                    } afterDelay:0.35f];
+                                }
+                                user[@"class_p"] = createClass;
+                            }
+                            else {
+                                user[@"class_p"] = weakSelf.selectedClass;
+                            }
                         } else {
-                            user[@"school"] = code[@"school"];
-                            user[@"class"] = code[@"class"];
+                            user[@"class_p"] = foundClass;
+                            user[@"class"] = foundClass[@"name"];
                             
-                            if (!IsEmpty(weakSelf.birthdate.text) && self.selectedBirthdate) {
+                            if (foundClass[@"school_p"]) {
+                                PFSchools *school = foundClass[@"school_p"];
+                                [school fetchIfNeeded];
+                                user[@"school"] = school[@"name"];
+                            }
+                            
+                            if (!IsEmpty(weakSelf.birthdate.text) && weakSelf.selectedBirthdate) {
                                 user[@"birthdate"] = weakSelf.selectedBirthdate;
                             }
                             
@@ -712,7 +747,7 @@
                                 user[@"zip_code"] = weakSelf.zipCode.text;
                             }
                             
-                            if (!IsEmpty(weakSelf.ethnicity.text) && self.selectedEthnicity) {
+                            if (!IsEmpty(weakSelf.ethnicity.text) && weakSelf.selectedEthnicity) {
                                 user[@"ethnicity"] = weakSelf.selectedEthnicity;
                             }
                             
@@ -756,7 +791,7 @@
                                         }
                                     }
                                 });
-
+                                
                             } afterDelay:0.35f];
                             
                         }];
@@ -775,7 +810,8 @@
                             }
                         } afterDelay:0.35f];
                     }
-                } else {
+                }
+                else {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                     });
@@ -788,8 +824,8 @@
                     } afterDelay:0.35f];
                 }
             }];
+            
         } afterDelay:0.35f];
-
     }
 }
 
@@ -1042,6 +1078,8 @@
             [self performSegueWithIdentifier:@"addClass" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.classIsNew = NO;
+            // Minus 1 to account for New Class button
+            self.selectedClass = [self.sortedClasses objectAtIndex:buttonIndex-1];
             self.className.text = [self stringWithoutConfirmation:buttonTitle];
         } else { // Cancel
             self.classIsNew = NO;

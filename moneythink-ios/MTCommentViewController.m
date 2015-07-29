@@ -665,6 +665,8 @@
 
     self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
     
+    __block PFChallengePost *weakChallengePost = self.challengePost;
+    
     if (self.challenge[@"challenge_number"]) {
         self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
     }
@@ -682,8 +684,8 @@
         self.challengePost[@"extra_fields"] = [self jsonStringFromSpentFields];
     }
     
-    if (self.postImage.image)
-    {
+    MTMakeWeakSelf();
+    if (self.postImage.image) {
         NSString *fileName = @"post_image.png";
         NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
         
@@ -699,34 +701,33 @@
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:self.challengePost];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:weakChallengePost];
                 });
             }
             else {
                 NSLog(@"Post with picture error - %@", error);
-                [self.challengePost saveEventually];
+                [weakSelf.challengePost saveEventually];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:weakSelf];
                 });
             }
         }];
     }
-    else
-    {
+    else {
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
         
         [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostsdNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:weakSelf];
                 });
             }
             else {
                 NSLog(@"Post error - %@", error);
-                [self.challengePost saveEventually];
+                [weakSelf.challengePost saveEventually];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostsdNotification object:self];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:weakSelf];
                 });
             }
         }];

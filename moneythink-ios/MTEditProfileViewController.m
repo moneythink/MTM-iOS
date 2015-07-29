@@ -160,7 +160,7 @@
         [self bk_performBlockInBackground:^(id obj) {
             self.profileImage = [[PFImageView alloc] init];
             [self.profileImage setFile:profileImageFile];
-            
+
             [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -178,6 +178,7 @@
                             }
                         }
                         
+                        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
                         [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
                         
                         [UIView animateWithDuration:0.2f animations:^{
@@ -195,8 +196,11 @@
     else {
         self.profileImageLabel.text = @"Add Photo";
         self.profileImage = [[PFImageView alloc] init];
+        self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
         [self.profileImage setFile:nil];
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+        
+        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
         [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
     }
     

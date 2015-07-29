@@ -225,7 +225,8 @@
     cell.avatarImageView.image = [UIImage imageNamed:@"profile_image"];
     cell.avatarImageView.layer.cornerRadius = round(cell.avatarImageView.frame.size.width / 2.0f);
     cell.avatarImageView.layer.masksToBounds = YES;
-    
+    cell.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+
     if (user[@"profile_picture"]) {
         cell.avatarImageView.file = user[@"profile_picture"];
         __block MTNotificationTableViewCell *weakCell = cell;
