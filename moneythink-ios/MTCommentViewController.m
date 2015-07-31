@@ -540,10 +540,9 @@
         return;
     }
     
-    if (IsEmpty(self.postText.text)) {
-        
-        NSString *title = @"Text Missing";
-        NSString *message = @"Post text is required.";
+    if (IsEmpty(self.postText.text) && !self.postImage.image) {
+        NSString *title = @"Content Missing";
+        NSString *message = @"Post text or photo is required.";
         if ([UIAlertController class]) {
             UIAlertController *changeSheet = [UIAlertController
                                               alertControllerWithTitle:title
@@ -634,9 +633,9 @@
 #pragma mark - New Post Method -
 - (void)saveNew
 {
-    if (IsEmpty(self.postText.text)) {
-        NSString *title = @"Text Missing";
-        NSString *message = @"Post text is required.";
+    if (IsEmpty(self.postText.text) && !self.postImage.image) {
+        NSString *title = @"Content Missing";
+        NSString *message = @"Post text or photo is required.";
         if ([UIAlertController class]) {
             UIAlertController *changeSheet = [UIAlertController
                                               alertControllerWithTitle:title
@@ -819,6 +818,10 @@
         [formatterOut setUsesGroupingSeparator:NO];
 
         textField.text = [formatterOut stringFromNumber:number];
+    }
+    
+    if (textField == self.spentTextField || textField == self.savedTextField) {
+        self.notSureCheckbox.isChecked = NO;
     }
 }
 

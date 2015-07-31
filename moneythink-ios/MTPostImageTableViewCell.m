@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib {
     self.spentLabel.textColor = [UIColor votingRed];
-    self.savedLabel.textColor = [UIColor votingPurple];
+    self.savedLabel.textColor = [UIColor votingBlue];
 }
 
 - (void)prepareForReuse

@@ -43,6 +43,7 @@
     self.profileImage.file = self.student[@"profile_picture"];
     self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
     self.profileImage.layer.masksToBounds = YES;
+    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
     
     MTMakeWeakSelf();
     [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -112,6 +113,7 @@
     cell.postProfileImage.file = user[@"profile_picture"];
     cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
     cell.postProfileImage.layer.masksToBounds = YES;
+    cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
     
     [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {

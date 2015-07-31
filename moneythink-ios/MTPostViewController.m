@@ -927,9 +927,6 @@ typedef enum {
                 weakSelf.hasSecondaryButtons = YES;
                 [weakSelf updateSecondaryButtonsTapped];
             }
-            else {
-                weakSelf.hasButtons = NO;
-            }
         }
         
         PFUser *user = self.challengePost[@"user"];

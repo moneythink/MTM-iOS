@@ -72,6 +72,10 @@
             NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
             BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
             
+            weakSelf.hasButtons = NO;
+            weakSelf.hasSecondaryButtons = NO;
+            weakSelf.hasTertiaryButtons = NO;
+            
             if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
                 if ([buttons count] == 4) {
                     weakSelf.hasTertiaryButtons = YES;
@@ -82,9 +86,6 @@
             }
             else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
-            }
-            else {
-                weakSelf.hasButtons = NO;
             }
             
             weakSelf.pulledData = YES;

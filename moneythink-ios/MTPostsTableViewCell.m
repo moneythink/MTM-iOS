@@ -22,7 +22,7 @@
 {
     [super awakeFromNib];
     self.spentLabel.textColor = [UIColor votingRed];
-    self.savedLabel.textColor = [UIColor votingPurple];
+    self.savedLabel.textColor = [UIColor votingBlue];
     self.spentView.hidden = YES;
 }
 

@@ -123,8 +123,7 @@
 #pragma mark - Private Methods -
 - (void)updateView
 {
-    NSInteger challenge_number = [self.challenge[@"challenge_number"] intValue];
-    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge_number = %@", [NSNumber numberWithInteger:challenge_number]];
+    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge = %@", self.challenge];
     PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
     
     queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
