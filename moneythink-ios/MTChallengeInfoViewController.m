@@ -152,14 +152,21 @@
     [self.missionView setNeedsUpdateConstraints];
     [self.missionView setNeedsLayout];
     
-    NSString *pointsPerPostString = [NSString stringWithFormat:@"%@ pts x post", self.challenge[@"points_per_post"]];
-    NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ (up to %@ pts)", pointsPerPostString, self.challenge[@"max_points"]];
+    NSString *perString = @"per post";
+    NSArray *buttons = self.challenge[@"buttons"];
+    NSArray *secondaryButtons = self.challenge[@"secondary_buttons"];
+    if (!IsEmpty(buttons) || !IsEmpty(secondaryButtons)) {
+        perString = @"per tap";
+    }
+    
+    NSString *pointsPerPostString = [NSString stringWithFormat:@"%@ pts %@,", self.challenge[@"points_per_post"], perString];
+    NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ %@ pts to complete", pointsPerPostString, self.challenge[@"max_points"]];
     NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
     [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
     [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
 
     [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:[theMessage rangeOfString:@"Reward:"]];
-    [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:pointsPerPostString]];
+    [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont boldSystemFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
 
     self.rewardLabel.attributedText = theAttributedTitle;
     

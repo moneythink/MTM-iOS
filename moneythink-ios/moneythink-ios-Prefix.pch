@@ -41,6 +41,7 @@
 #define kNotificationInactivityMentor   @"inactivity_mentor"
 #define kLastViewedChallengeId          @"kLastViewedChallengeId"
 #define kUserHasOnboardedKey            @"user_has_onboarded"
+#define kForcedUpdateKey                @"kForcedUpdateKey"
 
 
 #ifdef __OBJC__

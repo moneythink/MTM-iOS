@@ -66,6 +66,8 @@
 @property (nonatomic) BOOL allowEmptyMoneyOptions;
 @property (nonatomic, strong) NSArray *sortedClasses;
 @property (nonatomic, strong) PFClasses *selectedClass;
+@property (nonatomic, strong) UIActionSheet *currentActionSheet;
+@property (nonatomic, strong) id currentAlertController;
 
 @end
 
@@ -180,6 +182,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDismiss:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -274,6 +277,7 @@
             
             [schoolSheet addAction:cancel];
             
+            self.currentAlertController = schoolSheet;
             [self presentViewController:schoolSheet animated:YES completion:nil];
         } else {
             UIActionSheet *schoolSheet = [[UIActionSheet alloc]
@@ -289,6 +293,7 @@
             
             [schoolSheet addButtonWithTitle:@"Cancel"];
             schoolSheet.cancelButtonIndex = schoolNames.count + 1;
+            self.currentActionSheet = schoolSheet;
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:self.view]) {
@@ -390,6 +395,7 @@
             
             [classSheet addAction:cancel];
             
+            self.currentAlertController = classSheet;
             [weakSelf presentViewController:classSheet animated:YES completion:nil];
         } else {
             UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
@@ -400,6 +406,7 @@
             
             [classSheet addButtonWithTitle:@"Cancel"];
             classSheet.cancelButtonIndex = classNames.count + 1;
+            self.currentActionSheet = classSheet;
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:weakSelf.view]) {
@@ -502,6 +509,7 @@
             
             [ethnicitySheet addAction:cancel];
             
+            self.currentAlertController = ethnicitySheet;
             [self presentViewController:ethnicitySheet animated:YES completion:nil];
         } else {
             UIActionSheet *ethnicitySheet = [[UIActionSheet alloc]
@@ -517,6 +525,7 @@
             
             [ethnicitySheet addButtonWithTitle:@"Cancel"];
             ethnicitySheet.cancelButtonIndex = ethnicityNames.count;
+            self.currentActionSheet = ethnicitySheet;
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:self.view]) {
@@ -937,6 +946,7 @@
         [viewSheet addAction:option2];
         [viewSheet addAction:cancel];
         
+        self.currentAlertController = viewSheet;
         [self presentViewController:viewSheet animated:YES completion:nil];
     }
     else {
@@ -954,6 +964,7 @@
         [sheet bk_setCancelButtonWithTitle:@"Cancel" handler:^{
         }];
         
+        self.currentActionSheet = sheet;
         [sheet showInView:[UIApplication sharedApplication].keyWindow];
     }
 }
@@ -1167,6 +1178,19 @@
         self.reachable = YES;
     } else {
         self.reachable = NO;
+    }
+}
+
+- (void)didEnterBackground:(NSNotification *)notification
+{
+    if (self.currentActionSheet) {
+        [self.currentActionSheet dismissWithClickedButtonIndex:self.currentActionSheet.cancelButtonIndex animated:NO];
+        self.currentActionSheet = nil;
+    }
+    else if (self.currentAlertController) {
+        UIAlertController *alertController = (UIAlertController *)self.currentAlertController;
+        [alertController dismissViewControllerAnimated:NO completion:nil];
+        self.currentAlertController = nil;
     }
 }
 
