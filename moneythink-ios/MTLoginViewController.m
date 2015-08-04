@@ -78,6 +78,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetBecameReachable:) name:kInternetDidBecomeReachableNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
@@ -192,20 +193,12 @@
                                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
                                        }];
 
-            UIAlertAction *okAction = [UIAlertAction
-                                       actionWithTitle:@"OK"
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action) {
-                                           self.presentingForcedUpdateAlert = NO;
-                                       }];
-            
             [updateAlert addAction:openAction];
-            [updateAlert addAction:okAction];
             
             self.forcedUpdateAlertController = updateAlert;
             [self presentViewController:updateAlert animated:YES completion:nil];
         } else {
-            self.forcedUpdateAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Open App Store", nil];
+            self.forcedUpdateAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"Open App Store", nil];
             [self.forcedUpdateAlert show];
         }
     }
@@ -491,6 +484,11 @@
         self.forcedUpdateAlertController = nil;
     }
     self.presentingForcedUpdateAlert = NO;
+}
+
+- (void)willEnterForeground:(NSNotification *)notification
+{
+    [self updateView];
 }
 
 

@@ -148,16 +148,18 @@
     
     // >>>>> Attributed hashtag
     cell.postText.text = cell.rowPost[@"post_text"];
-    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
-    NSRange rangeAll = NSMakeRange(0, cell.postText.text.length);
     
-    [hashtags enumerateMatchesInString:cell.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.postText.text];
-        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+    if (!IsEmpty(cell.postText.text)) {
+        NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSRange rangeAll = NSMakeRange(0, cell.postText.text.length);
         
-        cell.postText.attributedText = hashtag;
-    }];
-    
+        [hashtags enumerateMatchesInString:cell.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.postText.text];
+            [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            
+            cell.postText.attributedText = hashtag;
+        }];
+    }
     // Attributed hashtag
 
     NSInteger likesCount = 0;

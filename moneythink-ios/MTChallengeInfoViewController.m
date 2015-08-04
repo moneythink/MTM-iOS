@@ -159,8 +159,14 @@
         perString = @"per tap";
     }
     
+    
     NSString *pointsPerPostString = [NSString stringWithFormat:@"%@ pts %@,", self.challenge[@"points_per_post"], perString];
     NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ %@ pts to complete", pointsPerPostString, self.challenge[@"max_points"]];
+    
+    if (!IsEmpty(self.challenge[@"rewards_info"])) {
+        theMessage = [NSString stringWithFormat:@"Reward: %@", self.challenge[@"rewards_info"]];
+    }
+                      
     NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
     [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
     [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
