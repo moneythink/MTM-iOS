@@ -74,6 +74,7 @@
         [self bk_performBlock:^(id obj) {
             self.profileImage = [[PFImageView alloc] init];
             [self.profileImage setFile:profileImageFile];
+            self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
             
             [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,6 +88,7 @@
     else {
         // Set to default
         self.profileImage = [[PFImageView alloc] init];
+        self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
         [self.profileImage setFile:nil];
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
         [imageView setImage:self.profileImage.image];

@@ -79,7 +79,7 @@
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey]) {
+        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey]) {
             NSLog(@"removing user pref for %@", key);
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
         }
@@ -91,6 +91,9 @@
     [[ZDKConfig instance] setUserIdentity:nil];
     [[ZDKSdkStorage instance] clearUserData];
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
+    
+    // Clear any notification count
+    ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = 0;
 }
 
 + (BOOL)isCurrentUserMentor

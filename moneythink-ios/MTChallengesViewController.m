@@ -8,7 +8,6 @@
 
 #import "MTChallengesViewController.h"
 #import "MTExplorePostCollectionView.h"
-#import "MTChallengeInfoViewController.h"
 #import "MTMyClassTableViewController.h"
 
 @interface MTChallengesViewController ()
@@ -37,7 +36,6 @@
 @property (nonatomic, assign) NSInteger challengesPendingIndex;
 @property (nonatomic, strong) MTExplorePostCollectionView *exploreCollectionView;
 @property (nonatomic, strong) MTMyClassTableViewController  *myClassTableView;
-@property (nonatomic, strong) MTChallengeInfoViewController *challengeInfoView;
 @property (nonatomic, strong) MTChallengeListViewController *challengeListView;
 @property (nonatomic, strong) NSArray *emojiObjects;
 @property (nonatomic) BOOL shouldLoadPreviousChallenge;
@@ -148,8 +146,6 @@
     self.myClassTableView = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsTableView"];
     self.myClassTableView.view.frame = self.myClassView.frame;
     
-    self.challengeInfoView = [self.storyboard instantiateViewControllerWithIdentifier:@"challengeInfoModal"];
-    
     self.viewControllers = @[self.myClassTableView, self.exploreCollectionView];
     self.pageViewControllers = @[self.myClassTableView];
     
@@ -247,7 +243,6 @@
     
     self.myClassTableView.challenge = self.currentChallenge;
     self.exploreCollectionView.challenge = self.currentChallenge;
-    self.challengeInfoView.challenge = self.currentChallenge;
 }
 
 - (void)toggleFeedExploreControl
@@ -443,6 +438,7 @@
 {
     PFQuery *allChallenges = [PFQuery queryWithClassName:[PFChallenges parseClassName]];
     [allChallenges orderByAscending:@"challenge_number"];
+    [allChallenges whereKey:@"challenge_number" greaterThan:[NSNumber numberWithInt:0]];
     [allChallenges whereKeyDoesNotExist:@"school"];
     [allChallenges whereKeyDoesNotExist:@"class"];
     
@@ -737,9 +733,13 @@
 - (void)leftButtonTapped
 {
     [self closeChallengeList];
-    self.challengesPageIndex--;
     
-    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex-1];
+    if (!newViewController) {
+        return;
+    }
+
+    self.challengesPageIndex--;
     NSArray *viewControllers = @[newViewController];
     [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
     
@@ -750,9 +750,13 @@
 - (void)rightButtonTapped
 {
     [self closeChallengeList];
-    self.challengesPageIndex++;
     
-    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex];
+    MTChallengeContentViewController *newViewController = [self viewControllerAtIndex:self.challengesPageIndex+1];
+    if (!newViewController) {
+        return;
+    }
+    
+    self.challengesPageIndex++;
     NSArray *viewControllers = @[newViewController];
     [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:YES completion:nil];
     

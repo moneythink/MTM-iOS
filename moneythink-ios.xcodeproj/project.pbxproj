@@ -17,8 +17,6 @@
 		106309961A3A3DD80093C209 /* checkbox_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098E1A3A3DD80093C209 /* checkbox_ticked.png */; };
 		106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */; };
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
-		106309991A3A3DD80093C209 /* z checkbox_not_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */; };
-		1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */ = {isa = PBXBuildFile; fileRef = 106309931A3A3DD80093C209 /* z checkbox_ticked.png */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
@@ -113,8 +111,14 @@
 		8921ED081B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */; };
 		8921ED0B1B25FCEF00010E3F /* nav-icons-signup.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED091B25FCEF00010E3F /* nav-icons-signup.png */; };
 		8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */; };
+		8925653E1B585EFA00473AFD /* PFEthnicities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925653D1B585EFA00473AFD /* PFEthnicities.m */; };
 		892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */ = {isa = PBXBuildFile; fileRef = 892573861AE59515002FF871 /* PFChallengePostsLiked.m */; };
 		8925B8C71B61A3C80027A0AF /* NSDictionary+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8C61B61A3C80027A0AF /* NSDictionary+MTAdditions.m */; };
+		89271F3D1B5DA32000C66DD8 /* checked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F391B5DA32000C66DD8 /* checked.png */; };
+		89271F3E1B5DA32000C66DD8 /* checked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3A1B5DA32000C66DD8 /* checked@2x.png */; };
+		89271F3F1B5DA32000C66DD8 /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3B1B5DA32000C66DD8 /* unchecked.png */; };
+		89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */; };
+		89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 89271F421B5DAC5600C66DD8 /* MTTextField.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */; };
@@ -154,6 +158,8 @@
 		8977E3EA1B223E41009AD452 /* comment_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E81B223E41009AD452 /* comment_highlighted.png */; };
 		8977E3EB1B223E41009AD452 /* comment_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */; };
 		898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */; };
+		899232791B6052B9009C63B9 /* PFMoneyOptions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899232781B6052B9009C63B9 /* PFMoneyOptions.m */; };
+		8992327D1B614202009C63B9 /* JGActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8992327C1B614202009C63B9 /* JGActionSheet.m */; };
 		8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906721AD46B5D007A4F3E /* icon_button_check_normal.png */; };
 		8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */; };
 		8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */; };
@@ -277,8 +283,6 @@
 		1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checkbox_ticked@2x.png"; sourceTree = "<group>"; };
 		106309901A3A3DD80093C209 /* MICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MICheckBox.h; sourceTree = "<group>"; };
 		106309911A3A3DD80093C209 /* MICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MICheckBox.m; sourceTree = "<group>"; };
-		106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "z checkbox_not_ticked.png"; sourceTree = "<group>"; };
-		106309931A3A3DD80093C209 /* z checkbox_ticked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "z checkbox_ticked.png"; sourceTree = "<group>"; };
 		1063099B1A3A3E180093C209 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -427,10 +431,18 @@
 		8921ED071B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+EmptyDataSet.m"; sourceTree = "<group>"; };
 		8921ED091B25FCEF00010E3F /* nav-icons-signup.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup.png"; sourceTree = "<group>"; };
 		8921ED0A1B25FCEF00010E3F /* nav-icons-signup@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-signup@2x.png"; sourceTree = "<group>"; };
+		8925653C1B585EEE00473AFD /* PFEthnicities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFEthnicities.h; path = "Data Classes/PFEthnicities.h"; sourceTree = "<group>"; };
+		8925653D1B585EFA00473AFD /* PFEthnicities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFEthnicities.m; path = "Data Classes/PFEthnicities.m"; sourceTree = "<group>"; };
 		892573851AE5950C002FF871 /* PFChallengePostsLiked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostsLiked.h; path = "Data Classes/PFChallengePostsLiked.h"; sourceTree = "<group>"; };
 		892573861AE59515002FF871 /* PFChallengePostsLiked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostsLiked.m; path = "Data Classes/PFChallengePostsLiked.m"; sourceTree = "<group>"; };
 		8925B8C51B61A3C80027A0AF /* NSDictionary+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MTAdditions.h"; sourceTree = "<group>"; };
 		8925B8C61B61A3C80027A0AF /* NSDictionary+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MTAdditions.m"; sourceTree = "<group>"; };
+		89271F391B5DA32000C66DD8 /* checked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checked.png; sourceTree = "<group>"; };
+		89271F3A1B5DA32000C66DD8 /* checked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "checked@2x.png"; sourceTree = "<group>"; };
+		89271F3B1B5DA32000C66DD8 /* unchecked.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = unchecked.png; sourceTree = "<group>"; };
+		89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unchecked@2x.png"; sourceTree = "<group>"; };
+		89271F411B5DAC5600C66DD8 /* MTTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTTextField.h; sourceTree = "<group>"; };
+		89271F421B5DAC5600C66DD8 /* MTTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTTextField.m; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
@@ -486,6 +498,10 @@
 		8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "comment_highlighted@2x.png"; sourceTree = "<group>"; };
 		898FBE5E1B0D2A6B0058F3B4 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		899232771B6052B0009C63B9 /* PFMoneyOptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFMoneyOptions.h; path = "Data Classes/PFMoneyOptions.h"; sourceTree = "<group>"; };
+		899232781B6052B9009C63B9 /* PFMoneyOptions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFMoneyOptions.m; path = "Data Classes/PFMoneyOptions.m"; sourceTree = "<group>"; };
+		8992327B1B614202009C63B9 /* JGActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGActionSheet.h; sourceTree = "<group>"; };
+		8992327C1B614202009C63B9 /* JGActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGActionSheet.m; sourceTree = "<group>"; };
 		899906721AD46B5D007A4F3E /* icon_button_check_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_normal.png; sourceTree = "<group>"; };
 		899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_button_check_normal@2x.png"; sourceTree = "<group>"; };
 		899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_pressed.png; sourceTree = "<group>"; };
@@ -695,6 +711,7 @@
 				89CE97341B4F1E59007FF4D7 /* AFNetworking */,
 				89CE97481B4F1E59007FF4D7 /* UIKit+AFNetworking */,
 				89758EA31B4F204D002B73E3 /* AFOAuth2Manager */,
+				8992327A1B614202009C63B9 /* JGActionSheet */,
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
 				89A793BC1B2F25CA000BFA40 /* Onboard */,
 				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
@@ -718,8 +735,10 @@
 				1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */,
 				106309901A3A3DD80093C209 /* MICheckBox.h */,
 				106309911A3A3DD80093C209 /* MICheckBox.m */,
-				106309921A3A3DD80093C209 /* z checkbox_not_ticked.png */,
-				106309931A3A3DD80093C209 /* z checkbox_ticked.png */,
+				89271F391B5DA32000C66DD8 /* checked.png */,
+				89271F3A1B5DA32000C66DD8 /* checked@2x.png */,
+				89271F3B1B5DA32000C66DD8 /* unchecked.png */,
+				89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */,
 			);
 			path = MICheckboxUtils;
 			sourceTree = "<group>";
@@ -852,6 +871,10 @@
 		5890F7441976DD7E0042AC2F /* Categories */ = {
 			isa = PBXGroup;
 			children = (
+				8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */,
+				8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */,
+				89C6792A19E315660054E890 /* UIAlertView+MTAdditions.h */,
+				89C6792B19E315660054E890 /* UIAlertView+MTAdditions.m */,
 				5890F7451976DDAF0042AC2F /* UIColor+Palette.h */,
 				5890F7461976DDAF0042AC2F /* UIColor+Palette.m */,
 				89007BD119F6E271008B4F8C /* UIFont+MTAdditions.h */,
@@ -875,6 +898,8 @@
 			children = (
 				8901D8B019FFDF00006E9168 /* MTLabel.h */,
 				8901D8B119FFDF00006E9168 /* MTLabel.m */,
+				89271F411B5DAC5600C66DD8 /* MTTextField.h */,
+				89271F421B5DAC5600C66DD8 /* MTTextField.m */,
 				89CE54111B152829000825FB /* MTViewController.h */,
 				89CE54121B152829000825FB /* MTViewController.m */,
 			);
@@ -1007,6 +1032,8 @@
 				8918B31F1B18F6C800880E62 /* arrow_right_white_disabled@2x.png */,
 				8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */,
 				8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */,
+				89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */,
+				89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */,
 			);
 			name = "challenge bar";
 			sourceTree = "<group>";
@@ -1021,8 +1048,6 @@
 				890587481A01816900DB8CD4 /* PrivacyPolicy.html */,
 				8967C78A1A77F79500BE125E /* challenges-icon.png */,
 				8967C78B1A77F79500BE125E /* challenges-icon@2x.png */,
-				89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */,
-				89A793B91B2B80D6000BFA40 /* challenge-list-icon@2x.png */,
 				899F309319F16948004F6B10 /* check-active.png */,
 				899F309419F16948004F6B10 /* check-active@2x.png */,
 				899F309519F16948004F6B10 /* check-unactive.png */,
@@ -1202,6 +1227,15 @@
 			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
+		8992327A1B614202009C63B9 /* JGActionSheet */ = {
+			isa = PBXGroup;
+			children = (
+				8992327B1B614202009C63B9 /* JGActionSheet.h */,
+				8992327C1B614202009C63B9 /* JGActionSheet.m */,
+			);
+			path = JGActionSheet;
+			sourceTree = "<group>";
+		};
 		89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */ = {
 			isa = PBXGroup;
 			children = (
@@ -1375,6 +1409,7 @@
 				8999067E1AD46B5D007A4F3E /* icon_button_dollar_normal.png in Resources */,
 				8921063219DA1F37000CFBF6 /* logo_actionbar.png in Resources */,
 				106309951A3A3DD80093C209 /* checkbox_not_ticked@2x.png in Resources */,
+				89271F3E1B5DA32000C66DD8 /* checked@2x.png in Resources */,
 				8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */,
 				8921062F19DA1F37000CFBF6 /* like_normal.png in Resources */,
 				8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */,
@@ -1384,8 +1419,8 @@
 				89CE54161B152A44000825FB /* icon_main_nav.png in Resources */,
 				8921064819DA1F37000CFBF6 /* students_normal@2x.png in Resources */,
 				89A0E8071B34FCBD00F01BFF /* comment_active.png in Resources */,
-				106309991A3A3DD80093C209 /* z checkbox_not_ticked.png in Resources */,
 				5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */,
+				89271F3F1B5DA32000C66DD8 /* unchecked.png in Resources */,
 				8921062E19DA1F37000CFBF6 /* like_active@2x.png in Resources */,
 				899F309819F16948004F6B10 /* check-active@2x.png in Resources */,
 				895F78961B16451600055759 /* nav-icons-challenges@2x.png in Resources */,
@@ -1419,7 +1454,6 @@
 				8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */,
 				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
-				1063099A1A3A3DD80093C209 /* z checkbox_ticked.png in Resources */,
 				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
 				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
@@ -1447,6 +1481,8 @@
 				89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */,
 				89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */,
 				895F78A91B16456000055759 /* nav-icons-support.png in Resources */,
+				89271F3D1B5DA32000C66DD8 /* checked.png in Resources */,
+				89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */,
 				89A0E80E1B38678100F01BFF /* picker@2x.png in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
@@ -1521,6 +1557,7 @@
 				106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
+				89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */,
 				58669F5C19772D00009BC13C /* PFChallengeBanner.m in Sources */,
 				89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */,
 				8977E3E31B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m in Sources */,
@@ -1554,10 +1591,12 @@
 				89CE97661B4F1E59007FF4D7 /* UIButton+AFNetworking.m in Sources */,
 				5860BF3C1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m in Sources */,
 				8901D8A719FAB4CA006E9168 /* MTPostLikeCommentTableViewCell.m in Sources */,
+				8925653E1B585EFA00473AFD /* PFEthnicities.m in Sources */,
 				89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */,
 				89CE54131B152829000825FB /* MTViewController.m in Sources */,
 				8901D8B219FFDF00006E9168 /* MTLabel.m in Sources */,
 				89CE975A1B4F1E59007FF4D7 /* AFHTTPRequestOperation.m in Sources */,
+				8992327D1B614202009C63B9 /* JGActionSheet.m in Sources */,
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */,
 				89CE97621B4F1E59007FF4D7 /* AFURLSessionManager.m in Sources */,
@@ -1576,6 +1615,7 @@
 				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
 				8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */,
 				58669F6019772D00009BC13C /* PFChallenges.m in Sources */,
+				899232791B6052B9009C63B9 /* PFMoneyOptions.m in Sources */,
 				58676B231974273E0070F604 /* MTLoginViewController.m in Sources */,
 				895907531B5465A2003AB574 /* MTUser.m in Sources */,
 				89CE975F1B4F1E59007FF4D7 /* AFURLConnectionOperation.m in Sources */,
@@ -1689,7 +1729,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1768,7 +1808,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1791,7 +1831,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "07a30cd1-ec63-422e-8ab3-69d50d21bf05";
+				PROVISIONING_PROFILE = "3cc1178b-2760-4b57-8f71-832545b6f338";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1847,7 +1887,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1870,7 +1910,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "db03a94a-1b42-4f36-97dd-819bff14abe5";
+				PROVISIONING_PROFILE = "adccdef1-3f29-49f4-857d-d98bdd220949";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1925,7 +1965,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -1948,7 +1988,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "db03a94a-1b42-4f36-97dd-819bff14abe5";
+				PROVISIONING_PROFILE = "adccdef1-3f29-49f4-857d-d98bdd220949";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2003,7 +2043,7 @@
 				CFBundleShortVersionString = 1.0.2;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/**",
@@ -2026,7 +2066,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "07a30cd1-ec63-422e-8ab3-69d50d21bf05";
+				PROVISIONING_PROFILE = "3cc1178b-2760-4b57-8f71-832545b6f338";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

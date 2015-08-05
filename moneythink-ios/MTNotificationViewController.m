@@ -158,6 +158,7 @@
     [queryClass whereKeyExists:@"notificationType"];
 
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryClass]];
+    
     // Always pull latest from Network if available
     query.cachePolicy = kPFCachePolicyNetworkElseCache;
     
@@ -224,7 +225,8 @@
     cell.avatarImageView.image = [UIImage imageNamed:@"profile_image"];
     cell.avatarImageView.layer.cornerRadius = round(cell.avatarImageView.frame.size.width / 2.0f);
     cell.avatarImageView.layer.masksToBounds = YES;
-    
+    cell.avatarImageView.contentMode = UIViewContentModeScaleAspectFill;
+
     if (user[@"profile_picture"]) {
         cell.avatarImageView.file = user[@"profile_picture"];
         __block MTNotificationTableViewCell *weakCell = cell;
@@ -686,7 +688,6 @@
     }
     
     ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = currentCount;
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:currentCount]];
     
     [PFCloud callFunctionInBackground:@"markNotificationRead" withParameters:@{@"user_id": [user objectId], @"notification_id": [notification objectId]} block:^(id object, NSError *error) {
         if (error) {
@@ -711,12 +712,14 @@
     
     PFQuery *queryMe = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryMe whereKey:@"recipient" equalTo:user];
-    
+    [queryMe whereKeyExists:@"notificationType"];
+
     PFQuery *queryClass = [PFQuery queryWithClassName:[PFNotifications parseClassName]];
     [queryClass whereKeyDoesNotExist:@"recipient"];
     [queryClass whereKey:@"class" equalTo:className];
     [queryClass whereKey:@"school" equalTo:schoolName];
-    
+    [queryClass whereKeyExists:@"notificationType"];
+
     PFQuery *query = [PFQuery orQueryWithSubqueries:@[queryMe, queryClass]];
     
     if (useCache) {

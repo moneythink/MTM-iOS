@@ -7,6 +7,7 @@
 //
 
 #import "MTLoginViewController.h"
+#import "MTNotificationViewController.h"
 
 @interface MTLoginViewController ()
 
@@ -19,9 +20,12 @@
 @property (weak, nonatomic) IBOutlet UILabel *emailLabel;
 @property (weak, nonatomic) IBOutlet UILabel *passwordLabel;
 @property (weak, nonatomic) IBOutlet UIButton *forgotPasswordButton;
-@property (strong, nonatomic) IBOutletCollection(UIView) NSArray *separatorViews;
+@property (nonatomic, strong) IBOutletCollection(UIView) NSArray *separatorViews;
 
-@property (strong, nonatomic) MTSignUpViewController *signUpViewController;
+@property (nonatomic, strong) MTSignUpViewController *signUpViewController;
+@property (nonatomic, strong) UIAlertView *forcedUpdateAlert;
+@property (nonatomic, strong) id forcedUpdateAlertController;
+@property (nonatomic) BOOL presentingForcedUpdateAlert;
 
 @end
 
@@ -73,7 +77,9 @@
     [self updateView];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(internetBecameReachable:) name:kInternetDidBecomeReachableNotification object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
@@ -150,6 +156,12 @@
 
 - (void)updateView
 {
+    if ([((AppDelegate *)[MTUtil getAppDelegate]) shouldForceUpdate]) {
+        if (self.presentingForcedUpdateAlert) {
+            return;
+        }
+        
+        self.presentingForcedUpdateAlert = YES;
     if ([MTUser isUserLoggedIn]) {
         [[MTUtil getAppDelegate] configureZendesk];
         
@@ -167,6 +179,23 @@
             thisView.hidden = YES;
         }
         
+        NSString *title = @"Update Required";
+        NSString *message = @"You have an unsupported version installed. Please update in the App Store to continue using Moneythink.";
+        if ([UIAlertController class]) {
+            UIAlertController *updateAlert = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:message
+                                              preferredStyle:UIAlertControllerStyleAlert];
+            
+            UIAlertAction *openAction = [UIAlertAction
+                                       actionWithTitle:@"Open App Store"
+                                       style:UIAlertActionStyleDefault
+                                       handler:^(UIAlertAction *action) {
+                                           self.presentingForcedUpdateAlert = NO;
+                                           NSString *iTunesLink = @"https://itunes.apple.com/us/app/moneythink/id907176836?mt=8";
+                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
+                                       }];
+        
         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
         if (![onboardingController checkForOnboarding]) {
             
@@ -176,6 +205,59 @@
             [self.revealViewController setFrontViewController:challengesVC animated:YES];
         }
 
+            [updateAlert addAction:openAction];
+            
+            self.forcedUpdateAlertController = updateAlert;
+            [self presentViewController:updateAlert animated:YES completion:nil];
+        } else {
+            self.forcedUpdateAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"Open App Store", nil];
+            [self.forcedUpdateAlert show];
+        }
+    }
+    else if ([PFUser currentUser]) {
+        self.view.backgroundColor = [UIColor primaryOrange];
+        self.emailLabel.hidden = YES;
+        self.passwordLabel.hidden = YES;
+        self.studentSignUpButton.hidden = YES;
+        self.mentorSignUpButton.hidden = YES;
+        self.loginButton.hidden = YES;
+        self.forgotPasswordButton.hidden = YES;
+        self.emailTextField.hidden = YES;
+        self.passwordTextField.hidden = YES;
+        
+        for (UIView *thisView in self.separatorViews) {
+            thisView.hidden = YES;
+        }
+
+        PFUser *user = [PFUser currentUser];
+        
+        MTMakeWeakSelf();
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        hud.labelText = @"Loading...";
+        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
+            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
+            if (!error) {
+                [[MTUtil getAppDelegate] configureZendesk];
+                
+                // Update Notification count for this user.
+                [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                
+                MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                if (![onboardingController checkForOnboarding]) {
+                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                }
+            } else {
+                NSLog(@"error - %@", error);
+                
+                if (![MTUtil internetReachable]) {
+                    [UIAlertView showNoInternetAlert];
+                }
+                else {
+                    [UIAlertView showNetworkAlertWithError:error];
+                }
+            }
+        }];
 //        PFUser *user = [PFUser currentUser];
 //        
 //        MTMakeWeakSelf();
@@ -273,6 +355,11 @@
     [self reloadInputViews];
 }
 
+- (void)shouldUpdateView
+{
+    [self updateView];
+}
+
 
 #pragma mark - Login Methods -
 - (IBAction)resetTapped:(id)sender
@@ -315,6 +402,13 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
+            // Check for custom playlist for this class
+            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+            
+            // Update Notification count for this user.
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+            
+            MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {
                 
                 // TODO: change back
@@ -368,7 +462,15 @@
 #pragma mark - UIAlertViewDelegate methods -
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex != alertView.cancelButtonIndex) {
+    if (alertView == self.forcedUpdateAlert) {
+        self.presentingForcedUpdateAlert = NO;
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            NSString *iTunesLink = @"https://itunes.apple.com/us/app/moneythink/id907176836?mt=8";
+            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
+        }
+        self.forcedUpdateAlert = nil;
+    }
+    else if (buttonIndex != alertView.cancelButtonIndex) {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Sending Password Reset...";
 
@@ -444,8 +546,27 @@
 }
 
 
-#pragma mark - Internet Notifications -
+#pragma mark - Notifications -
 - (void)internetBecameReachable:(NSNotification *)aNotification
+{
+    [self updateView];
+}
+
+- (void)didEnterBackground:(NSNotification *)notification
+{
+    if (self.forcedUpdateAlert) {
+        [self.forcedUpdateAlert dismissWithClickedButtonIndex:self.forcedUpdateAlert.cancelButtonIndex animated:NO];
+        self.forcedUpdateAlert = nil;
+    }
+    else if (self.forcedUpdateAlertController) {
+        UIAlertController *alertController = (UIAlertController *)self.forcedUpdateAlertController;
+        [alertController dismissViewControllerAnimated:NO completion:nil];
+        self.forcedUpdateAlertController = nil;
+    }
+    self.presentingForcedUpdateAlert = NO;
+}
+
+- (void)willEnterForeground:(NSNotification *)notification
 {
     [self updateView];
 }

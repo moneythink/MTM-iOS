@@ -119,6 +119,7 @@
     pointsLabel.text = points;
 
     profileImage.image = [UIImage imageNamed:@"profile_image"];
+    profileImage.contentMode = UIViewContentModeScaleAspectFill;
     profileImage.layer.cornerRadius = round(profileImage.frame.size.width / 2.0f);
     profileImage.layer.masksToBounds = YES;
 

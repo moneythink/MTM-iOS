@@ -11,4 +11,6 @@
 
 @interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate>
 
+- (void)shouldUpdateView;
+
 @end

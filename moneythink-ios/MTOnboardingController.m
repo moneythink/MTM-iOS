@@ -29,10 +29,15 @@
         return NO;
     }
     
-    SWRevealViewController *revealViewController = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
-    [revealViewController setFrontViewController:[self generateWelcomeVC] animated:YES];
+    [self initiateOnboarding];
     
     return YES;
+}
+
+- (void)initiateOnboarding
+{
+    SWRevealViewController *revealViewController = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
+    [revealViewController setFrontViewController:[self generateWelcomeVC] animated:YES];
 }
 
 - (void)handleOnboardingCompletion {
@@ -73,9 +78,9 @@
     }];
 
     // Skipping this until progress bar is complete
-//    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
-//    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
-//    }];
+    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
+    OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
+    }];
 
     UIImage *onboarding6 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_6_mentor"] : [UIImage imageNamed:@"onboarding_6_student"];
     OnboardingContentViewController *sixthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding6 buttonText:nil action:^{
@@ -130,11 +135,11 @@
 
     self.onboardingVC = nil;
     if ([PFUser currentUser][@"profile_picture"]) {
-        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, sixthPage, seventhPage, lastPage]];
+        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, fifthPage, sixthPage, seventhPage, lastPage]];
         self.onboardingVC.fadePageControlOnLastPage = YES;
     }
     else {
-        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, sixthPage, seventhPage, photoUploadPage, lastPage]];
+        self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, fifthPage, sixthPage, seventhPage, photoUploadPage, lastPage]];
         self.onboardingVC.fadePageControlOnLastTwoPages = YES;
     }
     

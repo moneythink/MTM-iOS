@@ -23,5 +23,6 @@
 - (void)updateParseInstallationState;
 - (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
 - (void)configureZendesk;
+- (BOOL)shouldForceUpdate;
 
 @end

@@ -43,6 +43,7 @@
     self.profileImage.file = self.student[@"profile_picture"];
     self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
     self.profileImage.layer.masksToBounds = YES;
+    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
     
     MTMakeWeakSelf();
     [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
@@ -112,6 +113,7 @@
     cell.postProfileImage.file = user[@"profile_picture"];
     cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
     cell.postProfileImage.layer.masksToBounds = YES;
+    cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
     
     [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
         if (!error) {
@@ -146,16 +148,18 @@
     
     // >>>>> Attributed hashtag
     cell.postText.text = cell.rowPost[@"post_text"];
-    NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
-    NSRange rangeAll = NSMakeRange(0, cell.postText.text.length);
     
-    [hashtags enumerateMatchesInString:cell.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
-        NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.postText.text];
-        [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+    if (!IsEmpty(cell.postText.text)) {
+        NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
+        NSRange rangeAll = NSMakeRange(0, cell.postText.text.length);
         
-        cell.postText.attributedText = hashtag;
-    }];
-    
+        [hashtags enumerateMatchesInString:cell.postText.text options:NSMatchingWithoutAnchoringBounds range:rangeAll usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+            NSMutableAttributedString *hashtag = [[NSMutableAttributedString alloc]initWithString:cell.postText.text];
+            [hashtag addAttribute:NSForegroundColorAttributeName value:[UIColor primaryOrange] range:result.range];
+            
+            cell.postText.attributedText = hashtag;
+        }];
+    }
     // Attributed hashtag
 
     NSInteger likesCount = 0;

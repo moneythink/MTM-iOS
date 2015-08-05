@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *exploreCollectionView;
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
+@property (nonatomic) BOOL hasTertiaryButtons;
 
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic) BOOL pulledData;
@@ -71,14 +72,20 @@
             NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
             BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
             
+            weakSelf.hasButtons = NO;
+            weakSelf.hasSecondaryButtons = NO;
+            weakSelf.hasTertiaryButtons = NO;
+            
             if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-                weakSelf.hasButtons = YES;
+                if ([buttons count] == 4) {
+                    weakSelf.hasTertiaryButtons = YES;
+                }
+                else {
+                    weakSelf.hasButtons = YES;
+                }
             }
             else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !isMentor) {
                 weakSelf.hasSecondaryButtons = YES;
-            }
-            else {
-                weakSelf.hasButtons = NO;
             }
             
             weakSelf.pulledData = YES;
@@ -268,13 +275,14 @@
         }
 
         BOOL showButtons = NO;
-        if (self.hasButtons || (self.hasSecondaryButtons && myPost)) {
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
             showButtons = YES;
         }
         
         if (showButtons) {
             destinationViewController.hasButtons = self.hasButtons;
             destinationViewController.hasSecondaryButtons = self.hasSecondaryButtons;
+            destinationViewController.hasTertiaryButtons = self.hasTertiaryButtons;
         }
         
         if (showButtons && self.postImage)

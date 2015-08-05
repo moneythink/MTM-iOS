@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *const kDidDeleteChallengePostNotification;
+extern NSString *const kDidTapChallengeButtonNotification;
+
 @protocol MTChallengeContentViewControllerDelegate <NSObject>
 
 - (void)leftButtonTapped;
@@ -28,7 +31,6 @@
 @property (nonatomic, strong) NSString *challengeTitleText;
 @property (nonatomic, strong) PFChallenges *challenge;
 @property (nonatomic, strong) NSArray *challenges;
-
 @property (nonatomic) NSUInteger pageIndex;
 
 

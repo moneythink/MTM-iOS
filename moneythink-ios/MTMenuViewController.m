@@ -62,6 +62,26 @@
         }
         
         self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
+        
+        MTMakeWeakSelf();
+        PFQuery *meQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
+        [meQuery whereKey:@"objectId" equalTo:user.objectId];
+        meQuery.cachePolicy = kPFCachePolicyNetworkOnly;
+        [meQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            if (!error) {
+                if ([objects count] == 1) {
+                    PFUser *thisUser = [objects firstObject];
+                    id userPoints = thisUser[@"points"];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSString *points = @"0";
+                        if (userPoints && userPoints != [NSNull null]) {
+                            points = [userPoints stringValue];
+                        }
+                        weakSelf.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
+                    });
+                }
+            }
+        }];
     }
     
     NSString *userClass = user[@"class"];

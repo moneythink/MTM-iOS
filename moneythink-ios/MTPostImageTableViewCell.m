@@ -11,7 +11,17 @@
 @implementation MTPostImageTableViewCell
 
 - (void)awakeFromNib {
-    // Initialization code
+    self.spentLabel.textColor = [UIColor votingRed];
+    self.savedLabel.textColor = [UIColor votingBlue];
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    self.spentView.hidden = YES;
+    self.spentLabel.text = @"";
+    self.savedLabel.text = @"";
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {

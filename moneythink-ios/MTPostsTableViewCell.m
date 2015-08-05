@@ -18,9 +18,21 @@
     return self;
 }
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    self.spentLabel.textColor = [UIColor votingRed];
+    self.savedLabel.textColor = [UIColor votingBlue];
+    self.spentView.hidden = YES;
+}
+
 - (void)prepareForReuse
 {
     [super prepareForReuse];
+
+    self.spentView.hidden = YES;
+    self.spentLabel.text = @"";
+    self.savedLabel.text = @"";
 
     self.activityIndicator.hidden = YES;
     self.loadingView.alpha = 0.0f;
@@ -40,6 +52,18 @@
         _emojiArray = emojiArray;
         
         [MTPostsTableViewCell layoutEmojiForContainerView:self.emojiContainerView withEmojiArray:self.emojiArray];
+    }
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+    
+    if (highlighted) {
+        self.spentView.backgroundColor = [[UIColor colorWithHexString:@"#d1d1d1"] colorWithAlphaComponent:0.7f];
+    }
+    else {
+        self.spentView.backgroundColor = [UIColor clearColor];
     }
 }
 

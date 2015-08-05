@@ -12,6 +12,8 @@
 #import "MTAddClassViewController.h"
 #import "MTAddSchoolViewController.h"
 #import "MTWebViewController.h"
+#import "MTNotificationViewController.h"
+#import "JGActionSheet.h"
 
 @interface MTSignUpViewController ()
 
@@ -19,6 +21,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *lastName;
 @property (weak, nonatomic) IBOutlet UITextField *email;
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumber;
+@property (weak, nonatomic) IBOutlet UITextField *birthdate;
+@property (weak, nonatomic) IBOutlet UITextField *zipCode;
+@property (weak, nonatomic) IBOutlet UITextField *ethnicity;
+@property (weak, nonatomic) IBOutlet UITextField *moneyOptions;
 @property (weak, nonatomic) IBOutlet UITextField *password;
 @property (weak, nonatomic) IBOutlet UITextField *registrationCode;
 @property (weak, nonatomic) IBOutlet UITextField *error;
@@ -42,15 +48,26 @@
 @property (nonatomic) BOOL schoolIsNew;
 @property (nonatomic) BOOL classIsNew;
 @property (nonatomic) BOOL reachable;
-@property (strong, nonatomic) NSArray *schools;
-@property (strong, nonatomic) PFSchools *school;
-@property (strong, nonatomic) UIActionSheet *schoolSheet;
-@property (strong, nonatomic) NSArray *classes;
-@property (strong, nonatomic) PFClasses *userClass;
-@property (strong, nonatomic) UIActionSheet *classSheet;
-@property (strong, nonatomic) NSString *confirmationString;
+@property (nonatomic, strong) NSArray *schools;
+@property (nonatomic, strong) PFSchools *school;
+@property (nonatomic, strong) UIActionSheet *schoolSheet;
+@property (nonatomic, strong) NSArray *classes;
+@property (nonatomic, strong) PFClasses *userClass;
+@property (nonatomic, strong) UIActionSheet *classSheet;
+@property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL keyboardShowing;
 @property (nonatomic) BOOL showPrivacy;
+@property (nonatomic, strong) NSArray *ethnicities;
+@property (nonatomic, strong) NSArray *moneyOptionsArray;
+@property (nonatomic, strong) NSDate *selectedBirthdate;
+@property (nonatomic, strong) PFEthnicities *selectedEthnicity;
+@property (nonatomic, strong) NSMutableArray *selectedMoneyOptions;
+@property (nonatomic) BOOL allowEmptyEthnicities;
+@property (nonatomic) BOOL allowEmptyMoneyOptions;
+@property (nonatomic, strong) NSArray *sortedClasses;
+@property (nonatomic, strong) PFClasses *selectedClass;
+@property (nonatomic, strong) UIActionSheet *currentActionSheet;
+@property (nonatomic, strong) id currentAlertController;
 
 @end
 
@@ -69,6 +86,7 @@
 {
     [super viewDidLoad];
     
+    self.selectedMoneyOptions = [NSMutableArray array];
     self.confirmationString = @"✓ ";
     
     [self.navigationController setNavigationBarHidden:NO animated:NO];
@@ -143,6 +161,17 @@
     }];
     swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
     [self.view addGestureRecognizer:swipeDown];
+    
+    if (![self.signUpType isEqualToString:@"mentor"]) {
+        [self loadEthnicities];
+        [self loadMoneyOptions];
+        
+        UIDatePicker *datePicker = [[UIDatePicker alloc]init];
+        [datePicker setDate:[NSDate date]];
+        datePicker.datePickerMode = UIDatePickerModeDate;
+        [datePicker addTarget:self action:@selector(dateTextField:) forControlEvents:UIControlEventValueChanged];
+        [self.birthdate setInputView:datePicker];
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -153,6 +182,7 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillDismiss:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -167,6 +197,7 @@
 #pragma mark - IBActions
 - (IBAction)schoolNameButton:(id)sender
 {
+    [self dismissKeyboard];
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Loading Schools...";
     hud.dimBackground = YES;
@@ -246,6 +277,7 @@
             
             [schoolSheet addAction:cancel];
             
+            self.currentAlertController = schoolSheet;
             [self presentViewController:schoolSheet animated:YES completion:nil];
         } else {
             UIActionSheet *schoolSheet = [[UIActionSheet alloc]
@@ -261,6 +293,7 @@
             
             [schoolSheet addButtonWithTitle:@"Cancel"];
             schoolSheet.cancelButtonIndex = schoolNames.count + 1;
+            self.currentActionSheet = schoolSheet;
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:self.view]) {
@@ -275,6 +308,7 @@
 
 - (IBAction)classNameButton:(id)sender
 {
+    [self dismissKeyboard];
     if ([self.schoolName.text isEqualToString:@""]) {
         UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [chooseSchoolAlert show];
@@ -301,20 +335,22 @@
     });
 
     NSMutableArray *names = [[NSMutableArray alloc] init];
+    NSMutableArray *classes = [NSMutableArray array];
     for (id object in objects) {
         if (!IsEmpty(object[@"name"])) {
             [names addObject:object[@"name"]];
+            [classes addObject:object];
         }
     }
     
-    NSArray *sortedNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-    for (NSString *thisClassName in sortedNames) {
-        NSString *name = thisClassName;
-        if ([self.className.text isEqualToString:thisClassName]) {
-            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisClassName];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    self.sortedClasses = [classes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+
+    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[self.sortedClasses count]];
+    for (PFClasses *thisClass in self.sortedClasses) {
+        NSString *name = thisClass[@"name"];
+        if ([self.className.text isEqualToString:name]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, name];
         }
         [classNames addObject:name];
     }
@@ -352,12 +388,14 @@
                              handler:^(UIAlertAction *action) {
                                  weakSelf.classIsNew = NO;
                                  weakSelf.className.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
+                                 weakSelf.selectedClass = weakSelf.sortedClasses[buttonItem];
                              }];
                 [classSheet addAction:className];
             }
             
             [classSheet addAction:cancel];
             
+            self.currentAlertController = classSheet;
             [weakSelf presentViewController:classSheet animated:YES completion:nil];
         } else {
             UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
@@ -368,6 +406,7 @@
             
             [classSheet addButtonWithTitle:@"Cancel"];
             classSheet.cancelButtonIndex = classNames.count + 1;
+            self.currentActionSheet = classSheet;
             
             UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
             if ([window.subviews containsObject:weakSelf.view]) {
@@ -379,17 +418,241 @@
     } afterDelay:0.35f];
 }
 
+- (IBAction)ethnicityButton:(id)sender
+{
+    [self dismissKeyboard];
+    if (!IsEmpty(self.ethnicities)) {
+        [self ethnicitiesSheet:self.ethnicities loading:NO error:nil];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Ethnicities...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [self bk_performBlock:^(id obj) {
+            PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
+            [queryEthnicities orderByAscending:@"order"];
+            queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
+            [queryEthnicities findObjectsInBackgroundWithTarget:weakSelf selector:@selector(ethnicitiesSheet:error:)];
+        } afterDelay:0.35f];
+    }
+}
+
+- (void)ethnicitiesSheet:(NSArray *)objects error:(NSError *)error
+{
+    [self ethnicitiesSheet:objects loading:YES error:error];
+}
+
+- (void)ethnicitiesSheet:(NSArray *)objects loading:(BOOL)loading error:(NSError *)error
+{
+    CGFloat delay = 0.35f;
+    if (loading) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+    }
+    else {
+        delay = 0.0f;
+    }
+    
+    if (error) {
+        self.allowEmptyEthnicities = YES;
+        [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load ethnicities. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return;
+    }
+    
+    self.ethnicities = [NSArray arrayWithArray:objects];
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
+    }
+    
+    __block NSMutableArray *ethnicityNames = [NSMutableArray arrayWithCapacity:[names count]];
+    for (NSString *thisEthnicityName in names) {
+        NSString *name = thisEthnicityName;
+        if ([self.ethnicity.text isEqualToString:thisEthnicityName]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisEthnicityName];
+        }
+        [ethnicityNames addObject:name];
+    }
+    
+    [self bk_performBlock:^(id obj) {
+        if ([UIAlertController class]) {
+            UIAlertController *ethnicitySheet = [UIAlertController
+                                              alertControllerWithTitle:@""
+                                              message:@"Choose Ethnicity"
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                     }];
+            
+            UIAlertAction *ethnicityName;
+            
+            MTMakeWeakSelf();
+            for (NSInteger buttonItem = 0; buttonItem < ethnicityNames.count; buttonItem++) {
+                ethnicityName = [UIAlertAction
+                              actionWithTitle:ethnicityNames[buttonItem]
+                              style:UIAlertActionStyleDefault
+                              handler:^(UIAlertAction *action) {
+                                  weakSelf.ethnicity.text = [weakSelf stringWithoutConfirmation:ethnicityNames[buttonItem]];
+                                  weakSelf.selectedEthnicity = [weakSelf.ethnicities objectAtIndex:buttonItem];
+                              }];
+                [ethnicitySheet addAction:ethnicityName];
+            }
+            
+            [ethnicitySheet addAction:cancel];
+            
+            self.currentAlertController = ethnicitySheet;
+            [self presentViewController:ethnicitySheet animated:YES completion:nil];
+        } else {
+            UIActionSheet *ethnicitySheet = [[UIActionSheet alloc]
+                                          initWithTitle:@"Choose Ethnicity"
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          destructiveButtonTitle:nil
+                                          otherButtonTitles:nil, nil];
+            
+            for (NSInteger buttonItem = 0; buttonItem < ethnicityNames.count; buttonItem++) {
+                [ethnicitySheet addButtonWithTitle:ethnicityNames[buttonItem]];
+            }
+            
+            [ethnicitySheet addButtonWithTitle:@"Cancel"];
+            ethnicitySheet.cancelButtonIndex = ethnicityNames.count;
+            self.currentActionSheet = ethnicitySheet;
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:self.view]) {
+                [ethnicitySheet showInView:self.view];
+            } else {
+                [ethnicitySheet showInView:window];
+            }
+        }
+        
+    } afterDelay:delay];
+}
+
+- (IBAction)moneyOptionsButton:(id)sender
+{
+    [self dismissKeyboard];
+    if (!IsEmpty(self.moneyOptionsArray)) {
+        [self moneyOptionsSheet:self.moneyOptionsArray loading:NO error:nil];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [self bk_performBlock:^(id obj) {
+            PFQuery *queryMoneyOptions = [PFQuery queryWithClassName:[PFMoneyOptions parseClassName]];
+            [queryMoneyOptions orderByAscending:@"order"];
+            queryMoneyOptions.cachePolicy = kPFCachePolicyNetworkElseCache;
+            [queryMoneyOptions findObjectsInBackgroundWithTarget:weakSelf selector:@selector(moneyOptionsSheet:error:)];
+        } afterDelay:0.35f];
+    }
+}
+
+- (void)moneyOptionsSheet:(NSArray *)objects error:(NSError *)error
+{
+    [self moneyOptionsSheet:objects loading:YES error:error];
+}
+
+- (void)moneyOptionsSheet:(NSArray *)objects loading:(BOOL)loading error:(NSError *)error
+{
+    CGFloat delay = 0.35f;
+    if (loading) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+    }
+    else {
+        delay = 0.0f;
+    }
+    
+    if (error) {
+        self.allowEmptyMoneyOptions = YES;
+        [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load options. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return;
+    }
+    
+    self.moneyOptionsArray = [NSArray arrayWithArray:objects];
+    
+    __block NSMutableArray *moneyOptionNames = [NSMutableArray arrayWithCapacity:[self.moneyOptionsArray count]];
+    for (PFMoneyOptions *thisMoneyOption in self.moneyOptionsArray) {
+        [moneyOptionNames addObject:thisMoneyOption[@"name"]];
+    }
+    
+    MTMakeWeakSelf();
+    [self bk_performBlock:^(id obj) {
+        JGActionSheetSection *section1 = [JGActionSheetSection sectionWithTitle:@"I keep money..."
+                                                                        message:@"(Select all that apply)"
+                                                                   buttonTitles:moneyOptionNames
+                                                                    buttonStyle:JGActionSheetButtonStyleDefault];
+        
+        for (PFMoneyOptions *thisMoneyOption in self.selectedMoneyOptions) {
+            [section1 setButtonStyle:JGActionSheetButtonStyleGreen forButtonAtIndex:[self.moneyOptionsArray indexOfObject:thisMoneyOption]];
+        }
+        JGActionSheetSection *doneSection = [JGActionSheetSection sectionWithTitle:nil message:nil buttonTitles:@[@"Done"] buttonStyle:JGActionSheetButtonStyleCancel];
+        
+        NSArray *sections = @[section1, doneSection];
+        
+        JGActionSheet *sheet = [JGActionSheet actionSheetWithSections:sections];
+        
+        [sheet setButtonPressedBlock:^(JGActionSheet *sheet, NSIndexPath *indexPath) {
+            if (indexPath.section == 0) {
+                NSInteger thisIndex = indexPath.row;
+                NSArray *sections = [sheet sections];
+                JGActionSheetSection *section1 = [sections objectAtIndex:0];
+                
+                PFMoneyOptions *thisMoneyOption = [weakSelf.moneyOptionsArray objectAtIndex:thisIndex];
+                if ([weakSelf.selectedMoneyOptions containsObject:thisMoneyOption]) {
+                    [weakSelf.selectedMoneyOptions removeObject:thisMoneyOption];
+                    [section1 setButtonStyle:JGActionSheetButtonStyleDefault forButtonAtIndex:thisIndex];
+                }
+                else {
+                    [weakSelf.selectedMoneyOptions addObject:thisMoneyOption];
+                    [section1 setButtonStyle:JGActionSheetButtonStyleGreen forButtonAtIndex:thisIndex];
+                }
+            }
+            else if (indexPath.section == 1) {
+                if (!IsEmpty(weakSelf.selectedMoneyOptions)) {
+                    NSString *selectedText = @"";
+                    
+                    for (int i=0; i<[weakSelf.selectedMoneyOptions count]; i++) {
+                        PFMoneyOptions *thisMoneyOption = [self.selectedMoneyOptions objectAtIndex:i];
+                        if (i==0) {
+                            selectedText = [selectedText stringByAppendingString:thisMoneyOption[@"name"]];
+                        }
+                        else {
+                            selectedText = [selectedText stringByAppendingString:[NSString stringWithFormat:@", %@", thisMoneyOption[@"name"]]];
+                        }
+                    }
+                    
+                    weakSelf.moneyOptions.text = selectedText;
+                }
+                else {
+                    weakSelf.moneyOptions.text = @"";
+                }
+                [sheet dismissAnimated:YES];
+            }
+        }];
+        
+        [sheet showInView:self.view animated:YES];
+    } afterDelay:delay];
+}
+
 - (IBAction)tappedSignUpButton:(id)sender
 {
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
 
     if ([self validate]) {
-        NSPredicate *codePredicate = [NSPredicate predicateWithFormat:@"code = %@ AND type = %@", self.registrationCode.text, self.signUpType];
-        
-        PFQuery *findCode = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:codePredicate];
-        
-        findCode.cachePolicy = kPFCachePolicyNetworkOnly;
-        
         __block BOOL showedSignupError = NO;
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -398,13 +661,26 @@
         
         MTMakeWeakSelf();
         [self bk_performBlock:^(id obj) {
-            [findCode findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+            NSDictionary *parameters = @{@"type": weakSelf.signUpType, @"code": weakSelf.registrationCode.text};
+            [PFCloud callFunctionInBackground:@"checkSignupCode" withParameters:parameters block:^(id object, NSError *error) {
                 if (!error) {
-                    NSArray *codes = objects;
+                    BOOL validCode = NO;
+                    PFClasses *foundClass = nil;
+
+                    if (isMentor) {
+                        validCode = YES;
+                    }
+                    else {
+                        if ([object isKindOfClass:[PFObject class]]) {
+                            PFObject *parseObject = (PFObject *)object;
+                            if ([parseObject.parseClassName isEqualToString:[PFClasses parseClassName]]) {
+                                foundClass = (PFClasses *)object;
+                                validCode = YES;
+                            }
+                        }
+                    }
                     
-                    if ([codes count] > 0) {
-                        PFSignupCodes *code = [codes firstObject];
-                        
+                    if (validCode) {
                         PFUser *user = [PFUser user];
                         
                         user.username = weakSelf.email.text;
@@ -427,11 +703,11 @@
                             [createSchool saveInBackground];
                         }
                         
+                        PFClasses *createClass = nil;
                         if (weakSelf.classIsNew) {
-                            PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
+                            createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
                             createClass[@"name"] = weakSelf.className.text;
                             createClass[@"school"] = weakSelf.schoolName.text;
-                            [createClass saveInBackground];
                             
                             PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
                             signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
@@ -445,9 +721,48 @@
                         if (isMentor) {
                             user[@"school"] = weakSelf.schoolName.text;
                             user[@"class"] = weakSelf.className.text;
+                            if (createClass) {
+                                NSError *error;
+                                [createClass save:&error];
+                                if (error && error.code != 120) {
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                    });
+                                    
+                                    [weakSelf bk_performBlock:^(id obj) {
+                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                    } afterDelay:0.35f];
+                                }
+                                user[@"class_p"] = createClass;
+                            }
+                            else {
+                                user[@"class_p"] = weakSelf.selectedClass;
+                            }
                         } else {
-                            user[@"school"] = code[@"school"];
-                            user[@"class"] = code[@"class"];
+                            user[@"class_p"] = foundClass;
+                            user[@"class"] = foundClass[@"name"];
+                            
+                            if (foundClass[@"school_p"]) {
+                                PFSchools *school = foundClass[@"school_p"];
+                                [school fetchIfNeeded];
+                                user[@"school"] = school[@"name"];
+                            }
+                            
+                            if (!IsEmpty(weakSelf.birthdate.text) && weakSelf.selectedBirthdate) {
+                                user[@"birthdate"] = weakSelf.selectedBirthdate;
+                            }
+                            
+                            if (!IsEmpty(weakSelf.zipCode.text)) {
+                                user[@"zip_code"] = weakSelf.zipCode.text;
+                            }
+                            
+                            if (!IsEmpty(weakSelf.ethnicity.text) && weakSelf.selectedEthnicity) {
+                                user[@"ethnicity"] = weakSelf.selectedEthnicity;
+                            }
+                            
+                            if (!IsEmpty(weakSelf.selectedMoneyOptions)) {
+                                [user setObject:weakSelf.selectedMoneyOptions forKey:@"moneyOptions_selected"];
+                            }
                         }
                         
                         [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -466,15 +781,15 @@
                                         // Check for custom playlist for this class
                                         [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
                                         
+                                        // Update Notification count for new user
+                                        //  Should be none but check anyway in case we decide to generate notifications for
+                                        //  new users.
+                                        [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                        
                                         [self.navigationController popViewControllerAnimated:NO];
                                         
                                         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                                        if (![onboardingController checkForOnboarding]) {
-                                            // TODO: change back
-//                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
-                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                                        }
+                                        [onboardingController initiateOnboarding];
                                         
                                     } else {
                                         // Ignore parse cache errors for now
@@ -485,7 +800,7 @@
                                         }
                                     }
                                 });
-
+                                
                             } afterDelay:0.35f];
                             
                         }];
@@ -504,7 +819,8 @@
                             }
                         } afterDelay:0.35f];
                     }
-                } else {
+                }
+                else {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                     });
@@ -517,8 +833,8 @@
                     } afterDelay:0.35f];
                 }
             }];
+            
         } afterDelay:0.35f];
-
     }
 }
 
@@ -546,6 +862,11 @@
         return NO;
     }
     
+    if (IsEmpty(self.email.text)) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    }
+    
     if (IsEmpty(self.password.text)) {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Password is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return NO;
@@ -554,6 +875,28 @@
     if (IsEmpty(self.registrationCode.text)) {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Registration Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return NO;
+    }
+
+    if (!isMentor) {
+        if (IsEmpty(self.birthdate.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Birthdate is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
+        
+        if (IsEmpty(self.zipCode.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Zip Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
+        
+        if (!self.allowEmptyEthnicities && IsEmpty(self.ethnicity.text)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Ethnicity is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
+        
+        if (!self.allowEmptyMoneyOptions && IsEmpty(self.selectedMoneyOptions)) {
+            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"I keep money is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            return NO;
+        }
     }
 
     if (isMentor && IsEmpty(self.schoolName.text)) {
@@ -603,6 +946,7 @@
         [viewSheet addAction:option2];
         [viewSheet addAction:cancel];
         
+        self.currentAlertController = viewSheet;
         [self presentViewController:viewSheet animated:YES completion:nil];
     }
     else {
@@ -620,6 +964,7 @@
         [sheet bk_setCancelButtonWithTitle:@"Cancel" handler:^{
         }];
         
+        self.currentActionSheet = sheet;
         [sheet showInView:[UIApplication sharedApplication].keyWindow];
     }
 }
@@ -668,6 +1013,58 @@
     }];
 }
 
+- (void)loadEthnicities
+{
+    PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
+    [queryEthnicities orderByAscending:@"order"];
+    queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [queryEthnicities findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.ethnicities = objects;
+        }
+        else {
+            NSLog(@"Unable to load Ethnicities: %@", [error localizedDescription]);
+        }
+    }];
+}
+
+- (void)loadMoneyOptions
+{
+    PFQuery *queryMoneyOptions = [PFQuery queryWithClassName:[PFMoneyOptions parseClassName]];
+    [queryMoneyOptions orderByAscending:@"order"];
+    queryMoneyOptions.cachePolicy = kPFCachePolicyNetworkElseCache;
+    
+    MTMakeWeakSelf();
+    [queryMoneyOptions findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            weakSelf.moneyOptionsArray = objects;
+        }
+        else {
+            NSLog(@"Unable to load Ethnicities: %@", [error localizedDescription]);
+        }
+    }];
+}
+
+- (void)dateTextField:(id)sender
+{
+    UIDatePicker *picker = (UIDatePicker *)self.birthdate.inputView;
+    [picker setMaximumDate:[NSDate date]];
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    NSDate *eventDate = picker.date;
+    [dateFormat setDateFormat:@"MM/dd/yyyy"];
+    
+    NSString *dateString = [dateFormat stringFromDate:eventDate];
+    self.selectedBirthdate = picker.date;
+    self.birthdate.text = [NSString stringWithFormat:@"%@",dateString];
+}
+
+-(void)dismissKeyboard
+{
+    [self.view endEditing:YES];
+}
+
 
 #pragma mark - UIActionSheetDelegate methods -
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex  // after animation
@@ -692,12 +1089,23 @@
             [self performSegueWithIdentifier:@"addClass" sender:self];
         } else if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.classIsNew = NO;
+            // Minus 1 to account for New Class button
+            self.selectedClass = [self.sortedClasses objectAtIndex:buttonIndex-1];
             self.className.text = [self stringWithoutConfirmation:buttonTitle];
         } else { // Cancel
             self.classIsNew = NO;
         }
+    } else if ([title isEqualToString:@"Choose Ethnicity"]) {
+        self.ethnicity.text = [self stringWithoutConfirmation:buttonTitle];
+        for (PFEthnicities *thisEthnicity in self.ethnicities) {
+            if ([thisEthnicity[@"name"] isEqualToString:self.ethnicity.text]) {
+                self.selectedEthnicity = thisEthnicity;
+                break;
+            }
+        }
     }
 }
+
 
 
 #pragma mark - Keyboard methods -
@@ -770,6 +1178,19 @@
         self.reachable = YES;
     } else {
         self.reachable = NO;
+    }
+}
+
+- (void)didEnterBackground:(NSNotification *)notification
+{
+    if (self.currentActionSheet) {
+        [self.currentActionSheet dismissWithClickedButtonIndex:self.currentActionSheet.cancelButtonIndex animated:NO];
+        self.currentActionSheet = nil;
+    }
+    else if (self.currentAlertController) {
+        UIAlertController *alertController = (UIAlertController *)self.currentAlertController;
+        [alertController dismissViewControllerAnimated:NO completion:nil];
+        self.currentAlertController = nil;
     }
 }
 

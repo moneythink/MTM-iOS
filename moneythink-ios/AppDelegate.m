@@ -16,6 +16,8 @@
 #import "MTMenuViewController.h"
 #import "MTPostViewController.h"
 #import "AFNetworkActivityIndicatorManager.h"
+#import "MTAddSchoolViewController.h"
+#import "MTAddClassViewController.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -95,6 +97,8 @@
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 
+    [self checkForForceUpdate];
+
     return YES;
 }
 
@@ -104,6 +108,8 @@
     if ([PFUser currentUser] && [MTUtil internetReachable]) {
         [[PFUser currentUser] fetchInBackground];
     }
+    
+    [self checkForForceUpdate];
 }
 
 
@@ -639,6 +645,70 @@
         newIdentity.externalId = [userCurrent objectId];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
     }
+}
+
+- (void)checkForForceUpdate
+{
+    // TODO: Remove/disable for 2.1 update. That means remove the NSUserDefaults and/or return NO from shouldForceUpdate below.
+    //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
+    //    [[NSUserDefaults standardUserDefaults] synchronize];
+    //    return;
+    
+    NSDictionary *parameters = [NSDictionary dictionaryWithObject:@"ios" forKey:@"platform"];
+    
+    MTMakeWeakSelf();
+    [PFCloud callFunctionInBackground:@"checkForceUpdate" withParameters:parameters block:^(id object, NSError *error) {
+        if (!error) {
+            BOOL previousForcedUpdate = [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
+            BOOL newForcedUpdate = [object boolValue];
+            
+            [[NSUserDefaults standardUserDefaults] setBool:newForcedUpdate forKey:kForcedUpdateKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            if ((previousForcedUpdate != newForcedUpdate) || newForcedUpdate) {
+                // Force back to login view
+                [weakSelf performSelector:@selector(executeForceUpdateRefresh) withObject:nil afterDelay:0.5f];
+            }
+        } else {
+            NSLog(@"error retrieving force update - %@", [error localizedDescription]);
+        }
+    }];
+}
+
+- (void)executeForceUpdateRefresh
+{
+    SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        if (revealVC.frontViewPosition == FrontViewPositionRight) {
+            [revealVC revealToggleAnimated:NO];
+        }
+        
+        if (self.userViewController) {
+            id visibleVC = [self.userViewController visibleViewController];
+            if ([visibleVC isKindOfClass:[MTAddSchoolViewController class]] || [visibleVC isKindOfClass:[MTAddClassViewController class]]) {
+                [visibleVC dismissViewControllerAnimated:NO completion:nil];
+            }
+            [self.userViewController popToRootViewControllerAnimated:NO];
+            
+            id topVC = [self.userViewController topViewController];
+            if ([topVC isKindOfClass:[MTLoginViewController class]]) {
+                MTLoginViewController *loginVC = (MTLoginViewController *)[self.userViewController topViewController];
+                
+                if (revealVC.frontViewController != self.userViewController) {
+                    [revealVC setFrontViewController:self.userViewController animated:YES];
+                }
+                else {
+                    [loginVC shouldUpdateView];
+                }
+            }
+        }
+    });
+}
+
+- (BOOL)shouldForceUpdate
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
 }
 
 
