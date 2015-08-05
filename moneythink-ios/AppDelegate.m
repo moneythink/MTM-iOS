@@ -649,10 +649,9 @@
 
 - (void)checkForForceUpdate
 {
-    // TODO: Remove/disable for 2.1 update. That means remove the NSUserDefaults and/or return NO from shouldForceUpdate below.
-    //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
-    //    [[NSUserDefaults standardUserDefaults] synchronize];
-    //    return;
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    return;
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObject:@"ios" forKey:@"platform"];
     
@@ -708,6 +707,8 @@
 
 - (BOOL)shouldForceUpdate
 {
+    // TODO: Bypass this for now until we decide whether to keep in.
+    return NO;
     return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
 }
 
