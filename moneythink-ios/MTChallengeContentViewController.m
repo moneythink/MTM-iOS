@@ -58,6 +58,7 @@
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeleteChallengePost:) name:kDidDeleteChallengePostNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didTapChallengeButton:) name:kDidTapChallengeButtonNotification object:nil];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -113,6 +114,14 @@
     }
 }
 
+- (void)didTapChallengeButton:(NSNotification *)notif
+{
+    PFChallenges *challenge = notif.object;
+    if ([challenge.objectId isEqualToString:self.challenge.objectId]) {
+        [self loadChallengeProgress];
+    }
+}
+
 
 #pragma mark - Navigation -
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -139,7 +148,9 @@
         if (!error) {
             if ([object isKindOfClass:[NSNumber class]]) {
                 weakSelf.challengeProgress = [(NSNumber *)object integerValue];
-                [weakSelf updateChallengeProgress];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakSelf updateChallengeProgress];
+                });
             }
         } else {
             NSLog(@"error retrieving challenge progress - %@", [error localizedDescription]);

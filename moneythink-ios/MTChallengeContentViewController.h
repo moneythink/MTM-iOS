@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 extern NSString *const kDidDeleteChallengePostNotification;
+extern NSString *const kDidTapChallengeButtonNotification;
 
 @protocol MTChallengeContentViewControllerDelegate <NSObject>
 

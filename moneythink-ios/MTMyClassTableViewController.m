@@ -13,6 +13,7 @@
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kDidDeleteChallengePostNotification = @"kDidDeleteChallengePostNotification";
+NSString *const kDidTapChallengeButtonNotification = @"kDidTapChallengeButtonNotification";
 NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
 NSString *const kSavedMyClassChallengePostNotification = @"kSavedMyClassChallengePostNotification";
 NSString *const kFailedMyClassChallengePostNotification = @"kFailedMyClassChallengePostNotification";
@@ -1951,6 +1952,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [post fetchInBackground];
                 [weakSelf userButtonsTapped];
                 [weakSelf loadObjects];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                });
             }
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2118,6 +2122,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 [weakSelf updateSecondaryButtonsTapped];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                });
             }
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2215,6 +2222,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
                 [weakSelf updateSecondaryButtonsTapped];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                });
             }
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
