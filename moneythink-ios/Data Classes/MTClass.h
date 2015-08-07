@@ -12,7 +12,7 @@
 
 @interface MTClass : RLMObject
 
-@property NSInteger classId;
+@property NSInteger id;
 @property NSString *name;
 @property NSString *studentSignupCode;
 

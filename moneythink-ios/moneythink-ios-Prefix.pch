@@ -64,6 +64,7 @@
 #import "UIImage+MTAdditions.h"
 #import "UIFont+MTAdditions.h"
 #import "NSDictionary+MTAdditions.h"
+#import "NSError+MTAdditions.h"
 
 #import "MTTextField.h"
 #import "MTNetworkManager.h"
@@ -109,6 +110,7 @@
 
 static inline BOOL IsEmpty(id thing) {
     return thing == nil ||
+    thing == [NSNull null] ||
     ([thing respondsToSelector:@selector(length)] && [(NSData *)thing length] == 0) ||
     ([thing respondsToSelector:@selector(count)]  && [(NSArray *)thing count] == 0);
 }

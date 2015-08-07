@@ -10,7 +10,7 @@
 
 @interface MTOrganization : RLMObject
 
-@property NSInteger organizationId;
+@property NSInteger id;
 @property NSString *name;
 @property NSString *mentorSignupCode;
 @property BOOL isActive;

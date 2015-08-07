@@ -39,7 +39,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
                  phoneNumber:(NSString *)phoneNumber
                      success:(MTNetworkSuccessBlock)success
                      failure:(MTNetworkFailureBlock)failure;
-- (NSArray *)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (NSArray *)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (NSArray *)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 

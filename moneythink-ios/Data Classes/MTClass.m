@@ -13,7 +13,8 @@
 // Specify default values for properties
 
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"name" : @"", @"studentSignupCode": @""};
+    return @{@"name" : @"",
+             @"studentSignupCode": @""};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -24,7 +25,28 @@
 //}
 
 + (NSString *)primaryKey {
-    return @"classId";
+    return @"id";
 }
+
+
+#pragma mark - Realm+JSON Methods -
++ (NSDictionary *)JSONInboundMappingDictionary {
+    return @{
+             @"id": @"id",
+             @"name": @"name",
+             @"studentSignupCode": @"studentSignupCode",
+             @"_embedded.organization": @"organization",
+             };
+}
+
++ (NSDictionary *)JSONOutboundMappingDictionary {
+    return @{
+             @"id": @"id",
+             @"name": @"name",
+             @"studentSignupCode": @"studentSignupCode",
+             @"organization": @"_embedded.organization",
+             };
+}
+
 
 @end

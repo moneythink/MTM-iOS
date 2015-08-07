@@ -13,7 +13,7 @@
 
 @interface MTUser : RLMObject
 
-@property NSInteger userId;
+@property NSInteger id;
 @property NSString *username;
 @property NSString *email;
 @property NSString *firstName;

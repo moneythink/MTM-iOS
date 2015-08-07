@@ -8,6 +8,7 @@
 
 #import "MTNetworkManager.h"
 #import "AFHTTPRequestSerializer+OAuth2.h"
+#import "RLMObject+JSON.h"
 
 // TODO: Create dev and prod keys
 #ifdef STAGE
@@ -17,6 +18,7 @@ static NSString * const MTNetworkAPIKey = @"123456";
 #endif
 
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
+static NSString * const MTNetworkClientID = @"ios";
 
 @interface MTNetworkManager (Private)
 
@@ -48,6 +50,7 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
         NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
         [contentTypes addObject:@"application/hal+json"];
         [contentTypes addObject:@"application/api-problem+json"];
+        [contentTypes addObject:@"application/problem+json"];
         responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
         self.responseSerializer = responseSerializer;
     }
@@ -60,6 +63,7 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
 - (void)checkforOAuthTokenWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     AFOAuthCredential *existingCredential = [AFOAuthCredential retrieveCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+    
     if (existingCredential && existingCredential.accessToken && !existingCredential.isExpired) {
         NSLog(@"Have existing AFOAuthCredential: %@", [existingCredential description]);
         if (success) {
@@ -73,7 +77,7 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
                     success(credential);
                 }
             } failure:^(NSError *error) {
-                NSLog(@"Failed to refresh OAuth token");
+                NSLog(@"Failed to refresh OAuth token: %@", [error mtErrorDescription]);
                 if (failure) {
                     failure(error);
                 }
@@ -93,16 +97,14 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
 - (void)refreshOAuthTokenForCredential:(AFOAuthCredential *)credential success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    
     parameters[@"refresh_token"] = credential.refreshToken;
     parameters[@"grant_type"] = @"refresh_token";
-    parameters[@"client_id"] = @"web";
-    parameters[@"client_secret"] = MTNetworkAPIKey;
     
     NSURL *baseURL = [NSURL URLWithString:MTNetworkURLString];
     AFOAuth2Manager *OAuth2Manager = [[AFOAuth2Manager alloc] initWithBaseURL:baseURL
-                                                                     clientID:@"web"
+                                                                     clientID:MTNetworkClientID
                                                                        secret:MTNetworkAPIKey];
+    
     [OAuth2Manager authenticateUsingOAuthWithURLString:@"oauth" parameters:parameters success:^(AFOAuthCredential *credential) {
         NSLog(@"Refreshed AFOAuthCredential: %@", [credential description]);
         [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
@@ -112,13 +114,15 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
         }
         
     } failure:^(NSError *error) {
-        NSLog(@"refreshOAuthTokenForCredential error: %@", error);
+        NSLog(@"refreshOAuthTokenForCredential error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
     }];
 }
 
+
+#pragma mark - JSON Data Parser Methods -
 - (MTUser *)processMeUserRequestWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
@@ -145,53 +149,55 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
         return nil;
     }
     
-    if (![[embeddedDict objectForKey:@"role"] isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"No role data");
-        return nil;
-    }
-    
-    NSDictionary *organizationDict = [embeddedDict objectForKey:@"organization"];
-    NSDictionary *classDict = [embeddedDict objectForKey:@"class"];
-    NSDictionary *roleDict = [embeddedDict objectForKey:@"role"];
-    
-    // Create and assign my organization
-    MTOrganization *myOrganization = [[MTOrganization alloc] init];
-    myOrganization.name = [organizationDict safeValueForKey:@"name"];
-    myOrganization.organizationId = [[organizationDict safeValueForKey:@"id"] integerValue];
-    myOrganization.mentorSignupCode = [organizationDict safeValueForKey:@"mentorSignupCode"];
-    
-    // Create and assign my class
-    MTClass *myClass = [[MTClass alloc] init];
-    myClass.classId = [[classDict safeValueForKey:@"id"] integerValue];
-    myClass.name = [classDict safeValueForKey:@"name"];
-    myClass.studentSignupCode = [classDict safeValueForKey:@"studentSignupCode"];
-    myClass.organization = myOrganization;
-    
-    // Create new ME User and send back
-    MTUser *meUser = [[MTUser alloc] init];
-    meUser.userId = [[responseDict safeValueForKey:@"id"] integerValue];
-    meUser.username = [responseDict safeValueForKey:@"username"];
-    meUser.firstName = [responseDict safeValueForKey:@"firstName"];
-    meUser.lastName = [responseDict safeValueForKey:@"lastName"];
-    meUser.email = [responseDict safeValueForKey:@"email"];
-    meUser.avatar = [responseDict safeValueForKey:@"avatar"];
-    meUser.phoneNumber = [responseDict safeValueForKey:@"phoneNumber"];
-    meUser.roleCode = [roleDict safeValueForKey:@"code"];
-    meUser.currentUser = YES;
-    meUser.organization = myOrganization;
-    meUser.userClass = myClass;
-    
-    // Realms are used to group data together
     RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
     
-    // Save your object
     [realm beginWriteTransaction];
-    [realm addObject:myOrganization];
-    [realm addObject:myClass];
-    [realm addObject:meUser];
+    
+    // Create and assign my class (organization created also)
+    MTClass *myClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
+
+    // Create new ME User and send back
+    MTUser *meUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:responseDict];
+    meUser.currentUser = YES;
+//    meUser.organization = myOrganization;
+    meUser.userClass = myClass;
+
     [realm commitWriteTransaction];
     
     return meUser;
+}
+
+- (NSInteger)processClassesRequestWithResponseObject:(id)responseObject
+{
+    NSInteger classesCount = 0;
+    
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return 0;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return 0;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"classes"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No classes response data");
+        return 0;
+    }
+    
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"classes"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
+    
+    [realm beginWriteTransaction];
+    NSArray *classesArray = [MTClass createOrUpdateInRealm:realm withJSONArray:responseArray];
+    classesCount = [classesArray count];
+    [realm commitWriteTransaction];
+    
+    return classesCount;
 }
 
 
@@ -203,12 +209,10 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
     parameters[@"username"] = username;
     parameters[@"password"] = password;
     parameters[@"grant_type"] = @"password";
-    parameters[@"client_id"] = @"web";
-    parameters[@"client_secret"] = MTNetworkAPIKey;
     
     NSURL *baseURL = [NSURL URLWithString:MTNetworkURLString];
     AFOAuth2Manager *OAuth2Manager = [[AFOAuth2Manager alloc] initWithBaseURL:baseURL
-                                                                     clientID:@"web"
+                                                                     clientID:MTNetworkClientID
                                                                        secret:MTNetworkAPIKey];
     
     MTMakeWeakSelf();
@@ -233,37 +237,43 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
             }
 
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"authenticateForUsername error: %@", error);
+            NSLog(@"authenticateForUsername error: %@", [error mtErrorDescription]);
             if (failure) {
                 failure(error);
             }
         }];
         
     } failure:^(NSError *error) {
-        NSLog(@"authenticateForUsername error: %@", error);
+        NSLog(@"authenticateForUsername error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
     }];
 }
 
-- (NSArray *)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    NSArray *classes = [NSArray array];
+    NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
+
+    [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
     
-//    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-//    parameters[@"grant_type"] = @"password";
-//    parameters[@"client_id"] = @"web";
-//    parameters[@"client_secret"] = MTNetworkAPIKey;
-
-    [self.requestSerializer setValue:signupCode forHTTPHeaderField:@"Authorization"];
     [self GET:@"organizations/classes" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"success response");
+        NSLog(@"Success getting Classes response");
+        NSInteger classesCount = [self processClassesRequestWithResponseObject:responseObject];
+        
+        if (classesCount > 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // TODO: Get classes and return to success block
+            });
+        }
+        else {
+            if (success) {
+                success(nil);
+            }
+        }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog(@"failure response, error: %@", [error localizedDescription]);
+        NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
     }];
-
-    return classes;
 }
 
 - (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -275,12 +285,13 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
         [weakSelf GET:@"classes" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"success response");
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"failure response, error: %@", [error localizedDescription]);
+            NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
         }];
     } failure:^(NSError *error) {
-        NSLog(@"Failed to get classes with error: %@", [error localizedDescription]);
+        NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
     }];
 }
 
+// TODO: Need to handle pagination
 
 @end

@@ -111,10 +111,20 @@ static NSError * AFErrorFromRFC6749Section5_2Error(id object) {
     self.clientID = clientID;
     self.secret = secret;
 
-    self.useHTTPBasicAuthentication = YES;
+    self.useHTTPBasicAuthentication = NO;
 
+    self.requestSerializer = [AFJSONRequestSerializer serializer];
     [self.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [self.requestSerializer setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
+    AFJSONResponseSerializer *responseSerializer = [AFJSONResponseSerializer serializerWithReadingOptions:NSJSONReadingAllowFragments];
+    NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
+    [contentTypes addObject:@"application/hal+json"];
+    [contentTypes addObject:@"application/api-problem+json"];
+    [contentTypes addObject:@"application/problem+json"];
+    responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
+    self.responseSerializer = responseSerializer;
+
     return self;
 }
 

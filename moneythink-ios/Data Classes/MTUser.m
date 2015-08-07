@@ -13,7 +13,14 @@
 // Specify default values for properties
 
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"username" : @"", @"email": @"", @"firstName": @"", @"lastName": @"", @"phoneNumber": @"", @"roleCode": @"", @"avatar": @""};
+    return @{@"username" : @"",
+             @"email": @"",
+             @"firstName": @"",
+             @"lastName": @"",
+             @"phoneNumber": @"",
+             @"roleCode": @"",
+             @"avatar": @"",
+             @"currentUser": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -24,7 +31,35 @@
 //}
 
 + (NSString *)primaryKey {
-    return @"userId";
+    return @"id";
+}
+
+
+#pragma mark - Realm+JSON Methods -
++ (NSDictionary *)JSONInboundMappingDictionary {
+    return @{
+             @"id": @"id",
+             @"username": @"username",
+             @"email": @"email",
+             @"firstName": @"firstName",
+             @"lastName": @"lastName",
+             @"phoneNumber": @"phoneNumber",
+             @"_embedded.role.code": @"roleCode",
+             @"avatar": @"avatar",
+             };
+}
+
++ (NSDictionary *)JSONOutboundMappingDictionary {
+    return @{
+             @"id": @"id",
+             @"username": @"username",
+             @"email": @"email",
+             @"firstName": @"firstName",
+             @"lastName": @"lastName",
+             @"phoneNumber": @"phoneNumber",
+             @"roleCode": @"_embedded.role.code",
+             @"avatar": @"avatar",
+             };
 }
 
 

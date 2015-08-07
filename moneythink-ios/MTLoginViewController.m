@@ -335,6 +335,12 @@
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
         
+        [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:@"1234code" success:^(id responseData) {
+            //
+        } failure:^(NSError *error) {
+            //
+        }];
+        
         // Get this user
         [[MTUtil getAppDelegate] configureZendesk];
         
@@ -348,10 +354,10 @@
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
             // Check for custom playlist for this class
-            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+//            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
             
             // Update Notification count for this user.
-            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+//            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
             
             MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {
