@@ -37,6 +37,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
                    firstName:(NSString *)firstName
                     lastName:(NSString *)lastName
                  phoneNumber:(NSString *)phoneNumber
+                     classId:(NSNumber *)classId
                      success:(MTNetworkSuccessBlock)success
                      failure:(MTNetworkFailureBlock)failure;
 - (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
@@ -45,5 +46,9 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 // Misc
 - (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)setAvatarForUserId:(NSInteger)userId withImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updateCurrentUserWithFirstName:(NSString *)firstName lastName:(NSString *)lastName email:(NSString *)email phoneNumber:(NSString *)phoneNumber password:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)refreshCurrentUserData;
+
 
 @end

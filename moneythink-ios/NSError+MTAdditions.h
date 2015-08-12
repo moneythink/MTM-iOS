@@ -11,5 +11,6 @@
 @interface NSError (MTAdditions)
 
 - (NSString *)mtErrorDescription;
+- (NSString *)firstValidationMessage;
 
 @end

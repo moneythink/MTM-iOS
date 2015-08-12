@@ -69,8 +69,6 @@
 		58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */; };
 		58D60AE41984636100DF247E /* MTChallengePostsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58D60AE31984636100DF247E /* MTChallengePostsViewController.m */; };
 		58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */; };
-		58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */; };
-		58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */; };
 		89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */; };
 		8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */; };
 		8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */; };
@@ -127,6 +125,7 @@
 		89271F3F1B5DA32000C66DD8 /* unchecked.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3B1B5DA32000C66DD8 /* unchecked.png */; };
 		89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */; };
 		89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 89271F421B5DAC5600C66DD8 /* MTTextField.m */; };
+		892BF44D1B7A643E00E19E9B /* MTUserAvatar.m in Sources */ = {isa = PBXBuildFile; fileRef = 892BF44C1B7A643E00E19E9B /* MTUserAvatar.m */; };
 		8946407519EC705500B7C3FD /* NSDate+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */; };
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */; };
@@ -381,10 +380,6 @@
 		58D60AE21984636100DF247E /* MTChallengePostsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengePostsViewController.h; sourceTree = "<group>"; };
 		58D60AE31984636100DF247E /* MTChallengePostsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengePostsViewController.m; sourceTree = "<group>"; };
 		58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
-		58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddSchoolViewController.h; sourceTree = "<group>"; };
-		58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddSchoolViewController.m; sourceTree = "<group>"; };
-		58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTAddClassViewController.h; sourceTree = "<group>"; };
-		58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTAddClassViewController.m; sourceTree = "<group>"; };
 		89007BD119F6E271008B4F8C /* UIFont+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+MTAdditions.h"; sourceTree = "<group>"; };
 		89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+MTAdditions.m"; sourceTree = "<group>"; };
 		8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostUserInfoTableViewCell.h; sourceTree = "<group>"; };
@@ -466,6 +461,8 @@
 		89271F3C1B5DA32000C66DD8 /* unchecked@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "unchecked@2x.png"; sourceTree = "<group>"; };
 		89271F411B5DAC5600C66DD8 /* MTTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTTextField.h; sourceTree = "<group>"; };
 		89271F421B5DAC5600C66DD8 /* MTTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTTextField.m; sourceTree = "<group>"; };
+		892BF44B1B7A643E00E19E9B /* MTUserAvatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTUserAvatar.h; path = "Data Classes/MTUserAvatar.h"; sourceTree = "<group>"; };
+		892BF44C1B7A643E00E19E9B /* MTUserAvatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTUserAvatar.m; path = "Data Classes/MTUserAvatar.m"; sourceTree = "<group>"; };
 		8946407319EC705500B7C3FD /* NSDate+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+MTAdditions.h"; sourceTree = "<group>"; };
 		8946407419EC705500B7C3FD /* NSDate+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+MTAdditions.m"; sourceTree = "<group>"; };
 		8950C19519DF0D7200847F85 /* UIView+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MTAdditions.h"; sourceTree = "<group>"; };
@@ -997,6 +994,8 @@
 			children = (
 				895907511B5465A2003AB574 /* MTUser.h */,
 				895907521B5465A2003AB574 /* MTUser.m */,
+				892BF44B1B7A643E00E19E9B /* MTUserAvatar.h */,
+				892BF44C1B7A643E00E19E9B /* MTUserAvatar.m */,
 				895907541B546AAC003AB574 /* MTOrganization.h */,
 				895907551B546AAC003AB574 /* MTOrganization.m */,
 				895907571B546B3B003AB574 /* MTClass.h */,
@@ -1236,10 +1235,6 @@
 		895F78BB1B167DA200055759 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				58F08AC9199EAC64009329B6 /* MTAddClassViewController.h */,
-				58F08ACA199EAC64009329B6 /* MTAddClassViewController.m */,
-				58F08AC6199EAC57009329B6 /* MTAddSchoolViewController.h */,
-				58F08AC7199EAC57009329B6 /* MTAddSchoolViewController.m */,
 				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
 				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
 				58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */,
@@ -1586,6 +1581,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				892BF44D1B7A643E00E19E9B /* MTUserAvatar.m in Sources */,
 				89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */,
 				899906841AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
@@ -1597,7 +1593,6 @@
 				8925B8C71B61A3C80027A0AF /* NSDictionary+MTAdditions.m in Sources */,
 				8921ED081B24FB4A00010E3F /* UIScrollView+EmptyDataSet.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
-				58F08AC8199EAC57009329B6 /* MTAddSchoolViewController.m in Sources */,
 				106309801A3A3C4D0093C209 /* MBProgressHUD.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				58669F7D19785AE8009BC13C /* PFStudentPointDetails.m in Sources */,
@@ -1650,7 +1645,6 @@
 				8925943F1B73EC7E00B40E06 /* MCJSONPrimaryKeyTransformer.m in Sources */,
 				5876E2B5196F2C1F00C176EC /* main.m in Sources */,
 				58509432197C063D00EDC969 /* MTChallengesViewController.m in Sources */,
-				58F08ACB199EAC64009329B6 /* MTAddClassViewController.m in Sources */,
 				8977E3DD1B1E1F6C009AD452 /* PFEmoji.m in Sources */,
 				5860BF3F19870C4F007D9BB3 /* MTMentorDashboardViewController.m in Sources */,
 				89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */,

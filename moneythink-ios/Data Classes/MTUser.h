@@ -10,6 +10,7 @@
 
 @class MTOrganization;
 @class MTClass;
+@class MTUserAvatar;
 
 @interface MTUser : RLMObject
 
@@ -20,7 +21,7 @@
 @property NSString *lastName;
 @property NSString *phoneNumber;
 @property NSString *roleCode;
-@property NSString *avatar;
+@property MTUserAvatar *userAvatar;
 @property BOOL currentUser;
 
 @property MTOrganization *organization;
@@ -30,7 +31,7 @@
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMe:(MTUser *)user;
 + (BOOL)isUserLoggedIn;
-+ (MTUser *)getMeUser;
++ (MTUser *)currentUser;
 
 @end
 

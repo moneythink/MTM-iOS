@@ -293,28 +293,19 @@ static CGFloat const kMainPageControlHeight = 35;
 
 
 #pragma mark - Profile Photo Methods -
-- (void)setProfileImageFile:(PFFile *)profileImageFile
+- (void)setProfileImage:(UIImage *)profileImage
 {
-    self.profileFile = profileImageFile;
+    _profileImage = profileImage;
     
-    MTMakeWeakSelf();
-    [profileImageFile getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        if (!error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                self.profileImage = [UIImage imageWithData:data];
-
-                [UIView animateWithDuration:0.2f animations:^{
-                    weakSelf.profileImageButton.alpha = 0.0f;
-                } completion:^(BOOL finished) {
-                    [weakSelf.profileImageButton setImage:self.profileImage forState:UIControlStateNormal];
-                    [weakSelf.profileImageButton setImage:nil forState:UIControlStateHighlighted];
-
-                    [UIView animateWithDuration:0.2f animations:^{
-                        weakSelf.profileImageButton.alpha = 1.0f;
-                    }];
-                }];
-            });
-        }
+    [UIView animateWithDuration:0.2f animations:^{
+        self.profileImageButton.alpha = 0.0f;
+    } completion:^(BOOL finished) {
+        [self.profileImageButton setImage:self.profileImage forState:UIControlStateNormal];
+        [self.profileImageButton setImage:nil forState:UIControlStateHighlighted];
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            self.profileImageButton.alpha = 1.0f;
+        }];
     }];
 }
 
@@ -347,7 +338,7 @@ static CGFloat const kMainPageControlHeight = 35;
         
         [editProfileImage addAction:cancel];
         
-        if (self.profileFile) {
+        if (self.profileImage) {
             UIAlertAction *removePhoto = [UIAlertAction
                                           actionWithTitle:@"Remove Existing Photo"
                                           style:UIAlertActionStyleDestructive
@@ -365,7 +356,7 @@ static CGFloat const kMainPageControlHeight = 35;
     } else {
         UIActionSheet *editProfileImage = nil;
         
-        if (self.profileFile) {
+        if (self.profileImage) {
             editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         }
         else {
@@ -410,7 +401,6 @@ static CGFloat const kMainPageControlHeight = 35;
 
 - (void)removePicture
 {
-    self.profileFile = nil;
     self.profileImage = nil;
     
     [UIView animateWithDuration:0.2f animations:^{
@@ -440,35 +430,41 @@ static CGFloat const kMainPageControlHeight = 35;
 
 - (void)saveUserPhoto
 {
-    PFUser *currentUser = [PFUser currentUser];
+    NSData *imageData = self.profileImage ? UIImageJPEGRepresentation(self.profileImage, 0.6f) : nil;
     
-    if (self.profileImage) {
-        NSString *fileName = @"profile_image.png";
-        NSData *imageData = UIImageJPEGRepresentation(self.profileImage, 0.8f);
-        PFFile *file = [PFFile fileWithName:fileName data:imageData];
+    MTUser *userCurrent = [MTUser currentUser];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Saving...";
+    hud.dimBackground = NO;
 
-        if (file) {
-            self.profileFile = file;
-            currentUser[@"profile_picture"] = file;
-        }
-    }
-    else {
-        self.profileFile = nil;
-        if ([currentUser objectForKey:@"profile_picture"]) {
-            [currentUser removeObjectForKey:@"profile_picture"];
-        }
-    }
-    
-    [currentUser saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Save Changes" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            NSLog(@"error - %@", error);
-        }
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:userCurrent.id withImageData:imageData success:^(id responseData) {
+        NSLog(@"Saved profile image");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            
+            if (weakSelf.movesToNextViewController) {
+                [weakSelf.delegate moveNextPage];
+            }
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to save profile image: %@", [error mtErrorDescription]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            NSData *oldAvatar = [MTUser currentUser].userAvatar.avatarData;
+            if (oldAvatar) {
+                weakSelf.profileImage = [UIImage imageWithData:oldAvatar];
+            }
+            else {
+                weakSelf.profileImage = nil;
+            }
+            if (weakSelf.movesToNextViewController) {
+                [weakSelf.delegate moveNextPage];
+            }
+        });
     }];
-    
-    if (self.movesToNextViewController) {
-        [self.delegate moveNextPage];
-    }
+
 }
 
 

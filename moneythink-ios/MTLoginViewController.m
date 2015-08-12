@@ -203,6 +203,7 @@
     }
     else if ([MTUser isUserLoggedIn]) {
         [[MTUtil getAppDelegate] configureZendesk];
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserData];
         
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;
@@ -226,7 +227,7 @@
             
             // TODO: change back
             //            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"editProfileNav"];
             [self.revealViewController setFrontViewController:challengesVC animated:YES];
         }
     }
@@ -335,13 +336,6 @@
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
         
-        [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:@"1234code" success:^(id responseData) {
-            //
-        } failure:^(NSError *error) {
-            //
-        }];
-        
-        // Get this user
         [[MTUtil getAppDelegate] configureZendesk];
         
         // Update for Push Notifications
@@ -364,7 +358,7 @@
                 
                 // TODO: change back
                 // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"editProfileNav"];
                 [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
             }
         });

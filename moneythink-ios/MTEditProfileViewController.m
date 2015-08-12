@@ -8,8 +8,6 @@
 
 #import "MTEditProfileViewController.h"
 #import "Reachability.h"
-#import "MTAddSchoolViewController.h"
-#import "MTAddClassViewController.h"
 
 @interface MTEditProfileViewController ()
 
@@ -32,19 +30,13 @@
 @property (nonatomic, strong) IBOutletCollection(UIView) NSArray *separatorViews;
 
 @property (assign, nonatomic) BOOL isMentor;
-@property (strong, nonatomic) PFImageView *profileImage;
-@property (strong, nonatomic) UIImage *updatedProfileImage;
+@property (nonatomic, strong) UIImage *updatedProfileImage;
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
 @property (assign, nonatomic) CGRect oldViewFieldsRect;
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
-@property (nonatomic, strong) PFUser *userCurrent;
+@property (nonatomic, strong) MTUser *userCurrent;
 @property (assign, nonatomic) BOOL reachable;
-@property (assign, nonatomic) BOOL schoolIsNew;
-@property (strong, nonatomic) NSArray *schools;
-@property (strong, nonatomic) PFSchools *school;
-@property (assign, nonatomic) BOOL classIsNew;
-@property (strong, nonatomic) NSArray *classes;
-@property (strong, nonatomic) PFClasses *userClass;
+@property (nonatomic, strong) NSArray *classes;
 @property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL unwinding;
 @property (nonatomic) BOOL showingKeyboard;
@@ -69,7 +61,7 @@
     
     self.viewFields.delegate = self;
     
-    self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+    self.isMentor = [MTUser isCurrentUserMentor];
     
     self.userSchool.enabled = self.isMentor;
     self.userClassName.enabled = self.isMentor;
@@ -84,15 +76,8 @@
     
     [self.view addGestureRecognizer:tap];
     
-    self.userCurrent = [PFUser currentUser];
-    
-    self.userSchool.text = self.userCurrent[@"school"];
-    self.userClassName.text = self.userCurrent[@"class"];
-
-    self.firstName.text = self.userCurrent[@"first_name"];
-    self.lastName.text = self.userCurrent[@"last_name"];
-    self.email.text = self.userCurrent[@"email"];
-    self.phoneNumber.text = self.userCurrent[@"phone_number"];
+    self.userCurrent = [MTUser currentUser];
+    [self updateViewForCurrentUser];
     
     [self.profileImageLabel setBackgroundColor:[UIColor clearColor]];
 
@@ -146,62 +131,21 @@
     [self.saveButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.saveButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
     
-    __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
     self.userProfileButton.imageView.layer.masksToBounds = YES;
+    
+    self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
 
-    if (profileImageFile) {
-        self.profileImageLabel.alpha = 0.0f;
-        
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading Profile...";
-        hud.dimBackground = YES;
-        
-        [self bk_performBlockInBackground:^(id obj) {
-            self.profileImage = [[PFImageView alloc] init];
-            [self.profileImage setFile:profileImageFile];
+    if (self.userCurrent.userAvatar) {
+        self.profileImageLabel.text = @"Change Photo";
 
-            [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    
-                    [UIView animateWithDuration:0.2f animations:^{
-                        self.userProfileButton.alpha = 0.0f;
-                    } completion:^(BOOL finished) {
-                        if (!error) {
-                            if (image) {
-                                self.profileImageLabel.text = @"Change Photo";
-                                self.profileImage.image = image;
-                            } else {
-                                self.profileImageLabel.text = @"Add Photo";
-                                self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-                            }
-                        }
-                        
-                        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-                        [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
-                        
-                        [UIView animateWithDuration:0.2f animations:^{
-                            self.profileImageLabel.alpha = 1.0f;
-                            self.userProfileButton.alpha = 1.0f;
-                        }];
-                    }];
-                });
-                
-                [[PFUser currentUser] fetch];
-            }];
-        } afterDelay:0.35f];
-        
+        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        UIImage *profileImage = [UIImage imageWithData:self.userCurrent.userAvatar.avatarData];
+        [self.userProfileButton setImage:profileImage forState:UIControlStateNormal];
     }
     else {
         self.profileImageLabel.text = @"Add Photo";
-        self.profileImage = [[PFImageView alloc] init];
-        self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-        [self.profileImage setFile:nil];
-        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-        
-        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        [self.userProfileButton setImage:self.profileImage.image forState:UIControlStateNormal];
+        [self.userProfileButton setImage:[UIImage imageNamed:@"profile_image.png"] forState:UIControlStateNormal];
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
@@ -228,114 +172,6 @@
 
 
 #pragma mark - Actions -
-- (IBAction)schoolNameButton:(id)sender
-{
-    if (!self.isMentor) {
-        return;
-    }
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading Schools...";
-    hud.dimBackground = YES;
-
-    [self bk_performBlock:^(id obj) {
-        PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
-        
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-    } afterDelay:0.35f];
-}
-
-- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-    });
-
-    NSMutableArray *names = [[NSMutableArray alloc] init];
-    for (id object in objects) {
-        if (!IsEmpty(object[@"name"])) {
-            [names addObject:object[@"name"]];
-        }
-    }
-    
-    NSArray *sortedNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    NSMutableArray *schoolNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-    for (NSString *thisSchoolName in sortedNames) {
-        NSString *name = thisSchoolName;
-        if ([self.userSchool.text isEqualToString:thisSchoolName]) {
-            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisSchoolName];
-        }
-        [schoolNames addObject:name];
-    }
-
-    [self bk_performBlock:^(id obj) {
-        if ([UIAlertController class]) {
-            UIAlertController *schoolSheet = [UIAlertController
-                                              alertControllerWithTitle:@""
-                                              message:@"Choose School"
-                                              preferredStyle:UIAlertControllerStyleActionSheet];
-            
-            UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleCancel
-                                     handler:^(UIAlertAction *action) {
-                                         self.schoolIsNew = NO;
-                                     }];
-            
-            UIAlertAction *schoolName;
-            
-            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-                schoolName = [UIAlertAction
-                              actionWithTitle:schoolNames[buttonItem]
-                              style:UIAlertActionStyleDefault
-                              handler:^(UIAlertAction *action) {
-                                  self.schoolIsNew = NO;
-                                  self.userSchool.text = [self stringWithoutConfirmation:schoolNames[buttonItem]];
-                                  self.userClassName.text = @"";
-                              }];
-                [schoolSheet addAction:schoolName];
-            }
-            
-            UIAlertAction *destruct = [UIAlertAction
-                                       actionWithTitle:@"New school"
-                                       style:UIAlertActionStyleDestructive
-                                       handler:^(UIAlertAction *action) {
-                                           self.schoolIsNew = YES;
-                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
-                                       }];
-            [schoolSheet addAction:destruct];
-            
-            [schoolSheet addAction:cancel];
-            
-            [self presentViewController:schoolSheet animated:YES completion:nil];
-        } else {
-            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
-            UIActionSheet *schoolSheet = [[UIActionSheet alloc]
-                                          initWithTitle:@"Choose School"
-                                          delegate:self
-                                          cancelButtonTitle:nil
-                                          destructiveButtonTitle:@"New school"
-                                          otherButtonTitles:nil, nil];
-            
-            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-                [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
-            }
-            
-            schoolSheet.cancelButtonIndex = [schoolSheet addButtonWithTitle:@"Cancel"];
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:self.view]) {
-                [schoolSheet showInView:self.view];
-            } else {
-                [schoolSheet showInView:window];
-            }
-        }
-    } afterDelay:0.35f];
-}
-
 - (IBAction)classNameButton:(id)sender
 {
     if (!self.isMentor) {
@@ -397,7 +233,6 @@
                                      actionWithTitle:@"Cancel"
                                      style:UIAlertActionStyleCancel
                                      handler:^(UIAlertAction *action) {
-                                         weakSelf.classIsNew = NO;
                                      }];
             
             UIAlertAction *className;
@@ -407,21 +242,10 @@
                              actionWithTitle:classNames[buttonItem]
                              style:UIAlertActionStyleDefault
                              handler:^(UIAlertAction *action) {
-                                 weakSelf.classIsNew = NO;
                                  weakSelf.userClassName.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
                              }];
                 [classSheet addAction:className];
             }
-            
-            UIAlertAction *destruct = [UIAlertAction
-                                       actionWithTitle:@"New class"
-                                       style:UIAlertActionStyleDestructive
-                                       handler:^(UIAlertAction *action) {
-                                           weakSelf.classIsNew = YES;
-                                           [weakSelf performSegueWithIdentifier:@"addClass" sender:weakSelf];
-                                       }];
-            [classSheet addAction:destruct];
-
             
             [classSheet addAction:cancel];
             
@@ -431,7 +255,7 @@
             UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class"
                                                                     delegate:weakSelf
                                                            cancelButtonTitle:nil
-                                                      destructiveButtonTitle:@"New class"
+                                                      destructiveButtonTitle:nil
                                                            otherButtonTitles:nil, nil];
             
             for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
@@ -469,32 +293,27 @@
         }
     }
     
-    NSString *school = self.userCurrent[@"school"] ? self.userCurrent[@"school"] : @"";
-    if (![self.userSchool.text isEqualToString:school]) {
-        dirty = YES;
-    }
-    
-    NSString *className = self.userCurrent[@"class"] ? self.userCurrent[@"class"] : @"";
+    NSString *className = self.userCurrent.userClass.name ? self.userCurrent.userClass.name : @"";
     if (![self.userClassName.text isEqualToString:className]) {
         dirty = YES;
     }
     
-    NSString *first = self.userCurrent[@"first_name"] ? self.userCurrent[@"first_name"] : @"";
+    NSString *first = self.userCurrent.firstName ? self.userCurrent.firstName : @"";
     if (![self.firstName.text isEqualToString:first]) {
         dirty = YES;
     }
     
-    NSString *last = self.userCurrent[@"last_name"] ? self.userCurrent[@"last_name"] : @"";
+    NSString *last = self.userCurrent.lastName ? self.userCurrent.lastName : @"";
     if (![self.lastName.text isEqualToString:last]) {
         dirty = YES;
     }
     
-    NSString *emailAddress = self.userCurrent[@"email"] ? self.userCurrent[@"email"] : @"";
+    NSString *emailAddress = self.userCurrent.email ? self.userCurrent.email : @"";
     if (![self.email.text isEqualToString:emailAddress]) {
         dirty = YES;
     }
     
-    NSString *phone = self.userCurrent[@"phone_number"] ? self.userCurrent[@"phone_number"] : @"";
+    NSString *phone = self.userCurrent.phoneNumber ? self.userCurrent.phoneNumber : @"";
     if (![self.phoneNumber.text isEqualToString:phone]) {
         dirty = YES;
     }
@@ -695,9 +514,22 @@
     }
 }
 
--(void)dismissKeyboard
+- (void)dismissKeyboard
 {
     [self.view endEditing:YES];
+}
+
+- (void)updateViewForCurrentUser
+{
+    self.userSchool.text = self.userCurrent.organization.name;
+    self.userClassName.text = self.userCurrent.userClass.name;
+    
+    self.firstName.text = self.userCurrent.firstName;
+    self.lastName.text = self.userCurrent.lastName;
+    self.email.text = self.userCurrent.email;
+    self.phoneNumber.text = self.userCurrent.phoneNumber;
+    self.userPassword.text = @"";
+    self.confirmPassword.text = @"";
 }
 
 
@@ -756,121 +588,102 @@
 #pragma mark - Get and save image -
 - (void)saveProfileChanges
 {
-    BOOL newClass = NO;
-    if (self.classIsNew || ![self.userCurrent[@"class"] isEqualToString:self.userClassName.text]) {
-        newClass = YES;
-    }
+    [self.view endEditing:YES];
 
-    if (self.userClassName.text) {
-        self.userCurrent[@"class"] = self.userClassName.text;
-    }
+//    BOOL newClass = NO;
+//    if (![self.userCurrent.userClass.name isEqualToString:self.userClassName.text]) {
+//        newClass = YES;
+//    }
+//
+//    if (self.userClassName.text) {
+//        self.userCurrent.userClass.name = self.userClassName.text;
+//    }
+//    
+//    if (newClass) {
+//        // Check for custom playlist for this class
+//        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:YES];
+//        [[NSNotificationCenter defaultCenter] postNotificationName:kUserDidChangeClass object:nil];
+//        
+//        // Reset prompts
+//        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
+//        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
+//        [[NSUserDefaults standardUserDefaults] synchronize];
+//    }
     
-    if (self.userSchool.text) {
-        self.userCurrent[@"school"] = self.userSchool.text;
-    }
-    
-    if (newClass) {
-        // Check for custom playlist for this class
-        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:YES];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kUserDidChangeClass object:nil];
-        
-        // Reset prompts
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    
-    if (self.firstName.text) {
-        self.userCurrent[@"first_name"] = self.firstName.text;
-    }
-    
-    if (self.lastName.text) {
-        self.userCurrent[@"last_name"] = self.lastName.text;
-    }
-    
-    if (self.phoneNumber.text) {
-        self.userCurrent[@"phone_number"] = self.phoneNumber.text;
-    }
+//    if (self.firstName.text) {
+//        self.userCurrent.firstName = self.firstName.text;
+//    }
+//
+//    if (self.lastName.text) {
+//        self.userCurrent.firstName = self.lastName.text;
+//    }
+//    
+//    if (self.phoneNumber.text) {
+//        self.userCurrent.phoneNumber = self.phoneNumber.text;
+//    }
 
     BOOL passwordsMatch = [self.userPassword.text isEqualToString:self.confirmPassword.text];
-    if (![self.self.userPassword.text isEqual:@""] && passwordsMatch) {
-        self.userCurrent.password = self.userPassword.text;
-    } else if (!passwordsMatch){
+    if (!passwordsMatch){
         UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Password error" message:@"Passwords do not match." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [noMatch show];
         return;
     }
     
-    if (self.schoolIsNew) {
-        PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-        createSchool[@"name"] = self.userSchool.text;
-        [createSchool saveInBackground];
-    }
-    
-    if (self.classIsNew) {
-        PFClasses *createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
-        createClass[@"name"] = self.userClassName.text;
-        createClass[@"school"] = self.userSchool.text;
-        [createClass saveInBackground];
-        
-        PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
-        signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
-        signupCodeForStudent[@"class"] = self.userClassName.text;
-        signupCodeForStudent[@"school"] = self.userSchool.text;
-        signupCodeForStudent[@"type"] = @"student";
-        
-        [signupCodeForStudent saveInBackground];
-    }
-    
-    [self.userCurrent setEmail:self.email.text];
-    [self.userCurrent setUsername:self.email.text];
+//    self.userCurrent.email = self.email.text;
+//    self.userCurrent.username = self.email.text;
     
     if (self.updatedProfileImage) {
-        self.profileImage = [[PFImageView alloc] initWithImage:self.updatedProfileImage];
-        NSString *fileName = @"profile_image.png";
-        NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.8f);
-        self.profileImage.file = [PFFile fileWithName:fileName data:imageData];
-        if (self.profileImage.file) {
-            self.userCurrent[@"profile_picture"] = self.profileImage.file;
-            [self.profileImage.file saveInBackground];
-        }
+        NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.6f);
+        [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:self.userCurrent.id withImageData:imageData success:^(id responseData) {
+            NSLog(@"Successfully updated user avatar");
+        } failure:^(NSError *error) {
+            NSLog(@"Failed to save user avatar");
+        }];
+        
         self.updatedProfileImage = nil;
     }
     else {
         if (self.removedProfilePhoto) {
-            self.profileImage = nil;
-            [self.userCurrent removeObjectForKey:@"profile_picture"];
+            [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:self.userCurrent.id withImageData:nil success:^(id responseData) {
+                NSLog(@"Successfully removed user avatar");
+            } failure:^(NSError *error) {
+                NSLog(@"Failed to remove user avatar");
+            }];
+
             self.removedProfilePhoto = NO;
         }
     }
     
     MTMakeWeakSelf();
-    [self.userCurrent saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (!error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                
-                [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
-                
-                if (weakSelf.presentingViewController) {
-                    [weakSelf dismissViewControllerAnimated:YES completion:nil];
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                    hud.labelText = @"Saved!";
-                    hud.mode = MBProgressHUDModeText;
-                    [hud hide:YES afterDelay:1.0f];
-                }
-            });
-
-            [[PFUser currentUser] fetchInBackground];
+    [[MTNetworkManager sharedMTNetworkManager] updateCurrentUserWithFirstName:self.firstName.text lastName:self.lastName.text email:self.email.text phoneNumber:self.phoneNumber.text password:self.userPassword.text success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.userCurrent = [MTUser currentUser];
+            [weakSelf updateViewForCurrentUser];
+            
+            [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
+            
+            if (weakSelf.presentingViewController) {
+                [weakSelf dismissViewControllerAnimated:YES completion:nil];
+            }
+            else {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+                hud.labelText = @"Saved!";
+                hud.mode = MBProgressHUDModeText;
+                [hud hide:YES afterDelay:1.0f];
+            }
             
             // Update for Push Notifications
-            [[MTUtil getAppDelegate] updateParseInstallationState];
-        } else {
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Save Changes" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            NSLog(@"error - %@", error);
-        }
+//            [[MTUtil getAppDelegate] updateParseInstallationState];
+        });
+
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error mtErrorDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+
+            weakSelf.userCurrent = [MTUser currentUser];
+            [weakSelf updateViewForCurrentUser];
+        });
     }];
 }
 
@@ -975,7 +788,7 @@
 {
     self.updatedProfileImage = nil;
     self.removedProfilePhoto = YES;
-    [self.profileImage setFile:nil];
+//    [self.profileImage setFile:nil];
     
     [UIView animateWithDuration:0.2f animations:^{
         self.userProfileButton.alpha = 0.0f;
@@ -984,7 +797,7 @@
         [self.userProfileButton setImage:[UIImage imageNamed:@"profile_image.png"] forState:UIControlStateNormal];
         
         self.profileImageLabel.text = @"Add Photo";
-        self.profileImage.image = nil;
+//        self.profileImage.image = nil;
         
         [UIView animateWithDuration:0.2f animations:^{
             self.userProfileButton.alpha = 1.0f;
@@ -1014,26 +827,9 @@
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     NSString *title = [actionSheet title];
-    if ([title isEqualToString:@"Choose School"]) {
-        if ([buttonTitle isEqualToString:@"New school"]) {
-            self.schoolIsNew = YES;
-            [self performSegueWithIdentifier:@"addSchool" sender:self];
-        } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.schoolIsNew = NO;
-            self.userSchool.text = [self stringWithoutConfirmation:buttonTitle];
-            self.userClassName.text = @"";
-        } else { // Cancel
-            self.schoolIsNew = NO;
-        }
-    } else if ([title isEqualToString:@"Choose Class"]) {
-        if ([buttonTitle isEqualToString:@"New class"]) {
-            self.classIsNew = YES;
-            [self performSegueWithIdentifier:@"addClass" sender:self];
-        } else if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.classIsNew = NO;
+    if ([title isEqualToString:@"Choose Class"]) {
+        if (![buttonTitle isEqualToString:@"Cancel"]) {
             self.userClassName.text = [self stringWithoutConfirmation:buttonTitle];
-        } else { // Cancel
-            self.classIsNew = NO;
         }
     }
     else {
@@ -1167,34 +963,6 @@
         self.reachable = YES;
     } else {
         self.reachable = NO;
-    }
-}
-
-
-#pragma mark - Unwind -
-- (IBAction)unwindToEditProfileView:(UIStoryboardSegue *)sender
-{
-    self.unwinding = YES;
-    
-    UIStoryboardSegue *returned = sender;
-    id sourceVC = [returned sourceViewController];
-    if ([sourceVC class] == [MTAddSchoolViewController class]) {
-        MTAddSchoolViewController *schoolVC = sourceVC;
-        
-        if (IsEmpty(schoolVC.schoolName)) {
-            return;
-        }
-        
-        self.userSchool.text = schoolVC.schoolName;
-        self.userClassName.text = @"";
-    } else if ([sourceVC class] == [MTAddClassViewController class]) {
-        MTAddClassViewController *classVC = sourceVC;
-        
-        if (IsEmpty(classVC.className)) {
-            return;
-        }
-        
-        self.userClassName.text = classVC.className;
     }
 }
 

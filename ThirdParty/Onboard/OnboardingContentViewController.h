@@ -50,7 +50,6 @@
 @property (nonatomic) CGFloat underProfileImagePickerPadding;
 @property (nonatomic) BOOL hasProfileImagePickerButton;
 @property (nonatomic) BOOL hasDoLaterButton;
-@property (nonatomic, strong) PFFile *profileFile;
 @property (nonatomic, strong) UIImage *profileImage;
 @property (nonatomic, strong) UIButton *profileImageButton;
 @property (nonatomic) BOOL changedProfileImage;

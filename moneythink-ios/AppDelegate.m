@@ -16,8 +16,6 @@
 #import "MTMenuViewController.h"
 #import "MTPostViewController.h"
 #import "AFNetworkActivityIndicatorManager.h"
-#import "MTAddSchoolViewController.h"
-#import "MTAddClassViewController.h"
 
 #ifdef STAGE
     static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
@@ -684,10 +682,6 @@
         }
         
         if (self.userViewController) {
-            id visibleVC = [self.userViewController visibleViewController];
-            if ([visibleVC isKindOfClass:[MTAddSchoolViewController class]] || [visibleVC isKindOfClass:[MTAddClassViewController class]]) {
-                [visibleVC dismissViewControllerAnimated:NO completion:nil];
-            }
             [self.userViewController popToRootViewControllerAnimated:NO];
             
             id topVC = [self.userViewController topViewController];
@@ -771,8 +765,8 @@
 - (void)setupRealm
 {
     // TODO: Clear for testing
-    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
-    [MTUser logout];
+//    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
+//    [MTUser logout];
 
     [RLMRealm defaultRealm];
     

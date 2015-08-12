@@ -82,6 +82,7 @@
 #import "UIScrollView+EmptyDataSet.h"
 
 #import "MTUser.h"
+#import "MTUserAvatar.h"
 #import "MTOrganization.h"
 #import "MTClass.h"
 

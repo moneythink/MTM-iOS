@@ -19,7 +19,6 @@
              @"lastName": @"",
              @"phoneNumber": @"",
              @"roleCode": @"",
-             @"avatar": @"",
              @"currentUser": @NO};
 }
 
@@ -45,7 +44,6 @@
              @"lastName": @"lastName",
              @"phoneNumber": @"phoneNumber",
              @"_embedded.role.code": @"roleCode",
-             @"avatar": @"avatar",
              };
 }
 
@@ -57,8 +55,6 @@
              @"firstName": @"firstName",
              @"lastName": @"lastName",
              @"phoneNumber": @"phoneNumber",
-             @"roleCode": @"_embedded.role.code",
-             @"avatar": @"avatar",
              };
 }
 
@@ -92,14 +88,17 @@
 
 + (BOOL)isCurrentUserMentor
 {
-    // TODO: implement
-    return NO;
+    if ([[[MTUser currentUser].roleCode uppercaseString] isEqualToString:@"MENTOR"]) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
 }
 
 + (BOOL)isUserMe:(MTUser *)user
 {
-    // TODO: implement
-    return NO;
+    return user.currentUser;
 }
 
 + (BOOL)isUserLoggedIn
@@ -112,9 +111,10 @@
     }
 }
 
-+ (MTUser *)getMeUser
++ (MTUser *)currentUser;
 {
-    return nil;
+    RLMResults *meUsers = [MTUser objectsWhere:@"currentUser = YES"];
+    return [meUsers firstObject];
 }
 
 

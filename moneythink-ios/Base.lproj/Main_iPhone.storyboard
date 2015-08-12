@@ -1161,17 +1161,6 @@
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="words" autocorrectionType="no" returnKeyType="next"/>
                                     </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vl4-hF-4w0" userLabel="School Name Button">
-                                        <rect key="frame" x="0.0" y="170" width="320" height="30"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <state key="normal">
-                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="schoolNameButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="J6d-4f-r6q"/>
-                                        </connections>
-                                    </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJD-YC-FKV" userLabel="Separator">
                                         <rect key="frame" x="0.0" y="200" width="320" height="1"/>
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -1293,7 +1282,7 @@
                                             <constraint firstAttribute="width" constant="148" id="Suh-da-IP6"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="12"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" keyboardType="numberPad" returnKeyType="next"/>
                                     </textField>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3Li-cC-9XP" userLabel="Separator">
                                         <rect key="frame" x="0.0" y="350" width="320" height="1"/>
@@ -1459,57 +1448,12 @@
                         <outletCollection property="separatorViews" destination="uaR-p9-7Me" id="IoO-fU-34p"/>
                         <outletCollection property="separatorViews" destination="8hB-fx-5jm" id="5jc-KE-meC"/>
                         <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToStudentMain" unwindAction="unwindToStudentMain:" id="ZrI-gL-liA"/>
-                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" id="NwG-bn-vTI"/>
-                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" id="Gdm-gL-5Rd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Isx-hU-GCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="cd1-HY-ACM" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-3473" y="-3002"/>
-        </scene>
-        <!--Add School-->
-        <scene sceneID="0Zq-Hb-rfV">
-            <objects>
-                <viewController storyboardIdentifier="addSchool" useStoryboardIdentifierAsRestorationIdentifier="YES" id="zeU-Mr-fxZ" userLabel="Add School" customClass="MTAddSchoolViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="gVQ-fV-vDL"/>
-                        <viewControllerLayoutGuide type="bottom" id="2LR-Wm-vGe"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="2sZ-vO-kRS">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="E02-TH-nAc">
-                                <rect key="frame" x="120" y="197" width="80" height="30"/>
-                                <state key="normal" title="Done">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="doneButtonTapped:" destination="zeU-Mr-fxZ" eventType="touchUpInside" id="EX2-1a-qqk"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New school" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="X2M-4u-vKh">
-                                <rect key="frame" x="20" y="159" width="280" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="x7l-zv-gJG"/>
-                    <connections>
-                        <outlet property="doneButton" destination="E02-TH-nAc" id="QDx-K4-wPx"/>
-                        <outlet property="schoolName" destination="X2M-4u-vKh" id="eVA-YM-Tp8"/>
-                        <outlet property="schoolNameText" destination="X2M-4u-vKh" id="YyF-qn-d8d"/>
-                        <segue destination="hz2-0S-NYE" kind="unwind" identifier="unwindToSignupView" unwindAction="unwindToSignupView:" id="h5C-Dr-P7L"/>
-                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="VWs-WG-A0Q"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="7AG-gt-3qy" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="hz2-0S-NYE" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-3013" y="-1040"/>
         </scene>
         <!--Mentor Challenge Info-->
         <scene sceneID="Lju-RJ-cwN">
@@ -1971,7 +1915,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="odo-CC-04i" userLabel="Header View">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="74"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUT-Og-c9s" userLabel="Avatar Image View" customClass="PFImageView">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gUT-Og-c9s" userLabel="Avatar Image View">
                                         <rect key="frame" x="15" y="27" width="40" height="40"/>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="David" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.60000000000000009" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="I76-c9-Bpj">
@@ -2258,7 +2202,7 @@
         <!--Edit Profile Navigation-->
         <scene sceneID="A7c-8k-ECE">
             <objects>
-                <navigationController id="KzZ-6x-7nb" userLabel="Edit Profile Navigation" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="editProfileNav" id="KzZ-6x-7nb" userLabel="Edit Profile Navigation" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KrA-il-A1e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -5144,10 +5088,10 @@
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="303-555-1212" minimumFontSize="15" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ARe-Lg-Sux" userLabel="Phone Number Text Field">
+                                            <textField opaque="NO" clipsSubviews="YES" tag="3" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="3035551212" minimumFontSize="15" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="ARe-Lg-Sux" userLabel="Phone Number Text Field">
                                                 <rect key="frame" x="150" y="132" width="160" height="44"/>
                                                 <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="15"/>
-                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="emailAddress" returnKeyType="next"/>
+                                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" keyboardType="numberPad" returnKeyType="next"/>
                                                 <connections>
                                                     <outlet property="delegate" destination="e6J-bE-0Mw" id="cp3-pO-SOF"/>
                                                 </connections>
@@ -5308,8 +5252,6 @@
                         <outlet property="verticalSpaceConstraint" destination="5Hq-Xp-cfg" id="Uv1-mp-06R"/>
                         <outlet property="view" destination="jCH-i6-HSY" id="CR9-Hj-COR"/>
                         <segue destination="bhs-34-IGx" kind="unwind" identifier="unwindToMainMenu" unwindAction="unwindToMainMenu:" id="Cd2-OO-fi7"/>
-                        <segue destination="zeU-Mr-fxZ" kind="modal" identifier="addSchool" animates="NO" id="kDD-cl-uw8"/>
-                        <segue destination="hO1-oe-Ce4" kind="modal" identifier="addClass" animates="NO" id="0QY-Pc-qd8"/>
                         <segue destination="z8Z-Rq-rRI" kind="push" identifier="showWebView" id="fGY-fc-BPd"/>
                     </connections>
                 </viewController>
@@ -5448,48 +5390,6 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
             </objects>
             <point key="canvasLocation" x="-2593" y="-3638"/>
         </scene>
-        <!--Add Class-->
-        <scene sceneID="a8I-4r-BfR">
-            <objects>
-                <viewController storyboardIdentifier="addClass" useStoryboardIdentifierAsRestorationIdentifier="YES" id="hO1-oe-Ce4" userLabel="Add Class" customClass="MTAddClassViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="j8o-rY-nRn"/>
-                        <viewControllerLayoutGuide type="bottom" id="kE2-dm-kYq"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="MRs-8Q-nsA">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7c-hC-3iu">
-                                <rect key="frame" x="120" y="197" width="80" height="30"/>
-                                <state key="normal" title="Done">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="doneButtonTapped:" destination="hO1-oe-Ce4" eventType="touchUpInside" id="J3Z-2v-MXv"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="New Class" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="uPQ-0o-epA">
-                                <rect key="frame" x="20" y="159" width="280" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="095-eP-GdC"/>
-                    <connections>
-                        <outlet property="classNameText" destination="uPQ-0o-epA" id="gOu-K0-mLm"/>
-                        <outlet property="doneButton" destination="J7c-hC-3iu" id="eZn-X3-o1D"/>
-                        <segue destination="T4o-US-tP7" kind="unwind" identifier="unwindToSignupView" unwindAction="unwindToSignupView:" id="7kl-9M-Taa"/>
-                        <segue destination="cd1-HY-ACM" kind="unwind" identifier="unwindToEditProfileView" unwindAction="unwindToEditProfileView:" id="bpp-oM-KJi"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FQD-dR-Na2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <exit id="T4o-US-tP7" userLabel="Exit" sceneMemberID="exit"/>
-            </objects>
-            <point key="canvasLocation" x="-2582" y="-1040"/>
-        </scene>
         <!--Emoji Collection-->
         <scene sceneID="vJD-Cy-GnB">
             <objects>
@@ -5617,14 +5517,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="0QY-Pc-qd8"/>
-        <segue reference="kDD-cl-uw8"/>
         <segue reference="fGY-fc-BPd"/>
-        <segue reference="xm4-7b-aI0"/>
-        <segue reference="vqR-nj-yuL"/>
         <segue reference="nYB-OV-yVU"/>
         <segue reference="LS9-Mg-yad"/>
+        <segue reference="vqR-nj-yuL"/>
         <segue reference="o0E-h6-NZi"/>
+        <segue reference="xm4-7b-aI0"/>
         <segue reference="nWx-Jd-e9Z"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -35,7 +35,6 @@
              @"id": @"id",
              @"name": @"name",
              @"studentSignupCode": @"studentSignupCode",
-             @"_embedded.organization": @"organization",
              };
 }
 
@@ -44,7 +43,6 @@
              @"id": @"id",
              @"name": @"name",
              @"studentSignupCode": @"studentSignupCode",
-             @"organization": @"_embedded.organization",
              };
 }
 
