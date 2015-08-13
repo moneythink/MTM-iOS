@@ -38,6 +38,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSavedProfileChanges:) name:kUserSavedProfileChanges object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceLogoutNotification:) name:kNotificationForceLogout object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -359,8 +360,9 @@
 {
     [MTUser logout];
     
-    // TODO: Remove
+    // TODO: Remove this method in favor of [MTUser logout]
     [MTUtil logout];
+    
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
     if (selectedIndexPath) {
@@ -463,6 +465,12 @@
 {
     [self loadProfileImage];
     self.profileName.text = [MTUser currentUser].firstName;
+}
+
+- (void)forceLogoutNotification:(NSNotification *)note
+{
+    NSLog(@"Received force logout notification");
+    [self logoutAction];
 }
 
 

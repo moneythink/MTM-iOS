@@ -12,14 +12,15 @@
 #import "AFURLRequestSerialization.h"
 #import "AFURLResponseSerialization.h"
 
-// TODO: Create dev and prod keys
+// TODO: Create dev and prod keys/urls
 #ifdef STAGE
 static NSString * const MTNetworkAPIKey = @"123456";
+static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
 static NSString * const MTNetworkAPIKey = @"123456";
+static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #endif
 
-static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 static NSString * const MTNetworkClientID = @"ios";
 
 @interface MTNetworkManager (Private)
@@ -84,6 +85,9 @@ static NSString * const MTNetworkClientID = @"ios";
                 }
             } failure:^(NSError *error) {
                 NSLog(@"Failed to refresh OAuth token: %@", [error mtErrorDescription]);
+                if (![MTUtil internetReachable]) {
+                    [[[UIAlertView alloc] initWithTitle:@"No Internet" message:@"Restore Internet connection and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
                 if (failure) {
                     failure(error);
                 }
@@ -94,7 +98,8 @@ static NSString * const MTNetworkClientID = @"ios";
                 [[[UIAlertView alloc] initWithTitle:@"No Internet" message:@"Restore Internet connection and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
             else {
-                // TODO: Shouldn't get here but force user to login again.
+                [[[UIAlertView alloc] initWithTitle:@"User Login Expiration" message:@"Please re-login to Moneythink to continue use." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationForceLogout object:nil];
             }
         }
     }
@@ -270,6 +275,82 @@ static NSString * const MTNetworkClientID = @"ios";
     return classesDict;
 }
 
+- (NSArray *)processEthnicitiesRequestWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No ethnicities response data");
+        return 0;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No ethnicities response data");
+        return 0;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"ethnicities"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No ethnicities response data");
+        return 0;
+    }
+    
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"ethnicities"];
+    NSMutableDictionary *ethnicitiesDict = [NSMutableDictionary dictionary];
+    
+    for (NSDictionary *thisEthnicity in responseArray) {
+        NSString *ethnicityRank = [[thisEthnicity objectForKey:@"ranking"] stringValue];
+        
+        if (!IsEmpty(ethnicityRank)) {
+            [ethnicitiesDict setValue:thisEthnicity forKey:ethnicityRank];
+        }
+    }
+    
+    NSMutableArray *sortedArray = [NSMutableArray array];
+    for (NSString *thisKey in [[ethnicitiesDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
+        [sortedArray addObject:[ethnicitiesDict objectForKey:thisKey]];
+    }
+    
+    return sortedArray;
+}
+
+- (NSArray *)processMoneyOptionsRequestWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No moneyOptions response data");
+        return 0;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No moneyOptions response data");
+        return 0;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"moneyOptions"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No moneyOptions response data");
+        return 0;
+    }
+    
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"moneyOptions"];
+    NSMutableDictionary *moneyOptionsDict = [NSMutableDictionary dictionary];
+    
+    for (NSDictionary *thisMoneyOption in responseArray) {
+        NSString *moneyOptionRank = [[thisMoneyOption objectForKey:@"ranking"] stringValue];
+        
+        if (!IsEmpty(moneyOptionRank)) {
+            [moneyOptionsDict setValue:thisMoneyOption forKey:moneyOptionRank];
+        }
+    }
+    
+    NSMutableArray *sortedArray = [NSMutableArray array];
+    for (NSString *thisKey in [[moneyOptionsDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
+        [sortedArray addObject:[moneyOptionsDict objectForKey:thisKey]];
+    }
+    
+    return sortedArray;
+}
+
 
 #pragma mark - Public Methods -
 - (void)authenticateForUsername:(NSString *)username withPassword:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -392,10 +473,82 @@ static NSString * const MTNetworkClientID = @"ios";
     }];
 }
 
+- (void)studentSignupForEmail:(NSString *)email
+                     password:(NSString *)password
+                   signupCode:(NSString *)signupCode
+                    firstName:(NSString *)firstName
+                     lastName:(NSString *)lastName
+                      zipCode:(NSString *)zipCode
+                  phoneNumber:(NSString *)phoneNumber
+                    birthdate:(NSDate *)birthdate
+                    ethnicity:(NSDictionary *)ethnicity
+                 moneyOptions:(NSArray *)moneyOptions
+                      success:(MTNetworkSuccessBlock)success
+                      failure:(MTNetworkFailureBlock)failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    
+    parameters[@"firstName"] = firstName;
+    parameters[@"lastName"] = lastName;
+    parameters[@"phoneNumber"] = phoneNumber;
+    parameters[@"username"] = email;
+    parameters[@"email"] = email;
+    parameters[@"password"] = password;
+    parameters[@"signupCode"] = signupCode;
+    parameters[@"zipCode"] = zipCode;
+
+    MCJSONDateTransformer *birthdateTransformer = [[MCJSONDateTransformer alloc] initWithDateStyle:MCJSONDateTransformerStyleDateOnly];
+    NSString *birthdateString = [birthdateTransformer reverseTransformedValue:birthdate];
+    parameters[@"birthDate"] = birthdateString;
+    
+    NSDictionary *codeDict = [NSDictionary dictionaryWithObject:@"STUDENT" forKey:@"code"];
+    parameters[@"role"] = codeDict;
+    
+    NSDictionary *ethnicityDict = [NSDictionary dictionaryWithObject:[ethnicity valueForKey:@"code"] forKey:@"code"];
+    parameters[@"ethnicity"] = ethnicityDict;
+    
+    NSMutableArray *moneyOptionsArray = [NSMutableArray array];
+    for (NSDictionary *moneyOption in moneyOptions) {
+        NSDictionary *moneyOptionDict = [NSDictionary dictionaryWithObjectsAndKeys:[moneyOption valueForKey:@"code"], @"code", nil];
+        [moneyOptionsArray addObject:moneyOptionDict];
+    }
+    parameters[@"moneyOptions"] = moneyOptionsArray;
+
+    MTMakeWeakSelf();
+    [self POST:@"users" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Signup Success");
+        
+        // Now, need to authenticate to get OAuth access token
+        [weakSelf authenticateForUsername:email withPassword:password success:^(id responseData) {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(responseData);
+                });
+            }
+        } failure:^(NSError *error) {
+            NSLog(@"Failed authenticateForUsername after registering as student: %@", [error mtErrorDescription]);
+            if (failure) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failure(error);
+                });
+            }
+        }];
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"Failed to register as student with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
 - (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
+    parameters[@"page_size"] = @"999";
 
     NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
     [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
@@ -428,19 +581,71 @@ static NSString * const MTNetworkClientID = @"ios";
     }];
 }
 
-- (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    MTMakeWeakSelf();
-    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"maxdepth"] = @"0";
+    parameters[@"page_size"] = @"999";
+
+    [self GET:@"ethnicities" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Success getting Ethnicities response");
+        NSArray *ethnicitiesArray = [self processEthnicitiesRequestWithResponseObject:responseObject];
         
-        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:@"classes" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"success response");
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
-        }];
-    } failure:^(NSError *error) {
-        NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
+        if ([ethnicitiesArray count] > 0) {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(ethnicitiesArray);
+                });
+            }
+        }
+        else {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(nil);
+                });
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"Failed to get Ethnicities with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
+- (void)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"maxdepth"] = @"0";
+    parameters[@"page_size"] = @"999";
+
+    [self GET:@"money-options" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Success getting Money Options response");
+        NSArray *moneyOptionsArray = [self processMoneyOptionsRequestWithResponseObject:responseObject];
+        
+        if ([moneyOptionsArray count] > 0) {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(moneyOptionsArray);
+                });
+            }
+        }
+        else {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(nil);
+                });
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"Failed to get Money Options with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
     }];
 }
 
@@ -601,6 +806,54 @@ static NSString * const MTNetworkClientID = @"ios";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed refreshCurrentUserData with error: %@", [error mtErrorDescription]);
+    }];
+}
+
+- (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"email"] = email;
+    
+    [self POST:@"users/reset-password" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"requestPasswordResetEmailForEmail Success");
+        if (success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(nil);
+            });
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"requestPasswordResetEmailForEmail Failed with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
+- (void)sendNewPassword:(NSString *)newPassword withToken:(NSString *)token success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"password"] = newPassword;
+    
+    NSString *authString = [NSString stringWithFormat:@"Token %@", token];
+    [self.requestSerializer setValue:authString forHTTPHeaderField:@"Authorization"];
+    [self POST:@"users/reset-password-confirm" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"sendNewPassword Success");
+        if (success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(nil);
+            });
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"sendNewPassword Failed with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
     }];
 }
 

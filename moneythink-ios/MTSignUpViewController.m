@@ -49,7 +49,7 @@
 @property (nonatomic, strong) NSArray *ethnicities;
 @property (nonatomic, strong) NSArray *moneyOptionsArray;
 @property (nonatomic, strong) NSDate *selectedBirthdate;
-@property (nonatomic, strong) PFEthnicities *selectedEthnicity;
+@property (nonatomic, strong) NSDictionary *selectedEthnicity;
 @property (nonatomic, strong) NSMutableArray *selectedMoneyOptions;
 @property (nonatomic) BOOL allowEmptyEthnicities;
 @property (nonatomic) BOOL allowEmptyMoneyOptions;
@@ -418,12 +418,16 @@
         hud.dimBackground = YES;
         
         MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
-            [queryEthnicities orderByAscending:@"order"];
-            queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
-            [queryEthnicities findObjectsInBackgroundWithTarget:weakSelf selector:@selector(ethnicitiesSheet:error:)];
-        } afterDelay:0.35f];
+        [[MTNetworkManager sharedMTNetworkManager] getEthnicitiesWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf ethnicitiesSheet:responseData error:nil];
+            });
+
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf ethnicitiesSheet:nil error:error];
+            });
+        }];
     }
 }
 
@@ -538,12 +542,16 @@
         hud.dimBackground = YES;
         
         MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            PFQuery *queryMoneyOptions = [PFQuery queryWithClassName:[PFMoneyOptions parseClassName]];
-            [queryMoneyOptions orderByAscending:@"order"];
-            queryMoneyOptions.cachePolicy = kPFCachePolicyNetworkElseCache;
-            [queryMoneyOptions findObjectsInBackgroundWithTarget:weakSelf selector:@selector(moneyOptionsSheet:error:)];
-        } afterDelay:0.35f];
+        [[MTNetworkManager sharedMTNetworkManager] getMoneyOptionsWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf moneyOptionsSheet:responseData error:nil];
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf moneyOptionsSheet:nil error:error];
+            });
+        }];
     }
 }
 
@@ -828,35 +836,21 @@
 
 - (void)loadEthnicities
 {
-    PFQuery *queryEthnicities = [PFQuery queryWithClassName:[PFEthnicities parseClassName]];
-    [queryEthnicities orderByAscending:@"order"];
-    queryEthnicities.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
     MTMakeWeakSelf();
-    [queryEthnicities findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.ethnicities = objects;
-        }
-        else {
-            NSLog(@"Unable to load Ethnicities: %@", [error localizedDescription]);
-        }
+    [[MTNetworkManager sharedMTNetworkManager] getEthnicitiesWithSuccess:^(id responseData) {
+        weakSelf.ethnicities = responseData;
+    } failure:^(NSError *error) {
+        NSLog(@"loadEthnicities failure: %@", [error mtErrorDescription]);
     }];
 }
 
 - (void)loadMoneyOptions
 {
-    PFQuery *queryMoneyOptions = [PFQuery queryWithClassName:[PFMoneyOptions parseClassName]];
-    [queryMoneyOptions orderByAscending:@"order"];
-    queryMoneyOptions.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
     MTMakeWeakSelf();
-    [queryMoneyOptions findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.moneyOptionsArray = objects;
-        }
-        else {
-            NSLog(@"Unable to load Ethnicities: %@", [error localizedDescription]);
-        }
+    [[MTNetworkManager sharedMTNetworkManager] getMoneyOptionsWithSuccess:^(id responseData) {
+        weakSelf.moneyOptionsArray = responseData;
+    } failure:^(NSError *error) {
+        NSLog(@"loadMoneyOptions failure: %@", [error mtErrorDescription]);
     }];
 }
 
@@ -1020,6 +1014,9 @@
                                                                     if ([error firstValidationMessage]) {
                                                                         errorMessage = [error firstValidationMessage];
                                                                     }
+                                                                    else if ([error detailMessage]) {
+                                                                        errorMessage = [error detailMessage];
+                                                                    }
 
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                                         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
@@ -1038,8 +1035,63 @@
     
     MTMakeWeakSelf();
     [self bk_performBlock:^(id obj) {
-        // Student Registration
-        
+        [[MTNetworkManager sharedMTNetworkManager] studentSignupForEmail:self.email.text
+                                                                password:self.password.text
+                                                              signupCode:self.registrationCode.text
+                                                               firstName:self.firstName.text
+                                                                lastName:self.lastName.text
+                                                                 zipCode:self.zipCode.text
+                                                             phoneNumber:self.phoneNumber.text
+                                                               birthdate:self.selectedBirthdate
+                                                               ethnicity:self.selectedEthnicity
+                                                            moneyOptions:self.selectedMoneyOptions
+                                                                success:^(id responseData) {
+                                                                    
+                                                                    [[MTUtil getAppDelegate] configureZendesk];
+                                                                    
+                                                                    // Update for Push Notifications
+                                                                    //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                    
+                                                                    // Check for custom playlist for this class
+                                                                    //        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+                                                                    
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                                                        
+                                                                        [weakSelf.navigationController popViewControllerAnimated:YES];
+                                                                        
+                                                                        // Check for custom playlist for this class
+                                                                        //            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+                                                                        
+                                                                        // Update Notification count for this user.
+                                                                        //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                                                        
+                                                                        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                                                                        if (![onboardingController checkForOnboarding]) {
+                                                                            
+                                                                            // TODO: change back
+                                                                            // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+                                                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
+                                                                        }
+                                                                    });
+                                                                    
+                                                                } failure:^(NSError *error) {
+                                                                    // See if we have a validation message
+                                                                    NSString *errorMessage = [error localizedDescription];
+                                                                    if ([error firstValidationMessage]) {
+                                                                        errorMessage = [error firstValidationMessage];
+                                                                    }
+                                                                    else if ([error detailMessage]) {
+                                                                        errorMessage = [error detailMessage];
+                                                                    }
+                                                                    
+                                                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                                                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                    });
+                                                                }];
+
     } afterDelay:0.35f];
 }
 
@@ -1057,7 +1109,7 @@
         }
     } else if ([title isEqualToString:@"Choose Ethnicity"]) {
         self.ethnicity.text = [self stringWithoutConfirmation:buttonTitle];
-        for (PFEthnicities *thisEthnicity in self.ethnicities) {
+        for (NSDictionary *thisEthnicity in self.ethnicities) {
             if ([thisEthnicity[@"name"] isEqualToString:self.ethnicity.text]) {
                 self.selectedEthnicity = thisEthnicity;
                 break;

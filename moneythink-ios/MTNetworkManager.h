@@ -27,7 +27,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
                         lastName:(NSString *)lastName
                          zipCode:(NSString *)zipCode
                      phoneNumber:(NSString *)phoneNumber
-                       ethnicity:(NSString *)ethnicity
+                       birthdate:(NSDate *)birthdate
+                       ethnicity:(NSDictionary *)ethnicity
                     moneyOptions:(NSArray *)moneyOptions
                          success:(MTNetworkSuccessBlock)success
                          failure:(MTNetworkFailureBlock)failure;
@@ -41,14 +42,15 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
                      success:(MTNetworkSuccessBlock)success
                      failure:(MTNetworkFailureBlock)failure;
 - (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (NSArray *)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (NSArray *)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Misc
-- (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)setAvatarForUserId:(NSInteger)userId withImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)updateCurrentUserWithFirstName:(NSString *)firstName lastName:(NSString *)lastName email:(NSString *)email phoneNumber:(NSString *)phoneNumber password:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)refreshCurrentUserData;
+- (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)sendNewPassword:(NSString *)newPassword withToken:(NSString *)token success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 
 @end

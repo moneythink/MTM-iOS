@@ -12,5 +12,6 @@
 
 - (NSString *)mtErrorDescription;
 - (NSString *)firstValidationMessage;
+- (NSString *)detailMessage;
 
 @end

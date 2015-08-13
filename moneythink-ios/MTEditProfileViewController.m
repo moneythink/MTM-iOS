@@ -36,6 +36,11 @@
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 @property (nonatomic, strong) MTUser *userCurrent;
 @property (assign, nonatomic) BOOL reachable;
+@property (assign, nonatomic) BOOL schoolIsNew;
+@property (strong, nonatomic) NSArray *schools;
+@property (strong, nonatomic) NSDictionary *selectedSchoolDict;
+@property (assign, nonatomic) BOOL classIsNew;
+@property (strong, nonatomic) NSDictionary *selectedClassDict;
 @property (nonatomic, strong) NSArray *classes;
 @property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL unwinding;
@@ -172,7 +177,115 @@
 
 
 #pragma mark - Actions -
-- (IBAction)classNameButton:(id)sender
+- (IBAction)chooseSchoolAction:(id)sender
+{
+    if (!self.isMentor) {
+        return;
+    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading Schools...";
+    hud.dimBackground = YES;
+    
+    [self bk_performBlock:^(id obj) {
+        PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
+        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+        
+        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
+    } afterDelay:0.35f];
+}
+
+- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    });
+    
+    NSMutableArray *names = [[NSMutableArray alloc] init];
+    for (id object in objects) {
+        if (!IsEmpty(object[@"name"])) {
+            [names addObject:object[@"name"]];
+        }
+    }
+    
+    NSArray *sortedNames = [names sortedArrayUsingSelector:
+                            @selector(localizedCaseInsensitiveCompare:)];
+    
+    NSMutableArray *schoolNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
+    for (NSString *thisSchoolName in sortedNames) {
+        NSString *name = thisSchoolName;
+        if ([self.userSchool.text isEqualToString:thisSchoolName]) {
+            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisSchoolName];
+        }
+        [schoolNames addObject:name];
+    }
+    
+    [self bk_performBlock:^(id obj) {
+        if ([UIAlertController class]) {
+            UIAlertController *schoolSheet = [UIAlertController
+                                              alertControllerWithTitle:@""
+                                              message:@"Choose School"
+                                              preferredStyle:UIAlertControllerStyleActionSheet];
+            
+            UIAlertAction *cancel = [UIAlertAction
+                                     actionWithTitle:@"Cancel"
+                                     style:UIAlertActionStyleCancel
+                                     handler:^(UIAlertAction *action) {
+                                         self.schoolIsNew = NO;
+                                     }];
+            
+            UIAlertAction *schoolName;
+            
+            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+                schoolName = [UIAlertAction
+                              actionWithTitle:schoolNames[buttonItem]
+                              style:UIAlertActionStyleDefault
+                              handler:^(UIAlertAction *action) {
+                                  self.schoolIsNew = NO;
+                                  self.userSchool.text = [self stringWithoutConfirmation:schoolNames[buttonItem]];
+                                  self.userClassName.text = @"";
+                              }];
+                [schoolSheet addAction:schoolName];
+            }
+            
+            UIAlertAction *destruct = [UIAlertAction
+                                       actionWithTitle:@"New school"
+                                       style:UIAlertActionStyleDestructive
+                                       handler:^(UIAlertAction *action) {
+                                           self.schoolIsNew = YES;
+                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
+                                       }];
+            [schoolSheet addAction:destruct];
+            
+            [schoolSheet addAction:cancel];
+            
+            [self presentViewController:schoolSheet animated:YES completion:nil];
+        } else {
+            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
+            UIActionSheet *schoolSheet = [[UIActionSheet alloc]
+                                          initWithTitle:@"Choose School"
+                                          delegate:self
+                                          cancelButtonTitle:nil
+                                          destructiveButtonTitle:@"New school"
+                                          otherButtonTitles:nil, nil];
+            
+            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
+                [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
+            }
+            
+            schoolSheet.cancelButtonIndex = [schoolSheet addButtonWithTitle:@"Cancel"];
+            
+            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+            if ([window.subviews containsObject:self.view]) {
+                [schoolSheet showInView:self.view];
+            } else {
+                [schoolSheet showInView:window];
+            }
+        }
+    } afterDelay:0.35f];
+}
+
+- (IBAction)chooseClassAction:(id)sender
 {
     if (!self.isMentor) {
         return;

@@ -54,6 +54,23 @@
     }
 }
 
+- (NSString *)detailMessage
+{
+    NSData *errorData = self.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+    
+    if (errorData) {
+        NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+        if (serializedData && !IsEmpty([serializedData objectForKey:@"detail"])) {
+            return [serializedData objectForKey:@"detail"];
+        }
+        else {
+            return nil;
+        }
+    }
+    else {
+        return nil;
+    }
+}
 
 
 @end

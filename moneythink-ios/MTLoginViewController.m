@@ -312,15 +312,15 @@
 - (IBAction)resetTapped:(id)sender
 {
     if (IsEmpty(self.emailTextField.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Reset Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"Forgot Password Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return;
     }
 
-    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil
-                                                      message:@"Would you like to receive an email to reset your password?"
+    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
+                                                      message:@"Would you like to receive an email to reset your password?\n\nChoose Enter Token after receiving email."
                                                      delegate:self
                                             cancelButtonTitle:@"Cancel"
-                                            otherButtonTitles:@"OK", nil];
+                                            otherButtonTitles:@"Request Email", @"Enter Token", nil];
     [confirm show];
 }
 
@@ -340,9 +340,6 @@
         
         // Update for Push Notifications
 //        [[MTUtil getAppDelegate] updateParseInstallationState];
-        
-        // Check for custom playlist for this class
-//        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -384,33 +381,82 @@
         }
         self.forcedUpdateAlert = nil;
     }
-    else if (buttonIndex != alertView.cancelButtonIndex) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Sending Password Reset...";
-
-        MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            NSError *error = nil;
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-
-            if (error) {
-                NSLog(@"Error resetting password: %@", [error localizedDescription]);
+    else if (buttonIndex == alertView.cancelButtonIndex) {
+        return;
+    }
+    else if ([alertView.title isEqualToString:@"Enter Token"]) {
+        NSString *token = [alertView textFieldAtIndex:0].text;
+        NSString *newPassword = [alertView textFieldAtIndex:1].text;
+        
+        if (IsEmpty(token) || IsEmpty(newPassword)) {
+            NSString *title = IsEmpty(token) ? @"Token Required" : @"Password Required";
+            if ([UIAlertController class]) {
+                UIAlertController *changeSheet = [UIAlertController
+                                                  alertControllerWithTitle:title
+                                                  message:nil
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction
+                                           actionWithTitle:@"OK"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+                                           }];
+                
+                [changeSheet addAction:okAction];
+                [self presentViewController:changeSheet animated:YES completion:nil];
+            } else {
+                [[[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
+
+            return;
+        }
+        
+        [[MTNetworkManager sharedMTNetworkManager] sendNewPassword:newPassword withToken:token success:^(id responseData) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Password Updated";
+            hud.mode = MBProgressHUDModeText;
+            [hud hide:YES afterDelay:1.5f];
+        } failure:^(NSError *error) {
+            NSString *title = @"Password Change Failed";
+            NSString *detailMessage = [error mtErrorDescription];
+            if ([UIAlertController class]) {
+                UIAlertController *changeSheet = [UIAlertController
+                                                  alertControllerWithTitle:title
+                                                  message:detailMessage
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction
+                                           actionWithTitle:@"OK"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+                                           }];
+                
+                [changeSheet addAction:okAction];
+                [self presentViewController:changeSheet animated:YES completion:nil];
+            } else {
+                [[[UIAlertView alloc] initWithTitle:title message:detailMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }];
+    }
+    else if ([alertView.title isEqualToString:@"Password Reset"]) {
+        
+        if (buttonIndex == 1) {
+            // Request Email
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Requesting Email...";
             
-            [PFUser requestPasswordResetForEmailInBackground:weakSelf.emailTextField.text block:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
+            MTMakeWeakSelf();
+            [self bk_performBlock:^(id obj) {
+                [[MTNetworkManager sharedMTNetworkManager] requestPasswordResetEmailForEmail:weakSelf.emailTextField.text success:^(id responseData) {
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                    hud.labelText = @"Reset successfully sent.";
+                    hud.labelText = @"Email Sent";
                     hud.mode = MBProgressHUDModeText;
                     [hud hide:YES afterDelay:1.5f];
-                }
-                else {
-                    NSString *title = @"Reset Failed";
-                    NSString *detailMessage = [NSString stringWithFormat:@"No account was found with email %@.", weakSelf.emailTextField.text];
-                    
-                    NSString *generatedError = [[error userInfo] valueForKey:@"error"];
-                    if (!IsEmpty(generatedError)) {
-                        detailMessage = generatedError;
+                } failure:^(NSError *error) {
+                    NSString *title = @"Email Request Failed";
+                    NSString *detailMessage = [error firstValidationMessage];
+                    if (!detailMessage) {
+                        detailMessage = [error mtErrorDescription];
                     }
                     
                     if ([UIAlertController class]) {
@@ -430,10 +476,19 @@
                     } else {
                         [[[UIAlertView alloc] initWithTitle:title message:detailMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                     }
-                }
-            }];
-            
-        } afterDelay:0.35f];
+                }];
+                
+            } afterDelay:0.35f];
+
+        }
+        else if (buttonIndex == 2) {
+            // Enter Token
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter Token" message:@"Enter the token received in email and your new password." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Send", nil];
+            alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+            [alert textFieldAtIndex:0].placeholder = @"Email Token";
+            [alert textFieldAtIndex:1].placeholder = @"New Password";
+            [alert show];
+        }
     }
 }
 

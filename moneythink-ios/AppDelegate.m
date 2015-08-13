@@ -18,11 +18,11 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef STAGE
-    static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-    static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+    static NSString *parseApplicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+    static NSString *parseClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
 #else
-    static NSString *applicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
-    static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+    static NSString *parseApplicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
+    static NSString *parseClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
 #endif
 
 @implementation AppDelegate
@@ -31,7 +31,7 @@
 {
     [Fabric with:@[CrashlyticsKit]];
     
-    [Parse setApplicationId:applicationID clientKey:clientKey];
+    [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
     //[Parse enableLocalDatastore];
     
     // AFTER Parse setup
