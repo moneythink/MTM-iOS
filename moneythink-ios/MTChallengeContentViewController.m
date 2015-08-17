@@ -108,16 +108,16 @@
 #pragma mark - Notifications -
 - (void)didDeleteChallengePost:(NSNotification *)notif
 {
-    PFChallenges *challenge = notif.object;
-    if ([challenge.objectId isEqualToString:self.challenge.objectId]) {
+    NSNumber *challengeId = notif.object;
+    if (challengeId.integerValue == self.challenge.id) {
         [self loadChallengeProgress];
     }
 }
 
 - (void)didTapChallengeButton:(NSNotification *)notif
 {
-    PFChallenges *challenge = notif.object;
-    if ([challenge.objectId isEqualToString:self.challenge.objectId]) {
+    NSNumber *challengeId = notif.object;
+    if (challengeId.integerValue == self.challenge.id) {
         [self loadChallengeProgress];
     }
 }
@@ -139,23 +139,24 @@
 #pragma mark - Private Methods -
 - (void)loadChallengeProgress
 {
-    NSString *userID = [PFUser currentUser].objectId;
-    NSString *challengeID = self.challenge.objectId;
-    self.oldChallengeProgress = self.challengeProgress;
-    
-    MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"getChallengeProgress" withParameters:@{@"user_id": userID, @"challenge_id": challengeID} block:^(id object, NSError *error) {
-        if (!error) {
-            if ([object isKindOfClass:[NSNumber class]]) {
-                weakSelf.challengeProgress = [(NSNumber *)object integerValue];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf updateChallengeProgress];
-                });
-            }
-        } else {
-            NSLog(@"error retrieving challenge progress - %@", [error localizedDescription]);
-        }
-    }];
+    // TODO: Load challenge progress with new API
+//    NSString *userID = [PFUser currentUser].objectId;
+//    NSString *challengeID = [NSString stringWithFormat:@"%ld", (long)self.challenge.id];
+//    self.oldChallengeProgress = self.challengeProgress;
+//    
+//    MTMakeWeakSelf();
+//    [PFCloud callFunctionInBackground:@"getChallengeProgress" withParameters:@{@"user_id": userID, @"challenge_id": challengeID} block:^(id object, NSError *error) {
+//        if (!error) {
+//            if ([object isKindOfClass:[NSNumber class]]) {
+//                weakSelf.challengeProgress = [(NSNumber *)object integerValue];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [weakSelf updateChallengeProgress];
+//                });
+//            }
+//        } else {
+//            NSLog(@"error retrieving challenge progress - %@", [error localizedDescription]);
+//        }
+//    }];
 }
 
 - (void)updateChallengeProgress

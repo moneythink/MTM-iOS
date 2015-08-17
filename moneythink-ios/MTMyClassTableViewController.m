@@ -10,6 +10,7 @@
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
 #import "MTEmojiPickerCollectionView.h"
+#import "MTPostViewController.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kDidDeleteChallengePostNotification = @"kDidDeleteChallengePostNotification";
@@ -158,7 +159,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 
 #pragma mark - Public -
-- (void)setChallenge:(PFChallenges *)challenge
+- (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
         _challenge = challenge;
@@ -167,12 +168,14 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         self.didUpdateLikedPosts = NO;
         self.updatedButtonsAndLikes = NO;
         
-        self.displaySpentView = [challenge[@"display_extra_fields"] boolValue];
+        // TODO: Re-enable after implemented
+//        self.displaySpentView = [challenge[@"display_extra_fields"] boolValue];
 
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         [self.tableView reloadData];
         
-        [self updateButtonsAndLikes];
+        // TODO: re-enable
+//        [self updateButtonsAndLikes];
     }
 }
 
@@ -290,54 +293,54 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)updateSecondaryButtonsTapped
 {
-    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostSecondaryButtonsClicked parseClassName]];
-    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-    [buttonsTapped includeKey:@"post"];
-    
-    MTMakeWeakSelf();
-    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-            for (PFChallengePostSecondaryButtonsClicked *clicks in objects) {
-                PFChallengePost *post = (PFChallengePost *)clicks[@"post"];
-                PFChallenges *challenge = post[@"challenge"];
-                NSString *challengeObjectId = challenge.objectId;
-                
-                id postObjectId = [(PFChallengePost *)clicks[@"post"] objectId];
-                
-                if ([challengeObjectId isEqualToString:weakSelf.challenge.objectId]) {
-                    id button = clicks[@"button"];
-                    id count = clicks[@"count"];
-                    
-                    NSDictionary *buttonsDict;
-                    if ([tappedButtonObjects objectForKey:postObjectId]) {
-                        buttonsDict = [tappedButtonObjects objectForKey:postObjectId];
-                        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:buttonsDict];
-                        [mutableDict setValue:count forKey:button];
-                        buttonsDict = [NSDictionary dictionaryWithDictionary:mutableDict];
-                    }
-                    else {
-                        buttonsDict = [NSDictionary dictionaryWithObjectsAndKeys:count, button, nil];
-                    }
-                    
-                    [tappedButtonObjects setValue:buttonsDict forKey:postObjectId];
-                }
-            }
-            weakSelf.secondaryButtonsTapped = tappedButtonObjects;
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.secondaryButton1.enabled = YES;
-                [weakSelf loadObjects];
-            });
-            
-        } else {
-            NSLog(@"Error - %@", error);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.secondaryButton1.enabled = YES;
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-        }
-    }];
+//    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostSecondaryButtonsClicked parseClassName]];
+//    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
+//    [buttonsTapped includeKey:@"post"];
+//    
+//    MTMakeWeakSelf();
+//    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
+//            for (PFChallengePostSecondaryButtonsClicked *clicks in objects) {
+//                PFChallengePost *post = (PFChallengePost *)clicks[@"post"];
+//                PFChallenges *challenge = post[@"challenge"];
+//                NSString *challengeObjectId = challenge.objectId;
+//                
+//                id postObjectId = [(PFChallengePost *)clicks[@"post"] objectId];
+//                
+//                if ([challengeObjectId isEqualToString:weakSelf.challenge.objectId]) {
+//                    id button = clicks[@"button"];
+//                    id count = clicks[@"count"];
+//                    
+//                    NSDictionary *buttonsDict;
+//                    if ([tappedButtonObjects objectForKey:postObjectId]) {
+//                        buttonsDict = [tappedButtonObjects objectForKey:postObjectId];
+//                        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:buttonsDict];
+//                        [mutableDict setValue:count forKey:button];
+//                        buttonsDict = [NSDictionary dictionaryWithDictionary:mutableDict];
+//                    }
+//                    else {
+//                        buttonsDict = [NSDictionary dictionaryWithObjectsAndKeys:count, button, nil];
+//                    }
+//                    
+//                    [tappedButtonObjects setValue:buttonsDict forKey:postObjectId];
+//                }
+//            }
+//            weakSelf.secondaryButtonsTapped = tappedButtonObjects;
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                weakSelf.secondaryButton1.enabled = YES;
+//                [weakSelf loadObjects];
+//            });
+//            
+//        } else {
+//            NSLog(@"Error - %@", error);
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                weakSelf.secondaryButton1.enabled = YES;
+//                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//            });
+//        }
+//    }];
 }
 
 
@@ -862,12 +865,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 {
     NSString *key = @"ShownToastForChallenge";
     NSArray *shownArray = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    if (![shownArray containsObject:self.challenge.objectId]) {
+    if (![shownArray containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
         
         // If not added for this install but we have a title, no need to show this again
         if (!IsEmpty([self.secondaryButton1 titleForState:UIControlStateNormal])) {
             NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
-            [mutant addObject:self.challenge.objectId];
+            [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
             [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
             [[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -883,7 +886,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             [hud hide:YES afterDelay:1.0f];
             
             NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
-            [mutant addObject:self.challenge.objectId];
+            [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
             [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
@@ -907,46 +910,46 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)updateButtons
 {
-    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
-    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-    [challengeQuery includeKey:@"verified_by"];
-    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MTMakeWeakSelf();
-    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
-                weakSelf.challenge = challenge;
-            }
-            
-            NSArray *buttons = challenge[@"buttons"];
-            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
-            
-            weakSelf.hasButtons = NO;
-            weakSelf.hasSecondaryButtons = NO;
-            weakSelf.hasTertiaryButtons = NO;
-            
-            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-                if ([buttons count] == 4) {
-                    weakSelf.hasTertiaryButtons = YES;
-                }
-                else {
-                    weakSelf.hasButtons = YES;
-                }
-                
-                [weakSelf userButtonsTapped];
-            }
-            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
-                weakSelf.hasSecondaryButtons = YES;
-                [weakSelf updateSecondaryButtonsTapped];
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf updateLikes];
-        });
-    }];
+//    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
+//    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
+//    [challengeQuery includeKey:@"verified_by"];
+//    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    MTMakeWeakSelf();
+//    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
+//            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
+//                weakSelf.challenge = challenge;
+//            }
+//            
+//            NSArray *buttons = challenge[@"buttons"];
+//            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
+//            
+//            weakSelf.hasButtons = NO;
+//            weakSelf.hasSecondaryButtons = NO;
+//            weakSelf.hasTertiaryButtons = NO;
+//            
+//            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
+//                if ([buttons count] == 4) {
+//                    weakSelf.hasTertiaryButtons = YES;
+//                }
+//                else {
+//                    weakSelf.hasButtons = YES;
+//                }
+//                
+//                [weakSelf userButtonsTapped];
+//            }
+//            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
+//                weakSelf.hasSecondaryButtons = YES;
+//                [weakSelf updateSecondaryButtonsTapped];
+//            }
+//        }
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [weakSelf updateLikes];
+//        });
+//    }];
 }
 
 - (void)updateLikes
@@ -1619,7 +1622,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
   
         MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
         destinationViewController.post = post;
-        destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
     }
     else if ([segueIdentifier isEqualToString:@"editPostSegue"]) {
@@ -1630,17 +1632,16 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         
         UINavigationController *destinationViewController = (UINavigationController *)[segue destinationViewController];
         
-        MTCommentViewController *commentVC = (MTCommentViewController *)[destinationViewController topViewController];
-        commentVC.post = post;
-        commentVC.challenge = self.challenge;
-        commentVC.editPost = YES;
-        [commentVC setDelegate:self];
+        MTPostViewController *postVC = (MTPostViewController *)[destinationViewController topViewController];
+        postVC.post = post;
+        postVC.challenge = self.challenge;
+        postVC.editPost = YES;
     }
     else {
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)sender;
         PFChallengePost *post = cell.post;
 
-        self.postViewController = (MTPostViewController*)[segue destinationViewController];
+        self.postViewController = (MTPostDetailViewController*)[segue destinationViewController];
         self.postViewController.challengePost = post;
         self.postViewController.challenge = self.challenge;
         self.postViewController.delegate = self;
@@ -1837,7 +1838,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                                              else {
                                                  [[PFUser currentUser] fetchInBackground];
                                                  dispatch_async(dispatch_get_main_queue(), ^{
-                                                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
+                                                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                                                  });
                                              }
                                              
@@ -1869,7 +1870,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     else {
                         [[PFUser currentUser] fetchInBackground];
                         dispatch_async(dispatch_get_main_queue(), ^{
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
+                            [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                         });
                     }
                     
@@ -1897,7 +1898,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             }
             
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 [weakSelf loadObjects];
             });
         }];
@@ -1948,12 +1949,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
             if (!error) {
                 [[PFUser currentUser] fetchInBackground];
-                [weakSelf.challenge fetchInBackground];
+//                [weakSelf.challenge fetchInBackground];
                 [post fetchInBackground];
                 [weakSelf userButtonsTapped];
                 [weakSelf loadObjects];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
             }
             else {
@@ -2011,7 +2012,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 
             } else {
                 [currentUser fetchInBackground];
-                [weakSelf.challenge fetchInBackground];
+//                [weakSelf.challenge fetchInBackground];
                 
                 [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -2123,7 +2124,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[PFUser currentUser] fetchInBackground];
                 [weakSelf updateSecondaryButtonsTapped];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
             }
             else {
@@ -2223,7 +2224,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[PFUser currentUser] fetchInBackground];
                 [weakSelf updateSecondaryButtonsTapped];
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
             }
             else {

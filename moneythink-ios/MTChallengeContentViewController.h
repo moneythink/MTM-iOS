@@ -15,7 +15,7 @@ extern NSString *const kDidTapChallengeButtonNotification;
 
 - (void)leftButtonTapped;
 - (void)rightButtonTapped;
-- (void)didSelectChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index;
+- (void)didSelectChallenge:(MTChallenge *)challenge withIndex:(NSInteger)index;
 - (void)didTapChallengeList;
 
 @end
@@ -29,8 +29,8 @@ extern NSString *const kDidTapChallengeButtonNotification;
 @property (nonatomic, strong) IBOutlet UIButton *rightButton;
 
 @property (nonatomic, strong) NSString *challengeTitleText;
-@property (nonatomic, strong) PFChallenges *challenge;
-@property (nonatomic, strong) NSArray *challenges;
+@property (nonatomic, strong) MTChallenge *challenge;
+@property (nonatomic, strong) RLMResults *challenges;
 @property (nonatomic) NSUInteger pageIndex;
 
 

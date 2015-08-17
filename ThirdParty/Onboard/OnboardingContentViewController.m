@@ -452,7 +452,7 @@ static CGFloat const kMainPageControlHeight = 35;
         NSLog(@"Failed to save profile image: %@", [error mtErrorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            NSData *oldAvatar = [MTUser currentUser].userAvatar.avatarData;
+            NSData *oldAvatar = [MTUser currentUser].userAvatar.imageData;
             if (oldAvatar) {
                 weakSelf.profileImage = [UIImage imageWithData:oldAvatar];
             }

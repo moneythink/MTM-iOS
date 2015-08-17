@@ -8,7 +8,7 @@
 
 #import "MTExplorePostCollectionView.h"
 #import "MTExploreCollectionViewCell.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 
 @interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -38,7 +38,9 @@
 {
     [super viewWillAppear:animated];
     self.pulledData = NO;
-    [self loadPosts];
+    
+    // TODO: Reenable
+//    [self loadPosts];
 }
 
 - (void)dealloc
@@ -70,7 +72,7 @@
             
             NSArray *buttons = weakSelf.challenge[@"buttons"];
             NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
-            BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+            BOOL isMentor = [MTUser isCurrentUserMentor];
             
             weakSelf.hasButtons = NO;
             weakSelf.hasSecondaryButtons = NO;
@@ -98,12 +100,13 @@
 
 
 #pragma mark - Public -
-- (void)setChallenge:(PFChallenges *)challenge
+- (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
         _challenge = challenge;
         
-        [self loadPosts];
+        // TODO: Re-enable
+//        [self loadPosts];
     }
 }
 
@@ -122,10 +125,10 @@
 
     if (indexPath.row <= self.posts.count) {
         PFChallengePost *post = self.posts[indexPath.row];
-        PFUser *user = post[@"user"];
+        MTUser *user = post[@"user"];
         
         cell.postText.text = post[@"post_text"];
-        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
         
         cell.postImage.image = [UIImage imageNamed:@"photo_post"];
         cell.postImage.file = post[@"picture"];
@@ -141,8 +144,9 @@
             }
         }];
         
+        // TODO: Load user avatars
         cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
-        cell.postUserImage.file = user[@"profile_picture"];
+//        cell.postUserImage.file = user[@"profile_picture"];
         cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
         cell.postUserImage.layer.masksToBounds = YES;
         cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -262,15 +266,15 @@
     NSString *segueIdentifier = [segue identifier];
     
     if ([segueIdentifier hasPrefix:@"pushViewPost"]) {
-        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
+        MTPostDetailViewController *destinationViewController = (MTPostDetailViewController *)[segue destinationViewController];
         destinationViewController.challengePost = (PFChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
         
         PFChallengePost *post = (PFChallengePost*)sender;
-        PFUser *user = post[@"user"];
+        MTUser *user = post[@"user"];
         
         BOOL myPost = NO;
-        if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        if ([MTUser isUserMe:user]) {
             myPost = YES;
         }
 

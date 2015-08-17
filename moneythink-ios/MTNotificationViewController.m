@@ -10,7 +10,7 @@
 #import "MTMentorStudentProfileViewController.h"
 #import "MTMentorDashboardViewController.h"
 #import "MTNotificationTableViewCell.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 #import "MTMenuViewController.h"
 
 @interface MTNotificationViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
@@ -591,7 +591,7 @@
 
 - (void)displayPostDetailForNotification:(PFNotifications *)notification
 {
-    MTPostViewController *postVC = (MTPostViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"challengePost"];
+    MTPostDetailViewController *postVC = (MTPostDetailViewController *)[self.storyboard instantiateViewControllerWithIdentifier:@"challengePost"];
     postVC.notification = notification;
     
     if ([postVC canPopulateForNotification:notification populate:NO]) {

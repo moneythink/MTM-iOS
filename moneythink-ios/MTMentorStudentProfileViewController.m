@@ -9,7 +9,7 @@
 #import "MTMentorStudentProfileViewController.h"
 #import "MTStudentProfileTableViewCell.h"
 #import "MTStudentProfileTableViewCell.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 
 @interface MTMentorStudentProfileViewController ()
 
@@ -32,34 +32,31 @@
 {
     [super viewDidLoad];
     
-    id studentPoints = self.student[@"points"];
-    NSString *points = @"0";
-    if (studentPoints && studentPoints != [NSNull null]) {
-        points = [studentPoints stringValue];
-    }
+    NSString *points = [NSString stringWithFormat:@"%lu", self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
-    self.title = [NSString stringWithFormat:@"%@ %@", self.student[@"first_name"], self.student[@"last_name"]];
+    self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
     
-    self.profileImage.file = self.student[@"profile_picture"];
-    self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
-    self.profileImage.layer.masksToBounds = YES;
-    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-    
-    MTMakeWeakSelf();
-    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!error) {
-                if (image) {
-                    weakSelf.profileImage.image = image;
-                } else {
-                    weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-                weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-            }
-        });
-    }];
+    // TODO: Load avatar
+//    self.profileImage.file = self.student[@"profile_picture"];
+//    self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
+//    self.profileImage.layer.masksToBounds = YES;
+//    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
+//    
+//    MTMakeWeakSelf();
+//    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            if (!error) {
+//                if (image) {
+//                    weakSelf.profileImage.image = image;
+//                } else {
+//                    weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+//                }
+//            } else {
+//                NSLog(@"error - %@", error);
+//                weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
+//            }
+//        });
+//    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -107,27 +104,28 @@
     }
     
     PFChallengePost *post = self.studentPosts[row];
-    PFUser *user = post[@"user"];
+    MTUser *user = post[@"user"];
     
-    cell.postProfileImage.image = [UIImage imageNamed:@"profile_image"];
-    cell.postProfileImage.file = user[@"profile_picture"];
-    cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
-    cell.postProfileImage.layer.masksToBounds = YES;
-    cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
-    
-    [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                cell.postProfileImage.image = image;
-                [cell setNeedsDisplay];
-            }
-            else {
-                image = nil;
-            }
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+    // TODO: Load avatar
+//    cell.postProfileImage.image = [UIImage imageNamed:@"profile_image"];
+//    cell.postProfileImage.file = user[@"profile_picture"];
+//    cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
+//    cell.postProfileImage.layer.masksToBounds = YES;
+//    cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
+//    
+//    [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
+//        if (!error) {
+//            if (image) {
+//                cell.postProfileImage.image = image;
+//                [cell setNeedsDisplay];
+//            }
+//            else {
+//                image = nil;
+//            }
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
 
     cell.rowPost = post;
     
@@ -142,7 +140,8 @@
     cell.verifiedLabel.hidden = ![MTUtil isCurrentUserMentor];
 
     if ([MTUtil isCurrentUserMentor]) {
-        PFUser *verifier = cell.rowPost[@"verified_by"];
+        // TODO: check this
+        MTUser *verifier = cell.rowPost[@"verified_by"];
         cell.verified.on = ![[verifier username] isEqualToString:@""];
     }
     
@@ -199,7 +198,7 @@
     NSString *segueId = [segue identifier];
     
     if ([segueId isEqualToString:@"pushProfileToPost"]) {
-        MTPostViewController *destinationVC = (MTPostViewController *)[segue destinationViewController];
+        MTPostDetailViewController *destinationVC = (MTPostDetailViewController *)[segue destinationViewController];
         MTStudentProfileTableViewCell *cell = (MTStudentProfileTableViewCell *)sender;
         PFChallengePost *rowObject = cell.rowPost;
         destinationVC.challengePost = rowObject;

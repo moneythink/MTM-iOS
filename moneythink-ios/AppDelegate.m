@@ -14,7 +14,7 @@
 #import "MTNotificationViewController.h"
 #import "MTSupportViewController.h"
 #import "MTMenuViewController.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef STAGE
@@ -41,6 +41,15 @@
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     [self setupRealm];
+    
+    //Clear keychain on first run in case of reinstallation
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
+        // Delete values from keychain here
+        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+    }
     
     [PFChallengeBanner registerSubclass];
     [PFChallengePost registerSubclass];
@@ -89,8 +98,8 @@
         ((SWRevealViewController *)revealVC).delegate = [MTUtil getAppDelegate];
     }
 
-    if ([PFUser currentUser] && [MTUtil internetReachable]) {
-        [[PFUser currentUser] fetchInBackground];
+    if ([MTUser currentUser] && [MTUtil internetReachable]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
@@ -103,8 +112,8 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
-    if ([PFUser currentUser] && [MTUtil internetReachable]) {
-        [[PFUser currentUser] fetchInBackground];
+    if ([MTUser currentUser] && [MTUtil internetReachable]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
     }
     
     [self checkForForceUpdate];
@@ -216,13 +225,19 @@
 
 - (void)handleUserUpdateWithfetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    PFUser *currentUser = [PFUser currentUser];
+    MTUser *currentUser = [MTUser currentUser];
     if (currentUser && [MTUtil internetReachable]) {
-        [currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (handler) {
-                handler(UIBackgroundFetchResultNewData);
-            }
-        }];
+        if ([MTUser currentUser] && [MTUtil internetReachable]) {
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                if (handler) {
+                    handler(UIBackgroundFetchResultNewData);
+                }
+            } failure:^(NSError *error) {
+                if (handler) {
+                    handler(UIBackgroundFetchResultNewData);
+                }
+            }];
+        }
     }
     else {
         if (handler) {
@@ -233,7 +248,7 @@
 
 - (void)handleActionNotificationWithUserInfo:(NSDictionary *)userInfo
 {
-    if (![PFUser currentUser]) {
+    if (![MTUser currentUser]) {
         return;
     }
 
@@ -312,12 +327,12 @@
 
 - (void)updateParseInstallationState
 {
-    if (![PFUser currentUser]) {
+    if (![MTUser currentUser]) {
         NSLog(@"Have no user object to update installation with");
         return;
     }
     
-    PFUser *user = [PFUser currentUser];
+    MTUser *user = [MTUser currentUser];
 
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
@@ -328,8 +343,8 @@
     
     [currentInstallation setObject:user forKey:@"user"];
 
-    NSString *className = user[@"class"];
-    NSString *schoolName = user[@"school"];
+    NSString *className = user.userClass.name;
+    NSString *schoolName = user.organization.name;
     
     if (!IsEmpty(className)) {
         [currentInstallation setObject:className forKey:@"class_name"];
@@ -340,75 +355,6 @@
     
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
-}
-
-- (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
-{
-    // Only need to do this if we have custom playlists
-    NSString *userClass = [PFUser currentUser][@"class"];
-    NSString *userSchool = [PFUser currentUser][@"school"];
-    
-    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFClasses parseClassName]];
-    [userClassQuery whereKey:@"name" equalTo:userClass];
-    [userClassQuery whereKey:@"school" equalTo:userSchool];
-    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    if (refresh) {
-        hud.labelText = @"Refreshing Content...";
-    }
-    else {
-        hud.labelText = @"Loading Content...";
-    }
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!IsEmpty(objects)) {
-                    PFClasses *userClass = [objects firstObject];
-                    NSLog(@"%@", userClass);
-                    
-                    // Next, determine if this class has custom challenges
-                    __block PFQuery *customPlaylist = [PFQuery queryWithClassName:[PFPlaylist parseClassName]];
-                    [customPlaylist whereKey:@"class" equalTo:userClass];
-                    customPlaylist.cachePolicy = kPFCachePolicyNetworkElseCache;
-                    
-                    [customPlaylist findObjectsInBackgroundWithBlock:^(NSArray *playlistObjects, NSError *error) {
-                        if (!error) {
-                            if (!IsEmpty(playlistObjects)) {
-                                // Pre-load the content
-                                [weakSelf loadCustomChallengesForPlaylist:[playlistObjects firstObject]];
-                            }
-                            else {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                });
-                            }
-                        }
-                        else {
-                            NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                            });
-                        }
-                    }];
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    });
-                }
-            }
-            else {
-                NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-            }
-        }];
-    } afterDelay:0.35f];
 }
 
 - (UINavigationController *)userViewController
@@ -425,31 +371,6 @@
 
 
 #pragma mark - Private Methods -
-- (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
-{
-    PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
-    [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
-    [allCustomChallenges orderByAscending:@"ordering"];
-    [allCustomChallenges includeKey:@"challenge"];
-    
-    [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-        
-        if (!error) {
-            for (PFPlaylistChallenges *thisPlaylistChallenge in objects) {
-                PFCustomChallenges *thisChallenge = thisPlaylistChallenge[@"challenge"];
-                NSInteger ordering = [thisPlaylistChallenge[@"ordering"] integerValue];
-                [MTUtil setOrdering:ordering forChallengeObjectId:thisChallenge.objectId];
-            }
-        }
-        else {
-            NSLog(@"Unable to load custom challenges");
-        }
-    }];
-}
-
 - (void)setupZendesk
 {
     [self configureZendesk];
@@ -635,12 +556,12 @@
     }];
 
     // Set Anonymous user info
-    PFUser *userCurrent = [PFUser currentUser];
+    MTUser *userCurrent = [MTUser currentUser];
     if (userCurrent) {
         ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
-        newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
-        newIdentity.email = userCurrent[@"email"];
-        newIdentity.externalId = [userCurrent objectId];
+        newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent.firstName, userCurrent.lastName];
+        newIdentity.email = userCurrent.email;
+        newIdentity.externalId = [NSString stringWithFormat:@"%ld", (long)userCurrent.id];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
     }
 }
@@ -768,7 +689,7 @@
 //    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
 //    [MTUser logout];
 
-    [RLMRealm defaultRealm];
+    [self performRealmMigration];
     
 //    MTOrganization *testO = [[MTOrganization alloc] init];
 //    testO.name = @"PSD";
@@ -807,7 +728,7 @@
 {
     // Notice setSchemaVersion is set to 1, this is always set manually. It must be
     // higher than the previous version (oldSchemaVersion) or an RLMException is thrown
-    [RLMRealm setSchemaVersion:1
+    [RLMRealm setSchemaVersion:0
                 forRealmAtPath:[RLMRealm defaultRealmPath]
             withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0

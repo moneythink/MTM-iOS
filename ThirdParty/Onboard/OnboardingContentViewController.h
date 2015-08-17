@@ -65,6 +65,5 @@
 - (instancetype)initWithTitle:(NSString *)title body:(NSString *)body image:(UIImage *)image buttonText:(NSString *)buttonText action:(dispatch_block_t)action;
 
 - (void)updateAlphas:(CGFloat)newAlpha;
-- (void)setProfileImageFile:(PFFile *)profileImageFile;
 
 @end

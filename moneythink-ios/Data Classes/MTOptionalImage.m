@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
-#import "MTUserAvatar.h"
+#import "MTOptionalImage.h"
 
-@implementation MTUserAvatar
+@implementation MTOptionalImage
 
 // Specify default values for properties
 

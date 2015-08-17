@@ -10,7 +10,7 @@
 
 @class MTOrganization;
 @class MTClass;
-@class MTUserAvatar;
+@class MTOptionalImage;
 
 @interface MTUser : RLMObject
 
@@ -21,14 +21,20 @@
 @property NSString *lastName;
 @property NSString *phoneNumber;
 @property NSString *roleCode;
-@property MTUserAvatar *userAvatar;
+@property MTOptionalImage *userAvatar;
+@property NSInteger points;
 @property BOOL currentUser;
+@property NSDate *updatedAt;
+@property NSDate *createdAt;
+@property BOOL hasResume;
+@property BOOL hasBankAccount;
 
 @property MTOrganization *organization;
 @property MTClass *userClass;
 
 + (void)logout;
 + (BOOL)isCurrentUserMentor;
++ (BOOL)isUserMentor:(MTUser *)user;
 + (BOOL)isUserMe:(MTUser *)user;
 + (BOOL)isUserLoggedIn;
 + (MTUser *)currentUser;

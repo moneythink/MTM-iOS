@@ -55,36 +55,22 @@
     }
     else {
         self.profilePoints.hidden = NO;
-
-//        id userPoints = user[@"points"];
-//        NSString *points = @"0";
-//        if (userPoints && userPoints != [NSNull null]) {
-//            points = [userPoints stringValue];
-//        }
-//        
-//        self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
-//        
-//        MTMakeWeakSelf();
-//        PFQuery *meQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
-//        [meQuery whereKey:@"objectId" equalTo:user.objectId];
-//        meQuery.cachePolicy = kPFCachePolicyNetworkOnly;
-//        [meQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            if (!error) {
-//                if ([objects count] == 1) {
-//                    PFUser *thisUser = [objects firstObject];
-//                    id userPoints = thisUser[@"points"];
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        NSString *points = @"0";
-//                        if (userPoints && userPoints != [NSNull null]) {
-//                            points = [userPoints stringValue];
-//                        }
-//                        weakSelf.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
-//                    });
-//                }
-//            }
-//        }];
+        self.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                MTUser *user = [MTUser currentUser];
+                weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                MTUser *user = [MTUser currentUser];
+                weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+            });
+        }];
     }
-    
+
 //    NSString *userClass = user[@"class"];
 //    NSString *userSchool = user[@"school"];
     
@@ -314,7 +300,7 @@
         }
 
         PFSignupCodes *signupCode = self.signUpCodes[indexPath.row];
-        NSString *signupCodeString = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [PFUser currentUser][@"class"], signupCode[@"code"]];
+        NSString *signupCodeString = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [MTUser currentUser].userClass.name, signupCode[@"code"]];
         NSArray *dataToShare = @[signupCodeString];
 
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:dataToShare
@@ -378,7 +364,7 @@
     self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width/2.0f;
     self.profileImage.layer.masksToBounds = YES;
     if ([MTUser currentUser].userAvatar) {
-        self.profileImage.image = [UIImage imageWithData:[MTUser currentUser].userAvatar.avatarData];
+        self.profileImage.image = [UIImage imageWithData:[MTUser currentUser].userAvatar.imageData];
     }
     else {
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];

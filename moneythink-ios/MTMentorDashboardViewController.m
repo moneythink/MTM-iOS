@@ -14,7 +14,7 @@
 @interface MTMentorDashboardViewController ()
 
 @property (nonatomic, strong) PFImageView *profileImage;
-@property (nonatomic, strong) PFUser *userCurrent;
+@property (nonatomic, strong) MTUser *userCurrent;
 
 @end
 
@@ -56,6 +56,9 @@
 #pragma mark - Private Methods -
 - (void)loadProfileImageForImageView:(UIImageView *)imageView
 {
+    // TODO: load avatars
+    return;
+    
     __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
     
     if (self.profileImage.image) {
@@ -97,25 +100,26 @@
 
 - (void)loadData
 {
-    NSString *nameClass = [PFUser currentUser][@"class"];
-    NSString *nameSchool = [PFUser currentUser][@"school"];
-
-    NSString *type = @"student";
-    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
-    PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
-    
-    [studentsForClass orderByAscending:@"last_name"];
-    studentsForClass.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MTMakeWeakSelf();
-    [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        weakSelf.classStudents = objects;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.tableView reloadData];
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-    }];
+    // TODO: Load user data
+//    NSString *nameClass = [PFUser currentUser][@"class"];
+//    NSString *nameSchool = [PFUser currentUser][@"school"];
+//
+//    NSString *type = @"student";
+//    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
+//    PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
+//    
+//    [studentsForClass orderByAscending:@"last_name"];
+//    studentsForClass.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    MTMakeWeakSelf();
+//    [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        weakSelf.classStudents = objects;
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [weakSelf.tableView reloadData];
+//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//        });
+//    }];
 }
 
 
@@ -148,14 +152,16 @@
     if (cell == nil) {
         cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
     }
-    PFUser *rowStudent = self.classStudents[row];
+    
+    MTUser *rowStudent = self.classStudents[row];
     cell.user = rowStudent;
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 
-    NSString *fullName = rowStudent[@"first_name"];
-    fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent[@"last_name"]];
+    NSString *fullName = rowStudent.firstName;
+    fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent.lastName];
     cell.userFullName.text = fullName;
 
+    // TODO : bank_account?
     NSString *bankAccount = rowStudent[@"bank_account"];
 
     if ([bankAccount intValue] == 1) {
@@ -201,7 +207,7 @@
 #pragma mark - UITableViewDelegate methods -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFUser *rowStudent = self.classStudents[indexPath.row];
+    MTUser *rowStudent = self.classStudents[indexPath.row];
     [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:rowStudent];
 }
 
@@ -229,14 +235,14 @@
     profileView.layer.masksToBounds = YES;
     [self loadProfileImageForImageView:profileView];
     
-    self.userCurrent = [PFUser currentUser];
+    self.userCurrent = [MTUser currentUser];
     
     UILabel *userNameLabel = (UILabel *)[headerView viewWithTag:201];
-    userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.userCurrent[@"first_name"], self.userCurrent[@"last_name"]];
+    userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.userCurrent.firstName, self.userCurrent.lastName];
     UILabel *schoolLabel = (UILabel *)[headerView viewWithTag:202];
-    schoolLabel.text = self.userCurrent[@"school"];
+    schoolLabel.text = self.userCurrent.organization.name;
     UILabel *classLabel = (UILabel *)[headerView viewWithTag:203];
-    classLabel.text = self.userCurrent[@"class"];
+    classLabel.text = self.userCurrent.userClass.name;
     
     return headerView.contentView;
 }
@@ -296,7 +302,7 @@
     if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         
-        PFUser *student = sender;
+        MTUser *student = sender;
         destinationVC.student = student;
         
     }

@@ -11,7 +11,7 @@
 
 @interface MTLeaderboardViewController ()
 
-@property (nonatomic, strong) NSArray *leaders;
+@property (nonatomic, strong) RLMResults *leaders;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 
 @end
@@ -34,41 +34,42 @@
 #pragma mark - Private Methods -
 - (void)loadLeaders
 {
-    NSString *userClass = [PFUser currentUser][@"class"];
-    NSString *userSchool = [PFUser currentUser][@"school"];
-    
-    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
-    [userClassQuery whereKey:@"class" equalTo:userClass];
-    [userClassQuery whereKey:@"school" equalTo:userSchool];
-    [userClassQuery whereKey:@"type" notEqualTo:@"mentor"];
-    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading Leaders...";
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-            });
-
-            if (!error) {
-                if (!IsEmpty(objects)) {
-                    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"points" ascending:NO];
-                    NSArray *sortedArray = [objects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-                    weakSelf.leaders = sortedArray;
-                    [weakSelf.tableView reloadData];
-                }
-            }
-            else {
-                NSLog(@"Error loading leaders: %@", [error localizedDescription]);
-            }
-        }];
-    } afterDelay:0.35f];
+    // TODO: Load leaders
+//    NSString *userClass = [PFUser currentUser][@"class"];
+//    NSString *userSchool = [PFUser currentUser][@"school"];
+//    
+//    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
+//    [userClassQuery whereKey:@"class" equalTo:userClass];
+//    [userClassQuery whereKey:@"school" equalTo:userSchool];
+//    [userClassQuery whereKey:@"type" notEqualTo:@"mentor"];
+//    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+//    
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+//    hud.labelText = @"Loading Leaders...";
+//    hud.dimBackground = YES;
+//    
+//    MTMakeWeakSelf();
+//    [self bk_performBlock:^(id obj) {
+//        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+//            });
+//
+//            if (!error) {
+//                if (!IsEmpty(objects)) {
+//                    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"points" ascending:NO];
+//                    NSArray *sortedArray = [objects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
+//                    weakSelf.leaders = sortedArray;
+//                    [weakSelf.tableView reloadData];
+//                }
+//            }
+//            else {
+//                NSLog(@"Error loading leaders: %@", [error localizedDescription]);
+//            }
+//        }];
+//    } afterDelay:0.35f];
 }
 
 
@@ -100,7 +101,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFUser *user = [self.leaders objectAtIndex:indexPath.row];
+    MTUser *user = [self.leaders objectAtIndex:indexPath.row];
     NSString *CellIdentifier = @"leaderCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
@@ -109,36 +110,31 @@
     UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:2];
     UILabel *pointsLabel = (UILabel *)[cell.contentView viewWithTag:3];
     
-    nameLabel.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
-    
-    id userPoints = user[@"points"];
-    NSString *points = @"0";
-    if (userPoints && userPoints != [NSNull null]) {
-        points = [userPoints stringValue];
-    }
-    pointsLabel.text = points;
+    nameLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    pointsLabel.text = [NSString stringWithFormat:@"%ld", (long)user.points];
 
     profileImage.image = [UIImage imageNamed:@"profile_image"];
     profileImage.contentMode = UIViewContentModeScaleAspectFill;
     profileImage.layer.cornerRadius = round(profileImage.frame.size.width / 2.0f);
     profileImage.layer.masksToBounds = YES;
 
-    if (user[@"profile_picture"]) {
-        profileImage.file = user[@"profile_picture"];
-        [profileImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
-                    profileImage.image = image;
-                    [cell setNeedsDisplay];
-                }
-                else {
-                    image = nil;
-                }
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-    }
+    // TODO: Load user avatars
+//    if (user[@"profile_picture"]) {
+//        profileImage.file = user[@"profile_picture"];
+//        [profileImage loadInBackground:^(UIImage *image, NSError *error) {
+//            if (!error) {
+//                if (image) {
+//                    profileImage.image = image;
+//                    [cell setNeedsDisplay];
+//                }
+//                else {
+//                    image = nil;
+//                }
+//            } else {
+//                NSLog(@"error - %@", error);
+//            }
+//        }];
+//    }
     
     return cell;
 }
@@ -149,7 +145,7 @@
 {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
-    PFUser *rowStudent = [self.leaders objectAtIndex:indexPath.row];
+    MTUser *rowStudent = [self.leaders objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"userProfileView" sender:rowStudent];
 }
 
@@ -168,7 +164,7 @@
     NSString *segueID = [segue identifier];
     if ([segueID isEqualToString:@"userProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        PFUser *student = sender;
+        MTUser *student = sender;
         destinationVC.student = student;
     }
 }

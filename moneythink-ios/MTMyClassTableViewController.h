@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "MTCommentViewController.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 #import "MTEmojiPickerCollectionView.h"
 
 extern NSString *const kWillSaveNewChallengePostNotification;
@@ -25,14 +25,14 @@ extern NSString *const kFailedSaveEditPostNotification;
 
 @interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate, MBProgressHUDDelegate>
 
-@property (nonatomic, strong) PFChallenges *challenge;
+@property (nonatomic, strong) MTChallenge *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
 @property (nonatomic, strong) NSString *className;
 @property (nonatomic, strong) NSString *schoolName;
 
 @property (nonatomic, strong) NSString *comment;
 @property (nonatomic, strong) NSArray *emojiObjects;
-@property (nonatomic, strong) MTPostViewController *postViewController;
+@property (nonatomic, strong) MTPostDetailViewController *postViewController;
 
 - (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post;
 

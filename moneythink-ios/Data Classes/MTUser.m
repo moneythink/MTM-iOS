@@ -19,7 +19,10 @@
              @"lastName": @"",
              @"phoneNumber": @"",
              @"roleCode": @"",
-             @"currentUser": @NO};
+             @"currentUser": @NO,
+             @"hasResume": @NO,
+             @"hasBankAccount": @NO,
+             @"points": @0};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -43,6 +46,8 @@
              @"firstName": @"firstName",
              @"lastName": @"lastName",
              @"phoneNumber": @"phoneNumber",
+             @"updatedAt": @"updatedAt",
+             @"createdAt": @"createdAt",
              @"_embedded.role.code": @"roleCode",
              };
 }
@@ -89,6 +94,16 @@
 + (BOOL)isCurrentUserMentor
 {
     if ([[[MTUser currentUser].roleCode uppercaseString] isEqualToString:@"MENTOR"]) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
++ (BOOL)isUserMentor:(MTUser *)user
+{
+    if ([[user.roleCode uppercaseString] isEqualToString:@"MENTOR"]) {
         return YES;
     }
     else {

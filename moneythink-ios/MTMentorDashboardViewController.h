@@ -17,6 +17,6 @@ typedef enum {
 @interface MTMentorDashboardViewController : MTViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) NSArray *classStudents;
+@property (strong, nonatomic) RLMResults *classStudents;
 
 @end

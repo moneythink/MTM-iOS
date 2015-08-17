@@ -984,26 +984,17 @@
                                                                     // Update for Push Notifications
                                                                     //        [[MTUtil getAppDelegate] updateParseInstallationState];
                                                                     
-                                                                    // Check for custom playlist for this class
-                                                                    //        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-                                                                    
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                                         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                                                                         
                                                                         [weakSelf.navigationController popViewControllerAnimated:YES];
-                                                                        
-                                                                        // Check for custom playlist for this class
-                                                                        //            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
                                                                         
                                                                         // Update Notification count for this user.
                                                                         //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                                                         
                                                                         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                         if (![onboardingController checkForOnboarding]) {
-                                                                            
-                                                                            // TODO: change back
-                                                                            // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                                                                             [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                         }
                                                                     });
@@ -1052,16 +1043,10 @@
                                                                     // Update for Push Notifications
                                                                     //        [[MTUtil getAppDelegate] updateParseInstallationState];
                                                                     
-                                                                    // Check for custom playlist for this class
-                                                                    //        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-                                                                    
                                                                     dispatch_async(dispatch_get_main_queue(), ^{
                                                                         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                                                                         
                                                                         [weakSelf.navigationController popViewControllerAnimated:YES];
-                                                                        
-                                                                        // Check for custom playlist for this class
-                                                                        //            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
                                                                         
                                                                         // Update Notification count for this user.
                                                                         //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];

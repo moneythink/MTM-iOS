@@ -8,12 +8,12 @@
 
 #import <Realm/Realm.h>
 
-@interface MTUserAvatar : RLMObject
+@interface MTOptionalImage : RLMObject
 
-@property NSData *avatarData;
+@property NSData *imageData;
 
 @end
 
 // This protocol enables typed collections. i.e.:
-// RLMArray<MTUserAvatar>
-RLM_ARRAY_TYPE(MTUserAvatar)
+// RLMArray<MTOptionalImage>
+RLM_ARRAY_TYPE(MTOptionalImage)

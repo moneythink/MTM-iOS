@@ -160,8 +160,8 @@ static NSString * const MTNetworkClientID = @"ios";
                     [realm beginWriteTransaction];
                     
                     MTUser *meUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
-                    MTUserAvatar *userAvatar = [[MTUserAvatar alloc] init];
-                    userAvatar.avatarData = responseObject;
+                    MTOptionalImage *userAvatar = [[MTOptionalImage alloc] init];
+                    userAvatar.imageData = responseObject;
                     meUser.userAvatar = userAvatar;
                     
                     [realm commitWriteTransaction];
@@ -235,6 +235,18 @@ static NSString * const MTNetworkClientID = @"ios";
     meUser.currentUser = YES;
     meUser.organization = myOrganization;
     meUser.userClass = myClass;
+    
+    if (![MTUser isUserMentor:meUser]) {
+        if ([[embeddedDict objectForKey:@"student"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *studentDict = [embeddedDict objectForKey:@"student"];
+            NSNumber *points = [studentDict valueForKey:@"points"];
+            if (points) {
+                meUser.points = [points integerValue];
+            }
+            meUser.hasBankAccount = [[studentDict objectForKey:@"hasBankAccount"] boolValue];
+            meUser.hasResume = [[studentDict objectForKey:@"hasResume"] boolValue];
+        }
+    }
     
     [realm commitWriteTransaction];
     
@@ -351,6 +363,55 @@ static NSString * const MTNetworkClientID = @"ios";
     return sortedArray;
 }
 
+- (void)processClassChallengesWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No user response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded class-challenges data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"classChallenges"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No classChallenges data");
+        return;
+    }
+    
+    NSArray *classChallengesArray = [embeddedDict objectForKey:@"classChallenges"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    for (id classChallenge in classChallengesArray) {
+        if ([classChallenge isKindOfClass:[NSDictionary class]]) {
+            
+            NSDictionary *classChallengeDict = (NSDictionary *)classChallenge;
+            if ([[classChallengeDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSInteger thisRanking = [[classChallengeDict valueForKey:@"ranking"] integerValue];
+                NSDictionary *innerEmbeddedDict = [classChallengeDict objectForKey:@"_embedded"];
+                
+                if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                    
+                    // Now create/update challenge
+                    MTChallenge *challenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    NSString *pointsPerPost = [challengeDict valueForKey:@"pointsPerPost"];
+                    challenge.pointsPerPost = [pointsPerPost integerValue];
+                    challenge.ranking = thisRanking;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 
 #pragma mark - Public Methods -
 - (void)authenticateForUsername:(NSString *)username withPassword:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -376,7 +437,7 @@ static NSString * const MTNetworkClientID = @"ios";
             
             MTUser *meUser = [weakSelf processMeUserRequestWithResponseObject:responseObject];
             if (meUser) {
-                NSLog(@"Parsed meUser object: %@", meUser);
+//                NSLog(@"Parsed meUser object: %@", meUser);
                 
                 // TODO: If Avatar, retrieve and store it
                 if (YES) {
@@ -683,12 +744,12 @@ static NSString * const MTNetworkClientID = @"ios";
                     
                     if (imageData) {
                         if (!meUser.userAvatar) {
-                            MTUserAvatar *userAvatar = [[MTUserAvatar alloc] init];
-                            userAvatar.avatarData = imageData;
+                            MTOptionalImage *userAvatar = [[MTOptionalImage alloc] init];
+                            userAvatar.imageData = imageData;
                             meUser.userAvatar = userAvatar;
                         }
                         else {
-                            meUser.userAvatar.avatarData = imageData;
+                            meUser.userAvatar.imageData = imageData;
                         }
                     }
                     else {
@@ -780,7 +841,7 @@ static NSString * const MTNetworkClientID = @"ios";
     }];
 }
 
-- (void)refreshCurrentUserData
+- (void)refreshCurrentUserDataWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -789,23 +850,46 @@ static NSString * const MTNetworkClientID = @"ios";
             NSLog(@"Found me user");
             MTUser *meUser = [weakSelf processMeUserRequestWithResponseObject:responseObject];
             if (meUser) {
-                NSLog(@"Parsed meUser object: %@", meUser);
+//                NSLog(@"Parsed meUser object: %@", meUser);
                 
                 // TODO: If Avatar, retrieve and store it
                 if (YES) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
                         NSLog(@"Retrieved user avatar");
+                        if (success) {
+                            success(nil);
+                        }
+
                     } failure:^(NSError *error) {
                         NSLog(@"Failed to retrieve user avatar, probably no avatar assigned");
+                        if (failure) {
+                            failure(error);
+                        }
                     }];
+                }
+                else {
+                    if (success) {
+                        success(nil);
+                    }
+                }
+            }
+            else {
+                if (success) {
+                    success(nil);
                 }
             }
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"authenticateForUsername error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed refreshCurrentUserData with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
     }];
 }
 
@@ -853,6 +937,39 @@ static NSString * const MTNetworkClientID = @"ios";
             dispatch_async(dispatch_get_main_queue(), ^{
                 failure(error);
             });
+        }
+    }];
+}
+
+- (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"999";
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"class-challenges" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"class-challenges success response");
+            
+            if (responseObject) {
+                [self processClassChallengesWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed class-challenges with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed class-challenges with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
         }
     }];
 }

@@ -111,7 +111,7 @@
         weakSelf.onboardingVC.swipingEnabled = NO;
         MTUser *currentUser = [MTUser currentUser];
         if (currentUser.userAvatar && !weakPhotoUploadPage.changedProfileImage) {
-            [weakPhotoUploadPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.avatarData]];
+            [weakPhotoUploadPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.imageData]];
         }
     };
     
@@ -157,7 +157,7 @@
         else {
             MTUser *currentUser = [MTUser currentUser];
             if (currentUser.userAvatar) {
-                [weakLastPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.avatarData]];
+                [weakLastPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.imageData]];
             }
         }
         

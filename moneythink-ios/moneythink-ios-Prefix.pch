@@ -83,9 +83,10 @@
 #import "UIScrollView+EmptyDataSet.h"
 
 #import "MTUser.h"
-#import "MTUserAvatar.h"
+#import "MTOptionalImage.h"
 #import "MTOrganization.h"
 #import "MTClass.h"
+#import "MTChallenge.h"
 
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"

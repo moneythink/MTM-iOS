@@ -203,7 +203,13 @@
     }
     else if ([MTUser isUserLoggedIn]) {
         [[MTUtil getAppDelegate] configureZendesk];
-        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserData];
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+        
+        [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
+            //
+        } failure:^(NSError *error) {
+            //
+        }];
         
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;
@@ -225,9 +231,7 @@
         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
         if (![onboardingController checkForOnboarding]) {
             
-            // TODO: change back
-            //            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"editProfileNav"];
+            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
             [self.revealViewController setFrontViewController:challengesVC animated:YES];
         }
     }
@@ -344,18 +348,12 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
-            // Check for custom playlist for this class
-//            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-            
             // Update Notification count for this user.
 //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
             
             MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {
-                
-                // TODO: change back
-                // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"editProfileNav"];
+                id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                 [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
             }
         });

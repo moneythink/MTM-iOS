@@ -46,6 +46,7 @@
 @property (nonatomic) BOOL unwinding;
 @property (nonatomic) BOOL showingKeyboard;
 @property (nonatomic) BOOL removedProfilePhoto;
+@property (nonatomic, strong) RLMNotificationToken *token;
 
 @end
 
@@ -145,7 +146,7 @@
         self.profileImageLabel.text = @"Change Photo";
 
         self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        UIImage *profileImage = [UIImage imageWithData:self.userCurrent.userAvatar.avatarData];
+        UIImage *profileImage = [UIImage imageWithData:self.userCurrent.userAvatar.imageData];
         [self.userProfileButton setImage:profileImage forState:UIControlStateNormal];
     }
     else {
@@ -154,6 +155,10 @@
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+    
+    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *note, RLMRealm * realm) {
+        // TODO: Update views
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated

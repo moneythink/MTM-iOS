@@ -11,7 +11,7 @@
 
 @interface MTStudentProgressTableViewCell : PFTableViewCell
 
-@property (strong, nonatomic) PFUser *user;
+@property (strong, nonatomic) MTUser *user;
 
 @property (strong, nonatomic) IBOutlet UILabel *userFullName;
 @property (strong, nonatomic) IBOutlet PFImageView *userProfileImage;
