@@ -34,8 +34,8 @@ typedef enum {
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
-@property (nonatomic, strong) PFUser *currentUser;
-@property (nonatomic, strong) PFUser *postUser;
+@property (nonatomic, strong) MTUser *currentUser;
+@property (nonatomic, strong) MTUser *postUser;
 @property (assign, nonatomic) NSInteger postLikesCount;
 @property (assign, nonatomic) BOOL isMyClass;
 @property (nonatomic, strong) NSArray *comments;
@@ -94,27 +94,27 @@ typedef enum {
             [self parseSpentFields];
         }
 
-        self.postUser = self.challengePost[@"user"];
-        self.currentUser = [PFUser currentUser];
+        self.postUser = self.challengePost.user;
+        self.currentUser = [MTUser currentUser];
         self.postLikesCount = 0;
         if (self.challengePost[@"likes"]) {
             self.postLikesCount = [self.challengePost[@"likes"] intValue];
         }
         
-        NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
-        PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
-        
-        findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
-        MTMakeWeakSelf();
-        [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                weakSelf.postUser = [objects firstObject];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
-                });
-            }
-        }];
+//        NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
+//        PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
+//        
+//        findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//        
+//        MTMakeWeakSelf();
+//        [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//            if (!error) {
+//                weakSelf.postUser = [objects firstObject];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [weakSelf.tableView reloadData];
+//                });
+//            }
+//        }];
         
         if (self.hasButtons && IsEmpty(self.buttonsTapped)) {
             [self updateButtonsTapped];
@@ -142,92 +142,92 @@ typedef enum {
 #pragma mark - Private Methods -
 - (void)loadComments
 {
-    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-        return;
-    }
-
-    MTMakeWeakSelf();
-    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
-    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
-    [queryPostComments includeKey:@"user"];
-    
-    queryPostComments.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-
-        if (!error) {
-            weakSelf.comments = objects;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-            });
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+//    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+//        return;
+//    }
+//
+//    MTMakeWeakSelf();
+//    PFQuery *queryPostComments = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
+//    [queryPostComments whereKey:@"challenge_post" equalTo:self.challengePost];
+//    [queryPostComments includeKey:@"user"];
+//    
+//    queryPostComments.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    [queryPostComments findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//
+//        if (!error) {
+//            weakSelf.comments = objects;
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [weakSelf.tableView reloadData];
+//            });
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
 }
 
 - (void)loadLikesWithCache:(BOOL)withCache
 {
-    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-        return;
-    }
-    
-    MTMakeWeakSelf();
-    PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
-    [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
-    [queryPostLikes includeKey:@"user"];
-    [queryPostLikes includeKey:@"emoji"];
-
-    if (withCache) {
-        queryPostLikes.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    }
-    else {
-        queryPostLikes.cachePolicy = kPFCachePolicyNetworkOnly;
-    }
-    
-    [queryPostLikes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableArray *users = [NSMutableArray array];
-            NSMutableArray *challengesPostsLiked = [NSMutableArray array];
-            NSMutableArray *emojiArray = [NSMutableArray array];
-            NSMutableArray *mutableLiked = [NSMutableArray array];
-            NSMutableArray *mutableLikedFull = [NSMutableArray array];
-
-            for (PFChallengePostsLiked *thisLike in objects) {
-                PFUser *thisUser = thisLike[@"user"];
-                [users addObject:thisUser];
-                [challengesPostsLiked addObject:thisLike];
-                
-                PFEmoji *thisEmoji = thisLike[@"emoji"];
-                if (thisEmoji) {
-                    [emojiArray addObject:thisEmoji];
-                }
-                
-                PFChallengePost *post = thisLike[@"post"];
-                if (!IsEmpty(post.objectId) && [MTUtil isUserMe:thisUser]) {
-                    [mutableLiked addObject:post.objectId];
-                    [mutableLikedFull addObject:thisLike];
-                }
-            }
-            
-            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
-            weakSelf.emojiArray = emojiArray;
-            weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
-            weakSelf.challengePostsLiked = [NSArray arrayWithArray:challengesPostsLiked];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.tableView reloadData];
-            });
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+//    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+//        return;
+//    }
+//    
+//    MTMakeWeakSelf();
+//    PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
+//    [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
+//    [queryPostLikes includeKey:@"user"];
+//    [queryPostLikes includeKey:@"emoji"];
+//
+//    if (withCache) {
+//        queryPostLikes.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    }
+//    else {
+//        queryPostLikes.cachePolicy = kPFCachePolicyNetworkOnly;
+//    }
+//    
+//    [queryPostLikes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            NSMutableArray *users = [NSMutableArray array];
+//            NSMutableArray *challengesPostsLiked = [NSMutableArray array];
+//            NSMutableArray *emojiArray = [NSMutableArray array];
+//            NSMutableArray *mutableLiked = [NSMutableArray array];
+//            NSMutableArray *mutableLikedFull = [NSMutableArray array];
+//
+//            for (PFChallengePostsLiked *thisLike in objects) {
+//                PFUser *thisUser = thisLike[@"user"];
+//                [users addObject:thisUser];
+//                [challengesPostsLiked addObject:thisLike];
+//                
+//                PFEmoji *thisEmoji = thisLike[@"emoji"];
+//                if (thisEmoji) {
+//                    [emojiArray addObject:thisEmoji];
+//                }
+//                
+//                PFChallengePost *post = thisLike[@"post"];
+//                if (!IsEmpty(post.objectId) && [MTUtil isUserMe:thisUser]) {
+//                    [mutableLiked addObject:post.objectId];
+//                    [mutableLikedFull addObject:thisLike];
+//                }
+//            }
+//            
+//            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+//            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
+//            weakSelf.emojiArray = emojiArray;
+//            weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
+//            weakSelf.challengePostsLiked = [NSArray arrayWithArray:challengesPostsLiked];
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [weakSelf.tableView reloadData];
+//            });
+//        } else {
+//            NSLog(@"error - %@", error);
+//        }
+//    }];
 }
 
 - (void)loadPostText
 {
-    NSString *textString = self.challengePost[@"post_text"];
+    NSString *textString = self.challengePost.content;
     if (IsEmpty(textString)) {
         return;
     }
@@ -250,37 +250,37 @@ typedef enum {
 
 - (void)updateButtonsTapped
 {
-    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
-    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-    
-    MTMakeWeakSelf();
-    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-
-        if (!error) {
-            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-            for (PFChallengePostButtonsClicked *clicks in objects) {
-                id button = clicks[@"button_clicked"];
-                id post = [(PFChallengePost *)clicks[@"post"] objectId];
-                [tappedButtonObjects setValue:button forKey:post];
-            }
-            weakSelf.buttonsTapped = tappedButtonObjects;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtonsTapped:)]) {
-                    [weakSelf.delegate didUpdateButtonsTapped:weakSelf.buttonsTapped];
-                }
-                
-                [weakSelf.tableView reloadData];
-            });
-        }
-        else {
-            NSLog(@"Error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-    }];
+//    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
+//    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
+//    
+//    MTMakeWeakSelf();
+//    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//        });
+//
+//        if (!error) {
+//            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
+//            for (PFChallengePostButtonsClicked *clicks in objects) {
+//                id button = clicks[@"button_clicked"];
+//                id post = [(PFChallengePost *)clicks[@"post"] objectId];
+//                [tappedButtonObjects setValue:button forKey:post];
+//            }
+//            weakSelf.buttonsTapped = tappedButtonObjects;
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtonsTapped:)]) {
+//                    [weakSelf.delegate didUpdateButtonsTapped:weakSelf.buttonsTapped];
+//                }
+//                
+//                [weakSelf.tableView reloadData];
+//            });
+//        }
+//        else {
+//            NSLog(@"Error - %@", error);
+//            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//        }
+//    }];
 }
 
 - (void)updateSecondaryButtonsTapped
@@ -348,313 +348,313 @@ typedef enum {
 
 - (void)setupButtonsForCell:(UITableViewCell *)cell
 {
-    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-    
-    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
-    NSInteger button = 0;
-    if (buttonID) {
-        button = [buttonID intValue];
-    }
-    
-    [button1 layer].masksToBounds = YES;
-    [button2 layer].masksToBounds = YES;
-
-    if ((button == 0) && buttonID) {
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateNormal];
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
-
-        [button1 setTintColor:[UIColor white]];
-        [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-
-        [[button2 layer] setBorderWidth:2.0f];
-        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-        [button2 setTintColor:[UIColor redOrange]];
-        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
-        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
-
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-    }
-    else if (button == 1) {
-        [[button1 layer] setBorderWidth:2.0f];
-        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-        [button1 setTintColor:[UIColor primaryGreen]];
-        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
-        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
-
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-        
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateNormal];
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateHighlighted];
-
-        [button2 setTintColor:[UIColor white]];
-        [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-        [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-    }
-    else {
-        [[button1 layer] setBorderWidth:2.0f];
-        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-        [button1 setTintColor:[UIColor primaryGreen]];
-        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
-        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
-
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-
-        [[button2 layer] setBorderWidth:2.0f];
-        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-        [button2 setTintColor:[UIColor redOrange]];
-        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
-        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
-
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-    }
-
-    [[button1 layer] setCornerRadius:5.0f];
-    [[button2 layer] setCornerRadius:5.0f];
-
-    // TODO: Load Buttons
-    NSArray *buttonTitles = nil;
+//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+//    
+//    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
+//    NSInteger button = 0;
+//    if (buttonID) {
+//        button = [buttonID intValue];
+//    }
+//    
+//    [button1 layer].masksToBounds = YES;
+//    [button2 layer].masksToBounds = YES;
+//
+//    if ((button == 0) && buttonID) {
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateNormal];
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
+//
+//        [button1 setTintColor:[UIColor white]];
+//        [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//
+//        [[button2 layer] setBorderWidth:2.0f];
+//        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+//        [button2 setTintColor:[UIColor redOrange]];
+//        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
+//        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
+//
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+//    }
+//    else if (button == 1) {
+//        [[button1 layer] setBorderWidth:2.0f];
+//        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+//        [button1 setTintColor:[UIColor primaryGreen]];
+//        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
+//        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
+//
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+//        
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateNormal];
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateHighlighted];
+//
+//        [button2 setTintColor:[UIColor white]];
+//        [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+//        [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//    }
+//    else {
+//        [[button1 layer] setBorderWidth:2.0f];
+//        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+//        [button1 setTintColor:[UIColor primaryGreen]];
+//        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
+//        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
+//
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+//
+//        [[button2 layer] setBorderWidth:2.0f];
+//        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+//        [button2 setTintColor:[UIColor redOrange]];
+//        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
+//        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
+//
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+//    }
+//
+//    [[button1 layer] setCornerRadius:5.0f];
+//    [[button2 layer] setCornerRadius:5.0f];
+//
+//    // TODO: Load Buttons
+//    NSArray *buttonTitles = nil;
 //    if (self.challenge && [self.challenge isDataAvailable]) {
 //        buttonTitles = self.challenge[@"buttons"];
 //    }
-//    
-    NSArray *buttonsClicked = nil;
+//
+//    NSArray *buttonsClicked = nil;
 //    if (self.challengePost && [self.challengePost isDataAvailable]) {
 //        buttonsClicked = self.challengePost[@"buttons_clicked"];
 //    }
-    
-    if (!IsEmpty(buttonTitles) && [buttonTitles count] == 2) {
-        button1.hidden = NO;
-        button2.hidden = NO;
-        
-        NSString *button1Title;
-        NSString *button2Title;
-        
-        if (!IsEmpty(buttonsClicked)) {
-            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-        } else {
-            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
-        }
-        
-        if ([buttonsClicked count] > 1) {
-            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
-        } else {
-            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
-        }
-        
-        [button1 setTitle:button1Title forState:UIControlStateNormal];
-        [button2 setTitle:button2Title forState:UIControlStateNormal];
-    }
-    else {
-        button1.hidden = YES;
-        button2.hidden = YES;
-    }
+//    
+//    if (!IsEmpty(buttonTitles) && [buttonTitles count] == 2) {
+//        button1.hidden = NO;
+//        button2.hidden = NO;
+//        
+//        NSString *button1Title;
+//        NSString *button2Title;
+//        
+//        if (!IsEmpty(buttonsClicked)) {
+//            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+//        } else {
+//            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
+//        }
+//        
+//        if ([buttonsClicked count] > 1) {
+//            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+//        } else {
+//            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
+//        }
+//        
+//        [button1 setTitle:button1Title forState:UIControlStateNormal];
+//        [button2 setTitle:button2Title forState:UIControlStateNormal];
+//    }
+//    else {
+//        button1.hidden = YES;
+//        button2.hidden = YES;
+//    }
 }
 
 - (void)setupSecondaryButtonsForCell:(UITableViewCell *)cell
 {
-    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
-    
-    NSInteger button1Count = [[buttonDict objectForKey:@0] integerValue];
-    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
-    
-    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-    
-    // Configure Button 1
-    [[button1 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
-    [[button1 layer] setBorderWidth:1.0f];
-    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button1.frame.size] forState:UIControlStateNormal];
-    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
-    [[button1 layer] setCornerRadius:5.0f];
-    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_normal"] forState:UIControlStateNormal];
-    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_pressed"] forState:UIControlStateHighlighted];
-    [button1 setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
-    
-    button1.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 0.0f);
-    [button1 layer].masksToBounds = YES;
-    
-    if (button1Count > 0) {
-        [button1 setTitle:[NSString stringWithFormat:@"%ld", (long)button1Count] forState:UIControlStateNormal];
-    }
-    else {
-        [button1 setTitle:@"" forState:UIControlStateNormal];
-    }
-    
-    [button1 removeTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-    [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-    
-    // Configure Button 2
-    [[button2 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
-    [[button2 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
-    [[button2 layer] setBorderWidth:1.0f];
-    [[button2 layer] setCornerRadius:5.0f];
-    [button2 setTitle:@"" forState:UIControlStateNormal];
-    [button2 layer].masksToBounds = YES;
-    
-    if (button2Count > 0) {
-        button1.enabled = NO;
-        [[button1 layer] setBorderColor:[UIColor lightGrayColor].CGColor];
-        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-        
-        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateNormal];
-        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateHighlighted];
-        
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateNormal];
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:button2.frame.size] forState:UIControlStateHighlighted];
-    }
-    else {
-        button1.enabled = YES;
-        [[button1 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
-        [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-
-        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateNormal];
-        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateHighlighted];
-        
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button2.frame.size] forState:UIControlStateNormal];
-        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateHighlighted];
-    }
-    
-    [button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
-    [button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+//    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
+//    
+//    NSInteger button1Count = [[buttonDict objectForKey:@0] integerValue];
+//    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
+//    
+//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+//    
+//    // Configure Button 1
+//    [[button1 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
+//    [[button1 layer] setBorderWidth:1.0f];
+//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button1.frame.size] forState:UIControlStateNormal];
+//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
+//    [[button1 layer] setCornerRadius:5.0f];
+//    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_normal"] forState:UIControlStateNormal];
+//    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_pressed"] forState:UIControlStateHighlighted];
+//    [button1 setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
+//    
+//    button1.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 0.0f);
+//    [button1 layer].masksToBounds = YES;
+//    
+//    if (button1Count > 0) {
+//        [button1 setTitle:[NSString stringWithFormat:@"%ld", (long)button1Count] forState:UIControlStateNormal];
+//    }
+//    else {
+//        [button1 setTitle:@"" forState:UIControlStateNormal];
+//    }
+//    
+//    [button1 removeTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+//    [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+//    
+//    // Configure Button 2
+//    [[button2 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
+//    [[button2 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
+//    [[button2 layer] setBorderWidth:1.0f];
+//    [[button2 layer] setCornerRadius:5.0f];
+//    [button2 setTitle:@"" forState:UIControlStateNormal];
+//    [button2 layer].masksToBounds = YES;
+//    
+//    if (button2Count > 0) {
+//        button1.enabled = NO;
+//        [[button1 layer] setBorderColor:[UIColor lightGrayColor].CGColor];
+//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+//        
+//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateNormal];
+//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateHighlighted];
+//        
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateNormal];
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:button2.frame.size] forState:UIControlStateHighlighted];
+//    }
+//    else {
+//        button1.enabled = YES;
+//        [[button1 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
+//        [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+//
+//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateNormal];
+//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateHighlighted];
+//        
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button2.frame.size] forState:UIControlStateNormal];
+//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateHighlighted];
+//    }
+//    
+//    [button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+//    [button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupTertiaryButtonsForCell:(UITableViewCell *)cell
 {
-    NSArray *buttonsClicked = self.challengePost[@"buttons_clicked"];
-    NSArray *buttonTitles = self.challenge[@"buttons"];
-    
-    BOOL tertiaryRow = NO;
-    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-    if (!button1) {
-        button1 = (UIButton *)[cell.contentView viewWithTag:3];
-        tertiaryRow = YES;
-    }
-    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-    if (!button2) {
-        button2 = (UIButton *)[cell.contentView viewWithTag:4];
-    }
-    
-    [button1 layer].masksToBounds = YES;
-    [button2 layer].masksToBounds = YES;
-    [[button1 layer] setCornerRadius:5.0f];
-    [[button2 layer] setCornerRadius:5.0f];
-
-    NSInteger button1Count = 0;
-    NSInteger button2Count = 0;
-    
-    UIColor *button1Color;
-    UIColor *button2Color;
-    
-    if (tertiaryRow) {
-        button1Color = [UIColor votingBlue];
-        button2Color = [UIColor votingGreen];
-    }
-    else {
-        button1Color = [UIColor votingRed];
-        button2Color = [UIColor votingPurple];
-    }
-    
-    if (buttonsClicked && [buttonsClicked count] == 4) {
-        if (!tertiaryRow) {
-            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:0]) integerValue];
-            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:1]) integerValue];
-        }
-        else {
-            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:2]) integerValue];
-            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:3]) integerValue];
-        }
-    }
-    
-    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
-    NSInteger button = 0;
-    if (buttonID) {
-        button = [buttonID intValue];
-    }
-    
-    // Reset to default
-    [[button1 layer] setBorderWidth:2.0f];
-    [[button1 layer] setBorderColor:button1Color.CGColor];
-    [button1 setTintColor:button1Color];
-    [button1 setTitleColor:button1Color forState:UIControlStateNormal];
-    [button1 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-    
-    [[button2 layer] setBorderWidth:2.0f];
-    [[button2 layer] setBorderColor:button2Color.CGColor];
-    [button2 setTintColor:button2Color];
-    [button2 setTitleColor:button2Color forState:UIControlStateNormal];
-    [button2 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-    
-    if (buttonID) {
-        if ((button == 0 && !tertiaryRow) || (button == 2 && tertiaryRow)) {
-            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateNormal];
-            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateHighlighted];
-            [button1 setTintColor:[UIColor white]];
-            [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-            [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-        }
-        else if ((button == 1 && !tertiaryRow) || (button == 3 && tertiaryRow)) {
-            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateNormal];
-            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateHighlighted];
-            [button2 setTintColor:[UIColor white]];
-            [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-            [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-        }
-    }
-    
-    if (buttonTitles.count == 4) {
-        NSString *button1Title;
-        NSString *button2Title;
-        
-        if (!tertiaryRow) {
-            if (buttonsClicked.count > 0 && [buttonsClicked[0] intValue] > 0) {
-                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-            }
-            else {
-                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[0]];
-            }
-            
-            if (buttonsClicked.count > 1 && [buttonsClicked[1] intValue] > 0) {
-                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
-            }
-            else {
-                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[1]];
-            }
-
-        }
-        else {
-            if (buttonsClicked.count > 2 && [buttonsClicked[2] intValue] > 0) {
-                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[2], buttonsClicked[2]];
-            }
-            else {
-                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[2]];
-            }
-            
-            if (buttonsClicked.count > 3 && [buttonsClicked[3] intValue] > 0) {
-                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[3], buttonsClicked[3]];
-            }
-            else {
-                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[3]];
-            }
-
-        }
-        
-        [button1 setTitle:button1Title forState:UIControlStateNormal];
-        [button2 setTitle:button2Title forState:UIControlStateNormal];
-    }
-    
-    [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+//    NSArray *buttonsClicked = self.challengePost[@"buttons_clicked"];
+//    NSArray *buttonTitles = self.challenge[@"buttons"];
+//    
+//    BOOL tertiaryRow = NO;
+//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+//    if (!button1) {
+//        button1 = (UIButton *)[cell.contentView viewWithTag:3];
+//        tertiaryRow = YES;
+//    }
+//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+//    if (!button2) {
+//        button2 = (UIButton *)[cell.contentView viewWithTag:4];
+//    }
+//    
+//    [button1 layer].masksToBounds = YES;
+//    [button2 layer].masksToBounds = YES;
+//    [[button1 layer] setCornerRadius:5.0f];
+//    [[button2 layer] setCornerRadius:5.0f];
+//
+//    NSInteger button1Count = 0;
+//    NSInteger button2Count = 0;
+//    
+//    UIColor *button1Color;
+//    UIColor *button2Color;
+//    
+//    if (tertiaryRow) {
+//        button1Color = [UIColor votingBlue];
+//        button2Color = [UIColor votingGreen];
+//    }
+//    else {
+//        button1Color = [UIColor votingRed];
+//        button2Color = [UIColor votingPurple];
+//    }
+//    
+//    if (buttonsClicked && [buttonsClicked count] == 4) {
+//        if (!tertiaryRow) {
+//            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:0]) integerValue];
+//            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:1]) integerValue];
+//        }
+//        else {
+//            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:2]) integerValue];
+//            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:3]) integerValue];
+//        }
+//    }
+//    
+//    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
+//    NSInteger button = 0;
+//    if (buttonID) {
+//        button = [buttonID intValue];
+//    }
+//    
+//    // Reset to default
+//    [[button1 layer] setBorderWidth:2.0f];
+//    [[button1 layer] setBorderColor:button1Color.CGColor];
+//    [button1 setTintColor:button1Color];
+//    [button1 setTitleColor:button1Color forState:UIControlStateNormal];
+//    [button1 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+//    
+//    [[button2 layer] setBorderWidth:2.0f];
+//    [[button2 layer] setBorderColor:button2Color.CGColor];
+//    [button2 setTintColor:button2Color];
+//    [button2 setTitleColor:button2Color forState:UIControlStateNormal];
+//    [button2 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+//    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+//    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+//    
+//    if (buttonID) {
+//        if ((button == 0 && !tertiaryRow) || (button == 2 && tertiaryRow)) {
+//            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateNormal];
+//            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateHighlighted];
+//            [button1 setTintColor:[UIColor white]];
+//            [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+//            [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//        }
+//        else if ((button == 1 && !tertiaryRow) || (button == 3 && tertiaryRow)) {
+//            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateNormal];
+//            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateHighlighted];
+//            [button2 setTintColor:[UIColor white]];
+//            [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+//            [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+//        }
+//    }
+//    
+//    if (buttonTitles.count == 4) {
+//        NSString *button1Title;
+//        NSString *button2Title;
+//        
+//        if (!tertiaryRow) {
+//            if (buttonsClicked.count > 0 && [buttonsClicked[0] intValue] > 0) {
+//                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+//            }
+//            else {
+//                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[0]];
+//            }
+//            
+//            if (buttonsClicked.count > 1 && [buttonsClicked[1] intValue] > 0) {
+//                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+//            }
+//            else {
+//                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[1]];
+//            }
+//
+//        }
+//        else {
+//            if (buttonsClicked.count > 2 && [buttonsClicked[2] intValue] > 0) {
+//                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[2], buttonsClicked[2]];
+//            }
+//            else {
+//                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[2]];
+//            }
+//            
+//            if (buttonsClicked.count > 3 && [buttonsClicked[3] intValue] > 0) {
+//                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[3], buttonsClicked[3]];
+//            }
+//            else {
+//                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[3]];
+//            }
+//
+//        }
+//        
+//        [button1 setTitle:button1Title forState:UIControlStateNormal];
+//        [button2 setTitle:button2Title forState:UIControlStateNormal];
+//    }
+//    
+//    [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+//    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
 }
 
 - (void)showFirstTimeToastNotification
@@ -717,7 +717,7 @@ typedef enum {
     [self.tableView reloadData];
 }
 
-- (void)continueLoadingFromNotificationWithPost:(PFChallengePost *)post withComment:(PFChallengePostComment *)comment
+- (void)continueLoadingFromNotificationWithPost:(MTChallengePost *)post withComment:(PFChallengePostComment *)comment
 {
     self.postComment = comment;
     self.challengePost = post;
@@ -729,44 +729,43 @@ typedef enum {
     
     self.currentUser = [PFUser currentUser];
 
-    MTMakeWeakSelf();
-    if (self.challengePost && ![self.challengePost isDataAvailable]) {
-        [self.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                weakSelf.challengePost = (PFChallengePost *)object;
-                [weakSelf finishLoadingChallengePostData];
-            }
-            else {
-                [UIAlertView showNetworkAlertWithError:error];
-            }
-        }];
-    }
-    else {
-        self.postImage = self.challengePost[@"picture"];
-        self.postUser = self.challengePost[@"user"];
-        
-        if (self.postUser && ![self.postUser isDataAvailable]) {
-            [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    weakSelf.postUser = (PFUser *)object;
-                    [weakSelf.tableView reloadData];
-                }
-                else {
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
-        
-        [self updateLikes];
-        [self loadPostText];
-        [self loadLikesWithCache:NO];
-    }
+//    MTMakeWeakSelf();
+//    if (self.challengePost && ![self.challengePost isDataAvailable]) {
+//        [self.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//            if (!error) {
+//                weakSelf.challengePost = (PFChallengePost *)object;
+//                [weakSelf finishLoadingChallengePostData];
+//            }
+//            else {
+//                [UIAlertView showNetworkAlertWithError:error];
+//            }
+//        }];
+//    }
+//    else {
+//        self.postImage = self.challengePost[@"picture"];
+//        self.postUser = self.challengePost[@"user"];
+//        
+//        if (self.postUser && ![self.postUser isDataAvailable]) {
+//            [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                if (!error) {
+//                    weakSelf.postUser = (PFUser *)object;
+//                    [weakSelf.tableView reloadData];
+//                }
+//                else {
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }];
+//        }
+//        
+//        [self updateLikes];
+//        [self loadPostText];
+//        [self loadLikesWithCache:NO];
+//    }
+//    
+//    if (post[@"challenge"]) {
+//        self.challenge = post[@"challenge"];
+//    }
     
-    if (post[@"challenge"]) {
-        self.challenge = post[@"challenge"];
-    }
-    
-    // TODO: Test loading from notification
 //    if (self.challenge && ![self.challenge isDataAvailable]) {
 //        [self.challenge fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
 //            if (!error) {
@@ -807,18 +806,18 @@ typedef enum {
 
     [self loadLikesWithCache:NO];
 
-    if (self.postUser && ![self.postUser isDataAvailable]) {
-        MTMakeWeakSelf();
-        [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (!error) {
-                weakSelf.postUser = (PFUser *)object;
-                [weakSelf.tableView reloadData];
-            }
-            else {
-                [UIAlertView showNetworkAlertWithError:error];
-            }
-        }];
-    }
+//    if (self.postUser && ![self.postUser isDataAvailable]) {
+//        MTMakeWeakSelf();
+//        [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//            if (!error) {
+//                weakSelf.postUser = (PFUser *)object;
+//                [weakSelf.tableView reloadData];
+//            }
+//            else {
+//                [UIAlertView showNetworkAlertWithError:error];
+//            }
+//        }];
+//    }
 
     [self updateLikes];
     [self loadPostText];
@@ -862,36 +861,36 @@ typedef enum {
 
 - (void)loadEmojiLikes
 {
-    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-        return;
-    }
-
-    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
-    [queryPostEmojis whereKey:@"post" equalTo:self.challengePost];
-    [queryPostEmojis includeKey:@"emoji"];
-    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MTMakeWeakSelf();
-    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableArray *emojiArray = [NSMutableArray array];
-            for (PFChallengePostsLiked *thisLike in objects) {
-                PFEmoji *thisEmoji = thisLike[@"emoji"];
-                if (thisEmoji) {
-                    [emojiArray addObject:thisEmoji];
-                }
-            }
-            
-            weakSelf.emojiArray = emojiArray;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf loadButtons];
-            });
-        } else {
-            NSLog(@"error - %@", error);
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        }
-    }];
+//    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+//        return;
+//    }
+//
+//    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
+//    [queryPostEmojis whereKey:@"post" equalTo:self.challengePost];
+//    [queryPostEmojis includeKey:@"emoji"];
+//    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    MTMakeWeakSelf();
+//    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            NSMutableArray *emojiArray = [NSMutableArray array];
+//            for (PFChallengePostsLiked *thisLike in objects) {
+//                PFEmoji *thisEmoji = thisLike[@"emoji"];
+//                if (thisEmoji) {
+//                    [emojiArray addObject:thisEmoji];
+//                }
+//            }
+//            
+//            weakSelf.emojiArray = emojiArray;
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [weakSelf loadButtons];
+//            });
+//        } else {
+//            NSLog(@"error - %@", error);
+//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//        }
+//    }];
 }
 
 - (void)loadButtons
@@ -1085,26 +1084,26 @@ typedef enum {
             [comment fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
                 if (!error) {
                     __block PFChallengePostComment *thisComment = (PFChallengePostComment *)object;
-                    PFChallengePost *thisPost = nil;
+                    MTChallengePost *thisPost = nil;
                     if (thisComment[@"challenge_post"]) {
                         thisPost = thisComment[@"challenge_post"];
                         
-                        if (![thisPost isDataAvailable]) {
-                            MTMakeWeakSelf();
-                            [thisPost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                                if (!error) {
-                                    PFChallengePost *thisPost = (PFChallengePost *)object;
-                                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
-                                }
-                                else {
-                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                    [UIAlertView showNetworkAlertWithError:error];
-                                }
-                            }];
-                        }
-                        else {
-                            [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
-                        }
+//                        if (![thisPost isDataAvailable]) {
+//                            MTMakeWeakSelf();
+//                            [thisPost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                                if (!error) {
+//                                    MTChallengePost *thisPost = (MTChallengePost *)object;
+//                                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+//                                }
+//                                else {
+//                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                                    [UIAlertView showNetworkAlertWithError:error];
+//                                }
+//                            }];
+//                        }
+//                        else {
+//                            [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
+//                        }
                     }
                     else {
                         NSLog(@"Unable to load challenge_post");
@@ -1119,26 +1118,26 @@ typedef enum {
             }];
         }
         else if (populate) {
-            PFChallengePost *post = comment[@"challenge_post"];
+            MTChallengePost *post = comment[@"challenge_post"];
             __block PFChallengePostComment *weakComment = comment;
             if (!post) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 [self showNoDataAlertAndPopView:YES];
                 return NO;
             }
-            else if (![post isDataAvailable]) {
-                MTMakeWeakSelf();
-                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                    if (!error) {
-                        PFChallengePost *thisPost = (PFChallengePost *)object;
-                        [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:weakComment];
-                    }
-                    else {
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                        [UIAlertView showNetworkAlertWithError:error];
-                    }
-                }];
-            }
+//            else if (![post isDataAvailable]) {
+//                MTMakeWeakSelf();
+//                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                    if (!error) {
+//                        PFChallengePost *thisPost = (PFChallengePost *)object;
+//                        [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:weakComment];
+//                    }
+//                    else {
+//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                        [UIAlertView showNetworkAlertWithError:error];
+//                    }
+//                }];
+//            }
             else {
                 [self continueLoadingFromNotificationWithPost:post withComment:comment];
             }
@@ -1147,7 +1146,7 @@ typedef enum {
         return YES;
     }
     else if (self.notification[@"post_liked"]) {
-        PFChallengePost *post = self.notification[@"post_liked"];
+        MTChallengePost *post = self.notification[@"post_liked"];
         
         if (!post) {
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -1156,19 +1155,19 @@ typedef enum {
             }
             return NO;
         }
-        else if (![post isDataAvailable]) {
-            MTMakeWeakSelf();
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    PFChallengePost *thisPost = (PFChallengePost *)object;
-                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
+//        else if (![post isDataAvailable]) {
+//            MTMakeWeakSelf();
+//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                if (!error) {
+//                    PFChallengePost *thisPost = (PFChallengePost *)object;
+//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+//                }
+//                else {
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }];
+//        }
         else if (populate) {
             [self continueLoadingFromNotificationWithPost:post withComment:nil];
         }
@@ -1176,7 +1175,7 @@ typedef enum {
         return YES;
     }
     else if (self.notification[@"verify_post"]) {
-        PFChallengePost *post = self.notification[@"verify_post"];
+        MTChallengePost *post = self.notification[@"verify_post"];
         
         if (!post) {
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -1185,19 +1184,19 @@ typedef enum {
             }
             return NO;
         }
-        else if (![post isDataAvailable]) {
-            MTMakeWeakSelf();
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    PFChallengePost *thisPost = (PFChallengePost *)object;
-                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
+//        else if (![post isDataAvailable]) {
+//            MTMakeWeakSelf();
+//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                if (!error) {
+//                    PFChallengePost *thisPost = (PFChallengePost *)object;
+//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+//                }
+//                else {
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }];
+//        }
         else if (populate) {
             [self continueLoadingFromNotificationWithPost:post withComment:nil];
         }
@@ -1205,7 +1204,7 @@ typedef enum {
         return YES;
     }
     else if (self.notification[@"post_verified"]) {
-        PFChallengePost *post = self.notification[@"post_verified"];
+        MTChallengePost *post = self.notification[@"post_verified"];
         
         if (!post) {
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -1214,19 +1213,19 @@ typedef enum {
             }
             return NO;
         }
-        else if (![post isDataAvailable]) {
-            MTMakeWeakSelf();
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    PFChallengePost *thisPost = (PFChallengePost *)object;
-                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
+//        else if (![post isDataAvailable]) {
+//            MTMakeWeakSelf();
+//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                if (!error) {
+//                    PFChallengePost *thisPost = (PFChallengePost *)object;
+//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+//                }
+//                else {
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }];
+//        }
         else if (populate) {
             [self continueLoadingFromNotificationWithPost:post withComment:nil];
         }
@@ -1234,7 +1233,7 @@ typedef enum {
         return YES;
     }
     else if (self.notification[@"post_to_verify"]) {
-        PFChallengePost *post = self.notification[@"post_to_verify"];
+        MTChallengePost *post = self.notification[@"post_to_verify"];
         
         if (!post) {
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -1243,19 +1242,19 @@ typedef enum {
             }
             return NO;
         }
-        else if (![post isDataAvailable]) {
-            MTMakeWeakSelf();
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    PFChallengePost *thisPost = (PFChallengePost *)object;
-                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
+//        else if (![post isDataAvailable]) {
+//            MTMakeWeakSelf();
+//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                if (!error) {
+//                    PFChallengePost *thisPost = (PFChallengePost *)object;
+//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
+//                }
+//                else {
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                    [UIAlertView showNetworkAlertWithError:error];
+//                }
+//            }];
+//        }
         else if (populate) {
             [self continueLoadingFromNotificationWithPost:post withComment:nil];
         }
@@ -1269,163 +1268,163 @@ typedef enum {
 
 - (void)emojiLiked:(PFEmoji *)emoji
 {
-    NSString *emojiName = emoji[@"name"];
-
-    __block MTPostLikeCommentTableViewCell *likeCommentCell = self.postLikeCommentCell;
-
-    __block NSString *postID = [self.challengePost objectId];
-    NSString *userID = [self.currentUser objectId];
-
-    BOOL like = [self.postsLiked containsObject:postID];
-
-    NSInteger oldPostLikesCount = self.postLikesCount;
-    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
-
-    if (!like) {
-        [likePosts addObject:postID];
-
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-        self.postLikesCount += 1;
-
-        // Animations are borked on < iOS 8.0 because of autolayout?
-        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
-        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
-            // no animation
-        } else {
-            [UIView animateWithDuration:0.2f animations:^{
-                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.2f animations:^{
-                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
-                } completion:NULL];
-            }];
-        }
-
-    }
-    else {
-        // Replacing current emoji like
-        BOOL foundMatch = NO;
-        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
-            PFChallengePost *post = thisPostLiked[@"post"];
-            if ([post.objectId isEqualToString:self.challengePost.objectId]) {
-                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
-                thisPostLiked[@"emoji"] = emoji;
-                
-                for (PFEmoji *thisEmoji in self.emojiArray) {
-                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
-                        [newEmojiArray removeObject:thisEmoji];
-                        foundMatch = YES;
-                        break;
-                    }
-                }
-            }
-            
-            if (foundMatch) {
-                break;
-            }
-        }
-    }
-
-    self.postsLiked = likePosts;
-    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
-    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-
-    // Optimistically, add/remove myself from like users and update emoji
-    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
-    if (!like) {
-        if (IsEmpty(newMutableArray)) {
-            [newMutableArray addObject:self.currentUser];
-        }
-        else {
-            BOOL hasUser = NO;
-            for (PFUser *thisUser in self.challengePostsLikedUsers) {
-                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
-                    hasUser = YES;
-                    break;
-                }
-                if (!hasUser) {
-                    [newMutableArray addObject:self.currentUser];
-                }
-            }
-        }
-    }
-    
-    // Optimistically update the emoji likes
-    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
-    [newEmojiArray insertObject:emoji atIndex:0];
-    self.emojiArray = [NSArray arrayWithArray:newEmojiArray];
-    
-    // Update my emoji
-    BOOL foundMe = NO;
-    for (PFChallengePostsLiked *thisChallengePostsLiked in self.challengePostsLiked) {
-        PFUser *thisUser = thisChallengePostsLiked[@"user"];
-        if ([MTUtil isUserMe:thisUser]) {
-            thisChallengePostsLiked[@"emoji"] = emoji;
-            foundMe = YES;
-            break;
-        }
-    }
-    if (!foundMe) {
-        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] initWithClassName:[PFChallengePostsLiked parseClassName]];
-        newOne[@"user"] = [PFUser currentUser];
-        newOne[@"emoji"] = emoji;
-        
-        NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.challengePostsLiked];
-        [newArray addObject:newOne];
-        self.challengePostsLiked = newArray;
-    }
-
-    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
-    [self.tableView reloadData];
-    
-    // Optimistically update parent view
-    if ([self.delegate respondsToSelector:@selector(willUpdatePostsLiked:withPostLikedFull:)]) {
-        [self.delegate willUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
-    }
-
-    MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
-
-        if (!error) {
-            
-            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
-                });
-            }];
-
-            [weakSelf loadLikesWithCache:NO];
-
-        } else {
-            NSLog(@"Error updating: %@", [error localizedDescription]);
-
-            // Rollback
-            weakSelf.postsLiked = oldLikePosts;
-            weakSelf.postLikesCount = oldPostLikesCount;
-            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
-            weakSelf.emojiArray = oldEmojiArray;
-            
-            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
-                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
-            }
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
-                [weakSelf.tableView reloadData];
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            });
-
-            [weakSelf loadLikesWithCache:YES];
-        }
-        
-        if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
-            [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
-        }
-
-    }];
+//    NSString *emojiName = emoji[@"name"];
+//
+//    __block MTPostLikeCommentTableViewCell *likeCommentCell = self.postLikeCommentCell;
+//
+//    __block NSString *postID = [self.challengePost objectId];
+//    NSString *userID = [self.currentUser objectId];
+//
+//    BOOL like = [self.postsLiked containsObject:postID];
+//
+//    NSInteger oldPostLikesCount = self.postLikesCount;
+//    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+//    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
+//    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
+//
+//    if (!like) {
+//        [likePosts addObject:postID];
+//
+//        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+//        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+//        self.postLikesCount += 1;
+//
+//        // Animations are borked on < iOS 8.0 because of autolayout?
+//        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
+//        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
+//            // no animation
+//        } else {
+//            [UIView animateWithDuration:0.2f animations:^{
+//                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
+//            } completion:^(BOOL finished) {
+//                [UIView animateWithDuration:0.2f animations:^{
+//                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
+//                } completion:NULL];
+//            }];
+//        }
+//
+//    }
+//    else {
+//        // Replacing current emoji like
+//        BOOL foundMatch = NO;
+//        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
+//            PFChallengePost *post = thisPostLiked[@"post"];
+//            if ([post.objectId isEqualToString:self.challengePost.objectId]) {
+//                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
+//                thisPostLiked[@"emoji"] = emoji;
+//                
+//                for (PFEmoji *thisEmoji in self.emojiArray) {
+//                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
+//                        [newEmojiArray removeObject:thisEmoji];
+//                        foundMatch = YES;
+//                        break;
+//                    }
+//                }
+//            }
+//            
+//            if (foundMatch) {
+//                break;
+//            }
+//        }
+//    }
+//
+//    self.postsLiked = likePosts;
+//    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
+//    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+//
+//    // Optimistically, add/remove myself from like users and update emoji
+//    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
+//    if (!like) {
+//        if (IsEmpty(newMutableArray)) {
+//            [newMutableArray addObject:self.currentUser];
+//        }
+//        else {
+//            BOOL hasUser = NO;
+//            for (PFUser *thisUser in self.challengePostsLikedUsers) {
+//                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
+//                    hasUser = YES;
+//                    break;
+//                }
+//                if (!hasUser) {
+//                    [newMutableArray addObject:self.currentUser];
+//                }
+//            }
+//        }
+//    }
+//    
+//    // Optimistically update the emoji likes
+//    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
+//    [newEmojiArray insertObject:emoji atIndex:0];
+//    self.emojiArray = [NSArray arrayWithArray:newEmojiArray];
+//    
+//    // Update my emoji
+//    BOOL foundMe = NO;
+//    for (PFChallengePostsLiked *thisChallengePostsLiked in self.challengePostsLiked) {
+//        PFUser *thisUser = thisChallengePostsLiked[@"user"];
+//        if ([MTUtil isUserMe:thisUser]) {
+//            thisChallengePostsLiked[@"emoji"] = emoji;
+//            foundMe = YES;
+//            break;
+//        }
+//    }
+//    if (!foundMe) {
+//        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] initWithClassName:[PFChallengePostsLiked parseClassName]];
+//        newOne[@"user"] = [PFUser currentUser];
+//        newOne[@"emoji"] = emoji;
+//        
+//        NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.challengePostsLiked];
+//        [newArray addObject:newOne];
+//        self.challengePostsLiked = newArray;
+//    }
+//
+//    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
+//    [self.tableView reloadData];
+//    
+//    // Optimistically update parent view
+//    if ([self.delegate respondsToSelector:@selector(willUpdatePostsLiked:withPostLikedFull:)]) {
+//        [self.delegate willUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
+//    }
+//
+//    MTMakeWeakSelf();
+//    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
+//
+//        if (!error) {
+//            
+//            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [weakSelf.tableView reloadData];
+//                });
+//            }];
+//
+//            [weakSelf loadLikesWithCache:NO];
+//
+//        } else {
+//            NSLog(@"Error updating: %@", [error localizedDescription]);
+//
+//            // Rollback
+//            weakSelf.postsLiked = oldLikePosts;
+//            weakSelf.postLikesCount = oldPostLikesCount;
+//            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
+//            weakSelf.emojiArray = oldEmojiArray;
+//            
+//            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
+//                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
+//            }
+//
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
+//                [weakSelf.tableView reloadData];
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//            });
+//
+//            [weakSelf loadLikesWithCache:YES];
+//        }
+//        
+//        if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
+//            [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
+//        }
+//
+//    }];
 }
 
 
@@ -1582,78 +1581,78 @@ typedef enum {
 
 - (void)performDeletePost
 {
-    if ([self.delegate respondsToSelector:@selector(didDeletePost:)]) {
-        [self.delegate didDeletePost:self.challengePost];
-        [self.navigationController popViewControllerAnimated:YES];
-    }
-    else {
-        NSString *userID = [self.postUser objectId];
-        NSString *postID = [self.challengePost objectId];
-        
-        MTMakeWeakSelf();
-        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-            if (!error) {
-                [weakSelf.currentUser fetchInBackground];
-                [self.navigationController popViewControllerAnimated:NO];
-            } else {
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-        }];
-    }
+//    if ([self.delegate respondsToSelector:@selector(didDeletePost:)]) {
+//        [self.delegate didDeletePost:self.challengePost];
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//    else {
+//        NSString *userID = [self.postUser objectId];
+//        NSString *postID = [self.challengePost objectId];
+//        
+//        MTMakeWeakSelf();
+//        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
+//            if (!error) {
+//                [weakSelf.currentUser fetchInBackground];
+//                [self.navigationController popViewControllerAnimated:NO];
+//            } else {
+//                NSLog(@"error - %@", error);
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//            }
+//        }];
+//    }
 }
 
 - (IBAction)verifiedTapped:(id)sender
 {
-    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
-
-    NSString *postID = [self.challengePost objectId];
-    NSString *verifiedBy = [self.currentUser objectId];
-    
-    BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
-
-    if (isChecked) {
-        verifiedBy = @"";
-    }
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    if (isChecked) {
-        hud.labelText = @"Removing Verification...";
-    }
-    else {
-        hud.labelText = @"Verifying...";
-    }
-    hud.dimBackground = YES;
-    
-    likeCommentCell.verfiedLabel.text = @"Updating...";
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-            
-            if (error) {
-                NSLog(@"error - %@", error);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                [weakSelf.tableView reloadData];
-
-            } else {
-                [weakSelf.currentUser fetchInBackground];
-//                [weakSelf.challenge fetchInBackground];
-                
-                [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                        [weakSelf.tableView reloadData];
-                    });
-                }];
-            }
-        }];
-        
-    } afterDelay:0.35f];
+//    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+//
+//    NSString *postID = [self.challengePost objectId];
+//    NSString *verifiedBy = [self.currentUser objectId];
+//    
+//    BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
+//
+//    if (isChecked) {
+//        verifiedBy = @"";
+//    }
+//    
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+//    if (isChecked) {
+//        hud.labelText = @"Removing Verification...";
+//    }
+//    else {
+//        hud.labelText = @"Verifying...";
+//    }
+//    hud.dimBackground = YES;
+//    
+//    likeCommentCell.verfiedLabel.text = @"Updating...";
+//    
+//    MTMakeWeakSelf();
+//    [self bk_performBlock:^(id obj) {
+//        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
+//            
+//            if (error) {
+//                NSLog(@"error - %@", error);
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                });
+//
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//                [weakSelf.tableView reloadData];
+//
+//            } else {
+//                [weakSelf.currentUser fetchInBackground];
+////                [weakSelf.challenge fetchInBackground];
+//                
+//                [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
+//                    dispatch_async(dispatch_get_main_queue(), ^{
+//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                        [weakSelf.tableView reloadData];
+//                    });
+//                }];
+//            }
+//        }];
+//        
+//    } afterDelay:0.35f];
 }
 
 - (IBAction)button1Tapped:(id)sender
@@ -1678,43 +1677,43 @@ typedef enum {
 
 - (void)submitPrimaryButtonTapped:(id)sender withButtonNumber:(NSInteger)buttonNumber
 {
-    __block id weakSender = sender;
-    ((UIButton *)sender).enabled = NO;
-    
-    PFChallengePost *post = self.challengePost;
-    
-    NSString *userID = [self.currentUser objectId];
-    NSString *postID = [post objectId];
-    
-    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInteger:buttonNumber]};
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Submitting...";
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [weakSelf.currentUser fetch];
-//                [weakSelf.challenge fetch];
-                [weakSelf.challengePost fetch];
-                ((UIButton *)weakSender).enabled = YES;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf updateButtonsTapped];
-                });
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-                
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-        }];
-    } afterDelay:0.35f];
+//    __block id weakSender = sender;
+//    ((UIButton *)sender).enabled = NO;
+//    
+//    PFChallengePost *post = self.challengePost;
+//    
+//    NSString *userID = [self.currentUser objectId];
+//    NSString *postID = [post objectId];
+//    
+//    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInteger:buttonNumber]};
+//    
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+//    hud.labelText = @"Submitting...";
+//    hud.dimBackground = YES;
+//    
+//    MTMakeWeakSelf();
+//    [self bk_performBlock:^(id obj) {
+//        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+//            if (!error) {
+//                [weakSelf.currentUser fetch];
+////                [weakSelf.challenge fetch];
+//                [weakSelf.challengePost fetch];
+//                ((UIButton *)weakSender).enabled = YES;
+//                
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [weakSelf updateButtonsTapped];
+//                });
+//            }
+//            else {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                });
+//                
+//                NSLog(@"error - %@", error);
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//            }
+//        }];
+//    } afterDelay:0.35f];
 }
 
 - (void)secondaryButton1Tapped:(id)sender
@@ -1793,129 +1792,129 @@ typedef enum {
 
 - (void)secondaryButton1ActionWithIncrement:(BOOL)increment
 {
-    PFUser *user = [PFUser currentUser];
-    
-    NSString *userID = [user objectId];
-    NSString *postID = [self.challengePost objectId];
-    NSNumber *increaseNumber = [NSNumber numberWithBool:(increment ? YES : NO)];
-    
-    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": [NSNumber numberWithInt:0], @"increase": increaseNumber};
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Processing Points...";
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                [weakSelf updateSecondaryButtonsTapped];
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-                
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-            
-            weakSelf.secondaryButton1.enabled = YES;
-        }];
-    } afterDelay:0.35f];
+//    PFUser *user = [PFUser currentUser];
+//    
+//    NSString *userID = [user objectId];
+//    NSString *postID = [self.challengePost objectId];
+//    NSNumber *increaseNumber = [NSNumber numberWithBool:(increment ? YES : NO)];
+//    
+//    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": [NSNumber numberWithInt:0], @"increase": increaseNumber};
+//    
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+//    hud.labelText = @"Processing Points...";
+//    hud.dimBackground = YES;
+//    
+//    MTMakeWeakSelf();
+//    [self bk_performBlock:^(id obj) {
+//        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+//            if (!error) {
+//                [[PFUser currentUser] fetchInBackground];
+//                [weakSelf updateSecondaryButtonsTapped];
+//            }
+//            else {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                });
+//                
+//                NSLog(@"error - %@", error);
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//            }
+//            
+//            weakSelf.secondaryButton1.enabled = YES;
+//        }];
+//    } afterDelay:0.35f];
 }
 
 - (void)secondaryButton2Tapped:(id)sender
 {
-    ((UIButton *)sender).enabled = NO;
-    self.secondaryButton2 = (UIButton *)sender;
-    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
-    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
-
-    BOOL markComplete = (button2Count > 0) ? NO : YES;
-    NSString *title = @"Mark this as complete?";
-    
-    if (button2Count > 0) {
-        // Now complete, marking incomplete
-        title = @"Mark this as incomplete?";
-    }
-    
-    MTMakeWeakSelf();
-    if ([UIAlertController class]) {
-        UIAlertController *changeSheet = [UIAlertController
-                                          alertControllerWithTitle:title
-                                          message:nil
-                                          preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"No"
-                                 style:UIAlertActionStyleCancel
-                                 handler:^(UIAlertAction *action) {
-                                     weakSelf.secondaryButton2.enabled = YES;
-                                 }];
-        
-        UIAlertAction *complete = [UIAlertAction
-                                   actionWithTitle:@"Yes"
-                                   style:UIAlertActionStyleDestructive
-                                   handler:^(UIAlertAction *action) {
-                                       dispatch_async(dispatch_get_main_queue(), ^{
-                                           [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
-                                       });
-                                   }];
-        
-        [changeSheet addAction:cancel];
-        [changeSheet addAction:complete];
-        
-        [weakSelf presentViewController:changeSheet animated:YES completion:nil];
-    } else {
-        
-        UIActionSheet *changeSheet = [UIActionSheet bk_actionSheetWithTitle:title];
-        [changeSheet bk_setDestructiveButtonWithTitle:@"Yes" handler:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
-            });
-        }];
-        [changeSheet bk_setCancelButtonWithTitle:@"No" handler:^{
-            weakSelf.secondaryButton2.enabled = YES;
-        }];
-        [changeSheet showInView:[UIApplication sharedApplication].keyWindow];
-    }
+//    ((UIButton *)sender).enabled = NO;
+//    self.secondaryButton2 = (UIButton *)sender;
+//    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
+//    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
+//
+//    BOOL markComplete = (button2Count > 0) ? NO : YES;
+//    NSString *title = @"Mark this as complete?";
+//    
+//    if (button2Count > 0) {
+//        // Now complete, marking incomplete
+//        title = @"Mark this as incomplete?";
+//    }
+//    
+//    MTMakeWeakSelf();
+//    if ([UIAlertController class]) {
+//        UIAlertController *changeSheet = [UIAlertController
+//                                          alertControllerWithTitle:title
+//                                          message:nil
+//                                          preferredStyle:UIAlertControllerStyleActionSheet];
+//        
+//        UIAlertAction *cancel = [UIAlertAction
+//                                 actionWithTitle:@"No"
+//                                 style:UIAlertActionStyleCancel
+//                                 handler:^(UIAlertAction *action) {
+//                                     weakSelf.secondaryButton2.enabled = YES;
+//                                 }];
+//        
+//        UIAlertAction *complete = [UIAlertAction
+//                                   actionWithTitle:@"Yes"
+//                                   style:UIAlertActionStyleDestructive
+//                                   handler:^(UIAlertAction *action) {
+//                                       dispatch_async(dispatch_get_main_queue(), ^{
+//                                           [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
+//                                       });
+//                                   }];
+//        
+//        [changeSheet addAction:cancel];
+//        [changeSheet addAction:complete];
+//        
+//        [weakSelf presentViewController:changeSheet animated:YES completion:nil];
+//    } else {
+//        
+//        UIActionSheet *changeSheet = [UIActionSheet bk_actionSheetWithTitle:title];
+//        [changeSheet bk_setDestructiveButtonWithTitle:@"Yes" handler:^{
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
+//            });
+//        }];
+//        [changeSheet bk_setCancelButtonWithTitle:@"No" handler:^{
+//            weakSelf.secondaryButton2.enabled = YES;
+//        }];
+//        [changeSheet showInView:[UIApplication sharedApplication].keyWindow];
+//    }
 }
 
 - (void)secondaryButton2ActionWithMarkComplete:(BOOL)markComplete
 {
-    PFUser *user = [PFUser currentUser];
-    
-    NSString *userID = [user objectId];
-    NSString *postID = [self.challengePost objectId];
-    NSNumber *completeNumber = [NSNumber numberWithBool:(markComplete ? YES : NO)];
-    
-    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": @1, @"increase": completeNumber};
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = markComplete ? @"Marking Complete..." : @"Marking Incomplete...";
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                [weakSelf updateSecondaryButtonsTapped];
-            }
-            else {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-                
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-            
-            weakSelf.secondaryButton2.enabled = YES;
-        }];
-    } afterDelay:0.35f];
+//    PFUser *user = [PFUser currentUser];
+//    
+//    NSString *userID = [user objectId];
+//    NSString *postID = [self.challengePost objectId];
+//    NSNumber *completeNumber = [NSNumber numberWithBool:(markComplete ? YES : NO)];
+//    
+//    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": @1, @"increase": completeNumber};
+//    
+//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+//    hud.labelText = markComplete ? @"Marking Complete..." : @"Marking Incomplete...";
+//    hud.dimBackground = YES;
+//    
+//    MTMakeWeakSelf();
+//    [self bk_performBlock:^(id obj) {
+//        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
+//            if (!error) {
+//                [[PFUser currentUser] fetchInBackground];
+//                [weakSelf updateSecondaryButtonsTapped];
+//            }
+//            else {
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//                });
+//                
+//                NSLog(@"error - %@", error);
+//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//            }
+//            
+//            weakSelf.secondaryButton2.enabled = YES;
+//        }];
+//    } afterDelay:0.35f];
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -2000,7 +1999,7 @@ typedef enum {
     }
     else if ([segueIdentifier isEqualToString:@"postDetailStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        PFUser *student = sender;
+        MTUser *student = sender;
         destinationVC.student = student;
     }
 }
@@ -2436,43 +2435,43 @@ typedef enum {
             __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
             userInfoCell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-            if (self.postUser && [self.postUser isDataAvailable]) {
-                NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
-                NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
-                
-                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-                
-                if (self.userAvatarImage) {
-                    [userInfoCell.postUserImageView setImage:self.userAvatarImage];
-                }
-                else {
-                    userInfoCell.postImage.file = self.postUser[@"profile_picture"];
-                    
-                    MTMakeWeakSelf();
-                    [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-                        weakSelf.userAvatarImage = image;
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (weakSelf.userAvatarImage) {
-                                [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
-                            }
-                        });
-                    }];
-                }
-            }
-            else {
-                userInfoCell.postUsername.text = @"";
-            }
+//            if (self.postUser && [self.postUser isDataAvailable]) {
+//                NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
+//                NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
+//                
+//                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+//                
+//                if (self.userAvatarImage) {
+//                    [userInfoCell.postUserImageView setImage:self.userAvatarImage];
+//                }
+//                else {
+//                    userInfoCell.postImage.file = self.postUser[@"profile_picture"];
+//                    
+//                    MTMakeWeakSelf();
+//                    [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+//                        weakSelf.userAvatarImage = image;
+//                        dispatch_async(dispatch_get_main_queue(), ^{
+//                            if (weakSelf.userAvatarImage) {
+//                                [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
+//                            }
+//                        });
+//                    }];
+//                }
+//            }
+//            else {
+//                userInfoCell.postUsername.text = @"";
+//            }
             
-            if ([self.challengePost isDataAvailable]) {
-                userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
-            }
-            else {
-                userInfoCell.whenPosted.text = @"";
-            }
+//            if ([self.challengePost isDataAvailable]) {
+//                userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
+//            }
+//            else {
+//                userInfoCell.whenPosted.text = @"";
+//            }
             
             userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
             
-            if ([MTUtil isUserMe:self.postUser]) {
+            if ([MTUser isUserMe:self.postUser]) {
                 userInfoCell.deletePost.hidden = NO;
                 userInfoCell.deletePost.enabled = YES;
             }
@@ -2495,42 +2494,42 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if ([self.challengePost isDataAvailable]) {
-                imageCell.postImage.file = self.challengePost[@"picture"];
-                imageCell.postImage.image = nil;
-                
-                MTMakeWeakSelf();
-                [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-                    if (!error) {
-                        if (image) {
-                            CGRect frame = imageCell.postImage.frame;
-                            imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
-                        }
-                        else {
-                            imageCell.postImage.image = nil;
-                        }
-                    }
-                    else {
-                        NSLog(@"error - %@", error);
-                    }
-                }];
-                
-                if (self.displaySpentView && self.hasSpentSavedContent) {
-                    imageCell.spentView.hidden = NO;
-                    imageCell.savedLabel.text = @"";
-                    imageCell.spentLabel.text = @"";
-
-                    if (!IsEmpty(self.savedAmount)) {
-                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
-                    }
-                    if (!IsEmpty(self.spentAmount)) {
-                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
-                    }
-                }
-                else {
-                    imageCell.spentView.hidden = YES;
-                }
-            }
+//            if ([self.challengePost isDataAvailable]) {
+//                imageCell.postImage.file = self.challengePost[@"picture"];
+//                imageCell.postImage.image = nil;
+//                
+//                MTMakeWeakSelf();
+//                [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
+//                    if (!error) {
+//                        if (image) {
+//                            CGRect frame = imageCell.postImage.frame;
+//                            imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
+//                        }
+//                        else {
+//                            imageCell.postImage.image = nil;
+//                        }
+//                    }
+//                    else {
+//                        NSLog(@"error - %@", error);
+//                    }
+//                }];
+//                
+//                if (self.displaySpentView && self.hasSpentSavedContent) {
+//                    imageCell.spentView.hidden = NO;
+//                    imageCell.savedLabel.text = @"";
+//                    imageCell.spentLabel.text = @"";
+//
+//                    if (!IsEmpty(self.savedAmount)) {
+//                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+//                    }
+//                    if (!IsEmpty(self.spentAmount)) {
+//                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+//                    }
+//                }
+//                else {
+//                    imageCell.spentView.hidden = YES;
+//                }
+//            }
 
             cell = imageCell;
 
@@ -2541,23 +2540,23 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"SpentSavedCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            if ([self.challengePost isDataAvailable]) {
-                if (self.displaySpentView && self.hasSpentSavedContent) {
-                    imageCell.spentView.hidden = NO;
-                    imageCell.savedLabel.text = @"";
-                    imageCell.spentLabel.text = @"";
-
-                    if (!IsEmpty(self.savedAmount)) {
-                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
-                    }
-                    if (!IsEmpty(self.spentAmount)) {
-                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
-                    }
-                }
-                else {
-                    imageCell.spentView.hidden = YES;
-                }
-            }
+//            if ([self.challengePost isDataAvailable]) {
+//                if (self.displaySpentView && self.hasSpentSavedContent) {
+//                    imageCell.spentView.hidden = NO;
+//                    imageCell.savedLabel.text = @"";
+//                    imageCell.spentLabel.text = @"";
+//
+//                    if (!IsEmpty(self.savedAmount)) {
+//                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+//                    }
+//                    if (!IsEmpty(self.spentAmount)) {
+//                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+//                    }
+//                }
+//                else {
+//                    imageCell.spentView.hidden = YES;
+//                }
+//            }
             
             cell = imageCell;
             
@@ -2624,24 +2623,24 @@ typedef enum {
         
             likeCommentCell.postLikes.text = likesString;
             
-            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-                likeCommentCell.likePost.enabled = NO;
-                likeCommentCell.comment.enabled = NO;
-            }
-            else {
-                likeCommentCell.likePost.enabled = YES;
-                likeCommentCell.comment.enabled = YES;
-            }
+//            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+//                likeCommentCell.likePost.enabled = NO;
+//                likeCommentCell.comment.enabled = NO;
+//            }
+//            else {
+//                likeCommentCell.likePost.enabled = YES;
+//                likeCommentCell.comment.enabled = YES;
+//            }
         
-            BOOL like = [self.postsLiked containsObject:self.challengePost.objectId];
-            if (like) {
-                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-            }
-            else {
-                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-            }
+//            BOOL like = [self.postsLiked containsObject:self.challengePost.objectId];
+//            if (like) {
+//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+//            }
+//            else {
+//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
+//            }
             
             BOOL containsMe = NO;
             for (PFChallengePostComment *thisPostComment in self.comments) {
@@ -2665,28 +2664,29 @@ typedef enum {
             
             likeCommentCell.verifiedCheckBox.hidden = self.hideVerifySwitch;
             
-            if ([self.challengePost isDataAvailable]) {
-                BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
-                [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
-                
-                likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
-                if (isChecked) {
-                    likeCommentCell.verfiedLabel.text = @"Verified";
-                }
-                else {
-                    likeCommentCell.verfiedLabel.text = @"Verify";
-                }
-            }
-            else {
-                likeCommentCell.verfiedLabel.text = @"";
-            }
+//            if ([self.challengePost isDataAvailable]) {
+//                BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
+//                [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
+//                
+//                likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
+//                if (isChecked) {
+//                    likeCommentCell.verfiedLabel.text = @"Verified";
+//                }
+//                else {
+//                    likeCommentCell.verfiedLabel.text = @"Verify";
+//                }
+//            }
+//            else {
+//                likeCommentCell.verfiedLabel.text = @"";
+//            }
 
-            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-                likeCommentCell.commentPost.enabled = NO;
-            }
-            else {
-                likeCommentCell.commentPost.enabled = YES;
-            }
+//            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
+//                likeCommentCell.commentPost.enabled = NO;
+//            }
+//            else {
+//                likeCommentCell.commentPost.enabled = YES;
+//            }
+
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
             

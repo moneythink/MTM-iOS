@@ -11,6 +11,7 @@
 @interface MTOptionalImage : RLMObject
 
 @property NSData *imageData;
+@property NSDate *updatedAt;
 
 @end
 

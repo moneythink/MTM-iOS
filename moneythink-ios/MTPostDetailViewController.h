@@ -22,7 +22,7 @@ typedef enum {
 
 @protocol MTPostViewControllerDelegate <NSObject>
 
-- (void)didDeletePost:(PFChallengePost *)challengePost;
+- (void)didDeletePost:(MTChallengePost *)challengePost;
 - (void)willUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
 - (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
 - (void)didUpdateButtonsTapped:(NSDictionary *)buttonsTapped;
@@ -36,7 +36,7 @@ typedef enum {
 
 @property (nonatomic, strong) MTMyClassTableViewController *myClassTableViewController;
 @property (nonatomic, strong) MTChallenge *challenge;
-@property (nonatomic, strong) PFChallengePost *challengePost;
+@property (nonatomic, strong) MTChallengePost *challengePost;
 @property (nonatomic) MTPostType postType;
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;

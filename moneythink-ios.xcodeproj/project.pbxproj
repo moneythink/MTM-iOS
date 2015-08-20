@@ -224,6 +224,7 @@
 		89CE976A1B4F1E59007FF4D7 /* UIWebView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 89CE97591B4F1E59007FF4D7 /* UIWebView+AFNetworking.m */; };
 		89DE8A6E1B823A270050C9A6 /* MTPostViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DE8A6D1B823A270050C9A6 /* MTPostViewController.m */; };
 		89DE8A711B8268270050C9A6 /* MTChallenge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DE8A701B8268270050C9A6 /* MTChallenge.m */; };
+		89DE8A741B84F83C0050C9A6 /* MTChallengePost.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DE8A731B84F83C0050C9A6 /* MTChallengePost.m */; };
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
 		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
@@ -610,6 +611,8 @@
 		89DE8A6D1B823A270050C9A6 /* MTPostViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostViewController.m; sourceTree = "<group>"; };
 		89DE8A6F1B8268270050C9A6 /* MTChallenge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallenge.h; path = "Data Classes/MTChallenge.h"; sourceTree = "<group>"; };
 		89DE8A701B8268270050C9A6 /* MTChallenge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallenge.m; path = "Data Classes/MTChallenge.m"; sourceTree = "<group>"; };
+		89DE8A721B84F83C0050C9A6 /* MTChallengePost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengePost.h; path = "Data Classes/MTChallengePost.h"; sourceTree = "<group>"; };
+		89DE8A731B84F83C0050C9A6 /* MTChallengePost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengePost.m; path = "Data Classes/MTChallengePost.m"; sourceTree = "<group>"; };
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		89E56D281A0448A300C187C9 /* login-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header.png"; sourceTree = "<group>"; };
 		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
@@ -997,6 +1000,8 @@
 			children = (
 				89DE8A6F1B8268270050C9A6 /* MTChallenge.h */,
 				89DE8A701B8268270050C9A6 /* MTChallenge.m */,
+				89DE8A721B84F83C0050C9A6 /* MTChallengePost.h */,
+				89DE8A731B84F83C0050C9A6 /* MTChallengePost.m */,
 				895907571B546B3B003AB574 /* MTClass.h */,
 				895907581B546B3B003AB574 /* MTClass.m */,
 				892BF44B1B7A643E00E19E9B /* MTOptionalImage.h */,
@@ -1714,6 +1719,7 @@
 				895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */,
 				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
 				89CE97691B4F1E59007FF4D7 /* UIRefreshControl+AFNetworking.m in Sources */,
+				89DE8A741B84F83C0050C9A6 /* MTChallengePost.m in Sources */,
 				89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */,
 				89CE975E1B4F1E59007FF4D7 /* AFSecurityPolicy.m in Sources */,
 				89CE975D1B4F1E59007FF4D7 /* AFNetworkReachabilityManager.m in Sources */,

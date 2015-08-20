@@ -22,6 +22,7 @@
              @"currentUser": @NO,
              @"hasResume": @NO,
              @"hasBankAccount": @NO,
+             @"hasAvatar": @NO,
              @"points": @0};
 }
 
@@ -65,13 +66,45 @@
 
 
 #pragma mark - Custom Methods -
+- (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    if (self.hasAvatar && self.userAvatar.imageData) {
+        return [UIImage imageWithData:self.userAvatar.imageData];
+    }
+    
+    BOOL shouldFetchAvatar = NO;
+    
+    if (self.hasAvatar && !self.userAvatar) {
+        shouldFetchAvatar = YES;
+    }
+    else if (self.hasAvatar && self.userAvatar) {
+        if ([self.updatedAt timeIntervalSince1970] > [self.userAvatar.updatedAt timeIntervalSince1970]) {
+            shouldFetchAvatar = YES;
+        }
+    }
+    
+    if (shouldFetchAvatar) {
+        [[MTNetworkManager sharedMTNetworkManager] getAvatarForUserId:self.id success:^(id responseData) {
+            if (success) {
+                success(responseData);
+            }
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+        }];
+    }
+    
+    return [UIImage imageNamed:@"profile_image"];
+}
+
 + (void)logout
 {
     // Removes all keys, except onboarding
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey]) {
+        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey]) {
             NSLog(@"removing user pref for %@", key);
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
         }

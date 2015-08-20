@@ -13,8 +13,9 @@ typedef void (^MTNetworkOAuthSuccessBlock)(AFOAuthCredential *credential);
 typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 @interface MTNetworkManager : AFHTTPSessionManager
-{
-}
+
+@property (nonatomic) BOOL showedReAuthAlert;
+@property BOOL refreshingOAuthToken;
 
 + (MTNetworkManager *)sharedMTNetworkManager;
 
@@ -46,7 +47,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Misc
-- (void)setAvatarForUserId:(NSInteger)userId withImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getAvatarForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)setMyAvatarWithImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)updateCurrentUserWithFirstName:(NSString *)firstName lastName:(NSString *)lastName email:(NSString *)email phoneNumber:(NSString *)phoneNumber password:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)refreshCurrentUserDataWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
@@ -54,5 +56,6 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 // Challenges related
 - (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end

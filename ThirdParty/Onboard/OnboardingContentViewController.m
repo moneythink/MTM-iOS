@@ -432,14 +432,12 @@ static CGFloat const kMainPageControlHeight = 35;
 {
     NSData *imageData = self.profileImage ? UIImageJPEGRepresentation(self.profileImage, 0.6f) : nil;
     
-    MTUser *userCurrent = [MTUser currentUser];
-    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Saving...";
     hud.dimBackground = NO;
 
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:userCurrent.id withImageData:imageData success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:imageData success:^(id responseData) {
         NSLog(@"Saved profile image");
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];

@@ -8,8 +8,9 @@
 
 #import "NSError+MTAdditions.h"
 
-@implementation NSError (MTAdditions)
+NSString *const MTErrorDomain = @"com.moneythink.errorDomain";
 
+@implementation NSError (MTAdditions)
 
 - (NSString *)mtErrorDescription
 {

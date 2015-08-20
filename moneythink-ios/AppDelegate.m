@@ -29,6 +29,9 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Do first, in case there's a migration
+    [self setupRealm];
+
     [Fabric with:@[CrashlyticsKit]];
     
     [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
@@ -40,12 +43,11 @@
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    [self setupRealm];
     
     //Clear keychain on first run in case of reinstallation
-    if (![[NSUserDefaults standardUserDefaults] objectForKey:@"FirstRun"]) {
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstTimeRunKey]) {
         // Delete values from keychain here
-        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:@"FirstRun"];
+        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:kFirstTimeRunKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
         
         [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
@@ -103,6 +105,8 @@
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceLogoutNotification:) name:kNotificationForceLogout object:nil];
 
     [self checkForForceUpdate];
 
@@ -728,7 +732,7 @@
 {
     // Notice setSchemaVersion is set to 1, this is always set manually. It must be
     // higher than the previous version (oldSchemaVersion) or an RLMException is thrown
-    [RLMRealm setSchemaVersion:0
+    [RLMRealm setSchemaVersion:5
                 forRealmAtPath:[RLMRealm defaultRealmPath]
             withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
                 // We haven’t migrated anything yet, so oldSchemaVersion == 0
@@ -743,6 +747,17 @@
     // Realm will automatically perform the migration and opening the Realm will succeed
     [RLMRealm defaultRealm];
 }
+
+
+#pragma mark - Notifications -
+- (void)forceLogoutNotification:(NSNotification *)note
+{
+    NSLog(@"Received force logout notification");
+    SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
+    MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
+    [menuVC logoutAction];
+}
+
 
 
 @end

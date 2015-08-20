@@ -53,6 +53,7 @@
              @"maxPoints": @"maxPoints",
              @"mentorInstructions": @"mentorInstructions",
              @"outcome": @"outcome",
+             @"pointsPerPost": @"pointsPerPost",
              @"studentInstructions": @"studentInstructions",
              @"tagline": @"tagline",
              @"title": @"title",

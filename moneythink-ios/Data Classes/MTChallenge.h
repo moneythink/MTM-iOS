@@ -15,7 +15,7 @@
 @property MTOptionalImage *banner;
 @property NSDate *createdAt;
 @property NSString *challengeDescription;
-@property NSString *difficulty;
+@property NSInteger difficulty;
 @property NSString *goal;
 @property BOOL isActive;
 @property BOOL isPrivate;

@@ -22,6 +22,7 @@ static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.cau
 #endif
 
 static NSString * const MTNetworkClientID = @"ios";
+static NSString * const MTRefreshingErrorCode = @"701";
 
 @interface MTNetworkManager (Private)
 
@@ -49,6 +50,7 @@ static NSString * const MTNetworkClientID = @"ios";
     if (self) {
         self.requestSerializer = [AFJSONRequestSerializer serializer];
         self.responseSerializer = [self getJSONResponseSerializer];
+        self.showedReAuthAlert = NO;
     }
     
     return self;
@@ -69,37 +71,47 @@ static NSString * const MTNetworkClientID = @"ios";
 
 - (void)checkforOAuthTokenWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+    if (![MTUtil internetReachable]) {
+        if (failure) {
+            failure(nil);
+        }
+        return;
+    }else if (self.refreshingOAuthToken) {
+        if (failure) {
+            failure([NSError errorWithDomain:MTErrorDomain code:[MTRefreshingErrorCode integerValue] userInfo:[NSDictionary dictionaryWithObject:@"Refreshing OAuth Token" forKey:NSLocalizedDescriptionKey]]);
+        }
+        return;
+    }
+    
     AFOAuthCredential *existingCredential = [AFOAuthCredential retrieveCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
     
     if (existingCredential && existingCredential.accessToken && !existingCredential.isExpired) {
-        NSLog(@"Have existing AFOAuthCredential: %@", [existingCredential description]);
+        NSLog(@"Have existing AFOAuthCredential with accessToken (NOT expired)");
+        self.showedReAuthAlert = NO;
         if (success) {
             success(existingCredential);
         }
     }
     else {
         if (existingCredential && !IsEmpty(existingCredential.refreshToken)) {
+            NSLog(@"Have existing AFOAuthCredential but is expired, refresh");
+
             [self refreshOAuthTokenForCredential:existingCredential success:^(AFOAuthCredential *credential) {
                 if (success) {
                     success(credential);
                 }
             } failure:^(NSError *error) {
                 NSLog(@"Failed to refresh OAuth token: %@", [error mtErrorDescription]);
-                if (![MTUtil internetReachable]) {
-                    [[[UIAlertView alloc] initWithTitle:@"No Internet" message:@"Restore Internet connection and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                }
                 if (failure) {
                     failure(error);
                 }
             }];
         }
         else {
-            if (![MTUtil internetReachable]) {
-                [[[UIAlertView alloc] initWithTitle:@"No Internet" message:@"Restore Internet connection and try again." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            }
-            else {
-                [[[UIAlertView alloc] initWithTitle:@"User Login Expiration" message:@"Please re-login to Moneythink to continue use." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationForceLogout object:nil];
+            NSLog(@"Have NO existing AFOAuthCredential or NO refreshToken");
+            [self checkForInternetAndReAuth];
+            if (failure) {
+                failure(nil);
             }
         }
     }
@@ -107,6 +119,23 @@ static NSString * const MTNetworkClientID = @"ios";
 
 - (void)refreshOAuthTokenForCredential:(AFOAuthCredential *)credential success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+    if (![MTUtil internetReachable]) {
+        failure(nil);
+        return;
+    }
+
+    @synchronized(self) {
+        if (self.refreshingOAuthToken) {
+            if (failure) {
+                failure([NSError errorWithDomain:MTErrorDomain code:[MTRefreshingErrorCode integerValue] userInfo:[NSDictionary dictionaryWithObject:@"Refreshing OAuth Token" forKey:NSLocalizedDescriptionKey]]);
+            }
+            return;
+        }
+        
+        self.refreshingOAuthToken = YES;
+
+    }
+
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"refresh_token"] = credential.refreshToken;
     parameters[@"grant_type"] = @"refresh_token";
@@ -116,87 +145,47 @@ static NSString * const MTNetworkClientID = @"ios";
                                                                      clientID:MTNetworkClientID
                                                                        secret:MTNetworkAPIKey];
     
+    MTMakeWeakSelf();
     [OAuth2Manager authenticateUsingOAuthWithURLString:@"oauth" parameters:parameters success:^(AFOAuthCredential *credential) {
-        NSLog(@"Refreshed AFOAuthCredential: %@", [credential description]);
-        [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+        NSLog(@"Successfully refreshed AFOAuthCredential");
+        
+        // TODO: Remove, just for testing refreshing token
+        [credential setExpiration:[NSDate dateWithTimeIntervalSinceNow:10]];
         [AFOAuthCredential storeCredential:credential withIdentifier:MTNetworkServiceOAuthCredentialKey];
+        weakSelf.refreshingOAuthToken = NO;
+
         if (success) {
             success(credential);
         }
         
     } failure:^(NSError *error) {
-        NSLog(@"refreshOAuthTokenForCredential error: %@", [error mtErrorDescription]);
+        NSLog(@"Failed to refresh AFOAuthCredential error: %@", [error mtErrorDescription]);
+        weakSelf.refreshingOAuthToken = NO;
+        [weakSelf checkForInternetAndReAuth];
+
         if (failure) {
             failure(error);
         }
     }];
 }
 
-- (void)getAvatarForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)checkForInternetAndReAuth
 {
-    [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
-        NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, (long)userId];
-        
-        [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Accept"];
-        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
-        
-        AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
-        NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
-        [contentTypes addObject:@"image/jpeg"];
-        responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
-        manager.responseSerializer = responseSerializer;
-        
-        NSError *requestError = nil;
-        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:nil error:&requestError];
-        
-        if (!requestError) {
-            AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSLog(@"getAvatarForUserId success response");
-                
-                if (responseObject) {
-                    RLMRealm *realm = [RLMRealm defaultRealm];
-                    [realm beginWriteTransaction];
-                    
-                    MTUser *meUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
-                    MTOptionalImage *userAvatar = [[MTOptionalImage alloc] init];
-                    userAvatar.imageData = responseObject;
-                    meUser.userAvatar = userAvatar;
-                    
-                    [realm commitWriteTransaction];
-                }
-                
-                if (success) {
-                    success(nil);
-                }
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Failed to set user avatar with error: %@", [error mtErrorDescription]);
-                if (failure) {
-                    failure(error);
-                }
-            }];
-            
-            [requestOperation start];
+    if (![MTUtil internetReachable]) {
+        [UIAlertView showNoInternetAlert];
+    }
+    else {
+        if (!self.showedReAuthAlert) {
+            [[[UIAlertView alloc] initWithTitle:@"User Login Expiration" message:@"Please re-login to Moneythink to continue use." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationForceLogout object:nil];
+            self.showedReAuthAlert = YES;
         }
-        else {
-            NSLog(@"Unable to construct request: %@", [requestError mtErrorDescription]);
-            if (failure) {
-                failure(requestError);
-            }
-        }
-
-    } failure:^(NSError *error) {
-        NSLog(@"Failed to Auth to get user avatar with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            failure(error);
-        }
-    }];
+    }
 }
 
 
 #pragma mark - JSON Data Parser Methods -
-- (MTUser *)processMeUserRequestWithResponseObject:(id)responseObject
+- (MTUser *)processUserRequestWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No user response data");
@@ -226,31 +215,40 @@ static NSString * const MTNetworkClientID = @"ios";
     [realm beginWriteTransaction];
     
     // Create and assign my class (organization created also)
-    MTOrganization *myOrganization = [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"organization"]];
-    MTClass *myClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
-    myClass.organization = myOrganization;
+    MTOrganization *userOrganization = [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"organization"]];
+    MTClass *userClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
+    userClass.organization = userOrganization;
 
     // Create new ME User and send back
-    MTUser *meUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:responseDict];
-    meUser.currentUser = YES;
-    meUser.organization = myOrganization;
-    meUser.userClass = myClass;
+    MTUser *user = [MTUser createOrUpdateInRealm:realm withJSONDictionary:responseDict];
+    user.currentUser = YES;
+    user.organization = userOrganization;
+    user.userClass = userClass;
     
-    if (![MTUser isUserMentor:meUser]) {
+    NSDictionary *linksDict = [responseDict objectForKey:@"_links"];
+    if ([linksDict objectForKey:@"avatar"]) {
+        user.hasAvatar = YES;
+    }
+    else {
+        user.hasAvatar = NO;
+    }
+    
+    if (![MTUser isUserMentor:user]) {
         if ([[embeddedDict objectForKey:@"student"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *studentDict = [embeddedDict objectForKey:@"student"];
             NSNumber *points = [studentDict valueForKey:@"points"];
             if (points) {
-                meUser.points = [points integerValue];
+                user.points = [points integerValue];
             }
-            meUser.hasBankAccount = [[studentDict objectForKey:@"hasBankAccount"] boolValue];
-            meUser.hasResume = [[studentDict objectForKey:@"hasResume"] boolValue];
+            user.hasBankAccount = [[studentDict objectForKey:@"hasBankAccount"] boolValue];
+            user.hasResume = [[studentDict objectForKey:@"hasResume"] boolValue];
+            
         }
     }
     
     [realm commitWriteTransaction];
     
-    return meUser;
+    return user;
 }
 
 - (NSDictionary *)processClassesRequestWithResponseObject:(id)responseObject
@@ -402,9 +400,72 @@ static NSString * const MTNetworkClientID = @"ios";
                     
                     // Now create/update challenge
                     MTChallenge *challenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    NSString *pointsPerPost = [challengeDict valueForKey:@"pointsPerPost"];
-                    challenge.pointsPerPost = [pointsPerPost integerValue];
                     challenge.ranking = thisRanking;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
+- (void)processPostsWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No user response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded posts data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"posts"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No posts data");
+        return;
+    }
+    
+    NSArray *postsArray = [embeddedDict objectForKey:@"posts"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    for (id post in postsArray) {
+        if ([post isKindOfClass:[NSDictionary class]]) {
+            
+            MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
+            
+            NSDictionary *postDict = (NSDictionary *)post;
+            if ([[postDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [postDict objectForKey:@"_embedded"];
+                
+                // Get user
+                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
+                    MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+                    challengePost.challengeClass = thisClass;
+                    
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisUser.userClass = thisClass;
+                    thisUser.organization = thisClass.organization;
+                    challengePost.user = thisUser;
+
+                    NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    challengePost.challenge = thisChallenge;
+                    
+                    NSDictionary *linksDict = [innerEmbeddedDict objectForKey:@"_links"];
+                    if ([linksDict objectForKey:@"avatar"]) {
+                        challengePost.hasPostImage = YES;
+                    }
+                    else {
+                        challengePost.hasPostImage = NO;
+                    }
                 }
             }
         }
@@ -430,18 +491,18 @@ static NSString * const MTNetworkClientID = @"ios";
     MTMakeWeakSelf();
     [OAuth2Manager authenticateUsingOAuthWithURLString:@"oauth" parameters:parameters success:^(AFOAuthCredential *credential) {
         NSLog(@"New AFOAuthCredential: %@", [credential description]);
+        [credential setExpiration:[NSDate dateWithTimeIntervalSinceNow:10]];
         [AFOAuthCredential storeCredential:credential withIdentifier:MTNetworkServiceOAuthCredentialKey];
+        weakSelf.showedReAuthAlert = NO;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:credential];
         [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"Found me user");
             
-            MTUser *meUser = [weakSelf processMeUserRequestWithResponseObject:responseObject];
+            MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
 //                NSLog(@"Parsed meUser object: %@", meUser);
-                
-                // TODO: If Avatar, retrieve and store it
-                if (YES) {
-                    [self getAvatarForUserId:meUser.id success:^(id responseData) {
+                if (meUser.hasAvatar) {
+                    [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
                         NSLog(@"Retrieved user avatar");
                         if (success) {
                             success(nil);
@@ -710,12 +771,75 @@ static NSString * const MTNetworkClientID = @"ios";
     }];
 }
 
-- (void)setAvatarForUserId:(NSInteger)userId withImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)getAvatarForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
+        NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, (long)userId];
+        
+        [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Accept"];
+        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
+        
+        AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+        NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
+        [contentTypes addObject:@"image/jpeg"];
+        responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
+        manager.responseSerializer = responseSerializer;
+        
+        NSError *requestError = nil;
+        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:nil error:&requestError];
+        
+        if (!requestError) {
+            AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                NSLog(@"getAvatarForUserId success response");
+                
+                if (responseObject) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    [realm beginWriteTransaction];
+                    
+                    MTUser *thisUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
+                    MTOptionalImage *userAvatar = [[MTOptionalImage alloc] init];
+                    userAvatar.imageData = responseObject;
+                    userAvatar.updatedAt = [NSDate date];
+                    thisUser.userAvatar = userAvatar;
+                    
+                    [realm commitWriteTransaction];
+                }
+                
+                if (success) {
+                    success([UIImage imageWithData:responseObject]);
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Failed to set user avatar with error: %@", [error mtErrorDescription]);
+                if (failure) {
+                    failure(error);
+                }
+            }];
+            
+            [requestOperation start];
+        }
+        else {
+            NSLog(@"Unable to construct request: %@", [requestError mtErrorDescription]);
+            if (failure) {
+                failure(requestError);
+            }
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to Auth to get user avatar with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)setMyAvatarWithImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         
         AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
-        NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, (long)userId];
+        NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, (long)[MTUser currentUser].id];
 
         [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Accept"];
@@ -746,6 +870,7 @@ static NSString * const MTNetworkClientID = @"ios";
                         if (!meUser.userAvatar) {
                             MTOptionalImage *userAvatar = [[MTOptionalImage alloc] init];
                             userAvatar.imageData = imageData;
+                            userAvatar.updatedAt = [NSDate date];
                             meUser.userAvatar = userAvatar;
                         }
                         else {
@@ -754,6 +879,7 @@ static NSString * const MTNetworkClientID = @"ios";
                     }
                     else {
                         meUser.userAvatar = nil;
+                        meUser.hasAvatar = NO;
                     }
                     
                     [realm commitWriteTransaction];
@@ -848,12 +974,10 @@ static NSString * const MTNetworkClientID = @"ios";
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:responseData];
         [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"Found me user");
-            MTUser *meUser = [weakSelf processMeUserRequestWithResponseObject:responseObject];
+            MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
 //                NSLog(@"Parsed meUser object: %@", meUser);
-                
-                // TODO: If Avatar, retrieve and store it
-                if (YES) {
+                if (meUser.hasAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
                         NSLog(@"Retrieved user avatar");
                         if (success) {
@@ -880,13 +1004,14 @@ static NSString * const MTNetworkClientID = @"ios";
             }
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"authenticateForUsername error: %@", [error mtErrorDescription]);
+            NSLog(@"refreshCurrentUserData error: %@", [error mtErrorDescription]);
+            [weakSelf checkForInternetAndReAuth];
             if (failure) {
                 failure(error);
             }
         }];
     } failure:^(NSError *error) {
-        NSLog(@"Failed refreshCurrentUserData with error: %@", [error mtErrorDescription]);
+        NSLog(@"refreshCurrentUserData error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -968,6 +1093,40 @@ static NSString * const MTNetworkClientID = @"ios";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed class-challenges with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        
+        // TODO: Filter by challenge
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"posts" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"posts success response");
+            
+            if (responseObject) {
+                [self processPostsWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed posts with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed posts with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }

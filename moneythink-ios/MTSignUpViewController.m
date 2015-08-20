@@ -1053,10 +1053,7 @@
                                                                         
                                                                         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                         if (![onboardingController checkForOnboarding]) {
-                                                                            
-                                                                            // TODO: change back
-                                                                            // id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"supportVCNav"];
+                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                                                                             [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                         }
                                                                     });

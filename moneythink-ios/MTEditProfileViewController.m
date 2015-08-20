@@ -752,7 +752,7 @@
     
     if (self.updatedProfileImage) {
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.6f);
-        [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:self.userCurrent.id withImageData:imageData success:^(id responseData) {
+        [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:imageData success:^(id responseData) {
             NSLog(@"Successfully updated user avatar");
         } failure:^(NSError *error) {
             NSLog(@"Failed to save user avatar");
@@ -762,7 +762,7 @@
     }
     else {
         if (self.removedProfilePhoto) {
-            [[MTNetworkManager sharedMTNetworkManager] setAvatarForUserId:self.userCurrent.id withImageData:nil success:^(id responseData) {
+            [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:nil success:^(id responseData) {
                 NSLog(@"Successfully removed user avatar");
             } failure:^(NSError *error) {
                 NSLog(@"Failed to remove user avatar");

@@ -6,16 +6,15 @@
 //  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
-#import <Parse/Parse.h>
 #import "MICheckBox.h"
 
-@interface MTPostsTableViewCell : PFTableViewCell
+@interface MTPostsTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) PFChallengePost *post;
-@property (nonatomic, strong) IBOutlet PFImageView *profileImage;
+@property (nonatomic, strong) MTChallengePost *post;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImage;
 @property (nonatomic, strong) IBOutlet UILabel *userName;
 @property (nonatomic, strong) IBOutlet UILabel *postedWhen;
-@property (nonatomic, strong) IBOutlet PFImageView *postImage;
+@property (nonatomic, strong) IBOutlet UIImageView *postImage;
 @property (nonatomic, strong) IBOutlet UILabel *postText;
 @property (nonatomic, strong) IBOutlet UILabel *likes;
 @property (nonatomic, strong) IBOutlet UILabel *comments;

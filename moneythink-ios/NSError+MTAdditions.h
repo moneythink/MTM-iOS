@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+FOUNDATION_EXPORT NSString *const MTErrorDomain;
+
 @interface NSError (MTAdditions)
 
 - (NSString *)mtErrorDescription;

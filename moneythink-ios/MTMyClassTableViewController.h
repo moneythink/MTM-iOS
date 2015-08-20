@@ -23,7 +23,7 @@ extern NSString *const kWillSaveEditPostNotification;
 extern NSString *const kDidSaveEditPostNotification;
 extern NSString *const kFailedSaveEditPostNotification;
 
-@interface MTMyClassTableViewController : PFQueryTableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate, MBProgressHUDDelegate>
+@interface MTMyClassTableViewController : UITableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic, strong) MTChallenge *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;
@@ -34,7 +34,7 @@ extern NSString *const kFailedSaveEditPostNotification;
 @property (nonatomic, strong) NSArray *emojiObjects;
 @property (nonatomic, strong) MTPostDetailViewController *postViewController;
 
-- (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post;
+- (void)didSelectLikeWithEmojiForPost:(MTChallengePost *)post;
 
 @end
 

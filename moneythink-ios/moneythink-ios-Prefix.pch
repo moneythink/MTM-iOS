@@ -42,6 +42,7 @@
 #define kNotificationForceLogout            @"kNotificationForceLogout"
 #define kLastViewedChallengeId              @"kLastViewedChallengeId"
 #define kUserHasOnboardedKey                @"user_has_onboarded"
+#define kFirstTimeRunKey                    @"kFirstTimeRunKey"
 #define kForcedUpdateKey                    @"kForcedUpdateKey"
 #define MTNetworkServiceOAuthCredentialKey  @"MTNetworkServiceOAuthCredentialKey"
 
@@ -56,6 +57,13 @@
 #import <ZendeskSDK/ZendeskSDK.h>
 
 #import "AFNetworking.h"
+
+#import "MTUser.h"
+#import "MTOptionalImage.h"
+#import "MTOrganization.h"
+#import "MTClass.h"
+#import "MTChallenge.h"
+#import "MTChallengePost.h"
 
 #import "MTUtil.h"
 #import "UIColor+Palette.h"
@@ -81,12 +89,6 @@
 #import "UIBarButtonItem+Badge.h"
 #import "UIButton+Badge.h"
 #import "UIScrollView+EmptyDataSet.h"
-
-#import "MTUser.h"
-#import "MTOptionalImage.h"
-#import "MTOrganization.h"
-#import "MTClass.h"
-#import "MTChallenge.h"
 
 #import "PFClasses.h"
 #import "PFChallengeBanner.h"

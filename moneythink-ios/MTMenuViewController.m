@@ -38,7 +38,6 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unreadCountUpdate:) name:kUnreadNotificationCountNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSavedProfileChanges:) name:kUserSavedProfileChanges object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(forceLogoutNotification:) name:kNotificationForceLogout object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -356,7 +355,8 @@
     }
 
     [self.revealViewController setFrontViewController:[[MTUtil getAppDelegate] userViewController] animated:YES];
-    [self.revealViewController revealToggleAnimated:YES];
+    [self.revealViewController setFrontViewPosition:FrontViewPositionLeft animated:YES];
+//    [self.revealViewController revealToggleAnimated:YES];
 }
 
 - (void)loadProfileImage
@@ -451,12 +451,6 @@
 {
     [self loadProfileImage];
     self.profileName.text = [MTUser currentUser].firstName;
-}
-
-- (void)forceLogoutNotification:(NSNotification *)note
-{
-    NSLog(@"Received force logout notification");
-    [self logoutAction];
 }
 
 

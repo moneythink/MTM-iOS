@@ -12,7 +12,7 @@
 @interface MTPostViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) MTChallenge *challenge;
-@property (nonatomic, strong) PFChallengePost *post;
+@property (nonatomic, strong) MTChallengePost *post;
 @property (nonatomic) BOOL editPost;
 
 @end

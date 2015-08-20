@@ -578,47 +578,47 @@
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
         
         MTMakeWeakSelf();
-        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakSelf.post];
-                });
-            }
-            else {
-                NSLog(@"Post Edit Save with picture error - %@", error);
-                [weakSelf.post saveEventually];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
-                });
-            }
-        }];
+//        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (!error) {
+//                [[PFUser currentUser] fetchInBackground];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakSelf.post];
+//                });
+//            }
+//            else {
+//                NSLog(@"Post Edit Save with picture error - %@", error);
+//                [weakSelf.post saveEventually];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
+//                });
+//            }
+//        }];
     }
     else {
         if (self.removedPostPhoto) {
-            [self.post removeObjectForKey:@"picture"];
+//            [self.post removeObjectForKey:@"picture"];
         }
 
         [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
         
-        __block PFChallengePost *weakPost = self.post;
+        __block MTChallengePost *weakPost = self.post;
         
         MTMakeWeakSelf();
-        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakPost];
-                });
-            }
-            else {
-                NSLog(@"Post Edit Save error - %@", error);
-                [weakSelf.challengePost saveEventually];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
-                });
-            }
-        }];
+//        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+//            if (!error) {
+//                [[PFUser currentUser] fetchInBackground];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakPost];
+//                });
+//            }
+//            else {
+//                NSLog(@"Post Edit Save error - %@", error);
+//                [weakSelf.challengePost saveEventually];
+//                dispatch_async(dispatch_get_main_queue(), ^{
+//                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
+//                });
+//            }
+//        }];
     }
     
     [self dismissViewControllerAnimated:YES completion:NULL];

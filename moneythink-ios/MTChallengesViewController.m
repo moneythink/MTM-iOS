@@ -70,9 +70,9 @@
     
     self.shouldLoadPreviousChallenge = YES;
     
-    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-        [self realmUpdatedNotificationAction];
-    }];
+//    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *note, RLMRealm * realm) {
+//        [self realmUpdatedNotificationAction];
+//    }];
     
     [self loadChallenges];
 }
@@ -354,9 +354,12 @@
         hud.dimBackground = YES;
     }
     
+    MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf getChallenges];
+            [weakSelf updateViews];
         });
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{

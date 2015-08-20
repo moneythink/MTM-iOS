@@ -13,5 +13,6 @@
 - (void)openLeaderboard;
 - (void)openNotificationsWithId:(NSString *)notificationId;
 - (void)openChallengesForChallengeId:(NSString *)challengeId;
+- (void)logoutAction;
 
 @end

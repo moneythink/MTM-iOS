@@ -8,6 +8,9 @@
 
 #import <Realm/Realm.h>
 
+typedef void (^MTNetworkSuccessBlock)(id responseData);
+typedef void (^MTNetworkFailureBlock)(NSError *error);
+
 @class MTOrganization;
 @class MTClass;
 @class MTOptionalImage;
@@ -28,9 +31,12 @@
 @property NSDate *createdAt;
 @property BOOL hasResume;
 @property BOOL hasBankAccount;
+@property BOOL hasAvatar;
 
 @property MTOrganization *organization;
 @property MTClass *userClass;
+
+- (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 + (void)logout;
 + (BOOL)isCurrentUserMentor;

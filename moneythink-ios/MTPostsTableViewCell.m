@@ -24,6 +24,9 @@
     self.spentLabel.textColor = [UIColor votingRed];
     self.savedLabel.textColor = [UIColor votingBlue];
     self.spentView.hidden = YES;
+    
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width/2.0f;
+    self.profileImage.layer.masksToBounds = YES;
 }
 
 - (void)prepareForReuse
