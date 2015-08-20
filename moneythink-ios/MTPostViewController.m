@@ -27,8 +27,8 @@
 @property (nonatomic, strong) IBOutlet UIButton *spentDoneButton;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
-@property (nonatomic, strong) PFImageView *postImage;
 @property (nonatomic, strong) PFChallengePost *challengePost;
+@property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) UIImage *updatedPostImage;
 @property (nonatomic) BOOL removedPostPhoto;
 @property (nonatomic) BOOL displaySpentView;
@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
     
-    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+//    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
     self.spentDoneButton.hidden = YES;
     
     if (self.displaySpentView) {
@@ -64,27 +64,21 @@
 
     if (self.editPost) {
         self.title = @"Edit Post";
-        self.postText.text = self.post[@"post_text"];
+        self.postText.text = self.post.content;
         
-        if (self.post[@"picture"]) {
-            self.postImage = [[PFImageView alloc] init];
-            self.postImage.file = self.post[@"picture"];
-
+        if (self.post.hasPostImage) {
             MTMakeWeakSelf();
-            [self.postImage loadInBackground:^(UIImage *image, NSError *error) {
-                if (!error) {
-                    if (image) {
-                        weakSelf.postImage.image = image;
-                        [weakSelf.chooseImageButton setImage:image forState:UIControlStateNormal];
-                    }
-                    else {
-                        image = nil;
-                    }
-                } else {
-                    NSLog(@"error - %@", error);
-                }
-            }];
+            [self.chooseImageButton setImage:[UIImage imageNamed:@"photo_post"] forState:UIControlStateNormal];
 
+            self.postImage = [self.post loadPostImageWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakSelf.postImage = [UIImage imageWithData:responseData];
+                    [weakSelf.chooseImageButton setImage:weakSelf.postImage forState:UIControlStateNormal];
+                });
+            } failure:^(NSError *error) {
+                NSLog(@"Unable to load post image");
+            }];
+            [self.chooseImageButton setImage:self.postImage forState:UIControlStateNormal];
             self.chooseImageLabel.text = @"Change Photo";
         }
         else {
@@ -222,6 +216,9 @@
 
 - (void)populateSpentFields
 {
+    // TODO: Remove
+    return;
+    
     if (!IsEmpty(self.post[@"extra_fields"])) {
         NSData *data = [self.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
         id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
@@ -433,7 +430,7 @@
             self.chooseImageButton.alpha = 0.0f;
             self.chooseImageLabel.alpha = 0.0f;
         } completion:^(BOOL finished) {
-            self.postImage = [[PFImageView alloc] initWithImage:image];
+            self.postImage = image;
             self.updatedPostImage = image;
             self.removedPostPhoto = NO;
             [self.chooseImageButton setImage:image forState:UIControlStateNormal];
@@ -467,7 +464,7 @@
         }
     }
     
-    NSString *postText = self.post[@"post_text"] ? self.post[@"post_text"] : @"";
+    NSString *postText = self.post.content ? self.post.content : @"";
     if (![self.postText.text isEqualToString:postText]) {
         dirty = YES;
     }
@@ -535,7 +532,7 @@
         return;
     }
     
-    if (IsEmpty(self.postText.text) && !self.postImage.image) {
+    if (IsEmpty(self.postText.text) && !self.postImage) {
         NSString *title = @"Content Missing";
         NSString *message = @"Post text or photo is required.";
         if ([UIAlertController class]) {
@@ -559,67 +556,26 @@
         return;
     }
     
-    self.post[@"post_text"] = self.postText.text;
+    // TODO: Remove
+//    if (self.displaySpentView) {
+//        self.post[@"extra_fields"] = [self jsonStringFromSpentFields];
+//    }
     
-    if (self.displaySpentView) {
-        self.post[@"extra_fields"] = [self jsonStringFromSpentFields];
-    }
-    
-    if (self.updatedPostImage && self.postImage.image) {
-        NSString *fileName = @"post_image.png";
-        NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
-        
-        self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-        if (self.postImage.file) {
-            // if there's a picture, then update the Parse post
-            self.post[@"picture"] = self.postImage.file;
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
-        
-        MTMakeWeakSelf();
-//        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//            if (!error) {
-//                [[PFUser currentUser] fetchInBackground];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakSelf.post];
-//                });
-//            }
-//            else {
-//                NSLog(@"Post Edit Save with picture error - %@", error);
-//                [weakSelf.post saveEventually];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
-//                });
-//            }
-//        }];
-    }
-    else {
-        if (self.removedPostPhoto) {
-//            [self.post removeObjectForKey:@"picture"];
-        }
+    NSData *imageData = nil;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
-        
-        __block MTChallengePost *weakPost = self.post;
-        
-        MTMakeWeakSelf();
-//        [self.post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//            if (!error) {
-//                [[PFUser currentUser] fetchInBackground];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:weakPost];
-//                });
-//            }
-//            else {
-//                NSLog(@"Post Edit Save error - %@", error);
-//                [weakSelf.challengePost saveEventually];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:weakSelf];
-//                });
-//            }
-//        }];
+    if (self.postImage) {
+        imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraData:nil success:^(AFOAuthCredential *credential) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:[NSNumber numberWithInteger:weakSelf.post.id]];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
+    }];
     
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
@@ -628,7 +584,7 @@
 #pragma mark - New Post Method -
 - (void)saveNew
 {
-    if (IsEmpty(self.postText.text) && !self.postImage.image) {
+    if (IsEmpty(self.postText.text) && !self.postImage) {
         NSString *title = @"Content Missing";
         NSString *message = @"Post text or photo is required.";
         if ([UIAlertController class]) {
@@ -656,76 +612,36 @@
         [UIAlertView showNoInternetAlert];
         return;
     }
-
-    self.challengePost = [[PFChallengePost alloc] initWithClassName:[PFChallengePost parseClassName]];
     
-    __block PFChallengePost *weakChallengePost = self.challengePost;
     
-    if (self.challenge[@"challenge_number"]) {
-        self.challengePost[@"challenge_number"] = self.challenge[@"challenge_number"];
+    NSData *imageData = nil;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:nil];
+    
+    if (self.postImage) {
+        imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
     
-    if (self.challenge) {
-        self.challengePost[@"challenge"] = self.challenge;
-    }
-    
-    self.challengePost[@"post_text"] = self.postText.text;
-    self.challengePost[@"class"] = [PFUser currentUser][@"class"];
-    self.challengePost[@"school"] = [PFUser currentUser][@"school"];
-    self.challengePost[@"user"] = [PFUser currentUser];
-    
-    if (self.displaySpentView) {
-        self.challengePost[@"extra_fields"] = [self jsonStringFromSpentFields];
-    }
+    // TODO: Get extra data.
+//    if (self.displaySpentView) {
+//        self.challengePost[@"extra_fields"] = [self jsonStringFromSpentFields];
+//    }
     
     MTMakeWeakSelf();
-    if (self.postImage.image) {
-        NSString *fileName = @"post_image.png";
-        NSData *imageData = UIImageJPEGRepresentation(self.postImage.image, 0.5f);
-        
-        self.postImage.file = [PFFile fileWithName:fileName data:imageData];
-        if (self.postImage.file) {
-            // if there's a picture, then update the Parse post
-            self.challengePost[@"picture"] = self.postImage.file;
-        }
-        
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
-        
-        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:weakChallengePost];
-                });
+    [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraData:nil success:^(AFOAuthCredential *credential) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (imageData) {
+                [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:nil];
             }
             else {
-                NSLog(@"Post with picture error - %@", error);
-                [weakSelf.challengePost saveEventually];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:weakSelf];
-                });
+                [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
             }
-        }];
-    }
-    else {
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewChallengePostNotification object:self.challengePost];
-        
-        [self.challengePost saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:weakSelf];
-                });
-            }
-            else {
-                NSLog(@"Post error - %@", error);
-                [weakSelf.challengePost saveEventually];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:weakSelf];
-                });
-            }
-        }];
-    }
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:nil];
+        });
+    }];
     
     [self performSegueWithIdentifier:@"unwindToChallengeRoom" sender:nil];
 }

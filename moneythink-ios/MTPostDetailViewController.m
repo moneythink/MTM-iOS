@@ -996,6 +996,9 @@ typedef enum {
 
 - (void)parseSpentFields
 {
+    // TODO: Remove
+    return;
+    
     // Assume blank
     self.hasSpentSavedContent = NO;
     self.savedAmount = @"";
@@ -2907,7 +2910,8 @@ typedef enum {
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
-    PFChallengePost *editedPost = notif.object;
+    NSNumber *postId = notif.object;
+    MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
     if (editedPost) {
         self.challengePost = editedPost;
         [self parseSpentFields];

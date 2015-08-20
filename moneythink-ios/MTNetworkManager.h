@@ -14,8 +14,10 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 @interface MTNetworkManager : AFHTTPSessionManager
 
-@property (nonatomic) BOOL showedReAuthAlert;
+@property (nonatomic, strong) NSOperationQueue *oauthRefreshQueue;
+@property (nonatomic) BOOL showingReAuthAlert;
 @property BOOL refreshingOAuthToken;
+@property (nonatomic, strong) UIAlertView *reAuthAlertView;
 
 + (MTNetworkManager *)sharedMTNetworkManager;
 
@@ -45,6 +47,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getMoneyOptionsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)refreshOAuthTokenForCredential:(AFOAuthCredential *)credential success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+
 
 // Misc
 - (void)getAvatarForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
@@ -56,6 +60,12 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 // Challenges related
 - (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+
+// Posts related
 - (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSString *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSString *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+
 
 @end

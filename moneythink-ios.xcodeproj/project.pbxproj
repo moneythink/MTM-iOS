@@ -175,6 +175,8 @@
 		899906801AD46B5D007A4F3E /* icon_button_dollar_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906781AD46B5D007A4F3E /* icon_button_dollar_pressed.png */; };
 		899906811AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906791AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png */; };
 		899906841AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m in Sources */ = {isa = PBXBuildFile; fileRef = 899906831AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m */; };
+		899CF52B1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m in Sources */ = {isa = PBXBuildFile; fileRef = 899CF52A1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m */; };
+		899CF52E1B8637D60058F59C /* MTOAuthRefreshOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 899CF52D1B8637D60058F59C /* MTOAuthRefreshOperation.m */; };
 		899F309719F16948004F6B10 /* check-active.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309319F16948004F6B10 /* check-active.png */; };
 		899F309819F16948004F6B10 /* check-active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309419F16948004F6B10 /* check-active@2x.png */; };
 		899F309919F16948004F6B10 /* check-unactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309519F16948004F6B10 /* check-unactive.png */; };
@@ -532,6 +534,10 @@
 		899906791AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_button_dollar_pressed@2x.png"; sourceTree = "<group>"; };
 		899906831AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFChallengePostSecondaryButtonsClicked.m; path = "Data Classes/PFChallengePostSecondaryButtonsClicked.m"; sourceTree = "<group>"; };
 		899906851AD47198007A4F3E /* PFChallengePostSecondaryButtonsClicked.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFChallengePostSecondaryButtonsClicked.h; path = "Data Classes/PFChallengePostSecondaryButtonsClicked.h"; sourceTree = "<group>"; };
+		899CF5291B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPRequestOperationManager+Synchronous.h"; sourceTree = "<group>"; };
+		899CF52A1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPRequestOperationManager+Synchronous.m"; sourceTree = "<group>"; };
+		899CF52C1B8637D60058F59C /* MTOAuthRefreshOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOAuthRefreshOperation.h; sourceTree = "<group>"; };
+		899CF52D1B8637D60058F59C /* MTOAuthRefreshOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOAuthRefreshOperation.m; sourceTree = "<group>"; };
 		899F309319F16948004F6B10 /* check-active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-active.png"; sourceTree = "<group>"; };
 		899F309419F16948004F6B10 /* check-active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-active@2x.png"; sourceTree = "<group>"; };
 		899F309519F16948004F6B10 /* check-unactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-unactive.png"; sourceTree = "<group>"; };
@@ -741,6 +747,8 @@
 				892594301B73EC7E00B40E06 /* Realm+JSON */,
 				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
 				89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */,
+				899CF5291B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.h */,
+				899CF52A1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m */,
 				106309731A3A3C4D0093C209 /* MBProgressHUD.h */,
 				106309741A3A3C4D0093C209 /* MBProgressHUD.m */,
 				1063097E1A3A3C4D0093C209 /* Reachability.h */,
@@ -871,6 +879,8 @@
 				89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */,
 				89758EAA1B4F279A002B73E3 /* MTNetworkManager.h */,
 				89758EAB1B4F279A002B73E3 /* MTNetworkManager.m */,
+				899CF52C1B8637D60058F59C /* MTOAuthRefreshOperation.h */,
+				899CF52D1B8637D60058F59C /* MTOAuthRefreshOperation.m */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1702,6 +1712,7 @@
 				89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */,
 				8925943E1B73EC7E00B40E06 /* MCJSONNonNullStringTransformer.m in Sources */,
 				58B7C28B1993305D0039E238 /* MTChallengeInfoViewController.m in Sources */,
+				899CF52E1B8637D60058F59C /* MTOAuthRefreshOperation.m in Sources */,
 				89CE97651B4F1E59007FF4D7 /* UIAlertView+AFNetworking.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */,
@@ -1719,6 +1730,7 @@
 				895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */,
 				8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */,
 				89CE97691B4F1E59007FF4D7 /* UIRefreshControl+AFNetworking.m in Sources */,
+				899CF52B1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m in Sources */,
 				89DE8A741B84F83C0050C9A6 /* MTChallengePost.m in Sources */,
 				89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */,
 				89CE975E1B4F1E59007FF4D7 /* AFSecurityPolicy.m in Sources */,

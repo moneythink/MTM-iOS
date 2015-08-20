@@ -57,6 +57,7 @@
 #import <ZendeskSDK/ZendeskSDK.h>
 
 #import "AFNetworking.h"
+#import "AFHttpRequestOperationManager+Synchronous.h"
 
 #import "MTUser.h"
 #import "MTOptionalImage.h"

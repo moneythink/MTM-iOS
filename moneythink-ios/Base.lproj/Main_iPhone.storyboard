@@ -856,7 +856,7 @@
                         <outlet property="myFeedHighlightView" destination="anL-fj-W6z" id="2Zf-ZC-RIL"/>
                         <outlet property="revealButtonItem" destination="ira-BL-xrW" id="OWN-Pb-myu"/>
                         <outlet property="verticalSpaceConstraint" destination="FXg-GM-dYy" id="hJx-Pl-qx4"/>
-                        <segue destination="XpV-Kx-YNN" kind="push" identifier="commentSegue" id="FBG-cj-gjr"/>
+                        <segue destination="XpV-Kx-YNN" kind="push" identifier="newPostSegue" id="FBG-cj-gjr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pLo-Ci-25G" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5534,12 +5534,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="FBG-cj-gjr"/>
         <segue reference="yad-P5-d3y"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="nYB-OV-yVU"/>
-        <segue reference="vqR-nj-yuL"/>
-        <segue reference="xm4-7b-aI0"/>
-        <segue reference="o0E-h6-NZi"/>
         <segue reference="nWx-Jd-e9Z"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="vqR-nj-yuL"/>
+        <segue reference="nYB-OV-yVU"/>
+        <segue reference="o0E-h6-NZi"/>
     </inferredMetricsTieBreakers>
 </document>

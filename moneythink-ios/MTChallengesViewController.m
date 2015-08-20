@@ -9,6 +9,7 @@
 #import "MTChallengesViewController.h"
 #import "MTExplorePostCollectionView.h"
 #import "MTMyClassTableViewController.h"
+#import "MTPostViewController.h"
 
 @interface MTChallengesViewController ()
 
@@ -341,6 +342,7 @@
 - (void)loadChallenges
 {
     [self getChallenges];
+    [self updateViews];
     
     if (IsEmpty(self.challenges)) {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -394,6 +396,11 @@
 
 - (void)getChallenges
 {
+    NSInteger currentChallengeId = -1;
+    if (self.currentChallenge) {
+        currentChallengeId = self.currentChallenge.id;
+    }
+    
     RLMResults *activeChallenges = [[MTChallenge objectsWhere:@"isActive = YES"] sortedResultsUsingProperty:@"ranking" ascending:YES];
     if (activeChallenges.count == 0) {
         self.challenges = nil;
@@ -418,15 +425,35 @@
         [self addChildViewController:self.challengesPageViewController];
         [self.challengesView addSubview:self.challengesPageViewController.view];
         [self.challengesPageViewController didMoveToParentViewController:self];
+        
+        if (!IsEmpty(self.challenges)) {
+            self.currentChallenge = [self.challenges firstObject];
+        }
     }
     else {
+        MTChallenge *currentChallenge = nil;
+        for (MTChallenge *thisChallenge in self.challenges) {
+            if (thisChallenge.id == currentChallengeId) {
+                currentChallenge = thisChallenge;
+                break;
+            }
+        }
+        
         MTChallengeContentViewController *startingViewController = [self viewControllerAtIndex:0];
+        if (currentChallenge) {
+            startingViewController = [self viewControllerAtIndex:[self.challenges indexOfObject:currentChallenge]];
+        }
         NSArray *viewControllers = @[startingViewController];
         [self.challengesPageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
-    }
-    
-    if (!IsEmpty(self.challenges)) {
-        self.currentChallenge = [self.challenges firstObject];
+        
+        if (!IsEmpty(self.challenges)) {
+            if (currentChallenge) {
+                self.currentChallenge = currentChallenge;
+            }
+            else {
+                self.currentChallenge = [self.challenges firstObject];
+            }
+        }
     }
 }
 
@@ -460,7 +487,7 @@
     }
     
     self.navigationItem.title = @"Cancel";
-    [self performSegueWithIdentifier:@"commentSegue" sender:self];
+    [self performSegueWithIdentifier:@"newPostSegue" sender:self];
 }
 
 - (void)dismissCommentView
@@ -744,15 +771,15 @@
 
 
 #pragma mark - Navigation -
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    NSString *segueID = [segue identifier];
-    
-    if ([segueID isEqualToString:@"commentSegue"]) {
-        MTCommentViewController *destinationVC = (MTCommentViewController *)[segue destinationViewController];
-        destinationVC.delegate = self;
-    }
-}
+//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+//{
+//    NSString *segueID = [segue identifier];
+//    
+//    if ([segueID isEqualToString:@"newPostSegue"]) {
+//        MTPostViewController *destinationVC = (MTPostViewController *)[segue destinationViewController];
+//        destinationVC.delegate = self;
+//    }
+//}
 
 
 @end

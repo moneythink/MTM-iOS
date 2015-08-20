@@ -23,6 +23,8 @@
 @property MTChallenge *challenge;
 @property MTClass *challengeClass;
 
+- (UIImage *)loadPostImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+
 @end
 
 // This protocol enables typed collections. i.e.:

@@ -2,8 +2,8 @@
 //  MTMyClassTableViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 8/4/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 8/20/14.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTMyClassTableViewController.h"
@@ -50,23 +50,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @end
 
 @implementation MTMyClassTableViewController
-
-//- (id)initWithCoder:(NSCoder *)aCoder {
-//    self = [super initWithCoder:aCoder];
-//    if (self) {
-//        // The className to query on
-//        self.parseClassName = [PFChallengePost parseClassName];
-//        
-//        // The key of the PFObject to display in the label of the default cell style
-//        self.textKey = @"post_text";
-//        
-//        // Whether the built-in pull-to-refresh is enabled
-//        self.pullToRefreshEnabled = YES;
-//    }
-//    
-//    return self;
-//}
-
 
 #pragma mark - Lifecycle -
 - (void)viewDidLoad
@@ -122,46 +105,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         self.tableView.emptyDataSetDelegate = nil;
     }
 }
-
-
-#pragma mark - Parse -
-//- (void)objectsDidLoad:(NSError *)error
-//{
-//    [super objectsDidLoad:error];
-//    
-//    if (self.updatedButtonsAndLikes) {
-//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//    }
-//    
-//    self.myObjects = [NSMutableArray arrayWithArray:self.objects];
-//    [self.tableView reloadData];
-//}
-//
-//// Override to customize what kind of query to perform on the class. The default is to query for
-//// all objects ordered by createdAt descending.
-//- (PFQuery *)queryForTable
-//{
-//    self.className = [PFUser currentUser][@"class"];
-//    
-//    NSPredicate *challengePostQuery = [NSPredicate predicateWithFormat:@"challenge = %@ AND class = %@",
-//                                    self.challenge, self.className];
-//    
-//    if (self.challengeNumber) {
-//        NSInteger challengeNumberInt = [self.challengeNumber intValue];
-//        challengePostQuery = [NSPredicate predicateWithFormat:@"(challenge = %@ OR challenge_number = %d) AND class = %@",
-//                                        self.challenge, challengeNumberInt, self.className];
-//    }
-//    
-//    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengePostQuery];
-//    [query orderByDescending:@"createdAt"];
-//    
-//    [query includeKey:@"user"];
-//    [query includeKey:@"reference_post"];
-//
-//    query.cachePolicy = kPFCachePolicyNetworkElseCache;
-//
-//    return query;
-//}
 
 
 #pragma mark - Data Loading -
@@ -393,7 +336,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 #pragma mark - NSNotification Methods -
 - (void)willSaveNewChallengePost:(NSNotification *)notif
 {
-    MTChallengePost *newPost = notif.object;
+    // TODO: Reload new posts
+    
+//    MTChallengePost *newPost = notif.object;
 //    [self.challengePosts insertObject:newPost atIndex:0];
     
     [self.tableView reloadData];
@@ -1381,21 +1326,13 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     }
     
     if (hasImage) {
-//        cell.postImage.image = nil;
-//        cell.postImage.file = postImage;
-//        [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-//            if (!error) {
-//                if (image) {
-//                    CGRect frame = cell.postImage.frame;
-//                    cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-//                    [cell setNeedsDisplay];
-//                } else {
-//                    cell.postImage.image = nil;
-//                }
-//            } else {
-//                NSLog(@"error - %@", error);
-//            }
-//        }];
+        cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakCell.postImage.image = responseData;
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to load post image");
+        }];
     }
     
     NSDate *dateObject = post.createdAt;

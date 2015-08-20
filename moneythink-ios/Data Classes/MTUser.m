@@ -68,10 +68,6 @@
 #pragma mark - Custom Methods -
 - (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    if (self.hasAvatar && self.userAvatar.imageData) {
-        return [UIImage imageWithData:self.userAvatar.imageData];
-    }
-    
     BOOL shouldFetchAvatar = NO;
     
     if (self.hasAvatar && !self.userAvatar) {
@@ -95,7 +91,12 @@
         }];
     }
     
-    return [UIImage imageNamed:@"profile_image"];
+    if (self.hasAvatar && self.userAvatar.imageData) {
+        return [UIImage imageWithData:self.userAvatar.imageData];
+    }
+    else {
+        return [UIImage imageNamed:@"profile_image"];
+    }
 }
 
 + (void)logout
