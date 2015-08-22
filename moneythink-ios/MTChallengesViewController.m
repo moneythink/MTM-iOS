@@ -771,15 +771,15 @@
 
 
 #pragma mark - Navigation -
-//- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-//{
-//    NSString *segueID = [segue identifier];
-//    
-//    if ([segueID isEqualToString:@"newPostSegue"]) {
-//        MTPostViewController *destinationVC = (MTPostViewController *)[segue destinationViewController];
-//        destinationVC.delegate = self;
-//    }
-//}
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    NSString *segueID = [segue identifier];
+    
+    if ([segueID isEqualToString:@"newPostSegue"]) {
+        MTPostViewController *destinationVC = (MTPostViewController *)[segue destinationViewController];
+        destinationVC.challenge = self.currentChallenge;
+    }
+}
 
 
 @end

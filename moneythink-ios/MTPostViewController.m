@@ -41,7 +41,7 @@
 {
     [super viewDidLoad];
     
-//    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+    self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
     self.spentDoneButton.hidden = YES;
     
     if (self.displaySpentView) {
@@ -216,104 +216,79 @@
 
 - (void)populateSpentFields
 {
-    // TODO: Remove
-    return;
+    self.spentTextField.text = @"";
+    self.savedTextField.text = @"";
     
-    if (!IsEmpty(self.post[@"extra_fields"])) {
-        NSData *data = [self.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if (!IsEmpty(self.post.challengeData)) {
+        NSData *data = [self.post.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
-        if ([jsonArray isKindOfClass:[NSArray class]]) {
-            NSArray *spentFieldsArray = (NSArray *)jsonArray;
-            for (id thisDict in spentFieldsArray) {
-                if ([thisDict isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *dict = (NSDictionary *)thisDict;
-                    NSString *nameForDict = [dict objectForKey:@"name"];
-                    
-                    if ([nameForDict isEqualToString:@"Spent"]) {
-                        self.spentCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
-                        if (self.spentCheckbox.isChecked) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            self.spentTextField.text = [self currencyTextForString:spentString];
-                            if (IsEmpty(self.spentTextField.text)) {
-                                self.spentCheckbox.isChecked = NO;
-                            }
-                        }
-                    }
-                    else if ([nameForDict isEqualToString:@"Saved"]) {
-                        self.savedCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
-                        if (self.savedCheckbox.isChecked) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            self.savedTextField.text = [self currencyTextForString:spentString];
-                            if (IsEmpty(self.savedTextField.text)) {
-                                self.savedCheckbox.isChecked = NO;
-                            }
-                        }
-                    }
-                    else {
-                        self.notSureCheckbox.isChecked = [[dict objectForKey:@"checked"] boolValue];
-                        if (self.notSureCheckbox.isChecked) {
-                            self.spentCheckbox.isChecked = NO;
-                            self.spentTextField.text = @"";
-                            self.savedCheckbox.isChecked = NO;
-                            self.savedTextField.text = @"";
-                        }
-                    }
+        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
+            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
+            NSString *currencyString = [self currencyTextForString:spentString];
+            if (!IsEmpty(currencyString)) {
+                self.spentTextField.text = currencyString;
+                if (IsEmpty(self.spentTextField.text)) {
+                    self.spentCheckbox.isChecked = NO;
                 }
+            }
+            
+            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
+            currencyString = [self currencyTextForString:savedString];
+            if (!IsEmpty(currencyString)) {
+                self.savedTextField.text = [self currencyTextForString:savedString];
+                if (IsEmpty(self.savedTextField.text)) {
+                    self.savedCheckbox.isChecked = NO;
+                }
+            }
+            
+            if (self.spentCheckbox.isChecked || self.savedCheckbox.isChecked) {
+                self.notSureCheckbox.isChecked = NO;
             }
         }
     }
 }
 
-- (NSString *)jsonStringFromSpentFields
+- (NSDictionary *)dictionaryFromSpentFields
 {
-    NSString *jsonString = nil;
-    NSMutableArray *myArray = [NSMutableArray array];
+    if (IsEmpty(self.spentTextField.text) && IsEmpty(self.savedTextField.text)) {
+        return nil;
+    }
     
-    NSDictionary *spentDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0f], @"value", @NO, @"checked", @"Spent", @"name", nil];
-    NSDictionary *savedDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:0.0f], @"value", @NO, @"checked", @"Saved", @"name", nil];
-    NSDictionary *notSureDict;
-
-    if (self.notSureCheckbox.isChecked) {
-        notSureDict = [NSDictionary dictionaryWithObjectsAndKeys:@YES, @"checked", @"I'm not sure", @"name", nil];
+    NSMutableDictionary *myDict = [NSMutableDictionary dictionary];
+    
+    if (!IsEmpty(self.spentTextField.text)) {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        NSNumber *number = [formatter numberFromString:self.spentTextField.text];
+        NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
+        [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
+        [formatterOut setUsesGroupingSeparator:NO];
+        
+        NSString *amountSpent = [formatterOut stringFromNumber:number];
+        [myDict setValue:amountSpent forKey:@"spent"];
     }
     else {
-        notSureDict = [NSDictionary dictionaryWithObjectsAndKeys:@NO, @"checked", @"I'm not sure", @"name", nil];
+        [myDict setValue:@"0" forKey:@"spent"];
+    }
+
+    if (!IsEmpty(self.savedTextField.text)) {
+        NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+        [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        NSNumber *number = [formatter numberFromString:self.savedTextField.text];
+        NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
+        [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
+        [formatterOut setUsesGroupingSeparator:NO];
         
-        if (!IsEmpty(self.spentTextField.text)) {
-            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-            [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-            NSNumber *number = [formatter numberFromString:self.spentTextField.text];
-            NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
-            [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
-            [formatterOut setUsesGroupingSeparator:NO];
-            
-            NSString *amountSpent = [formatterOut stringFromNumber:number];
-            spentDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[amountSpent floatValue]], @"value", @YES, @"checked", @"Spent", @"name", nil];
-        }
-        
-        if (!IsEmpty(self.savedTextField.text)) {
-            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-            [formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-            NSNumber *number = [formatter numberFromString:self.savedTextField.text];
-            NSNumberFormatter *formatterOut = [[NSNumberFormatter alloc] init];
-            [formatterOut setNumberStyle:NSNumberFormatterDecimalStyle];
-            [formatterOut setUsesGroupingSeparator:NO];
-            
-            NSString *amountSaved = [formatterOut stringFromNumber:number];
-            savedDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithFloat:[amountSaved floatValue]], @"value", @YES, @"checked", @"Saved", @"name", nil];
-        }
+        NSString *amountSaved = [formatterOut stringFromNumber:number];
+        [myDict setValue:amountSaved forKey:@"saved"];
+    }
+    else {
+        [myDict setValue:@"0" forKey:@"saved"];
     }
     
-    [myArray addObject:spentDict];
-    [myArray addObject:savedDict];
-    [myArray addObject:notSureDict];
-    
-    NSError *error;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:myArray options:0 error:&error];
-    jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    return jsonString;
+    return myDict;
 }
 
 - (NSString *)currencyTextForString:(NSString *)string
@@ -556,22 +531,22 @@
         return;
     }
     
-    // TODO: Remove
-//    if (self.displaySpentView) {
-//        self.post[@"extra_fields"] = [self jsonStringFromSpentFields];
-//    }
+    NSDictionary *extraData = nil;
+    if (self.displaySpentView) {
+        extraData = [self dictionaryFromSpentFields];
+    }
     
     NSData *imageData = nil;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:self.post];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:nil];
 
     if (self.postImage) {
         imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraData:nil success:^(AFOAuthCredential *credential) {
+    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraData:extraData success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:[NSNumber numberWithInteger:weakSelf.post.id]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:nil];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
@@ -621,20 +596,15 @@
         imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
     
-    // TODO: Get extra data.
-//    if (self.displaySpentView) {
-//        self.challengePost[@"extra_fields"] = [self jsonStringFromSpentFields];
-//    }
+    NSDictionary *extraData = nil;
+    if (self.displaySpentView) {
+        extraData = [self dictionaryFromSpentFields];
+    }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraData:nil success:^(AFOAuthCredential *credential) {
+    [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraData:extraData success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (imageData) {
-                [[NSNotificationCenter defaultCenter] postNotificationName:kSavingWithPhotoNewChallengePostNotification object:nil];
-            }
-            else {
-                [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
-            }
+            [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
@@ -712,8 +682,6 @@
             }
         }
     }
-    
-    [self jsonStringFromSpentFields];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;   // return NO to not change text
@@ -800,8 +768,6 @@
     
     self.spentTextField.text = @"";
     self.savedTextField.text = @"";
-    
-    [self jsonStringFromSpentFields];
 }
 
 - (IBAction)doneAction:(id)sender

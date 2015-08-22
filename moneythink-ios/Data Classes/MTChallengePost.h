@@ -17,7 +17,7 @@
 @property NSDate *updatedAt;
 @property MTOptionalImage *postImage;
 @property BOOL hasPostImage;
-
+@property NSString *challengeData;
 
 @property MTUser *user;
 @property MTChallenge *challenge;

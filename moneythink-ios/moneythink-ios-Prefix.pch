@@ -39,7 +39,6 @@
 #define kNotificationInactivity5            @"inactivity_5"
 #define kNotificationInactivity6            @"inactivity_6"
 #define kNotificationInactivityMentor       @"inactivity_mentor"
-#define kNotificationForceLogout            @"kNotificationForceLogout"
 #define kLastViewedChallengeId              @"kLastViewedChallengeId"
 #define kUserHasOnboardedKey                @"user_has_onboarded"
 #define kFirstTimeRunKey                    @"kFirstTimeRunKey"

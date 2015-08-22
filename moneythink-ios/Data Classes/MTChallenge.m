@@ -24,6 +24,7 @@
              @"ranking": @0,
              @"studentInstructions": @"",
              @"tagline": @"",
+             @"postExtraFields": @"",
              @"title": @""};
 }
 

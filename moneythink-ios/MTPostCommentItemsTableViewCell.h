@@ -14,8 +14,6 @@
 @property (nonatomic, weak) IBOutlet MTLabel *commentLabel;
 @property (nonatomic, weak) IBOutlet MTLabel *userLabel;
 @property (nonatomic, weak) IBOutlet UIView *separatorView;
-@property (nonatomic, strong) IBOutlet PFImageView *userAvatarImageView;
-
-@property (nonatomic, strong) UIImage *userAvatarImage;
+@property (nonatomic, strong) IBOutlet UIImageView *userAvatarImageView;
 
 @end

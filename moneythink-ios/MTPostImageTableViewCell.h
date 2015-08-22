@@ -10,7 +10,7 @@
 
 @interface MTPostImageTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) IBOutlet PFImageView *postImage;
+@property (nonatomic, strong) IBOutlet UIImageView *postImage;
 @property (nonatomic, strong) IBOutlet UIView *spentView;
 @property (nonatomic, strong) IBOutlet UILabel *spentLabel;
 @property (nonatomic, strong) IBOutlet UILabel *savedLabel;

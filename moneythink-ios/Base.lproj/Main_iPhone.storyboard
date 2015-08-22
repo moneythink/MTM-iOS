@@ -2341,7 +2341,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7NO-sc-hdA" id="1gV-og-nOe">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YDe-6A-oGp" userLabel="Post Image View" customClass="PFImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="YDe-6A-oGp" userLabel="Post Image View">
                                                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="320" id="6vd-qN-KdO"/>
@@ -2688,7 +2688,7 @@
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Wf-Pk-De7" id="GeD-9Y-0Ae">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="NSl-O4-gOU" userLabel="Avatar Image View" customClass="PFImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="NSl-O4-gOU" userLabel="Avatar Image View">
                                                     <rect key="frame" x="15" y="7" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="30" id="MLz-XY-1FH"/>
@@ -2735,7 +2735,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="300" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="HbY-5W-o3Y" userLabel="Avatar Image View" customClass="PFImageView">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="HbY-5W-o3Y" userLabel="Avatar Image View">
                                                     <rect key="frame" x="15" y="5" width="30" height="30"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="30" id="WWK-Bn-nRj"/>
@@ -5538,8 +5538,8 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <segue reference="yad-P5-d3y"/>
         <segue reference="nWx-Jd-e9Z"/>
         <segue reference="LS9-Mg-yad"/>
-        <segue reference="vqR-nj-yuL"/>
-        <segue reference="nYB-OV-yVU"/>
         <segue reference="o0E-h6-NZi"/>
+        <segue reference="a3W-fR-2k0"/>
+        <segue reference="48k-xo-w1Z"/>
     </inferredMetricsTieBreakers>
 </document>

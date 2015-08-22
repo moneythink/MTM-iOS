@@ -15,8 +15,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 @interface MTNetworkManager : AFHTTPSessionManager
 
 @property (nonatomic, strong) NSOperationQueue *oauthRefreshQueue;
-@property (nonatomic) BOOL showingReAuthAlert;
 @property BOOL refreshingOAuthToken;
+@property BOOL displayingInternetAndReAuthAlert;
 @property (nonatomic, strong) UIAlertView *reAuthAlertView;
 
 + (MTNetworkManager *)sharedMTNetworkManager;
@@ -64,8 +64,9 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 // Posts related
 - (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSString *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSString *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)deletePostId:(NSInteger)postId success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 
 @end

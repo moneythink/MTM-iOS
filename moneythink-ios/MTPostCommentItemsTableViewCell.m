@@ -19,7 +19,6 @@
 {
     [super prepareForReuse];
     self.userAvatarImageView.image = nil;
-    self.userAvatarImage = nil;
     self.separatorView.hidden = NO;
 }
 

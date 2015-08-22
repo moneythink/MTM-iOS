@@ -28,6 +28,7 @@
 @property NSString *tagline;
 @property NSString *title;
 @property NSDate *updatedAt;
+@property NSString *postExtraFields;
 
 @end
 

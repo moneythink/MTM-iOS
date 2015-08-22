@@ -41,8 +41,8 @@ typedef enum {
 @property (nonatomic, strong) NSArray *comments;
 @property (nonatomic, strong) NSArray *challengePostsLikedUsers;
 @property (nonatomic, strong) NSArray *challengePostsLiked;
-@property (nonatomic, strong) UIImage *userAvatarImage;
-@property (nonatomic, strong) UIImage *postImage;
+//@property (nonatomic, strong) UIImage *userAvatarImage;
+//@property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) NSMutableAttributedString *postText;
 @property (nonatomic) CGFloat postTextHeight;
 @property (nonatomic) BOOL isMentor;
@@ -89,7 +89,7 @@ typedef enum {
         [self loadFromNotification];
     }
     else {
-        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+        self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
         if (self.displaySpentView) {
             [self parseSpentFields];
         }
@@ -97,9 +97,10 @@ typedef enum {
         self.postUser = self.challengePost.user;
         self.currentUser = [MTUser currentUser];
         self.postLikesCount = 0;
-        if (self.challengePost[@"likes"]) {
-            self.postLikesCount = [self.challengePost[@"likes"] intValue];
-        }
+        
+//        if (self.challengePost[@"likes"]) {
+//            self.postLikesCount = [self.challengePost[@"likes"] intValue];
+//        }
         
 //        NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
 //        PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
@@ -123,12 +124,12 @@ typedef enum {
             [self updateSecondaryButtonsTapped];
         }
         
-        if (IsEmpty(self.emojiPickerObjects)) {
-            [self loadEmoji];
-        }
-        [self loadComments];
+//        if (IsEmpty(self.emojiPickerObjects)) {
+//            [self loadEmoji];
+//        }
+//        [self loadComments];
         [self loadPostText];
-        [self loadLikesWithCache:YES];
+//        [self loadLikesWithCache:YES];
         [self configureChallengePermissions];
     }
 }
@@ -341,8 +342,8 @@ typedef enum {
 
 - (void)configureChallengePermissions
 {
-    self.isMentor = [self.currentUser[@"type"] isEqualToString:@"mentor"];
-    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    self.isMentor = [MTUser isCurrentUserMentor];
+    BOOL autoVerify = self.challenge.autoVerify;
     self.hideVerifySwitch = !self.isMentor || autoVerify;
 }
 
@@ -690,18 +691,18 @@ typedef enum {
 - (void)loadEmoji
 {
     // Load Emoji for picker
-    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
-    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    [query addAscendingOrder:@"emoji_order"];
-    
-    MTMakeWeakSelf();
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.emojiPickerObjects = objects;
-        } else {
-            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
-        }
-    }];
+//    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
+//    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
+//    [query addAscendingOrder:@"emoji_order"];
+//    
+//    MTMakeWeakSelf();
+//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            weakSelf.emojiPickerObjects = objects;
+//        } else {
+//            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
+//        }
+//    }];
 }
 
 
@@ -723,11 +724,11 @@ typedef enum {
     self.challengePost = post;
     
     self.postLikesCount = 0;
-    if (self.challengePost[@"likes"]) {
-        self.postLikesCount = [self.challengePost[@"likes"] intValue];
-    }
+//    if (self.challengePost[@"likes"]) {
+//        self.postLikesCount = [self.challengePost[@"likes"] intValue];
+//    }
     
-    self.currentUser = [PFUser currentUser];
+    self.currentUser = [MTUser currentUser];
 
 //    MTMakeWeakSelf();
 //    if (self.challengePost && ![self.challengePost isDataAvailable]) {
@@ -771,7 +772,7 @@ typedef enum {
 //            if (!error) {
 //                weakSelf.challenge = (PFChallenges *)object;
 //                
-//                weakSelf.displaySpentView = [weakSelf.challenge[@"display_extra_fields"] boolValue];
+//                weakSelf.displaySpentView = !IsEmpty(weakSelf.challenge.postExtraFields);
 //                if (weakSelf.challengePost && [weakSelf.challengePost isDataAvailable] && weakSelf.displaySpentView) {
 //                    [weakSelf parseSpentFields];
 //                }
@@ -785,7 +786,7 @@ typedef enum {
 //        }];
 //    }
 //    else {
-//        self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
+//        self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
 //        if (self.challengePost && [self.challengePost isDataAvailable] && self.displaySpentView) {
 //            [self parseSpentFields];
 //        }
@@ -796,16 +797,16 @@ typedef enum {
 
 - (void)finishLoadingChallengePostData
 {
-    self.postImage = self.challengePost[@"picture"];
-    self.postUser = self.challengePost[@"user"];
-    
-    self.displaySpentView = [self.challenge[@"display_extra_fields"] boolValue];
-    if (self.displaySpentView) {
-        [self parseSpentFields];
-    }
-
-    [self loadLikesWithCache:NO];
-
+//    self.postImage = self.challengePost[@"picture"];
+//    self.postUser = self.challengePost[@"user"];
+//    
+//    self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
+//    if (self.displaySpentView) {
+//        [self parseSpentFields];
+//    }
+//
+//    [self loadLikesWithCache:NO];
+//
 //    if (self.postUser && ![self.postUser isDataAvailable]) {
 //        MTMakeWeakSelf();
 //        [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
@@ -818,45 +819,45 @@ typedef enum {
 //            }
 //        }];
 //    }
-
-    [self updateLikes];
-    [self loadPostText];
+//
+//    [self updateLikes];
+//    [self loadPostText];
 }
 
 - (void)updateLikes
 {
-    MTMakeWeakSelf();
-    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
-    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
-    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
-    myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableArray *mutableLiked = [NSMutableArray array];
-            NSMutableArray *mutableLikedFull = [NSMutableArray array];
-            
-            for (PFChallengePostsLiked *thisPostLiked in objects) {
-                PFChallengePost *post = thisPostLiked[@"post"];
-                if (!IsEmpty(post.objectId)) {
-                    [mutableLiked addObject:post.objectId];
-                    [mutableLikedFull addObject:thisPostLiked];
-                }
-            }
-            
-            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf loadEmojiLikes];
-            });
-        }
-        else {
-            NSLog(@"error - %@", error);
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        }
-        
-    }];
+//    MTMakeWeakSelf();
+//    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
+//    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
+//    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
+//    myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
+//    
+//    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//        if (!error) {
+//            NSMutableArray *mutableLiked = [NSMutableArray array];
+//            NSMutableArray *mutableLikedFull = [NSMutableArray array];
+//            
+//            for (PFChallengePostsLiked *thisPostLiked in objects) {
+//                PFChallengePost *post = thisPostLiked[@"post"];
+//                if (!IsEmpty(post.objectId)) {
+//                    [mutableLiked addObject:post.objectId];
+//                    [mutableLikedFull addObject:thisPostLiked];
+//                }
+//            }
+//            
+//            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
+//            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
+//            
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                [weakSelf loadEmojiLikes];
+//            });
+//        }
+//        else {
+//            NSLog(@"error - %@", error);
+//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+//        }
+//        
+//    }];
 }
 
 - (void)loadEmojiLikes
@@ -996,45 +997,27 @@ typedef enum {
 
 - (void)parseSpentFields
 {
-    // TODO: Remove
-    return;
-    
     // Assume blank
     self.hasSpentSavedContent = NO;
     self.savedAmount = @"";
     self.spentAmount = @"";
     
-    if (!IsEmpty(self.challengePost[@"extra_fields"])) {
-        NSData *data = [self.challengePost[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if (!IsEmpty(self.challengePost.challengeData)) {
+        NSData *data = [self.challengePost.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
-        if ([jsonArray isKindOfClass:[NSArray class]]) {
-            NSArray *spentFieldsArray = (NSArray *)jsonArray;
-
-            for (id thisDict in spentFieldsArray) {
-                if ([thisDict isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *dict = (NSDictionary *)thisDict;
-                    NSString *nameForDict = [dict objectForKey:@"name"];
-                    
-                    if ([nameForDict isEqualToString:@"Spent"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            self.spentAmount = [self currencyTextForString:spentString];
-                        }
-                    }
-                    else if ([nameForDict isEqualToString:@"Saved"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            self.savedAmount = [self currencyTextForString:spentString];
-                        }
-                    }
-                    else {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            self.savedAmount = @"";
-                            self.spentAmount = @"";
-                        }
-                    }
-                }
+        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
+            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
+            NSString *currencyString = [self currencyTextForString:spentString];
+            if (!IsEmpty(currencyString)) {
+                self.spentAmount = currencyString;
+            }
+            
+            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
+            currencyString = [self currencyTextForString:savedString];
+            if (!IsEmpty(currencyString)) {
+                self.savedAmount = currencyString;
             }
         }
     }
@@ -2438,40 +2421,26 @@ typedef enum {
             __block MTPostUserInfoTableViewCell *userInfoCell = [tableView dequeueReusableCellWithIdentifier:@"PostUserInfoCell" forIndexPath:indexPath];
             userInfoCell.selectionStyle = UITableViewCellSelectionStyleNone;
 
-//            if (self.postUser && [self.postUser isDataAvailable]) {
-//                NSString *firstName = self.postUser[@"first_name"] ? self.postUser[@"first_name"] : @"";
-//                NSString *lastName = self.postUser[@"last_name"] ? self.postUser[@"last_name"] : @"";
-//                
-//                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-//                
-//                if (self.userAvatarImage) {
-//                    [userInfoCell.postUserImageView setImage:self.userAvatarImage];
-//                }
-//                else {
-//                    userInfoCell.postImage.file = self.postUser[@"profile_picture"];
-//                    
-//                    MTMakeWeakSelf();
-//                    [userInfoCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-//                        weakSelf.userAvatarImage = image;
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-//                            if (weakSelf.userAvatarImage) {
-//                                [userInfoCell.postUserImageView setImage:weakSelf.userAvatarImage];
-//                            }
-//                        });
-//                    }];
-//                }
-//            }
-//            else {
-//                userInfoCell.postUsername.text = @"";
-//            }
+            if (self.postUser) {
+                NSString *firstName = self.postUser.firstName ? self.postUser.firstName: @"";
+                NSString *lastName = self.postUser.lastName ? self.postUser.lastName : @"";
+                
+                userInfoCell.postUsername.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+                
+                __block MTPostUserInfoTableViewCell *weakCell = userInfoCell;
+                weakCell.postUserImageView.image = [self.postUser loadAvatarImageWithSuccess:^(id responseData) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        weakCell.postUserImageView.image = responseData;
+                    });
+                } failure:^(NSError *error) {
+                    NSLog(@"Unable to load user avatar");
+                }];
+            }
+            else {
+                userInfoCell.postUsername.text = @"";
+            }
             
-//            if ([self.challengePost isDataAvailable]) {
-//                userInfoCell.whenPosted.text = [[self.challengePost createdAt] niceRelativeTimeFromNow];
-//            }
-//            else {
-//                userInfoCell.whenPosted.text = @"";
-//            }
-            
+            userInfoCell.whenPosted.text = [self.challengePost.createdAt niceRelativeTimeFromNow];
             userInfoCell.postUserImageView.contentMode = UIViewContentModeScaleAspectFill;
             
             if ([MTUser isUserMe:self.postUser]) {
@@ -2497,42 +2466,32 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-//            if ([self.challengePost isDataAvailable]) {
-//                imageCell.postImage.file = self.challengePost[@"picture"];
-//                imageCell.postImage.image = nil;
-//                
-//                MTMakeWeakSelf();
-//                [imageCell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-//                    if (!error) {
-//                        if (image) {
-//                            CGRect frame = imageCell.postImage.frame;
-//                            imageCell.postImage.image = [weakSelf imageByScalingAndCroppingForSize:frame.size withImage:image];
-//                        }
-//                        else {
-//                            imageCell.postImage.image = nil;
-//                        }
-//                    }
-//                    else {
-//                        NSLog(@"error - %@", error);
-//                    }
-//                }];
-//                
-//                if (self.displaySpentView && self.hasSpentSavedContent) {
-//                    imageCell.spentView.hidden = NO;
-//                    imageCell.savedLabel.text = @"";
-//                    imageCell.spentLabel.text = @"";
-//
-//                    if (!IsEmpty(self.savedAmount)) {
-//                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
-//                    }
-//                    if (!IsEmpty(self.spentAmount)) {
-//                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
-//                    }
-//                }
-//                else {
-//                    imageCell.spentView.hidden = YES;
-//                }
-//            }
+            __block MTPostImageTableViewCell *weakCell = imageCell;
+            if (self.challengePost.hasPostImage) {
+                imageCell.postImage.image = [self.challengePost loadPostImageWithSuccess:^(id responseData) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        weakCell.postImage.image = responseData;
+                    });
+                } failure:^(NSError *error) {
+                    NSLog(@"Unable to load post image");
+                }];
+            }
+            
+            if (self.displaySpentView && self.hasSpentSavedContent) {
+                imageCell.spentView.hidden = NO;
+                imageCell.savedLabel.text = @"";
+                imageCell.spentLabel.text = @"";
+
+                if (!IsEmpty(self.savedAmount)) {
+                    imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+                }
+                if (!IsEmpty(self.spentAmount)) {
+                    imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+                }
+            }
+            else {
+                imageCell.spentView.hidden = YES;
+            }
 
             cell = imageCell;
 
@@ -2543,23 +2502,21 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"SpentSavedCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-//            if ([self.challengePost isDataAvailable]) {
-//                if (self.displaySpentView && self.hasSpentSavedContent) {
-//                    imageCell.spentView.hidden = NO;
-//                    imageCell.savedLabel.text = @"";
-//                    imageCell.spentLabel.text = @"";
-//
-//                    if (!IsEmpty(self.savedAmount)) {
-//                        imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
-//                    }
-//                    if (!IsEmpty(self.spentAmount)) {
-//                        imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
-//                    }
-//                }
-//                else {
-//                    imageCell.spentView.hidden = YES;
-//                }
-//            }
+            if (self.displaySpentView && self.hasSpentSavedContent) {
+                imageCell.spentView.hidden = NO;
+                imageCell.savedLabel.text = @"";
+                imageCell.spentLabel.text = @"";
+
+                if (!IsEmpty(self.savedAmount)) {
+                    imageCell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", self.savedAmount];
+                }
+                if (!IsEmpty(self.spentAmount)) {
+                    imageCell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", self.spentAmount];
+                }
+            }
+            else {
+                imageCell.spentView.hidden = YES;
+            }
             
             cell = imageCell;
             
@@ -2709,8 +2666,8 @@ typedef enum {
             [defaultCell.commentLabel setFont:[UIFont mtFontOfSize:13.0f]];
             defaultCell.commentLabel.textColor = [UIColor darkGrey];
             
-            PFUser *commentPoster = comment[@"user"];
-            NSString *detailString = [NSString stringWithFormat:@"%@ %@:", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+            MTUser *commentPoster = comment[@"user"];
+            NSString *detailString = [NSString stringWithFormat:@"%@ %@:", commentPoster.firstName, commentPoster.lastName];
             defaultCell.userLabel.text = detailString;
             [defaultCell.userLabel setFont:[UIFont mtBoldFontOfSize:11.0f]];
             defaultCell.userLabel.textColor = [UIColor darkGrey];
@@ -2727,29 +2684,14 @@ typedef enum {
             
             defaultCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
             
-            if (defaultCell.userAvatarImage) {
-                [defaultCell.userAvatarImageView setImage:defaultCell.userAvatarImage];
-            }
-            else {
-                if (!commentPoster[@"profile_picture"]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [defaultCell.userAvatarImageView setImage:[UIImage imageNamed:@"profile_image"]];
-                    });
-                }
-                else {
-                    defaultCell.userAvatarImageView.file = commentPoster[@"profile_picture"];
-                    
-                    [defaultCell.userAvatarImageView loadInBackground:^(UIImage *image, NSError *error) {
-                        defaultCell.userAvatarImage = image;
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (defaultCell.userAvatarImage) {
-                                [defaultCell.userAvatarImageView setImage:defaultCell.userAvatarImage];
-                            }
-                        });
-                    }];
-                }
-            }
+            __block MTPostCommentItemsTableViewCell *weakCell = defaultCell;
+            weakCell.userAvatarImageView.image = [commentPoster loadAvatarImageWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakCell.userAvatarImageView.image = responseData;
+                });
+            } failure:^(NSError *error) {
+                NSLog(@"Unable to load user avatar");
+            }];
             
             cell = defaultCell;
             
@@ -2760,7 +2702,7 @@ typedef enum {
             __block MTPostLikeUserTableViewCell *likeUserCell = [tableView dequeueReusableCellWithIdentifier:@"LikeUserCell" forIndexPath:indexPath];
             likeUserCell.selectionStyle = UITableViewCellSelectionStyleGray;
             
-            PFUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
+            MTUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
             
             [likeUserCell setAccessoryType:UITableViewCellAccessoryNone];
             
@@ -2770,29 +2712,14 @@ typedef enum {
             likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             likeUserCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
             
-            if (likeUserCell.userAvatarImage) {
-                [likeUserCell.userAvatarImageView setImage:likeUserCell.userAvatarImage];
-            }
-            else {
-                if (!likeUser[@"profile_picture"]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [likeUserCell.userAvatarImageView setImage:[UIImage imageNamed:@"profile_image"]];
-                    });
-                }
-                else {
-                    likeUserCell.userAvatarImageView.file = likeUser[@"profile_picture"];
-                    
-                    [likeUserCell.userAvatarImageView loadInBackground:^(UIImage *image, NSError *error) {
-                        likeUserCell.userAvatarImage = image;
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (likeUserCell.userAvatarImage) {
-                                [likeUserCell.userAvatarImageView setImage:likeUserCell.userAvatarImage];
-                            }
-                        });
-                    }];
-                }
-            }
+            __block MTPostLikeUserTableViewCell *weakCell = likeUserCell;
+            weakCell.userAvatarImageView.image = [likeUser loadAvatarImageWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakCell.userAvatarImageView.image = responseData;
+                });
+            } failure:^(NSError *error) {
+                NSLog(@"Unable to load user avatar");
+            }];
             
             // Load Emoji like for this user
             if ([self.challengePostsLiked count] > indexPath.row) {
@@ -2867,68 +2794,80 @@ typedef enum {
 #pragma mark - NSNotification Methods -
 - (void)willSaveNewPostComment:(NSNotification *)notif
 {
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving New Comment...";
+        hud.dimBackground = NO;
+    });
 }
 
 - (void)didSaveNewPostComment:(NSNotification *)notif
 {
-    [self.tableView reloadData];
-    [self loadComments];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self.tableView reloadData];
+        [self loadComments];
+    });
 }
 
 - (void)willSaveEditPost:(NSNotification *)notif
 {
-    BOOL myPost = NO;
-    if ([MTUtil isUserMe:self.postUser]) {
-        myPost = YES;
-    }
-    
-    BOOL showButtons = NO;
-    if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
-        showButtons = YES;
-    }
-    
-    PFChallengePost *editedPost = notif.object;
-    if (editedPost) {
-        self.challengePost = editedPost;
-        [self parseSpentFields];
-    }
-    
-    self.postImage = editedPost[@"picture"];
-
-    if (showButtons && self.postImage)
-        self.postType = MTPostTypeWithButtonsWithImage;
-    else if (showButtons)
-        self.postType = MTPostTypeWithButtonsNoImage;
-    else if (self.postImage)
-        self.postType = MTPostTypeNoButtonsWithImage;
-    else
-        self.postType = MTPostTypeNoButtonsNoImage;
-
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving...";
+        hud.dimBackground = NO;
+    });
 }
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
-    NSNumber *postId = notif.object;
-    MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
-    if (editedPost) {
-        self.challengePost = editedPost;
-        [self parseSpentFields];
-    }
-    
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+
+        NSNumber *postId = [NSNumber numberWithInteger:self.challengePost.id];
+        MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
+        
+        if (editedPost) {
+            self.challengePost = editedPost;
+            [self parseSpentFields];
+        }
+        
+        BOOL myPost = NO;
+        if ([MTUser isUserMe:self.postUser]) {
+            myPost = YES;
+        }
+        
+        BOOL showButtons = NO;
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
+            showButtons = YES;
+        }
+        
+        if (showButtons && self.challengePost.hasPostImage)
+            self.postType = MTPostTypeWithButtonsWithImage;
+        else if (showButtons)
+            self.postType = MTPostTypeWithButtonsNoImage;
+        else if (self.challengePost.hasPostImage)
+            self.postType = MTPostTypeNoButtonsWithImage;
+        else
+            self.postType = MTPostTypeNoButtonsNoImage;
+        
+        [self.tableView reloadData];
+    });
 }
 
 - (void)failedSaveEditPost:(NSNotification *)notif
 {
-    [self.tableView reloadData];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Your edit post failed to save.";
-    hud.dimBackground = NO;
-    hud.mode = MBProgressHUDModeText;
-    [hud hide:YES afterDelay:1.5f];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Your edit post failed to save.";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+    });
 }
 
 
