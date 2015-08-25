@@ -25,6 +25,18 @@ NSString *const MTErrorDomain = @"com.moneythink.errorDomain";
     }
 }
 
+- (NSInteger)mtErrorCode
+{
+    NSData *errorData = self.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];
+    if (errorData) {
+        NSDictionary *serializedData = [NSJSONSerialization JSONObjectWithData: errorData options:kNilOptions error:nil];
+        return [[serializedData valueForKey:@"status"] integerValue];
+    }
+    else {
+        return 0;
+    }
+}
+
 - (NSString *)firstValidationMessage
 {
     NSData *errorData = self.userInfo[AFNetworkingOperationFailingURLResponseDataErrorKey];

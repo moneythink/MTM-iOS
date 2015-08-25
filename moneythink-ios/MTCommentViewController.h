@@ -20,7 +20,7 @@
 @property (nonatomic, weak) id <MTCommentViewProtocol> delegate;
 
 @property (nonatomic, strong) MTChallengePost *post;
-@property (nonatomic, strong) PFChallengePostComment *challengePostComment;
-@property (nonatomic) BOOL editPost;
+@property (nonatomic, strong) MTChallengePostComment *challengePostComment;
+@property (nonatomic) BOOL editComment;
 
 @end

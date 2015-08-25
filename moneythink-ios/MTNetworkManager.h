@@ -58,15 +58,21 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)sendNewPassword:(NSString *)newPassword withToken:(NSString *)token success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
-// Challenges related
+// Challenges
 - (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
-// Posts related
-- (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+// Posts
+- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)deletePostId:(NSInteger)postId success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
+// Comments
+- (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadCommentsForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createCommentForPostId:(NSInteger)postId content:(NSString *)content success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updateCommentId:(NSInteger)commentId content:(NSString *)content success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)deleteCommentId:(NSInteger)commentId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end

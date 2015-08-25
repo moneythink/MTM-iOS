@@ -28,9 +28,17 @@
     [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.doneButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
 
-    self.title = @"Comment on Post";
-    self.postText.text = @"";
-            
+    if (self.editComment) {
+        self.title = @"Edit Comment";
+        [self.doneButton setTitle:@"Save" forState:UIControlStateNormal];
+        self.postText.text = self.challengePostComment.content;
+    }
+    else {
+        self.title = @"Comment on Post";
+        [self.doneButton setTitle:@"Comment" forState:UIControlStateNormal];
+        self.postText.text = @"";
+    }
+    
     UISwipeGestureRecognizer *swipeDown = [[UISwipeGestureRecognizer alloc] initWithTarget:self
                                                                                     action:@selector(dismissKeyboard)];
     swipeDown.direction = UISwipeGestureRecognizerDirectionDown;
@@ -64,34 +72,52 @@
         }
 
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Posting Comment...";
+        
+        NSString *labelString = @"Posting Comment...";
+        if (self.editComment) {
+            labelString = @"Updating Comment...";
+        }
+        hud.labelText = labelString;
         hud.dimBackground = YES;
-
-        MTUser *currentUser = [MTUser currentUser];
-        self.challengePostComment = [[PFChallengePostComment alloc] initWithClassName:[PFChallengePostComment parseClassName]];
-        self.challengePostComment[@"challenge_post"] = self.post;
-        self.challengePostComment[@"comment_text"] = self.postText.text;
-        self.challengePostComment[@"school"] = currentUser.organization.name;
-        self.challengePostComment[@"class"] = currentUser.userClass.name;
-        self.challengePostComment[@"user"] = [MTUser currentUser];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewPostCommentNotification object:nil];
-        
-        MTMakeWeakSelf();
-        [self.challengePostComment saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveNewPostCommentNotification object:nil];
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
+        if (self.editComment) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostCommentNotification object:nil];
 
-            if (!error) {
+            [[MTNetworkManager sharedMTNetworkManager] updateCommentId:self.challengePostComment.id content:self.postText.text success:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveNewPostCommentNotification object:nil];
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+                
                 [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
-            }
-            else {
-                NSLog(@"Post text comment error - %@", error);
-                [weakSelf.challengePostComment saveEventually];
-            }
-        }];
+            } failure:^(NSError *error) {
+                NSLog(@"Edit comment error - %@", [error mtErrorDescription]);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostCommentEditNotification object:nil];
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+            }];
+        }
+        else {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewPostCommentNotification object:nil];
+
+            [[MTNetworkManager sharedMTNetworkManager] createCommentForPostId:self.post.id content:self.postText.text success:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveNewPostCommentNotification object:nil];
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+                
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+            } failure:^(NSError *error) {
+                NSLog(@"Post text comment error - %@", [error mtErrorDescription]);
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostCommentNotification object:nil];
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+            }];
+        }
     }
     
     [self.postText endEditing:YES];

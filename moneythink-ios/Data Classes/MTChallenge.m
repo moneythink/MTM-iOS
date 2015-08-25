@@ -25,7 +25,8 @@
              @"studentInstructions": @"",
              @"tagline": @"",
              @"postExtraFields": @"",
-             @"title": @""};
+             @"title": @"",
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)

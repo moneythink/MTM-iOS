@@ -103,8 +103,8 @@
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
     }
     
-    PFChallengePost *post = self.studentPosts[row];
-    MTUser *user = post[@"user"];
+    MTChallengePost *post = self.studentPosts[row];
+    MTUser *user = post.user;
     
     // TODO: Load avatar
 //    cell.postProfileImage.image = [UIImage imageNamed:@"profile_image"];
@@ -200,7 +200,7 @@
     if ([segueId isEqualToString:@"pushProfileToPost"]) {
         MTPostDetailViewController *destinationVC = (MTPostDetailViewController *)[segue destinationViewController];
         MTStudentProfileTableViewCell *cell = (MTStudentProfileTableViewCell *)sender;
-        PFChallengePost *rowObject = cell.rowPost;
+        MTChallengePost *rowObject = cell.rowPost;
         destinationVC.challengePost = rowObject;
     }
 }

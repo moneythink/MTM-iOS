@@ -2743,7 +2743,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" placeholderIntrinsicWidth="290" placeholderIntrinsicHeight="20" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="290" translatesAutoresizingMaskIntoConstraints="NO" id="p94-5J-g8p" userLabel="User Label" customClass="MTLabel">
-                                                    <rect key="frame" x="52" y="5" width="253" height="20"/>
+                                                    <rect key="frame" x="52" y="5" width="217" height="20"/>
                                                     <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -2754,6 +2754,13 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="picker.png" translatesAutoresizingMaskIntoConstraints="NO" id="lpj-Fb-bNx" userLabel="Picker Image View">
+                                                    <rect key="frame" x="274" y="2" width="36" height="24"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="36" id="1ER-AZ-9O7"/>
+                                                        <constraint firstAttribute="height" constant="24" id="8XQ-aP-TLW"/>
+                                                    </constraints>
+                                                </imageView>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Aoz-1g-gs8" userLabel="Separator View">
                                                     <rect key="frame" x="15" y="54" width="305" height="1"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -2763,8 +2770,9 @@
                                                 </view>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="lpj-Fb-bNx" firstAttribute="leading" secondItem="p94-5J-g8p" secondAttribute="trailing" constant="5" id="2zW-25-pgw"/>
                                                 <constraint firstItem="i0J-pX-mBT" firstAttribute="leading" secondItem="LeA-xK-mFN" secondAttribute="leading" constant="52" id="4to-AZ-dnO"/>
-                                                <constraint firstAttribute="trailing" secondItem="p94-5J-g8p" secondAttribute="trailing" constant="15" id="B5w-mg-UZa"/>
+                                                <constraint firstItem="lpj-Fb-bNx" firstAttribute="top" secondItem="LeA-xK-mFN" secondAttribute="top" constant="2" id="K5g-tL-Evb"/>
                                                 <constraint firstItem="p94-5J-g8p" firstAttribute="top" secondItem="LeA-xK-mFN" secondAttribute="top" constant="5" id="Ko5-Vw-Qa7"/>
                                                 <constraint firstAttribute="trailing" secondItem="Aoz-1g-gs8" secondAttribute="trailing" id="Rts-CP-bJt"/>
                                                 <constraint firstItem="HbY-5W-o3Y" firstAttribute="top" secondItem="LeA-xK-mFN" secondAttribute="top" constant="5" id="UDp-Bt-fPH"/>
@@ -2773,12 +2781,14 @@
                                                 <constraint firstItem="p94-5J-g8p" firstAttribute="leading" secondItem="LeA-xK-mFN" secondAttribute="leading" constant="52" id="a3R-c4-aiG"/>
                                                 <constraint firstAttribute="bottom" secondItem="Aoz-1g-gs8" secondAttribute="bottom" id="bOS-zb-k50"/>
                                                 <constraint firstItem="Aoz-1g-gs8" firstAttribute="top" relation="greaterThanOrEqual" secondItem="i0J-pX-mBT" secondAttribute="bottom" priority="999" constant="4" id="i98-w3-HTA"/>
+                                                <constraint firstAttribute="trailing" secondItem="lpj-Fb-bNx" secondAttribute="trailing" constant="10" id="mR0-6z-RK7"/>
                                                 <constraint firstItem="i0J-pX-mBT" firstAttribute="top" secondItem="p94-5J-g8p" secondAttribute="bottom" constant="5" id="mwz-xh-6Jf"/>
                                                 <constraint firstItem="Aoz-1g-gs8" firstAttribute="leading" secondItem="LeA-xK-mFN" secondAttribute="leading" constant="15" id="u7F-Q9-05i"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="commentLabel" destination="i0J-pX-mBT" id="Ldy-pQ-xma"/>
+                                            <outlet property="pickerImageView" destination="lpj-Fb-bNx" id="lgy-tR-1Jt"/>
                                             <outlet property="separatorView" destination="Aoz-1g-gs8" id="RcZ-Fk-Nh5"/>
                                             <outlet property="userAvatarImageView" destination="HbY-5W-o3Y" id="wCz-Nb-0Ik"/>
                                             <outlet property="userLabel" destination="p94-5J-g8p" id="JjA-zM-GFL"/>
@@ -2810,6 +2820,7 @@
                         <segue destination="9DK-c8-e6q" kind="modal" identifier="commentOnPost" id="a3W-fR-2k0"/>
                         <segue destination="Pk4-FW-8FD" kind="push" identifier="postDetailStudentProfileView" id="o0E-h6-NZi"/>
                         <segue destination="XvP-4P-aHd" kind="modal" identifier="editPostSegue" id="48k-xo-w1Z"/>
+                        <segue destination="9DK-c8-e6q" kind="modal" identifier="editCommentSegue" id="ds8-qb-8o8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -5534,12 +5545,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="FBG-cj-gjr"/>
-        <segue reference="yad-P5-d3y"/>
         <segue reference="nWx-Jd-e9Z"/>
+        <segue reference="yad-P5-d3y"/>
+        <segue reference="FBG-cj-gjr"/>
+        <segue reference="ds8-qb-8o8"/>
         <segue reference="LS9-Mg-yad"/>
         <segue reference="o0E-h6-NZi"/>
-        <segue reference="a3W-fR-2k0"/>
         <segue reference="48k-xo-w1Z"/>
     </inferredMetricsTieBreakers>
 </document>

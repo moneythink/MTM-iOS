@@ -117,9 +117,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     MTMakeWeakSelf();
     [OAuth2Manager authenticateUsingOAuthWithURLString:@"oauth" parameters:parameters success:^(AFOAuthCredential *credential) {
         NSLog(@"Successfully refreshed AFOAuthCredential");
-        
-        // TODO: Remove, just for testing refreshing token
-        [credential setExpiration:[NSDate dateWithTimeIntervalSinceNow:10]];
+//        [credential setExpiration:[NSDate dateWithTimeIntervalSinceNow:10]];
         [AFOAuthCredential storeCredential:credential withIdentifier:MTNetworkServiceOAuthCredentialKey];
         weakSelf.refreshingOAuthToken = NO;
 
@@ -239,7 +237,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
             }
             user.hasBankAccount = [[studentDict objectForKey:@"hasBankAccount"] boolValue];
             user.hasResume = [[studentDict objectForKey:@"hasResume"] boolValue];
-            
         }
     }
     
@@ -383,6 +380,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
+    
+    // Mark existing challenges deleted to filter out deleted challenges
+    RLMResults *existingChallenges = [MTChallenge allObjects];
+    for (MTChallenge *thisChallenge in existingChallenges) {
+        thisChallenge.isDeleted = YES;
+    }
+
     for (id classChallenge in classChallengesArray) {
         if ([classChallenge isKindOfClass:[NSDictionary class]]) {
             
@@ -398,6 +402,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     // Now create/update challenge
                     MTChallenge *challenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
                     challenge.ranking = thisRanking;
+                    challenge.isDeleted = NO;
                     
                     if ([[challengeDict objectForKey:@"postExtraFields"] isKindOfClass:[NSDictionary class]]) {
                         NSError *error;
@@ -414,10 +419,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
-- (void)processPostsWithResponseObject:(id)responseObject
+- (void)processPostsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"No user response data");
+        NSLog(@"No posts response data");
         return;
     }
     
@@ -439,10 +444,18 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
+    
+    // Mark existing comments deleted to filter out deleted comments
+    RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu", challengeId];
+    for (MTChallengePost *thisPost in existingPosts) {
+        thisPost.isDeleted = YES;
+    }
+
     for (id post in postsArray) {
         if ([post isKindOfClass:[NSDictionary class]]) {
             
             MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
+            challengePost.isDeleted = NO;
             
             NSDictionary *postDict = (NSDictionary *)post;
             if ([[postDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
@@ -504,8 +517,80 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
+- (void)processCommentsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId postId:(NSInteger)postId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No comments response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded comments data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"comments"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No comments data");
+        return;
+    }
+    
+    NSArray *commentsArray = [embeddedDict objectForKey:@"comments"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    // Mark existing comments deleted to filter out deleted comments
+    if (challengeId > 0) {
+        // for challenge
+        RLMResults *existingComments = [MTChallengePostComment objectsWhere:@"challengePost.challenge.id = %lu", challengeId];
+        for (MTChallengePostComment *thisComment in existingComments) {
+            thisComment.isDeleted = YES;
+        }
+    }
+    else {
+        // for post
+        RLMResults *existingComments = [MTChallengePostComment objectsWhere:@"challengePost.id = %lu", postId];
+        for (MTChallengePostComment *thisComment in existingComments) {
+            thisComment.isDeleted = YES;
+        }
+    }
+    
+    for (id comment in commentsArray) {
+        if ([comment isKindOfClass:[NSDictionary class]]) {
+            
+            MTChallengePostComment *challengePostComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:comment];
+            challengePostComment.isDeleted = NO;
+            
+            NSDictionary *commentDict = (NSDictionary *)comment;
+            if ([[commentDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [commentDict objectForKey:@"_embedded"];
+                
+                // Get user
+                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    challengePostComment.user = thisUser;
+                    
+                    NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
+                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    challengePostComment.challengePost = thisChallengePost;
+                    
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 
 #pragma mark - Public Methods -
+
+#pragma mark - Login/Registration Methods -
 - (void)authenticateForUsername:(NSString *)username withPassword:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -800,6 +885,56 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
+- (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"email"] = email;
+    
+    [self POST:@"users/reset-password" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"requestPasswordResetEmailForEmail Success");
+        if (success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(nil);
+            });
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"requestPasswordResetEmailForEmail Failed with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
+- (void)sendNewPassword:(NSString *)newPassword withToken:(NSString *)token success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"password"] = newPassword;
+    
+    NSString *authString = [NSString stringWithFormat:@"Token %@", token];
+    [self.requestSerializer setValue:authString forHTTPHeaderField:@"Authorization"];
+    [self POST:@"users/reset-password-confirm" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"sendNewPassword Success");
+        if (success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(nil);
+            });
+        }
+        
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"sendNewPassword Failed with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
+
+#pragma mark - User Methods -
 - (void)getAvatarForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -837,6 +972,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     optionalImage.imageData = responseObject;
                     optionalImage.updatedAt = [NSDate date];
                     thisUser.userAvatar = optionalImage;
+                    thisUser.hasAvatar = YES;
                     
                     [realm commitWriteTransaction];
                 }
@@ -845,7 +981,18 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     success([UIImage imageWithData:responseObject]);
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-                NSLog(@"Failed to set user avatar with error: %@", [error mtErrorDescription]);
+                NSLog(@"Failed to get user avatar with error: %@", [error mtErrorDescription]);
+                
+                if ([error mtErrorCode] == 404) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    [realm beginWriteTransaction];
+                    
+                    MTUser *thisUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
+                    thisUser.userAvatar = nil;
+                    thisUser.hasAvatar = NO;
+                    
+                    [realm commitWriteTransaction];
+                }
                 if (failure) {
                     failure(error);
                 }
@@ -874,7 +1021,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         
         AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
         NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, (long)[MTUser currentUser].id];
-
+        
         [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Accept"];
         [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
@@ -884,7 +1031,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [contentTypes addObject:@"image/jpeg"];
         responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
         manager.responseSerializer = responseSerializer;
-
+        
         NSError *requestError = nil;
         NSString *method = imageData ? @"PUT" : @"DELETE";
         NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:method URLString:urlString parameters:nil error:&requestError];
@@ -963,10 +1110,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
         parameters[@"firstName"] = firstName;
         parameters[@"lastName"] = lastName;
         parameters[@"phoneNumber"] = phoneNumber;
-//        parameters[@"username"] = email;
-//        parameters[@"email"] = email;
+        //        parameters[@"username"] = email;
+        //        parameters[@"email"] = email;
         parameters[@"password"] = password;
-
+        
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateCurrentUser success response");
@@ -978,7 +1125,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 MTUser *meUser = [MTUser currentUser];
                 meUser.firstName = firstName;
                 meUser.lastName = lastName;
-//                meUser.email = email;
+                //                meUser.email = email;
                 meUser.phoneNumber = phoneNumber;
                 
                 [realm commitWriteTransaction];
@@ -1007,17 +1154,17 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:responseData];
         [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-//            NSLog(@"Found me user");
+            //            NSLog(@"Found me user");
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
-//                NSLog(@"Parsed meUser object: %@", meUser);
+                //                NSLog(@"Parsed meUser object: %@", meUser);
                 if (meUser.hasAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
                         NSLog(@"Retrieved user avatar");
                         if (success) {
                             success(nil);
                         }
-
+                        
                     } failure:^(NSError *error) {
                         NSLog(@"Failed to retrieve user avatar, probably no avatar assigned");
                         if (failure) {
@@ -1052,54 +1199,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)requestPasswordResetEmailForEmail:(NSString *)email success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
-{
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    parameters[@"email"] = email;
-    
-    [self POST:@"users/reset-password" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"requestPasswordResetEmailForEmail Success");
-        if (success) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                success(nil);
-            });
-        }
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog(@"requestPasswordResetEmailForEmail Failed with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                failure(error);
-            });
-        }
-    }];
-}
 
-- (void)sendNewPassword:(NSString *)newPassword withToken:(NSString *)token success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
-{
-    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-    parameters[@"password"] = newPassword;
-    
-    NSString *authString = [NSString stringWithFormat:@"Token %@", token];
-    [self.requestSerializer setValue:authString forHTTPHeaderField:@"Authorization"];
-    [self POST:@"users/reset-password-confirm" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-        NSLog(@"sendNewPassword Success");
-        if (success) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                success(nil);
-            });
-        }
-        
-    } failure:^(NSURLSessionDataTask *task, NSError *error) {
-        NSLog(@"sendNewPassword Failed with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                failure(error);
-            });
-        }
-    }];
-}
-
+#pragma mark - Challenge Methods -
 - (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();
@@ -1133,21 +1234,23 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)loadPostsForChallenge:(MTChallenge *)challenge success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+
+#pragma mark - Post Methods -
+- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
         parameters[@"page_size"] = @"9990";
+        parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
-        // TODO: Filter by challenge
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"posts" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"posts success response");
             
             if (responseObject) {
-                [self processPostsWithResponseObject:responseObject];
+                [self processPostsWithResponseObject:responseObject challengeId:challengeId];
             }
             
             if (success) {
@@ -1340,6 +1443,19 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePost *newPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                
+                MTChallenge *challenge = [MTChallenge objectForPrimaryKey:[NSNumber numberWithInteger:challengeId]];
+                if (challenge) {
+                    newPost.challenge = challenge;
+                }
+                
+                MTClass *thisClass = [MTUser currentUser].userClass;
+                if (thisClass) {
+                    newPost.challengeClass = thisClass;
+                }
+                
+                newPost.user = [MTUser currentUser];
+                
                 if (!IsEmpty(extraData)) {
                     NSError *error;
                     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extraData options:0 error:&error];
@@ -1518,6 +1634,213 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }
     }];
 }
+
+
+#pragma mark - Comment Methods -
+- (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"9990";
+        parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
+//        NSString *urlString = [NSString stringWithFormat:@"comments/challenge_id=%lu", challengeId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadCommentsForChallengeId success response");
+            
+            if (responseObject) {
+                [self processCommentsWithResponseObject:responseObject challengeId:challengeId postId:0];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadCommentsForChallengeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadCommentsForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadCommentsForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"9990";
+        NSString *urlString = [NSString stringWithFormat:@"comments/post_id=%lu", postId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadCommentsForPostId success response");
+            
+            if (responseObject) {
+                [self processCommentsWithResponseObject:responseObject challengeId:0 postId:postId];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadCommentsForPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadCommentsForPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)createCommentForPostId:(NSInteger)postId content:(NSString *)content success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"comments"];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"content"] = content;
+        parameters[@"post"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:postId] forKey:@"id"];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"createCommentForPostId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePostComment *newComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                
+                MTUser *meUser = [MTUser currentUser];
+                newComment.user = meUser;
+                
+                MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                newComment.challengePost = post;
+                
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed createCommentForPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed createCommentForPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)updateCommentId:(NSInteger)commentId content:(NSString *)content success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"comments/%ld", (long)commentId];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"content"] = content;
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"updateCommentId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePostComment *updatedPost = [MTChallengePostComment objectForPrimaryKey:[NSNumber numberWithInteger:commentId]];
+                updatedPost.content = content;
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                NSLog(@"Unable to update comment, no responseObject");
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed updateCommentId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed updateCommentId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)deleteCommentId:(NSInteger)commentId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"comments/%ld", (long)commentId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"deleteCommentId success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTChallengePostComment *commentToDelete = [MTChallengePostComment objectForPrimaryKey:[NSNumber numberWithInteger:commentId]];
+            if (commentToDelete) {
+                [realm deleteObject:commentToDelete];
+            }
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed deleteCommentId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed deleteCommentId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
 
 // TODO: Need to handle pagination
 

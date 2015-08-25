@@ -10,7 +10,7 @@
 
 @protocol MTEmojiPickerCollectionViewDelegate <NSObject>
 
-- (void)didSelectEmoji:(PFEmoji *)emoji withPost:(PFChallengePost *)post;
+- (void)didSelectEmoji:(PFEmoji *)emoji withPost:(MTChallengePost *)post;
 
 @end
 
@@ -18,7 +18,7 @@
 
 @property (nonatomic, weak) id<MTEmojiPickerCollectionViewDelegate> delegate;
 
-@property (nonatomic, strong) PFChallengePost *post;
+@property (nonatomic, strong) MTChallengePost *post;
 @property (nonatomic, strong) NSArray *emojiObjects;
 
 @end

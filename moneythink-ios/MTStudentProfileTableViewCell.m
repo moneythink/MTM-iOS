@@ -47,26 +47,27 @@
 }
 
 - (void)checkedVerifiedBox {
-    PFUser *mentor = [PFUser currentUser];
-    NSString *userID = [mentor objectId];
-    NSString *postID = [self.rowPost objectId];
-    
-    if (!self.verifiedCheckbox.isChecked) {
-        userID = @"";
-    }
-    
-    NSDictionary *verifiedDict = @{@"post_id": postID, @"verified_by": userID};
-    
-    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:verifiedDict block:^(id object, NSError *error) {
-        if (!error) {
-            
-        } else {
-            self.verifiedCheckbox.isChecked = !self.verifiedCheckbox.isChecked;
-            [self setNeedsLayout];
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-    }];
+    // TODO: Implement
+//    PFUser *mentor = [PFUser currentUser];
+//    NSString *userID = [mentor objectId];
+//    NSString *postID = [self.rowPost objectId];
+//    
+//    if (!self.verifiedCheckbox.isChecked) {
+//        userID = @"";
+//    }
+//    
+//    NSDictionary *verifiedDict = @{@"post_id": postID, @"verified_by": userID};
+//    
+//    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:verifiedDict block:^(id object, NSError *error) {
+//        if (!error) {
+//            
+//        } else {
+//            self.verifiedCheckbox.isChecked = !self.verifiedCheckbox.isChecked;
+//            [self setNeedsLayout];
+//            NSLog(@"error - %@", error);
+//            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+//        }
+//    }];
 }
 
 @end

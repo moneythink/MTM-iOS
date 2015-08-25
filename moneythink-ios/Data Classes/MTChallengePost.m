@@ -14,7 +14,8 @@
     return @{@"isVerified" : @NO,
              @"hasPostImage": @NO,
              @"challengeData": @"",
-             @"content": @""};
+             @"content": @"",
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)

@@ -11,7 +11,7 @@
 
 @interface MTStudentProfileTableViewCell : PFTableViewCell
 
-@property (strong, nonatomic) PFChallengePost *rowPost;
+@property (strong, nonatomic) MTChallengePost *rowPost;
 
 @property (strong, nonatomic) IBOutlet PFImageView *postProfileImage;
 @property (strong, nonatomic) IBOutlet UILabel *timeSince;

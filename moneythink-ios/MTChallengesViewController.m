@@ -401,7 +401,7 @@
         currentChallengeId = self.currentChallenge.id;
     }
     
-    RLMResults *activeChallenges = [[MTChallenge objectsWhere:@"isActive = YES"] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    RLMResults *activeChallenges = [[MTChallenge objectsWhere:@"isActive = YES AND isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
     if (activeChallenges.count == 0) {
         self.challenges = nil;
         return;

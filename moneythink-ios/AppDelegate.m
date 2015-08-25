@@ -687,63 +687,44 @@
 #pragma mark - Realm Methods -
 - (void)setupRealm
 {
-    // TODO: Clear for testing
+    // Can clear database on launch for testing
 //    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
 //    [MTUser logout];
-
-    [self performRealmMigration];
     
-//    MTOrganization *testO = [[MTOrganization alloc] init];
-//    testO.name = @"PSD";
-//    
-//    MTClass *testClass = [[MTClass alloc] init];
-//    testClass.name = @"Riffenburgh";
-//    
-//    // Create a standalone object
-//    MTUser *meUser = [[MTUser alloc] init];
-//    
-//    // Set & read properties
-//    meUser.username = @"";
-//    meUser.firstName = @"David";
-//    meUser.lastName = @"Sica";
-//    meUser.currentUser = YES;
-//    meUser.organization = testO;
-//    meUser.userClass = testClass;
-//    NSLog(@"Me: %@", meUser.firstName);
-//    
-//    // Realms are used to group data together
-//    RLMRealm *realm = [RLMRealm defaultRealm]; // Create realm pointing to default file
-//    
-//    // Save your object
-//    [realm beginWriteTransaction];
-//    [realm addObject:testO];
-//    [realm addObject:testClass];
-//    [realm addObject:meUser];
-//    [realm commitWriteTransaction];
-//
-//    // Query
-//    RLMResults *results = [MTUser objectsInRealm:realm where:@"firstName contains 'D'"];
-//    NSLog(@"Number of users: %li", (unsigned long)results.count);
-}
-
-- (void)performRealmMigration
-{
-    // Notice setSchemaVersion is set to 1, this is always set manually. It must be
-    // higher than the previous version (oldSchemaVersion) or an RLMException is thrown
-    [RLMRealm setSchemaVersion:6
-                forRealmAtPath:[RLMRealm defaultRealmPath]
-            withMigrationBlock:^(RLMMigration *migration, uint64_t oldSchemaVersion) {
-                // We haven’t migrated anything yet, so oldSchemaVersion == 0
-                if (oldSchemaVersion < 1) {
-                    // Nothing to do!
-                    // Realm will automatically detect new properties and removed properties
-                    // And will update the schema on disk automatically
-                }
-            }];
+    RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     
-    // now that we have called `setSchemaVersion:withMigrationBlock:`, opening an outdated
-    // Realm will automatically perform the migration and opening the Realm will succeed
-    [RLMRealm defaultRealm];
+    // Set either the path for the file or the identifer for an in-memory Realm
+    // By default config.path will be the Default realm path
+    // config.path = "";
+    // config.inMemoryIdentifier = @"MyInMemoryRealm";
+    
+    // Encryption keys, schema versions and migration blocks are now all set on the
+    // config object rather than registered for a path:
+    // config.encryptionKey = GetKeyFromKeychain();
+    config.schemaVersion = 10;
+    config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) {
+        // We haven’t migrated anything yet, so oldSchemaVersion == 0
+        if (oldSchemaVersion < 1) {
+            // Nothing to do!
+            // Realm will automatically detect new properties and removed properties
+            // And will update the schema on disk automatically
+        }
+    };
+    
+    // New feature: a Realm configuration can explicitly list which object classes
+    // should be stored in the Realm, rather than always including every `RLMObject`
+    // and `Object` subclass.
+//    config.objectClasses = @[Dog.class, Person.class];
+    
+    // Either use the configuration to open a Realm:
+    NSError *error;
+    [RLMRealm realmWithConfiguration:config error:&error];
+    if (error) {
+        NSLog(@"Unable to open default realm: %@", [error localizedDescription]);
+    }
+    
+    // Or set the configuration used for the default Realm:
+    // [RLMRealmConfiguration setDefaultConfiguration:config];
 }
 
 

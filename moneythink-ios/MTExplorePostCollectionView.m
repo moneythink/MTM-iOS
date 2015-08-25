@@ -267,10 +267,10 @@
     
     if ([segueIdentifier hasPrefix:@"pushViewPost"]) {
         MTPostDetailViewController *destinationViewController = (MTPostDetailViewController *)[segue destinationViewController];
-        destinationViewController.challengePost = (PFChallengePost *)sender;
+        destinationViewController.challengePost = (MTChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
         
-        PFChallengePost *post = (PFChallengePost*)sender;
+        MTChallengePost *post = (MTChallengePost *)sender;
         MTUser *user = post[@"user"];
         
         BOOL myPost = NO;

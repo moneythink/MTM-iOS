@@ -18,6 +18,7 @@
 @property MTOptionalImage *postImage;
 @property BOOL hasPostImage;
 @property NSString *challengeData;
+@property BOOL isDeleted;
 
 @property MTUser *user;
 @property MTChallenge *challenge;

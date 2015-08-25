@@ -19,7 +19,20 @@
 {
     [super prepareForReuse];
     self.userAvatarImageView.image = nil;
+    self.pickerImageView.hidden = YES;
     self.separatorView.hidden = NO;
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+    
+    if (highlighted) {
+        [self.pickerImageView setImage:[UIImage imageNamed:@"picker_highlighted"]];
+    }
+    else {
+        [self.pickerImageView setImage:[UIImage imageNamed:@"picker"]];
+    }
 }
 
 

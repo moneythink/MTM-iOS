@@ -29,6 +29,7 @@
 @property NSString *title;
 @property NSDate *updatedAt;
 @property NSString *postExtraFields;
+@property BOOL isDeleted;
 
 @end
 
