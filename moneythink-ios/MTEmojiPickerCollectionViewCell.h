@@ -10,7 +10,6 @@
 
 @interface MTEmojiPickerCollectionViewCell : UICollectionViewCell
 
-@property (nonatomic, strong) IBOutlet UIImageView *emojiImageView;
-@property (nonatomic, strong) PFImageView *emojiImage;
+@property (nonatomic, strong) UIImageView *emojiImage;
 
 @end

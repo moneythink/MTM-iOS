@@ -38,7 +38,7 @@
 @property (nonatomic, strong) MTExplorePostCollectionView *exploreCollectionView;
 @property (nonatomic, strong) MTMyClassTableViewController  *myClassTableView;
 @property (nonatomic, strong) MTChallengeListViewController *challengeListView;
-@property (nonatomic, strong) NSArray *emojiObjects;
+@property (nonatomic, strong) RLMResults *emojiObjects;
 @property (nonatomic) BOOL shouldLoadPreviousChallenge;
 
 @property (nonatomic, strong) RLMNotificationToken *token;
@@ -372,19 +372,21 @@
 
 - (void)loadEmoji
 {
-    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
-    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    [query orderByAscending:@"emoji_order"];
-    
+    RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    if (!IsEmpty(emojis)) {
+        self.emojiObjects = emojis;
+        self.myClassTableView.emojiObjects = self.emojiObjects;
+        [self.myClassTableView.tableView reloadData];
+    }
+
     MTMakeWeakSelf();
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.emojiObjects = objects;
-            weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
-            [weakSelf.myClassTableView.tableView reloadData];
-        } else {
-            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
-        }
+    [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
+        RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+        weakSelf.emojiObjects = emojis;
+        weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
+        [weakSelf.myClassTableView.tableView reloadData];
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
     }];
 }
 

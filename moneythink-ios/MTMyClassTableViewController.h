@@ -33,7 +33,7 @@ extern NSString *const kFailedSaveEditPostNotification;
 @property (nonatomic, strong) NSString *schoolName;
 
 @property (nonatomic, strong) NSString *comment;
-@property (nonatomic, strong) NSArray *emojiObjects;
+@property (nonatomic, strong) RLMResults *emojiObjects;
 @property (nonatomic, strong) MTPostDetailViewController *postViewController;
 
 - (void)didSelectLikeWithEmojiForPost:(MTChallengePost *)post;

@@ -23,8 +23,7 @@ typedef enum {
 @protocol MTPostViewControllerDelegate <NSObject>
 
 - (void)didDeletePost:(MTChallengePost *)challengePost;
-- (void)willUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
-- (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
+- (void)didUpdateLikes;
 - (void)didUpdateButtonsTapped:(NSDictionary *)buttonsTapped;
 - (void)didUpdateSecondaryButtonsTapped:(NSDictionary *)secondaryButtonsTapped;
 
@@ -43,12 +42,10 @@ typedef enum {
 @property (nonatomic) BOOL hasTertiaryButtons;
 @property (nonatomic, strong) NSDictionary *buttonsTapped;
 @property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
-@property (nonatomic, strong) NSArray *postsLiked;
-@property (nonatomic, strong) NSArray *postsLikedFull;
 @property (nonatomic, strong) NSArray *emojiArray;
 @property (nonatomic, strong) PFNotifications *notification;
 
-- (void)emojiLiked:(PFEmoji *)emoji;
+- (void)emojiLiked:(MTEmoji *)emoji;
 - (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate;
 
 @end

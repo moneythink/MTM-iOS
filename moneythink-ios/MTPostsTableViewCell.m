@@ -82,15 +82,15 @@
 
     NSMutableArray *uniqueEmojiArray = [NSMutableArray array];
     NSMutableArray *uniqueEmojiNameArray = [NSMutableArray array];
-    for (PFEmoji *thisEmoji in emojiArray) {
-        if (![uniqueEmojiNameArray containsObject:thisEmoji[@"name"]]) {
-            [uniqueEmojiNameArray addObject:thisEmoji[@"name"]];
+    for (MTEmoji *thisEmoji in emojiArray) {
+        if (![uniqueEmojiNameArray containsObject:thisEmoji.code]) {
+            [uniqueEmojiNameArray addObject:thisEmoji.code];
             [uniqueEmojiArray addObject:thisEmoji];
         }
     }
     
     // Sort by name, so consistent in presentation
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"emoji_order" ascending:YES];
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"ranking" ascending:YES];
     NSArray *sortedUniqueEmojiArray = [uniqueEmojiArray sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
     
     NSInteger otherCount = [emojiArray count]-[uniqueEmojiArray count];
@@ -133,35 +133,15 @@
     }
     
     for (NSInteger i = 0; i < finishIndex; i++) {
-        PFEmoji *thisEmoji = [sortedUniqueEmojiArray objectAtIndex:i];
-        PFFile *imageFile = nil;
-        if (IS_RETINA) {
-            imageFile = thisEmoji[@"image_2x"];
-        }
-        else {
-            imageFile = thisEmoji[@"image"];
-        }
+        MTEmoji *thisEmoji = [sortedUniqueEmojiArray objectAtIndex:i];
         
         UIView *emojiView = [containerView viewWithTag:(i+startIndex+1)];
         emojiView.backgroundColor = [UIColor clearColor];
-        PFImageView *emojiImageView = [[PFImageView alloc] initWithFrame:CGRectMake(0, 0, emojiView.frame.size.width, emojiView.frame.size.height)];
+        UIImageView *emojiImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, emojiView.frame.size.width, emojiView.frame.size.height)];
         emojiImageView.contentMode = UIViewContentModeScaleAspectFill;
-        emojiImageView.file = imageFile;
+        emojiImageView.image = [UIImage imageWithData:thisEmoji.emojiImage.imageData];
         
         [emojiView addSubview:emojiImageView];
-        
-        [emojiImageView loadInBackground:^(UIImage *image, NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (!error) {
-                    if (image) {
-                        emojiImageView.image = image;
-                        [containerView setNeedsDisplay];
-                    }
-                } else {
-                    NSLog(@"error - %@", error);
-                }
-            });
-        }];
     }
 }
 

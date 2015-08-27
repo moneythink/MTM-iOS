@@ -36,20 +36,17 @@ typedef enum {
 
 @property (nonatomic, strong) MTUser *currentUser;
 @property (nonatomic, strong) MTUser *postUser;
-@property (assign, nonatomic) NSInteger postLikesCount;
-@property (assign, nonatomic) BOOL isMyClass;
+@property (nonatomic) BOOL isMyClass;
 @property (nonatomic, strong) RLMResults *comments;
-@property (nonatomic, strong) NSArray *challengePostsLikedUsers;
-@property (nonatomic, strong) NSArray *challengePostsLiked;
+@property (nonatomic, strong) RLMResults *likes;
+
 @property (nonatomic, strong) NSMutableAttributedString *postText;
 @property (nonatomic) CGFloat postTextHeight;
 @property (nonatomic) BOOL isMentor;
 @property (nonatomic) BOOL hideVerifySwitch;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
-@property (nonatomic, strong) MTPostLikeCommentTableViewCell *postLikeCommentCell;
-@property (nonatomic, strong) PFChallengePostComment *postComment;
-@property (nonatomic, strong) NSArray *emojiPickerObjects;
+@property (nonatomic, strong) RLMResults *emojiObjects;
 @property (nonatomic, strong) NSString *spentAmount;
 @property (nonatomic, strong) NSString *savedAmount;
 @property (nonatomic) BOOL displaySpentView;
@@ -84,6 +81,11 @@ typedef enum {
         self.hideVerifySwitch = YES;
 
         [self.tableView reloadData];
+        
+        if (IsEmpty(self.emojiObjects)) {
+            [self loadEmoji];
+        }
+
         [self loadFromNotification];
     }
     else {
@@ -94,26 +96,6 @@ typedef enum {
 
         self.postUser = self.challengePost.user;
         self.currentUser = [MTUser currentUser];
-        self.postLikesCount = 0;
-        
-//        if (self.challengePost[@"likes"]) {
-//            self.postLikesCount = [self.challengePost[@"likes"] intValue];
-//        }
-        
-//        NSPredicate *posterWithID = [NSPredicate predicateWithFormat:@"objectId = %@", [self.postUser objectId]];
-//        PFQuery *findPoster = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:posterWithID];
-//        
-//        findPoster.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//        
-//        MTMakeWeakSelf();
-//        [findPoster findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            if (!error) {
-//                weakSelf.postUser = [objects firstObject];
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [weakSelf.tableView reloadData];
-//                });
-//            }
-//        }];
         
         if (self.hasButtons && IsEmpty(self.buttonsTapped)) {
             [self updateButtonsTapped];
@@ -122,12 +104,9 @@ typedef enum {
             [self updateSecondaryButtonsTapped];
         }
         
-//        if (IsEmpty(self.emojiPickerObjects)) {
-//            [self loadEmoji];
-//        }
         [self loadComments];
         [self loadPostText];
-//        [self loadLikesWithCache:YES];
+        [self loadLikesOnlyDatabase:NO];
         [self configureChallengePermissions];
     }
 }
@@ -144,65 +123,56 @@ typedef enum {
     self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
     [self.tableView reloadData];
     
-    // TODO: Re-load comments for this post
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePost.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+            [weakSelf.tableView reloadData];
+        });
+
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load comment for post: %@", [error mtErrorDescription]);
+    }];
 }
 
-- (void)loadLikesWithCache:(BOOL)withCache
+- (void)loadLikesOnlyDatabase:(BOOL)onlyDatabase;
 {
-//    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-//        return;
-//    }
-//    
-//    MTMakeWeakSelf();
-//    PFQuery *queryPostLikes = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
-//    [queryPostLikes whereKey:@"post" equalTo:self.challengePost];
-//    [queryPostLikes includeKey:@"user"];
-//    [queryPostLikes includeKey:@"emoji"];
-//
-//    if (withCache) {
-//        queryPostLikes.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    }
-//    else {
-//        queryPostLikes.cachePolicy = kPFCachePolicyNetworkOnly;
-//    }
-//    
-//    [queryPostLikes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            NSMutableArray *users = [NSMutableArray array];
-//            NSMutableArray *challengesPostsLiked = [NSMutableArray array];
-//            NSMutableArray *emojiArray = [NSMutableArray array];
-//            NSMutableArray *mutableLiked = [NSMutableArray array];
-//            NSMutableArray *mutableLikedFull = [NSMutableArray array];
-//
-//            for (PFChallengePostsLiked *thisLike in objects) {
-//                PFUser *thisUser = thisLike[@"user"];
-//                [users addObject:thisUser];
-//                [challengesPostsLiked addObject:thisLike];
-//                
-//                PFEmoji *thisEmoji = thisLike[@"emoji"];
-//                if (thisEmoji) {
-//                    [emojiArray addObject:thisEmoji];
-//                }
-//                
-//                PFChallengePost *post = thisLike[@"post"];
-//                if (!IsEmpty(post.objectId) && [MTUtil isUserMe:thisUser]) {
-//                    [mutableLiked addObject:post.objectId];
-//                    [mutableLikedFull addObject:thisLike];
-//                }
-//            }
-//            
-//            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-//            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
-//            weakSelf.emojiArray = emojiArray;
-//            weakSelf.challengePostsLikedUsers = [NSArray arrayWithArray:users];
-//            weakSelf.challengePostsLiked = [NSArray arrayWithArray:challengesPostsLiked];
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [weakSelf.tableView reloadData];
-//            });
-//        } else {
-//            NSLog(@"error - %@", error);
-//        }
-//    }];
+    self.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id];
+    
+    NSMutableArray *emojiArray = [NSMutableArray array];
+    for (MTChallengePostLike *thisLike in self.likes) {
+        MTEmoji *thisEmoji = thisLike.emoji;
+        if (thisEmoji) {
+            [emojiArray addObject:thisEmoji];
+        }
+    }
+
+    self.emojiArray = emojiArray;
+    [self.tableView reloadData];
+
+    if (onlyDatabase) {
+        return;
+    }
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadLikesForPostId:self.challengePost.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id];
+            
+            NSMutableArray *emojiArray = [NSMutableArray array];
+            for (MTChallengePostLike *thisLike in weakSelf.likes) {
+                MTEmoji *thisEmoji = thisLike.emoji;
+                if (thisEmoji) {
+                    [emojiArray addObject:thisEmoji];
+                }
+            }
+            
+            weakSelf.emojiArray = emojiArray;
+            [weakSelf.tableView reloadData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load/update likes: %@", [error mtErrorDescription]);
+    }];
 }
 
 - (void)loadPostText
@@ -228,6 +198,151 @@ typedef enum {
     [self.tableView reloadData];
 }
 
+- (void)configureChallengePermissions
+{
+    self.isMentor = [MTUser isCurrentUserMentor];
+    BOOL autoVerify = self.challenge.autoVerify;
+    self.hideVerifySwitch = !self.isMentor || autoVerify;
+}
+
+- (void)showFirstTimeToastNotification
+{
+    NSString *key = @"ShownToastForChallenge";
+    NSArray *shownArray = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if (![shownArray containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"";
+        hud.detailsLabelText = @"Congratulations on taking a step towards your goal!";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        hud.delegate = self;
+        [hud hide:YES afterDelay:1.0f];
+        
+        NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
+        [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
+        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else {
+        [self secondaryButton1AfterToastAction];
+    }
+}
+
+- (void)closeTouched:(id)sender
+{
+    self.myClassTableViewController = nil;
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)loadEmoji
+{
+    RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    if (!IsEmpty(emojis)) {
+        self.emojiObjects = emojis;
+        [self.tableView reloadData];
+    }
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
+        RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+        weakSelf.emojiObjects = emojis;
+        [weakSelf.tableView reloadData];
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
+    }];
+}
+
+- (void)showNoDataAlertAndPopView:(BOOL)popView
+{
+    NSString *title = @"Unable to load Notification";
+    NSString *messageToDisplay = @"Post may have been previously deleted.";
+    
+    if ([UIAlertController class]) {
+        UIAlertController *changeSheet = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:messageToDisplay
+                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *close = [UIAlertAction
+                                actionWithTitle:@"Close"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction *action) {
+                                    if (popView) {
+                                        [self.navigationController popViewControllerAnimated:YES];
+                                    }
+                                }];
+        
+        [changeSheet addAction:close];
+        
+        [self presentViewController:changeSheet animated:YES completion:nil];
+    } else {
+        MTMakeWeakSelf();
+        [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+            if (popView) {
+                [weakSelf.navigationController popViewControllerAnimated:YES];
+            }
+        }];
+    }
+}
+
+- (void)parseSpentFields
+{
+    // Assume blank
+    self.hasSpentSavedContent = NO;
+    self.savedAmount = @"";
+    self.spentAmount = @"";
+    
+    if (!IsEmpty(self.challengePost.challengeData)) {
+        NSData *data = [self.challengePost.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        
+        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
+            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
+            NSString *currencyString = [self currencyTextForString:spentString];
+            if (!IsEmpty(currencyString)) {
+                self.spentAmount = currencyString;
+            }
+            
+            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
+            currencyString = [self currencyTextForString:savedString];
+            if (!IsEmpty(currencyString)) {
+                self.savedAmount = currencyString;
+            }
+        }
+    }
+    
+    if ((!IsEmpty(self.savedAmount) || !IsEmpty(self.spentAmount))) {
+        self.hasSpentSavedContent = YES;
+    }
+}
+
+- (NSString *)currencyTextForString:(NSString *)string
+{
+    NSString *currencyText = nil;
+    
+    NSNumberFormatter *decimalFormatter = [[NSNumberFormatter alloc] init];
+    [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
+    [decimalFormatter setUsesGroupingSeparator:NO];
+    [decimalFormatter setMaximumFractionDigits:2];
+    
+    NSNumber *currentNumber = [decimalFormatter numberFromString:string];
+    
+    if ([currentNumber floatValue] >= 0.01f) {
+        NSNumberFormatter *currencyformatter = [[NSNumberFormatter alloc] init];
+        [currencyformatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+        currencyText = [currencyformatter stringFromNumber:currentNumber];
+    }
+    else {
+        currencyText = @"";
+    }
+    
+    return currencyText;
+}
+
+
+#pragma mark - Button Methods -
 - (void)updateButtonsTapped
 {
 //    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
@@ -317,13 +432,6 @@ typedef enum {
 //            NSLog(@"Error - %@", error);
 //        }
 //    }];
-}
-
-- (void)configureChallengePermissions
-{
-    self.isMentor = [MTUser isCurrentUserMentor];
-    BOOL autoVerify = self.challenge.autoVerify;
-    self.hideVerifySwitch = !self.isMentor || autoVerify;
 }
 
 - (void)setupButtonsForCell:(UITableViewCell *)cell
@@ -636,53 +744,6 @@ typedef enum {
 //    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
 }
 
-- (void)showFirstTimeToastNotification
-{
-    NSString *key = @"ShownToastForChallenge";
-    NSArray *shownArray = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    if (![shownArray containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
-        
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"";
-        hud.detailsLabelText = @"Congratulations on taking a step towards your goal!";
-        hud.dimBackground = NO;
-        hud.mode = MBProgressHUDModeText;
-        hud.delegate = self;
-        [hud hide:YES afterDelay:1.0f];
-        
-        NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
-        [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
-        [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    }
-    else {
-        [self secondaryButton1AfterToastAction];
-    }
-}
-
-- (void)closeTouched:(id)sender
-{
-    self.myClassTableViewController = nil;
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)loadEmoji
-{
-    // Load Emoji for picker
-//    PFQuery *query = [PFQuery queryWithClassName:[PFEmoji parseClassName] predicate:nil];
-//    query.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    [query addAscendingOrder:@"emoji_order"];
-//    
-//    MTMakeWeakSelf();
-//    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            weakSelf.emojiPickerObjects = objects;
-//        } else {
-//            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
-//        }
-//    }];
-}
-
 
 #pragma mark - Load from Notification Methods -
 - (void)loadFromNotification
@@ -698,10 +759,10 @@ typedef enum {
 
 - (void)continueLoadingFromNotificationWithPost:(MTChallengePost *)post withComment:(PFChallengePostComment *)comment
 {
-    self.postComment = comment;
+//    self.postComment = comment;
     self.challengePost = post;
     
-    self.postLikesCount = 0;
+//    self.postLikesCount = 0;
 //    if (self.challengePost[@"likes"]) {
 //        self.postLikesCount = [self.challengePost[@"likes"] intValue];
 //    }
@@ -802,76 +863,6 @@ typedef enum {
 //    [self loadPostText];
 }
 
-- (void)updateLikes
-{
-//    MTMakeWeakSelf();
-//    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
-//    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
-//    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
-//    myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-//    
-//    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            NSMutableArray *mutableLiked = [NSMutableArray array];
-//            NSMutableArray *mutableLikedFull = [NSMutableArray array];
-//            
-//            for (PFChallengePostsLiked *thisPostLiked in objects) {
-//                PFChallengePost *post = thisPostLiked[@"post"];
-//                if (!IsEmpty(post.objectId)) {
-//                    [mutableLiked addObject:post.objectId];
-//                    [mutableLikedFull addObject:thisPostLiked];
-//                }
-//            }
-//            
-//            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-//            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [weakSelf loadEmojiLikes];
-//            });
-//        }
-//        else {
-//            NSLog(@"error - %@", error);
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        }
-//        
-//    }];
-}
-
-- (void)loadEmojiLikes
-{
-//    if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-//        return;
-//    }
-//
-//    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
-//    [queryPostEmojis whereKey:@"post" equalTo:self.challengePost];
-//    [queryPostEmojis includeKey:@"emoji"];
-//    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
-//    
-//    MTMakeWeakSelf();
-//    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            NSMutableArray *emojiArray = [NSMutableArray array];
-//            for (PFChallengePostsLiked *thisLike in objects) {
-//                PFEmoji *thisEmoji = thisLike[@"emoji"];
-//                if (thisEmoji) {
-//                    [emojiArray addObject:thisEmoji];
-//                }
-//            }
-//            
-//            weakSelf.emojiArray = emojiArray;
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [weakSelf loadButtons];
-//            });
-//        } else {
-//            NSLog(@"error - %@", error);
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        }
-//    }];
-}
-
 - (void)loadButtons
 {
 //    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
@@ -935,96 +926,6 @@ typedef enum {
 //            [weakSelf loadComments];
 //        });
 //    }];
-}
-
-
-#pragma mark - Private Methods -
-- (void)showNoDataAlertAndPopView:(BOOL)popView
-{
-    NSString *title = @"Unable to load Notification";
-    NSString *messageToDisplay = @"Post may have been previously deleted.";
-    
-    if ([UIAlertController class]) {
-        UIAlertController *changeSheet = [UIAlertController
-                                          alertControllerWithTitle:title
-                                          message:messageToDisplay
-                                          preferredStyle:UIAlertControllerStyleAlert];
-        
-        UIAlertAction *close = [UIAlertAction
-                                actionWithTitle:@"Close"
-                                style:UIAlertActionStyleCancel
-                                handler:^(UIAlertAction *action) {
-                                    if (popView) {
-                                        [self.navigationController popViewControllerAnimated:YES];
-                                    }
-                                }];
-        
-        [changeSheet addAction:close];
-        
-        [self presentViewController:changeSheet animated:YES completion:nil];
-    } else {
-        MTMakeWeakSelf();
-        [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-            if (popView) {
-                [weakSelf.navigationController popViewControllerAnimated:YES];
-            }
-        }];
-    }
-}
-
-- (void)parseSpentFields
-{
-    // Assume blank
-    self.hasSpentSavedContent = NO;
-    self.savedAmount = @"";
-    self.spentAmount = @"";
-    
-    if (!IsEmpty(self.challengePost.challengeData)) {
-        NSData *data = [self.challengePost.challengeData dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
-        
-        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
-            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
-            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
-            NSString *currencyString = [self currencyTextForString:spentString];
-            if (!IsEmpty(currencyString)) {
-                self.spentAmount = currencyString;
-            }
-            
-            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
-            currencyString = [self currencyTextForString:savedString];
-            if (!IsEmpty(currencyString)) {
-                self.savedAmount = currencyString;
-            }
-        }
-    }
-    
-    if ((!IsEmpty(self.savedAmount) || !IsEmpty(self.spentAmount))) {
-        self.hasSpentSavedContent = YES;
-    }
-}
-
-- (NSString *)currencyTextForString:(NSString *)string
-{
-    NSString *currencyText = nil;
-    
-    NSNumberFormatter *decimalFormatter = [[NSNumberFormatter alloc] init];
-    [decimalFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    [decimalFormatter setUsesGroupingSeparator:NO];
-    [decimalFormatter setMaximumFractionDigits:2];
-    
-    NSNumber *currentNumber = [decimalFormatter numberFromString:string];
-    
-    if ([currentNumber floatValue] >= 0.01f) {
-        NSNumberFormatter *currencyformatter = [[NSNumberFormatter alloc] init];
-        [currencyformatter setNumberStyle:NSNumberFormatterCurrencyStyle];
-        currencyText = [currencyformatter stringFromNumber:currentNumber];
-    }
-    else {
-        currencyText = @"";
-    }
-    
-    return currencyText;
 }
 
 
@@ -1229,165 +1130,71 @@ typedef enum {
     return NO;
 }
 
-- (void)emojiLiked:(PFEmoji *)emoji
+- (void)emojiLiked:(MTEmoji *)emoji
 {
-//    NSString *emojiName = emoji[@"name"];
-//
-//    __block MTPostLikeCommentTableViewCell *likeCommentCell = self.postLikeCommentCell;
-//
-//    __block NSString *postID = [self.challengePost objectId];
-//    NSString *userID = [self.currentUser objectId];
-//
-//    BOOL like = [self.postsLiked containsObject:postID];
-//
-//    NSInteger oldPostLikesCount = self.postLikesCount;
-//    NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-//    NSMutableArray *likePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-//    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
-//
-//    if (!like) {
-//        [likePosts addObject:postID];
-//
-//        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-//        [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-//        self.postLikesCount += 1;
-//
-//        // Animations are borked on < iOS 8.0 because of autolayout?
-//        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
-//        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
-//            // no animation
-//        } else {
-//            [UIView animateWithDuration:0.2f animations:^{
-//                likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1.5, 1.5);
-//            } completion:^(BOOL finished) {
-//                [UIView animateWithDuration:0.2f animations:^{
-//                    likeCommentCell.likePost.transform = CGAffineTransformMakeScale(1, 1);
-//                } completion:NULL];
-//            }];
-//        }
-//
-//    }
-//    else {
-//        // Replacing current emoji like
-//        BOOL foundMatch = NO;
-//        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
-//            PFChallengePost *post = thisPostLiked[@"post"];
-//            if ([post.objectId isEqualToString:self.challengePost.objectId]) {
-//                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
-//                thisPostLiked[@"emoji"] = emoji;
-//                
-//                for (PFEmoji *thisEmoji in self.emojiArray) {
-//                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
-//                        [newEmojiArray removeObject:thisEmoji];
-//                        foundMatch = YES;
-//                        break;
-//                    }
-//                }
-//            }
-//            
-//            if (foundMatch) {
-//                break;
-//            }
-//        }
-//    }
-//
-//    self.postsLiked = likePosts;
-//    self.challengePost[@"likes"] = [NSNumber numberWithInteger:self.postLikesCount];
-//    likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
-//
-//    // Optimistically, add/remove myself from like users and update emoji
-//    NSMutableArray *newMutableArray = [NSMutableArray arrayWithArray:self.challengePostsLikedUsers];
-//    if (!like) {
-//        if (IsEmpty(newMutableArray)) {
-//            [newMutableArray addObject:self.currentUser];
-//        }
-//        else {
-//            BOOL hasUser = NO;
-//            for (PFUser *thisUser in self.challengePostsLikedUsers) {
-//                if ([thisUser.objectId isEqualToString:self.currentUser.objectId]) {
-//                    hasUser = YES;
-//                    break;
-//                }
-//                if (!hasUser) {
-//                    [newMutableArray addObject:self.currentUser];
-//                }
-//            }
-//        }
-//    }
-//    
-//    // Optimistically update the emoji likes
-//    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:self.emojiArray];
-//    [newEmojiArray insertObject:emoji atIndex:0];
-//    self.emojiArray = [NSArray arrayWithArray:newEmojiArray];
-//    
-//    // Update my emoji
-//    BOOL foundMe = NO;
-//    for (PFChallengePostsLiked *thisChallengePostsLiked in self.challengePostsLiked) {
-//        PFUser *thisUser = thisChallengePostsLiked[@"user"];
-//        if ([MTUtil isUserMe:thisUser]) {
-//            thisChallengePostsLiked[@"emoji"] = emoji;
-//            foundMe = YES;
-//            break;
-//        }
-//    }
-//    if (!foundMe) {
-//        PFChallengePostsLiked *newOne = [[PFChallengePostsLiked alloc] initWithClassName:[PFChallengePostsLiked parseClassName]];
-//        newOne[@"user"] = [PFUser currentUser];
-//        newOne[@"emoji"] = emoji;
-//        
-//        NSMutableArray *newArray = [NSMutableArray arrayWithArray:self.challengePostsLiked];
-//        [newArray addObject:newOne];
-//        self.challengePostsLiked = newArray;
-//    }
-//
-//    self.challengePostsLikedUsers = [NSArray arrayWithArray:newMutableArray];
-//    [self.tableView reloadData];
-//    
-//    // Optimistically update parent view
-//    if ([self.delegate respondsToSelector:@selector(willUpdatePostsLiked:withPostLikedFull:)]) {
-//        [self.delegate willUpdatePostsLiked:self.postsLiked withPostLikedFull:self.postsLikedFull];
-//    }
-//
-//    MTMakeWeakSelf();
-//    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
-//
-//        if (!error) {
-//            
-//            [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [weakSelf.tableView reloadData];
-//                });
-//            }];
-//
-//            [weakSelf loadLikesWithCache:NO];
-//
-//        } else {
-//            NSLog(@"Error updating: %@", [error localizedDescription]);
-//
-//            // Rollback
-//            weakSelf.postsLiked = oldLikePosts;
-//            weakSelf.postLikesCount = oldPostLikesCount;
-//            weakSelf.challengePost[@"likes"] = [NSNumber numberWithInteger:oldPostLikesCount];
-//            weakSelf.emojiArray = oldEmojiArray;
-//            
-//            if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
-//                [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
-//            }
-//
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                likeCommentCell.postLikes.text = [NSString stringWithFormat:@"%ld", (long)oldPostLikesCount];
-//                [weakSelf.tableView reloadData];
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//            });
-//
-//            [weakSelf loadLikesWithCache:YES];
-//        }
-//        
-//        if ([weakSelf.delegate respondsToSelector:@selector(didUpdatePostsLiked:withPostLikedFull:)]) {
-//            [weakSelf.delegate didUpdatePostsLiked:weakSelf.postsLiked withPostLikedFull:weakSelf.postsLikedFull];
-//        }
-//
-//    }];
+    NSString *emojiCode = emoji.code;
+    
+    __block MTChallengePost *post = self.challengePost;
+    
+    MTUser *user = [MTUser currentUser];
+    RLMResults *likesForPost = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO AND user.id = %lu", post.id, user.id];
+    BOOL iLike = !IsEmpty(likesForPost);
+    
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (iLike) {
+        hud.detailsLabelText = @"Updating Emoji...";
+    }
+    else {
+        hud.detailsLabelText = @"Sending Emoji...";
+    }
+    hud.dimBackground = YES;
+    hud.color = [UIColor colorWithWhite:1.0f alpha:1.0f];
+    hud.detailsLabelColor = [UIColor blackColor];
+    hud.detailsLabelFont = [UIFont mtFontOfSize:13.0f];
+    
+    hud.mode = MBProgressHUDModeCustomView;
+    
+    UIImageView *emojiImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:emoji.emojiImage.imageData]];
+    emojiImageView.frame = ({
+        CGRect newFrame = emojiImageView.frame;
+        newFrame.size = CGSizeMake(120.0f, 120.0f);
+        newFrame;
+    });
+    hud.customView = emojiImageView;
+    
+    MTMakeWeakSelf();
+    if (iLike) {
+        NSInteger likeId = ((MTChallengePostLike *)[likesForPost firstObject]).id;
+        [[MTNetworkManager sharedMTNetworkManager] updateLikeId:likeId emojiCode:emojiCode success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf loadLikesOnlyDatabase:YES];
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateLikes)]) {
+                    [weakSelf.delegate didUpdateLikes];
+                }
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] addLikeForPostId:post.id emojiCode:emojiCode success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf loadLikesOnlyDatabase:YES];
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateLikes)]) {
+                    [weakSelf.delegate didUpdateLikes];
+                }
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }];
+    }
 }
 
 
@@ -1454,11 +1261,10 @@ typedef enum {
     // Load for Notification-loaded case
     if (!self.myClassTableViewController) {
         self.myClassTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsTableView"];
-        self.myClassTableViewController.emojiObjects = self.emojiPickerObjects;
+        self.myClassTableViewController.emojiObjects = self.emojiObjects;
         self.myClassTableViewController.postViewController = self;
     }
     
-    self.postLikeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
     [self.myClassTableViewController didSelectLikeWithEmojiForPost:self.challengePost];
 }
 
@@ -2270,7 +2076,7 @@ typedef enum {
             return [self.comments count] > 0 ? @"Comments" : @"";
             break;
         case MTPostTableCellTypeLikeUsers:
-            return [self.challengePostsLikedUsers count] > 0 ? @"Likes" : @"";
+            return [self.likes count] > 0 ? @"Likes" : @"";
             break;
             
         default:
@@ -2303,7 +2109,7 @@ typedef enum {
             height = [self.comments count] > 0 ? 30.0f : 0.0f;
             break;
         case MTPostTableCellTypeLikeUsers:
-            height = [self.challengePostsLikedUsers count] > 0 ? 30.0f : 0.0f;
+            height = [self.likes count] > 0 ? 30.0f : 0.0f;
             break;
             
         default:
@@ -2355,7 +2161,7 @@ typedef enum {
                     rows = self.comments.count;
                     break;
                 case MTPostTableCellTypeLikeUsers:
-                    rows = self.challengePostsLikedUsers.count;
+                    rows = [self.likes count];
                     break;
    
                 default:
@@ -2395,10 +2201,10 @@ typedef enum {
                     rows = 1;
                     break;
                 case MTPostTableCellTypePostComments:
-                    rows = self.comments.count;
+                    rows = [self.comments count];
                     break;
                 case MTPostTableCellTypeLikeUsers:
-                    rows = self.challengePostsLikedUsers.count;
+                    rows = [self.likes count];
                     break;
                     
                 default:
@@ -2431,10 +2237,10 @@ typedef enum {
                     rows = 1;
                     break;
                 case MTPostTableCellTypePostComments:
-                    rows = self.comments.count;
+                    rows = [self.comments count];
                     break;
                 case MTPostTableCellTypeLikeUsers:
-                    rows = self.challengePostsLikedUsers.count;
+                    rows = [self.likes count];
                     break;
                     
                 default:
@@ -2470,10 +2276,10 @@ typedef enum {
                     rows = 1;
                     break;
                 case MTPostTableCellTypePostComments:
-                    rows = self.comments.count;
+                    rows = [self.comments count];
                     break;
                 case MTPostTableCellTypeLikeUsers:
-                    rows = self.challengePostsLikedUsers.count;
+                    rows = [self.likes count];
                     break;
                     
                 default:
@@ -2652,8 +2458,8 @@ typedef enum {
 
             NSString *likesString;
         
-            if (self.postLikesCount > 0) {
-                likesString = [NSString stringWithFormat:@"%ld", (long)self.postLikesCount];
+            if ([self.likes count] > 0) {
+                likesString = [NSString stringWithFormat:@"%ld", (long)[self.likes count]];
             }
             else {
                 likesString = @"0";
@@ -2661,24 +2467,18 @@ typedef enum {
         
             likeCommentCell.postLikes.text = likesString;
             
-//            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-//                likeCommentCell.likePost.enabled = NO;
-//                likeCommentCell.comment.enabled = NO;
-//            }
-//            else {
-//                likeCommentCell.likePost.enabled = YES;
-//                likeCommentCell.comment.enabled = YES;
-//            }
+            likeCommentCell.likePost.enabled = YES;
+            likeCommentCell.comment.enabled = YES;
         
-//            BOOL like = [self.postsLiked containsObject:self.challengePost.objectId];
-//            if (like) {
-//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-//            }
-//            else {
-//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
-//                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
-//            }
+            BOOL iLike = [MTChallengePostLike postLikesContainsMyLike:self.likes];
+            if (iLike) {
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
+            }
+            else {
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
+                [likeCommentCell.likePost setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
+            }
             
             if ([MTChallengePostComment postCommentsContainsMyComment:self.comments]) {
                 [likeCommentCell.comment setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
@@ -2704,29 +2504,6 @@ typedef enum {
             }
             
             likeCommentCell.commentPost.enabled = YES;
-
-//            if ([self.challengePost isDataAvailable]) {
-//                BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
-//                [likeCommentCell.verifiedCheckBox setIsChecked:isChecked];
-//                
-//                likeCommentCell.verfiedLabel.hidden = self.hideVerifySwitch;
-//                if (isChecked) {
-//                    likeCommentCell.verfiedLabel.text = @"Verified";
-//                }
-//                else {
-//                    likeCommentCell.verfiedLabel.text = @"Verify";
-//                }
-//            }
-//            else {
-//                likeCommentCell.verfiedLabel.text = @"";
-//            }
-//
-//            if (!self.challengePost || ![self.challengePost isDataAvailable]) {
-//                likeCommentCell.commentPost.enabled = NO;
-//            }
-//            else {
-//                likeCommentCell.commentPost.enabled = YES;
-//            }
 
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
@@ -2759,7 +2536,7 @@ typedef enum {
             defaultCell.pickerImageView.hidden = ![MTUser isUserMe:commentPoster];
             
             // If last row and has likes, don't show separator
-            if ((indexPath.row == [self.comments count]-1) && !IsEmpty(self.challengePostsLikedUsers)) {
+            if ((indexPath.row == [self.comments count]-1) && !IsEmpty(self.likes)) {
                 defaultCell.separatorView.hidden = YES;
             }
             else {
@@ -2786,12 +2563,13 @@ typedef enum {
             __block MTPostLikeUserTableViewCell *likeUserCell = [tableView dequeueReusableCellWithIdentifier:@"LikeUserCell" forIndexPath:indexPath];
             likeUserCell.selectionStyle = UITableViewCellSelectionStyleGray;
             
-            MTUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
+            MTChallengePostLike *like = self.likes[indexPath.row];
+            MTUser *likeUser = like.user;
             
             [likeUserCell setAccessoryType:UITableViewCellAccessoryNone];
             
-            NSString *firstName = likeUser[@"first_name"];
-            NSString *lastName = likeUser[@"last_name"];
+            NSString *firstName = likeUser.firstName;
+            NSString *lastName = likeUser.lastName;
             
             likeUserCell.username.text = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
             likeUserCell.userAvatarImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -2806,34 +2584,12 @@ typedef enum {
             }];
             
             // Load Emoji like for this user
-            if ([self.challengePostsLiked count] > indexPath.row) {
-                PFChallengePostsLiked *thisLiked = [self.challengePostsLiked objectAtIndex:indexPath.row];
-                PFEmoji *thisEmoji = thisLiked[@"emoji"];
+            if ([self.likes count] > indexPath.row) {
+                MTChallengePostLike *thisLiked = [self.likes objectAtIndex:indexPath.row];
+                MTEmoji *thisEmoji = thisLiked.emoji;
                 
-                if (thisEmoji) {
-                    PFFile *imageFile = nil;
-                    if (IS_RETINA) {
-                        imageFile = thisEmoji[@"image_2x"];
-                    }
-                    else {
-                        imageFile = thisEmoji[@"image"];
-                    }
-                    
-                    likeUserCell.emojiView.contentMode = UIViewContentModeScaleAspectFill;
-                    likeUserCell.emojiView.file = imageFile;
-                    
-                    [likeUserCell.emojiView loadInBackground:^(UIImage *image, NSError *error) {
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            if (!error) {
-                                if (image) {
-                                    likeUserCell.emojiView.image = image;
-                                    [likeUserCell setNeedsDisplay];
-                                }
-                            } else {
-                                NSLog(@"error - %@", error);
-                            }
-                        });
-                    }];
+                if (thisEmoji && thisEmoji.emojiImage.imageData) {
+                    likeUserCell.emojiView.image = [UIImage imageWithData:thisEmoji.emojiImage.imageData];
                 }
                 else {
                     likeUserCell.emojiView.image = nil;
@@ -2857,7 +2613,8 @@ typedef enum {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
     if (indexPath.section == MTPostTableCellTypeLikeUsers) {
-        MTUser *likeUser = self.challengePostsLikedUsers[indexPath.row];
+        MTChallengePostLike *like = self.likes[indexPath.row];
+        MTUser *likeUser = like.user;
         [self performSegueWithIdentifier:@"postDetailStudentProfileView" sender:likeUser];
     }
     else if (indexPath.section == MTPostTableCellTypePostComments) {

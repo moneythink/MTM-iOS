@@ -34,10 +34,6 @@
 @property (nonatomic, strong) IBOutlet UILabel *spentLabel;
 @property (nonatomic, strong) IBOutlet UILabel *savedLabel;
 
-@property (nonatomic, strong) NSArray *postsLiked;
-@property (assign, nonatomic) NSInteger postLikesCount;
-@property (assign, nonatomic) BOOL iLike;
-
 @property (nonatomic, strong) NSArray *emojiArray;
 
 + (void)layoutEmojiForContainerView:(UIView *)containerView withEmojiArray:(NSArray *)emojiArray;

@@ -149,8 +149,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
 
-        NSString *title = @"Moneythink Network Error";
-        NSString *message = @"Unable to connect to Moneythink services, please try again. If the problem persists, Logout and Login again.";
+        NSString *title = @"Authentication Error";
+        NSString *message = @"Moneythink authentication token has expired or is invalid. Please Logout/Login again to continue accessing Moneythink services.";
         if ([UIAlertController class]) {
             UIAlertController *alertController = [UIAlertController
                                                   alertControllerWithTitle:title
@@ -587,6 +587,155 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
+- (void)processEmojisWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No emojis response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded emojis data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"emojis"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No emojis data");
+        return;
+    }
+    
+    NSMutableArray *emojiCodesToFetch = [NSMutableArray array];
+    NSArray *emojisArray = [embeddedDict objectForKey:@"emojis"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    // Mark existing emojis deleted to filter out deleted emojis
+    RLMResults *existingEmojis = [MTEmoji allObjects];
+    for (MTEmoji *thisEmoji in existingEmojis) {
+        thisEmoji.isDeleted = YES;
+    }
+    
+    for (id emoji in emojisArray) {
+        if ([emoji isKindOfClass:[NSDictionary class]]) {
+            BOOL shouldFetchEmojiImage = NO;
+
+            // See if we have existing Emoji and check updated timestamp to see if we need to
+            //  refresh the image.
+            NSString *emojiCode = [emoji objectForKey:@"code"];
+            NSDate *oldUpdatedAt = nil;
+            if (!IsEmpty(emojiCode)) {
+                MTEmoji *oldEmojiObject = [MTEmoji objectForPrimaryKey:emojiCode];
+                if (oldEmojiObject) {
+                    oldUpdatedAt = oldEmojiObject.updatedAt;
+                }
+            }
+            
+            MTEmoji *emojiObject = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emoji];
+            emojiObject.isDeleted = NO;
+            
+            if (!emojiObject.emojiImage) {
+                shouldFetchEmojiImage = YES;
+            }
+            else if (oldUpdatedAt && emojiObject.updatedAt) {
+                if ([emojiObject.updatedAt timeIntervalSince1970] > [oldUpdatedAt timeIntervalSince1970]) {
+                    shouldFetchEmojiImage = YES;
+                }
+            }
+            
+            if (shouldFetchEmojiImage) {
+                [emojiCodesToFetch addObject:emojiObject.code];
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+    
+    for (NSString *emojiCode in emojiCodesToFetch) {
+        [self getEmojiImageForEmojiCode:emojiCode success:nil failure:nil];
+    }
+}
+
+- (void)processLikesWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId postId:(NSInteger)postId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No likes response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No likes comments data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"likes"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No likes data");
+        return;
+    }
+    
+    NSArray *likesArray = [embeddedDict objectForKey:@"likes"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    // Mark existing comments deleted to filter out deleted comments
+    if (challengeId > 0) {
+        // for challenge
+        RLMResults *existingLikes = [MTChallengePostLike objectsWhere:@"challengePost.challenge.id = %lu", challengeId];
+        for (MTChallengePostLike *thisLike in existingLikes) {
+            thisLike.isDeleted = YES;
+        }
+    }
+    else {
+        // for post
+        RLMResults *existingLikes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu", postId];
+        for (MTChallengePostLike *thisLike in existingLikes) {
+            thisLike.isDeleted = YES;
+        }
+    }
+    
+    for (id like in likesArray) {
+        if ([like isKindOfClass:[NSDictionary class]]) {
+            
+            MTChallengePostLike *challengePostLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:like];
+            challengePostLike.isDeleted = NO;
+            
+            NSDictionary *likeDict = (NSDictionary *)like;
+            if ([[likeDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [likeDict objectForKey:@"_embedded"];
+                
+                // Get embedded data
+                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    challengePostLike.user = thisUser;
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
+                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    challengePostLike.challengePost = thisChallengePost;
+                }
+
+                if ([[innerEmbeddedDict objectForKey:@"emoji"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *emojiDict = [innerEmbeddedDict objectForKey:@"emoji"];
+                    MTEmoji *thisEmoji = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emojiDict];
+                    challengePostLike.emoji = thisEmoji;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 
 #pragma mark - Public Methods -
 
@@ -615,9 +764,20 @@ static NSString * const MTRefreshingErrorCode = @"701";
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
 //                NSLog(@"Parsed meUser object: %@", meUser);
-                if (meUser.hasAvatar) {
+                BOOL shouldFetchAvatar = NO;
+                
+                if (meUser.hasAvatar && !meUser.userAvatar) {
+                    shouldFetchAvatar = YES;
+                }
+                else if (meUser.hasAvatar && meUser.userAvatar) {
+                    if ([meUser.updatedAt timeIntervalSince1970] > [meUser.userAvatar.updatedAt timeIntervalSince1970]) {
+                        shouldFetchAvatar = YES;
+                    }
+                }
+                
+                if (shouldFetchAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
-                        NSLog(@"Retrieved user avatar");
+                        NSLog(@"Retrieved new or updated user avatar");
                         if (success) {
                             success(nil);
                         }
@@ -629,6 +789,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     }];
                 }
                 else {
+                    NSLog(@"Already have latest user avatar");
                     if (success) {
                         success(nil);
                     }
@@ -956,7 +1117,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         
         if (!requestError) {
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-                NSLog(@"getAvatarForUserId success response");
+//                NSLog(@"getAvatarForUserId success response");
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -1158,21 +1319,32 @@ static NSString * const MTRefreshingErrorCode = @"701";
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
                 //                NSLog(@"Parsed meUser object: %@", meUser);
-                if (meUser.hasAvatar) {
+                BOOL shouldFetchAvatar = NO;
+                
+                if (meUser.hasAvatar && !meUser.userAvatar) {
+                    shouldFetchAvatar = YES;
+                }
+                else if (meUser.hasAvatar && meUser.userAvatar) {
+                    if ([meUser.updatedAt timeIntervalSince1970] > [meUser.userAvatar.updatedAt timeIntervalSince1970]) {
+                        shouldFetchAvatar = YES;
+                    }
+                }
+                
+                if (shouldFetchAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
-                        NSLog(@"Retrieved user avatar");
+                        NSLog(@"Retrieved new or updated user avatar");
                         if (success) {
                             success(nil);
                         }
-                        
                     } failure:^(NSError *error) {
                         NSLog(@"Failed to retrieve user avatar, probably no avatar assigned");
-                        if (failure) {
-                            failure(error);
+                        if (success) {
+                            success(nil);
                         }
                     }];
                 }
                 else {
+//                    NSLog(@"Already have latest user avatar");
                     if (success) {
                         success(nil);
                     }
@@ -1211,7 +1383,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"class-challenges" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"class-challenges success response");
+            NSLog(@"loadChallengesWithSuccess success response");
             
             if (responseObject) {
                 [self processClassChallengesWithResponseObject:responseObject];
@@ -1221,13 +1393,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 success(nil);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed class-challenges with error: %@", [error mtErrorDescription]);
+            NSLog(@"Failed loadChallengesWithSuccess with error: %@", [error mtErrorDescription]);
             if (failure) {
                 failure(error);
             }
         }];
     } failure:^(NSError *error) {
-        NSLog(@"Failed class-challenges with error: %@", [error mtErrorDescription]);
+        NSLog(@"Failed loadChallengesWithSuccess with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -1247,7 +1419,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"posts" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"posts success response");
+            NSLog(@"loadPostsForChallengeId success response");
             
             if (responseObject) {
                 [self processPostsWithResponseObject:responseObject challengeId:challengeId];
@@ -1257,13 +1429,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 success(nil);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed posts with error: %@", [error mtErrorDescription]);
+            NSLog(@"Failed loadPostsForChallengeId with error: %@", [error mtErrorDescription]);
             if (failure) {
                 failure(error);
             }
         }];
     } failure:^(NSError *error) {
-        NSLog(@"Failed posts with error: %@", [error mtErrorDescription]);
+        NSLog(@"Failed loadPostsForChallengeId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -1645,7 +1817,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
         parameters[@"maxdepth"] = @"2";
         parameters[@"page_size"] = @"9990";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
-//        NSString *urlString = [NSString stringWithFormat:@"comments/challenge_id=%lu", challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -1677,12 +1848,12 @@ static NSString * const MTRefreshingErrorCode = @"701";
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
+        parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = @"9990";
-        NSString *urlString = [NSString stringWithFormat:@"comments/post_id=%lu", postId];
-        
+        parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
+
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadCommentsForPostId success response");
             
             if (responseObject) {
@@ -1835,6 +2006,293 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed deleteCommentId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+
+#pragma mark - Liking/Emoji Methods -
+- (void)loadEmojiWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"emojis" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadEmojiWithSuccess success response");
+            
+            if (responseObject) {
+                [self processEmojisWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadEmojiWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadEmojiWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)getEmojiImageForEmojiCode:(NSString *)emojiCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
+        NSString *urlString = [NSString stringWithFormat:@"%@emojis/%@/icon", self.baseURL, emojiCode];
+        
+        [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [manager.requestSerializer setValue:@"image/png" forHTTPHeaderField:@"Accept"];
+        [manager.requestSerializer setValue:@"image/png" forHTTPHeaderField:@"Content-Type"];
+        
+        AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+        NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
+        [contentTypes addObject:@"image/png"];
+        responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
+        manager.responseSerializer = responseSerializer;
+        
+        NSError *requestError = nil;
+        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:nil error:&requestError];
+        
+        if (!requestError) {
+            AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+//                NSLog(@"getEmojiImageForEmojiName success response");
+                
+                if (responseObject) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    [realm beginWriteTransaction];
+                    
+                    MTEmoji *thisEmoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                    if (thisEmoji) {
+                        MTOptionalImage *optionalImage = thisEmoji.emojiImage;
+                        if (!optionalImage) {
+                            optionalImage = [[MTOptionalImage alloc] init];
+                        }
+    
+                        optionalImage.imageData = responseObject;
+                        optionalImage.updatedAt = [NSDate date];
+                        thisEmoji.emojiImage = optionalImage;
+                    }
+                    
+                    [realm commitWriteTransaction];
+                }
+                
+                if (success) {
+                    success([UIImage imageWithData:responseObject]);
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Failed getEmojiImageForEmojiName with error: %@", [error mtErrorDescription]);
+                
+                if ([error mtErrorCode] == 404) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    [realm beginWriteTransaction];
+                    
+                    MTEmoji *thisEmoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                    if (thisEmoji) {
+                        thisEmoji.emojiImage = nil;
+                    }
+                    
+                    [realm commitWriteTransaction];
+                }
+                if (failure) {
+                    failure(error);
+                }
+            }];
+            
+            [requestOperation start];
+        }
+        else {
+            NSLog(@"Unable to construct request: %@", [requestError mtErrorDescription]);
+            if (failure) {
+                failure(requestError);
+            }
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to Auth to get emoji with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadLikesForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"likes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadLikesForChallengeId success response");
+            
+            if (responseObject) {
+                [self processLikesWithResponseObject:responseObject challengeId:challengeId postId:0];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadLikesForChallengeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadLikesForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadLikesForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"likes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadLikesForPostId success response");
+            
+            if (responseObject) {
+                [self processLikesWithResponseObject:responseObject challengeId:0 postId:postId];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadLikesForPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadLikesForPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)addLikeForPostId:(NSInteger)postId emojiCode:(NSString *)emojiCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"likes"];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"emoji"] = [NSDictionary dictionaryWithObject:emojiCode forKey:@"code"];
+        parameters[@"post"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:postId] forKey:@"id"];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"addLikeForPostId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePostLike *newLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                
+                MTUser *meUser = [MTUser currentUser];
+                newLike.user = meUser;
+                
+                MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                newLike.challengePost = post;
+                
+                MTEmoji *emoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                newLike.emoji = emoji;
+                
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed addLikeForPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed addLikeForPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)updateLikeId:(NSInteger)likeId emojiCode:(NSString *)emojiCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"likes/%ld", (long)likeId];
+
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"emoji"] = [NSDictionary dictionaryWithObject:emojiCode forKey:@"code"];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"updateLikeId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePostLike *updatedLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                
+                MTEmoji *emoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                updatedLike.emoji = emoji;
+                
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed updateLikeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed updateLikeId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }

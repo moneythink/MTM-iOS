@@ -692,16 +692,12 @@
 //    [MTUser logout];
     
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
+    // Set the new schema version. This must be greater than the previously used
+    // version (if you've never set a schema version before, the version is 0).
+    config.schemaVersion = 12;
     
-    // Set either the path for the file or the identifer for an in-memory Realm
-    // By default config.path will be the Default realm path
-    // config.path = "";
-    // config.inMemoryIdentifier = @"MyInMemoryRealm";
-    
-    // Encryption keys, schema versions and migration blocks are now all set on the
-    // config object rather than registered for a path:
-    // config.encryptionKey = GetKeyFromKeychain();
-    config.schemaVersion = 10;
+    // Set the block which will be called automatically when opening a Realm with a
+    // schema version lower than the one set above
     config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) {
         // We haven’t migrated anything yet, so oldSchemaVersion == 0
         if (oldSchemaVersion < 1) {
@@ -711,20 +707,12 @@
         }
     };
     
-    // New feature: a Realm configuration can explicitly list which object classes
-    // should be stored in the Realm, rather than always including every `RLMObject`
-    // and `Object` subclass.
-//    config.objectClasses = @[Dog.class, Person.class];
+    // Tell Realm to use this new configuration object for the default Realm
+    [RLMRealmConfiguration setDefaultConfiguration:config];
     
-    // Either use the configuration to open a Realm:
-    NSError *error;
-    [RLMRealm realmWithConfiguration:config error:&error];
-    if (error) {
-        NSLog(@"Unable to open default realm: %@", [error localizedDescription]);
-    }
-    
-    // Or set the configuration used for the default Realm:
-    // [RLMRealmConfiguration setDefaultConfiguration:config];
+    // Now that we've told Realm how to handle the schema change, opening the file
+    // will automatically perform the migration
+    [RLMRealm defaultRealm];
 }
 
 

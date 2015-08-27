@@ -205,12 +205,6 @@
         [[MTUtil getAppDelegate] configureZendesk];
         [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
         
-        [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
-            //
-        } failure:^(NSError *error) {
-            //
-        }];
-        
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;
         self.passwordLabel.hidden = YES;

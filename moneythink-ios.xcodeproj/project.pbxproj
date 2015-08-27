@@ -167,6 +167,8 @@
 		8977E3EB1B223E41009AD452 /* comment_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8977E3E91B223E41009AD452 /* comment_highlighted@2x.png */; };
 		898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */; };
 		8992327D1B614202009C63B9 /* JGActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 8992327C1B614202009C63B9 /* JGActionSheet.m */; };
+		8992BB2A1B8E23B400A828FC /* MTEmoji.m in Sources */ = {isa = PBXBuildFile; fileRef = 8992BB291B8E23B400A828FC /* MTEmoji.m */; };
+		8992BB2D1B8E5A1E00A828FC /* MTChallengePostLike.m in Sources */ = {isa = PBXBuildFile; fileRef = 8992BB2C1B8E5A1E00A828FC /* MTChallengePostLike.m */; };
 		8999067A1AD46B5D007A4F3E /* icon_button_check_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906721AD46B5D007A4F3E /* icon_button_check_normal.png */; };
 		8999067B1AD46B5D007A4F3E /* icon_button_check_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */; };
 		8999067C1AD46B5D007A4F3E /* icon_button_check_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */; };
@@ -527,6 +529,10 @@
 		898FBE5F1B0D2A6B0058F3B4 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		8992327B1B614202009C63B9 /* JGActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGActionSheet.h; sourceTree = "<group>"; };
 		8992327C1B614202009C63B9 /* JGActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGActionSheet.m; sourceTree = "<group>"; };
+		8992BB281B8E23B400A828FC /* MTEmoji.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTEmoji.h; path = "Data Classes/MTEmoji.h"; sourceTree = "<group>"; };
+		8992BB291B8E23B400A828FC /* MTEmoji.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTEmoji.m; path = "Data Classes/MTEmoji.m"; sourceTree = "<group>"; };
+		8992BB2B1B8E5A1E00A828FC /* MTChallengePostLike.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengePostLike.h; path = "Data Classes/MTChallengePostLike.h"; sourceTree = "<group>"; };
+		8992BB2C1B8E5A1E00A828FC /* MTChallengePostLike.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengePostLike.m; path = "Data Classes/MTChallengePostLike.m"; sourceTree = "<group>"; };
 		899906721AD46B5D007A4F3E /* icon_button_check_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_normal.png; sourceTree = "<group>"; };
 		899906731AD46B5D007A4F3E /* icon_button_check_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_button_check_normal@2x.png"; sourceTree = "<group>"; };
 		899906741AD46B5D007A4F3E /* icon_button_check_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_button_check_pressed.png; sourceTree = "<group>"; };
@@ -1017,8 +1023,12 @@
 				89DE8A731B84F83C0050C9A6 /* MTChallengePost.m */,
 				8920693A1B8B81C3003F53B9 /* MTChallengePostComment.h */,
 				8920693B1B8B81C3003F53B9 /* MTChallengePostComment.m */,
+				8992BB2B1B8E5A1E00A828FC /* MTChallengePostLike.h */,
+				8992BB2C1B8E5A1E00A828FC /* MTChallengePostLike.m */,
 				895907571B546B3B003AB574 /* MTClass.h */,
 				895907581B546B3B003AB574 /* MTClass.m */,
+				8992BB281B8E23B400A828FC /* MTEmoji.h */,
+				8992BB291B8E23B400A828FC /* MTEmoji.m */,
 				892BF44B1B7A643E00E19E9B /* MTOptionalImage.h */,
 				892BF44C1B7A643E00E19E9B /* MTOptionalImage.m */,
 				895907541B546AAC003AB574 /* MTOrganization.h */,
@@ -1657,6 +1667,7 @@
 				895907591B546B3B003AB574 /* MTClass.m in Sources */,
 				89C6792F19E317340054E890 /* MTUtil.m in Sources */,
 				890906E31B728953005D77FE /* PFMoneyOptions.m in Sources */,
+				8992BB2D1B8E5A1E00A828FC /* MTChallengePostLike.m in Sources */,
 				58669F5D19772D00009BC13C /* PFChallengePost.m in Sources */,
 				8977E3E01B1E26E1009AD452 /* MTEmojiPickerCollectionView.m in Sources */,
 				8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */,
@@ -1719,6 +1730,7 @@
 				8925943E1B73EC7E00B40E06 /* MCJSONNonNullStringTransformer.m in Sources */,
 				58B7C28B1993305D0039E238 /* MTChallengeInfoViewController.m in Sources */,
 				899CF52E1B8637D60058F59C /* MTOAuthRefreshOperation.m in Sources */,
+				8992BB2A1B8E23B400A828FC /* MTEmoji.m in Sources */,
 				89CE97651B4F1E59007FF4D7 /* UIAlertView+AFNetworking.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,
 				892573871AE59515002FF871 /* PFChallengePostsLiked.m in Sources */,

@@ -65,6 +65,8 @@
 #import "MTChallenge.h"
 #import "MTChallengePost.h"
 #import "MTChallengePostComment.h"
+#import "MTEmoji.h"
+#import "MTChallengePostLike.h"
 
 #import "MTUtil.h"
 #import "UIColor+Palette.h"

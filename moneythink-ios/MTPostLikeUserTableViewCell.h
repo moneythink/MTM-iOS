@@ -10,9 +10,9 @@
 
 @interface MTPostLikeUserTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) IBOutlet PFImageView *userAvatarImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *userAvatarImageView;
 @property (nonatomic, strong) IBOutlet UILabel *username;
-@property (nonatomic, strong) IBOutlet PFImageView *emojiView;
+@property (nonatomic, strong) IBOutlet UIImageView *emojiView;
 
 @property (nonatomic, strong) UIImage *userAvatarImage;
 

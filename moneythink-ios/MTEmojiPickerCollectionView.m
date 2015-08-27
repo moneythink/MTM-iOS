@@ -37,40 +37,18 @@ static NSString * const reuseIdentifier = @"Cell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     MTEmojiPickerCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"EmojiPickerCollectionViewCell" forIndexPath:indexPath];
     
-    PFEmoji *emojiObject = [self.emojiObjects objectAtIndex:indexPath.item];
+    MTEmoji *emojiObject = [self.emojiObjects objectAtIndex:indexPath.item];
 
-    PFFile *imageFile = nil;
-    if (IS_RETINA) {
-        imageFile = emojiObject[@"image_large_2x"];
-    }
-    else {
-        imageFile = emojiObject[@"image_large"];
-    }
-    
     [[cell viewWithTag:99] removeFromSuperview];
-    cell.emojiImage = [[PFImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 48.0f, 48.0f)];
-    cell.emojiImage.file = imageFile;
+    cell.emojiImage = [[UIImageView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 48.0f, 48.0f)];
     cell.emojiImage.tag = 99;
     cell.emojiImage.contentMode = UIViewContentModeScaleAspectFill;
     cell.contentView.backgroundColor = [UIColor clearColor];
     cell.emojiImage.layer.borderColor = [UIColor primaryOrange].CGColor;
     cell.emojiImage.layer.cornerRadius = 4.0f;
+    cell.emojiImage.image = [UIImage imageWithData:emojiObject.emojiImage.imageData];
     
     [cell.contentView addSubview:cell.emojiImage];
-    
-    [cell.emojiImage loadInBackground:^(UIImage *image, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (!error) {
-                if (image) {
-                    cell.emojiImage.image = image;
-                    [cell setNeedsDisplay];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        });
-
-    }];
     
     return cell;
 }
@@ -81,7 +59,7 @@ static NSString * const reuseIdentifier = @"Cell";
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
     
-    PFEmoji *emojiObject = [self.emojiObjects objectAtIndex:indexPath.item];
+    MTEmoji *emojiObject = [self.emojiObjects objectAtIndex:indexPath.item];
     if ([self.delegate respondsToSelector:@selector(didSelectEmoji:withPost:)]) {
         [self.delegate didSelectEmoji:emojiObject withPost:self.post];
     }
