@@ -18,9 +18,13 @@
 + (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId;
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMe:(PFUser *)user;
++ (NSString *)currentUserType;
++ (NSString *)currentUserTypeCapitalized;
 
 + (NSString *)lastViewedChallengeId;
 + (void)setLastViewedChallengedId:(NSString *)challengeId;
+
++ (NSString *)capitalizeFirstLetter:(NSString *)string;
 
 + (BOOL)userChangedClass;
 + (void)setUserChangedClass:(BOOL)userChangedClass;

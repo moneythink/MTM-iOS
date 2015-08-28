@@ -9,6 +9,7 @@
 #import "MTOnboardingController.h"
 #import "OnboardingViewController.h"
 #import "OnboardingContentViewController.h"
+#import <Google/Analytics.h>
 
 @interface MTOnboardingController ()
 
@@ -38,6 +39,13 @@
 {
     SWRevealViewController *revealViewController = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
     [revealViewController setFrontViewController:[self generateWelcomeVC] animated:YES];
+    
+    // GA Track - 'Onboarding: Student'
+    // GA Track - 'Onboarding: Mentor'
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    NSString *screenName = [NSString stringWithFormat:@"Onboarding: %@", [MTUtil currentUserTypeCapitalized]];
+    [tracker set:kGAIScreenName value:screenName];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
 - (void)handleOnboardingCompletion {

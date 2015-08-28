@@ -8,6 +8,7 @@
 
 #import "MTLoginViewController.h"
 #import "MTNotificationViewController.h"
+#import <Google/Analytics.h>
 
 @interface MTLoginViewController ()
 
@@ -72,6 +73,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // GA Track - 'Login'
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Login"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
     
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self updateView];

@@ -141,6 +141,27 @@
 
 }
 
++ (NSString *)currentUserType
+{
+    if ([self isCurrentUserMentor]) {
+        return @"mentor";
+    } else {
+        return @"student";
+    }
+}
+
++ (NSString *)currentUserTypeCapitalized
+{
+    return [self capitalizeFirstLetter:[self currentUserType]];
+}
+
++ (NSString *)capitalizeFirstLetter:(NSString *)string
+{
+    NSString *firstLetter = [[string substringToIndex:1] capitalizedString];
+    NSString *remainder = [string substringFromIndex:1];
+    return [firstLetter stringByAppendingString:remainder];
+}
+
 + (BOOL)isUserMe:(PFUser *)user
 {
     if ([[PFUser currentUser].objectId isEqualToString:user.objectId]) {

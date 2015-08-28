@@ -10,6 +10,7 @@
 #import "MTExplorePostCollectionView.h"
 #import "MTMyClassTableViewController.h"
 #import "MTPostViewController.h"
+#import <Google/Analytics.h>
 
 @interface MTChallengesViewController ()
 
@@ -71,6 +72,11 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // GA Track - 'Challenges'
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Challenges"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
     
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 
