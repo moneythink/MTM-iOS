@@ -1,2 +1,5 @@
 moneythink-ios.xcodeproj/project.xcworkspace/xcuserdata
 moneythink-ios.xcodeproj/xcuserdata
+moneythink-ios.xcworkspace/xcuserdata
+Pods/*
+Fabric.framework*
