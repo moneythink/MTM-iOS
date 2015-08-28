@@ -60,7 +60,7 @@
     
     // Optional: configure GAI options.
     GAI *gai = [GAI sharedInstance];
-    gai.trackUncaughtExceptions = YES;  // report uncaught exceptions
+    gai.trackUncaughtExceptions = NO;  // do not report uncaught exceptions; we have a lot of tracking already!
     // gai.logger.logLevel = kGAILogLevelVerbose;
     
     NSString *GADryRun = [[NSProcessInfo processInfo] environment][@"GA_DRY_RUN"];
