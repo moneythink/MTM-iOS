@@ -24,8 +24,7 @@ typedef enum {
 
 - (void)didDeletePost:(MTChallengePost *)challengePost;
 - (void)didUpdateLikes;
-- (void)didUpdateButtonsTapped:(NSDictionary *)buttonsTapped;
-- (void)didUpdateSecondaryButtonsTapped:(NSDictionary *)secondaryButtonsTapped;
+- (void)didUpdateButtons;
 
 @end
 
@@ -40,8 +39,6 @@ typedef enum {
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
-@property (nonatomic, strong) NSDictionary *buttonsTapped;
-@property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 @property (nonatomic, strong) NSArray *emojiArray;
 @property (nonatomic, strong) PFNotifications *notification;
 

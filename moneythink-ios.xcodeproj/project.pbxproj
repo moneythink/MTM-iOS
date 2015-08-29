@@ -91,6 +91,8 @@
 		8918B3281B18F6C800880E62 /* arrow_right_white_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3201B18F6C800880E62 /* arrow_right_white_normal.png */; };
 		8918B3291B18F6C800880E62 /* arrow_right_white_normal@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */; };
 		8920693C1B8B81C3003F53B9 /* MTChallengePostComment.m in Sources */ = {isa = PBXBuildFile; fileRef = 8920693B1B8B81C3003F53B9 /* MTChallengePostComment.m */; };
+		892096921B8FA03B00186801 /* MTChallengeButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 892096911B8FA03B00186801 /* MTChallengeButton.m */; };
+		892096951B8FABF100186801 /* MTChallengeButtonClick.m in Sources */ = {isa = PBXBuildFile; fileRef = 892096941B8FABF100186801 /* MTChallengeButtonClick.m */; };
 		892105C319DA1EEA000CFBF6 /* MTPostDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 892105C219DA1EEA000CFBF6 /* MTPostDetailViewController.m */; };
 		8921062919DA1F37000CFBF6 /* info_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105E519DA1F37000CFBF6 /* info_icon.png */; };
 		8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 892105E619DA1F37000CFBF6 /* info_icon@2x.png */; };
@@ -421,6 +423,10 @@
 		8918B3211B18F6C800880E62 /* arrow_right_white_normal@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "arrow_right_white_normal@2x.png"; path = "moneythink-ios/assets/arrow_right_white_normal@2x.png"; sourceTree = SOURCE_ROOT; };
 		8920693A1B8B81C3003F53B9 /* MTChallengePostComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengePostComment.h; path = "Data Classes/MTChallengePostComment.h"; sourceTree = "<group>"; };
 		8920693B1B8B81C3003F53B9 /* MTChallengePostComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengePostComment.m; path = "Data Classes/MTChallengePostComment.m"; sourceTree = "<group>"; };
+		892096901B8FA03B00186801 /* MTChallengeButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengeButton.h; path = "Data Classes/MTChallengeButton.h"; sourceTree = "<group>"; };
+		892096911B8FA03B00186801 /* MTChallengeButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengeButton.m; path = "Data Classes/MTChallengeButton.m"; sourceTree = "<group>"; };
+		892096931B8FABF100186801 /* MTChallengeButtonClick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengeButtonClick.h; path = "Data Classes/MTChallengeButtonClick.h"; sourceTree = "<group>"; };
+		892096941B8FABF100186801 /* MTChallengeButtonClick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengeButtonClick.m; path = "Data Classes/MTChallengeButtonClick.m"; sourceTree = "<group>"; };
 		892105C119DA1EEA000CFBF6 /* MTPostDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostDetailViewController.h; sourceTree = "<group>"; };
 		892105C219DA1EEA000CFBF6 /* MTPostDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTPostDetailViewController.m; sourceTree = "<group>"; };
 		892105E519DA1F37000CFBF6 /* info_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = info_icon.png; sourceTree = "<group>"; };
@@ -1019,6 +1025,10 @@
 			children = (
 				89DE8A6F1B8268270050C9A6 /* MTChallenge.h */,
 				89DE8A701B8268270050C9A6 /* MTChallenge.m */,
+				892096901B8FA03B00186801 /* MTChallengeButton.h */,
+				892096911B8FA03B00186801 /* MTChallengeButton.m */,
+				892096931B8FABF100186801 /* MTChallengeButtonClick.h */,
+				892096941B8FABF100186801 /* MTChallengeButtonClick.m */,
 				89DE8A721B84F83C0050C9A6 /* MTChallengePost.h */,
 				89DE8A731B84F83C0050C9A6 /* MTChallengePost.m */,
 				8920693A1B8B81C3003F53B9 /* MTChallengePostComment.h */,
@@ -1709,6 +1719,7 @@
 				8977E3DD1B1E1F6C009AD452 /* PFEmoji.m in Sources */,
 				5860BF3F19870C4F007D9BB3 /* MTMentorDashboardViewController.m in Sources */,
 				89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */,
+				892096951B8FABF100186801 /* MTChallengeButtonClick.m in Sources */,
 				8920693C1B8B81C3003F53B9 /* MTChallengePostComment.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */,
 				89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */,
@@ -1730,6 +1741,7 @@
 				8925943E1B73EC7E00B40E06 /* MCJSONNonNullStringTransformer.m in Sources */,
 				58B7C28B1993305D0039E238 /* MTChallengeInfoViewController.m in Sources */,
 				899CF52E1B8637D60058F59C /* MTOAuthRefreshOperation.m in Sources */,
+				892096921B8FA03B00186801 /* MTChallengeButton.m in Sources */,
 				8992BB2A1B8E23B400A828FC /* MTEmoji.m in Sources */,
 				89CE97651B4F1E59007FF4D7 /* UIAlertView+AFNetworking.m in Sources */,
 				58669F6419772D00009BC13C /* PFNotifications.m in Sources */,

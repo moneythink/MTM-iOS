@@ -736,6 +736,159 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
+- (void)processButtonsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No buttons response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No buttons comments data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"buttons"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No buttons data");
+        return;
+    }
+    
+    NSArray *buttonsArray = [embeddedDict objectForKey:@"buttons"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    // Mark existing comments deleted to filter out deleted comments
+    if (challengeId > 0) {
+        RLMResults *existingButtons = [MTChallengeButton objectsWhere:@"challenge.id = %lu", challengeId];
+        for (MTChallengeButton *thisButton in existingButtons) {
+            thisButton.isDeleted = YES;
+        }
+    }
+    else {
+        RLMResults *existingButtons = [MTChallengeButton allObjects];
+        for (MTChallengeButton *thisButton in existingButtons) {
+            thisButton.isDeleted = YES;
+        }
+    }
+    
+    for (id button in buttonsArray) {
+        if ([button isKindOfClass:[NSDictionary class]]) {
+            MTChallengeButton *challengeButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:button];
+            challengeButton.isDeleted = NO;
+            
+            if (challengeId > 0) {
+                MTChallenge *challenge = [MTChallenge objectForPrimaryKey:[NSNumber numberWithInteger:challengeId]];
+                challengeButton.challenge = challenge;
+            }
+            
+            NSDictionary *buttonDict = (NSDictionary *)button;
+            if ([[buttonDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [buttonDict objectForKey:@"_embedded"];
+                
+                // Get embedded data
+                if ([[innerEmbeddedDict objectForKey:@"buttonType"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *buttonTypeDict = [innerEmbeddedDict objectForKey:@"buttonType"];
+                    if ([buttonTypeDict objectForKey:@"code"]) {
+                        challengeButton.buttonTypeCode = [buttonTypeDict objectForKey:@"code"];
+                    }
+                }
+                
+                if (challengeId == 0) {
+                    if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                        MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                        challengeButton.challenge = thisChallenge;
+                    }
+                }
+            }
+
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
+- (void)processButtonClicksWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId postId:(NSInteger)postId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No button-clicks response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No button-clicks comments data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"buttonClicks"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No button-clicks data");
+        return;
+    }
+    
+    NSArray *buttonClicksArray = [embeddedDict objectForKey:@"buttonClicks"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    
+    if (challengeId > 0) {
+        // for challenge
+        RLMResults *existingButtons = [MTChallengeButtonClick objectsWhere:@"challengePost.challenge.id = %lu", challengeId];
+        for (MTChallengeButton *thisButton in existingButtons) {
+            thisButton.isDeleted = YES;
+        }
+    }
+    else {
+        // for post
+        RLMResults *existingButtons = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu", postId];
+        for (MTChallengeButton *thisButton in existingButtons) {
+            thisButton.isDeleted = YES;
+        }
+    }
+    
+    for (id buttonClick in buttonClicksArray) {
+        if ([buttonClick isKindOfClass:[NSDictionary class]]) {
+            MTChallengeButtonClick *challengeButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:buttonClick];
+            challengeButtonClick.isDeleted = NO;
+            
+            NSDictionary *buttonDict = (NSDictionary *)buttonClick;
+            if ([[buttonDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [buttonDict objectForKey:@"_embedded"];
+                
+                // Get embedded data
+                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    challengeButtonClick.user = thisUser;
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
+                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    challengeButtonClick.challengePost = thisChallengePost;
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"button"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *buttonDict = [innerEmbeddedDict objectForKey:@"button"];
+                    MTChallengeButton *thisButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:buttonDict];
+                    challengeButtonClick.challengeButton = thisButton;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 
 #pragma mark - Public Methods -
 
@@ -1510,7 +1663,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)updatePostImageForPostId:(NSInteger)postId withImageData:(NSData *)imageData create:(BOOL)create success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)updatePostImageForPostId:(NSInteger)postId withImageData:(NSData *)imageData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         
@@ -1529,9 +1682,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
         
         NSError *requestError = nil;
         NSString *method = imageData ? @"PUT" : @"DELETE";
-        if (create) {
-            method = @"POST";
-        }
         NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:method URLString:urlString parameters:nil error:&requestError];
         
         if (!requestError) {
@@ -1641,7 +1791,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 // Now POST image
                 if (postImageData) {
-                    [weakSelf updatePostImageForPostId:newPost.id withImageData:postImageData create:YES success:^(id responseData) {
+                    [weakSelf updatePostImageForPostId:newPost.id withImageData:postImageData success:^(id responseData) {
                         RLMRealm *realm = [RLMRealm defaultRealm];
                         [realm beginWriteTransaction];
                         
@@ -1705,6 +1855,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
             parameters[@"challengeData"] = extraData;
         }
         
+        MTChallengePost *oldPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+        BOOL hadImage = oldPost.hasPostImage;
+        
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updatePostId success response");
@@ -1732,7 +1885,25 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
                 // Now update image
                 if (postImageData) {
-                    [weakSelf updatePostImageForPostId:postId withImageData:postImageData create:NO success:^(id responseData) {
+                    [weakSelf updatePostImageForPostId:postId withImageData:postImageData success:^(id responseData) {
+                        if (success) {
+                            success(nil);
+                        }
+                    } failure:^(NSError *error) {
+                        NSLog(@"Unable to update post image");
+                        if (failure) {
+                            failure(error);
+                        }
+                    }];
+                }
+                else if (hadImage) {
+                    [weakSelf updatePostImageForPostId:postId withImageData:nil success:^(id responseData) {
+                        [realm beginWriteTransaction];
+                        MTChallengePost *updatedPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                        updatedPost.hasPostImage = NO;
+                        updatedPost.postImage = nil;
+                        [realm commitWriteTransaction];
+
                         if (success) {
                             success(nil);
                         }
@@ -2293,6 +2464,171 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed updateLikeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+
+#pragma mark - Buttons -
+- (void)loadButtonsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        
+        if (challengeId > 0) {
+            parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
+        }
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"buttons" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadButtonsForChallengeId success response");
+            
+            if (responseObject) {
+                [self processButtonsWithResponseObject:responseObject challengeId:challengeId];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadButtonsForChallengeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadButtonsForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadButtonClicksForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"button-clicks" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadButtonClicksForChallengeId success response");
+            
+            if (responseObject) {
+                [self processButtonClicksWithResponseObject:responseObject challengeId:challengeId postId:0];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadButtonClicksForChallengeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadButtonClicksForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)addButtonClickForPostId:(NSInteger)postId buttonId:(NSInteger)buttonId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"button-clicks"];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"post"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:postId] forKey:@"id"];
+        parameters[@"button"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:buttonId] forKey:@"id"];
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"addButtonClickForPostId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengeButtonClick *newButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                
+                MTUser *meUser = [MTUser currentUser];
+                newButtonClick.user = meUser;
+                
+                MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                newButtonClick.challengePost = post;
+                
+                MTChallengeButton *button = [MTChallengeButton objectForPrimaryKey:[NSNumber numberWithInteger:buttonId]];
+                newButtonClick.challengeButton = button;
+                
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed addButtonClickForPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed addButtonClickForPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)deleteButtonClickId:(NSInteger)buttonClickId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"button-clicks/%ld", (long)buttonClickId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"deleteButtonClickId success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTChallengeButtonClick *buttonClickToDelete = [MTChallengeButtonClick objectForPrimaryKey:[NSNumber numberWithInteger:buttonClickId]];
+            if (buttonClickToDelete) {
+                buttonClickToDelete.isDeleted = YES;
+            }
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed deleteButtonClickId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed deleteButtonClickId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }

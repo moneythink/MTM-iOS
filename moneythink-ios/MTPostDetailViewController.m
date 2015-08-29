@@ -51,7 +51,7 @@ typedef enum {
 @property (nonatomic, strong) NSString *savedAmount;
 @property (nonatomic) BOOL displaySpentView;
 @property (nonatomic) BOOL hasSpentSavedContent;
-
+@property (nonatomic, strong) RLMResults *buttons;
 
 @end
 
@@ -97,16 +97,10 @@ typedef enum {
         self.postUser = self.challengePost.user;
         self.currentUser = [MTUser currentUser];
         
-        if (self.hasButtons && IsEmpty(self.buttonsTapped)) {
-            [self updateButtonsTapped];
-        }
-        if (self.hasSecondaryButtons && IsEmpty(self.secondaryButtonsTapped)) {
-            [self updateSecondaryButtonsTapped];
-        }
-        
-        [self loadComments];
+        [self loadCommentsOnlyDatabase:NO];
         [self loadPostText];
         [self loadLikesOnlyDatabase:NO];
+        [self loadButtonsOnlyDatabase:YES];
         [self configureChallengePermissions];
     }
 }
@@ -118,10 +112,14 @@ typedef enum {
 
 
 #pragma mark - Private Methods -
-- (void)loadComments
+- (void)loadCommentsOnlyDatabase:(BOOL)onlyDatabase
 {
     self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
     [self.tableView reloadData];
+    
+    if (onlyDatabase) {
+        return;
+    }
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePost.id success:^(id responseData) {
@@ -196,6 +194,80 @@ typedef enum {
     }];
     
     [self.tableView reloadData];
+}
+
+- (void)loadButtonsOnlyDatabase:(BOOL)onlyDatabase
+{
+    self.buttons = [[MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    
+    self.hasButtons = NO;
+    self.hasSecondaryButtons = NO;
+    self.hasTertiaryButtons = NO;
+    
+    if (!IsEmpty(self.buttons)) {
+        if ([[((MTChallengeButton *)[self.buttons firstObject]).buttonTypeCode uppercaseString] isEqualToString:@"VOTE"]) {
+            // Voting buttons (primary or tertiary)
+            if ([self.buttons count] == 4) {
+                // Tertiary
+                self.hasTertiaryButtons = YES;
+            }
+            else {
+                // Primary
+                self.hasButtons = YES;
+            }
+        }
+        else if (!self.isMentor) {
+            // Secondary
+            self.hasSecondaryButtons = YES;
+        }
+        
+        MTUser *user = self.challengePost.user;
+        BOOL myPost = NO;
+        if ([MTUser isUserMe:user]) {
+            myPost = YES;
+        }
+
+        BOOL showButtons = NO;
+        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
+            showButtons = YES;
+        }
+
+        if (showButtons && self.challengePost.hasPostImage)
+            self.postType = MTPostTypeWithButtonsWithImage;
+        else if (showButtons)
+            self.postType = MTPostTypeWithButtonsNoImage;
+        else if (self.challengePost.hasPostImage)
+            self.postType = MTPostTypeNoButtonsWithImage;
+        else
+            self.postType = MTPostTypeNoButtonsNoImage;
+
+        [self.tableView reloadData];
+    }
+    
+    if (onlyDatabase) {
+        return;
+    }
+    
+    MTMakeWeakSelf();
+    // TODO: Re-enable filter by challenge by setting challengeId
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonsForChallengeId:0 success:^(id responseData) {
+        [weakSelf loadButtonsOnlyDatabase:YES];
+        if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+            [weakSelf updateButtonClicks];
+        }
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
+    }];
+}
+
+- (void)updateButtonClicks
+{
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonClicksForChallengeId:self.challenge.id success:^(id responseData) {
+        [weakSelf.tableView reloadData];
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to updateButtonsClicks: %@", [error mtErrorDescription]);
+    }];
 }
 
 - (void)configureChallengePermissions
@@ -343,405 +415,348 @@ typedef enum {
 
 
 #pragma mark - Button Methods -
-- (void)updateButtonsTapped
-{
-//    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
-//    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-//    
-//    MTMakeWeakSelf();
-//    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        });
-//
-//        if (!error) {
-//            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-//            for (PFChallengePostButtonsClicked *clicks in objects) {
-//                id button = clicks[@"button_clicked"];
-//                id post = [(PFChallengePost *)clicks[@"post"] objectId];
-//                [tappedButtonObjects setValue:button forKey:post];
-//            }
-//            weakSelf.buttonsTapped = tappedButtonObjects;
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtonsTapped:)]) {
-//                    [weakSelf.delegate didUpdateButtonsTapped:weakSelf.buttonsTapped];
-//                }
-//                
-//                [weakSelf.tableView reloadData];
-//            });
-//        }
-//        else {
-//            NSLog(@"Error - %@", error);
-//            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//        }
-//    }];
-}
-
-- (void)updateSecondaryButtonsTapped
-{
-//    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostSecondaryButtonsClicked parseClassName]];
-//    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-//    [buttonsTapped includeKey:@"post"];
-//    
-//    MTMakeWeakSelf();
-//    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        });
-//        
-//        if (!error) {
-//            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-//            for (PFChallengePostSecondaryButtonsClicked *clicks in objects) {
-//                PFChallengePost *post = (PFChallengePost *)clicks[@"post"];
-//                PFChallenges *challenge = post[@"challenge"];
-//                NSString *challengeObjectId = challenge.objectId;
-//                
-//                id postObjectId = [(PFChallengePost *)clicks[@"post"] objectId];
-//                
-//                if ([challengeObjectId isEqualToString:weakSelf.challenge.objectId]) {
-//                    id button = clicks[@"button"];
-//                    id count = clicks[@"count"];
-//                    
-//                    NSDictionary *buttonsDict;
-//                    if ([tappedButtonObjects objectForKey:postObjectId]) {
-//                        buttonsDict = [tappedButtonObjects objectForKey:postObjectId];
-//                        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:buttonsDict];
-//                        [mutableDict setValue:count forKey:button];
-//                        buttonsDict = [NSDictionary dictionaryWithDictionary:mutableDict];
-//                    }
-//                    else {
-//                        buttonsDict = [NSDictionary dictionaryWithObjectsAndKeys:count, button, nil];
-//                    }
-//                    
-//                    [tappedButtonObjects setValue:buttonsDict forKey:postObjectId];
-//                }
-//
-//            }
-//            weakSelf.secondaryButtonsTapped = tappedButtonObjects;
-//            
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateSecondaryButtonsTapped:)]) {
-//                    [weakSelf.delegate didUpdateSecondaryButtonsTapped:weakSelf.secondaryButtonsTapped];
-//                }
-//                
-//                [weakSelf.tableView reloadData];
-//            });
-//            
-//        } else {
-//            NSLog(@"Error - %@", error);
-//        }
-//    }];
-}
-
 - (void)setupButtonsForCell:(UITableViewCell *)cell
 {
-//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-//    
-//    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
-//    NSInteger button = 0;
-//    if (buttonID) {
-//        button = [buttonID intValue];
-//    }
-//    
-//    [button1 layer].masksToBounds = YES;
-//    [button2 layer].masksToBounds = YES;
-//
-//    if ((button == 0) && buttonID) {
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateNormal];
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
-//
-//        [button1 setTintColor:[UIColor white]];
-//        [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-//
-//        [[button2 layer] setBorderWidth:2.0f];
-//        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-//        [button2 setTintColor:[UIColor redOrange]];
-//        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
-//        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
-//
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-//    }
-//    else if (button == 1) {
-//        [[button1 layer] setBorderWidth:2.0f];
-//        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-//        [button1 setTintColor:[UIColor primaryGreen]];
-//        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
-//        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
-//
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-//        
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateNormal];
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateHighlighted];
-//
-//        [button2 setTintColor:[UIColor white]];
-//        [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-//        [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-//    }
-//    else {
-//        [[button1 layer] setBorderWidth:2.0f];
-//        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
-//        [button1 setTintColor:[UIColor primaryGreen]];
-//        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
-//        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
-//
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-//        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-//
-//        [[button2 layer] setBorderWidth:2.0f];
-//        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
-//        [button2 setTintColor:[UIColor redOrange]];
-//        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
-//        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
-//
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-//    }
-//
-//    [[button1 layer] setCornerRadius:5.0f];
-//    [[button2 layer] setCornerRadius:5.0f];
-//
-//    NSArray *buttonTitles = nil;
-//    if (self.challenge && [self.challenge isDataAvailable]) {
-//        buttonTitles = self.challenge[@"buttons"];
-//    }
-//
-//    NSArray *buttonsClicked = nil;
-//    if (self.challengePost && [self.challengePost isDataAvailable]) {
-//        buttonsClicked = self.challengePost[@"buttons_clicked"];
-//    }
-//    
-//    if (!IsEmpty(buttonTitles) && [buttonTitles count] == 2) {
-//        button1.hidden = NO;
-//        button2.hidden = NO;
-//        
-//        NSString *button1Title;
-//        NSString *button2Title;
-//        
-//        if (!IsEmpty(buttonsClicked)) {
-//            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-//        } else {
-//            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
-//        }
-//        
-//        if ([buttonsClicked count] > 1) {
-//            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
-//        } else {
-//            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
-//        }
-//        
-//        [button1 setTitle:button1Title forState:UIControlStateNormal];
-//        [button2 setTitle:button2Title forState:UIControlStateNormal];
-//    }
-//    else {
-//        button1.hidden = YES;
-//        button2.hidden = YES;
-//    }
+    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    
+    [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+    [button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+
+    [button2 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+    [button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    MTChallengeButton *challengeButton1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *challengeButton2 = [self.buttons objectAtIndex:1];
+    
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton2.id];
+    
+    RLMResults *allButton1Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton1.id];
+    
+    RLMResults *allButton2Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton2.id];
+    
+    [button1 layer].masksToBounds = YES;
+    [button2 layer].masksToBounds = YES;
+    
+    if (!IsEmpty(myButton1Clicks)) {
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateNormal];
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
+        
+        [button1 setTintColor:[UIColor white]];
+        [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+        
+        [[button2 layer] setBorderWidth:2.0f];
+        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [button2 setTintColor:[UIColor redOrange]];
+        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
+        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
+        
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+    }
+    else if (!IsEmpty(myButton2Clicks)) {
+        [[button1 layer] setBorderWidth:2.0f];
+        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [button1 setTintColor:[UIColor primaryGreen]];
+        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
+        
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+        
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor redOrange] size:button2.frame.size] forState:UIControlStateHighlighted];
+        
+        [button2 setTintColor:[UIColor white]];
+        [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+        [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    }
+    else {
+        [[button1 layer] setBorderWidth:2.0f];
+        [[button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
+        [button1 setTintColor:[UIColor primaryGreen]];
+        [button1 setTitleColor:[UIColor primaryGreen] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor lightGreen] forState:UIControlStateHighlighted];
+        
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+        [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+        
+        [[button2 layer] setBorderWidth:2.0f];
+        [[button2 layer] setBorderColor:[UIColor redOrange].CGColor];
+        [button2 setTintColor:[UIColor redOrange]];
+        [button2 setTitleColor:[UIColor redOrange] forState:UIControlStateNormal];
+        [button2 setTitleColor:[UIColor lightRedOrange] forState:UIControlStateHighlighted];
+        
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+    }
+    
+    [[button1 layer] setCornerRadius:5.0f];
+    [[button2 layer] setCornerRadius:5.0f];
+    
+    if (self.buttons.count > 1) {
+        NSString *button1Title;
+        NSString *button2Title;
+        
+        if ([allButton1Clicks count] > 0) {
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, [allButton1Clicks count]];
+        }
+        else {
+            button1Title = [NSString stringWithFormat:@"%@ (0)", challengeButton1.label];
+        }
+        
+        if (allButton2Clicks.count > 1) {
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, [allButton2Clicks count]];
+        }
+        else {
+            button2Title = [NSString stringWithFormat:@"%@ (0)", challengeButton2.label];
+        }
+        
+        [button1 setTitle:button1Title forState:UIControlStateNormal];
+        [button2 setTitle:button2Title forState:UIControlStateNormal];
+    }
 }
 
 - (void)setupSecondaryButtonsForCell:(UITableViewCell *)cell
 {
-//    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
-//    
-//    NSInteger button1Count = [[buttonDict objectForKey:@0] integerValue];
-//    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
-//    
-//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-//    
-//    // Configure Button 1
-//    [[button1 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
-//    [[button1 layer] setBorderWidth:1.0f];
-//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button1.frame.size] forState:UIControlStateNormal];
-//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
-//    [[button1 layer] setCornerRadius:5.0f];
-//    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_normal"] forState:UIControlStateNormal];
-//    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_pressed"] forState:UIControlStateHighlighted];
-//    [button1 setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
-//    
-//    button1.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 0.0f);
-//    [button1 layer].masksToBounds = YES;
-//    
-//    if (button1Count > 0) {
-//        [button1 setTitle:[NSString stringWithFormat:@"%ld", (long)button1Count] forState:UIControlStateNormal];
-//    }
-//    else {
-//        [button1 setTitle:@"" forState:UIControlStateNormal];
-//    }
-//    
-//    [button1 removeTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-//    [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
-//    
-//    // Configure Button 2
-//    [[button2 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
-//    [[button2 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
-//    [[button2 layer] setBorderWidth:1.0f];
-//    [[button2 layer] setCornerRadius:5.0f];
-//    [button2 setTitle:@"" forState:UIControlStateNormal];
-//    [button2 layer].masksToBounds = YES;
-//    
-//    if (button2Count > 0) {
-//        button1.enabled = NO;
-//        [[button1 layer] setBorderColor:[UIColor lightGrayColor].CGColor];
-//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
-//        
-//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateNormal];
-//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateHighlighted];
-//        
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateNormal];
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:button2.frame.size] forState:UIControlStateHighlighted];
-//    }
-//    else {
-//        button1.enabled = YES;
-//        [[button1 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
-//        [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-//        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
-//
-//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateNormal];
-//        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateHighlighted];
-//        
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button2.frame.size] forState:UIControlStateNormal];
-//        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateHighlighted];
-//    }
-//    
-//    [button2 removeTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
-//    [button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    
+    [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+    [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [button2 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+    [button2 addTarget:self action:@selector(secondaryButton2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+
+    MTChallengeButton *challengeButton1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *challengeButton2 = [self.buttons objectAtIndex:1];
+    
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton2.id];
+    
+    NSInteger button1Count = [myButton1Clicks count];
+    NSInteger button2Count = [myButton2Clicks count];
+    
+    // Configure Button 1
+    [[button1 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
+    [[button1 layer] setBorderWidth:1.0f];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button1.frame.size] forState:UIControlStateNormal];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button1.frame.size] forState:UIControlStateHighlighted];
+    [[button1 layer] setCornerRadius:5.0f];
+    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_normal"] forState:UIControlStateNormal];
+    [button1 setImage:[UIImage imageNamed:@"icon_button_dollar_pressed"] forState:UIControlStateHighlighted];
+    [button1 setTitleColor:[UIColor white] forState:UIControlStateHighlighted];
+    
+    button1.titleEdgeInsets = UIEdgeInsetsMake(0.0f, 10.0f, 0.0f, 0.0f);
+    [button1 layer].masksToBounds = YES;
+    
+    if (button1Count > 0) {
+        [button1 setTitle:[NSString stringWithFormat:@"%ld", (long)button1Count] forState:UIControlStateNormal];
+    }
+    else {
+        [button1 setTitle:@"" forState:UIControlStateNormal];
+    }
+    
+    // Configure Button 2
+    [[button2 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
+    [[button2 layer] setBackgroundColor:[UIColor whiteColor].CGColor];
+    [[button2 layer] setBorderWidth:1.0f];
+    [[button2 layer] setCornerRadius:5.0f];
+    [button2 setTitle:@"" forState:UIControlStateNormal];
+    [button2 layer].masksToBounds = YES;
+    
+    if (button2Count > 0) {
+        button1.enabled = NO;
+        [[button1 layer] setBorderColor:[UIColor lightGrayColor].CGColor];
+        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateNormal];
+        
+        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateNormal];
+        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateHighlighted];
+        
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreenDark] size:button2.frame.size] forState:UIControlStateHighlighted];
+    }
+    else {
+        button1.enabled = YES;
+        [[button1 layer] setBorderColor:[UIColor darkGrayColor].CGColor];
+        [button1 setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+        
+        [button2 setImage:[UIImage imageNamed:@"icon_button_check_normal"] forState:UIControlStateNormal];
+        [button2 setImage:[UIImage imageNamed:@"icon_button_check_pressed"] forState:UIControlStateHighlighted];
+        
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor whiteColor] size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:button2.frame.size] forState:UIControlStateHighlighted];
+    }
 }
 
 - (void)setupTertiaryButtonsForCell:(UITableViewCell *)cell
 {
-//    NSArray *buttonsClicked = self.challengePost[@"buttons_clicked"];
-//    NSArray *buttonTitles = self.challenge[@"buttons"];
-//    
-//    BOOL tertiaryRow = NO;
-//    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
-//    if (!button1) {
-//        button1 = (UIButton *)[cell.contentView viewWithTag:3];
-//        tertiaryRow = YES;
-//    }
-//    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-//    if (!button2) {
-//        button2 = (UIButton *)[cell.contentView viewWithTag:4];
-//    }
-//    
-//    [button1 layer].masksToBounds = YES;
-//    [button2 layer].masksToBounds = YES;
-//    [[button1 layer] setCornerRadius:5.0f];
-//    [[button2 layer] setCornerRadius:5.0f];
-//
-//    NSInteger button1Count = 0;
-//    NSInteger button2Count = 0;
-//    
-//    UIColor *button1Color;
-//    UIColor *button2Color;
-//    
-//    if (tertiaryRow) {
-//        button1Color = [UIColor votingBlue];
-//        button2Color = [UIColor votingGreen];
-//    }
-//    else {
-//        button1Color = [UIColor votingRed];
-//        button2Color = [UIColor votingPurple];
-//    }
-//    
-//    if (buttonsClicked && [buttonsClicked count] == 4) {
-//        if (!tertiaryRow) {
-//            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:0]) integerValue];
-//            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:1]) integerValue];
-//        }
-//        else {
-//            button1Count = [((NSNumber *)[buttonsClicked objectAtIndex:2]) integerValue];
-//            button2Count = [((NSNumber *)[buttonsClicked objectAtIndex:3]) integerValue];
-//        }
-//    }
-//    
-//    id buttonID = [self.buttonsTapped valueForKey:[self.challengePost objectId]];
-//    NSInteger button = 0;
-//    if (buttonID) {
-//        button = [buttonID intValue];
-//    }
-//    
-//    // Reset to default
-//    [[button1 layer] setBorderWidth:2.0f];
-//    [[button1 layer] setBorderColor:button1Color.CGColor];
-//    [button1 setTintColor:button1Color];
-//    [button1 setTitleColor:button1Color forState:UIControlStateNormal];
-//    [button1 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
-//    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
-//    
-//    [[button2 layer] setBorderWidth:2.0f];
-//    [[button2 layer] setBorderColor:button2Color.CGColor];
-//    [button2 setTintColor:button2Color];
-//    [button2 setTitleColor:button2Color forState:UIControlStateNormal];
-//    [button2 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
-//    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
-//    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
-//    
-//    if (buttonID) {
-//        if ((button == 0 && !tertiaryRow) || (button == 2 && tertiaryRow)) {
-//            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateNormal];
-//            [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateHighlighted];
-//            [button1 setTintColor:[UIColor white]];
-//            [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-//            [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-//        }
-//        else if ((button == 1 && !tertiaryRow) || (button == 3 && tertiaryRow)) {
-//            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateNormal];
-//            [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateHighlighted];
-//            [button2 setTintColor:[UIColor white]];
-//            [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
-//            [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
-//        }
-//    }
-//    
-//    if (buttonTitles.count == 4) {
-//        NSString *button1Title;
-//        NSString *button2Title;
-//        
-//        if (!tertiaryRow) {
-//            if (buttonsClicked.count > 0 && [buttonsClicked[0] intValue] > 0) {
-//                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
-//            }
-//            else {
-//                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[0]];
-//            }
-//            
-//            if (buttonsClicked.count > 1 && [buttonsClicked[1] intValue] > 0) {
-//                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
-//            }
-//            else {
-//                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[1]];
-//            }
-//
-//        }
-//        else {
-//            if (buttonsClicked.count > 2 && [buttonsClicked[2] intValue] > 0) {
-//                button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[2], buttonsClicked[2]];
-//            }
-//            else {
-//                button1Title = [NSString stringWithFormat:@"%@", buttonTitles[2]];
-//            }
-//            
-//            if (buttonsClicked.count > 3 && [buttonsClicked[3] intValue] > 0) {
-//                button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[3], buttonsClicked[3]];
-//            }
-//            else {
-//                button2Title = [NSString stringWithFormat:@"%@", buttonTitles[3]];
-//            }
-//
-//        }
-//        
-//        [button1 setTitle:button1Title forState:UIControlStateNormal];
-//        [button2 setTitle:button2Title forState:UIControlStateNormal];
-//    }
-//    
-//    [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-//    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+    MTChallengeButton *challengeButton1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *challengeButton2 = [self.buttons objectAtIndex:1];
+    MTChallengeButton *challengeButton3 = [self.buttons objectAtIndex:2];
+    MTChallengeButton *challengeButton4 = [self.buttons objectAtIndex:3];
+    
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton2.id];
+    
+    RLMResults *myButton3Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton3.id];
+    
+    RLMResults *myButton4Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, self.challengePost.id, challengeButton4.id];
+    
+    RLMResults *allButton1Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton1.id];
+    
+    RLMResults *allButton2Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton2.id];
+    
+    RLMResults *allButton3Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton3.id];
+    
+    RLMResults *allButton4Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    self.challengePost.id, challengeButton4.id];
+
+    BOOL tertiaryRow = NO;
+    UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
+    if (!button1) {
+        button1 = (UIButton *)[cell.contentView viewWithTag:3];
+        tertiaryRow = YES;
+    }
+    else {
+        [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+        [button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    if (!button2) {
+        button2 = (UIButton *)[cell.contentView viewWithTag:4];
+    }
+    else {
+        [button2 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+        [button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
+    [button1 layer].masksToBounds = YES;
+    [button2 layer].masksToBounds = YES;
+    [[button1 layer] setCornerRadius:5.0f];
+    [[button2 layer] setCornerRadius:5.0f];
+
+    NSInteger button1Count = 0;
+    NSInteger button2Count = 0;
+    
+    UIColor *button1Color;
+    UIColor *button2Color;
+    
+    if (tertiaryRow) {
+        button1Color = [UIColor votingBlue];
+        button2Color = [UIColor votingGreen];
+    }
+    else {
+        button1Color = [UIColor votingRed];
+        button2Color = [UIColor votingPurple];
+    }
+    
+    if ([self.buttons count] == 4) {
+        if (!tertiaryRow) {
+            button1Count = [allButton1Clicks count];
+            button2Count = [allButton2Clicks count];
+        }
+        else {
+            button1Count = [allButton3Clicks count];
+            button2Count = [allButton4Clicks count];
+        }
+    }
+    
+    // Reset to default
+    [[button1 layer] setBorderWidth:2.0f];
+    [[button1 layer] setBorderColor:button1Color.CGColor];
+    [button1 setTintColor:button1Color];
+    [button1 setTitleColor:button1Color forState:UIControlStateNormal];
+    [button1 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateNormal];
+    [button1 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button1.frame.size] forState:UIControlStateHighlighted];
+    
+    [[button2 layer] setBorderWidth:2.0f];
+    [[button2 layer] setBorderColor:button2Color.CGColor];
+    [button2 setTintColor:button2Color];
+    [button2 setTitleColor:button2Color forState:UIControlStateNormal];
+    [button2 setTitleColor:[UIColor grayColor] forState:UIControlStateHighlighted];
+    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateNormal];
+    [button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:button2.frame.size] forState:UIControlStateHighlighted];
+    
+    if ((!IsEmpty(myButton1Clicks) && !tertiaryRow) || (!IsEmpty(myButton3Clicks) && tertiaryRow)) {
+        [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateNormal];
+        [button1 setBackgroundImage:[UIImage imageWithColor:button1Color size:button1.frame.size] forState:UIControlStateHighlighted];
+        [button1 setTintColor:[UIColor white]];
+        [button1 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+        [button1 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    }
+    else if ((!IsEmpty(myButton2Clicks) && !tertiaryRow) || (!IsEmpty(myButton4Clicks) && tertiaryRow)) {
+        [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateNormal];
+        [button2 setBackgroundImage:[UIImage imageWithColor:button2Color size:button2.frame.size] forState:UIControlStateHighlighted];
+        [button2 setTintColor:[UIColor white]];
+        [button2 setTitleColor:[UIColor white] forState:UIControlStateNormal];
+        [button2 setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
+    }
+    
+    if (self.buttons.count == 4) {
+        NSString *button1Title;
+        NSString *button2Title;
+        
+        if (!tertiaryRow) {
+            if ([allButton1Clicks count] > 0) {
+                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, [allButton1Clicks count]];
+            }
+            else {
+                button1Title = [NSString stringWithFormat:@"%@", challengeButton1.label];
+            }
+            
+            if ([allButton2Clicks count] > 0 ) {
+                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, [allButton2Clicks count]];
+            }
+            else {
+                button2Title = [NSString stringWithFormat:@"%@", challengeButton2.label];
+            }
+
+        }
+        else {
+            if ([allButton3Clicks count] > 0) {
+                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton3.label, [allButton3Clicks count]];
+            }
+            else {
+                button1Title = [NSString stringWithFormat:@"%@", challengeButton3.label];
+            }
+            
+            if ([allButton4Clicks count] > 0) {
+                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton4.label, [allButton4Clicks count]];
+            }
+            else {
+                button2Title = [NSString stringWithFormat:@"%@", challengeButton4.label];
+            }
+
+        }
+        
+        [button1 setTitle:button1Title forState:UIControlStateNormal];
+        [button2 setTitle:button2Title forState:UIControlStateNormal];
+    }
+    
+    [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
+    [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
 }
 
 
@@ -861,71 +876,6 @@ typedef enum {
 //
 //    [self updateLikes];
 //    [self loadPostText];
-}
-
-- (void)loadButtons
-{
-//    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
-//    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-//    [challengeQuery includeKey:@"verified_by"];
-//    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-//    
-//    MTMakeWeakSelf();
-//    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-//            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
-//                weakSelf.challenge = challenge;
-//            }
-//            
-//            NSArray *buttons = challenge[@"buttons"];
-//            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
-//            
-//            weakSelf.hasButtons = NO;
-//            weakSelf.hasSecondaryButtons = NO;
-//            weakSelf.hasTertiaryButtons = NO;
-//            
-//            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-//                if ([buttons count] == 4) {
-//                    weakSelf.hasTertiaryButtons = YES;
-//                }
-//                else {
-//                    weakSelf.hasButtons = YES;
-//                }
-//                
-//                [weakSelf updateButtonsTapped];
-//            }
-//            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
-//                weakSelf.hasSecondaryButtons = YES;
-//                [weakSelf updateSecondaryButtonsTapped];
-//            }
-//        }
-//        
-//        PFUser *user = self.challengePost[@"user"];
-//        
-//        BOOL myPost = NO;
-//        if ([MTUtil isUserMe:user]) {
-//            myPost = YES;
-//        }
-//        
-//        BOOL showButtons = NO;
-//        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
-//            showButtons = YES;
-//        }
-//                
-//        if (showButtons && self.postImage)
-//            self.postType = MTPostTypeWithButtonsWithImage;
-//        else if (showButtons)
-//            self.postType = MTPostTypeWithButtonsNoImage;
-//        else if (self.postImage)
-//            self.postType = MTPostTypeNoButtonsWithImage;
-//        else
-//            self.postType = MTPostTypeNoButtonsNoImage;
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [weakSelf loadComments];
-//        });
-//    }];
 }
 
 
@@ -1275,7 +1225,7 @@ typedef enum {
 
 - (void)dismissCommentView
 {
-    [self loadComments];
+    [self loadCommentsOnlyDatabase:YES];
     [self dismissViewControllerAnimated:YES completion:^{}];
 }
 
@@ -1452,7 +1402,7 @@ typedef enum {
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] deleteCommentId:comment.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadComments];
+            [weakSelf loadCommentsOnlyDatabase:YES];
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         });
     } failure:^(NSError *error) {
@@ -1516,12 +1466,12 @@ typedef enum {
 //    } afterDelay:0.35f];
 }
 
-- (IBAction)button1Tapped:(id)sender
+- (void)button1Tapped:(id)sender
 {
     [self submitPrimaryButtonTapped:sender withButtonNumber:0];
 }
 
-- (IBAction)button2Tapped:(id)sender
+- (void)button2Tapped:(id)sender
 {
     [self submitPrimaryButtonTapped:sender withButtonNumber:1];
 }
@@ -1538,43 +1488,74 @@ typedef enum {
 
 - (void)submitPrimaryButtonTapped:(id)sender withButtonNumber:(NSInteger)buttonNumber
 {
-//    __block id weakSender = sender;
-//    ((UIButton *)sender).enabled = NO;
-//    
-//    PFChallengePost *post = self.challengePost;
-//    
-//    NSString *userID = [self.currentUser objectId];
-//    NSString *postID = [post objectId];
-//    
-//    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInteger:buttonNumber]};
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    hud.labelText = @"Submitting...";
-//    hud.dimBackground = YES;
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-//            if (!error) {
-//                [weakSelf.currentUser fetch];
-////                [weakSelf.challenge fetch];
-//                [weakSelf.challengePost fetch];
-//                ((UIButton *)weakSender).enabled = YES;
-//                
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [weakSelf updateButtonsTapped];
-//                });
-//            }
-//            else {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                });
-//                
-//                NSLog(@"error - %@", error);
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//            }
-//        }];
-//    } afterDelay:0.35f];
+    UIButton *button = sender;
+    button.enabled = NO;
+    
+    MTChallengeButton *challengeButton = [self.buttons objectAtIndex:buttonNumber];
+    
+    RLMResults *existingClick = [MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu",
+                                 [MTUser currentUser].id, self.challengePost.id];
+    
+    MTChallengeButtonClick *thisClick = [existingClick firstObject];
+    if (thisClick.challengeButton.id == challengeButton.id) {
+        button.enabled = YES;
+        return;
+    }
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Submitting...";
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    if (thisClick) {
+        // Delete old one first, then add
+        [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:thisClick.id success:^(id responseData) {
+            
+            [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:weakSelf.challengePost.id buttonId:challengeButton.id success:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    button.enabled = YES;
+                    [weakSelf.tableView reloadData];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                        [weakSelf.delegate didUpdateButtons];
+                    }
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    button.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:self.challengePost.id buttonId:challengeButton.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
+                [weakSelf.tableView reloadData];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                    [weakSelf.delegate didUpdateButtons];
+                }
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
 
 - (void)secondaryButton1Tapped:(id)sender
@@ -1653,129 +1634,180 @@ typedef enum {
 
 - (void)secondaryButton1ActionWithIncrement:(BOOL)increment
 {
-//    PFUser *user = [PFUser currentUser];
-//    
-//    NSString *userID = [user objectId];
-//    NSString *postID = [self.challengePost objectId];
-//    NSNumber *increaseNumber = [NSNumber numberWithBool:(increment ? YES : NO)];
-//    
-//    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": [NSNumber numberWithInt:0], @"increase": increaseNumber};
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    hud.labelText = @"Processing Points...";
-//    hud.dimBackground = YES;
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-//            if (!error) {
-//                [[PFUser currentUser] fetchInBackground];
-//                [weakSelf updateSecondaryButtonsTapped];
-//            }
-//            else {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                });
-//                
-//                NSLog(@"error - %@", error);
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//            }
-//            
-//            weakSelf.secondaryButton1.enabled = YES;
-//        }];
-//    } afterDelay:0.35f];
+    MTChallengeButton *button1 = [self.buttons objectAtIndex:0];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Processing Points...";
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    if (increment) {
+        // Create new buttonClick
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:self.challengePost.id buttonId:button1.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton1.enabled = YES;
+                [weakSelf.tableView reloadData];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                    [weakSelf.delegate didUpdateButtons];
+                }
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton1.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        // Delete existing buttonClick
+        MTChallengeButtonClick *oneClick = [[MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                             [MTUser currentUser].id, self.challengePost.id, button1.id] firstObject];
+        
+        if (oneClick) {
+            [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:oneClick.id success:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton1.enabled = YES;
+                    [weakSelf.tableView reloadData];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                        [weakSelf.delegate didUpdateButtons];
+                    }
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton1.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+        }
+        else {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            weakSelf.secondaryButton1.enabled = YES;
+        }
+    }
 }
 
 - (void)secondaryButton2Tapped:(id)sender
 {
-//    ((UIButton *)sender).enabled = NO;
-//    self.secondaryButton2 = (UIButton *)sender;
-//    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:self.challengePost.objectId];
-//    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
-//
-//    BOOL markComplete = (button2Count > 0) ? NO : YES;
-//    NSString *title = @"Mark this as complete?";
-//    
-//    if (button2Count > 0) {
-//        // Now complete, marking incomplete
-//        title = @"Mark this as incomplete?";
-//    }
-//    
-//    MTMakeWeakSelf();
-//    if ([UIAlertController class]) {
-//        UIAlertController *changeSheet = [UIAlertController
-//                                          alertControllerWithTitle:title
-//                                          message:nil
-//                                          preferredStyle:UIAlertControllerStyleActionSheet];
-//        
-//        UIAlertAction *cancel = [UIAlertAction
-//                                 actionWithTitle:@"No"
-//                                 style:UIAlertActionStyleCancel
-//                                 handler:^(UIAlertAction *action) {
-//                                     weakSelf.secondaryButton2.enabled = YES;
-//                                 }];
-//        
-//        UIAlertAction *complete = [UIAlertAction
-//                                   actionWithTitle:@"Yes"
-//                                   style:UIAlertActionStyleDestructive
-//                                   handler:^(UIAlertAction *action) {
-//                                       dispatch_async(dispatch_get_main_queue(), ^{
-//                                           [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
-//                                       });
-//                                   }];
-//        
-//        [changeSheet addAction:cancel];
-//        [changeSheet addAction:complete];
-//        
-//        [weakSelf presentViewController:changeSheet animated:YES completion:nil];
-//    } else {
-//        
-//        UIActionSheet *changeSheet = [UIActionSheet bk_actionSheetWithTitle:title];
-//        [changeSheet bk_setDestructiveButtonWithTitle:@"Yes" handler:^{
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
-//            });
-//        }];
-//        [changeSheet bk_setCancelButtonWithTitle:@"No" handler:^{
-//            weakSelf.secondaryButton2.enabled = YES;
-//        }];
-//        [changeSheet showInView:[UIApplication sharedApplication].keyWindow];
-//    }
+    ((UIButton *)sender).enabled = NO;
+    self.secondaryButton2 = (UIButton *)sender;
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
+    
+    RLMResults *clickResults = [MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                [MTUser currentUser].id, self.challengePost.id, button2.id];
+    
+    BOOL markComplete = ([clickResults count] > 0) ? NO : YES;
+    NSString *title = @"Mark this as complete?";
+    if (!markComplete) {
+        // Now complete, marking incomplete
+        title = @"Mark this as incomplete?";
+    }
+    
+    MTMakeWeakSelf();
+    if ([UIAlertController class]) {
+        UIAlertController *changeSheet = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:nil
+                                          preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"No"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                     weakSelf.secondaryButton2.enabled = YES;
+                                 }];
+        
+        UIAlertAction *complete = [UIAlertAction
+                                   actionWithTitle:@"Yes"
+                                   style:UIAlertActionStyleDestructive
+                                   handler:^(UIAlertAction *action) {
+                                       dispatch_async(dispatch_get_main_queue(), ^{
+                                           [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
+                                       });
+                                   }];
+        
+        [changeSheet addAction:cancel];
+        [changeSheet addAction:complete];
+        
+        [weakSelf presentViewController:changeSheet animated:YES completion:nil];
+    } else {
+        
+        UIActionSheet *changeSheet = [UIActionSheet bk_actionSheetWithTitle:title];
+        [changeSheet bk_setDestructiveButtonWithTitle:@"Yes" handler:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf secondaryButton2ActionWithMarkComplete:markComplete];
+            });
+        }];
+        [changeSheet bk_setCancelButtonWithTitle:@"No" handler:^{
+            weakSelf.secondaryButton2.enabled = YES;
+        }];
+        [changeSheet showInView:[UIApplication sharedApplication].keyWindow];
+    }
 }
 
 - (void)secondaryButton2ActionWithMarkComplete:(BOOL)markComplete
 {
-//    PFUser *user = [PFUser currentUser];
-//    
-//    NSString *userID = [user objectId];
-//    NSString *postID = [self.challengePost objectId];
-//    NSNumber *completeNumber = [NSNumber numberWithBool:(markComplete ? YES : NO)];
-//    
-//    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": @1, @"increase": completeNumber};
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    hud.labelText = markComplete ? @"Marking Complete..." : @"Marking Incomplete...";
-//    hud.dimBackground = YES;
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-//            if (!error) {
-//                [[PFUser currentUser] fetchInBackground];
-//                [weakSelf updateSecondaryButtonsTapped];
-//            }
-//            else {
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                });
-//                
-//                NSLog(@"error - %@", error);
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//            }
-//            
-//            weakSelf.secondaryButton2.enabled = YES;
-//        }];
-//    } afterDelay:0.35f];
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
+    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = markComplete ? @"Marking Complete..." : @"Marking Incomplete...";
+    hud.dimBackground = YES;
+    
+    MTMakeWeakSelf();
+    if (markComplete) {
+        // Add click
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:self.challengePost.id buttonId:button2.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton2.enabled = YES;
+                [weakSelf.tableView reloadData];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                    [weakSelf.delegate didUpdateButtons];
+                }
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton2.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        // Delete existing buttonClick
+        MTChallengeButtonClick *oneClick = [[MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                             [MTUser currentUser].id, self.challengePost.id, button2.id] firstObject];
+        
+        if (oneClick) {
+            [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:oneClick.id success:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton2.enabled = YES;
+                    [weakSelf.tableView reloadData];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
+                        [weakSelf.delegate didUpdateButtons];
+                    }
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton2.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+        }
+        else {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            weakSelf.secondaryButton2.enabled = YES;
+        }
+    }
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -2652,7 +2684,7 @@ typedef enum {
 {
     dispatch_async(dispatch_get_main_queue(), ^{
 //        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        [self loadComments];
+        [self loadCommentsOnlyDatabase:YES];
         [self.tableView reloadData];
     });
 }

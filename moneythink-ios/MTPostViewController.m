@@ -601,13 +601,12 @@
         extraData = [self dictionaryFromSpentFields];
     }
     
-    MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraData:extraData success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
         });
     } failure:^(NSError *error) {
-        NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
+        NSLog(@"Unable to create post: %@", [error mtErrorDescription]);
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostNotification object:nil];
         });
