@@ -29,6 +29,8 @@
     [super viewWillAppear:animated];
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     [self loadLeaders];
+    
+    [MTUtil GATrackScreen:@"Leaderboard"];
 }
 
 

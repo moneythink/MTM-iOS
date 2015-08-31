@@ -74,9 +74,7 @@
     [super viewWillAppear:animated];
     
     // GA Track - 'Challenges'
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    [tracker set:kGAIScreenName value:@"Challenges"];
-    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    [MTUtil GATrackScreen:@"Challenges"];
     
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 

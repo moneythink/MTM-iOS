@@ -43,6 +43,8 @@
 {
     [super viewWillAppear:animated];
     
+    [MTUtil GATrackScreen:@"Menu"];
+    
     [self loadProfileImage];
 
     MTUser *user = [MTUser currentUser];

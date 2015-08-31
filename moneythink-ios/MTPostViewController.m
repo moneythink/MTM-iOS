@@ -42,6 +42,8 @@
     
     self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
     self.spentDoneButton.hidden = YES;
+
+    [MTUtil GATrackScreen:@"Post Detail"];
     
     if (self.displaySpentView) {
         self.spentView.hidden = NO;
@@ -386,13 +388,23 @@
         image = [info objectForKey:UIImagePickerControllerEditedImage];
     }
     
-    if (image.size.width > 480.0f) {
-        CGFloat scale = 480.0f / image.size.width;
-        CGFloat heightNew = scale * image.size.height;
-        CGSize sizeNew = CGSizeMake(480.0f, heightNew);
-        UIGraphicsBeginImageContext(sizeNew);
-        [image drawInRect:CGRectMake(0,0,sizeNew.width,sizeNew.height)];
-        UIGraphicsEndImageContext();
+    PFUser *commentPoster = comment[@"user"];
+    NSString *detailString = [NSString stringWithFormat:@"%@ %@:", commentPoster[@"first_name"], commentPoster[@"last_name"]];
+    cell.userLabel.text = detailString;
+    [cell.userLabel setFont:[UIFont mtBoldFontOfSize:11.0f]];
+}
+
+
+#pragma mark - Actions -
+- (IBAction)likeButtonTapped:(id)sender
+{
+    [MTUtil GATrackScreen:@"Emoji Picker"];
+    
+    // Load for Notification-loaded case
+    if (!self.myClassTableViewController) {
+        self.myClassTableViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"myClassChallengePostsTableView"];
+        self.myClassTableViewController.emojiObjects = self.emojiPickerObjects;
+        self.myClassTableViewController.postViewController = self;
     }
     
     [self dismissViewControllerAnimated:YES completion:^{

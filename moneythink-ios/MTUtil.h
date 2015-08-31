@@ -42,4 +42,7 @@
 + (void)cleanDeletedItemsInDatabase;
 + (void)logout;
 
+// Google Analytics singleton
++ (void)GATrackScreen:(NSString *)string;
+
 @end

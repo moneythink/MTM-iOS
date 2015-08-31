@@ -12,7 +12,6 @@
 #import "MTWebViewController.h"
 #import "MTNotificationViewController.h"
 #import "JGActionSheet.h"
-#import <Google/Analytics.h>
 
 #define NUMBERS_ONLY @"1234567890"
 
@@ -172,11 +171,9 @@
     
     // GA Track - 'Sign Up: Student'
     // GA Track - 'Sign Up: Mentor'
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     NSString *signupTypeCapitalized = [MTUtil capitalizeFirstLetter:self.signUpType];
     NSString *screenName = [NSString stringWithFormat:@"Sign Up: %@", signupTypeCapitalized];
-    [tracker set:kGAIScreenName value:screenName];
-    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    [MTUtil GATrackScreen:screenName];
 
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 

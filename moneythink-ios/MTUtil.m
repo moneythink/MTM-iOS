@@ -7,6 +7,7 @@
 //
 
 #import "MTUtil.h"
+#import <Google/Analytics.h>
 
 @implementation MTUtil
 
@@ -172,6 +173,11 @@
     }
 }
 
++ (void)GATrackScreen:(NSString *)string {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:string];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+}
 + (void)setRefreshedForKey:(NSString *)key
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:key];

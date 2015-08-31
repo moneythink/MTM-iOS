@@ -69,6 +69,8 @@
 {
     [super viewWillAppear:animated];
     
+    [MTUtil GATrackScreen:@"Notifications"];
+    
     if (self.actionableNotificationId > 0) {
         [self handleActionableNotification];
     }

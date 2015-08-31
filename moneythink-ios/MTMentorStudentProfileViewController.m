@@ -45,6 +45,8 @@
 {
     [super viewDidAppear:NO];
     
+    [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
+
     self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     

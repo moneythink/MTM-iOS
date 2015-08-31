@@ -10,7 +10,6 @@
 #import "MTStudentProgressTableViewCell.h"
 #import "MICheckBox.h"
 #import "MTMentorStudentProfileViewController.h"
-#import <Google/Analytics.h>
 
 @interface MTMentorDashboardViewController ()
 
