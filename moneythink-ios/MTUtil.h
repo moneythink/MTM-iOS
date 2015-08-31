@@ -45,4 +45,6 @@
 // Google Analytics singleton
 + (void)GATrackScreen:(NSString *)string;
 
++ (void)userDidLogin:(NSString *)userIdentifier;
+
 @end

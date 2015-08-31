@@ -177,6 +177,22 @@
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:string];
     [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    
+    NSLog(@"GA Track [Screen]: %@", string);
+}
+
+/* View Controllers should call this whenever the user is successfully logged in. */
++ (void)userDidLogin:(NSString *)userIdentifier {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    
+    // As per docs here: https://developers.google.com/analytics/devguides/collection/ios/v3/user-id
+    [tracker set:@"&uid" value:userIdentifier];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UX"            // Event category (required)
+                                                          action:@"User Sign In"  // Event action (required)
+                                                           label:nil              // Event label
+                                                           value:nil] build]];    // Event value
+    
+    NSLog(@"GA Track [Event]: User Sign In (ID: %@)", userIdentifier);
 }
 + (void)setRefreshedForKey:(NSString *)key
 {

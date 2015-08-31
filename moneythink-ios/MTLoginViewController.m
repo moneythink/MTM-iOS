@@ -205,6 +205,9 @@
         }
     }
     else if ([MTUser isUserLoggedIn]) {
+
+        [MTUtil userDidLogin:[user objectId]];
+
         [[MTUtil getAppDelegate] configureZendesk];
         if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
             [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -349,6 +352,8 @@
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
         
+        [MTUtil userDidLogin:[user objectId]];
+
         [[MTUtil getAppDelegate] configureZendesk];
         
         // Update for Push Notifications
