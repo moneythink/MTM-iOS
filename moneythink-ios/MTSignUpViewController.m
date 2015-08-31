@@ -42,7 +42,6 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *verticalSpaceConstraint;
 
 @property (nonatomic) BOOL reachable;
-@property (nonatomic, strong) UIActionSheet *classSheet;
 @property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL keyboardShowing;
 @property (nonatomic) BOOL showPrivacy;
@@ -53,9 +52,13 @@
 @property (nonatomic, strong) NSMutableArray *selectedMoneyOptions;
 @property (nonatomic) BOOL allowEmptyEthnicities;
 @property (nonatomic) BOOL allowEmptyMoneyOptions;
+@property (nonatomic, strong) NSDictionary *organizationsDict;
 @property (nonatomic, strong) NSDictionary *classesDict;
 @property (nonatomic, strong) UIActionSheet *currentActionSheet;
 @property (nonatomic, strong) id currentAlertController;
+@property (nonatomic, strong) NSNumber *selectedOrganizationId;
+@property (nonatomic, strong) NSNumber *selectedClassId;
+@property (nonatomic, strong) NSString *mentorNewClassName;
 
 @end
 
@@ -183,229 +186,6 @@
 
 
 #pragma mark - IBActions
-//- (IBAction)schoolNameButton:(id)sender
-//{
-//    [self dismissKeyboard];
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    hud.labelText = @"Loading Schools...";
-//    hud.dimBackground = YES;
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-//        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
-//        
-//        [querySchools findObjectsInBackgroundWithTarget:weakSelf selector:@selector(schoolsSheet:error:)];
-//    } afterDelay:0.35f];
-//}
-//
-//- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
-//{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//    });
-//
-//    NSMutableArray *names = [[NSMutableArray alloc] init];
-//    for (id object in objects) {
-//        if (!IsEmpty(object[@"name"])) {
-//            [names addObject:object[@"name"]];
-//        }
-//    }
-//    
-//    NSArray *sortedNames = [names sortedArrayUsingSelector:
-//                            @selector(localizedCaseInsensitiveCompare:)];
-//    
-//    NSMutableArray *schoolNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-//    for (NSString *thisSchoolName in sortedNames) {
-//        NSString *name = thisSchoolName;
-//        if ([self.schoolName.text isEqualToString:thisSchoolName]) {
-//            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisSchoolName];
-//        }
-//        [schoolNames addObject:name];
-//    }
-//    
-//    [self bk_performBlock:^(id obj) {
-//        if ([UIAlertController class]) {
-//            UIAlertController *schoolSheet = [UIAlertController
-//                                              alertControllerWithTitle:@""
-//                                              message:@"Choose School"
-//                                              preferredStyle:UIAlertControllerStyleActionSheet];
-//            
-//            UIAlertAction *cancel = [UIAlertAction
-//                                     actionWithTitle:@"Cancel"
-//                                     style:UIAlertActionStyleCancel
-//                                     handler:^(UIAlertAction *action) {
-//                                         self.schoolIsNew = NO;
-//                                     }];
-//            
-//            UIAlertAction *destruct = [UIAlertAction
-//                                       actionWithTitle:@"New school"
-//                                       style:UIAlertActionStyleDestructive
-//                                       handler:^(UIAlertAction *action) {
-//                                           self.schoolIsNew = YES;
-//                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
-//                                       }];
-//            
-//            UIAlertAction *schoolName;
-//            
-//            [schoolSheet addAction:destruct];
-//            
-//            MTMakeWeakSelf();
-//            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-//                schoolName = [UIAlertAction
-//                              actionWithTitle:schoolNames[buttonItem]
-//                              style:UIAlertActionStyleDefault
-//                              handler:^(UIAlertAction *action) {
-//                                  weakSelf.schoolIsNew = NO;
-//                                  weakSelf.schoolName.text = [weakSelf stringWithoutConfirmation:schoolNames[buttonItem]];
-//                                  weakSelf.className.text = @"";
-//                              }];
-//                [schoolSheet addAction:schoolName];
-//            }
-//            
-//            [schoolSheet addAction:cancel];
-//            
-//            self.currentAlertController = schoolSheet;
-//            [self presentViewController:schoolSheet animated:YES completion:nil];
-//        } else {
-//            UIActionSheet *schoolSheet = [[UIActionSheet alloc]
-//                                          initWithTitle:@"Choose School"
-//                                          delegate:self
-//                                          cancelButtonTitle:nil
-//                                          destructiveButtonTitle:@"New school"
-//                                          otherButtonTitles:nil, nil];
-//            
-//            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-//                [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
-//            }
-//            
-//            [schoolSheet addButtonWithTitle:@"Cancel"];
-//            schoolSheet.cancelButtonIndex = schoolNames.count + 1;
-//            self.currentActionSheet = schoolSheet;
-//            
-//            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-//            if ([window.subviews containsObject:self.view]) {
-//                [schoolSheet showInView:self.view];
-//            } else {
-//                [schoolSheet showInView:window];
-//            }
-//        }
-// 
-//    } afterDelay:0.35f];
-//}
-//
-//- (IBAction)classNameButton:(id)sender
-//{
-//    [self dismissKeyboard];
-//    if ([self.schoolName.text isEqualToString:@""]) {
-//        UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-//        [chooseSchoolAlert show];
-//    } else {
-//        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//        hud.labelText = @"Loading Classes...";
-//        hud.dimBackground = YES;
-//        
-//        MTMakeWeakSelf();
-//        [self bk_performBlock:^(id obj) {
-//            NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", weakSelf.schoolName.text];
-//            PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
-//            querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
-//            
-//            [querySchools findObjectsInBackgroundWithTarget:weakSelf selector:@selector(classesSheet:error:)];
-//        } afterDelay:0.35f];
-//    }
-//}
-//
-//- (void)classesSheet:(NSArray *)objects error:(NSError *)error
-//{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-//    });
-//
-//    NSMutableArray *names = [[NSMutableArray alloc] init];
-//    NSMutableArray *classes = [NSMutableArray array];
-//    for (id object in objects) {
-//        if (!IsEmpty(object[@"name"])) {
-//            [names addObject:object[@"name"]];
-//            [classes addObject:object];
-//        }
-//    }
-//    
-//    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-//    self.sortedClasses = [classes sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-//
-//    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[self.sortedClasses count]];
-//    for (PFClasses *thisClass in self.sortedClasses) {
-//        NSString *name = thisClass[@"name"];
-//        if ([self.className.text isEqualToString:name]) {
-//            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, name];
-//        }
-//        [classNames addObject:name];
-//    }
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        if ([UIAlertController class]) {
-//            UIAlertController *classSheet = [UIAlertController
-//                                             alertControllerWithTitle:@""
-//                                             message:@"Choose Class"
-//                                             preferredStyle:UIAlertControllerStyleActionSheet];
-//            
-//            UIAlertAction *cancel = [UIAlertAction
-//                                     actionWithTitle:@"Cancel"
-//                                     style:UIAlertActionStyleCancel
-//                                     handler:^(UIAlertAction *action) {
-//                                         weakSelf.classIsNew = NO;
-//                                     }];
-//            
-//            UIAlertAction *destruct = [UIAlertAction
-//                                       actionWithTitle:@"New class"
-//                                       style:UIAlertActionStyleDestructive
-//                                       handler:^(UIAlertAction *action) {
-//                                           weakSelf.classIsNew = YES;
-//                                           [weakSelf performSegueWithIdentifier:@"addClass" sender:weakSelf];
-//                                       }];
-//            
-//            UIAlertAction *className;
-//            [classSheet addAction:destruct];
-//            
-//            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-//                className = [UIAlertAction
-//                             actionWithTitle:classNames[buttonItem]
-//                             style:UIAlertActionStyleDefault
-//                             handler:^(UIAlertAction *action) {
-//                                 weakSelf.classIsNew = NO;
-//                                 weakSelf.className.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
-//                                 weakSelf.selectedClass = weakSelf.sortedClasses[buttonItem];
-//                             }];
-//                [classSheet addAction:className];
-//            }
-//            
-//            [classSheet addAction:cancel];
-//            
-//            self.currentAlertController = classSheet;
-//            [weakSelf presentViewController:classSheet animated:YES completion:nil];
-//        } else {
-//            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New class" otherButtonTitles:nil, nil];
-//            
-//            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-//                [classSheet addButtonWithTitle:classNames[buttonItem]];
-//            }
-//            
-//            [classSheet addButtonWithTitle:@"Cancel"];
-//            classSheet.cancelButtonIndex = classNames.count + 1;
-//            self.currentActionSheet = classSheet;
-//            
-//            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-//            if ([window.subviews containsObject:weakSelf.view]) {
-//                [classSheet showInView:weakSelf.view];
-//            } else {
-//                [classSheet showInView:window];
-//            }
-//        }
-//    } afterDelay:0.35f];
-//}
-
 - (IBAction)ethnicityButton:(id)sender
 {
     [self dismissKeyboard];
@@ -649,9 +429,8 @@
     BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
 
     if ([self validate]) {
-        
         if (isMentor) {
-            [self loadMentorClasses];
+            [self loadMentorOrganizations];
         }
         else {
             [self processStudentSignup];
@@ -719,16 +498,6 @@
             return NO;
         }
     }
-
-//    if (isMentor && IsEmpty(self.schoolName.text)) {
-//        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"School Name is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//        return NO;
-//    }
-//
-//    if (isMentor && IsEmpty(self.className.text)) {
-//        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Class Name is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//        return NO;
-//    }
 
     return YES;
 }
@@ -872,6 +641,93 @@
     [self.view endEditing:YES];
 }
 
+- (void)loadMentorOrganizations
+{
+    [self dismissKeyboard];
+    
+    if (!IsEmpty(self.organizationsDict)) {
+        [self presentOrganizationsSheet];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Schools...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] getOrganizationsWithSignupCode:weakSelf.registrationCode.text success:^(id responseData) {
+            weakSelf.organizationsDict = responseData;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                [weakSelf presentOrganizationsSheet];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            });
+        }];
+    }
+}
+
+- (void)presentOrganizationsSheet
+{
+    NSArray *sortedOrganizations = [[self.organizationsDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    MTMakeWeakSelf();
+    NSString *message = @"Choose School";
+    if ([UIAlertController class]) {
+        UIAlertController *organizationSheet = [UIAlertController
+                                         alertControllerWithTitle:@""
+                                         message:message
+                                         preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        UIAlertAction *organizationName;
+        
+        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+            organizationName = [UIAlertAction
+                         actionWithTitle:sortedOrganizations[buttonItem]
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction *action) {
+                             NSNumber *newOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+                             if (!weakSelf.selectedOrganizationId || [weakSelf.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
+                                 weakSelf.classesDict = nil;
+                             }
+                             weakSelf.selectedOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+                             [weakSelf loadMentorClasses];
+                         }];
+            [organizationSheet addAction:organizationName];
+        }
+        
+        [organizationSheet addAction:cancel];
+        
+        self.currentAlertController = organizationSheet;
+        [weakSelf presentViewController:organizationSheet animated:YES completion:nil];
+    } else {
+        UIActionSheet *organizationSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+            [organizationSheet addButtonWithTitle:sortedOrganizations[buttonItem]];
+        }
+        
+        [organizationSheet addButtonWithTitle:@"Cancel"];
+        organizationSheet.cancelButtonIndex = sortedOrganizations.count;
+        self.currentActionSheet = organizationSheet;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:weakSelf.view]) {
+            [organizationSheet showInView:weakSelf.view];
+        } else {
+            [organizationSheet showInView:window];
+        }
+    }
+}
+
 - (void)loadMentorClasses
 {
     [self dismissKeyboard];
@@ -885,137 +741,184 @@
         hud.dimBackground = YES;
         
         MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            
-            [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:weakSelf.registrationCode.text success:^(id responseData) {
-                weakSelf.classesDict = responseData;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf presentClassesSheet];
-                });
-            } failure:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                });
-            }];
-        } afterDelay:0.35f];
+        [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:weakSelf.registrationCode.text organizationId:[self.selectedOrganizationId integerValue] success:^(id responseData) {
+            weakSelf.classesDict = responseData;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                [weakSelf presentClassesSheet];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            });
+        }];
     }
 }
 
 - (void)presentClassesSheet
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    });
-    
     NSArray *sortedClasses = [[self.classesDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
+    NSString *message = @"Choose Class";
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        if ([UIAlertController class]) {
-            UIAlertController *classSheet = [UIAlertController
-                                             alertControllerWithTitle:@""
-                                             message:@"Choose Class"
-                                             preferredStyle:UIAlertControllerStyleActionSheet];
-            
-            UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleCancel
-                                     handler:^(UIAlertAction *action) {
-                                     }];
-            
-            UIAlertAction *className;
-            
-            for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
-                className = [UIAlertAction
-                             actionWithTitle:sortedClasses[buttonItem]
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction *action) {
-                                 [weakSelf processMentorSignupWithClassName:sortedClasses[buttonItem]];
-                             }];
-                [classSheet addAction:className];
-            }
-            
-            [classSheet addAction:cancel];
-            
-            self.currentAlertController = classSheet;
-            [weakSelf presentViewController:classSheet animated:YES completion:nil];
-        } else {
-            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class" delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-            
-            for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
-                [classSheet addButtonWithTitle:sortedClasses[buttonItem]];
-            }
-            
-            [classSheet addButtonWithTitle:@"Cancel"];
-            classSheet.cancelButtonIndex = sortedClasses.count + 1;
-            self.currentActionSheet = classSheet;
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:weakSelf.view]) {
-                [classSheet showInView:weakSelf.view];
-            } else {
-                [classSheet showInView:window];
-            }
+    if ([UIAlertController class]) {
+        UIAlertController *classSheet = [UIAlertController
+                                         alertControllerWithTitle:@""
+                                         message:message
+                                         preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        UIAlertAction *className;
+        
+        for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
+            className = [UIAlertAction
+                         actionWithTitle:sortedClasses[buttonItem]
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction *action) {
+                             weakSelf.selectedClassId = [weakSelf.classesDict objectForKey:sortedClasses[buttonItem]];
+                             [weakSelf processMentorSignup];
+                         }];
+            [classSheet addAction:className];
         }
-    } afterDelay:0.35f];
+        
+        UIAlertAction *destruct = [UIAlertAction
+                                   actionWithTitle:@"New Class"
+                                   style:UIAlertActionStyleDestructive
+                                   handler:^(UIAlertAction *action) {
+                                       [weakSelf promptForNewClassName];
+                                   }];
+
+        [classSheet addAction:destruct];
+        [classSheet addAction:cancel];
+        
+        self.currentAlertController = classSheet;
+        [weakSelf presentViewController:classSheet animated:YES completion:nil];
+    } else {
+        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New Class" otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
+            [classSheet addButtonWithTitle:sortedClasses[buttonItem]];
+        }
+        
+        [classSheet addButtonWithTitle:@"Cancel"];
+        classSheet.cancelButtonIndex = sortedClasses.count + 1;
+        self.currentActionSheet = classSheet;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:weakSelf.view]) {
+            [classSheet showInView:weakSelf.view];
+        } else {
+            [classSheet showInView:window];
+        }
+    }
 }
 
-- (void)processMentorSignupWithClassName:(NSString *)className
+- (void)promptForNewClassName
+{
+    MTMakeWeakSelf();
+    NSString *title = @"Enter New Class Name";
+    if ([UIAlertController class]) {
+        UIAlertController *newClassAlert = [UIAlertController
+                                         alertControllerWithTitle:title
+                                         message:nil
+                                         preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        [newClassAlert addAction:cancel];
+        
+        UIAlertAction *submit = [UIAlertAction
+                                 actionWithTitle:@"Submit"
+                                 style:UIAlertActionStyleDestructive
+                                 handler:^(UIAlertAction *action) {
+                                     self.mentorNewClassName = ((UITextField *)[newClassAlert.textFields firstObject]).text;
+                                     [self processMentorSignup];
+                                 }];
+        
+        [newClassAlert addAction:submit];
+
+        [newClassAlert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"New Class Name";
+        }];
+        
+
+        self.currentAlertController = newClassAlert;
+        [weakSelf presentViewController:newClassAlert animated:YES completion:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Submit", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert textFieldAtIndex:0].placeholder = @"New Class Name";
+        [alert show];
+    }
+}
+
+- (void)processMentorSignup
 {
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Registering...";
     hud.dimBackground = YES;
     
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        NSNumber *classId = [self.classesDict objectForKey:className];
-        [[MTNetworkManager sharedMTNetworkManager] mentorSignupForEmail:self.email.text
-                                                               password:self.password.text
-                                                             signupCode:self.registrationCode.text
-                                                              firstName:self.firstName.text
-                                                               lastName:self.lastName.text
-                                                            phoneNumber:self.phoneNumber.text
-                                                                classId:classId
-                                                                success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] mentorSignupForEmail:self.email.text
+                                                           password:self.password.text
+                                                         signupCode:self.registrationCode.text
+                                                          firstName:self.firstName.text
+                                                           lastName:self.lastName.text
+                                                        phoneNumber:self.phoneNumber.text
+                                                     organizationId:self.selectedOrganizationId
+                                                            classId:self.selectedClassId
+                                                       newClassName:self.mentorNewClassName
+                                                            success:^(id responseData) {
+                                                                
+                                                                [[MTUtil getAppDelegate] configureZendesk];
+                                                                
+                                                                // Update for Push Notifications
+                                                                //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                                                                     
-                                                                    [[MTUtil getAppDelegate] configureZendesk];
+                                                                    [weakSelf.navigationController popViewControllerAnimated:YES];
                                                                     
-                                                                    // Update for Push Notifications
-                                                                    //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                    // Update Notification count for this user.
+                                                                    //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                                                     
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                                                        
-                                                                        [weakSelf.navigationController popViewControllerAnimated:YES];
-                                                                        
-                                                                        // Update Notification count for this user.
-                                                                        //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
-                                                                        
-                                                                        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                                                                        if (![onboardingController checkForOnboarding]) {
-                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                                                                        }
-                                                                    });
-
-                                                                } failure:^(NSError *error) {
-                                                                    // See if we have a validation message
-                                                                    NSString *errorMessage = [error localizedDescription];
-                                                                    if ([error firstValidationMessage]) {
-                                                                        errorMessage = [error firstValidationMessage];
+                                                                    MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                                                                    if (![onboardingController checkForOnboarding]) {
+                                                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                                                        [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                     }
-                                                                    else if ([error detailMessage]) {
-                                                                        errorMessage = [error detailMessage];
-                                                                    }
+                                                                });
 
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                                                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                                                                    });
-                                                                }];
-        
-    } afterDelay:0.35f];
+                                                            } failure:^(NSError *error) {
+                                                                // See if we have a validation message
+                                                                NSString *errorMessage = [error localizedDescription];
+                                                                if ([error firstValidationMessage]) {
+                                                                    errorMessage = [error firstValidationMessage];
+                                                                }
+                                                                else if ([error detailMessage]) {
+                                                                    errorMessage = [error detailMessage];
+                                                                }
+                                                                
+                                                                weakSelf.selectedOrganizationId = nil;
+                                                                weakSelf.selectedClassId = nil;
+                                                                weakSelf.mentorNewClassName = nil;
+
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                                                                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                });
+                                                            }];
 }
 
 - (void)processStudentSignup
@@ -1025,56 +928,53 @@
     hud.dimBackground = YES;
     
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [[MTNetworkManager sharedMTNetworkManager] studentSignupForEmail:self.email.text
-                                                                password:self.password.text
-                                                              signupCode:self.registrationCode.text
-                                                               firstName:self.firstName.text
-                                                                lastName:self.lastName.text
-                                                                 zipCode:self.zipCode.text
-                                                             phoneNumber:self.phoneNumber.text
-                                                               birthdate:self.selectedBirthdate
-                                                               ethnicity:self.selectedEthnicity
-                                                            moneyOptions:self.selectedMoneyOptions
-                                                                success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] studentSignupForEmail:self.email.text
+                                                            password:self.password.text
+                                                          signupCode:self.registrationCode.text
+                                                           firstName:self.firstName.text
+                                                            lastName:self.lastName.text
+                                                             zipCode:self.zipCode.text
+                                                         phoneNumber:self.phoneNumber.text
+                                                           birthdate:self.selectedBirthdate
+                                                           ethnicity:self.selectedEthnicity
+                                                        moneyOptions:self.selectedMoneyOptions
+                                                            success:^(id responseData) {
+                                                                
+                                                                [[MTUtil getAppDelegate] configureZendesk];
+                                                                
+                                                                // Update for Push Notifications
+                                                                //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                                                                     
-                                                                    [[MTUtil getAppDelegate] configureZendesk];
+                                                                    [weakSelf.navigationController popViewControllerAnimated:YES];
                                                                     
-                                                                    // Update for Push Notifications
-                                                                    //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                    // Update Notification count for this user.
+                                                                    //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                                                     
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                                                        
-                                                                        [weakSelf.navigationController popViewControllerAnimated:YES];
-                                                                        
-                                                                        // Update Notification count for this user.
-                                                                        //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
-                                                                        
-                                                                        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                                                                        if (![onboardingController checkForOnboarding]) {
-                                                                            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                                                                            [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                                                                        }
-                                                                    });
-                                                                    
-                                                                } failure:^(NSError *error) {
-                                                                    // See if we have a validation message
-                                                                    NSString *errorMessage = [error localizedDescription];
-                                                                    if ([error firstValidationMessage]) {
-                                                                        errorMessage = [error firstValidationMessage];
+                                                                    MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+                                                                    if (![onboardingController checkForOnboarding]) {
+                                                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                                                        [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                     }
-                                                                    else if ([error detailMessage]) {
-                                                                        errorMessage = [error detailMessage];
-                                                                    }
-                                                                    
-                                                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                                                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                                                                    });
-                                                                }];
-
-    } afterDelay:0.35f];
+                                                                });
+                                                                
+                                                            } failure:^(NSError *error) {
+                                                                // See if we have a validation message
+                                                                NSString *errorMessage = [error localizedDescription];
+                                                                if ([error firstValidationMessage]) {
+                                                                    errorMessage = [error firstValidationMessage];
+                                                                }
+                                                                else if ([error detailMessage]) {
+                                                                    errorMessage = [error detailMessage];
+                                                                }
+                                                                
+                                                                dispatch_async(dispatch_get_main_queue(), ^{
+                                                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                                                                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                });
+                                                            }];
 }
 
 
@@ -1083,13 +983,27 @@
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     NSString *title = [actionSheet title];
-    if ([title isEqualToString:@"Choose Class"]) {
+    if ([title isEqualToString:@"Choose School"]) {
         if (![buttonTitle isEqualToString:@"Cancel"]) {
-            // Minus 1 to account for New Class button
-            NSString *selectedClass = [actionSheet buttonTitleAtIndex:buttonIndex];
-            [self processMentorSignupWithClassName:selectedClass];
+            NSNumber *newOrganizationId = [self.organizationsDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            if (!self.selectedOrganizationId || [self.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
+                self.classesDict = nil;
+            }
+            self.selectedOrganizationId = [self.organizationsDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            [self loadMentorClasses];
         }
-    } else if ([title isEqualToString:@"Choose Ethnicity"]) {
+    }
+    else if ([title isEqualToString:@"Choose Class"]) {
+        if ([buttonTitle isEqualToString:@"New Class"]) {
+            [self promptForNewClassName];
+        }
+        else if (![buttonTitle isEqualToString:@"Cancel"]) {
+            // Minus 1 to account for New Class button
+            self.selectedClassId = [self.classesDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            [self processMentorSignup];
+        }
+    }
+    else if ([title isEqualToString:@"Choose Ethnicity"]) {
         self.ethnicity.text = [self stringWithoutConfirmation:buttonTitle];
         for (NSDictionary *thisEthnicity in self.ethnicities) {
             if ([thisEthnicity[@"name"] isEqualToString:self.ethnicity.text]) {
@@ -1097,6 +1011,16 @@
                 break;
             }
         }
+    }
+}
+
+
+#pragma mark - UIAlertViewDelegate methods -
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"Enter New Class Name"]) {
+        self.mentorNewClassName = [alertView textFieldAtIndex:0].text;
+        [self processMentorSignup];
     }
 }
 

@@ -245,23 +245,57 @@ static NSString * const MTRefreshingErrorCode = @"701";
     return user;
 }
 
+- (NSDictionary *)processOrganizationsRequestWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No organizations response data");
+        return nil;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No organizations response data");
+        return nil;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"organizations"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No organizations response data");
+        return nil;
+    }
+    
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"organizations"];
+    NSMutableDictionary *organizationsDict = [NSMutableDictionary dictionary];
+    
+    for (NSDictionary *thisOrganization in responseArray) {
+        NSString *organizationName = [thisOrganization objectForKey:@"name"];
+        NSNumber *organizationId = [thisOrganization objectForKey:@"id"];
+        
+        if (!IsEmpty(organizationName) && [organizationId integerValue] > 0) {
+            [organizationsDict setValue:organizationId forKey:organizationName];
+        }
+    }
+    
+    return organizationsDict;
+}
+
 - (NSDictionary *)processClassesRequestWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No classes response data");
-        return 0;
+        return nil;
     }
     
     NSDictionary *responseDict = (NSDictionary *)responseObject;
     if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No classes response data");
-        return 0;
+        return nil;
     }
     
     NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
     if (![[embeddedDict objectForKey:@"classes"] isKindOfClass:[NSArray class]]) {
         NSLog(@"No classes response data");
-        return 0;
+        return nil;
     }
     
     NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"classes"];
@@ -274,6 +308,26 @@ static NSString * const MTRefreshingErrorCode = @"701";
         if (!IsEmpty(className) && [classId integerValue] > 0) {
             [classesDict setValue:classId forKey:className];
         }
+    }
+    
+    return classesDict;
+}
+
+- (NSDictionary *)processCreateClassRequestWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return nil;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    NSMutableDictionary *classesDict = [NSMutableDictionary dictionary];
+    NSString *className = [responseDict objectForKey:@"name"];
+    NSNumber *classId = [responseDict objectForKey:@"id"];
+    
+    if (!IsEmpty(className) && [classId integerValue] > 0) {
+        [classesDict setValue:classId forKey:className];
     }
     
     return classesDict;
@@ -975,7 +1029,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
                    firstName:(NSString *)firstName
                     lastName:(NSString *)lastName
                  phoneNumber:(NSString *)phoneNumber
-                     classId:(NSNumber *)classId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+              organizationId:(NSNumber *)organizationId
+                     classId:(NSNumber *)classId
+                newClassName:(NSString *)newClassName success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     
@@ -990,8 +1046,17 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSDictionary *codeDict = [NSDictionary dictionaryWithObject:@"MENTOR" forKey:@"code"];
     parameters[@"role"] = codeDict;
 
-    NSDictionary *classDict = [NSDictionary dictionaryWithObject:classId forKey:@"id"];
-    parameters[@"class"] = classDict;
+    NSDictionary *organizationDict = [NSDictionary dictionaryWithObject:organizationId forKey:@"id"];
+    parameters[@"organization"] = organizationDict;
+
+    if (!IsEmpty(newClassName)) {
+        NSDictionary *classDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInteger:0], @"id", newClassName, @"name", nil];
+        parameters[@"class"] = classDict;
+    }
+    else {
+        NSDictionary *classDict = [NSDictionary dictionaryWithObject:classId forKey:@"id"];
+        parameters[@"class"] = classDict;
+    }
 
     MTMakeWeakSelf();
     [self POST:@"users" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -1094,16 +1159,198 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)getClassesWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)getOrganizationsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"9990";
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        [self GET:@"organizations" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"Success getOrganizationsWithSuccess response");
+            NSDictionary *organizationsDict = [self processOrganizationsRequestWithResponseObject:responseObject];
+            
+            if ([organizationsDict count] > 0) {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(organizationsDict);
+                    });
+                }
+            }
+            else {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(nil);
+                    });
+                }
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed getOrganizationsWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failure(error);
+                });
+            }
+        }];
+
+    } failure:^(NSError *error) {
+        NSLog(@"Failed getOrganizationsWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+    
+}
+
+- (void)getOrganizationsWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    if (IsEmpty(signupCode)) {
+        [self getOrganizationsWithSuccess:success failure:failure];
+        return;
+    }
+    
+    NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+    parameters[@"maxdepth"] = @"0";
+    parameters[@"page_size"] = @"999";
+    
+    NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
+    [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
+    
+    [self GET:@"mentor-organizations" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        NSLog(@"Success getting Organizations response");
+        NSDictionary *organizationsDict = [self processOrganizationsRequestWithResponseObject:responseObject];
+        
+        if ([organizationsDict count] > 0) {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(organizationsDict);
+                });
+            }
+        }
+        else {
+            if (success) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    success(nil);
+                });
+            }
+        }
+    } failure:^(NSURLSessionDataTask *task, NSError *error) {
+        NSLog(@"Failed to get organizations with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                failure(error);
+            });
+        }
+    }];
+}
+
+- (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        [self GET:@"classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"Success getClassesWithSuccess response");
+            NSDictionary *classesDict = [self processClassesRequestWithResponseObject:responseObject];
+            
+            if ([classesDict count] > 0) {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(classesDict);
+                    });
+                }
+            }
+            else {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(nil);
+                    });
+                }
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed getClassesWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failure(error);
+                });
+            }
+        }];
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed getClassesWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+    
+}
+
+- (void)createClassWithName:(NSString *)name organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"9990";
+        parameters[@"name"] = name;
+        parameters[@"organization"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:organizationId] forKey:@"id"];
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        [self POST:@"classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"Success createClassWithName response");
+            NSDictionary *classesDict = [self processCreateClassRequestWithResponseObject:responseObject];
+            
+            if ([classesDict count] > 0) {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(classesDict);
+                    });
+                }
+            }
+            else {
+                if (success) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        success(nil);
+                    });
+                }
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failure(error);
+                });
+            }
+        }];
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+    
+}
+
+- (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
     parameters[@"page_size"] = @"999";
+    
+    NSString *urlString = [NSString stringWithFormat:@"organizations/%ld/classes", (long)organizationId];
 
     NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
     [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
     
-    [self GET:@"organizations/classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+    [self GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Success getting Classes response");
         NSDictionary *classesDict = [self processClassesRequestWithResponseObject:responseObject];
         
@@ -1412,6 +1659,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
                                  email:(NSString *)email
                            phoneNumber:(NSString *)phoneNumber
                               password:(NSString *)password
+                        organizationId:(NSInteger)organizationId
+                               classId:(NSInteger)classId
                                success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
@@ -1424,25 +1673,38 @@ static NSString * const MTRefreshingErrorCode = @"701";
         parameters[@"firstName"] = firstName;
         parameters[@"lastName"] = lastName;
         parameters[@"phoneNumber"] = phoneNumber;
-        //        parameters[@"username"] = email;
-        //        parameters[@"email"] = email;
+        parameters[@"username"] = email;
+        parameters[@"email"] = email;
         parameters[@"password"] = password;
+        
+        if (organizationId > 0) {
+            parameters[@"organization"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:organizationId] forKey:@"id"];
+        }
+        
+        if (classId > 0) {
+            parameters[@"class"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:classId] forKey:@"id"];
+        }
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateCurrentUser success response");
             
             if (responseObject) {
-                RLMRealm *realm = [RLMRealm defaultRealm];
-                [realm beginWriteTransaction];
+//                RLMRealm *realm = [RLMRealm defaultRealm];
+//                [realm beginWriteTransaction];
                 
-                MTUser *meUser = [MTUser currentUser];
-                meUser.firstName = firstName;
-                meUser.lastName = lastName;
-                //                meUser.email = email;
-                meUser.phoneNumber = phoneNumber;
+                MTUser *meUser = [self processUserRequestWithResponseObject:responseObject];
                 
-                [realm commitWriteTransaction];
+//                MTUser *meUser = [MTUser currentUser];
+//                meUser.firstName = firstName;
+//                meUser.lastName = lastName;
+//                meUser.email = email;
+//                meUser.username = email;
+//                meUser.phoneNumber = phoneNumber;
+                
+//                [realm commitWriteTransaction];
+                
+                NSLog(@"updated User: %@", meUser);
             }
             
             if (success) {
@@ -1741,7 +2003,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -1841,7 +2103,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -1941,7 +2203,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)deletePostId:(NSInteger)postId success:(MTNetworkOAuthSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)deletePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -1972,6 +2234,52 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed deletePostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)verifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"post"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:postId] forKey:@"id"];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:@"posts/verify" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"verifyPostId success response");
+            
+            if (responseObject) {
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                
+                MTChallengePost *updatedPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                updatedPost.isVerified = YES;
+                
+                [realm commitWriteTransaction];
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                NSLog(@"Unable to update post, no responseObject");
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed verifyPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed verifyPostId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }

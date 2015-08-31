@@ -2,8 +2,8 @@
 //  MTEditProfileViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 7/25/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 8/31/15.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTEditProfileViewController.h"
@@ -36,30 +36,21 @@
 @property (assign, nonatomic) CGSize oldViewFieldsContentSize;
 @property (nonatomic, strong) MTUser *userCurrent;
 @property (assign, nonatomic) BOOL reachable;
-@property (assign, nonatomic) BOOL schoolIsNew;
-@property (strong, nonatomic) NSArray *schools;
-@property (strong, nonatomic) NSDictionary *selectedSchoolDict;
-@property (assign, nonatomic) BOOL classIsNew;
-@property (strong, nonatomic) NSDictionary *selectedClassDict;
-@property (nonatomic, strong) NSArray *classes;
-@property (nonatomic, strong) NSString *confirmationString;
 @property (nonatomic) BOOL unwinding;
 @property (nonatomic) BOOL showingKeyboard;
 @property (nonatomic) BOOL removedProfilePhoto;
-@property (nonatomic, strong) RLMNotificationToken *token;
+@property (nonatomic, strong) NSDictionary *organizationsDict;
+@property (nonatomic, strong) NSDictionary *classesDict;
+@property (nonatomic, strong) NSNumber *selectedOrganizationId;
+@property (nonatomic, strong) NSNumber *selectedClassId;
+@property (nonatomic, strong) NSString *mentorNewClassName;
+@property (nonatomic, strong) NSString *mentorCode;
+@property (nonatomic) BOOL showedEmailWarning;
 
 @end
 
 @implementation MTEditProfileViewController
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -126,11 +117,8 @@
                     [((UILabel*)scrollViewSubview) setBackgroundColor:[UIColor clearColor]];
                 }
             }
-            
         }
     }
-    
-    self.confirmationString = @"✓ ";
     
     [self.cancelButton setTitleColor:[UIColor primaryOrange] forState:UIControlStateNormal];
     [self.cancelButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
@@ -155,10 +143,6 @@
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
-    
-    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-        // TODO: Update views
-    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -169,7 +153,6 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(openMenuAction:) name:kWillMoveToOpenMenuPositionNotification object:nil];
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -182,214 +165,282 @@
 
 
 #pragma mark - Actions -
-- (IBAction)chooseSchoolAction:(id)sender
+- (IBAction)loadMentorOrganizations
 {
     if (!self.isMentor) {
         return;
     }
     
+    [self dismissKeyboard];
+    [self promptForMentorCode];
+}
+
+- (void)promptForMentorCode
+{
+    MTMakeWeakSelf();
+    NSString *title = @"Provide Mentor Code";
+    NSString *message = @"Please provide your mentor code to view all schools.";
+    if ([UIAlertController class]) {
+        UIAlertController *newClassAlert = [UIAlertController
+                                            alertControllerWithTitle:title
+                                            message:message
+                                            preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        [newClassAlert addAction:cancel];
+        
+        UIAlertAction *submit = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDestructive
+                                 handler:^(UIAlertAction *action) {
+                                     self.mentorCode = ((UITextField *)[newClassAlert.textFields firstObject]).text;
+                                     [self getMentorOrganizations];
+                                 }];
+        
+        [newClassAlert addAction:submit];
+        
+        [newClassAlert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"Mentor Code";
+        }];
+        
+        [weakSelf presentViewController:newClassAlert animated:YES completion:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert textFieldAtIndex:0].placeholder = @"Mentor Code";
+        [alert show];
+    }
+}
+
+- (void)getMentorOrganizations
+{
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Loading Schools...";
     hud.dimBackground = YES;
     
-    [self bk_performBlock:^(id obj) {
-        PFQuery *querySchools = [PFQuery queryWithClassName:[PFSchools parseClassName]];
-        querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] getOrganizationsWithSignupCode:self.mentorCode success:^(id responseData) {
+        weakSelf.organizationsDict = responseData;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [weakSelf presentOrganizationsSheet];
+        });
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [[[UIAlertView alloc] initWithTitle:@"Load Error" message:[NSString stringWithFormat:@"Unable to load schools with this mentor code: %@", weakSelf.mentorCode] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        });
+    }];
+}
+
+- (void)presentOrganizationsSheet
+{
+    NSArray *sortedOrganizations = [[self.organizationsDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    MTMakeWeakSelf();
+    NSString *message = @"Choose School";
+    if ([UIAlertController class]) {
+        UIAlertController *organizationSheet = [UIAlertController
+                                                alertControllerWithTitle:@""
+                                                message:message
+                                                preferredStyle:UIAlertControllerStyleActionSheet];
         
-        [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(schoolsSheet:error:)];
-    } afterDelay:0.35f];
-}
-
-- (void)schoolsSheet:(NSArray *)objects error:(NSError *)error
-{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-    });
-    
-    NSMutableArray *names = [[NSMutableArray alloc] init];
-    for (id object in objects) {
-        if (!IsEmpty(object[@"name"])) {
-            [names addObject:object[@"name"]];
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        UIAlertAction *organizationName;
+        
+        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+            organizationName = [UIAlertAction
+                                actionWithTitle:sortedOrganizations[buttonItem]
+                                style:UIAlertActionStyleDefault
+                                handler:^(UIAlertAction *action) {
+                                    NSNumber *newOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+                                    if (!weakSelf.selectedOrganizationId || [weakSelf.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
+                                        weakSelf.classesDict = nil;
+                                    }
+                                    weakSelf.selectedOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+                                    weakSelf.userSchool.text = sortedOrganizations[buttonItem];
+                                    [weakSelf loadMentorClasses];
+                                }];
+            [organizationSheet addAction:organizationName];
         }
-    }
-    
-    NSArray *sortedNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    NSMutableArray *schoolNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-    for (NSString *thisSchoolName in sortedNames) {
-        NSString *name = thisSchoolName;
-        if ([self.userSchool.text isEqualToString:thisSchoolName]) {
-            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisSchoolName];
-        }
-        [schoolNames addObject:name];
-    }
-    
-    [self bk_performBlock:^(id obj) {
-        if ([UIAlertController class]) {
-            UIAlertController *schoolSheet = [UIAlertController
-                                              alertControllerWithTitle:@""
-                                              message:@"Choose School"
-                                              preferredStyle:UIAlertControllerStyleActionSheet];
-            
-            UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleCancel
-                                     handler:^(UIAlertAction *action) {
-                                         self.schoolIsNew = NO;
-                                     }];
-            
-            UIAlertAction *schoolName;
-            
-            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-                schoolName = [UIAlertAction
-                              actionWithTitle:schoolNames[buttonItem]
-                              style:UIAlertActionStyleDefault
-                              handler:^(UIAlertAction *action) {
-                                  self.schoolIsNew = NO;
-                                  self.userSchool.text = [self stringWithoutConfirmation:schoolNames[buttonItem]];
-                                  self.userClassName.text = @"";
-                              }];
-                [schoolSheet addAction:schoolName];
-            }
-            
-            UIAlertAction *destruct = [UIAlertAction
-                                       actionWithTitle:@"New school"
-                                       style:UIAlertActionStyleDestructive
-                                       handler:^(UIAlertAction *action) {
-                                           self.schoolIsNew = YES;
-                                           [self performSegueWithIdentifier:@"addSchool" sender:self];
-                                       }];
-            [schoolSheet addAction:destruct];
-            
-            [schoolSheet addAction:cancel];
-            
-            [self presentViewController:schoolSheet animated:YES completion:nil];
-        } else {
-            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
-            UIActionSheet *schoolSheet = [[UIActionSheet alloc]
-                                          initWithTitle:@"Choose School"
-                                          delegate:self
-                                          cancelButtonTitle:nil
-                                          destructiveButtonTitle:@"New school"
-                                          otherButtonTitles:nil, nil];
-            
-            for (NSInteger buttonItem = 0; buttonItem < schoolNames.count; buttonItem++) {
-                [schoolSheet addButtonWithTitle:schoolNames[buttonItem]];
-            }
-            
-            schoolSheet.cancelButtonIndex = [schoolSheet addButtonWithTitle:@"Cancel"];
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:self.view]) {
-                [schoolSheet showInView:self.view];
-            } else {
-                [schoolSheet showInView:window];
-            }
-        }
-    } afterDelay:0.35f];
-}
-
-- (IBAction)chooseClassAction:(id)sender
-{
-    if (!self.isMentor) {
-        return;
-    }
-
-    if ([self.userSchool.text isEqualToString:@""]) {
-        UIAlertView *chooseSchoolAlert = [[UIAlertView alloc] initWithTitle:@"No school selected" message:@"Choose or add a school before selecting a class." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [chooseSchoolAlert show];
+        
+        [organizationSheet addAction:cancel];
+        
+        [weakSelf presentViewController:organizationSheet animated:YES completion:nil];
     } else {
+        UIActionSheet *organizationSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+            [organizationSheet addButtonWithTitle:sortedOrganizations[buttonItem]];
+        }
+        
+        [organizationSheet addButtonWithTitle:@"Cancel"];
+        organizationSheet.cancelButtonIndex = sortedOrganizations.count;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:weakSelf.view]) {
+            [organizationSheet showInView:weakSelf.view];
+        } else {
+            [organizationSheet showInView:window];
+        }
+    }
+}
+
+- (IBAction)loadMentorClasses
+{
+    [self dismissKeyboard];
+    
+    if (!IsEmpty(self.classesDict)) {
+        [self presentClassesSheet];
+    }
+    else {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Loading Classes...";
         hud.dimBackground = YES;
-
-        [self bk_performBlock:^(id obj) {
-            NSPredicate *classesForSchool = [NSPredicate predicateWithFormat:@"school = %@", self.userSchool.text];
-            PFQuery *querySchools = [PFQuery queryWithClassName:[PFClasses parseClassName] predicate:classesForSchool];
-            querySchools.cachePolicy = kPFCachePolicyNetworkElseCache;
-            
-            [querySchools findObjectsInBackgroundWithTarget:self selector:@selector(classesSheet:error:)];
-        } afterDelay:0.35f];
+        
+        MTMakeWeakSelf();
+        if (self.selectedOrganizationId && [self.selectedOrganizationId integerValue] != self.userCurrent.organization.id) {
+            [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:self.mentorCode organizationId:[self.selectedOrganizationId integerValue] success:^(id responseData) {
+                weakSelf.classesDict = responseData;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                    [weakSelf presentClassesSheet];
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                    [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to Load Classes" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                });
+            }];
+        }
+        else {
+            [[MTNetworkManager sharedMTNetworkManager] getClassesWithSuccess:^(id responseData) {
+                weakSelf.classesDict = responseData;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                    [weakSelf presentClassesSheet];
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                    [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to Load Classes" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                });
+            }];
+        }
     }
 }
 
-- (void)classesSheet:(NSArray *)objects error:(NSError *)error
+- (void)presentClassesSheet
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    });
-
-    NSMutableArray *names = [[NSMutableArray alloc] init];
-    for (id object in objects) {
-        if (!IsEmpty(object[@"name"])) {
-            [names addObject:object[@"name"]];
-        }
-    }
+    NSArray *sortedClasses = [[self.classesDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     
-    NSArray *sortedNames = [names sortedArrayUsingSelector:
-                            @selector(localizedCaseInsensitiveCompare:)];
-    
-    NSMutableArray *classNames = [NSMutableArray arrayWithCapacity:[sortedNames count]];
-    for (NSString *thisClassName in sortedNames) {
-        NSString *name = thisClassName;
-        if ([self.userClassName.text isEqualToString:thisClassName]) {
-            name = [NSString stringWithFormat:@"%@%@", self.confirmationString, thisClassName];
-        }
-        [classNames addObject:name];
-    }
-    
+    NSString *message = @"Choose Class";
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        if ([UIAlertController class]) {
-            UIAlertController *classSheet = [UIAlertController
-                                             alertControllerWithTitle:@""
-                                             message:@"Choose Class"
-                                             preferredStyle:UIAlertControllerStyleActionSheet];
-            
-            UIAlertAction *cancel = [UIAlertAction
-                                     actionWithTitle:@"Cancel"
-                                     style:UIAlertActionStyleCancel
-                                     handler:^(UIAlertAction *action) {
-                                     }];
-            
-            UIAlertAction *className;
-            
-            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-                className = [UIAlertAction
-                             actionWithTitle:classNames[buttonItem]
-                             style:UIAlertActionStyleDefault
-                             handler:^(UIAlertAction *action) {
-                                 weakSelf.userClassName.text = [weakSelf stringWithoutConfirmation:classNames[buttonItem]];
-                             }];
-                [classSheet addAction:className];
-            }
-            
-            [classSheet addAction:cancel];
-            
-            [weakSelf presentViewController:classSheet animated:YES completion:nil];
-        } else {
-            // DWS: Tried moving New school button to bottom but maybe iOS bug preventing this?
-            UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:@"Choose Class"
-                                                                    delegate:weakSelf
-                                                           cancelButtonTitle:nil
-                                                      destructiveButtonTitle:nil
-                                                           otherButtonTitles:nil, nil];
-            
-            for (NSInteger buttonItem = 0; buttonItem < classNames.count; buttonItem++) {
-                [classSheet addButtonWithTitle:classNames[buttonItem]];
-            }
-            
-            classSheet.cancelButtonIndex = [classSheet addButtonWithTitle:@"Cancel"];
-            
-            UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-            if ([window.subviews containsObject:weakSelf.view]) {
-                [classSheet showInView:weakSelf.view];
-            } else {
-                [classSheet showInView:window];
-            }
+    if ([UIAlertController class]) {
+        UIAlertController *classSheet = [UIAlertController
+                                         alertControllerWithTitle:@""
+                                         message:message
+                                         preferredStyle:UIAlertControllerStyleActionSheet];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        UIAlertAction *className;
+        
+        for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
+            className = [UIAlertAction
+                         actionWithTitle:sortedClasses[buttonItem]
+                         style:UIAlertActionStyleDefault
+                         handler:^(UIAlertAction *action) {
+                             weakSelf.selectedClassId = [weakSelf.classesDict objectForKey:sortedClasses[buttonItem]];
+                             weakSelf.userClassName.text = sortedClasses[buttonItem];
+                         }];
+            [classSheet addAction:className];
         }
-    } afterDelay:0.35f];
+        
+        UIAlertAction *destruct = [UIAlertAction
+                                   actionWithTitle:@"New Class"
+                                   style:UIAlertActionStyleDestructive
+                                   handler:^(UIAlertAction *action) {
+                                       [weakSelf promptForNewClassName];
+                                   }];
+        
+        [classSheet addAction:destruct];
+        [classSheet addAction:cancel];
+        
+        [weakSelf presentViewController:classSheet animated:YES completion:nil];
+    } else {
+        UIActionSheet *classSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:@"New Class" otherButtonTitles:nil, nil];
+        
+        for (NSInteger buttonItem = 0; buttonItem < sortedClasses.count; buttonItem++) {
+            [classSheet addButtonWithTitle:sortedClasses[buttonItem]];
+        }
+        
+        [classSheet addButtonWithTitle:@"Cancel"];
+        classSheet.cancelButtonIndex = sortedClasses.count + 1;
+        
+        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+        if ([window.subviews containsObject:weakSelf.view]) {
+            [classSheet showInView:weakSelf.view];
+        } else {
+            [classSheet showInView:window];
+        }
+    }
+}
+
+- (void)promptForNewClassName
+{
+    MTMakeWeakSelf();
+    NSString *title = @"Enter New Class Name";
+    if ([UIAlertController class]) {
+        UIAlertController *newClassAlert = [UIAlertController
+                                            alertControllerWithTitle:title
+                                            message:nil
+                                            preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *cancel = [UIAlertAction
+                                 actionWithTitle:@"Cancel"
+                                 style:UIAlertActionStyleCancel
+                                 handler:^(UIAlertAction *action) {
+                                 }];
+        
+        [newClassAlert addAction:cancel];
+        
+        UIAlertAction *submit = [UIAlertAction
+                                 actionWithTitle:@"OK"
+                                 style:UIAlertActionStyleDestructive
+                                 handler:^(UIAlertAction *action) {
+                                     self.mentorNewClassName = ((UITextField *)[newClassAlert.textFields firstObject]).text;
+                                     self.userClassName.text = self.mentorNewClassName;
+                                 }];
+        
+        [newClassAlert addAction:submit];
+        
+        [newClassAlert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+            textField.placeholder = @"New Class Name";
+        }];
+        
+        
+        [weakSelf presentViewController:newClassAlert animated:YES completion:nil];
+    } else {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert textFieldAtIndex:0].placeholder = @"New Class Name";
+        [alert show];
+    }
 }
 
 - (IBAction)saveChanges:(id)sender
@@ -409,6 +460,11 @@
         if (self.removedProfilePhoto) {
             dirty = YES;
         }
+    }
+    
+    NSString *schoolName = self.userCurrent.organization.name ? self.userCurrent.organization.name : @"";
+    if (![self.userSchool.text isEqualToString:schoolName]) {
+        dirty = YES;
     }
     
     NSString *className = self.userCurrent.userClass.name ? self.userCurrent.userClass.name : @"";
@@ -461,6 +517,7 @@
                                          actionWithTitle:@"Discard Changes"
                                          style:UIAlertActionStyleDefault
                                          handler:^(UIAlertAction *action) {
+                                             [weakSelf updateViewForCurrentUser];
                                              [weakSelf dismissViewControllerAnimated:YES completion:NULL];
                                          }];
 
@@ -479,6 +536,7 @@
                 [weakSelf saveProfileChanges];
             }];
             [saveSheet bk_addButtonWithTitle:@"Discard Changes" handler:^{
+                [weakSelf updateViewForCurrentUser];
                 [weakSelf dismissViewControllerAnimated:YES completion:NULL];
             }];
             [saveSheet bk_setCancelButtonWithTitle:@"Cancel" handler:nil];
@@ -493,18 +551,6 @@
 
 
 #pragma mark - Private -
-- (NSString *)stringWithoutConfirmation:(NSString *)oldString
-{
-    if ([oldString hasPrefix:self.confirmationString]) {
-        NSString *newString = [oldString substringFromIndex:[oldString rangeOfString:self.confirmationString].length];
-        return newString;
-    }
-    else {
-        return oldString;
-    }
-
-}
-
 - (void)textFieldsConfigure
 {
     UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
@@ -708,48 +754,56 @@
 {
     [self.view endEditing:YES];
 
-//    BOOL newClass = NO;
-//    if (![self.userCurrent.userClass.name isEqualToString:self.userClassName.text]) {
-//        newClass = YES;
-//    }
-//
-//    if (self.userClassName.text) {
-//        self.userCurrent.userClass.name = self.userClassName.text;
-//    }
-//    
-//    if (newClass) {
-//        // Check for custom playlist for this class
-//        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:YES];
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kUserDidChangeClass object:nil];
-//        
-//        // Reset prompts
-//        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserActivatedChallenges];
-//        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kUserInvitedStudents];
-//        [[NSUserDefaults standardUserDefaults] synchronize];
-//    }
-    
-//    if (self.firstName.text) {
-//        self.userCurrent.firstName = self.firstName.text;
-//    }
-//
-//    if (self.lastName.text) {
-//        self.userCurrent.firstName = self.lastName.text;
-//    }
-//    
-//    if (self.phoneNumber.text) {
-//        self.userCurrent.phoneNumber = self.phoneNumber.text;
-//    }
-
     BOOL passwordsMatch = [self.userPassword.text isEqualToString:self.confirmPassword.text];
     if (!passwordsMatch){
         UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Password error" message:@"Passwords do not match." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [noMatch show];
         return;
     }
+
+    BOOL emailsMatch = [self.email.text isEqualToString:self.userCurrent.email];
+    if (!emailsMatch && !self.showedEmailWarning){
+        self.showedEmailWarning = YES;
+        UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Email Warning" message:@"If you change your email address you will need to Logout/Login again to re-authenticate.\n\nDismiss and tap Save again to continue." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
+        [noMatch show];
+        return;
+    }
     
-//    self.userCurrent.email = self.email.text;
-//    self.userCurrent.username = self.email.text;
-    
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Saving...";
+    hud.dimBackground = YES;
+
+    if (!IsEmpty(self.mentorNewClassName)) {
+        // Create class first, then update user
+        MTMakeWeakSelf();
+        NSInteger orgId = self.selectedOrganizationId ? [self.selectedOrganizationId integerValue] : self.userCurrent.organization.id;
+        [[MTNetworkManager sharedMTNetworkManager] createClassWithName:self.mentorNewClassName organizationId:orgId success:^(id responseData) {
+            NSDictionary *newClassDict = responseData;
+            if ([newClassDict objectForKey:weakSelf.mentorNewClassName]) {
+                weakSelf.selectedClassId = [newClassDict objectForKey:weakSelf.mentorNewClassName];
+                [weakSelf submitUserSave];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                });
+            }
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"New Class Error" message:[NSString stringWithFormat:@"Unable to create new class: %@", [error localizedDescription]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                [noMatch show];
+            });
+        }];
+    }
+    else {
+        // Just update user
+        [self submitUserSave];
+    }
+}
+
+- (void)submitUserSave
+{
     if (self.updatedProfileImage) {
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.6f);
         [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:imageData success:^(id responseData) {
@@ -767,15 +821,22 @@
             } failure:^(NSError *error) {
                 NSLog(@"Failed to remove user avatar");
             }];
-
+            
             self.removedProfilePhoto = NO;
         }
     }
     
+    NSInteger orgId = self.selectedOrganizationId ? [self.selectedOrganizationId integerValue] : 0;
+    NSInteger classId = self.selectedClassId ? [self.selectedClassId integerValue] : 0;
+    
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] updateCurrentUserWithFirstName:self.firstName.text lastName:self.lastName.text email:self.email.text phoneNumber:self.phoneNumber.text password:self.userPassword.text success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] updateCurrentUserWithFirstName:self.firstName.text lastName:self.lastName.text email:self.email.text phoneNumber:self.phoneNumber.text
+                                                                     password:self.userPassword.text
+                                                               organizationId:orgId
+                                                                      classId:classId
+                                                                      success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.userCurrent = [MTUser currentUser];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
             [weakSelf updateViewForCurrentUser];
             
             [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
@@ -783,23 +844,15 @@
             if (weakSelf.presentingViewController) {
                 [weakSelf dismissViewControllerAnimated:YES completion:nil];
             }
-            else {
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                hud.labelText = @"Saved!";
-                hud.mode = MBProgressHUDModeText;
-                [hud hide:YES afterDelay:1.0f];
-            }
             
             // Update for Push Notifications
-//            [[MTUtil getAppDelegate] updateParseInstallationState];
+            //            [[MTUtil getAppDelegate] updateParseInstallationState];
         });
-
+        
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error mtErrorDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-
-            weakSelf.userCurrent = [MTUser currentUser];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             [weakSelf updateViewForCurrentUser];
         });
     }];
@@ -906,7 +959,6 @@
 {
     self.updatedProfileImage = nil;
     self.removedProfilePhoto = YES;
-//    [self.profileImage setFile:nil];
     
     [UIView animateWithDuration:0.2f animations:^{
         self.userProfileButton.alpha = 0.0f;
@@ -915,7 +967,6 @@
         [self.userProfileButton setImage:[UIImage imageNamed:@"profile_image.png"] forState:UIControlStateNormal];
         
         self.profileImageLabel.text = @"Add Photo";
-//        self.profileImage.image = nil;
         
         [UIView animateWithDuration:0.2f animations:^{
             self.userProfileButton.alpha = 1.0f;
@@ -945,9 +996,25 @@
 {
     NSString *buttonTitle = [actionSheet buttonTitleAtIndex:buttonIndex];
     NSString *title = [actionSheet title];
-    if ([title isEqualToString:@"Choose Class"]) {
+    if ([title isEqualToString:@"Choose School"]) {
         if (![buttonTitle isEqualToString:@"Cancel"]) {
-            self.userClassName.text = [self stringWithoutConfirmation:buttonTitle];
+            NSNumber *newOrganizationId = [self.organizationsDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            if (!self.selectedOrganizationId || [self.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
+                self.classesDict = nil;
+            }
+            self.selectedOrganizationId = [self.organizationsDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            self.userSchool.text = [actionSheet buttonTitleAtIndex:buttonIndex];
+            [self loadMentorClasses];
+        }
+    }
+    else if ([title isEqualToString:@"Choose Class"]) {
+        if ([buttonTitle isEqualToString:@"New Class"]) {
+            [self promptForNewClassName];
+        }
+        else if (![buttonTitle isEqualToString:@"Cancel"]) {
+            // Minus 1 to account for New Class button
+            self.selectedClassId = [self.classesDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
+            self.userClassName.text = [actionSheet buttonTitleAtIndex:buttonIndex];
         }
     }
     else {
@@ -973,6 +1040,19 @@
                     break;
             }
         }
+    }
+}
+
+#pragma mark - UIAlertViewDelegate methods -
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if ([alertView.title isEqualToString:@"Enter New Class Name"]) {
+        self.mentorNewClassName = [alertView textFieldAtIndex:0].text;
+        self.userClassName.text = self.mentorNewClassName;
+    }
+    else if ([alertView.title isEqualToString:@"Provide Mentor Code"]) {
+        self.mentorCode = [alertView textFieldAtIndex:0].text;
+        [self getMentorOrganizations];
     }
 }
 

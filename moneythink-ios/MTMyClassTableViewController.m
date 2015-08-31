@@ -1588,6 +1588,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [self.tableView reloadData];
 }
 
+- (void)didUpdateVerification
+{
+    [self.tableView reloadData];
+}
+
 
 #pragma mark - Actions -
 - (IBAction)unwindToMyClassTableView:(UIStoryboardSegue *)sender
@@ -1858,57 +1863,35 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (IBAction)verifiedTapped:(id)sender
 {
-    __block MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
-    __block MTChallengePost *post = postCell.post;
-    __block MTUser *currentUser = [MTUser currentUser];
-
-//    NSString *postID = [post objectId];
-//    NSString *verifiedBy = [currentUser objectId];
-//
-//    BOOL isChecked = (post[@"verified_by"] != nil);
-//    
-//    if (isChecked) {
-//        verifiedBy = @"";
-//    }
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    if (isChecked) {
-//        hud.labelText = @"Removing Verification...";
-//    }
-//    else {
-//        hud.labelText = @"Verifying...";
-//    }
-//    hud.dimBackground = YES;
-//    
-//    postCell.verfiedLabel.text = @"Updating...";
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-//            
-//            if (error) {
-//                NSLog(@"error - %@", error);
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                });
-//                
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//                [weakSelf.tableView reloadData];
-//                
-//            } else {
-//                [currentUser fetchInBackground];
-////                [weakSelf.challenge fetchInBackground];
-//                
-//                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                        [weakSelf.tableView reloadData];
-//                    });
-//                }];
-//            }
-//        }];
-//        
-//    } afterDelay:0.35f];
+    MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
+    MTChallengePost *post = postCell.post;
+    
+    BOOL isVerified = post.isVerified;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (isVerified) {
+        hud.labelText = @"Removing Verification...";
+    }
+    else {
+        hud.labelText = @"Verifying...";
+    }
+    hud.dimBackground = YES;
+    
+    postCell.verfiedLabel.text = @"Updating...";
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] verifyPostId:post.id success:^(AFOAuthCredential *credential) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.tableView reloadData];
+        });
+        
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.tableView reloadData];
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+        });
+    }];
 }
 
 - (void)secondaryButton1Tapped:(id)sender

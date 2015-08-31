@@ -1171,8 +1171,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="chooseSchoolAction:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="kMM-p8-xhv"/>
-                                            <action selector="classNameButton:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="Rc3-gX-ocj"/>
+                                            <action selector="loadMentorOrganizations" destination="IlW-MR-Ygi" eventType="touchUpInside" id="77I-M5-Z2M"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJD-YC-FKV" userLabel="Separator">
@@ -1207,7 +1206,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="chooseClassAction:" destination="IlW-MR-Ygi" eventType="touchUpInside" id="Ad2-lC-dMF"/>
+                                            <action selector="loadMentorClasses" destination="IlW-MR-Ygi" eventType="touchUpInside" id="RHt-3d-FC6"/>
                                         </connections>
                                     </button>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Su6-Em-iZX" userLabel="Separator">

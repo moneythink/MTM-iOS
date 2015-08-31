@@ -25,6 +25,7 @@ typedef enum {
 - (void)didDeletePost:(MTChallengePost *)challengePost;
 - (void)didUpdateLikes;
 - (void)didUpdateButtons;
+- (void)didUpdateVerification;
 
 @end
 

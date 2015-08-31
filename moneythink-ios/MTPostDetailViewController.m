@@ -1415,55 +1415,38 @@ typedef enum {
 
 - (IBAction)verifiedTapped:(id)sender
 {
-//    __block MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
-//
-//    NSString *postID = [self.challengePost objectId];
-//    NSString *verifiedBy = [self.currentUser objectId];
-//    
-//    BOOL isChecked = (self.challengePost[@"verified_by"] != nil);
-//
-//    if (isChecked) {
-//        verifiedBy = @"";
-//    }
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    if (isChecked) {
-//        hud.labelText = @"Removing Verification...";
-//    }
-//    else {
-//        hud.labelText = @"Verifying...";
-//    }
-//    hud.dimBackground = YES;
-//    
-//    likeCommentCell.verfiedLabel.text = @"Updating...";
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-//            
-//            if (error) {
-//                NSLog(@"error - %@", error);
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                });
-//
-//                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-//                [weakSelf.tableView reloadData];
-//
-//            } else {
-//                [weakSelf.currentUser fetchInBackground];
-////                [weakSelf.challenge fetchInBackground];
-//                
-//                [weakSelf.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                        [weakSelf.tableView reloadData];
-//                    });
-//                }];
-//            }
-//        }];
-//        
-//    } afterDelay:0.35f];
+    MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+    
+    BOOL isVerified = self.challengePost.isVerified;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (isVerified) {
+        hud.labelText = @"Removing Verification...";
+    }
+    else {
+        hud.labelText = @"Verifying...";
+    }
+    hud.dimBackground = YES;
+    
+    likeCommentCell.verfiedLabel.text = @"Updating...";
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] verifyPostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.tableView reloadData];
+            
+            if ([weakSelf.delegate respondsToSelector:@selector(didUpdateVerification)]) {
+                [weakSelf.delegate didUpdateVerification];
+            }
+        });
+        
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.tableView reloadData];
+            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+        });
+    }];
 }
 
 - (void)button1Tapped:(id)sender
