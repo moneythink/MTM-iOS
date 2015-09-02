@@ -33,7 +33,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic) BOOL hasTertiaryButtons;
 @property (nonatomic) BOOL isMentor;
 @property (nonatomic) BOOL iLike;
-@property (nonatomic) BOOL deletingPost;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
 @property (nonatomic, strong) MTEmojiPickerCollectionView *emojiCollectionView;
@@ -42,7 +41,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic) BOOL displaySpentView;
 @property (nonatomic, strong) RLMResults *challengePosts;
 @property (nonatomic, strong) RLMResults *buttons;
-@property (nonatomic) BOOL savingNewEditPost;
 
 @end
 
@@ -90,7 +88,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     self.postViewController = nil;
 }
 
@@ -108,34 +105,34 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 {
     [self refreshFromDatabase];
     
-    // Don't GET from DB right away because there's a delay in processing updates.
-    if (!self.savingNewEditPost && !self.deletingPost) {
-        MTMakeWeakSelf();
-        [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id success:^(id responseData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.refreshControl endRefreshing];
-                [weakSelf refreshFromDatabase];
-                
-                [weakSelf updateComments];
-                [weakSelf updateLikes];
-                [weakSelf updateButtons];
-            });
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.refreshControl endRefreshing];
+            [weakSelf refreshFromDatabase];
             
-        } failure:^(NSError *error) {
-            NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
+            [weakSelf updateComments];
+            [weakSelf updateLikes];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf.refreshControl endRefreshing];
-                [weakSelf refreshFromDatabase];
-            });
-        }];
-    }
+            if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+                [weakSelf updateButtonClicks];
+            }
+        });
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.refreshControl endRefreshing];
+            [weakSelf refreshFromDatabase];
+        });
+    }];
 }
 
 - (void)refreshFromDatabase
 {
     if (self.challenge) {
-        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d  AND isDeleted = NO", self.challenge.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
         [self loadButtons];
     }
     else {
@@ -151,28 +148,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadCommentsForChallengeId:self.challenge.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             [weakSelf.tableView reloadData];
         });
         
     } failure:^(NSError *error) {
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        });
-    }];
-}
-
-- (void)updateButtons
-{
-    MTMakeWeakSelf();
-    // TODO: Re-enable filter by challenge by setting challengeId
-    [[MTNetworkManager sharedMTNetworkManager] loadButtonsForChallengeId:0 success:^(id responseData) {
-        [weakSelf loadButtons];
-        if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
-            [weakSelf updateButtonClicks];
-        }
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
+        NSLog(@"Unable to update comments: %@", [error mtErrorDescription]);
     }];
 }
 
@@ -323,7 +303,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)willSaveNewChallengePost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingNewEditPost = YES;
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Saving New Post...";
@@ -336,15 +315,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         [self refreshFromDatabase];
-        self.savingNewEditPost = NO;
     });
 }
 
 - (void)postFailed
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingNewEditPost = NO;
-
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Your post failed to upload.";
@@ -409,7 +385,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)willSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingNewEditPost = YES;
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Saving...";
@@ -420,7 +395,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)didSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingNewEditPost = NO;
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         [self refreshFromDatabase];
     });
@@ -429,7 +403,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)failedSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingNewEditPost = NO;
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Your edit post failed to save.";
         hud.dimBackground = NO;
@@ -1030,8 +1004,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     cell.spentLabel.text = @"";
     cell.savedLabel.text = @"";
 
-    if (self.displaySpentView && !IsEmpty(cell.post.challengeData)) {
-        NSData *data = [cell.post.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+    if (self.displaySpentView && !IsEmpty(cell.post.extraFields)) {
+        NSData *data = [cell.post.extraFields dataUsingEncoding:NSUTF8StringEncoding];
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
         if ([jsonDict isKindOfClass:[NSDictionary class]]) {
@@ -1056,8 +1030,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (BOOL)hasSpentContentForPost:(MTChallengePost *)post
 {
     BOOL hasContent = NO;
-    if (self.displaySpentView && !IsEmpty(post.challengeData)) {
-        NSData *data = [post.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+    if (self.displaySpentView && !IsEmpty(post.extraFields)) {
+        NSData *data = [post.extraFields dataUsingEncoding:NSUTF8StringEncoding];
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
         if ([jsonDict isKindOfClass:[NSDictionary class]]) {
@@ -1549,7 +1523,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 #pragma mark - MTPostViewControllerDelegate Methods -
 - (void)didDeletePost:(MTChallengePost *)challengePost
 {
-    self.deletingPost = YES;
     self.tableView.userInteractionEnabled = NO;
     
     // Perform on delay after we get popped to here
@@ -1574,7 +1547,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             weakSelf.tableView.userInteractionEnabled = YES;
         }
         
-        weakSelf.deletingPost = NO;
     } afterDelay:0.35f];
 }
 
@@ -1879,19 +1851,36 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     postCell.verfiedLabel.text = @"Updating...";
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] verifyPostId:post.id success:^(AFOAuthCredential *credential) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.tableView reloadData];
-        });
-        
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.tableView reloadData];
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        });
-    }];
+    if (isVerified) {
+        [[MTNetworkManager sharedMTNetworkManager] unVerifyPostId:post.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] verifyPostId:post.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
 
 - (void)secondaryButton1Tapped:(id)sender

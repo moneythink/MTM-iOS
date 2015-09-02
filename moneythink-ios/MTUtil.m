@@ -73,6 +73,23 @@
 }
 
 
++ (BOOL)userChangedClass
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kUserDidChangeClass];
+}
+
++ (void)setUserChangedClass:(BOOL)userChangedClass
+{
+    if (!userChangedClass) {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kUserDidChangeClass];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserDidChangeClass];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
 + (void)logout
 {
     // Removes all keys, except onboarding

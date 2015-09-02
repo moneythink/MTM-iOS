@@ -11,7 +11,7 @@
 @interface MTChallengeInfoViewController ()
 
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, strong) IBOutlet PFImageView *challengeBanner;
+@property (nonatomic, strong) IBOutlet UIImageView *challengeBanner;
 
 @property (nonatomic, strong) IBOutlet UIView *rewardsView;
 @property (nonatomic, strong) IBOutlet UILabel *rewardLabel;
@@ -123,25 +123,16 @@
 #pragma mark - Private Methods -
 - (void)updateView
 {
-    // TODO: Load banner
-//    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge = %@", self.challenge];
-//    PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
-//    
-//    queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
-//    
-//    MTMakeWeakSelf();
-//    [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        if (!error) {
-//            PFChallengeBanner *banner = [objects firstObject];
-//            PFFile *bannerFile = banner[@"image_mdpi"];
-//            weakSelf.challengeBanner.file = bannerFile;
-//            [weakSelf.challengeBanner loadInBackground:^(UIImage *image, NSError *error) {
-//                if (!error) {
-//                    weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:image];
-//                }
-//            }];
-//        }
-//    }];
+    MTMakeWeakSelf();
+    UIImage *bannerImage = [self.challenge loadBannerImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:responseData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load challenge banner: %@", [error mtErrorDescription]);
+    }];
+    
+    self.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:bannerImage];
     
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
@@ -155,20 +146,17 @@
     
     NSString *perString = @"per post";
     
-    // TODO: Reenable with buttons
-//    NSArray *buttons = self.challenge[@"buttons"];
-//    NSArray *secondaryButtons = self.challenge[@"secondary_buttons"];
-//    if (!IsEmpty(buttons) || !IsEmpty(secondaryButtons)) {
-//        perString = @"per tap";
-//    }
+    RLMResults *buttons = [MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id];
+    if (!IsEmpty(buttons)) {
+        perString = @"per tap";
+    }
     
     NSString *pointsPerPostString = [NSString stringWithFormat:@"%ld pts %@,", (long)self.challenge.pointsPerPost, perString];
     NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ %ld pts to complete", pointsPerPostString, (long)self.challenge.maxPoints];
     
-    // TODO: After rewards_info added
-//    if (!IsEmpty(self.challenge[@"rewards_info"])) {
-//        theMessage = [NSString stringWithFormat:@"Reward: %@", self.challenge[@"rewards_info"]];
-//    }
+    if (!IsEmpty(self.challenge.rewardsInfo)) {
+        theMessage = [NSString stringWithFormat:@"Reward: %@", self.challenge.rewardsInfo];
+    }
     
     NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
     [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];

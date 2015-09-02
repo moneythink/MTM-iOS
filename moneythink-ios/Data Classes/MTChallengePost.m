@@ -13,7 +13,7 @@
 + (NSDictionary *)defaultPropertyValues {
     return @{@"isVerified" : @NO,
              @"hasPostImage": @NO,
-             @"challengeData": @"",
+             @"extraFields": @"",
              @"content": @"",
              @"isDeleted": @NO};
 }

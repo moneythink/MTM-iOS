@@ -249,8 +249,7 @@ typedef enum {
     }
     
     MTMakeWeakSelf();
-    // TODO: Re-enable filter by challenge by setting challengeId
-    [[MTNetworkManager sharedMTNetworkManager] loadButtonsForChallengeId:0 success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
         [weakSelf loadButtonsOnlyDatabase:YES];
         if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
             [weakSelf updateButtonClicks];
@@ -365,8 +364,8 @@ typedef enum {
     self.savedAmount = @"";
     self.spentAmount = @"";
     
-    if (!IsEmpty(self.challengePost.challengeData)) {
-        NSData *data = [self.challengePost.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+    if (!IsEmpty(self.challengePost.extraFields)) {
+        NSData *data = [self.challengePost.extraFields dataUsingEncoding:NSUTF8StringEncoding];
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
         if ([jsonDict isKindOfClass:[NSDictionary class]]) {
@@ -1430,23 +1429,44 @@ typedef enum {
     likeCommentCell.verfiedLabel.text = @"Updating...";
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] verifyPostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.tableView reloadData];
+    if (isVerified) {
+        [[MTNetworkManager sharedMTNetworkManager] unVerifyPostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateVerification)]) {
+                    [weakSelf.delegate didUpdateVerification];
+                }
+            });
             
-            if ([weakSelf.delegate respondsToSelector:@selector(didUpdateVerification)]) {
-                [weakSelf.delegate didUpdateVerification];
-            }
-        });
-        
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.tableView reloadData];
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        });
-    }];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] verifyPostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                
+                if ([weakSelf.delegate respondsToSelector:@selector(didUpdateVerification)]) {
+                    [weakSelf.delegate didUpdateVerification];
+                }
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
 
 - (void)button1Tapped:(id)sender

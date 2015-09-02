@@ -22,5 +22,8 @@
 
 + (NSString *)lastViewedChallengeId;
 + (void)setLastViewedChallengedId:(NSString *)challengeId;
++ (BOOL)userChangedClass;
++ (void)setUserChangedClass:(BOOL)userChangedClass;
+
 
 @end

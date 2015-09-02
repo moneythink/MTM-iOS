@@ -26,6 +26,7 @@
              @"tagline": @"",
              @"postExtraFields": @"",
              @"title": @"",
+             @"rewardsInfo": @"",
              @"isDeleted": @NO};
 }
 
@@ -59,6 +60,7 @@
              @"studentInstructions": @"studentInstructions",
              @"tagline": @"tagline",
              @"title": @"title",
+             @"rewardsInfo": @"rewardsInfo",
              @"updatedAt": @"updatedAt",
              };
 }
@@ -79,8 +81,42 @@
              @"studentInstructions": @"studentInstructions",
              @"tagline": @"tagline",
              @"title": @"title",
+             @"rewardsInfo": @"rewardsInfo",
              @"updatedAt": @"updatedAt",
              };
+}
+
+
+#pragma mark - Custom Methods -
+- (UIImage *)loadBannerImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    BOOL shouldFetchBanner = NO;
+    
+    if (!self.banner.imageData) {
+        shouldFetchBanner = YES;
+    }
+    else if ([self.updatedAt timeIntervalSince1970] > [self.banner.updatedAt timeIntervalSince1970]) {
+        shouldFetchBanner = YES;
+    }
+    
+    if (shouldFetchBanner) {
+        [[MTNetworkManager sharedMTNetworkManager] getChallengeBannerImageForChallengeId:self.id success:^(id responseData) {
+            if (success) {
+                success(responseData);
+            }
+        } failure:^(NSError *error) {
+            if (failure) {
+                failure(error);
+            }
+        }];
+    }
+    
+    if (self.banner.imageData) {
+        return [UIImage imageWithData:self.banner.imageData];
+    }
+    else {
+        return nil;
+    }
 }
 
 

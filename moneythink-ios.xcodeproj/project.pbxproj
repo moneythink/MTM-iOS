@@ -235,6 +235,7 @@
 		89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */; };
 		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
+		89E7805C1B9656CC00BD44EE /* MTChallengeProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */; };
 		89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */; };
 		89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */; };
 		89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E51A09638400F02CC7 /* PFCustomChallenges.m */; };
@@ -637,6 +638,8 @@
 		89DFDB5E19D9A67B0063EEA3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		89E56D281A0448A300C187C9 /* login-header.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header.png"; sourceTree = "<group>"; };
 		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
+		89E7805A1B9656CC00BD44EE /* MTChallengeProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengeProgress.h; path = "Data Classes/MTChallengeProgress.h"; sourceTree = "<group>"; };
+		89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengeProgress.m; path = "Data Classes/MTChallengeProgress.m"; sourceTree = "<group>"; };
 		89F250DE1A09629000F02CC7 /* PFPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylist.h; path = "Data Classes/PFPlaylist.h"; sourceTree = "<group>"; };
 		89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylist.m; path = "Data Classes/PFPlaylist.m"; sourceTree = "<group>"; };
 		89F250E11A0962E300F02CC7 /* PFPlaylistChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylistChallenges.h; path = "Data Classes/PFPlaylistChallenges.h"; sourceTree = "<group>"; };
@@ -1035,6 +1038,8 @@
 				8920693B1B8B81C3003F53B9 /* MTChallengePostComment.m */,
 				8992BB2B1B8E5A1E00A828FC /* MTChallengePostLike.h */,
 				8992BB2C1B8E5A1E00A828FC /* MTChallengePostLike.m */,
+				89E7805A1B9656CC00BD44EE /* MTChallengeProgress.h */,
+				89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */,
 				895907571B546B3B003AB574 /* MTClass.h */,
 				895907581B546B3B003AB574 /* MTClass.m */,
 				8992BB281B8E23B400A828FC /* MTEmoji.h */,
@@ -1711,6 +1716,7 @@
 				58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */,
 				8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */,
 				89CE97621B4F1E59007FF4D7 /* AFURLSessionManager.m in Sources */,
+				89E7805C1B9656CC00BD44EE /* MTChallengeProgress.m in Sources */,
 				89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */,
 				106309881A3A3C4D0093C209 /* Reachability.m in Sources */,
 				8925943F1B73EC7E00B40E06 /* MCJSONPrimaryKeyTransformer.m in Sources */,

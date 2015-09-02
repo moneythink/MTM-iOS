@@ -27,7 +27,6 @@
 @property (nonatomic) NSInteger challengesPageIndex;
 @property (nonatomic, strong) MTChallengeContentViewController *challengeContentViewControllerBefore;
 @property (nonatomic, strong) MTChallengeContentViewController *challengeContentViewControllerAfter;
-@property (nonatomic) BOOL userChangedClass;
 @property (nonatomic, strong) MTChallenge *currentChallenge;
 @property (nonatomic, strong) RLMResults *challenges;
 @property (nonatomic, strong) NSArray *viewControllers;
@@ -40,8 +39,6 @@
 @property (nonatomic, strong) MTChallengeListViewController *challengeListView;
 @property (nonatomic, strong) RLMResults *emojiObjects;
 @property (nonatomic) BOOL shouldLoadPreviousChallenge;
-
-@property (nonatomic, strong) RLMNotificationToken *token;
 
 @end
 
@@ -61,20 +58,13 @@
                                     action:@selector(postCommentTapped)];
     
     self.navigationItem.rightBarButtonItem = postComment;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userDidChangeClass:) name:kUserDidChangeClass object:nil];
-
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+
+    self.shouldLoadPreviousChallenge = YES;
 
     [self setupViews];
     [self loadEmoji];
-    
-    self.shouldLoadPreviousChallenge = YES;
-    
-//    self.token = [[RLMRealm defaultRealm] addNotificationBlock:^(NSString *note, RLMRealm * realm) {
-//        [self realmUpdatedNotificationAction];
-//    }];
-    
+    [self loadButtons];
     [self loadChallenges];
 }
 
@@ -82,6 +72,8 @@
 {
     [super viewWillAppear:animated];
     
+    [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+
     // Do this to work around bug with challenge bar when in-call status bar showing
     // Still need to handle challenge list resizing when in-call status bar change occur while in view.
     CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
@@ -133,7 +125,6 @@
 - (void)didReceiveMemoryWarnng
 {
     [super didReceiveMemoryWarning];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
     if (![self.currentChallenge isInvalidated]) {
         [MTUtil setLastViewedChallengedId:[NSString stringWithFormat:@"%ld", (long)self.currentChallenge.id]];
     }
@@ -341,7 +332,14 @@
 #pragma mark - Private Methods: Load Data -
 - (void)loadChallenges
 {
-    [self getChallenges];
+    if ([MTUtil userChangedClass]) {
+        self.challenges = nil;
+        self.currentChallenge = nil;
+    }
+    else {
+        [self getChallenges];
+    }
+    
     [self updateViews];
     
     if (IsEmpty(self.challenges)) {
@@ -349,16 +347,14 @@
         hud.labelText = @"Loading Challenges...";
         hud.dimBackground = YES;
     }
-    else if (self.userChangedClass) {
-        self.userChangedClass = NO;
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Updating Challenges...";
-        hud.dimBackground = YES;
-    }
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([MTUtil userChangedClass]) {
+                [MTUtil setUserChangedClass:NO];
+            }
+            
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             [weakSelf getChallenges];
             [weakSelf updateViews];
@@ -390,10 +386,12 @@
     }];
 }
 
-- (void)realmUpdatedNotificationAction
+- (void)loadButtons
 {
-    [self getChallenges];
-    [self updateViews];
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
+    }];
 }
 
 - (void)getChallenges
@@ -761,14 +759,6 @@
             });
         }];
     }
-}
-
-
-#pragma mark - Notifications -
-- (void)userDidChangeClass:(NSNotification *)notif
-{
-    self.userChangedClass = YES;
-    self.challenges = nil;
 }
 
 

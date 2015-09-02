@@ -29,7 +29,10 @@
 @property NSString *title;
 @property NSDate *updatedAt;
 @property NSString *postExtraFields;
+@property NSString *rewardsInfo;
 @property BOOL isDeleted;
+
+- (UIImage *)loadBannerImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end
 

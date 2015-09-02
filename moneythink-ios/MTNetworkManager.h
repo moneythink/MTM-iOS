@@ -66,14 +66,17 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 
 // Challenges
 - (void)loadChallengesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getChallengeBannerImageForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadChallengeProgressWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Posts
 - (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraData:(NSDictionary *)extraData success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)deletePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)verifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)unVerifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Comments
 - (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
@@ -90,7 +93,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)updateLikeId:(NSInteger)likeId emojiCode:(NSString *)emojiCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Buttons
-- (void)loadButtonsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadButtonsWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)loadButtonClicksForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)addButtonClickForPostId:(NSInteger)postId buttonId:(NSInteger)buttonId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)deleteButtonClickId:(NSInteger)buttonClickId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

@@ -761,14 +761,6 @@
         return;
     }
 
-    BOOL emailsMatch = [self.email.text isEqualToString:self.userCurrent.email];
-    if (!emailsMatch && !self.showedEmailWarning){
-        self.showedEmailWarning = YES;
-        UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"Email Warning" message:@"If you change your email address you will need to Logout/Login again to re-authenticate.\n\nDismiss and tap Save again to continue." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil, nil];
-        [noMatch show];
-        return;
-    }
-    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Saving...";
     hud.dimBackground = YES;
@@ -781,6 +773,8 @@
             NSDictionary *newClassDict = responseData;
             if ([newClassDict objectForKey:weakSelf.mentorNewClassName]) {
                 weakSelf.selectedClassId = [newClassDict objectForKey:weakSelf.mentorNewClassName];
+                weakSelf.organizationsDict = nil;
+                weakSelf.classesDict = nil;
                 [weakSelf submitUserSave];
             }
             else {
@@ -837,20 +831,30 @@
                                                                       success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            
+            weakSelf.organizationsDict = nil;
+            weakSelf.classesDict = nil;
+
             [weakSelf updateViewForCurrentUser];
             
+            if (classId > 0) {
+                [MTUtil setUserChangedClass:YES];
+            }
             [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
             
             if (weakSelf.presentingViewController) {
                 [weakSelf dismissViewControllerAnimated:YES completion:nil];
             }
             
-            // Update for Push Notifications
+            // TODO: Update for Push Notifications
             //            [[MTUtil getAppDelegate] updateParseInstallationState];
         });
         
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.organizationsDict = nil;
+            weakSelf.classesDict = nil;
+
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
             [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             [weakSelf updateViewForCurrentUser];

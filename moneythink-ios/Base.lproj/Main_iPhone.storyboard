@@ -1523,7 +1523,7 @@
                             <scrollView autoresizesSubviews="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FCp-s1-xYe">
                                 <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="I0J-CD-4L4" customClass="PFImageView">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="I0J-CD-4L4">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="150" id="2v2-Me-Cch"/>

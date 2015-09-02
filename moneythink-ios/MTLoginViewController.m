@@ -224,7 +224,6 @@
 
         MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
         if (![onboardingController checkForOnboarding]) {
-            
             id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
             [self.revealViewController setFrontViewController:challengesVC animated:YES];
         }

@@ -219,8 +219,8 @@
     self.spentTextField.text = @"";
     self.savedTextField.text = @"";
     
-    if (!IsEmpty(self.post.challengeData)) {
-        NSData *data = [self.post.challengeData dataUsingEncoding:NSUTF8StringEncoding];
+    if (!IsEmpty(self.post.extraFields)) {
+        NSData *data = [self.post.extraFields dataUsingEncoding:NSUTF8StringEncoding];
         id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
 
         if ([jsonDict isKindOfClass:[NSDictionary class]]) {
@@ -252,10 +252,6 @@
 
 - (NSDictionary *)dictionaryFromSpentFields
 {
-    if (IsEmpty(self.spentTextField.text) && IsEmpty(self.savedTextField.text)) {
-        return nil;
-    }
-    
     NSMutableDictionary *myDict = [NSMutableDictionary dictionary];
     
     if (!IsEmpty(self.spentTextField.text)) {
@@ -531,9 +527,9 @@
         return;
     }
     
-    NSDictionary *extraData = nil;
+    NSDictionary *extraFields = nil;
     if (self.displaySpentView) {
-        extraData = [self dictionaryFromSpentFields];
+        extraFields = [self dictionaryFromSpentFields];
     }
     
     NSData *imageData = nil;
@@ -544,7 +540,7 @@
     }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraData:extraData success:^(AFOAuthCredential *credential) {
+    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraFields:extraFields success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:nil];
         });
@@ -596,12 +592,12 @@
         imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
     
-    NSDictionary *extraData = nil;
+    NSDictionary *extraFields = nil;
     if (self.displaySpentView) {
-        extraData = [self dictionaryFromSpentFields];
+        extraFields = [self dictionaryFromSpentFields];
     }
     
-    [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraData:extraData success:^(AFOAuthCredential *credential) {
+    [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraFields:extraFields success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
         });
