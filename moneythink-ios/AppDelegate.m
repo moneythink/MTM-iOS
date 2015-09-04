@@ -34,15 +34,17 @@
 
     [Fabric with:@[CrashlyticsKit]];
     
+    // Parse
     [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
-    //[Parse enableLocalDatastore];
-    
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+
     // AFTER Parse setup
     [self clearZendesk];
     [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-    
     
     //Clear keychain on first run in case of reinstallation
     if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstTimeRunKey]) {
@@ -52,25 +54,6 @@
         
         [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
     }
-    
-    [PFChallengeBanner registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFChallengePostButtonsClicked registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFStudentPointDetails registerSubclass];
-    
-    // Set default ACLs
-    PFACL *defaultACL = [PFACL ACL];
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
     
     [self setWhiteNavBarAppearanceForNavigationBar:nil];
     
@@ -100,7 +83,7 @@
         ((SWRevealViewController *)revealVC).delegate = [MTUtil getAppDelegate];
     }
 
-    if ([MTUser currentUser] && [MTUtil internetReachable]) {
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable]) {
         [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
     }
     
@@ -114,22 +97,22 @@
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
-    if ([MTUser currentUser] && [MTUtil internetReachable]) {
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable]) {
         [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
     }
     
     [self checkForForceUpdate];
+    [self updatePushMessagingInfo];
 }
 
 
 #pragma mark - Push Notifications -
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
-    // Store the deviceToken in the current installation and save it to Parse.
+    // Store the deviceToken in the current installation and save it to Parse, then update the API.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    currentInstallation.channels = @[@"global"];
-    [currentInstallation saveInBackground];
+    [self updatePushMessagingInfo];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -138,7 +121,6 @@
     // Device
     NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", [error localizedDescription]);
 #endif
-
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
@@ -262,17 +244,18 @@
         unknownNotification = YES;
     }
     
-    [MTNotificationViewController markReadForNotificationId:notificationId];
+    [MTNotificationViewController markReadForNotificationId:[notificationId integerValue]];
     
     if (unknownNotification || [notificationType isEqualToString:kNotificationPostComment] ||
-        [notificationType isEqualToString:kNotificationNewChallenge] ||
+        [notificationType isEqualToString:kNotificationChallengeActivated] ||
         [notificationType isEqualToString:kNotificationPostLiked] ||
-        [notificationType hasPrefix:kNotificationInactivity] ||
+        [notificationType isEqualToString:kNotificationStudentInactivity] ||
+        [notificationType isEqualToString:kNotificationMentorInactivity] ||
         [notificationType isEqualToString:kNotificationVerifyPost]) {
         
         SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
         MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
-        [menuVC openNotificationsWithId:notificationId];
+        [menuVC openNotificationsWithId:[notificationId integerValue]];
     }
     else if ([notificationType isEqualToString:kNotificationLeaderOn] ||
              [notificationType isEqualToString:kNotificationLeaderOff]) {
@@ -327,15 +310,12 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
-- (void)updateParseInstallationState
+- (void)updatePushMessagingInfo
 {
-    if (![MTUser currentUser]) {
-        NSLog(@"Have no user object to update installation with");
+    if (![MTUser isUserLoggedIn] || ![MTUser currentUser]) {
         return;
     }
     
-    MTUser *user = [MTUser currentUser];
-
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     // Don't update if Installation doesn't have a deviceToken (i.e simulator)
@@ -343,20 +323,25 @@
         return;
     }
     
-    [currentInstallation setObject:user forKey:@"user"];
-
-    NSString *className = user.userClass.name;
-    NSString *schoolName = user.organization.name;
-    
-    if (!IsEmpty(className)) {
-        [currentInstallation setObject:className forKey:@"class_name"];
-    }
-    if (!IsEmpty(schoolName)) {
-        [currentInstallation setObject:schoolName forKey:@"school_name"];
-    }
-    
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
+    
+    if ([MTUtil pushMessagingRegistrationId]) {
+        // Update
+        [[MTNetworkManager sharedMTNetworkManager] updatePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] withDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+            NSLog(@"Successfully updated push messaging registration");
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to update push messaging registration: %@", [error mtErrorDescription]);
+        }];
+    }
+    else {
+        // Create
+        [[MTNetworkManager sharedMTNetworkManager] createPushMessagingRegistrationWithDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+            NSLog(@"Successfully created push messaging registration");
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to create push messaging registration: %@", [error mtErrorDescription]);
+        }];
+    }
 }
 
 - (UINavigationController *)userViewController
@@ -694,7 +679,7 @@
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 16;
+    config.schemaVersion = 21;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above

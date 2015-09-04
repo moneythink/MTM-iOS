@@ -16,14 +16,19 @@
 
 + (NSInteger)orderingForChallengeObjectId:(NSString *)objectId;
 + (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId;
-+ (void)logout;
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMe:(PFUser *)user;
 
 + (NSString *)lastViewedChallengeId;
 + (void)setLastViewedChallengedId:(NSString *)challengeId;
+
 + (BOOL)userChangedClass;
 + (void)setUserChangedClass:(BOOL)userChangedClass;
 
++ (NSDate *)lastNotificationFetchDate;
++ (void)setLastNotificationFetchDate:(NSDate *)fetchDate;
+
++ (NSInteger)pushMessagingRegistrationId;
++ (void)setPushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId;
 
 @end

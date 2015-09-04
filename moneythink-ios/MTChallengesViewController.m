@@ -204,14 +204,14 @@
         self.shouldLoadPreviousChallenge = NO;
         
         MTChallenge *challengeToGoTo = nil;
-        if (!IsEmpty(self.actionableChallengeId)) {
+        if (self.actionableChallengeId > 0) {
             // If we're at this challenge, no need to animate
-            if ([self.actionableChallengeId integerValue] == self.currentChallenge.id) {
+            if (self.actionableChallengeId == self.currentChallenge.id) {
                 // do nothing
             }
             else {
                 for (MTChallenge *thisChallenge in self.challenges) {
-                    if (thisChallenge.id == [self.actionableChallengeId integerValue]) {
+                    if (thisChallenge.id == self.actionableChallengeId) {
                         challengeToGoTo = thisChallenge;
                         break;
                     }
@@ -240,7 +240,7 @@
         
         // Reset to avoid infinite loop
         [MTUtil setLastViewedChallengedId:nil];
-        self.actionableChallengeId = nil;
+        self.actionableChallengeId = 0;
         
         if (challengeToGoTo) {
             self.currentChallenge = challengeToGoTo;

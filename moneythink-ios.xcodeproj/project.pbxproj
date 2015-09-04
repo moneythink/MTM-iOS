@@ -187,6 +187,7 @@
 		899F309919F16948004F6B10 /* check-unactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309519F16948004F6B10 /* check-unactive.png */; };
 		899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 899F309619F16948004F6B10 /* check-unactive@2x.png */; };
 		899F309D19F2C87E004F6B10 /* UIImage+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */; };
+		899FC9421B98FCE7009251FB /* MTUserPostPropertyCount.m in Sources */ = {isa = PBXBuildFile; fileRef = 899FC9411B98FCE7009251FB /* MTUserPostPropertyCount.m */; };
 		89A0E8071B34FCBD00F01BFF /* comment_active.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8031B34FCBD00F01BFF /* comment_active.png */; };
 		89A0E8081B34FCBD00F01BFF /* comment_active@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */; };
 		89A0E8091B34FCBD00F01BFF /* comment_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8051B34FCBD00F01BFF /* comment_normal.png */; };
@@ -236,6 +237,7 @@
 		89E56D2A1A0448A300C187C9 /* login-header.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D281A0448A300C187C9 /* login-header.png */; };
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
 		89E7805C1B9656CC00BD44EE /* MTChallengeProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */; };
+		89E7805F1B974B7B00BD44EE /* MTNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805E1B974B7B00BD44EE /* MTNotification.m */; };
 		89F250E01A0962AB00F02CC7 /* PFPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */; };
 		89F250E31A0962EF00F02CC7 /* PFPlaylistChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E21A0962EF00F02CC7 /* PFPlaylistChallenges.m */; };
 		89F250E61A09638400F02CC7 /* PFCustomChallenges.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F250E51A09638400F02CC7 /* PFCustomChallenges.m */; };
@@ -560,6 +562,8 @@
 		899F309619F16948004F6B10 /* check-unactive@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "check-unactive@2x.png"; sourceTree = "<group>"; };
 		899F309B19F2C87E004F6B10 /* UIImage+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+MTAdditions.h"; sourceTree = "<group>"; };
 		899F309C19F2C87E004F6B10 /* UIImage+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+MTAdditions.m"; sourceTree = "<group>"; };
+		899FC9401B98FCE7009251FB /* MTUserPostPropertyCount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTUserPostPropertyCount.h; path = "Data Classes/MTUserPostPropertyCount.h"; sourceTree = "<group>"; };
+		899FC9411B98FCE7009251FB /* MTUserPostPropertyCount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTUserPostPropertyCount.m; path = "Data Classes/MTUserPostPropertyCount.m"; sourceTree = "<group>"; };
 		89A0E8031B34FCBD00F01BFF /* comment_active.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment_active.png; path = "moneythink-ios/assets/comment_active.png"; sourceTree = SOURCE_ROOT; };
 		89A0E8041B34FCBD00F01BFF /* comment_active@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "comment_active@2x.png"; path = "moneythink-ios/assets/comment_active@2x.png"; sourceTree = SOURCE_ROOT; };
 		89A0E8051B34FCBD00F01BFF /* comment_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = comment_normal.png; path = "moneythink-ios/assets/comment_normal.png"; sourceTree = SOURCE_ROOT; };
@@ -640,6 +644,8 @@
 		89E56D291A0448A300C187C9 /* login-header@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-header@2x.png"; sourceTree = "<group>"; };
 		89E7805A1B9656CC00BD44EE /* MTChallengeProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTChallengeProgress.h; path = "Data Classes/MTChallengeProgress.h"; sourceTree = "<group>"; };
 		89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengeProgress.m; path = "Data Classes/MTChallengeProgress.m"; sourceTree = "<group>"; };
+		89E7805D1B974B7B00BD44EE /* MTNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTNotification.h; path = "Data Classes/MTNotification.h"; sourceTree = "<group>"; };
+		89E7805E1B974B7B00BD44EE /* MTNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNotification.m; path = "Data Classes/MTNotification.m"; sourceTree = "<group>"; };
 		89F250DE1A09629000F02CC7 /* PFPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylist.h; path = "Data Classes/PFPlaylist.h"; sourceTree = "<group>"; };
 		89F250DF1A0962AB00F02CC7 /* PFPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PFPlaylist.m; path = "Data Classes/PFPlaylist.m"; sourceTree = "<group>"; };
 		89F250E11A0962E300F02CC7 /* PFPlaylistChallenges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PFPlaylistChallenges.h; path = "Data Classes/PFPlaylistChallenges.h"; sourceTree = "<group>"; };
@@ -1044,12 +1050,16 @@
 				895907581B546B3B003AB574 /* MTClass.m */,
 				8992BB281B8E23B400A828FC /* MTEmoji.h */,
 				8992BB291B8E23B400A828FC /* MTEmoji.m */,
+				89E7805D1B974B7B00BD44EE /* MTNotification.h */,
+				89E7805E1B974B7B00BD44EE /* MTNotification.m */,
 				892BF44B1B7A643E00E19E9B /* MTOptionalImage.h */,
 				892BF44C1B7A643E00E19E9B /* MTOptionalImage.m */,
 				895907541B546AAC003AB574 /* MTOrganization.h */,
 				895907551B546AAC003AB574 /* MTOrganization.m */,
 				895907511B5465A2003AB574 /* MTUser.h */,
 				895907521B5465A2003AB574 /* MTUser.m */,
+				899FC9401B98FCE7009251FB /* MTUserPostPropertyCount.h */,
+				899FC9411B98FCE7009251FB /* MTUserPostPropertyCount.m */,
 			);
 			name = Realm;
 			sourceTree = "<group>";
@@ -1658,6 +1668,7 @@
 				892BF44D1B7A643E00E19E9B /* MTOptionalImage.m in Sources */,
 				89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */,
 				899906841AD4713E007A4F3E /* PFChallengePostSecondaryButtonsClicked.m in Sources */,
+				899FC9421B98FCE7009251FB /* MTUserPostPropertyCount.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				895907561B546AAC003AB574 /* MTOrganization.m in Sources */,
 				89CE97601B4F1E59007FF4D7 /* AFURLRequestSerialization.m in Sources */,
@@ -1770,6 +1781,7 @@
 				89DE8A741B84F83C0050C9A6 /* MTChallengePost.m in Sources */,
 				89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */,
 				89CE975E1B4F1E59007FF4D7 /* AFSecurityPolicy.m in Sources */,
+				89E7805F1B974B7B00BD44EE /* MTNotification.m in Sources */,
 				89CE975D1B4F1E59007FF4D7 /* AFNetworkReachabilityManager.m in Sources */,
 				8925943D1B73EC7E00B40E06 /* MCJSONDateTransformer.m in Sources */,
 				8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */,
@@ -1959,7 +1971,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "3cc1178b-2760-4b57-8f71-832545b6f338";
+				PROVISIONING_PROFILE = "fc74c914-3610-4f21-aeee-cd6617cffde1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2038,7 +2050,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "adccdef1-3f29-49f4-857d-d98bdd220949";
+				PROVISIONING_PROFILE = "f450cb62-2a2c-47bb-a2b3-afd609d95072";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2116,7 +2128,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "adccdef1-3f29-49f4-857d-d98bdd220949";
+				PROVISIONING_PROFILE = "f450cb62-2a2c-47bb-a2b3-afd609d95072";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2194,7 +2206,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "3cc1178b-2760-4b57-8f71-832545b6f338";
+				PROVISIONING_PROFILE = "fc74c914-3610-4f21-aeee-cd6617cffde1";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

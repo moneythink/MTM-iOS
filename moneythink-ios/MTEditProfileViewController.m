@@ -845,9 +845,6 @@
             if (weakSelf.presentingViewController) {
                 [weakSelf dismissViewControllerAnimated:YES completion:nil];
             }
-            
-            // TODO: Update for Push Notifications
-            //            [[MTUtil getAppDelegate] updateParseInstallationState];
         });
         
     } failure:^(NSError *error) {

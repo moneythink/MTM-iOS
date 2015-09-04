@@ -20,8 +20,7 @@
 
 - (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
-- (void)updateParseInstallationState;
-//- (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
+- (void)updatePushMessagingInfo;
 - (void)configureZendesk;
 - (BOOL)shouldForceUpdate;
 

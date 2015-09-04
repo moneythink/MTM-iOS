@@ -883,7 +883,7 @@
                                                                 [[MTUtil getAppDelegate] configureZendesk];
                                                                 
                                                                 // Update for Push Notifications
-                                                                //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                [[MTUtil getAppDelegate] updatePushMessagingInfo];
                                                                 
                                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -891,7 +891,7 @@
                                                                     [weakSelf.navigationController popViewControllerAnimated:YES];
                                                                     
                                                                     // Update Notification count for this user.
-                                                                    //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                                                    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                                                     
                                                                     MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                     if (![onboardingController checkForOnboarding]) {
@@ -943,7 +943,7 @@
                                                                 [[MTUtil getAppDelegate] configureZendesk];
                                                                 
                                                                 // Update for Push Notifications
-                                                                //        [[MTUtil getAppDelegate] updateParseInstallationState];
+                                                                [[MTUtil getAppDelegate] updatePushMessagingInfo];
                                                                 
                                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -951,7 +951,7 @@
                                                                     [weakSelf.navigationController popViewControllerAnimated:YES];
                                                                     
                                                                     // Update Notification count for this user.
-                                                                    //            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                                                    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
                                                                     
                                                                     MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                     if (![onboardingController checkForOnboarding]) {
@@ -1119,205 +1119,6 @@
         self.currentAlertController = nil;
     }
 }
-
-
-#pragma mark - Archived -
-//- (IBAction)tappedSignUpButton:(id)sender
-//{
-//    BOOL isMentor = [self.signUpType isEqualToString:@"mentor"];
-//    
-//    if ([self validate]) {
-//        __block BOOL showedSignupError = NO;
-//        
-//        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//        hud.labelText = @"Registering...";
-//        hud.dimBackground = YES;
-//        
-//        MTMakeWeakSelf();
-//        [self bk_performBlock:^(id obj) {
-//            NSDictionary *parameters = @{@"type": weakSelf.signUpType, @"code": weakSelf.registrationCode.text};
-//            [PFCloud callFunctionInBackground:@"checkSignupCode" withParameters:parameters block:^(id object, NSError *error) {
-//                if (!error) {
-//                    BOOL validCode = NO;
-//                    PFClasses *foundClass = nil;
-//                    
-//                    if (isMentor) {
-//                        validCode = YES;
-//                    }
-//                    else {
-//                        if ([object isKindOfClass:[PFObject class]]) {
-//                            PFObject *parseObject = (PFObject *)object;
-//                            if ([parseObject.parseClassName isEqualToString:[PFClasses parseClassName]]) {
-//                                foundClass = (PFClasses *)object;
-//                                validCode = YES;
-//                            }
-//                        }
-//                    }
-//                    
-//                    if (validCode) {
-//                        PFUser *user = [PFUser user];
-//                        
-//                        user.username = weakSelf.email.text;
-//                        user.password = weakSelf.password.text;
-//                        user.email = weakSelf.email.text;
-//                        
-//                        // other fields can be set just like with PFObject
-//                        user[@"first_name"] = weakSelf.firstName.text;
-//                        user[@"last_name"] = weakSelf.lastName.text;
-//                        
-//                        if (!IsEmpty(weakSelf.phoneNumber.text)) {
-//                            user[@"phone_number"] = weakSelf.phoneNumber.text;
-//                        }
-//                        
-//                        user[@"type"] = weakSelf.signUpType;
-//                        
-//                        if (weakSelf.schoolIsNew) {
-//                            PFSchools *createSchool = [[PFSchools alloc] initWithClassName:@"Schools"];
-//                            createSchool[@"name"] = weakSelf.schoolName.text;
-//                            [createSchool saveInBackground];
-//                        }
-//                        
-//                        PFClasses *createClass = nil;
-//                        if (weakSelf.classIsNew) {
-//                            createClass = [[PFClasses alloc] initWithClassName:@"Classes"];
-//                            createClass[@"name"] = weakSelf.className.text;
-//                            createClass[@"school"] = weakSelf.schoolName.text;
-//                            
-//                            PFSignupCodes *signupCodeForStudent = [[PFSignupCodes alloc] initWithClassName:@"SignupCodes"];
-//                            signupCodeForStudent[@"code"] = [PFCloud callFunction:@"generateSignupCode" withParameters:@{@"": @""}];
-//                            signupCodeForStudent[@"class"] = weakSelf.className.text;
-//                            signupCodeForStudent[@"school"] = weakSelf.schoolName.text;
-//                            signupCodeForStudent[@"type"] = @"student";
-//                            
-//                            [signupCodeForStudent saveInBackground];
-//                        }
-//                        
-//                        if (isMentor) {
-//                            user[@"school"] = weakSelf.schoolName.text;
-//                            user[@"class"] = weakSelf.className.text;
-//                            if (createClass) {
-//                                NSError *error;
-//                                [createClass save:&error];
-//                                if (error && error.code != 120) {
-//                                    dispatch_async(dispatch_get_main_queue(), ^{
-//                                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                                    });
-//                                    
-//                                    [weakSelf bk_performBlock:^(id obj) {
-//                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//                                    } afterDelay:0.35f];
-//                                }
-//                                user[@"class_p"] = createClass;
-//                            }
-//                            else {
-//                                user[@"class_p"] = weakSelf.selectedClass;
-//                            }
-//                        } else {
-//                            user[@"class_p"] = foundClass;
-//                            user[@"class"] = foundClass[@"name"];
-//                            
-//                            if (foundClass[@"school_p"]) {
-//                                PFSchools *school = foundClass[@"school_p"];
-//                                [school fetchIfNeeded];
-//                                user[@"school"] = school[@"name"];
-//                            }
-//                            
-//                            if (!IsEmpty(weakSelf.birthdate.text) && weakSelf.selectedBirthdate) {
-//                                user[@"birthdate"] = weakSelf.selectedBirthdate;
-//                            }
-//                            
-//                            if (!IsEmpty(weakSelf.zipCode.text)) {
-//                                user[@"zip_code"] = weakSelf.zipCode.text;
-//                            }
-//                            
-//                            if (!IsEmpty(weakSelf.ethnicity.text) && weakSelf.selectedEthnicity) {
-//                                user[@"ethnicity"] = weakSelf.selectedEthnicity;
-//                            }
-//                            
-//                            if (!IsEmpty(weakSelf.selectedMoneyOptions)) {
-//                                [user setObject:weakSelf.selectedMoneyOptions forKey:@"moneyOptions_selected"];
-//                            }
-//                        }
-//                        
-//                        [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-//                            dispatch_async(dispatch_get_main_queue(), ^{
-//                                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                            });
-//                            
-//                            [weakSelf bk_performBlock:^(id obj) {
-//                                dispatch_async(dispatch_get_main_queue(), ^{
-//                                    if (!error) {
-//                                        [[PFUser currentUser] fetchInBackgroundWithTarget:weakSelf selector:nil];
-//                                        
-//                                        // Update for Push Notifications
-//                                        [[MTUtil getAppDelegate] updateParseInstallationState];
-//                                        
-//                                        // Check for custom playlist for this class
-//                                        [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
-//                                        
-//                                        // Update Notification count for new user
-//                                        //  Should be none but check anyway in case we decide to generate notifications for
-//                                        //  new users.
-//                                        [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
-//                                        
-//                                        [self.navigationController popViewControllerAnimated:NO];
-//                                        
-//                                        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-//                                        [onboardingController initiateOnboarding];
-//                                        
-//                                    } else {
-//                                        // Ignore parse cache errors for now
-//                                        if (error.code != 120) {
-//                                            NSString *errorString = [error userInfo][@"error"];
-//                                            weakSelf.error.text = errorString;
-//                                            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//                                        }
-//                                    }
-//                                });
-//                                
-//                            } afterDelay:0.35f];
-//                            
-//                        }];
-//                    } else {
-//                        dispatch_async(dispatch_get_main_queue(), ^{
-//                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                        });
-//                        
-//                        [weakSelf bk_performBlock:^(id obj) {
-//                            if (!showedSignupError) {
-//                                showedSignupError = YES;
-//                                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"There was an error with the registration code." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//                            }
-//                            else {
-//                                showedSignupError = NO;
-//                            }
-//                        } afterDelay:0.35f];
-//                    }
-//                }
-//                else {
-//                    dispatch_async(dispatch_get_main_queue(), ^{
-//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                    });
-//                    
-//                    [weakSelf bk_performBlock:^(id obj) {
-//                        // Ignore parse cache errors for now
-//                        if (error.code != 120) {
-//                            [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:[error userInfo][@"error"] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-//                        }
-//                    } afterDelay:0.35f];
-//                }
-//            }];
-//            
-//        } afterDelay:0.35f];
-//        if (isMentor) {
-//            [self loadMentorClasses];
-//        }
-//        else {
-//            [self processStudentSignup];
-//        }
-//    }
-//}
-
 
 
 @end

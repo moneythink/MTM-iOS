@@ -22,6 +22,7 @@ NSString *const kFailedMyClassChallengePostCommentEditNotification = @"kFailedMy
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
 NSString *const kWillSaveEditPostCommentNotification = @"kWillSaveEditPostCommentNotification";
 NSString *const kDidSaveNewPostCommentNotification = @"kDidSaveNewPostCommentNotification";
+NSString *const kDidDeletePostCommentNotification = @"kDidDeletePostCommentNotification";
 NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification";
 NSString *const kDidSaveEditPostNotification = @"kDidSaveEditPostNotification";
 NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotification";
@@ -57,6 +58,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPostComment:) name:kWillSaveEditPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeletePostComment:) name:kDidDeletePostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentFailed) name:kFailedMyClassChallengePostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentEditFailed) name:kFailedMyClassChallengePostCommentEditNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
@@ -351,6 +353,14 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 }
 
 - (void)didSaveNewPostComment:(NSNotification *)notif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self refreshFromDatabase];
+    });
+}
+
+- (void)didDeletePostComment:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];

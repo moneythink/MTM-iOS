@@ -92,7 +92,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
             NSLog(@"MTOAuthRefreshOperation completionBlock: NO credential");
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf.oauthRefreshQueue cancelAllOperations];
-                [weakSelf checkForInternetAndReAuthWithError:nil];
+                [weakSelf checkForInternetAndReAuthWithError:nil cannotConnectMessage:NO];
                 if (failure) {
                     failure(nil);
                 }
@@ -127,7 +127,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     } failure:^(NSError *error) {
         NSLog(@"Failed to refresh AFOAuthCredential error: %@", [error mtErrorDescription]);
         weakSelf.refreshingOAuthToken = NO;
-        [weakSelf checkForInternetAndReAuthWithError:error];
+        [weakSelf checkForInternetAndReAuthWithError:error cannotConnectMessage:NO];
 
         if (failure) {
             failure(error);
@@ -135,7 +135,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)checkForInternetAndReAuthWithError:(NSError *)error
+- (void)checkForInternetAndReAuthWithError:(NSError *)error cannotConnectMessage:(BOOL)cannotConnectMessage
 {
     if (![MTUtil internetReachable]) {
         [UIAlertView showNoInternetAlert];
@@ -150,6 +150,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
         NSString *title = @"Authentication Error";
         NSString *message = @"Moneythink authentication token has expired or is invalid. Please Logout/Login again to continue accessing Moneythink services.";
+        if (cannotConnectMessage) {
+            title = @"Connection Error";
+            message = @"Moneythink cannot connect to network services. Try again later or if problem persists, logout/login again.";
+        }
         if ([UIAlertController class]) {
             UIAlertController *alertController = [UIAlertController
                                                   alertControllerWithTitle:title
@@ -498,7 +502,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     
-    // Mark existing comments deleted to filter out deleted comments
+    // Mark existing posts deleted to filter out deleted posts
     RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu", challengeId];
     for (MTChallengePost *thisPost in existingPosts) {
         thisPost.isDeleted = YES;
@@ -527,12 +531,12 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
                     
-                    // Make sure my ID is not overwritten with missing data from feed
+                    // Make sure my ID is not overwritten with missing data (class/org) from feed
                     if ([MTUser isUserMe:thisUser]) {
                         thisUser.userClass = myClass;
                         thisUser.organization = myOrganization;
                     }
-                    else {
+                    else if (thisClass) {
                         thisUser.userClass = thisClass;
                     }
                     
@@ -581,6 +585,203 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
+- (void)processExplorePostsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No explore posts response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded explore posts data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"posts"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No explore posts data");
+        return;
+    }
+    
+    NSArray *postsArray = [embeddedDict objectForKey:@"posts"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    // Mark existing posts (not in user class) deleted to filter out deleted explore posts
+    RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu AND challengeClass.id != %lu", challengeId, [MTUser currentUser].userClass.id];
+    for (MTChallengePost *thisPost in existingPosts) {
+        thisPost.isDeleted = YES;
+    }
+    
+    MTClass *myClass = [MTUser currentUser].userClass;
+    MTOrganization *myOrganization = myClass.organization;
+    
+    for (id post in postsArray) {
+        if ([post isKindOfClass:[NSDictionary class]]) {
+            
+            MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
+            challengePost.isDeleted = NO;
+            
+            NSDictionary *postDict = (NSDictionary *)post;
+            if ([[postDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [postDict objectForKey:@"_embedded"];
+                
+                // Get user
+                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
+                    MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+                    challengePost.challengeClass = thisClass;
+                    
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    
+                    // Make sure my ID is not overwritten with missing data (class/org) from feed
+                    if ([MTUser isUserMe:thisUser]) {
+                        thisUser.userClass = myClass;
+                        thisUser.organization = myOrganization;
+                    }
+                    else if (thisClass) {
+                        thisUser.userClass = thisClass;
+                    }
+                    
+                    challengePost.user = thisUser;
+                    
+                    NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    challengePost.challenge = thisChallenge;
+                    
+                    id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
+                    if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
+                        NSMutableDictionary *extraFieldsDict = [NSMutableDictionary dictionary];
+                        for (NSDictionary *thisData in extraFieldsArray) {
+                            NSString *name = [thisData valueForKey:@"name"];
+                            NSString *value = [thisData valueForKey:@"value"];
+                            [extraFieldsDict setObject:value forKey:name];
+                        }
+                        if (!IsEmpty(extraFieldsDict)) {
+                            NSError *error;
+                            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extraFieldsDict options:0 error:&error];
+                            if (!error) {
+                                NSString *extraFieldsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                                challengePost.extraFields = extraFieldsString;
+                            }
+                        }
+                        else {
+                            challengePost.extraFields = @"";
+                        }
+                    }
+                    else {
+                        challengePost.extraFields = @"";
+                    }
+                }
+                
+                // Get Image
+                NSDictionary *linksDict = [postDict objectForKey:@"_links"];
+                if ([linksDict objectForKey:@"picture"]) {
+                    challengePost.hasPostImage = YES;
+                }
+                else {
+                    challengePost.hasPostImage = NO;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
+- (void)processPostWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No posts response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No embedded posts data");
+        return;
+    }
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    MTClass *myClass = [MTUser currentUser].userClass;
+    MTOrganization *myOrganization = myClass.organization;
+    
+    MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:responseDict];
+    challengePost.isDeleted = NO;
+    
+    if ([[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        
+        NSDictionary *innerEmbeddedDict = [responseDict objectForKey:@"_embedded"];
+        
+        // Get user
+        if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
+            MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+            challengePost.challengeClass = thisClass;
+            
+            NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+            MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+            
+            // Make sure my ID is not overwritten with missing data (class/org) from feed
+            if ([MTUser isUserMe:thisUser]) {
+                thisUser.userClass = myClass;
+                thisUser.organization = myOrganization;
+            }
+            else if (thisClass) {
+                thisUser.userClass = thisClass;
+            }
+            
+            challengePost.user = thisUser;
+            
+            NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+            MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+            challengePost.challenge = thisChallenge;
+            
+            id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
+            if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
+                NSMutableDictionary *extraFieldsDict = [NSMutableDictionary dictionary];
+                for (NSDictionary *thisData in extraFieldsArray) {
+                    NSString *name = [thisData valueForKey:@"name"];
+                    NSString *value = [thisData valueForKey:@"value"];
+                    [extraFieldsDict setObject:value forKey:name];
+                }
+                if (!IsEmpty(extraFieldsDict)) {
+                    NSError *error;
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extraFieldsDict options:0 error:&error];
+                    if (!error) {
+                        NSString *extraFieldsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+                        challengePost.extraFields = extraFieldsString;
+                    }
+                }
+                else {
+                    challengePost.extraFields = @"";
+                }
+            }
+            else {
+                challengePost.extraFields = @"";
+            }
+        }
+        
+        // Get Image
+        NSDictionary *linksDict = [responseDict objectForKey:@"_links"];
+        if ([linksDict objectForKey:@"picture"]) {
+            challengePost.hasPostImage = YES;
+        }
+        else {
+            challengePost.hasPostImage = NO;
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 - (void)processCommentsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId postId:(NSInteger)postId
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
@@ -623,9 +824,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }
     }
     
-    MTClass *myClass = [MTUser currentUser].userClass;
-    MTOrganization *myOrganization = myClass.organization;
-
     for (id comment in commentsArray) {
         if ([comment isKindOfClass:[NSDictionary class]]) {
             
@@ -641,19 +839,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    
-                    // Make sure my ID is not overwritten with missing data from feed
-                    if ([MTUser isUserMe:thisUser]) {
-                        thisUser.userClass = myClass;
-                        thisUser.organization = myOrganization;
-                    }
-
                     challengePostComment.user = thisUser;
                     
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
                     MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
                     challengePostComment.challengePost = thisChallengePost;
-                    
                 }
             }
         }
@@ -759,7 +949,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     
-    // Mark existing comments deleted to filter out deleted comments
+    // Mark existing likes deleted to filter out deleted likes
     if (challengeId > 0) {
         // for challenge
         RLMResults *existingLikes = [MTChallengePostLike objectsWhere:@"challengePost.challenge.id = %lu", challengeId];
@@ -774,9 +964,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
             thisLike.isDeleted = YES;
         }
     }
-    
-    MTClass *myClass = [MTUser currentUser].userClass;
-    MTOrganization *myOrganization = myClass.organization;
     
     for (id like in likesArray) {
         if ([like isKindOfClass:[NSDictionary class]]) {
@@ -793,13 +980,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    
-                    // Make sure my ID is not overwritten with missing data from feed
-                    if ([MTUser isUserMe:thisUser]) {
-                        thisUser.userClass = myClass;
-                        thisUser.organization = myOrganization;
-                    }
-
                     challengePostLike.user = thisUser;
                 }
                 
@@ -923,9 +1103,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }
     }
     
-    MTClass *myClass = [MTUser currentUser].userClass;
-    MTOrganization *myOrganization = myClass.organization;
-
     for (id buttonClick in buttonClicksArray) {
         if ([buttonClick isKindOfClass:[NSDictionary class]]) {
             MTChallengeButtonClick *challengeButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:buttonClick];
@@ -940,13 +1117,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    
-                    // Make sure my ID is not overwritten with missing data from feed
-                    if ([MTUser isUserMe:thisUser]) {
-                        thisUser.userClass = myClass;
-                        thisUser.organization = myOrganization;
-                    }
-
                     challengeButtonClick.user = thisUser;
                 }
                 
@@ -993,7 +1163,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     
-    // Mark existing buttons deleted to filter out deleted comments
     RLMResults *existingProgress = [MTChallengeProgress allObjects];
     for (MTChallengeProgress *thisProgress in existingProgress) {
         thisProgress.isDeleted = YES;
@@ -1022,8 +1191,214 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
+- (void)processNotificationsWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No notifications response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No notifications data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"notifications"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No notifications data");
+        return;
+    }
+    
+    NSArray *notificationsArray = [embeddedDict objectForKey:@"notifications"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    for (id notification in notificationsArray) {
+        if ([notification isKindOfClass:[NSDictionary class]]) {
+            MTNotification *thisNotification = [MTNotification createOrUpdateInRealm:realm withJSONDictionary:notification];
+            
+            NSDictionary *notificationDict = (NSDictionary *)notification;
+            
+            // Related Comment
+            if ([[notificationDict objectForKey:@"relatedComment"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *relatedCommentDict = [notificationDict objectForKey:@"relatedComment"];
+                MTChallengePostComment *relatedComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:relatedCommentDict];
+                thisNotification.relatedComment = relatedComment;
+            }
+
+            if ([[notificationDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [notificationDict objectForKey:@"_embedded"];
+                
+                // Get embedded data, related data
+                if ([[innerEmbeddedDict objectForKey:@"relatedChallenge"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"relatedChallenge"];
+                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisNotification.relatedChallenge = thisChallenge;
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"relatedPost"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *postDict = [innerEmbeddedDict objectForKey:@"relatedPost"];
+                    MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
+                    thisNotification.relatedPost = thisPost;
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"relatedUser"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"relatedUser"];
+                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisNotification.relatedUser = thisUser;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
+- (void)processDashboardUsersWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No dashboard users response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No dashboard users data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"users"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No dashboard users members data");
+        return;
+    }
+    
+    NSArray *usersArray = [embeddedDict objectForKey:@"users"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    
+    for (id user in usersArray) {
+        if ([user isKindOfClass:[NSDictionary class]]) {
+            
+            NSDictionary *userDict = (NSDictionary *)user;
+            
+            MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+            thisUser.organization = [MTUser currentUser].organization;
+            thisUser.userClass = [MTUser currentUser].userClass;
+
+            if ([[userDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                
+                NSDictionary *innerEmbeddedDict = [userDict objectForKey:@"_embedded"];
+                
+                if ([[innerEmbeddedDict objectForKey:@"student"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *student = [innerEmbeddedDict objectForKey:@"student"];
+                    if (!IsEmpty(student)) {
+                        thisUser.hasBankAccount = [[student objectForKey:@"hasBankAccount"] boolValue];
+                        thisUser.hasResume = [[student objectForKey:@"hasResume"] boolValue];
+                        thisUser.points = [[student objectForKey:@"points"] integerValue];
+                    }
+                }
+            }
+            
+            if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                if ([linksDict objectForKey:@"avatar"]) {
+                    thisUser.hasAvatar = YES;
+                }
+                else {
+                    thisUser.hasAvatar = NO;
+                }
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
+- (void)processUserPostsWithResponseObject:(id)responseObject userId:(NSInteger)userId
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No user posts response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No user posts data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
+    
+    if (![[embeddedDict objectForKey:@"posts"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No user posts data");
+        return;
+    }
+    
+    NSArray *postsArray = [embeddedDict objectForKey:@"posts"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    
+    [realm beginWriteTransaction];
+    
+    MTUser *thisUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
+
+    for (id post in postsArray) {
+        if ([post isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *postDict = (NSDictionary *)post;
+            MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
+            thisPost.user = thisUser;
+            thisPost.challengeClass = thisUser.userClass;
+            
+            if ([[post objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *innerEmbeddedDict = (NSDictionary *)[post objectForKey:@"_embedded"];
+                
+                NSInteger likesCount = 0;
+                NSInteger commentCount = 0;
+                
+                if ([[innerEmbeddedDict objectForKey:@"likes"] isKindOfClass:[NSArray class]]) {
+                    NSArray *likesArray = [innerEmbeddedDict objectForKey:@"likes"];
+                    likesCount = [likesArray count];
+                }
+                
+                if ([[innerEmbeddedDict objectForKey:@"comments"] isKindOfClass:[NSArray class]]) {
+                    NSArray *commentsArray = [innerEmbeddedDict objectForKey:@"comments"];
+                    commentCount = [commentsArray count];
+                }
+                
+                NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", thisUser.id, thisPost.id];
+                MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
+                if (!existing) {
+                    existing = [[MTUserPostPropertyCount alloc] init];
+                    existing.complexId = complexId;
+                }
+                                                
+                existing.user = thisUser;
+                existing.post = thisPost;
+                existing.likeCount = likesCount;
+                existing.commentCount = commentCount;
+                
+                [realm addOrUpdateObject:existing];
+            }
+        }
+    }
+    [realm commitWriteTransaction];
+}
+
 
 #pragma mark - Public Methods -
+- (void)cancelExistingOperations
+{
+    [self.oauthRefreshQueue cancelAllOperations];
+}
+
 
 #pragma mark - Login/Registration Methods -
 - (void)authenticateForUsername:(NSString *)username withPassword:(NSString *)password success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -1135,6 +1510,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
         NSDictionary *classDict = [NSDictionary dictionaryWithObject:classId forKey:@"id"];
         parameters[@"class"] = classDict;
     }
+    
+    NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
+    [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
 
     MTMakeWeakSelf();
     [self POST:@"users" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -1206,6 +1584,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [moneyOptionsArray addObject:moneyOptionDict];
     }
     parameters[@"moneyOptions"] = moneyOptionsArray;
+    
+    NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
+    [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
 
     MTMakeWeakSelf();
     [self POST:@"users" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -1853,10 +2234,20 @@ static NSString * const MTRefreshingErrorCode = @"701";
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"refreshCurrentUserData error: %@", [error mtErrorDescription]);
-            [weakSelf checkForInternetAndReAuthWithError:error];
-            if (failure) {
-                failure(error);
+            // Silently fail on network connection errors
+            NSInteger code = [error code];
+            if (code == NSURLErrorTimedOut || code == NSURLErrorCancelled || code == NSURLErrorCannotFindHost ||
+                code == NSURLErrorCannotConnectToHost || code == NSURLErrorNetworkConnectionLost || code == NSURLErrorDNSLookupFailed ||
+                code == NSURLErrorResourceUnavailable || code == NSURLErrorNotConnectedToInternet) {
+                
+                if (failure) {
+                    failure(error);
+                }
             }
+            else {
+                [weakSelf checkForInternetAndReAuthWithError:error cannotConnectMessage:YES];
+            }
+            
         }];
     } failure:^(NSError *error) {
         NSLog(@"refreshCurrentUserData error: %@", [error mtErrorDescription]);
@@ -2032,6 +2423,41 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed loadPostsForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"9990";
+        
+        NSString *urlString = [NSString stringWithFormat:@"posts/%ld", (long)postId];
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadPostId success response");
+            
+            if (responseObject) {
+                [self processPostWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadPostId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadPostId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -2507,6 +2933,41 @@ static NSString * const MTRefreshingErrorCode = @"701";
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed verifyPostId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"9990";
+        
+        NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)userId];
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadPostsForUserId success response");
+            
+            if (responseObject) {
+                [self processUserPostsWithResponseObject:responseObject userId:userId];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -3167,6 +3628,402 @@ static NSString * const MTRefreshingErrorCode = @"701";
 }
 
 
-// TODO: Need to handle pagination
+#pragma mark - Notifications -
+- (void)loadNotificationsWithSinceDate:(NSDate *)sinceDate includeRead:(BOOL)includeRead success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"999";
+        
+        if (!includeRead) {
+            parameters[@"filter"] = @"unread";
+        }
+        
+        if (sinceDate) {
+            parameters[@"since"] = sinceDate;
+        }
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:@"notifications" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadNotificationsWithSinceDate success response");
+            
+            if (responseObject) {
+                [self processNotificationsWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadNotificationsWithSinceDate with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadNotificationsWithSinceDate with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)loadNotificationId:(NSInteger)notificationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"999";
+        
+        NSString *urlString = [NSString stringWithFormat:@"notifications/%ld", (long)notificationId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadNotificationId success response");
+            
+            if (responseObject) {
+                [self processNotificationsWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadNotificationId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadNotificationId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)markReadForNotificationId:(NSInteger)notificationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSString *urlString = [NSString stringWithFormat:@"notifications/%lu/read", notificationId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"markReadForNotificationId success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTNotification *thisNotification = [MTNotification objectForPrimaryKey:[NSNumber numberWithInteger:notificationId]];
+            if (thisNotification) {
+                thisNotification.read = YES;
+            }
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed markReadForNotificationId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed markReadForNotificationId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)markAllNotificationsReadWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:@"notifications/read-all" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"markAllNotificationsReadWithSuccess success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            RLMResults *allNotifications = [MTNotification allObjects];
+            for (MTNotification *notif in allNotifications) {
+                notif.read = YES;
+            }
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed markAllNotificationsReadWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed markAllNotificationsReadWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)createPushMessagingRegistrationWithDeviceToken:(NSString *)deviceToken success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations"];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"deviceType"] = @"ios";
+        parameters[@"registrationId"] = deviceToken;
+        parameters[@"deviceId"] = deviceToken;
+
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"createPushMessagingRegistrationWithDeviceToken success response");
+            
+            if (responseObject) {
+                if ([responseObject objectForKey:@"id"]) {
+                    [MTUtil setPushMessagingRegistrationId:[[responseObject objectForKey:@"id"] integerValue]];
+                }
+                
+                if (success) {
+                    success(nil);
+                }
+            }
+            else {
+                if (failure) {
+                    failure(nil);
+                }
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed createPushMessagingRegistrationWithDeviceToken with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed createPushMessagingRegistrationWithDeviceToken with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)updatePushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId withDeviceToken:(NSString *)deviceToken success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", pushMessagingRegistrationId];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"deviceType"] = @"ios";
+        parameters[@"registrationId"] = deviceToken;
+        parameters[@"deviceId"] = deviceToken;
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"updatePushMessagingRegistrationId success response");
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed updatePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed updatePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)deletePushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", pushMessagingRegistrationId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"deletePushMessagingRegistrationId success response");
+            [MTUtil setPushMessagingRegistrationId:0];
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed deletePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed deletePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+
+#pragma mark - Explore -
+- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"2";
+        parameters[@"page_size"] = @"20";
+        
+        NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", challengeId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadExplorePostsForChallengeId success response");
+            
+            if (responseObject) {
+                [self processExplorePostsWithResponseObject:responseObject challengeId:challengeId];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadExplorePostsForChallengeId with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadExplorePostsForChallengeId with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+
+#pragma mark - Dashboard -
+- (void)loadDashboardUsersWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"999";
+        
+        NSString *urlString = [NSString stringWithFormat:@"classes/%lu/students", [MTUser currentUser].userClass.id];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"loadDashboardUsersWithSuccess success response");
+            
+            if (responseObject) {
+                [self processDashboardUsersWithResponseObject:responseObject];
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed loadDashboardUsersWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed loadDashboardUsersWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)setBankValue:(BOOL)bankValue forUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"hasBankAccount"] = [NSNumber numberWithBool:bankValue];
+        
+        NSString *urlString = [NSString stringWithFormat:@"students/%lu", userId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"setBankValue success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTUser *user = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
+            user.hasBankAccount = bankValue;
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed setBankValue with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed setBankValue with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)setResumeValue:(BOOL)resumeValue forUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"hasResume"] = [NSNumber numberWithBool:resumeValue];
+        
+        NSString *urlString = [NSString stringWithFormat:@"students/%lu", userId];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"setResumeValue success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTUser *user = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
+            user.hasResume = resumeValue;
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed setResumeValue with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed setResumeValue with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+
 
 @end

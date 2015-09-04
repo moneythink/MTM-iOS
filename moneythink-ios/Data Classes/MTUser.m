@@ -11,7 +11,6 @@
 @implementation MTUser
 
 // Specify default values for properties
-
 + (NSDictionary *)defaultPropertyValues {
     return @{@"username" : @"",
              @"email": @"",
@@ -105,7 +104,8 @@
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey]) {
+        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] &&
+            ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
             NSLog(@"removing user pref for %@", key);
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
         }
@@ -117,7 +117,6 @@
     [[ZDKSdkStorage instance] clearUserData];
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
     
-    // TODO: Clear out database?
     [[RLMRealm defaultRealm] beginWriteTransaction];
     [[RLMRealm defaultRealm] deleteAllObjects];
     [[RLMRealm defaultRealm] commitWriteTransaction];

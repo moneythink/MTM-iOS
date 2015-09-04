@@ -13,8 +13,9 @@
 
 @interface MTMentorDashboardViewController ()
 
-@property (nonatomic, strong) PFImageView *profileImage;
+@property (nonatomic, strong) UIImageView *profileImage;
 @property (nonatomic, strong) MTUser *userCurrent;
+@property (nonatomic, strong) RLMResults *classStudents;
 
 @end
 
@@ -23,103 +24,32 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-    [self.tableView reloadData];
-    
     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Refreshing...";
-    hud.dimBackground = YES;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
     [self loadData];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
 }
 
 
 #pragma mark - Private Methods -
-- (void)loadProfileImageForImageView:(UIImageView *)imageView
-{
-    // TODO: load avatars
-    return;
-    
-    __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-    
-    if (self.profileImage.image) {
-        imageView.image = self.profileImage.image;
-    }
-    else {
-        imageView.image = [UIImage imageNamed:@"profile_image.png"];
-    }
-    
-    imageView.layer.cornerRadius = round(imageView.frame.size.width / 2.0f);
-    imageView.layer.masksToBounds = YES;
-    imageView.contentMode = UIViewContentModeScaleAspectFill;
-    
-    if (profileImageFile) {
-        // Load/update the profile image
-        [self bk_performBlock:^(id obj) {
-            self.profileImage = [[PFImageView alloc] init];
-            [self.profileImage setFile:profileImageFile];
-            self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-            
-            [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [imageView setImage:self.profileImage.image];
-                });
-                
-                [[PFUser currentUser] fetchInBackground];
-            }];
-        } afterDelay:0.35f];
-    }
-    else {
-        // Set to default
-        self.profileImage = [[PFImageView alloc] init];
-        self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-        [self.profileImage setFile:nil];
-        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-        [imageView setImage:self.profileImage.image];
-    }
-}
-
 - (void)loadData
 {
-    // TODO: Load user data
-//    NSString *nameClass = [PFUser currentUser][@"class"];
-//    NSString *nameSchool = [PFUser currentUser][@"school"];
-//
-//    NSString *type = @"student";
-//    NSPredicate *classStudents = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@ AND type = %@", nameClass, nameSchool, type];
-//    PFQuery *studentsForClass = [PFQuery queryWithClassName:[PFUser parseClassName] predicate:classStudents];
-//    
-//    [studentsForClass orderByAscending:@"last_name"];
-//    studentsForClass.cachePolicy = kPFCachePolicyNetworkElseCache;
-//    
-//    MTMakeWeakSelf();
-//    [studentsForClass findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//        weakSelf.classStudents = objects;
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [weakSelf.tableView reloadData];
-//            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//        });
-//    }];
+    self.classStudents = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
+    [self.tableView reloadData];
+
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadDashboardUsersWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.classStudents = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
+            [weakSelf.tableView reloadData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load dashboard user: %@", [error mtErrorDescription]);
+    }];
 }
 
 
@@ -140,8 +70,6 @@
     return rows;
 }
 
-// Row display. Implementers should *always* try to reuse cells by setting each cell's reuseIdentifier and querying for available reusable cells with dequeueReusableCellWithIdentifier:
-// Cell gets various attributes set automatically based on table (separators) and data source (accessory views, editing controls)
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
@@ -153,7 +81,7 @@
         cell = [[MTStudentProgressTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identString];
     }
     
-    MTUser *rowStudent = self.classStudents[row];
+    MTUser *rowStudent = [self.classStudents objectAtIndex:row];
     cell.user = rowStudent;
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
 
@@ -161,38 +89,19 @@
     fullName = [[fullName stringByAppendingString:@" "] stringByAppendingString:rowStudent.lastName];
     cell.userFullName.text = fullName;
 
-    // TODO : bank_account?
-    NSString *bankAccount = rowStudent[@"bank_account"];
+    cell.bankCheckbox.isChecked = rowStudent.hasBankAccount;
+    cell.resumeCheckbox.isChecked = rowStudent.hasResume;
 
-    if ([bankAccount intValue] == 1) {
-        cell.bankCheckbox.isChecked = YES;
-    }
-    else {
-        cell.bankCheckbox.isChecked = NO;
-    }
-
-    NSString *resume = rowStudent[@"resume"];
-
-    if ([resume intValue] == 1) {
-        cell.resumeCheckbox.isChecked = YES;
-    }
-    else {
-        cell.resumeCheckbox.isChecked = NO;
-    }
-
-    cell.userProfileImage.image = nil;
-    cell.userProfileImage.image = [UIImage imageNamed:@"profile_image.png"];
     cell.userProfileImage.layer.cornerRadius = round(cell.userProfileImage.frame.size.width / 2.0f);
     cell.userProfileImage.layer.masksToBounds = YES;
     cell.userProfileImage.contentMode = UIViewContentModeScaleAspectFill;
-
-    cell.userProfileImage.file = rowStudent[@"profile_picture"];
-    [cell.userProfileImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-        }
-        else {
-            NSLog(@"error - %@", error);
-        }
+    __block MTStudentProgressTableViewCell *weakCell = cell;
+    cell.userProfileImage.image = [rowStudent loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakCell.userProfileImage.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
     }];
 
     return cell;
@@ -207,7 +116,7 @@
 #pragma mark - UITableViewDelegate methods -
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MTUser *rowStudent = self.classStudents[indexPath.row];
+    MTUser *rowStudent = [self.classStudents objectAtIndex:indexPath.row];
     [self performSegueWithIdentifier:@"mentorStudentProfileView" sender:rowStudent];
 }
 
@@ -231,11 +140,22 @@
         [headerView.contentView removeGestureRecognizer:[headerView.contentView.gestureRecognizers objectAtIndex:0]];
     }
     
+    self.userCurrent = [MTUser currentUser];
+
     UIImageView *profileView = (UIImageView *)[headerView viewWithTag:200];
     profileView.layer.masksToBounds = YES;
-    [self loadProfileImageForImageView:profileView];
+    profileView.layer.cornerRadius = round(profileView.frame.size.width / 2.0f);
+    profileView.layer.masksToBounds = YES;
+    profileView.contentMode = UIViewContentModeScaleAspectFill;
     
-    self.userCurrent = [MTUser currentUser];
+    __block UIImageView *weakImageView = profileView;
+    profileView.image = [self.userCurrent loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakImageView.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
+    }];
     
     UILabel *userNameLabel = (UILabel *)[headerView viewWithTag:201];
     userNameLabel.text = [NSString stringWithFormat:@"%@ %@", self.userCurrent.firstName, self.userCurrent.lastName];
@@ -297,14 +217,11 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
-    
     NSString *segueID = [segue identifier];
     if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        
         MTUser *student = sender;
         destinationVC.student = student;
-        
     }
 }
 

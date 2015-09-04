@@ -314,10 +314,17 @@
     }
 
     UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
-                                                      message:@"Would you like to receive an email to reset your password?\n\nChoose Enter Token after receiving email."
+                                                      message:@"Would you like to receive an email to reset your password?"
                                                      delegate:self
                                             cancelButtonTitle:@"Cancel"
-                                            otherButtonTitles:@"Request Email", @"Enter Token", nil];
+                                            otherButtonTitles:@"Request Email", nil];
+    
+    // For the token flow, not currently used
+//    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
+//                                                      message:@"Would you like to receive an email to reset your password?\n\nChoose Enter Token after receiving email."
+//                                                     delegate:self
+//                                            cancelButtonTitle:@"Cancel"
+//                                            otherButtonTitles:@"Request Email", @"Enter Token", nil];
     [confirm show];
 }
 
@@ -336,13 +343,13 @@
         [[MTUtil getAppDelegate] configureZendesk];
         
         // Update for Push Notifications
-//        [[MTUtil getAppDelegate] updateParseInstallationState];
+        [[MTUtil getAppDelegate] updatePushMessagingInfo];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
             // Update Notification count for this user.
-//            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+            [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
             
             MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
             if (![onboardingController checkForOnboarding]) {

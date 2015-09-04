@@ -85,5 +85,15 @@
     }
 }
 
+- (BOOL)isPostInMyClass
+{
+    if (self.challengeClass.id == [MTUser currentUser].userClass.id) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
 
 @end

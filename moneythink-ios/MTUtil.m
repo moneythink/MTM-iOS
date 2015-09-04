@@ -90,28 +90,46 @@
     }
 }
 
-+ (void)logout
++ (NSDate *)lastNotificationFetchDate
 {
-    // Removes all keys, except onboarding
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
-    for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey]) {
-            NSLog(@"removing user pref for %@", key);
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
-        }
-    }
-
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [PFUser logOut];
-    [[ZDKConfig instance] setUserIdentity:nil];
-    [[ZDKSdkStorage instance] clearUserData];
-    [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
-    
-    // Clear any notification count
-    ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = 0;
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kLastNotificationFetchDateKey];
 }
+
++ (void)setLastNotificationFetchDate:(NSDate *)fetchDate
+{
+    if (fetchDate) {
+        [[NSUserDefaults standardUserDefaults] setObject:fetchDate forKey:kLastNotificationFetchDateKey];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kLastNotificationFetchDateKey];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (NSInteger)pushMessagingRegistrationId
+{
+    NSNumber *pushId = [[NSUserDefaults standardUserDefaults] objectForKey:kPushMessagingRegistrationKey];
+    if (pushId) {
+        return [pushId integerValue];
+    }
+    else {
+        return 0;
+    }
+}
+
++ (void)setPushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId
+{
+    if (pushMessagingRegistrationId > 0) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:pushMessagingRegistrationId] forKey:kPushMessagingRegistrationKey];
+    }
+    else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPushMessagingRegistrationKey];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
 
 + (BOOL)isCurrentUserMentor
 {

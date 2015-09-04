@@ -143,17 +143,17 @@
 
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadChallengeProgressWithSuccess:^(id responseData) {
-        RLMResults *progressResults = [MTChallengeProgress objectsWhere:@"isDeleted = NO AND challenge.id=%d AND user.id = %d", self.challenge.id, [MTUser currentUser].id];
-        MTChallengeProgress *thisProgress = [progressResults firstObject];
-        
-        if (thisProgress) {
-            weakSelf.challengeProgress = thisProgress.progress;
-        }
-        else {
-            weakSelf.challengeProgress = 0.0f;
-        }
-        
         dispatch_async(dispatch_get_main_queue(), ^{
+            RLMResults *progressResults = [MTChallengeProgress objectsWhere:@"isDeleted = NO AND challenge.id=%d AND user.id = %d", weakSelf.challenge.id, [MTUser currentUser].id];
+            MTChallengeProgress *thisProgress = [progressResults firstObject];
+            
+            if (thisProgress) {
+                weakSelf.challengeProgress = thisProgress.progress;
+            }
+            else {
+                weakSelf.challengeProgress = 0.0f;
+            }
+        
             [weakSelf updateChallengeProgress];
         });
         

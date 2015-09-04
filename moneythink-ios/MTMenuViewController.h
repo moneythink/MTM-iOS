@@ -11,8 +11,8 @@
 @interface MTMenuViewController : UIViewController <UIActionSheetDelegate>
 
 - (void)openLeaderboard;
-- (void)openNotificationsWithId:(NSString *)notificationId;
-- (void)openChallengesForChallengeId:(NSString *)challengeId;
+- (void)openNotificationsWithId:(NSInteger)notificationId;
+- (void)openChallengesForChallengeId:(NSInteger)challengeId;
 - (void)logoutAction;
 
 @end

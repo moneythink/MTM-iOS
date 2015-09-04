@@ -41,9 +41,8 @@ typedef enum {
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
 @property (nonatomic, strong) NSArray *emojiArray;
-@property (nonatomic, strong) PFNotifications *notification;
+@property (nonatomic, strong) MTNotification *notification;
 
 - (void)emojiLiked:(MTEmoji *)emoji;
-- (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate;
 
 @end

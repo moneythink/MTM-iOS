@@ -21,7 +21,6 @@
 @property (nonatomic, strong) IBOutlet UIView *footerView;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 
-@property (nonatomic, strong) NSArray *signUpCodes;
 @property (nonatomic, strong) NSIndexPath *currentlySelectedIndexPath;
 
 @end
@@ -70,36 +69,11 @@
         }];
     }
 
-//    NSString *userClass = user[@"class"];
-//    NSString *userSchool = user[@"school"];
-    
     __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
     if (self.currentlySelectedIndexPath) {
         indexPathForSelected = [NSIndexPath indexPathForRow:self.currentlySelectedIndexPath.row inSection:self.currentlySelectedIndexPath.section];
         self.currentlySelectedIndexPath = nil;
     }
-    
-//    if ([MTUtil isCurrentUserMentor]) {
-//        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
-//        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-//        querySignUpCodes.cachePolicy = kPFCachePolicyNetworkElseCache;
-//        
-//        MTMakeWeakSelf();
-//        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            if (!error) {
-//                weakSelf.signUpCodes = objects;
-//                dispatch_async(dispatch_get_main_queue(), ^{
-//                    [weakSelf.tableView reloadData];
-//                    if (!indexPathForSelected) {
-//                        [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-//                    }
-//                    else {
-//                        [weakSelf.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
-//                    }
-//                });
-//            }
-//        }];
-//    }
     
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     [self.tableView reloadData];
@@ -172,7 +146,12 @@
         case 2:
         {
             if ([MTUser isCurrentUserMentor]) {
-                return [self.signUpCodes count];
+                if (!IsEmpty([MTUser currentUser].userClass.studentSignupCode)) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
             }
             else {
                 return 0;
@@ -238,18 +217,8 @@
         case 2:
         {
             CellIdentifier = @"Signup";
-            
-            NSString *type = @"";
-    
-            PFSignupCodes *signupCode = self.signUpCodes[row];
-            type = signupCode[@"type"];
-            code = signupCode[@"code"];
-    
-            if ([type isEqualToString:@"student"]) {
-                msg = @"Student Sign Up Code:";
-            } else if ([type isEqualToString:@"mentor"]) {
-                msg = @"Mentor Sign Up Code:";
-            }
+            msg = @"Student Sign Up Code:";
+            code = [MTUser currentUser].userClass.studentSignupCode;
     
             break;
         }
@@ -280,26 +249,7 @@
     if (indexPath.section == 2) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
-        NSString *msg = @"";
-
-        switch (indexPath.row) {
-            case 0: {
-                msg = @"Student";
-
-                // Mark user invited students
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserInvitedStudents];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-                break;
-
-            default: {
-                msg = @"Mentor";
-            }
-                break;
-        }
-
-        PFSignupCodes *signupCode = self.signUpCodes[indexPath.row];
-        NSString *signupCodeString = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [MTUser currentUser].userClass.name, signupCode[@"code"]];
+        NSString *signupCodeString = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", [MTUser currentUser].userClass.name, [MTUser currentUser].userClass.studentSignupCode];
         NSArray *dataToShare = @[signupCodeString];
 
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:dataToShare
@@ -343,20 +293,51 @@
 
 - (void)logoutAction
 {
+    [[MTNetworkManager sharedMTNetworkManager] cancelExistingOperations];
+    
+    // Try deleting push registration first before deleting token
+    if ([MTUtil pushMessagingRegistrationId]) {
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Logging out...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] deletePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] success:^(id responseData) {
+            NSLog(@"Successfully deleted push messaging registration ID");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf continueLogout];
+            });
+            
+        } failure:^(NSError *error) {
+            NSLog(@"Failed to delete push messaging registration ID");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf continueLogout];
+            });
+        }];
+    }
+    else {
+        [self continueLogout];
+    }
+}
+
+- (void)continueLogout
+{
     [MTUser logout];
-    
-    // TODO: Remove this method in favor of [MTUser logout]
-    [MTUtil logout];
-    
+
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
     if (selectedIndexPath) {
         [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
     }
-
+    
     [self.revealViewController setFrontViewController:[[MTUtil getAppDelegate] userViewController] animated:YES];
     [self.revealViewController setFrontViewPosition:FrontViewPositionLeft animated:YES];
-//    [self.revealViewController revealToggleAnimated:YES];
+    //    [self.revealViewController revealToggleAnimated:YES];
 }
 
 - (void)loadProfileImage
@@ -394,7 +375,7 @@
     [self.revealViewController setFrontViewController:leaderboardVCNav animated:YES];
 }
 
-- (void)openNotificationsWithId:(NSString *)notificationId
+- (void)openNotificationsWithId:(NSInteger)notificationId
 {
     self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:2 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -409,7 +390,7 @@
     [self.revealViewController setFrontViewController:notificationsVCNav animated:YES];
 }
 
-- (void)openChallengesForChallengeId:(NSString *)challengeId
+- (void)openChallengesForChallengeId:(NSInteger)challengeId
 {
     self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -420,7 +401,7 @@
     UINavigationController *challengesVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
     MTChallengesViewController *challengesVC = (MTChallengesViewController *)challengesVCNav.topViewController;
     
-    if (!IsEmpty(challengeId)) {
+    if (challengeId > 0) {
         challengesVC.actionableChallengeId = challengeId;
     }
     

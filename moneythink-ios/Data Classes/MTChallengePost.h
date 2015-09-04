@@ -25,6 +25,7 @@
 @property MTClass *challengeClass;
 
 - (UIImage *)loadPostImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (BOOL)isPostInMyClass;
 
 @end
 

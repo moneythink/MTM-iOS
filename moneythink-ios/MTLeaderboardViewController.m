@@ -34,42 +34,18 @@
 #pragma mark - Private Methods -
 - (void)loadLeaders
 {
-    // TODO: Load leaders
-//    NSString *userClass = [PFUser currentUser][@"class"];
-//    NSString *userSchool = [PFUser currentUser][@"school"];
-//    
-//    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
-//    [userClassQuery whereKey:@"class" equalTo:userClass];
-//    [userClassQuery whereKey:@"school" equalTo:userSchool];
-//    [userClassQuery whereKey:@"type" notEqualTo:@"mentor"];
-//    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-//    
-//    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-//    
-//    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//    hud.labelText = @"Loading Leaders...";
-//    hud.dimBackground = YES;
-//    
-//    MTMakeWeakSelf();
-//    [self bk_performBlock:^(id obj) {
-//        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-//            dispatch_async(dispatch_get_main_queue(), ^{
-//                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-//            });
-//
-//            if (!error) {
-//                if (!IsEmpty(objects)) {
-//                    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"points" ascending:NO];
-//                    NSArray *sortedArray = [objects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-//                    weakSelf.leaders = sortedArray;
-//                    [weakSelf.tableView reloadData];
-//                }
-//            }
-//            else {
-//                NSLog(@"Error loading leaders: %@", [error localizedDescription]);
-//            }
-//        }];
-//    } afterDelay:0.35f];
+    self.leaders = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
+    [self.tableView reloadData];
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadDashboardUsersWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.leaders = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
+            [weakSelf.tableView reloadData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load leaderboard users: %@", [error mtErrorDescription]);
+    }];
 }
 
 
@@ -106,35 +82,26 @@
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-    PFImageView *profileImage = (PFImageView *)[cell.contentView viewWithTag:1];
+    UIImageView *profileImage = (UIImageView *)[cell.contentView viewWithTag:1];
     UILabel *nameLabel = (UILabel *)[cell.contentView viewWithTag:2];
     UILabel *pointsLabel = (UILabel *)[cell.contentView viewWithTag:3];
     
     nameLabel.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
     pointsLabel.text = [NSString stringWithFormat:@"%ld", (long)user.points];
 
-    profileImage.image = [UIImage imageNamed:@"profile_image"];
     profileImage.contentMode = UIViewContentModeScaleAspectFill;
     profileImage.layer.cornerRadius = round(profileImage.frame.size.width / 2.0f);
     profileImage.layer.masksToBounds = YES;
 
-    // TODO: Load user avatars
-//    if (user[@"profile_picture"]) {
-//        profileImage.file = user[@"profile_picture"];
-//        [profileImage loadInBackground:^(UIImage *image, NSError *error) {
-//            if (!error) {
-//                if (image) {
-//                    profileImage.image = image;
-//                    [cell setNeedsDisplay];
-//                }
-//                else {
-//                    image = nil;
-//                }
-//            } else {
-//                NSLog(@"error - %@", error);
-//            }
-//        }];
-//    }
+    __block UIImageView *weakImageView = profileImage;
+    
+    profileImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakImageView.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
+    }];
     
     return cell;
 }

@@ -67,6 +67,7 @@ typedef enum {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeletePostComment:) name:kDidDeletePostCommentNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -79,13 +80,12 @@ typedef enum {
         self.postType = MTPostTypeNoButtonsNoImage;
         self.isMentor = NO;
         self.hideVerifySwitch = YES;
-
         [self.tableView reloadData];
         
         if (IsEmpty(self.emojiObjects)) {
             [self loadEmoji];
         }
-
+        
         [self loadFromNotification];
     }
     else {
@@ -93,7 +93,7 @@ typedef enum {
         if (self.displaySpentView) {
             [self parseSpentFields];
         }
-
+        
         self.postUser = self.challengePost.user;
         self.currentUser = [MTUser currentUser];
         
@@ -112,6 +112,79 @@ typedef enum {
 
 
 #pragma mark - Private Methods -
+- (void)loadFromNotification
+{
+    if (!self.notification || !self.notification.relatedPost) {
+        return;
+    }
+    
+    MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:self.notification.relatedPost.id]];
+    if (thisPost) {
+        self.challengePost = thisPost;
+        self.challenge = thisPost.challenge;
+        
+        self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
+        if (self.displaySpentView) {
+            [self parseSpentFields];
+        }
+        
+        self.postUser = self.challengePost.user;
+        self.currentUser = [MTUser currentUser];
+        
+        [self.tableView reloadData];
+        
+        [self loadCommentsOnlyDatabase:NO];
+        [self loadPostText];
+        [self loadLikesOnlyDatabase:NO];
+        [self loadButtonsOnlyDatabase:NO];
+        [self configureChallengePermissions];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading...";
+        hud.dimBackground = YES;
+    }
+
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostId:self.notification.relatedPost.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            
+            MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.notification.relatedPost.id]];
+            
+            if (!thisPost) {
+                NSLog(@"Unable to find this post");
+                return;
+            }
+            
+            weakSelf.challengePost = thisPost;
+            weakSelf.challenge = thisPost.challenge;
+            
+            weakSelf.displaySpentView = !IsEmpty(weakSelf.challenge.postExtraFields);
+            if (weakSelf.displaySpentView) {
+                [weakSelf parseSpentFields];
+            }
+            
+            weakSelf.postUser = weakSelf.challengePost.user;
+            weakSelf.currentUser = [MTUser currentUser];
+            
+            [weakSelf.tableView reloadData];
+            
+            [weakSelf loadCommentsOnlyDatabase:NO];
+            [weakSelf loadPostText];
+            [weakSelf loadLikesOnlyDatabase:NO];
+            [weakSelf loadButtonsOnlyDatabase:NO];
+            [weakSelf configureChallengePermissions];
+        });
+
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            NSLog(@"Unable to load post: %@", [error mtErrorDescription]);
+        });
+    }];
+}
+
 - (void)loadCommentsOnlyDatabase:(BOOL)onlyDatabase
 {
     self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
@@ -419,6 +492,9 @@ typedef enum {
     UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
     UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
     
+    button1.enabled = [self.challengePost isPostInMyClass];
+    button2.enabled = [self.challengePost isPostInMyClass];
+
     [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -527,6 +603,9 @@ typedef enum {
 {
     UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
     UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
+    
+    button1.enabled = [self.challengePost isPostInMyClass];
+    button2.enabled = [self.challengePost isPostInMyClass];
     
     [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -756,329 +835,13 @@ typedef enum {
     
     [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-}
-
-
-#pragma mark - Load from Notification Methods -
-- (void)loadFromNotification
-{
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading...";
-    hud.dimBackground = YES;
     
-    [self loadEmoji];
-    [self canPopulateForNotification:self.notification populate:YES];
-    [self.tableView reloadData];
-}
-
-- (void)continueLoadingFromNotificationWithPost:(MTChallengePost *)post withComment:(PFChallengePostComment *)comment
-{
-//    self.postComment = comment;
-    self.challengePost = post;
-    
-//    self.postLikesCount = 0;
-//    if (self.challengePost[@"likes"]) {
-//        self.postLikesCount = [self.challengePost[@"likes"] intValue];
-//    }
-    
-    self.currentUser = [MTUser currentUser];
-
-//    MTMakeWeakSelf();
-//    if (self.challengePost && ![self.challengePost isDataAvailable]) {
-//        [self.challengePost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//            if (!error) {
-//                weakSelf.challengePost = (PFChallengePost *)object;
-//                [weakSelf finishLoadingChallengePostData];
-//            }
-//            else {
-//                [UIAlertView showNetworkAlertWithError:error];
-//            }
-//        }];
-//    }
-//    else {
-//        self.postImage = self.challengePost[@"picture"];
-//        self.postUser = self.challengePost[@"user"];
-//        
-//        if (self.postUser && ![self.postUser isDataAvailable]) {
-//            [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                if (!error) {
-//                    weakSelf.postUser = (PFUser *)object;
-//                    [weakSelf.tableView reloadData];
-//                }
-//                else {
-//                    [UIAlertView showNetworkAlertWithError:error];
-//                }
-//            }];
-//        }
-//        
-//        [self updateLikes];
-//        [self loadPostText];
-//        [self loadLikesWithCache:NO];
-//    }
-//    
-//    if (post[@"challenge"]) {
-//        self.challenge = post[@"challenge"];
-//    }
-    
-//    if (self.challenge && ![self.challenge isDataAvailable]) {
-//        [self.challenge fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//            if (!error) {
-//                weakSelf.challenge = (PFChallenges *)object;
-//                
-//                weakSelf.displaySpentView = !IsEmpty(weakSelf.challenge.postExtraFields);
-//                if (weakSelf.challengePost && [weakSelf.challengePost isDataAvailable] && weakSelf.displaySpentView) {
-//                    [weakSelf parseSpentFields];
-//                }
-//
-//                [weakSelf.tableView reloadData];
-//                [weakSelf configureChallengePermissions];
-//            }
-//            else {
-//                [UIAlertView showNetworkAlertWithError:error];
-//            }
-//        }];
-//    }
-//    else {
-//        self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
-//        if (self.challengePost && [self.challengePost isDataAvailable] && self.displaySpentView) {
-//            [self parseSpentFields];
-//        }
-//
-//        [self configureChallengePermissions];
-//    }
-}
-
-- (void)finishLoadingChallengePostData
-{
-//    self.postImage = self.challengePost[@"picture"];
-//    self.postUser = self.challengePost[@"user"];
-//    
-//    self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
-//    if (self.displaySpentView) {
-//        [self parseSpentFields];
-//    }
-//
-//    [self loadLikesWithCache:NO];
-//
-//    if (self.postUser && ![self.postUser isDataAvailable]) {
-//        MTMakeWeakSelf();
-//        [self.postUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//            if (!error) {
-//                weakSelf.postUser = (PFUser *)object;
-//                [weakSelf.tableView reloadData];
-//            }
-//            else {
-//                [UIAlertView showNetworkAlertWithError:error];
-//            }
-//        }];
-//    }
-//
-//    [self updateLikes];
-//    [self loadPostText];
+    button1.enabled = [self.challengePost isPostInMyClass];
+    button2.enabled = [self.challengePost isPostInMyClass];
 }
 
 
 #pragma mark - Public Methods -
-- (BOOL)canPopulateForNotification:(PFNotifications *)notification populate:(BOOL)populate
-{
-    if (self.notification[@"comment"]) {
-        PFChallengePostComment *comment = self.notification[@"comment"];
-        
-        if (!comment) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-
-            if (populate) {
-                [self showNoDataAlertAndPopView:NO];
-            }
-            return NO;
-        }
-        else if (![comment isDataAvailable]) {
-            MTMakeWeakSelf();
-            [comment fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                if (!error) {
-                    __block PFChallengePostComment *thisComment = (PFChallengePostComment *)object;
-                    MTChallengePost *thisPost = nil;
-                    if (thisComment[@"challenge_post"]) {
-                        thisPost = thisComment[@"challenge_post"];
-                        
-//                        if (![thisPost isDataAvailable]) {
-//                            MTMakeWeakSelf();
-//                            [thisPost fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                                if (!error) {
-//                                    MTChallengePost *thisPost = (MTChallengePost *)object;
-//                                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
-//                                }
-//                                else {
-//                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                                    [UIAlertView showNetworkAlertWithError:error];
-//                                }
-//                            }];
-//                        }
-//                        else {
-//                            [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:thisComment];
-//                        }
-                    }
-                    else {
-                        NSLog(@"Unable to load challenge_post");
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                        [UIAlertView showNetworkAlertWithError:error];
-                    }
-                }
-                else {
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }];
-        }
-        else if (populate) {
-            MTChallengePost *post = comment[@"challenge_post"];
-            __block PFChallengePostComment *weakComment = comment;
-            if (!post) {
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                [self showNoDataAlertAndPopView:YES];
-                return NO;
-            }
-//            else if (![post isDataAvailable]) {
-//                MTMakeWeakSelf();
-//                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                    if (!error) {
-//                        PFChallengePost *thisPost = (PFChallengePost *)object;
-//                        [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:weakComment];
-//                    }
-//                    else {
-//                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                        [UIAlertView showNetworkAlertWithError:error];
-//                    }
-//                }];
-//            }
-            else {
-                [self continueLoadingFromNotificationWithPost:post withComment:comment];
-            }
-        }
-        
-        return YES;
-    }
-    else if (self.notification[@"post_liked"]) {
-        MTChallengePost *post = self.notification[@"post_liked"];
-        
-        if (!post) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            if (populate) {
-                [self showNoDataAlertAndPopView:NO];
-            }
-            return NO;
-        }
-//        else if (![post isDataAvailable]) {
-//            MTMakeWeakSelf();
-//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                if (!error) {
-//                    PFChallengePost *thisPost = (PFChallengePost *)object;
-//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-//                }
-//                else {
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                    [UIAlertView showNetworkAlertWithError:error];
-//                }
-//            }];
-//        }
-        else if (populate) {
-            [self continueLoadingFromNotificationWithPost:post withComment:nil];
-        }
-        
-        return YES;
-    }
-    else if (self.notification[@"verify_post"]) {
-        MTChallengePost *post = self.notification[@"verify_post"];
-        
-        if (!post) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            if (populate) {
-                [self showNoDataAlertAndPopView:NO];
-            }
-            return NO;
-        }
-//        else if (![post isDataAvailable]) {
-//            MTMakeWeakSelf();
-//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                if (!error) {
-//                    PFChallengePost *thisPost = (PFChallengePost *)object;
-//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-//                }
-//                else {
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                    [UIAlertView showNetworkAlertWithError:error];
-//                }
-//            }];
-//        }
-        else if (populate) {
-            [self continueLoadingFromNotificationWithPost:post withComment:nil];
-        }
-        
-        return YES;
-    }
-    else if (self.notification[@"post_verified"]) {
-        MTChallengePost *post = self.notification[@"post_verified"];
-        
-        if (!post) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            if (populate) {
-                [self showNoDataAlertAndPopView:NO];
-            }
-            return NO;
-        }
-//        else if (![post isDataAvailable]) {
-//            MTMakeWeakSelf();
-//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                if (!error) {
-//                    PFChallengePost *thisPost = (PFChallengePost *)object;
-//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-//                }
-//                else {
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                    [UIAlertView showNetworkAlertWithError:error];
-//                }
-//            }];
-//        }
-        else if (populate) {
-            [self continueLoadingFromNotificationWithPost:post withComment:nil];
-        }
-        
-        return YES;
-    }
-    else if (self.notification[@"post_to_verify"]) {
-        MTChallengePost *post = self.notification[@"post_to_verify"];
-        
-        if (!post) {
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            if (populate) {
-                [self showNoDataAlertAndPopView:NO];
-            }
-            return NO;
-        }
-//        else if (![post isDataAvailable]) {
-//            MTMakeWeakSelf();
-//            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-//                if (!error) {
-//                    PFChallengePost *thisPost = (PFChallengePost *)object;
-//                    [weakSelf continueLoadingFromNotificationWithPost:thisPost withComment:nil];
-//                }
-//                else {
-//                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-//                    [UIAlertView showNetworkAlertWithError:error];
-//                }
-//            }];
-//        }
-        else if (populate) {
-            [self continueLoadingFromNotificationWithPost:post withComment:nil];
-        }
-        
-        return YES;
-    }
-
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-    return NO;
-}
-
 - (void)emojiLiked:(MTEmoji *)emoji
 {
     NSString *emojiCode = emoji.code;
@@ -1402,6 +1165,7 @@ typedef enum {
     [[MTNetworkManager sharedMTNetworkManager] deleteCommentId:comment.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf loadCommentsOnlyDatabase:YES];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeletePostCommentNotification object:nil];
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         });
     } failure:^(NSError *error) {
@@ -2545,6 +2309,10 @@ typedef enum {
             
             [MTPostsTableViewCell layoutEmojiForContainerView:likeCommentCell.emojiContainerView withEmojiArray:self.emojiArray];
 
+            likeCommentCell.likePost.enabled = [self.challengePost isPostInMyClass];
+            likeCommentCell.comment.enabled = [self.challengePost isPostInMyClass];
+            likeCommentCell.commentPost.enabled = [self.challengePost isPostInMyClass];
+
             cell = likeCommentCell;
             
             break;
@@ -2687,6 +2455,15 @@ typedef enum {
 {
     dispatch_async(dispatch_get_main_queue(), ^{
 //        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self loadCommentsOnlyDatabase:YES];
+        [self.tableView reloadData];
+    });
+}
+
+- (void)didDeletePostComment:(NSNotification *)notif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        //        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         [self loadCommentsOnlyDatabase:YES];
         [self.tableView reloadData];
     });
