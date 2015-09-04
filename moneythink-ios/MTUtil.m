@@ -182,17 +182,32 @@
 }
 
 /* View Controllers should call this whenever the user is successfully logged in. */
-+ (void)userDidLogin:(NSString *)userIdentifier {
++ (void)userDidLogin:(PFUser *)user {
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     
     // As per docs here: https://developers.google.com/analytics/devguides/collection/ios/v3/user-id
-    [tracker set:@"&uid" value:userIdentifier];
+    [tracker set:@"&uid" value:[user objectId]];
+    
+    NSString *classId = @"";
+    PFClasses *class_p = user[@"class_p"];
+    if (class_p != nil) {
+        classId = class_p.objectId;
+    }
+    [tracker set:@"&class_p" value:classId];
+    
+    NSString *schoolId = @"";
+    PFClasses *school_p = user[@"school_p"];
+    if (school_p != nil) {
+        schoolId = school_p.objectId;
+    }
+    [tracker set:@"&school_p" value:schoolId];
+    
     [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UX"            // Event category (required)
                                                           action:@"User Sign In"  // Event action (required)
                                                            label:nil              // Event label
                                                            value:nil] build]];    // Event value
     
-    NSLog(@"GA Track [Event]: User Sign In (ID: %@)", userIdentifier);
+    NSLog(@"GA Track [Event]: User Sign In (ID: %@, School ID: %@, Class ID: %@)", [user objectId], schoolId, classId);
 }
 + (void)setRefreshedForKey:(NSString *)key
 {
