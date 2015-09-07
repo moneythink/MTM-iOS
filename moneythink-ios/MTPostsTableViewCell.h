@@ -25,8 +25,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *button3;
 @property (nonatomic, strong) IBOutlet UIButton *button4;
 @property (nonatomic, strong) IBOutlet UIButton *deletePost;
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, strong) IBOutlet UIView *loadingView;
 @property (nonatomic, strong) IBOutlet MICheckBox *verifiedCheckBox;
 @property (nonatomic, strong) IBOutlet UILabel *verfiedLabel;
 @property (nonatomic, strong) IBOutlet UIView *emojiContainerView;

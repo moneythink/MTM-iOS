@@ -101,24 +101,26 @@
     self.notifications = [[MTNotification objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
-    // This method is called before a PFQuery is fired to get more objects
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    
-    if (!self.showingAlert && IsEmpty(self.notifications)) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading...";
-        hud.dimBackground = YES;
+    __block MBProgressHUD *thisHUD = nil;
+    if (!self.showingAlert && IsEmpty(self.notifications) && self.actionableNotificationId == 0) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        thisHUD = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        thisHUD.labelText = @"Loading...";
+        thisHUD.dimBackground = YES;
     }
     
     BOOL includeRead = NO;
-    if (![MTUtil lastNotificationFetchDate]) {
+    NSDate *lastFetchDate = [MTUtil lastNotificationFetchDate];
+    if (!lastFetchDate || IsEmpty(self.notifications)) {
         includeRead = YES;
+        lastFetchDate = [[NSDate date] dateByAddingTimeInterval:-60*60*24*7];
     }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadNotificationsWithSinceDate:[MTUtil lastNotificationFetchDate] includeRead:includeRead success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] loadNotificationsWithSinceDate:lastFetchDate includeRead:includeRead success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [weakSelf.refreshControl endRefreshing];
+            [thisHUD hide:YES];
             weakSelf.notifications = [[MTNotification objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"createdAt" ascending:NO];
             RLMResults *myUnReadNotifs = [MTNotification objectsWhere:@"isDeleted = NO AND read = NO"];
             ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = [myUnReadNotifs count];
@@ -129,7 +131,9 @@
         });
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [weakSelf.refreshControl endRefreshing];
+            [thisHUD hide:YES];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         });
     }];
 }
@@ -353,7 +357,6 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     MTNotification *notification = [self.notifications objectAtIndex:indexPath.row];
-    [MTNotificationViewController markReadForNotification:notification];
     [self actionForNotification:notification];
 }
 
@@ -361,62 +364,74 @@
 #pragma mark - Actionable Notification Methods -
 - (void)handleActionableNotification
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading...";
-    hud.dimBackground = YES;
+    MTNotification *thisNotification = [MTNotification objectForPrimaryKey:[NSNumber numberWithInteger:self.actionableNotificationId]];
     
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadNotificationId:self.actionableNotificationId success:^(id responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            MTNotification *thisNotification = [MTNotification objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.actionableNotificationId]];
-            weakSelf.actionableNotificationId = 0;
+    if (thisNotification) {
+        [[RLMRealm defaultRealm] beginWriteTransaction];
+        thisNotification.isDeleted = NO;
+        [[RLMRealm defaultRealm] commitWriteTransaction];
 
-            if (thisNotification) {
-                [weakSelf actionForNotification:thisNotification];
-            }
-        });
-    
-
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        self.actionableNotificationId = 0;
+        [self actionForNotification:thisNotification];
+    }
+    else {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Notification...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] loadNotificationId:self.actionableNotificationId success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                MTNotification *thisNotification = [MTNotification objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.actionableNotificationId]];
+                weakSelf.actionableNotificationId = 0;
+                
+                if (thisNotification) {
+                    [weakSelf actionForNotification:thisNotification];
+                }
+            });
             
-            weakSelf.actionableNotificationId = 0;
-            weakSelf.showingAlert = YES;
-            NSString *title = @"Unable to load Notification";
-            NSString *messageToDisplay = @"";
-            
-            if ([UIAlertController class]) {
-                UIAlertController *changeSheet = [UIAlertController
-                                                  alertControllerWithTitle:title
-                                                  message:messageToDisplay
-                                                  preferredStyle:UIAlertControllerStyleAlert];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 
-                UIAlertAction *close = [UIAlertAction
-                                        actionWithTitle:@"Close"
-                                        style:UIAlertActionStyleCancel
-                                        handler:^(UIAlertAction *action) {
-                                            weakSelf.showingAlert = NO;
-                                        }];
+                weakSelf.actionableNotificationId = 0;
+                weakSelf.showingAlert = YES;
+                NSString *title = @"Unable to load Notification";
+                NSString *messageToDisplay = @"";
                 
-                [changeSheet addAction:close];
-                
-                [self presentViewController:changeSheet animated:YES completion:nil];
-            } else {
-                MTMakeWeakSelf();
-                [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-                    weakSelf.showingAlert = NO;
-                }];
-            }
-        });
-    }];
+                if ([UIAlertController class]) {
+                    UIAlertController *changeSheet = [UIAlertController
+                                                      alertControllerWithTitle:title
+                                                      message:messageToDisplay
+                                                      preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *close = [UIAlertAction
+                                            actionWithTitle:@"Close"
+                                            style:UIAlertActionStyleCancel
+                                            handler:^(UIAlertAction *action) {
+                                                weakSelf.showingAlert = NO;
+                                            }];
+                    
+                    [changeSheet addAction:close];
+                    
+                    [self presentViewController:changeSheet animated:YES completion:nil];
+                } else {
+                    MTMakeWeakSelf();
+                    [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                        weakSelf.showingAlert = NO;
+                    }];
+                }
+            });
+        }];
+    }
 }
 
 - (void)actionForNotification:(MTNotification *)notification
 {
-    NSString *notificationType = notification.notificationType;
+    [MTNotificationViewController markReadForNotification:notification];
     
+    NSString *notificationType = notification.notificationType;
     if (IsEmpty(notificationType)) {
         return;
     }
@@ -556,6 +571,10 @@
 
 + (void)markReadForNotification:(MTNotification *)notification
 {
+    if (notification.read) {
+        return;
+    }
+    
     // Proactively, decrement notification count
     NSInteger currentCount = ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount;
     if (currentCount > 0) {
@@ -609,7 +628,7 @@
 - (void)unreadCountUpdate:(NSNotification *)note
 {
     NSNumber *count = note.object;
-    self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", [count integerValue]];
+    self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)[count integerValue]];
     [self.tableView reloadData];
 }
 
@@ -640,9 +659,9 @@
     return [UIColor whiteColor];
 }
 
-- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return CGPointMake(0, -56.0f);
+    return -78.0f;
 }
 
 

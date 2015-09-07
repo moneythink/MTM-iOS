@@ -385,9 +385,9 @@ static BOOL disableCustomEasing = NO;
         font = [UIFont systemFontOfSize:15.0f];
         titleColor = [UIColor whiteColor];
         
-        backgroundColor = rgb(46.0f, 204.0f, 113.0f);
+//        backgroundColor = rgb(46.0f, 204.0f, 113.0f);
         backgroundColor = [UIColor primaryGreen];
-        borderColor = rgb(39.0f, 174.0f, 96.0f);
+//        borderColor = rgb(39.0f, 174.0f, 96.0f);
         borderColor = [UIColor primaryGreenDark];
     }
     else if (buttonStyle == JGActionSheetButtonStyleBlue) {

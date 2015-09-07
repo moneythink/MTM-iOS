@@ -31,4 +31,11 @@
 + (NSInteger)pushMessagingRegistrationId;
 + (void)setPushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId;
 
++ (void)setRefreshedForKey:(NSString *)key;
++ (BOOL)shouldRefreshForKey:(NSString *)key;
+
++ (void)markDatabaseDeleted;
++ (void)cleanDeletedItemsInDatabase;
++ (void)logout;
+
 @end

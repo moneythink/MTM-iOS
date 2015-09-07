@@ -55,18 +55,22 @@
         self.profilePoints.hidden = NO;
         self.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
         
-        MTMakeWeakSelf();
-        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MTUser *user = [MTUser currentUser];
-                weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
-            });
-        } failure:^(NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MTUser *user = [MTUser currentUser];
-                weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
-            });
-        }];
+        if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+            MTMakeWeakSelf();
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    MTUser *user = [MTUser currentUser];
+                    weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MTUser *user = [MTUser currentUser];
+                    weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+                });
+            }];
+
+        }
     }
 
     __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
@@ -327,7 +331,7 @@
 
 - (void)continueLogout
 {
-    [MTUser logout];
+    [MTUtil logout];
 
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];

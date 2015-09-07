@@ -13,7 +13,8 @@
 // Specify default values for properties
 + (NSDictionary *)defaultPropertyValues {
     return @{@"likeCount" : @0,
-             @"commentCount": @0};
+             @"commentCount": @0,
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -38,5 +39,36 @@
     return @{
              };
 }
+
+
+#pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTUserPostPropertyCount allObjects];
+    NSInteger count = [allObjects count];
+    for (MTUserPostPropertyCount *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTUserPostPropertyCount (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTUserPostPropertyCount objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTUserPostPropertyCount (%ld) objects", (long)count);
+}
+
 
 @end

@@ -52,11 +52,42 @@
 }
 
 #pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTChallengePost allObjects];
+    NSInteger count = [allObjects count];
+    for (MTChallengePost *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTChallengePost (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTChallengePost objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTChallengePost (%ld) objects", (long)count);
+}
+
 - (UIImage *)loadPostImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     BOOL shouldFetchImage = NO;
     
     if (self.hasPostImage && !self.postImage) {
+        shouldFetchImage = YES;
+    }
+    else if (self.hasPostImage && self.postImage && self.postImage.isDeleted) {
         shouldFetchImage = YES;
     }
     else if (self.hasPostImage && self.postImage) {

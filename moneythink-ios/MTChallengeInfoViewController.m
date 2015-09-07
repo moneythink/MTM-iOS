@@ -175,7 +175,8 @@
         self.mentorLabel.hidden = YES;
     }
     
-    self.challengeNumber.text = [NSString stringWithFormat:@"%lu", self.pageIndex+1];
+    NSInteger challengeNumber = self.pageIndex+1;
+    self.challengeNumber.text = [NSString stringWithFormat:@"%lu", (long)challengeNumber];
     self.challengeTitle.text = self.challenge.title;
 }
 

@@ -3337,13 +3337,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.29999999999999999" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bQf-JR-1hF" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="436"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="jMm-ql-KU1">
-                                            <rect key="frame" x="142" y="172" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="wpu-F8-PK5" firstAttribute="top" secondItem="onZ-tg-5rn" secondAttribute="top" constant="13" id="YR4-QH-nxY"/>
@@ -3351,14 +3344,12 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="jMm-ql-KU1" id="gFi-jK-e6J"/>
                                     <outlet property="commentButton" destination="96E-EQ-y2e" id="f2p-TD-p2v"/>
                                     <outlet property="comments" destination="3Zd-61-sE1" id="bld-SI-uSN"/>
                                     <outlet property="deletePost" destination="ADr-4h-mJc" id="yfO-MT-JdO"/>
                                     <outlet property="emojiContainerView" destination="67w-wS-MW6" id="SH8-vE-Nvr"/>
                                     <outlet property="likeButton" destination="gpP-NG-Lrv" id="WAp-vB-VIP"/>
                                     <outlet property="likes" destination="kJy-15-av8" id="phg-hg-ddu"/>
-                                    <outlet property="loadingView" destination="bQf-JR-1hF" id="dht-7B-y7a"/>
                                     <outlet property="postImage" destination="VWk-dC-RPZ" id="RwD-tG-BHL"/>
                                     <outlet property="postText" destination="rlC-dL-SwD" id="Hl7-4V-LVt"/>
                                     <outlet property="postedWhen" destination="wpu-F8-PK5" id="Rhx-ON-dWD"/>
@@ -3490,13 +3481,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.29999999999999999" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cop-qJ-Da8" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="150"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="SGh-Ed-zIq">
-                                            <rect key="frame" x="142" y="57" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="73d-iI-rUz" firstAttribute="top" secondItem="8Wv-vT-FfS" secondAttribute="top" constant="13" id="GE8-fF-KBy"/>
@@ -3504,14 +3488,12 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="SGh-Ed-zIq" id="UuH-Xo-nvO"/>
                                     <outlet property="commentButton" destination="sJx-A5-cNc" id="yJ3-QI-pZ2"/>
                                     <outlet property="comments" destination="gq7-MJ-Eej" id="ktm-kb-bZC"/>
                                     <outlet property="deletePost" destination="TwF-lc-hku" id="2CC-ZS-Yri"/>
                                     <outlet property="emojiContainerView" destination="7WI-VB-5vF" id="Dqw-4c-6Jh"/>
                                     <outlet property="likeButton" destination="vUJ-bW-Rmw" id="vjr-Bi-WJW"/>
                                     <outlet property="likes" destination="2hX-kv-FGC" id="Og6-41-Ipc"/>
-                                    <outlet property="loadingView" destination="cop-qJ-Da8" id="Dto-fP-bEw"/>
                                     <outlet property="postText" destination="c1j-wI-VtQ" id="dkb-X8-ibS"/>
                                     <outlet property="postedWhen" destination="73d-iI-rUz" id="kYn-sc-NCC"/>
                                     <outlet property="profileImage" destination="DTw-x6-ZdE" id="nXH-fj-aSA"/>
@@ -3661,13 +3643,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="iI6-r7-mKP" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="184"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="iLB-gE-14m">
-                                            <rect key="frame" x="142" y="74" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="zXO-Qh-MmR" firstAttribute="top" secondItem="6u5-f3-aPG" secondAttribute="top" constant="13" id="tKW-b5-7Ll"/>
@@ -3675,14 +3650,12 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="iLB-gE-14m" id="yDw-fe-GcS"/>
                                     <outlet property="commentButton" destination="vcS-hT-Vr7" id="wtj-5G-pQr"/>
                                     <outlet property="comments" destination="TVp-Fw-Bga" id="Trv-ql-J23"/>
                                     <outlet property="deletePost" destination="tX2-Wm-Kbi" id="N54-Ly-zHn"/>
                                     <outlet property="emojiContainerView" destination="TVL-sZ-2yK" id="7Zs-oR-rZM"/>
                                     <outlet property="likeButton" destination="BxE-y1-o4d" id="2yX-He-K1B"/>
                                     <outlet property="likes" destination="TEH-4q-FmE" id="aei-79-zUH"/>
-                                    <outlet property="loadingView" destination="iI6-r7-mKP" id="Rpj-WW-fK6"/>
                                     <outlet property="postText" destination="L8W-3m-WU2" id="iBU-cH-Nqj"/>
                                     <outlet property="postedWhen" destination="zXO-Qh-MmR" id="9zG-Jx-SdO"/>
                                     <outlet property="profileImage" destination="Hk4-yf-jyV" id="MBt-Wr-eRs"/>
@@ -3850,13 +3823,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k9G-wH-nAn" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="466"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Tie-dM-1r1">
-                                            <rect key="frame" x="142" y="172" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="0XS-Ol-FOc" secondAttribute="trailing" constant="20" id="1cK-sq-h4a"/>
@@ -3864,7 +3830,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="Tie-dM-1r1" id="enP-oZ-JDm"/>
                                     <outlet property="button1" destination="BUW-Vd-xnh" id="bp4-66-H5A"/>
                                     <outlet property="button2" destination="sgd-Gl-hrD" id="qx3-UN-npz"/>
                                     <outlet property="commentButton" destination="5Ng-mN-G04" id="hTb-03-aO4"/>
@@ -3873,7 +3838,6 @@
                                     <outlet property="emojiContainerView" destination="qQ2-Lp-oZs" id="NxX-xh-b96"/>
                                     <outlet property="likeButton" destination="jbJ-d7-apH" id="EbW-aZ-i6e"/>
                                     <outlet property="likes" destination="N18-Yw-FL9" id="48j-2v-zlM"/>
-                                    <outlet property="loadingView" destination="k9G-wH-nAn" id="MMq-KU-2vo"/>
                                     <outlet property="postImage" destination="35n-am-Bmr" id="V6z-t3-o2V"/>
                                     <outlet property="postText" destination="dkx-E0-rr9" id="Xep-dH-DRK"/>
                                     <outlet property="postedWhen" destination="0XS-Ol-FOc" id="Pex-6D-eYo"/>
@@ -4054,13 +4018,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VYa-KE-laO" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="500"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Fqr-A8-CUx">
-                                            <rect key="frame" x="142" y="189" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="72H-Hy-RIx" secondAttribute="trailing" constant="20" id="eqZ-sF-buG"/>
@@ -4068,7 +4025,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="Fqr-A8-CUx" id="ZuK-WF-lpc"/>
                                     <outlet property="button1" destination="n5z-hl-LTD" id="9I4-Iu-UZm"/>
                                     <outlet property="button2" destination="hJy-e1-fBH" id="H3C-No-dsU"/>
                                     <outlet property="button3" destination="CQ5-HY-L8U" id="8DR-he-5jG"/>
@@ -4079,7 +4035,6 @@
                                     <outlet property="emojiContainerView" destination="IJI-M8-Xaq" id="qt7-2L-hyd"/>
                                     <outlet property="likeButton" destination="4GQ-lR-8Ai" id="zpX-jC-wa2"/>
                                     <outlet property="likes" destination="v4z-2W-ouQ" id="Gpv-nw-XpM"/>
-                                    <outlet property="loadingView" destination="VYa-KE-laO" id="Abr-nS-t3L"/>
                                     <outlet property="postImage" destination="x99-K8-BGC" id="fcw-z3-Wq4"/>
                                     <outlet property="postText" destination="mDo-bJ-Jjm" id="wNg-5u-GfO"/>
                                     <outlet property="postedWhen" destination="72H-Hy-RIx" id="3Xg-MM-p6X"/>
@@ -4223,13 +4178,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Q3V-ew-UZA" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="190"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="xt5-nH-uB8">
-                                            <rect key="frame" x="142" y="77" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Ori-QR-4iV" firstAttribute="top" secondItem="VAr-eh-M5c" secondAttribute="top" constant="13" id="B6w-sf-mbJ"/>
@@ -4237,7 +4185,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="xt5-nH-uB8" id="xTA-hh-oid"/>
                                     <outlet property="button1" destination="441-g9-pTe" id="Ew4-Tc-F2t"/>
                                     <outlet property="button2" destination="fgi-eY-8lw" id="LHN-rz-T5b"/>
                                     <outlet property="commentButton" destination="Mqp-kZ-fm6" id="7Zg-LU-5UG"/>
@@ -4246,7 +4193,6 @@
                                     <outlet property="emojiContainerView" destination="a2d-7K-rAs" id="Dmz-6K-OT8"/>
                                     <outlet property="likeButton" destination="hp9-uy-xD2" id="JNG-Pu-Oj3"/>
                                     <outlet property="likes" destination="U1k-7l-i2p" id="CQf-eS-jaf"/>
-                                    <outlet property="loadingView" destination="Q3V-ew-UZA" id="RJ7-Lh-Moc"/>
                                     <outlet property="postText" destination="KuU-Gc-nos" id="YDN-OZ-el8"/>
                                     <outlet property="postedWhen" destination="Ori-QR-4iV" id="DiU-BM-B8m"/>
                                     <outlet property="profileImage" destination="gl2-dx-1QJ" id="py2-Li-aoz"/>
@@ -4408,13 +4354,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ke8-w7-wHX" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="224"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="EBr-MZ-AWh">
-                                            <rect key="frame" x="142" y="94" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="LgS-Yq-2bB" secondAttribute="trailing" constant="20" id="Mv8-9a-fWE"/>
@@ -4422,7 +4361,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="EBr-MZ-AWh" id="y2b-Bs-fwn"/>
                                     <outlet property="button1" destination="bKs-iz-LDb" id="NKq-pv-tfo"/>
                                     <outlet property="button2" destination="FAB-hd-Pax" id="I0w-5l-gcJ"/>
                                     <outlet property="commentButton" destination="eaW-94-TZ3" id="naD-F1-HqL"/>
@@ -4431,7 +4369,6 @@
                                     <outlet property="emojiContainerView" destination="gvv-jK-vHP" id="mHP-lr-jcb"/>
                                     <outlet property="likeButton" destination="e5q-Ib-FrY" id="0sO-p1-hYj"/>
                                     <outlet property="likes" destination="hSB-dG-hgk" id="tSV-o7-uea"/>
-                                    <outlet property="loadingView" destination="Ke8-w7-wHX" id="855-I8-ubn"/>
                                     <outlet property="postText" destination="mfB-Aq-bGo" id="ud8-Uw-R7Y"/>
                                     <outlet property="postedWhen" destination="LgS-Yq-2bB" id="f5X-ZT-2LK"/>
                                     <outlet property="profileImage" destination="Czv-X5-Zdv" id="i29-uS-04Q"/>
@@ -4582,13 +4519,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pch-lx-8cA" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="224"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="IQM-mm-EjG">
-                                            <rect key="frame" x="142" y="94" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="ETc-cG-iMu" secondAttribute="trailing" constant="20" id="PGq-5x-AbS"/>
@@ -4596,7 +4526,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="IQM-mm-EjG" id="fUv-Jk-jdz"/>
                                     <outlet property="button1" destination="xhu-fc-QiN" id="eaR-qT-rr3"/>
                                     <outlet property="button2" destination="AWe-mv-94Q" id="dS7-AD-rcH"/>
                                     <outlet property="button3" destination="q1z-gx-XOD" id="LnY-bC-MDy"/>
@@ -4607,7 +4536,6 @@
                                     <outlet property="emojiContainerView" destination="qxk-yn-fxi" id="9fC-6O-qu8"/>
                                     <outlet property="likeButton" destination="fEf-vM-gHo" id="QL1-jv-nP9"/>
                                     <outlet property="likes" destination="D6T-cH-35r" id="rCX-km-qAN"/>
-                                    <outlet property="loadingView" destination="pch-lx-8cA" id="BgK-ad-J5w"/>
                                     <outlet property="postText" destination="ryt-vl-tLw" id="xuh-fR-pwu"/>
                                     <outlet property="postedWhen" destination="ETc-cG-iMu" id="GhR-S1-Zav"/>
                                     <outlet property="profileImage" destination="FZg-tN-DYe" id="WCg-1p-4JW"/>
@@ -4777,13 +4705,6 @@
                                             </state>
                                             <state key="highlighted" image="picker_highlighted.png"/>
                                         </button>
-                                        <view alpha="0.30000001192092896" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="7xd-rQ-AuW" userLabel="Loading View">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="258"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                        </view>
-                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="8o2-iv-esp">
-                                            <rect key="frame" x="142" y="111" width="37" height="37"/>
-                                        </activityIndicatorView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="OKF-Zr-bNN" firstAttribute="top" secondItem="8De-FC-4wD" secondAttribute="top" constant="13" id="ZdV-Nx-Puz"/>
@@ -4791,7 +4712,6 @@
                                     </constraints>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <outlet property="activityIndicator" destination="8o2-iv-esp" id="Hac-SU-LvG"/>
                                     <outlet property="button1" destination="37U-Hj-3Xy" id="Fjq-g5-eBN"/>
                                     <outlet property="button2" destination="JJM-uv-3oc" id="Y4n-tu-mUF"/>
                                     <outlet property="button3" destination="gaM-NW-k56" id="nyo-Bu-AKv"/>
@@ -4802,7 +4722,6 @@
                                     <outlet property="emojiContainerView" destination="aD0-XU-eLV" id="Xn0-Y2-Ou2"/>
                                     <outlet property="likeButton" destination="ipX-hI-Q6N" id="8cC-Sr-2Qz"/>
                                     <outlet property="likes" destination="8R0-cz-Jww" id="7Fv-wx-YFs"/>
-                                    <outlet property="loadingView" destination="7xd-rQ-AuW" id="d0z-sT-Uzi"/>
                                     <outlet property="postText" destination="6ED-A1-OUU" id="JSG-k4-A4s"/>
                                     <outlet property="postedWhen" destination="OKF-Zr-bNN" id="dJD-RB-Qyl"/>
                                     <outlet property="profileImage" destination="eRC-eq-Edg" id="Kjl-1t-yuP"/>
@@ -5538,12 +5457,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="nWx-Jd-e9Z"/>
+        <segue reference="Q4R-Y6-fhV"/>
         <segue reference="FBG-cj-gjr"/>
         <segue reference="yad-P5-d3y"/>
-        <segue reference="Q4R-Y6-fhV"/>
-        <segue reference="48k-xo-w1Z"/>
         <segue reference="LS9-Mg-yad"/>
-        <segue reference="ds8-qb-8o8"/>
-        <segue reference="nWx-Jd-e9Z"/>
+        <segue reference="nYB-OV-yVU"/>
+        <segue reference="vqR-nj-yuL"/>
     </inferredMetricsTieBreakers>
 </document>

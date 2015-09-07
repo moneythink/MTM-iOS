@@ -361,8 +361,8 @@
     self.moneyOptionsArray = [NSArray arrayWithArray:objects];
     
     __block NSMutableArray *moneyOptionNames = [NSMutableArray arrayWithCapacity:[self.moneyOptionsArray count]];
-    for (PFMoneyOptions *thisMoneyOption in self.moneyOptionsArray) {
-        [moneyOptionNames addObject:thisMoneyOption[@"name"]];
+    for (NSDictionary *thisMoneyOptionDict in self.moneyOptionsArray) {
+        [moneyOptionNames addObject:[thisMoneyOptionDict objectForKey:@"name"]];
     }
     
     MTMakeWeakSelf();
@@ -372,7 +372,7 @@
                                                                    buttonTitles:moneyOptionNames
                                                                     buttonStyle:JGActionSheetButtonStyleDefault];
         
-        for (PFMoneyOptions *thisMoneyOption in self.selectedMoneyOptions) {
+        for (NSDictionary *thisMoneyOption in self.selectedMoneyOptions) {
             [section1 setButtonStyle:JGActionSheetButtonStyleGreen forButtonAtIndex:[self.moneyOptionsArray indexOfObject:thisMoneyOption]];
         }
         JGActionSheetSection *doneSection = [JGActionSheetSection sectionWithTitle:nil message:nil buttonTitles:@[@"Done"] buttonStyle:JGActionSheetButtonStyleCancel];
@@ -387,7 +387,7 @@
                 NSArray *sections = [sheet sections];
                 JGActionSheetSection *section1 = [sections objectAtIndex:0];
                 
-                PFMoneyOptions *thisMoneyOption = [weakSelf.moneyOptionsArray objectAtIndex:thisIndex];
+                NSDictionary *thisMoneyOption = [weakSelf.moneyOptionsArray objectAtIndex:thisIndex];
                 if ([weakSelf.selectedMoneyOptions containsObject:thisMoneyOption]) {
                     [weakSelf.selectedMoneyOptions removeObject:thisMoneyOption];
                     [section1 setButtonStyle:JGActionSheetButtonStyleDefault forButtonAtIndex:thisIndex];
@@ -402,12 +402,12 @@
                     NSString *selectedText = @"";
                     
                     for (int i=0; i<[weakSelf.selectedMoneyOptions count]; i++) {
-                        PFMoneyOptions *thisMoneyOption = [self.selectedMoneyOptions objectAtIndex:i];
+                        NSDictionary *thisMoneyOption = [self.selectedMoneyOptions objectAtIndex:i];
                         if (i==0) {
-                            selectedText = [selectedText stringByAppendingString:thisMoneyOption[@"name"]];
+                            selectedText = [selectedText stringByAppendingString:[thisMoneyOption objectForKey:@"name"]];
                         }
                         else {
-                            selectedText = [selectedText stringByAppendingString:[NSString stringWithFormat:@", %@", thisMoneyOption[@"name"]]];
+                            selectedText = [selectedText stringByAppendingString:[NSString stringWithFormat:@", %@", [thisMoneyOption objectForKey:@"name"]]];
                         }
                     }
                     

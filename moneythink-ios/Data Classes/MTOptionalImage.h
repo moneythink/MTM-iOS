@@ -12,6 +12,10 @@
 
 @property NSData *imageData;
 @property NSDate *updatedAt;
+@property BOOL isDeleted;
+
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
 
 @end
 

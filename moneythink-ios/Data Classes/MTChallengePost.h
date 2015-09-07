@@ -27,6 +27,9 @@
 - (UIImage *)loadPostImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (BOOL)isPostInMyClass;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 @end
 
 // This protocol enables typed collections. i.e.:

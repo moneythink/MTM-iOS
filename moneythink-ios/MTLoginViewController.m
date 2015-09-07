@@ -203,7 +203,13 @@
     }
     else if ([MTUser isUserLoggedIn]) {
         [[MTUtil getAppDelegate] configureZendesk];
-        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+        if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+            } failure:^(NSError *error) {
+                //
+            }];
+        }
         
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;

@@ -14,7 +14,8 @@
 
 + (NSDictionary *)defaultPropertyValues {
     return @{@"name" : @"",
-             @"studentSignupCode": @""};
+             @"studentSignupCode": @"",
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -44,6 +45,36 @@
              @"name": @"name",
              @"studentSignupCode": @"studentSignupCode",
              };
+}
+
+
+#pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTClass allObjects];
+    NSInteger count = [allObjects count];
+    for (MTClass *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTClass (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTClass objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTClass (%ld) objects", (long)count);
 }
 
 

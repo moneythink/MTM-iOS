@@ -15,6 +15,10 @@
 @property MTChallengePost *post;
 @property NSInteger likeCount;
 @property NSInteger commentCount;
+@property BOOL isDeleted;
+
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
 
 @end
 

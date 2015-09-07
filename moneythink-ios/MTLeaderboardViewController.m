@@ -27,6 +27,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
     [self loadLeaders];
 }
 
@@ -34,17 +35,27 @@
 #pragma mark - Private Methods -
 - (void)loadLeaders
 {
-    self.leaders = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
+    self.leaders = [[MTUser objectsWhere:@"isDeleted = NO AND roleCode = %@ AND userClass.id = %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
     [self.tableView reloadData];
+    
+    if (IsEmpty(self.leaders)) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading...";
+        hud.dimBackground = YES;
+    }
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadDashboardUsersWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.leaders = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            weakSelf.leaders = [[MTUser objectsWhere:@"isDeleted = NO AND roleCode = %@ AND userClass.id = %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
             [weakSelf.tableView reloadData];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load leaderboard users: %@", [error mtErrorDescription]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
     }];
 }
 

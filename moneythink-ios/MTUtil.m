@@ -151,5 +151,82 @@
     }
 }
 
++ (void)setRefreshedForKey:(NSString *)key
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:key];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (BOOL)shouldRefreshForKey:(NSString *)key
+{
+    NSDate *lastRefreshTime = [[NSUserDefaults standardUserDefaults] objectForKey:key];
+    if ([[NSDate date] timeIntervalSince1970] - [lastRefreshTime timeIntervalSince1970] > 86400.0f) {
+        return YES;
+    }
+    else {
+        return NO;
+    }
+}
+
++ (void)markDatabaseDeleted
+{
+    [MTUserPostPropertyCount markAllDeleted];
+    [MTOptionalImage markAllDeleted];
+    [MTNotification markAllDeleted];
+    [MTEmoji markAllDeleted];
+    [MTChallengeProgress markAllDeleted];
+    [MTChallengePostComment markAllDeleted];
+    [MTChallengePostLike markAllDeleted];
+    [MTChallengeButtonClick markAllDeleted];
+    [MTChallengeButton markAllDeleted];
+    [MTChallengePost markAllDeleted];
+    [MTChallenge markAllDeleted];
+    [MTClass markAllDeleted];
+    [MTOrganization markAllDeleted];
+    [MTUser markAllDeleted];
+}
+
++ (void)cleanDeletedItemsInDatabase
+{
+    [MTUserPostPropertyCount removeAllDeleted];
+    [MTOptionalImage removeAllDeleted];
+    [MTNotification removeAllDeleted];
+    [MTEmoji removeAllDeleted];
+    [MTChallengeProgress removeAllDeleted];
+    [MTChallengePostComment removeAllDeleted];
+    [MTChallengePostLike removeAllDeleted];
+    [MTChallengeButtonClick removeAllDeleted];
+    [MTChallengeButton removeAllDeleted];
+    [MTChallengePost removeAllDeleted];
+    [MTChallenge removeAllDeleted];
+    [MTClass removeAllDeleted];
+    [MTOrganization removeAllDeleted];
+    [MTUser removeAllDeleted];
+}
+
++ (void)logout
+{
+    // Removes all keys, except onboarding
+    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
+    NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
+    for (NSString *key in [defaultsDictionary allKeys]) {
+        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] &&
+            ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
+            NSLog(@"removing user pref for %@", key);
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
+        }
+    }
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    [[ZDKConfig instance] setUserIdentity:nil];
+    [[ZDKSdkStorage instance] clearUserData];
+    [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
+    
+    [MTUtil markDatabaseDeleted];
+    
+    [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+}
+
 
 @end

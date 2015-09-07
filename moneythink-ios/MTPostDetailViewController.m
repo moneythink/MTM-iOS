@@ -52,6 +52,8 @@ typedef enum {
 @property (nonatomic) BOOL displaySpentView;
 @property (nonatomic) BOOL hasSpentSavedContent;
 @property (nonatomic, strong) RLMResults *buttons;
+@property (nonatomic) BOOL loadedComments;
+@property (nonatomic) BOOL loadedLikes;
 
 @end
 
@@ -120,6 +122,10 @@ typedef enum {
     
     MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:self.notification.relatedPost.id]];
     if (thisPost) {
+        [[RLMRealm defaultRealm] beginWriteTransaction];
+        thisPost.isDeleted = NO;
+        [[RLMRealm defaultRealm] commitWriteTransaction];
+        
         self.challengePost = thisPost;
         self.challenge = thisPost.challenge;
         
@@ -133,27 +139,34 @@ typedef enum {
         
         [self.tableView reloadData];
         
-        [self loadCommentsOnlyDatabase:NO];
+        [self loadCommentsOnlyDatabase:YES];
         [self loadPostText];
-        [self loadLikesOnlyDatabase:NO];
-        [self loadButtonsOnlyDatabase:NO];
+        [self loadLikesOnlyDatabase:YES];
+        [self loadButtonsOnlyDatabase:YES];
         [self configureChallengePermissions];
+        
+        if (IsEmpty(self.likes) && IsEmpty(self.comments)) {
+            // We probably haven't loaded the data yet so display overlay, otherwise update in the background
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Loading Post Data...";
+            hud.dimBackground = YES;
+        }
+
     }
     else {
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading...";
+        hud.labelText = @"Loading Post...";
         hud.dimBackground = YES;
     }
 
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostId:self.notification.relatedPost.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            
             MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.notification.relatedPost.id]];
             
             if (!thisPost) {
                 NSLog(@"Unable to find this post");
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 return;
             }
             
@@ -187,7 +200,7 @@ typedef enum {
 
 - (void)loadCommentsOnlyDatabase:(BOOL)onlyDatabase
 {
-    self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+    self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
     if (onlyDatabase) {
@@ -197,8 +210,13 @@ typedef enum {
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePost.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+            weakSelf.loadedComments = YES;
+            weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
             [weakSelf.tableView reloadData];
+            
+            if (weakSelf.loadedLikes) {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            }
         });
 
     } failure:^(NSError *error) {
@@ -228,6 +246,7 @@ typedef enum {
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadLikesForPostId:self.challengePost.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.loadedLikes = YES;
             weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id];
             
             NSMutableArray *emojiArray = [NSMutableArray array];
@@ -240,6 +259,10 @@ typedef enum {
             
             weakSelf.emojiArray = emojiArray;
             [weakSelf.tableView reloadData];
+            
+            if (weakSelf.loadedComments) {
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            }
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load/update likes: %@", [error mtErrorDescription]);
@@ -315,6 +338,10 @@ typedef enum {
             self.postType = MTPostTypeNoButtonsNoImage;
 
         [self.tableView reloadData];
+        
+        // We already have buttons, just update clicks
+        [self updateButtonClicks];
+        return;
     }
     
     if (onlyDatabase) {
@@ -323,10 +350,12 @@ typedef enum {
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
-        [weakSelf loadButtonsOnlyDatabase:YES];
-        if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
-            [weakSelf updateButtonClicks];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadButtonsOnlyDatabase:YES];
+            if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+                [weakSelf updateButtonClicks];
+            }
+        });
     } failure:^(NSError *error) {
         NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
     }];
@@ -381,20 +410,21 @@ typedef enum {
 
 - (void)loadEmoji
 {
-    RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
     if (!IsEmpty(emojis)) {
         self.emojiObjects = emojis;
         [self.tableView reloadData];
     }
-    
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
-        RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
-        weakSelf.emojiObjects = emojis;
-        [weakSelf.tableView reloadData];
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
-    }];
+    else {
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
+            RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
+            weakSelf.emojiObjects = emojis;
+            [weakSelf.tableView reloadData];
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
+        }];
+    }
 }
 
 - (void)showNoDataAlertAndPopView:(BOOL)popView
@@ -581,14 +611,14 @@ typedef enum {
         NSString *button2Title;
         
         if ([allButton1Clicks count] > 0) {
-            button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, [allButton1Clicks count]];
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, (unsigned long)[allButton1Clicks count]];
         }
         else {
             button1Title = [NSString stringWithFormat:@"%@ (0)", challengeButton1.label];
         }
         
         if (allButton2Clicks.count > 1) {
-            button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, [allButton2Clicks count]];
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, (unsigned long)[allButton2Clicks count]];
         }
         else {
             button2Title = [NSString stringWithFormat:@"%@ (0)", challengeButton2.label];
@@ -734,9 +764,6 @@ typedef enum {
     [[button1 layer] setCornerRadius:5.0f];
     [[button2 layer] setCornerRadius:5.0f];
 
-    NSInteger button1Count = 0;
-    NSInteger button2Count = 0;
-    
     UIColor *button1Color;
     UIColor *button2Color;
     
@@ -747,17 +774,6 @@ typedef enum {
     else {
         button1Color = [UIColor votingRed];
         button2Color = [UIColor votingPurple];
-    }
-    
-    if ([self.buttons count] == 4) {
-        if (!tertiaryRow) {
-            button1Count = [allButton1Clicks count];
-            button2Count = [allButton2Clicks count];
-        }
-        else {
-            button1Count = [allButton3Clicks count];
-            button2Count = [allButton4Clicks count];
-        }
     }
     
     // Reset to default
@@ -798,14 +814,14 @@ typedef enum {
         
         if (!tertiaryRow) {
             if ([allButton1Clicks count] > 0) {
-                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, [allButton1Clicks count]];
+                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton1.label, (unsigned long)[allButton1Clicks count]];
             }
             else {
                 button1Title = [NSString stringWithFormat:@"%@", challengeButton1.label];
             }
             
             if ([allButton2Clicks count] > 0 ) {
-                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, [allButton2Clicks count]];
+                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton2.label, (unsigned long)[allButton2Clicks count]];
             }
             else {
                 button2Title = [NSString stringWithFormat:@"%@", challengeButton2.label];
@@ -814,14 +830,14 @@ typedef enum {
         }
         else {
             if ([allButton3Clicks count] > 0) {
-                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton3.label, [allButton3Clicks count]];
+                button1Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton3.label, (unsigned long)[allButton3Clicks count]];
             }
             else {
                 button1Title = [NSString stringWithFormat:@"%@", challengeButton3.label];
             }
             
             if ([allButton4Clicks count] > 0) {
-                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton4.label, [allButton4Clicks count]];
+                button2Title = [NSString stringWithFormat:@"%@ (%lu)", challengeButton4.label, (unsigned long)[allButton4Clicks count]];
             }
             else {
                 button2Title = [NSString stringWithFormat:@"%@", challengeButton4.label];
@@ -1069,7 +1085,9 @@ typedef enum {
     else {
         [[MTNetworkManager sharedMTNetworkManager] deletePostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
                 [self.navigationController popViewControllerAnimated:YES];
             });
         } failure:^(NSError *error) {
@@ -2309,9 +2327,10 @@ typedef enum {
             
             [MTPostsTableViewCell layoutEmojiForContainerView:likeCommentCell.emojiContainerView withEmojiArray:self.emojiArray];
 
+            likeCommentCell.verifiedCheckBox.enabled = [self.challengePost isPostInMyClass];
             likeCommentCell.likePost.enabled = [self.challengePost isPostInMyClass];
             likeCommentCell.comment.enabled = [self.challengePost isPostInMyClass];
-            likeCommentCell.commentPost.enabled = [self.challengePost isPostInMyClass];
+            likeCommentCell.commentPost.hidden = ![self.challengePost isPostInMyClass];
 
             cell = likeCommentCell;
             

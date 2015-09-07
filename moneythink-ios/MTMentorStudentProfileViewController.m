@@ -24,7 +24,7 @@
 {
     [super viewDidLoad];
     
-    NSString *points = [NSString stringWithFormat:@"%lu", self.student.points];
+    NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
     self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
     
@@ -45,13 +45,13 @@
 {
     [super viewDidAppear:NO];
     
-    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted == NO AND user.id == %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted == NO AND user.id == %lu", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
             [weakSelf.tableView reloadData];
         });
     } failure:^(NSError *error) {
@@ -130,9 +130,9 @@
     // Attributed hashtag
 
     // Get Likes
-    NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", self.student.id, post.id];
+    NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)self.student.id, (long)post.id];
     MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
-    if (existing && existing.likeCount > 0) {
+    if (existing && existing.likeCount > 0 && !existing.isDeleted) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
         cell.likeCount.text = [NSString stringWithFormat:@"%ld", (long)existing.likeCount];
     }

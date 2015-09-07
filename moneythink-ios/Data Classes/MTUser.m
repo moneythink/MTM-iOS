@@ -22,7 +22,8 @@
              @"hasResume": @NO,
              @"hasBankAccount": @NO,
              @"hasAvatar": @NO,
-             @"points": @0};
+             @"points": @0,
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -65,11 +66,43 @@
 
 
 #pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTUser allObjects];
+    NSInteger count = [allObjects count];
+    for (MTUser *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+        thisObject.currentUser = NO;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTUser (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTUser objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTUser (%ld) objects", (long)count);
+}
+
 - (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     BOOL shouldFetchAvatar = NO;
     
     if (self.hasAvatar && !self.userAvatar) {
+        shouldFetchAvatar = YES;
+    }
+    else if (self.hasAvatar && self.userAvatar && self.userAvatar.isDeleted) {
         shouldFetchAvatar = YES;
     }
     else if (self.hasAvatar && self.userAvatar) {
@@ -96,32 +129,6 @@
     else {
         return [UIImage imageNamed:@"profile_image"];
     }
-}
-
-+ (void)logout
-{
-    // Removes all keys, except onboarding
-    NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
-    NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
-    for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] &&
-            ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
-            NSLog(@"removing user pref for %@", key);
-            [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
-        }
-    }
-    
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [[ZDKConfig instance] setUserIdentity:nil];
-    [[ZDKSdkStorage instance] clearUserData];
-    [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
-    
-    [[RLMRealm defaultRealm] beginWriteTransaction];
-    [[RLMRealm defaultRealm] deleteAllObjects];
-    [[RLMRealm defaultRealm] commitWriteTransaction];
-    
-    [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
 }
 
 + (BOOL)isCurrentUserMentor
@@ -161,7 +168,7 @@
 
 + (MTUser *)currentUser;
 {
-    RLMResults *meUsers = [MTUser objectsWhere:@"currentUser = YES"];
+    RLMResults *meUsers = [MTUser objectsWhere:@"isDeleted = NO AND currentUser = YES"];
     return [meUsers firstObject];
 }
 

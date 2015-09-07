@@ -50,6 +50,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     if (self) {
         self.requestSerializer = [AFJSONRequestSerializer serializer];
+        [self.requestSerializer setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
         self.responseSerializer = [self getJSONResponseSerializer];
         self.oauthRefreshQueue = [[NSOperationQueue alloc] init];
         self.oauthRefreshQueue.maxConcurrentOperationCount = 1;
@@ -214,11 +215,15 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     // Create and assign my class (organization created also)
     MTOrganization *userOrganization = [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"organization"]];
+    userOrganization.isDeleted = NO;
+    
     MTClass *userClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
+    userClass.isDeleted = NO;
     userClass.organization = userOrganization;
 
     // Create new ME User and send back
     MTUser *user = [MTUser createOrUpdateInRealm:realm withJSONDictionary:responseDict];
+    user.isDeleted = NO;
     user.currentUser = YES;
     user.organization = userOrganization;
     user.userClass = userClass;
@@ -436,13 +441,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSArray *classChallengesArray = [embeddedDict objectForKey:@"classChallenges"];
     
     RLMRealm *realm = [RLMRealm defaultRealm];
-    [realm beginWriteTransaction];
     
     // Mark existing challenges deleted to filter out deleted challenges
-    RLMResults *existingChallenges = [MTChallenge allObjects];
-    for (MTChallenge *thisChallenge in existingChallenges) {
-        thisChallenge.isDeleted = YES;
-    }
+    [MTChallenge markAllDeleted];
+    [realm beginWriteTransaction];
 
     for (id classChallenge in classChallengesArray) {
         if ([classChallenge isKindOfClass:[NSDictionary class]]) {
@@ -526,10 +528,22 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
                     MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+                    thisClass.isDeleted = NO;
                     challengePost.challengeClass = thisClass;
                     
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisUser.isDeleted = NO;
+                    
+                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                        if ([linksDict objectForKey:@"avatar"]) {
+                            thisUser.hasAvatar = YES;
+                        }
+                        else {
+                            thisUser.hasAvatar = NO;
+                        }
+                    }
                     
                     // Make sure my ID is not overwritten with missing data (class/org) from feed
                     if ([MTUser isUserMe:thisUser]) {
@@ -544,6 +558,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
                     MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisChallenge.isDeleted = NO;
                     challengePost.challenge = thisChallenge;
                     
                     id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
@@ -552,7 +567,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         for (NSDictionary *thisData in extraFieldsArray) {
                             NSString *name = [thisData valueForKey:@"name"];
                             NSString *value = [thisData valueForKey:@"value"];
-                            [extraFieldsDict setObject:value forKey:name];
+                            
+                            if (name && value) {
+                                [extraFieldsDict setObject:value forKey:name];
+                            }
                         }
                         if (!IsEmpty(extraFieldsDict)) {
                             NSError *error;
@@ -635,10 +653,22 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
                     MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+                    thisClass.isDeleted = NO;
                     challengePost.challengeClass = thisClass;
                     
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisUser.isDeleted = NO;
+                    
+                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                        if ([linksDict objectForKey:@"avatar"]) {
+                            thisUser.hasAvatar = YES;
+                        }
+                        else {
+                            thisUser.hasAvatar = NO;
+                        }
+                    }
                     
                     // Make sure my ID is not overwritten with missing data (class/org) from feed
                     if ([MTUser isUserMe:thisUser]) {
@@ -653,6 +683,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
                     MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisChallenge.isDeleted = NO;
                     challengePost.challenge = thisChallenge;
                     
                     id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
@@ -725,10 +756,22 @@ static NSString * const MTRefreshingErrorCode = @"701";
         if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
             MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+            thisClass.isDeleted = NO;
             challengePost.challengeClass = thisClass;
             
             NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
             MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+            thisUser.isDeleted = NO;
+            
+            if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                if ([linksDict objectForKey:@"avatar"]) {
+                    thisUser.hasAvatar = YES;
+                }
+                else {
+                    thisUser.hasAvatar = NO;
+                }
+            }
             
             // Make sure my ID is not overwritten with missing data (class/org) from feed
             if ([MTUser isUserMe:thisUser]) {
@@ -743,6 +786,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
             
             NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
             MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+            thisChallenge.isDeleted = NO;
             challengePost.challenge = thisChallenge;
             
             id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
@@ -839,10 +883,23 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisUser.isDeleted = NO;
+                    
+                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                        if ([linksDict objectForKey:@"avatar"]) {
+                            thisUser.hasAvatar = YES;
+                        }
+                        else {
+                            thisUser.hasAvatar = NO;
+                        }
+                    }
+
                     challengePostComment.user = thisUser;
                     
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
                     MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    thisChallengePost.isDeleted = NO;
                     challengePostComment.challengePost = thisChallengePost;
                 }
             }
@@ -875,14 +932,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSMutableArray *emojiCodesToFetch = [NSMutableArray array];
     NSArray *emojisArray = [embeddedDict objectForKey:@"emojis"];
     
+    // Mark existing emojis deleted to filter out deleted emojis
+    [MTEmoji markAllDeleted];
+    
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    
-    // Mark existing emojis deleted to filter out deleted emojis
-    RLMResults *existingEmojis = [MTEmoji allObjects];
-    for (MTEmoji *thisEmoji in existingEmojis) {
-        thisEmoji.isDeleted = YES;
-    }
     
     for (id emoji in emojisArray) {
         if ([emoji isKindOfClass:[NSDictionary class]]) {
@@ -980,18 +1034,32 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    
+                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                        if ([linksDict objectForKey:@"avatar"]) {
+                            thisUser.hasAvatar = YES;
+                        }
+                        else {
+                            thisUser.hasAvatar = NO;
+                        }
+                    }
+
+                    thisUser.isDeleted = NO;
                     challengePostLike.user = thisUser;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
                     MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    thisChallengePost.isDeleted = NO;
                     challengePostLike.challengePost = thisChallengePost;
                 }
 
                 if ([[innerEmbeddedDict objectForKey:@"emoji"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *emojiDict = [innerEmbeddedDict objectForKey:@"emoji"];
                     MTEmoji *thisEmoji = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emojiDict];
+                    thisEmoji.isDeleted = NO;
                     challengePostLike.emoji = thisEmoji;
                 }
             }
@@ -1023,14 +1091,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     NSArray *buttonsArray = [embeddedDict objectForKey:@"buttons"];
     
+    // Mark existing buttons deleted to filter out deleted comments
+    [MTChallengeButton markAllDeleted];
+
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    
-    // Mark existing buttons deleted to filter out deleted comments
-    RLMResults *existingButtons = [MTChallengeButton allObjects];
-    for (MTChallengeButton *thisButton in existingButtons) {
-        thisButton.isDeleted = YES;
-    }
     
     for (id button in buttonsArray) {
         if ([button isKindOfClass:[NSDictionary class]]) {
@@ -1053,6 +1118,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
                     MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisChallenge.isDeleted = NO;
                     challengeButton.challenge = thisChallenge;
                 }
             }
@@ -1087,7 +1153,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     
-    
     if (challengeId > 0) {
         // for challenge
         RLMResults *existingButtons = [MTChallengeButtonClick objectsWhere:@"challengePost.challenge.id = %lu", challengeId];
@@ -1117,18 +1182,21 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    thisUser.isDeleted = NO;
                     challengeButtonClick.user = thisUser;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
                     MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                    thisChallengePost.isDeleted = NO;
                     challengeButtonClick.challengePost = thisChallengePost;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"button"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *buttonDict = [innerEmbeddedDict objectForKey:@"button"];
                     MTChallengeButton *thisButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:buttonDict];
+                    thisButton.isDeleted = NO;
                     challengeButtonClick.challengeButton = thisButton;
                 }
             }
@@ -1160,13 +1228,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     NSArray *studentChallengesArray = [embeddedDict objectForKey:@"studentChallenges"];
     
+    [MTChallengeProgress markAllDeleted];
+
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
-    
-    RLMResults *existingProgress = [MTChallengeProgress allObjects];
-    for (MTChallengeProgress *thisProgress in existingProgress) {
-        thisProgress.isDeleted = YES;
-    }
     
     for (id progress in studentChallengesArray) {
         if ([progress isKindOfClass:[NSDictionary class]]) {
@@ -1183,6 +1248,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
                     MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisChallenge.isDeleted = NO;
                     challengeProgress.challenge = thisChallenge;
                 }
             }
@@ -1220,6 +1286,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id notification in notificationsArray) {
         if ([notification isKindOfClass:[NSDictionary class]]) {
             MTNotification *thisNotification = [MTNotification createOrUpdateInRealm:realm withJSONDictionary:notification];
+            thisNotification.isDeleted = NO;
             
             NSDictionary *notificationDict = (NSDictionary *)notification;
             
@@ -1227,6 +1294,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
             if ([[notificationDict objectForKey:@"relatedComment"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *relatedCommentDict = [notificationDict objectForKey:@"relatedComment"];
                 MTChallengePostComment *relatedComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:relatedCommentDict];
+                relatedComment.isDeleted = NO;
                 thisNotification.relatedComment = relatedComment;
             }
 
@@ -1238,18 +1306,32 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if ([[innerEmbeddedDict objectForKey:@"relatedChallenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"relatedChallenge"];
                     MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
+                    thisChallenge.isDeleted = NO;
                     thisNotification.relatedChallenge = thisChallenge;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"relatedPost"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *postDict = [innerEmbeddedDict objectForKey:@"relatedPost"];
                     MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
+                    thisPost.isDeleted = NO;
                     thisNotification.relatedPost = thisPost;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"relatedUser"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"relatedUser"];
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                    
+                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                        if ([linksDict objectForKey:@"avatar"]) {
+                            thisUser.hasAvatar = YES;
+                        }
+                        else {
+                            thisUser.hasAvatar = NO;
+                        }
+                    }
+
+                    thisUser.isDeleted = NO;
                     thisNotification.relatedUser = thisUser;
                 }
             }
@@ -1290,6 +1372,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
             NSDictionary *userDict = (NSDictionary *)user;
             
             MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+            thisUser.isDeleted = NO;
             thisUser.organization = [MTUser currentUser].organization;
             thisUser.userClass = [MTUser currentUser].userClass;
 
@@ -1345,7 +1428,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSArray *postsArray = [embeddedDict objectForKey:@"posts"];
     
     RLMRealm *realm = [RLMRealm defaultRealm];
-    
     [realm beginWriteTransaction];
     
     MTUser *thisUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
@@ -1354,6 +1436,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         if ([post isKindOfClass:[NSDictionary class]]) {
             NSDictionary *postDict = (NSDictionary *)post;
             MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
+            thisPost.isDeleted = NO;
             thisPost.user = thisUser;
             thisPost.challengeClass = thisUser.userClass;
             
@@ -1373,13 +1456,14 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     commentCount = [commentsArray count];
                 }
                 
-                NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", thisUser.id, thisPost.id];
+                NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)thisUser.id, (long)thisPost.id];
                 MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
                 if (!existing) {
                     existing = [[MTUserPostPropertyCount alloc] init];
                     existing.complexId = complexId;
                 }
-                                                
+                
+                existing.isDeleted = NO;
                 existing.user = thisUser;
                 existing.post = thisPost;
                 existing.likeCount = likesCount;
@@ -1437,7 +1521,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 if (shouldFetchAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
-                        NSLog(@"Retrieved new or updated user avatar");
+//                        NSLog(@"Retrieved new or updated user avatar");
                         if (success) {
                             success(nil);
                         }
@@ -1989,6 +2073,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         optionalImage = [[MTOptionalImage alloc] init];
                     }
                     
+                    optionalImage.isDeleted = NO;
                     optionalImage.imageData = responseObject;
                     optionalImage.updatedAt = [NSDate date];
                     thisUser.userAvatar = optionalImage;
@@ -2191,7 +2276,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:responseData];
         [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
-            //            NSLog(@"Found me user");
+            NSLog(@"refreshCurrentUserDataWithSuccess");
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
                 //                NSLog(@"Parsed meUser object: %@", meUser);
@@ -2208,7 +2293,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 if (shouldFetchAvatar) {
                     [weakSelf getAvatarForUserId:meUser.id success:^(id responseData) {
-                        NSLog(@"Retrieved new or updated user avatar");
+//                        NSLog(@"Retrieved new or updated user avatar");
                         if (success) {
                             success(nil);
                         }
@@ -2326,6 +2411,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         optionalImage = [[MTOptionalImage alloc] init];
                     }
                     
+                    optionalImage.isDeleted = NO;
                     optionalImage.imageData = responseObject;
                     optionalImage.updatedAt = [NSDate date];
                     thisChallenge.banner = optionalImage;
@@ -2397,21 +2483,28 @@ static NSString * const MTRefreshingErrorCode = @"701";
 #pragma mark - Post Methods -
 - (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+    
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
+//        NSLog(@"loadPostsForChallengeId success response; wait time: %f", finishWaitTime-startTime);
+
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"posts" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"loadPostsForChallengeId success response");
+            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
+            NSLog(@"loadPostsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
             
             if (responseObject) {
                 [self processPostsWithResponseObject:responseObject challengeId:challengeId];
             }
             
+//            NSLog(@"loadPostsForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
             if (success) {
                 success(nil);
             }
@@ -2435,7 +2528,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         
         NSString *urlString = [NSString stringWithFormat:@"posts/%ld", (long)postId];
 
@@ -2492,12 +2585,14 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     [realm beginWriteTransaction];
                     
                     MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                    thisPost.isDeleted = NO;
                     
                     MTOptionalImage *optionalImage = thisPost.postImage;
                     if (!optionalImage) {
                         optionalImage = [[MTOptionalImage alloc] init];
                     }
                     
+                    optionalImage.isDeleted = NO;
                     optionalImage.imageData = responseObject;
                     optionalImage.updatedAt = [NSDate date];
                     thisPost.postImage = optionalImage;
@@ -2563,6 +2658,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     [realm beginWriteTransaction];
                     
                     MTChallengePost *challengePost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                    challengePost.isDeleted = NO;
                     
                     if (imageData) {
                         MTOptionalImage *postImage = challengePost.postImage;
@@ -2570,6 +2666,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                             postImage = [[MTOptionalImage alloc] init];
                         }
                         
+                        postImage.isDeleted = NO;
                         postImage.imageData = imageData;
                         postImage.updatedAt = [NSDate date];
                         challengePost.postImage = postImage;
@@ -2634,8 +2731,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePost *newPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                newPost.isDeleted = NO;
                 
                 MTChallenge *challenge = [MTChallenge objectForPrimaryKey:[NSNumber numberWithInteger:challengeId]];
+                challenge.isDeleted = NO;
+                
                 if (challenge) {
                     newPost.challenge = challenge;
                 }
@@ -2669,6 +2769,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         if (!postImage) {
                             postImage = [[MTOptionalImage alloc] init];
                         }
+                        
+                        postImage.isDeleted = NO;
                         postImage.imageData = postImageData;
                         updatedPost.postImage = postImage;
                         updatedPost.hasPostImage = YES;
@@ -2769,6 +2871,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     [weakSelf updatePostImageForPostId:postId withImageData:nil success:^(id responseData) {
                         [realm beginWriteTransaction];
                         MTChallengePost *updatedPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                        updatedPost.isDeleted = NO;
                         updatedPost.hasPostImage = NO;
                         updatedPost.postImage = nil;
                         [realm commitWriteTransaction];
@@ -2864,6 +2967,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 [realm beginWriteTransaction];
                 
                 MTChallengePost *updatedPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                updatedPost.isDeleted = NO;
                 updatedPost.isVerified = YES;
                 
                 [realm commitWriteTransaction];
@@ -2910,6 +3014,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 [realm beginWriteTransaction];
                 
                 MTChallengePost *updatedPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                updatedPost.isDeleted = NO;
                 updatedPost.isVerified = NO;
                 
                 [realm commitWriteTransaction];
@@ -2945,7 +3050,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         
         NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)userId];
 
@@ -2978,21 +3083,29 @@ static NSString * const MTRefreshingErrorCode = @"701";
 #pragma mark - Comment Methods -
 - (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
+//        NSLog(@"loadCommentsForChallengeId success response; wait time: %f", finishWaitTime-startTime);
+
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = @"999";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"loadCommentsForChallengeId success response");
+            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
+            NSLog(@"loadCommentsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
             
             if (responseObject) {
                 [self processCommentsWithResponseObject:responseObject challengeId:challengeId postId:0];
             }
             
+//            NSLog(@"loadCommentsForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
+
             if (success) {
                 success(nil);
             }
@@ -3016,7 +3129,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3063,11 +3176,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostComment *newComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                newComment.isDeleted = NO;
                 
                 MTUser *meUser = [MTUser currentUser];
                 newComment.user = meUser;
                 
                 MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                post.isDeleted = NO;
                 newComment.challengePost = post;
                 
                 [realm commitWriteTransaction];
@@ -3113,8 +3228,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
             if (responseObject) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
-                MTChallengePostComment *updatedPost = [MTChallengePostComment objectForPrimaryKey:[NSNumber numberWithInteger:commentId]];
-                updatedPost.content = content;
+                MTChallengePostComment *updatedPostComment = [MTChallengePostComment objectForPrimaryKey:[NSNumber numberWithInteger:commentId]];
+                updatedPostComment.isDeleted = NO;
+                updatedPostComment.content = content;
                 [realm commitWriteTransaction];
                 
                 if (success) {
@@ -3187,7 +3303,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"emojis" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3242,12 +3358,15 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     [realm beginWriteTransaction];
                     
                     MTEmoji *thisEmoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                    thisEmoji.isDeleted = NO;
+                    
                     if (thisEmoji) {
                         MTOptionalImage *optionalImage = thisEmoji.emojiImage;
                         if (!optionalImage) {
                             optionalImage = [[MTOptionalImage alloc] init];
                         }
     
+                        optionalImage.isDeleted = NO;
                         optionalImage.imageData = responseObject;
                         optionalImage.updatedAt = [NSDate date];
                         thisEmoji.emojiImage = optionalImage;
@@ -3267,6 +3386,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     [realm beginWriteTransaction];
                     
                     MTEmoji *thisEmoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                    thisEmoji.isDeleted = NO;
+                    
                     if (thisEmoji) {
                         thisEmoji.emojiImage = nil;
                     }
@@ -3297,21 +3418,29 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
 - (void)loadLikesForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
+//        NSLog(@"loadLikesForChallengeId success response; wait time: %f", finishWaitTime-startTime);
+
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"likes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"loadLikesForChallengeId success response");
+            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
+            NSLog(@"loadLikesForChallengeId success response; load time: %f", finishTime-finishWaitTime);
             
             if (responseObject) {
                 [self processLikesWithResponseObject:responseObject challengeId:challengeId postId:0];
             }
             
+//            NSLog(@"loadLikesForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
+
             if (success) {
                 success(nil);
             }
@@ -3335,7 +3464,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3382,14 +3511,17 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostLike *newLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                newLike.isDeleted = NO;
                 
                 MTUser *meUser = [MTUser currentUser];
                 newLike.user = meUser;
                 
                 MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                post.isDeleted = NO;
                 newLike.challengePost = post;
                 
                 MTEmoji *emoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                emoji.isDeleted = NO;
                 newLike.emoji = emoji;
                 
                 [realm commitWriteTransaction];
@@ -3436,8 +3568,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostLike *updatedLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                updatedLike.isDeleted = NO;
                 
                 MTEmoji *emoji = [MTEmoji objectForPrimaryKey:emojiCode];
+                emoji.isDeleted = NO;
                 updatedLike.emoji = emoji;
                 
                 [realm commitWriteTransaction];
@@ -3474,7 +3608,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"buttons" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3507,7 +3641,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"page_size"] = @"999";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3554,14 +3688,17 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengeButtonClick *newButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:responseObject];
+                newButtonClick.isDeleted = NO;
                 
                 MTUser *meUser = [MTUser currentUser];
                 newButtonClick.user = meUser;
                 
                 MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
+                post.isDeleted = NO;
                 newButtonClick.challengePost = post;
                 
                 MTChallengeButton *button = [MTChallengeButton objectForPrimaryKey:[NSNumber numberWithInteger:buttonId]];
+                button.isDeleted = NO;
                 newButtonClick.challengeButton = button;
                 
                 [realm commitWriteTransaction];
@@ -3709,7 +3846,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSString *urlString = [NSString stringWithFormat:@"notifications/%lu/read", notificationId];
+        NSString *urlString = [NSString stringWithFormat:@"notifications/%lu/read", (long)notificationId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3824,7 +3961,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", pushMessagingRegistrationId];
+        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", (long)pushMessagingRegistrationId];
         
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"deviceType"] = @"ios";
@@ -3855,7 +3992,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", pushMessagingRegistrationId];
+        NSString *urlString = [NSString stringWithFormat:@"push-messaging-registrations/%lu", (long)pushMessagingRegistrationId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3882,22 +4019,28 @@ static NSString * const MTRefreshingErrorCode = @"701";
 #pragma mark - Explore -
 - (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
+
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
+//        NSLog(@"loadExplorePostsForChallengeId success response; wait time: %f", finishWaitTime-startTime);
+
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
         parameters[@"page_size"] = @"20";
         
-        NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", challengeId];
+        NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", (long)challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"loadExplorePostsForChallengeId success response");
+            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
+            NSLog(@"loadExplorePostsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
             
             if (responseObject) {
                 [self processExplorePostsWithResponseObject:responseObject challengeId:challengeId];
             }
-            
+//            NSLog(@"loadExplorePostsForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
             if (success) {
                 success(nil);
             }
@@ -3925,7 +4068,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = @"999";
         
-        NSString *urlString = [NSString stringWithFormat:@"classes/%lu/students", [MTUser currentUser].userClass.id];
+        NSString *urlString = [NSString stringWithFormat:@"classes/%lu/students", (long)[MTUser currentUser].userClass.id];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3959,7 +4102,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"hasBankAccount"] = [NSNumber numberWithBool:bankValue];
         
-        NSString *urlString = [NSString stringWithFormat:@"students/%lu", userId];
+        NSString *urlString = [NSString stringWithFormat:@"students/%lu", (long)userId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3995,7 +4138,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"hasResume"] = [NSNumber numberWithBool:resumeValue];
         
-        NSString *urlString = [NSString stringWithFormat:@"students/%lu", userId];
+        NSString *urlString = [NSString stringWithFormat:@"students/%lu", (long)userId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {

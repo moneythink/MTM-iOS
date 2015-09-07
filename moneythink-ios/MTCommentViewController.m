@@ -15,8 +15,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UIButton *doneButton;
 
-//@property (nonatomic, strong) PFChallengePost *challengePost;
-
 @end
 
 @implementation MTCommentViewController
@@ -89,7 +87,9 @@
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 });
                 
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             } failure:^(NSError *error) {
                 NSLog(@"Edit comment error - %@", [error mtErrorDescription]);
                 
@@ -108,7 +108,9 @@
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 });
                 
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             } failure:^(NSError *error) {
                 NSLog(@"Post text comment error - %@", [error mtErrorDescription]);
                 

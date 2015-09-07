@@ -14,6 +14,10 @@
 @property NSString *name;
 @property NSString *mentorSignupCode;
 @property BOOL isActive;
+@property BOOL isDeleted;
+
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
 
 @end
 

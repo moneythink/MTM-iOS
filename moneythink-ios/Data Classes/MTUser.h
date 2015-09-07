@@ -32,18 +32,21 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 @property BOOL hasResume;
 @property BOOL hasBankAccount;
 @property BOOL hasAvatar;
+@property BOOL isDeleted;
 
 @property MTOrganization *organization;
 @property MTClass *userClass;
 
 - (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
-+ (void)logout;
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMentor:(MTUser *)user;
 + (BOOL)isUserMe:(MTUser *)user;
 + (BOOL)isUserLoggedIn;
 + (MTUser *)currentUser;
+
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
 
 @end
 

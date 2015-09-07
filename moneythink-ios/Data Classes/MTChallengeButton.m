@@ -55,4 +55,34 @@
              };
 }
 
+#pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTChallengeButton allObjects];
+    NSInteger count = [allObjects count];
+    for (MTChallengeButton *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTChallengeButton (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTChallengeButton objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTChallengeButton (%ld) objects", (long)count);
+}
+
+
 @end

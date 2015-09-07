@@ -42,7 +42,8 @@
     MTChallenge *challenge = [self.challenges objectAtIndex:indexPath.section];
     
     MTChallengeListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ChallengeListTableViewCell" forIndexPath:indexPath];
-    cell.challengeNumber.text = [NSString stringWithFormat:@"%ld", indexPath.section+1];
+    NSInteger challengeNumber = indexPath.section+1;
+    cell.challengeNumber.text = [NSString stringWithFormat:@"%ld", (long)challengeNumber];
     cell.challengeTitle.text = challenge.title;
     
     return cell;

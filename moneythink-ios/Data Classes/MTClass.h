@@ -15,8 +15,12 @@
 @property NSInteger id;
 @property NSString *name;
 @property NSString *studentSignupCode;
+@property BOOL isDeleted;
 
 @property MTOrganization *organization;
+
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
 
 @end
 

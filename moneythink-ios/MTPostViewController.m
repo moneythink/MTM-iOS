@@ -27,7 +27,6 @@
 @property (nonatomic, strong) IBOutlet UIButton *spentDoneButton;
 
 @property (nonatomic, strong) UIImagePickerController *imagePickerController;
-@property (nonatomic, strong) PFChallengePost *challengePost;
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) UIImage *updatedPostImage;
 @property (nonatomic) BOOL removedPostPhoto;
@@ -545,7 +544,7 @@
             [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:nil];
         });
     } failure:^(NSError *error) {
-        NSLog(@"Unable to update post for id:%lu", weakSelf.post.id);
+        NSLog(@"Unable to update post for id:%lu", (long)weakSelf.post.id);
     }];
     
     [self dismissViewControllerAnimated:YES completion:NULL];

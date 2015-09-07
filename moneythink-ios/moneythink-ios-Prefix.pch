@@ -39,7 +39,10 @@
 #define MTNetworkServiceOAuthCredentialKey  @"MTNetworkServiceOAuthCredentialKey"
 #define kLastNotificationFetchDateKey       @"kLastNotificationFetchDateKey"
 #define kPushMessagingRegistrationKey       @"kPushMessagingRegistrationKey"
-
+#define kRefreshForEmoji                    @"kRefreshForEmoji"
+#define kRefreshForChallenges               @"kRefreshForChallenges"
+#define kRefreshForButtons                  @"kRefreshForButtons"
+#define kRefreshForMeUser                   @"kRefreshForMeUser"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>
@@ -92,27 +95,6 @@
 #import "UIBarButtonItem+Badge.h"
 #import "UIButton+Badge.h"
 #import "UIScrollView+EmptyDataSet.h"
-
-#import "PFClasses.h"
-#import "PFChallengeBanner.h"
-#import "PFChallengePost.h"
-#import "PFChallengePostButtonsClicked.h"
-#import "PFChallengePostSecondaryButtonsClicked.h"
-#import "PFChallengePostComment.h"
-#import "PFChallenges.h"
-#import "PFChallengesActivated.h"
-#import "PFCustomChallenges.h"
-#import "PFEmoji.h"
-#import "PFNotifications.h"
-#import "PFPlaylist.h"
-#import "PFPlaylistChallenges.h"
-#import "PFScheduledActivations.h"
-#import "PFSchools.h"
-#import "PFSignupCodes.h"
-#import "PFStudentPointDetails.h"
-#import "PFChallengePostsLiked.h"
-#import "PFEthnicities.h"
-#import "PFMoneyOptions.h"
 
 #import "MTOnboardingController.h"
 

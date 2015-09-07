@@ -21,6 +21,9 @@
 
 + (BOOL)postCommentsContainsMyComment:(RLMResults *)commentArray;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 @end
 
 

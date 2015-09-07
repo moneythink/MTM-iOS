@@ -342,56 +342,67 @@
     
     [self updateViews];
     
-    if (IsEmpty(self.challenges)) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading Challenges...";
-        hud.dimBackground = YES;
+    if (IsEmpty(self.challenges) || [MTUtil shouldRefreshForKey:kRefreshForChallenges]) {
+        if (IsEmpty(self.challenges)) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Loading Challenges...";
+            hud.dimBackground = YES;
+        }
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MTUtil setRefreshedForKey:kRefreshForChallenges];
+                
+                if ([MTUtil userChangedClass]) {
+                    [MTUtil setUserChangedClass:NO];
+                }
+                
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf getChallenges];
+                [weakSelf updateViews];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }];
     }
-    
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([MTUtil userChangedClass]) {
-                [MTUtil setUserChangedClass:NO];
-            }
-            
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf getChallenges];
-            [weakSelf updateViews];
-        });
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-    }];
 }
 
 - (void)loadEmoji
 {
-    RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO AND emojiImage != nil"] sortedResultsUsingProperty:@"ranking" ascending:YES];
     if (!IsEmpty(emojis)) {
         self.emojiObjects = emojis;
         self.myClassTableView.emojiObjects = self.emojiObjects;
         [self.myClassTableView.tableView reloadData];
     }
 
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
-        RLMResults *emojis = [[MTEmoji allObjects] sortedResultsUsingProperty:@"ranking" ascending:YES];
-        weakSelf.emojiObjects = emojis;
-        weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
-        [weakSelf.myClassTableView.tableView reloadData];
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
-    }];
+    if (IsEmpty(emojis) || [MTUtil shouldRefreshForKey:kRefreshForEmoji]) {
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForEmoji];
+            
+            RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
+            weakSelf.emojiObjects = emojis;
+            weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
+            [weakSelf.myClassTableView.tableView reloadData];
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
+        }];
+    }
 }
 
 - (void)loadButtons
 {
-    [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
-    }];
+    if ([MTUtil shouldRefreshForKey:kRefreshForButtons]) {
+        [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForButtons];
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
+        }];
+    }
 }
 
 - (void)getChallenges

@@ -166,7 +166,7 @@
 {
     CGFloat factor = self.challengeProgress;
 
-    CGFloat newWidth = self.challengeProgress * (self.backgroundProgressView.frame.size.width - 2.0f);
+    CGFloat newWidth;
     CGFloat maskPadding = 3.0f;
     
     if (factor <= 0.0f) {

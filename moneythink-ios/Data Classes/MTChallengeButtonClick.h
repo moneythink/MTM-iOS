@@ -18,6 +18,9 @@
 @property MTChallengeButton *challengeButton;
 @property MTUser *user;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 @end
 
 // This protocol enables typed collections. i.e.:

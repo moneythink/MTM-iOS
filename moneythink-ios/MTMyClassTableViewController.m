@@ -42,6 +42,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic) BOOL displaySpentView;
 @property (nonatomic, strong) RLMResults *challengePosts;
 @property (nonatomic, strong) RLMResults *buttons;
+@property (nonatomic, strong) NSMutableArray *challengeIdsQueried;
 
 @end
 
@@ -51,6 +52,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.challengeIdsQueried = [NSMutableArray array];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewChallengePost:) name:kWillSaveNewChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostNotification object:nil];
@@ -107,17 +110,31 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 {
     [self refreshFromDatabase];
     
+    if (IsEmpty(self.challengePosts) && ![self.challengeIdsQueried containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
+        
+        // Show this loading indicator only the first time empty, otherwise background update.
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Posts...";
+        hud.dimBackground = YES;
+    }
+
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             [weakSelf.refreshControl endRefreshing];
             [weakSelf refreshFromDatabase];
             
-            [weakSelf updateComments];
-            [weakSelf updateLikes];
-            
-            if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
-                [weakSelf updateButtonClicks];
+            if (!IsEmpty(weakSelf.challengePosts)) {
+                [weakSelf updateComments];
+                [weakSelf updateLikes];
+                
+                if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+                    [weakSelf updateButtonClicks];
+                }
             }
         });
         
@@ -125,6 +142,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             [weakSelf.refreshControl endRefreshing];
             [weakSelf refreshFromDatabase];
         });
@@ -134,7 +152,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)refreshFromDatabase
 {
     if (self.challenge) {
-        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
         [self loadButtons];
     }
     else {
@@ -511,14 +529,14 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         NSString *button2Title;
         
         if ([allButton1Clicks count] > 0) {
-            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, [allButton1Clicks count]];
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, (unsigned long)[allButton1Clicks count]];
         }
         else {
             button1Title = [NSString stringWithFormat:@"%@ (0)", button1.label];
         }
         
         if (allButton2Clicks.count > 1) {
-            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, [allButton2Clicks count]];
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, (unsigned long)[allButton2Clicks count]];
         }
         else {
             button2Title = [NSString stringWithFormat:@"%@ (0)", button2.label];
@@ -821,28 +839,28 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         NSString *button4Title;
         
         if ([allButton1Clicks count] > 0) {
-            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, [allButton1Clicks count]];
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, (unsigned long)[allButton1Clicks count]];
         }
         else {
             button1Title = [NSString stringWithFormat:@"%@", button1.label];
         }
         
         if ([allButton2Clicks count] > 0) {
-            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, [allButton2Clicks count]];
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, (unsigned long)[allButton2Clicks count]];
         }
         else {
             button2Title = [NSString stringWithFormat:@"%@", button2.label];
         }
 
         if ([allButton3Clicks count] > 0) {
-            button3Title = [NSString stringWithFormat:@"%@ (%lu)", button3.label, [allButton3Clicks count]];
+            button3Title = [NSString stringWithFormat:@"%@ (%lu)", button3.label, (unsigned long)[allButton3Clicks count]];
         }
         else {
             button3Title = [NSString stringWithFormat:@"%@", button3.label];
         }
 
         if ([allButton4Clicks count] > 0) {
-            button4Title = [NSString stringWithFormat:@"%@ (%lu)", button4.label, [allButton4Clicks count]];
+            button4Title = [NSString stringWithFormat:@"%@ (%lu)", button4.label, (unsigned long)[allButton4Clicks count]];
         }
         else {
             button4Title = [NSString stringWithFormat:@"%@", button4.label];
@@ -1293,26 +1311,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
     cell.comments.text = [NSString stringWithFormat:@"%ld", (long)[comments count]];
 
-    cell.activityIndicator.hidden = YES;
     cell.deletePost.hidden = !canDelete;
-    cell.loadingView.alpha = 0.0f;
     cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-
-    // TODO: Re-enable showing new post?
-//    if (dateObject) {
-//        cell.activityIndicator.hidden = YES;
-//        cell.deletePost.hidden = !canDelete;
-//        cell.loadingView.alpha = 0.0f;
-//        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
-//    }
-//    else {
-//        cell.comments.text = @"0";
-//        cell.activityIndicator.hidden = NO;
-//        [cell.activityIndicator startAnimating];
-//        cell.deletePost.hidden = YES;
-//        cell.loadingView.alpha = 0.3f;
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-//    }
     
     return cell;
 }
@@ -1324,10 +1324,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    if (cell.loadingView.alpha != 0.0f) {
-        return;
-    }
-    
     [self performSegueWithIdentifier:@"pushViewPost" sender:cell];
 }
 
@@ -1659,7 +1655,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf refreshFromDatabase];
-                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                        } failure:nil];
                         [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                     });
                 } failure:^(NSError *error) {
@@ -1698,7 +1696,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf refreshFromDatabase];
-                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                        } failure:nil];
                         [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                     });
                 } failure:^(NSError *error) {
@@ -1733,7 +1733,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf refreshFromDatabase];
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
             });
         } failure:^(NSError *error) {
@@ -2274,9 +2276,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     return [UIColor whiteColor];
 }
 
-- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return CGPointMake(0, -56.0f);
+    return -142.0f;
 }
 
 

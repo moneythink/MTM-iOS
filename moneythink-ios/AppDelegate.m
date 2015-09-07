@@ -34,19 +34,13 @@
 
     [Fabric with:@[CrashlyticsKit]];
     
-    // Parse
-    [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
-    PFACL *defaultACL = [PFACL ACL];
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-
-    // AFTER Parse setup
+    [self setupParse];
     [self clearZendesk];
     [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    //Clear keychain on first run in case of reinstallation
+    // Clear keychain on first run in case of reinstallation
     if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstTimeRunKey]) {
         // Delete values from keychain here
         [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:kFirstTimeRunKey];
@@ -83,8 +77,12 @@
         ((SWRevealViewController *)revealVC).delegate = [MTUtil getAppDelegate];
     }
 
-    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable]) {
-        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable] && [MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+        } failure:^(NSError *error) {
+            //
+        }];
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
@@ -96,13 +94,22 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
-    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable]) {
-        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:nil failure:nil];
+    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable] && [MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+        } failure:^(NSError *error) {
+            //
+        }];
     }
     
     [self checkForForceUpdate];
     [self updatePushMessagingInfo];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication*)application
+{
+    [self purgeDeletedData];
 }
 
 
@@ -213,6 +220,8 @@
     if (currentUser && [MTUtil internetReachable]) {
         if ([MTUser currentUser] && [MTUtil internetReachable]) {
             [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+
                 if (handler) {
                     handler(UIBackgroundFetchResultNewData);
                 }
@@ -244,7 +253,9 @@
         unknownNotification = YES;
     }
     
-    [MTNotificationViewController markReadForNotificationId:[notificationId integerValue]];
+    if (!IsEmpty(notificationId)) {
+        [MTNotificationViewController markReadForNotificationId:[notificationId integerValue]];
+    }
     
     if (unknownNotification || [notificationType isEqualToString:kNotificationPostComment] ||
         [notificationType isEqualToString:kNotificationChallengeActivated] ||
@@ -510,11 +521,7 @@
 }
 
 - (void)configureZendesk
-{
-    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
-                                   zendeskUrl:@"https://moneythink.zendesk.com"
-                                  andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
-    
+{    
 //    [ZDKDispatcher setDebugLogging:YES];
 //    [ZDKLogger enable:YES];
 
@@ -609,9 +616,34 @@
 
 - (BOOL)shouldForceUpdate
 {
-    // TODO: Bypass this for now until we decide whether to keep in.
+    // Bypass this for now until we decide whether to keep in.
     return NO;
     return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
+}
+
+- (void)purgeDeletedData
+{
+    // Start background task to remove deleted records
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    [MTUtil cleanDeletedItemsInDatabase];
+    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+}
+
+- (void)setupParse
+{
+    // Parse -- Only used for Push Notification support, database not used.
+    [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    if ([PFUser currentUser]) {
+        [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
+            NSLog(@"Successfully logged out legacy/Parse user");
+        }];
+    }
 }
 
 
@@ -628,11 +660,9 @@
     if (revealController.frontViewPosition == FrontViewPositionRight) {
         UIView *lockingView = [UIView new];
         lockingView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:revealController action:@selector(revealToggle:)];
-        
+                
         __block SWRevealViewController *weakReveal = revealController;
-        tap = [[UITapGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
             if (weakReveal.frontViewPosition == FrontViewPositionRight) {
                 [weakReveal revealToggle:nil];
             }
@@ -679,7 +709,7 @@
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 21;
+    config.schemaVersion = 22;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above

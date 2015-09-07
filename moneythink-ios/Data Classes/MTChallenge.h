@@ -32,6 +32,9 @@
 @property NSString *rewardsInfo;
 @property BOOL isDeleted;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 - (UIImage *)loadBannerImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end

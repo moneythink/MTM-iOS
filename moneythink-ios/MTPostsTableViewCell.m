@@ -37,8 +37,6 @@
     self.spentLabel.text = @"";
     self.savedLabel.text = @"";
 
-    self.activityIndicator.hidden = YES;
-    self.loadingView.alpha = 0.0f;
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];
     [self.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
@@ -120,7 +118,7 @@
         if (otherCount > 99) {
             otherCount = 99;
         }
-        counterLabel.text = [NSString stringWithFormat:@"+%lu", otherCount];
+        counterLabel.text = [NSString stringWithFormat:@"+%lu", (long)otherCount];
         
         [labelView addSubview:counterLabel];
         [counterView addSubview:labelView];

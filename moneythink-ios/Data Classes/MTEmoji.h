@@ -17,6 +17,9 @@
 @property NSInteger ranking;
 @property BOOL isDeleted;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 @end
 
 // This protocol enables typed collections. i.e.:

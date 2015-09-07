@@ -15,7 +15,8 @@
 + (NSDictionary *)defaultPropertyValues {
     return @{@"name" : @"",
              @"mentorSignupCode": @"",
-             @"isActive": @YES};
+             @"isActive": @YES,
+             @"isDeleted": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -45,6 +46,36 @@
              @"name": @"name",
              @"mentorSignupCode": @"mentorSignupCode",
              };
+}
+
+
+#pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTOrganization allObjects];
+    NSInteger count = [allObjects count];
+    for (MTOrganization *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTOrganization (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTOrganization objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTOrganization (%ld) objects", (long)count);
 }
 
 

@@ -88,11 +88,39 @@
 
 
 #pragma mark - Custom Methods -
++ (void)markAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTChallenge allObjects];
+    NSInteger count = [allObjects count];
+    for (MTChallenge *thisObject in allObjects) {
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTChallenge (%ld) deleted", (long)count);
+}
+
++ (void)removeAllDeleted
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *deletedObjects = [MTChallenge objectsWhere:@"isDeleted = YES"];
+    NSInteger count = [deletedObjects count];
+    if (!IsEmpty(deletedObjects)) {
+        [realm deleteObjects:deletedObjects];
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Removed deleted MTChallenge (%ld) objects", (long)count);
+}
+
 - (UIImage *)loadBannerImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     BOOL shouldFetchBanner = NO;
     
-    if (!self.banner.imageData) {
+    if (!self.banner.imageData || self.banner.isDeleted) {
         shouldFetchBanner = YES;
     }
     else if ([self.updatedAt timeIntervalSince1970] > [self.banner.updatedAt timeIntervalSince1970]) {

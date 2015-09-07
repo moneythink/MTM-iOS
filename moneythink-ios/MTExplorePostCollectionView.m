@@ -19,8 +19,6 @@
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
 
-@property (nonatomic) BOOL pulledData;
-
 @end
 
 @implementation MTExplorePostCollectionView
@@ -31,14 +29,6 @@
     
     self.collectionView.emptyDataSetSource = self;
     self.collectionView.emptyDataSetDelegate = self;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.pulledData = NO;
-    
-    [self loadPosts];
 }
 
 - (void)dealloc
@@ -67,7 +57,7 @@
 
 - (void)loadPostsFromDatabase
 {
-    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES", self.challenge.id] sortedResultsUsingProperty:@"updatedAt" ascending:NO];
+    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES", self.challenge.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.collectionView reloadData];
 }
 
@@ -105,10 +95,13 @@
 - (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
+        BOOL refresh = (_challenge == nil || (_challenge != nil && (_challenge.id != challenge.id)));
         _challenge = challenge;
         
-        [self loadPosts];
-        [self loadButtons];
+        if (refresh) {
+            [self loadPosts];
+            [self loadButtons];
+        }
     }
 }
 
@@ -294,7 +287,7 @@
 #pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Posts";
+    NSString *text = @"No Posts With Photos";
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor darkGrayColor]};
@@ -304,7 +297,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Be the first to post to this Challenge!";
+    NSString *text = @"Be the first to post (w/photo) to this Challenge!";
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
@@ -319,7 +312,7 @@
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    if (IsEmpty(self.posts) && self.pulledData) {
+    if (IsEmpty(self.posts)) {
         return YES;
     }
     else {
@@ -332,9 +325,9 @@
     return [UIColor whiteColor];
 }
 
-- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return CGPointMake(0, -56.0f);
+    return -56.0f;
 }
 
 

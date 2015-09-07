@@ -19,6 +19,9 @@
 
 + (BOOL)postLikesContainsMyLike:(RLMResults *)likeArray;
 
++ (void)markAllDeleted;
++ (void)removeAllDeleted;
+
 @end
 
 // This protocol enables typed collections. i.e.:

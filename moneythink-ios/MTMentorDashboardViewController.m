@@ -25,30 +25,43 @@
 {
     [super viewDidLoad];
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+    [self loadData];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    [self loadData];
+    [super viewDidAppear:animated];
+    if ([self.tableView indexPathForSelectedRow]) {
+        [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
+    }
 }
 
 
 #pragma mark - Private Methods -
 - (void)loadData
 {
-    self.classStudents = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
+    self.classStudents = [[MTUser objectsWhere:@"isDeleted = NO AND roleCode = %@ AND userClass.id = %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
     [self.tableView reloadData];
+    
+    if (IsEmpty(self.classStudents)) {
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading...";
+        hud.dimBackground = YES;
+    }
 
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadDashboardUsersWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.classStudents = [[MTUser objectsWhere:@"roleCode == %@ AND userClass.id == %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            weakSelf.classStudents = [[MTUser objectsWhere:@"isDeleted = NO AND roleCode = %@ AND userClass.id = %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"lastName" ascending:YES];
             [weakSelf.tableView reloadData];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load dashboard user: %@", [error mtErrorDescription]);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
     }];
 }
 
