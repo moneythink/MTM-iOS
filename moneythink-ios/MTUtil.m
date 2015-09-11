@@ -206,18 +206,17 @@
 
 + (void)logout
 {
-    // Removes all keys, except onboarding
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kUserHasOnboardedKey] && ![key isEqualToString:kForcedUpdateKey] &&
-            ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
-            NSLog(@"removing user pref for %@", key);
+        if (![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
+            NSLog(@"Removing user pref for %@", key);
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
         }
     }
     
     [[NSUserDefaults standardUserDefaults] synchronize];
+    ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = 0;
     
     [[ZDKConfig instance] setUserIdentity:nil];
     [[ZDKSdkStorage instance] clearUserData];

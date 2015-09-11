@@ -23,6 +23,7 @@
              @"hasBankAccount": @NO,
              @"hasAvatar": @NO,
              @"points": @0,
+             @"onboardingComplete": @NO,
              @"isDeleted": @NO};
 }
 
@@ -49,6 +50,7 @@
              @"phoneNumber": @"phoneNumber",
              @"updatedAt": @"updatedAt",
              @"createdAt": @"createdAt",
+             @"onboardingComplete": @"onboardingComplete",
              @"_embedded.role.code": @"roleCode",
              };
 }

@@ -2270,6 +2270,43 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
+- (void)setOnboardingCompleteForCurrentUserWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        MTUser *currentUser = [MTUser currentUser];
+        NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)currentUser.id];
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"onboardingComplete"] = [NSNumber numberWithBool:YES];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"setOnboardingCompleteForCurrentUserWithSuccess success response");
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            [MTUser currentUser].onboardingComplete = YES;
+            [realm commitWriteTransaction];
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed setOnboardingCompleteForCurrentUserWithSuccess with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed setOnboardingCompleteForCurrentUserWithSuccess with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
 - (void)refreshCurrentUserDataWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();

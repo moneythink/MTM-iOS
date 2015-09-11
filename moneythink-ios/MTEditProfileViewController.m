@@ -298,6 +298,10 @@
 
 - (IBAction)loadMentorClasses
 {
+    if (!self.isMentor) {
+        return;
+    }
+
     [self dismissKeyboard];
     
     if (!IsEmpty(self.classesDict)) {
@@ -462,36 +466,8 @@
         }
     }
     
-    NSString *schoolName = self.userCurrent.organization.name ? self.userCurrent.organization.name : @"";
-    if (![self.userSchool.text isEqualToString:schoolName]) {
-        dirty = YES;
-    }
+    dirty = [self haveUpdatedUserInfoToSave];
     
-    NSString *className = self.userCurrent.userClass.name ? self.userCurrent.userClass.name : @"";
-    if (![self.userClassName.text isEqualToString:className]) {
-        dirty = YES;
-    }
-    
-    NSString *first = self.userCurrent.firstName ? self.userCurrent.firstName : @"";
-    if (![self.firstName.text isEqualToString:first]) {
-        dirty = YES;
-    }
-    
-    NSString *last = self.userCurrent.lastName ? self.userCurrent.lastName : @"";
-    if (![self.lastName.text isEqualToString:last]) {
-        dirty = YES;
-    }
-    
-    NSString *emailAddress = self.userCurrent.email ? self.userCurrent.email : @"";
-    if (![self.email.text isEqualToString:emailAddress]) {
-        dirty = YES;
-    }
-    
-    NSString *phone = self.userCurrent.phoneNumber ? self.userCurrent.phoneNumber : @"";
-    if (![self.phoneNumber.text isEqualToString:phone]) {
-        dirty = YES;
-    }
-
     if (dirty) {
         if ([UIAlertController class]) {
             UIAlertController *saveSheet = [UIAlertController
@@ -551,6 +527,43 @@
 
 
 #pragma mark - Private -
+- (BOOL)haveUpdatedUserInfoToSave
+{
+    BOOL dirty = NO;
+    
+    NSString *schoolName = self.userCurrent.organization.name ? self.userCurrent.organization.name : @"";
+    if (![self.userSchool.text isEqualToString:schoolName]) {
+        dirty = YES;
+    }
+    
+    NSString *className = self.userCurrent.userClass.name ? self.userCurrent.userClass.name : @"";
+    if (![self.userClassName.text isEqualToString:className]) {
+        dirty = YES;
+    }
+    
+    NSString *first = self.userCurrent.firstName ? self.userCurrent.firstName : @"";
+    if (![self.firstName.text isEqualToString:first]) {
+        dirty = YES;
+    }
+    
+    NSString *last = self.userCurrent.lastName ? self.userCurrent.lastName : @"";
+    if (![self.lastName.text isEqualToString:last]) {
+        dirty = YES;
+    }
+    
+    NSString *emailAddress = self.userCurrent.email ? self.userCurrent.email : @"";
+    if (![self.email.text isEqualToString:emailAddress]) {
+        dirty = YES;
+    }
+    
+    NSString *phone = self.userCurrent.phoneNumber ? self.userCurrent.phoneNumber : @"";
+    if (![self.phoneNumber.text isEqualToString:phone]) {
+        dirty = YES;
+    }
+    
+    return dirty;
+}
+
 - (void)textFieldsConfigure
 {
     UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
@@ -780,6 +793,8 @@
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                    UIAlertView *noMatch = [[UIAlertView alloc] initWithTitle:@"New Class Error" message:@"Unable to create new class" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
+                    [noMatch show];
                 });
             }
         } failure:^(NSError *error) {
@@ -798,12 +813,33 @@
 
 - (void)submitUserSave
 {
+    MTMakeWeakSelf();
+    BOOL haveUpdatedInfo = [self haveUpdatedUserInfoToSave];
+    
     if (self.updatedProfileImage) {
         NSData *imageData = UIImageJPEGRepresentation(self.updatedProfileImage, 0.6f);
         [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:imageData success:^(id responseData) {
             NSLog(@"Successfully updated user avatar");
+            
+            if (haveUpdatedInfo) {
+                [weakSelf submitUserInfoUpdate];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+            }
         } failure:^(NSError *error) {
             NSLog(@"Failed to save user avatar");
+            
+            if (haveUpdatedInfo) {
+                [weakSelf submitUserInfoUpdate];
+            }
+            else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                });
+            }
         }];
         
         self.updatedProfileImage = nil;
@@ -812,14 +848,38 @@
         if (self.removedProfilePhoto) {
             [[MTNetworkManager sharedMTNetworkManager] setMyAvatarWithImageData:nil success:^(id responseData) {
                 NSLog(@"Successfully removed user avatar");
+                
+                if (haveUpdatedInfo) {
+                    [weakSelf submitUserInfoUpdate];
+                }
+                else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    });
+                }
             } failure:^(NSError *error) {
                 NSLog(@"Failed to remove user avatar");
+                
+                if (haveUpdatedInfo) {
+                    [weakSelf submitUserInfoUpdate];
+                }
+                else {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    });
+                }
             }];
             
             self.removedProfilePhoto = NO;
         }
+        else {
+            [self submitUserInfoUpdate];
+        }
     }
-    
+}
+
+- (void)submitUserInfoUpdate
+{
     NSInteger orgId = self.selectedOrganizationId ? [self.selectedOrganizationId integerValue] : 0;
     NSInteger classId = self.selectedClassId ? [self.selectedClassId integerValue] : 0;
     
@@ -829,34 +889,34 @@
                                                                organizationId:orgId
                                                                       classId:classId
                                                                       success:^(id responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-            
-            weakSelf.organizationsDict = nil;
-            weakSelf.classesDict = nil;
-
-            [weakSelf updateViewForCurrentUser];
-            
-            if (classId > 0) {
-                [MTUtil setUserChangedClass:YES];
-            }
-            [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
-            
-            if (weakSelf.presentingViewController) {
-                [weakSelf dismissViewControllerAnimated:YES completion:nil];
-            }
-        });
-        
-    } failure:^(NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.organizationsDict = nil;
-            weakSelf.classesDict = nil;
-
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-            [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-            [weakSelf updateViewForCurrentUser];
-        });
-    }];
+                                                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                                                              [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                                                              
+                                                                              weakSelf.organizationsDict = nil;
+                                                                              weakSelf.classesDict = nil;
+                                                                              
+                                                                              [weakSelf updateViewForCurrentUser];
+                                                                              
+                                                                              if (classId > 0) {
+                                                                                  [MTUtil setUserChangedClass:YES];
+                                                                              }
+                                                                              [[NSNotificationCenter defaultCenter] postNotificationName:kUserSavedProfileChanges object:nil];
+                                                                              
+                                                                              if (weakSelf.presentingViewController) {
+                                                                                  [weakSelf dismissViewControllerAnimated:YES completion:nil];
+                                                                              }
+                                                                          });
+                                                                          
+                                                                      } failure:^(NSError *error) {
+                                                                          dispatch_async(dispatch_get_main_queue(), ^{
+                                                                              weakSelf.organizationsDict = nil;
+                                                                              weakSelf.classesDict = nil;
+                                                                              
+                                                                              [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                                                                              [[[UIAlertView alloc] initWithTitle:@"Unable to Save Changes" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                              [weakSelf updateViewForCurrentUser];
+                                                                          });
+                                                                      }];
 }
 
 - (void)dismiss

@@ -33,7 +33,6 @@
 #define kNotificationStudentInactivity      @"STUDENT_INACTIVITY"
 #define kNotificationMentorInactivity       @"MENTOR_INACTIVITY"
 #define kLastViewedChallengeId              @"kLastViewedChallengeId"
-#define kUserHasOnboardedKey                @"user_has_onboarded"
 #define kFirstTimeRunKey                    @"kFirstTimeRunKey"
 #define kForcedUpdateKey                    @"kForcedUpdateKey"
 #define MTNetworkServiceOAuthCredentialKey  @"MTNetworkServiceOAuthCredentialKey"
@@ -92,9 +91,8 @@
 #import "MBProgressHUD.h"
 #import "SWRevealViewController.h"
 #import "MTViewController.h"
-#import "UIBarButtonItem+Badge.h"
-#import "UIButton+Badge.h"
 #import "UIScrollView+EmptyDataSet.h"
+#import "BBBadgeBarButtonItem.h"
 
 #import "MTOnboardingController.h"
 

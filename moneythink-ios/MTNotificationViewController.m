@@ -15,7 +15,6 @@
 
 @interface MTNotificationViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
-@property (nonatomic, weak) IBOutlet UIBarButtonItem *revealButtonItem;
 @property (nonatomic, weak) IBOutlet UIBarButtonItem *markAllReadButtonItem;
 
 @property (nonatomic, strong) RLMResults *notifications;
@@ -46,9 +45,14 @@
     
     SWRevealViewController *revealViewController = self.revealViewController;
     if (revealViewController) {
-        [self.revealButtonItem setTarget: self.revealViewController];
-        [self.revealButtonItem setAction: @selector(revealToggle:)];
-        self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        UIButton *customButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [customButton addTarget:self.revealViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
+        [customButton setImage:[UIImage imageNamed:@"icon_main_nav.png"] forState:UIControlStateNormal];
+        BBBadgeBarButtonItem *barButton = [[BBBadgeBarButtonItem alloc] initWithCustomUIButton:customButton];
+        barButton.badgeOriginX = 13;
+        barButton.badgeOriginY = -9;
+        barButton.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        self.navigationItem.leftBarButtonItem = barButton;
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
@@ -628,7 +632,9 @@
 - (void)unreadCountUpdate:(NSNotification *)note
 {
     NSNumber *count = note.object;
-    self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)[count integerValue]];
+    
+    BBBadgeBarButtonItem *barButton = (BBBadgeBarButtonItem *)self.navigationItem.leftBarButtonItem;
+    barButton.badgeValue = [NSString stringWithFormat:@"%ld", (long)[count integerValue]];
     [self.tableView reloadData];
 }
 

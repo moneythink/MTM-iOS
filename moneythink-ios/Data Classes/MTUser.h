@@ -32,6 +32,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 @property BOOL hasResume;
 @property BOOL hasBankAccount;
 @property BOOL hasAvatar;
+@property BOOL onboardingComplete;
 @property BOOL isDeleted;
 
 @property MTOrganization *organization;

@@ -21,7 +21,7 @@
 #pragma mark - Onboarding -
 - (BOOL)checkForOnboarding
 {
-    BOOL userHasOnboarded = [[NSUserDefaults standardUserDefaults] boolForKey:kUserHasOnboardedKey];
+    BOOL userHasOnboarded = [MTUser currentUser].onboardingComplete;
     
     // if the user has already onboarded, just set up the normal root view controller
     // for the application, but don't animate it because there's no transition in this case
@@ -41,8 +41,7 @@
 }
 
 - (void)handleOnboardingCompletion {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserHasOnboardedKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[MTNetworkManager sharedMTNetworkManager] setOnboardingCompleteForCurrentUserWithSuccess:nil failure:nil];
     
     SWRevealViewController *rootVC = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
     id challengesVC = [rootVC.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];

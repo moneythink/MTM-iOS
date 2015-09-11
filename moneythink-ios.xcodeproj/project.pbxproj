@@ -142,6 +142,7 @@
 		8967C7981A77F7E300BE125E /* schedule-check.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7961A77F7E300BE125E /* schedule-check.png */; };
 		8967C7991A77F7E300BE125E /* schedule-check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7971A77F7E300BE125E /* schedule-check@2x.png */; };
 		896E11091B740A7C00CEEF17 /* NSError+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 896E11081B740A7C00CEEF17 /* NSError+MTAdditions.m */; };
+		89712E1B1BA356AD00777DA7 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89712E1A1BA356AD00777DA7 /* BBBadgeBarButtonItem.m */; settings = {ASSET_TAGS = (); }; };
 		89758EA81B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EA51B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m */; };
 		89758EA91B4F204D002B73E3 /* AFOAuth2Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EA71B4F204D002B73E3 /* AFOAuth2Manager.m */; };
 		89758EAC1B4F279A002B73E3 /* MTNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EAB1B4F279A002B73E3 /* MTNetworkManager.m */; };
@@ -180,8 +181,6 @@
 		89A0E8111B38A01000F01BFF /* picker_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E80F1B38A01000F01BFF /* picker_highlighted.png */; };
 		89A0E8121B38A01000F01BFF /* picker_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A0E8101B38A01000F01BFF /* picker_highlighted@2x.png */; };
 		89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89A50CEC19DE0141003BE1D8 /* MessageUI.framework */; };
-		89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */; };
-		89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793B11B28A69C000BFA40 /* UIButton+Badge.m */; };
 		89A793B61B29F104000BFA40 /* mt_avatar.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B41B29F104000BFA40 /* mt_avatar.png */; };
 		89A793B71B29F104000BFA40 /* mt_avatar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B51B29F104000BFA40 /* mt_avatar@2x.png */; };
 		89A793BA1B2B80D6000BFA40 /* challenge-list-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */; };
@@ -468,6 +467,8 @@
 		8967C7971A77F7E300BE125E /* schedule-check@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "schedule-check@2x.png"; sourceTree = "<group>"; };
 		896E11071B740A7C00CEEF17 /* NSError+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+MTAdditions.h"; sourceTree = "<group>"; };
 		896E11081B740A7C00CEEF17 /* NSError+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+MTAdditions.m"; sourceTree = "<group>"; };
+		89712E191BA356AD00777DA7 /* BBBadgeBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBBadgeBarButtonItem.h; sourceTree = "<group>"; };
+		89712E1A1BA356AD00777DA7 /* BBBadgeBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBBadgeBarButtonItem.m; sourceTree = "<group>"; };
 		89758EA41B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AFHTTPRequestSerializer+OAuth2.h"; sourceTree = "<group>"; };
 		89758EA51B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AFHTTPRequestSerializer+OAuth2.m"; sourceTree = "<group>"; };
 		89758EA61B4F204D002B73E3 /* AFOAuth2Manager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFOAuth2Manager.h; sourceTree = "<group>"; };
@@ -519,10 +520,6 @@
 		89A0E80F1B38A01000F01BFF /* picker_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = picker_highlighted.png; sourceTree = "<group>"; };
 		89A0E8101B38A01000F01BFF /* picker_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picker_highlighted@2x.png"; sourceTree = "<group>"; };
 		89A50CEC19DE0141003BE1D8 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		89A793AE1B28A69C000BFA40 /* UIBarButtonItem+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIBarButtonItem+Badge.h"; sourceTree = "<group>"; };
-		89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIBarButtonItem+Badge.m"; sourceTree = "<group>"; };
-		89A793B01B28A69C000BFA40 /* UIButton+Badge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIButton+Badge.h"; sourceTree = "<group>"; };
-		89A793B11B28A69C000BFA40 /* UIButton+Badge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+Badge.m"; sourceTree = "<group>"; };
 		89A793B41B29F104000BFA40 /* mt_avatar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mt_avatar.png; sourceTree = "<group>"; };
 		89A793B51B29F104000BFA40 /* mt_avatar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "mt_avatar@2x.png"; sourceTree = "<group>"; };
 		89A793B81B2B80D6000BFA40 /* challenge-list-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "challenge-list-icon.png"; sourceTree = "<group>"; };
@@ -703,14 +700,14 @@
 			isa = PBXGroup;
 			children = (
 				89CE97341B4F1E59007FF4D7 /* AFNetworking */,
-				89CE97481B4F1E59007FF4D7 /* UIKit+AFNetworking */,
 				89758EA31B4F204D002B73E3 /* AFOAuth2Manager */,
+				89712E181BA356AD00777DA7 /* BBBadgeBarButtonItem */,
 				8992327A1B614202009C63B9 /* JGActionSheet */,
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
 				89A793BC1B2F25CA000BFA40 /* Onboard */,
 				892594301B73EC7E00B40E06 /* Realm+JSON */,
 				898FBE5D1B0D2A6B0058F3B4 /* SWRevealViewController */,
-				89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */,
+				89CE97481B4F1E59007FF4D7 /* UIKit+AFNetworking */,
 				899CF5291B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.h */,
 				899CF52A1B8630FD0058F59C /* AFHTTPRequestOperationManager+Synchronous.m */,
 				106309731A3A3C4D0093C209 /* MBProgressHUD.h */,
@@ -1188,6 +1185,15 @@
 			name = Common;
 			sourceTree = "<group>";
 		};
+		89712E181BA356AD00777DA7 /* BBBadgeBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				89712E191BA356AD00777DA7 /* BBBadgeBarButtonItem.h */,
+				89712E1A1BA356AD00777DA7 /* BBBadgeBarButtonItem.m */,
+			);
+			path = BBBadgeBarButtonItem;
+			sourceTree = "<group>";
+		};
 		89758EA31B4F204D002B73E3 /* AFOAuth2Manager */ = {
 			isa = PBXGroup;
 			children = (
@@ -1215,17 +1221,6 @@
 				8992327C1B614202009C63B9 /* JGActionSheet.m */,
 			);
 			path = JGActionSheet;
-			sourceTree = "<group>";
-		};
-		89A793AD1B28A69C000BFA40 /* UIBarButtonItem-Badge */ = {
-			isa = PBXGroup;
-			children = (
-				89A793AE1B28A69C000BFA40 /* UIBarButtonItem+Badge.h */,
-				89A793AF1B28A69C000BFA40 /* UIBarButtonItem+Badge.m */,
-				89A793B01B28A69C000BFA40 /* UIButton+Badge.h */,
-				89A793B11B28A69C000BFA40 /* UIButton+Badge.m */,
-			);
-			path = "UIBarButtonItem-Badge";
 			sourceTree = "<group>";
 		};
 		89A793BC1B2F25CA000BFA40 /* Onboard */ = {
@@ -1558,7 +1553,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				892BF44D1B7A643E00E19E9B /* MTOptionalImage.m in Sources */,
-				89A793B31B28A69C000BFA40 /* UIButton+Badge.m in Sources */,
 				899FC9421B98FCE7009251FB /* MTUserPostPropertyCount.m in Sources */,
 				580B5AEE1982D3C70092AA9C /* MTEditProfileViewController.m in Sources */,
 				895907561B546AAC003AB574 /* MTOrganization.m in Sources */,
@@ -1618,7 +1612,6 @@
 				892096951B8FABF100186801 /* MTChallengeButtonClick.m in Sources */,
 				8920693C1B8B81C3003F53B9 /* MTChallengePostComment.m in Sources */,
 				580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */,
-				89A793B21B28A69C000BFA40 /* UIBarButtonItem+Badge.m in Sources */,
 				892594421B73EC7E00B40E06 /* RLMObject+JSON.m in Sources */,
 				89758EA91B4F204D002B73E3 /* AFOAuth2Manager.m in Sources */,
 				896E11091B740A7C00CEEF17 /* NSError+MTAdditions.m in Sources */,
@@ -1655,6 +1648,7 @@
 				89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */,
 				89CE975E1B4F1E59007FF4D7 /* AFSecurityPolicy.m in Sources */,
 				89E7805F1B974B7B00BD44EE /* MTNotification.m in Sources */,
+				89712E1B1BA356AD00777DA7 /* BBBadgeBarButtonItem.m in Sources */,
 				89CE975D1B4F1E59007FF4D7 /* AFNetworkReachabilityManager.m in Sources */,
 				8925943D1B73EC7E00B40E06 /* MCJSONDateTransformer.m in Sources */,
 				8905874C1A0181F500DB8CD4 /* MTWebViewController.m in Sources */,
@@ -1843,7 +1837,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "fc74c914-3610-4f21-aeee-cd6617cffde1";
+				PROVISIONING_PROFILE = "41a254af-8e79-4e28-bb28-316cd7e09fb6";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2078,7 +2072,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "fc74c914-3610-4f21-aeee-cd6617cffde1";
+				PROVISIONING_PROFILE = "41a254af-8e79-4e28-bb28-316cd7e09fb6";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

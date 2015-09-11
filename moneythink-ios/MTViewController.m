@@ -10,8 +10,6 @@
 
 @interface MTViewController ()
 
-@property (nonatomic, weak) IBOutlet UIBarButtonItem *revealButtonItem;
-
 @end
 
 @implementation MTViewController
@@ -42,9 +40,14 @@
 {
     SWRevealViewController *revealViewController = self.revealViewController;
     if (revealViewController) {
-        [self.revealButtonItem setTarget: self.revealViewController];
-        [self.revealButtonItem setAction: @selector(revealToggle:)];
-        self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        UIButton *customButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
+        [customButton addTarget:self.revealViewController action:@selector(revealToggle:) forControlEvents:UIControlEventTouchUpInside];
+        [customButton setImage:[UIImage imageNamed:@"icon_main_nav.png"] forState:UIControlStateNormal];
+        BBBadgeBarButtonItem *barButton = [[BBBadgeBarButtonItem alloc] initWithCustomUIButton:customButton];
+        barButton.badgeOriginX = 13;
+        barButton.badgeOriginY = -9;
+        barButton.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+        self.navigationItem.leftBarButtonItem = barButton;
         
         // Set the gesture
         //  Add tag = 5000 so panGestureRecognizer can be re-added
@@ -54,7 +57,8 @@
 
 - (void)unreadCountUpdate:(NSNotification *)note
 {
-    self.revealButtonItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
+    BBBadgeBarButtonItem *barButton = (BBBadgeBarButtonItem *)self.navigationItem.leftBarButtonItem;
+    barButton.badgeValue = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
 }
 
 

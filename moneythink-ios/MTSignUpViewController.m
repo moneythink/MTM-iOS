@@ -229,8 +229,14 @@
     }
     
     if (error) {
-        self.allowEmptyEthnicities = YES;
-        [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load ethnicities. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        if (![MTUtil internetReachable]) {
+            [UIAlertView showNoInternetAlert];
+        }
+        else {
+            self.allowEmptyEthnicities = YES;
+            [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load ethnicities. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+
         return;
     }
     
@@ -353,8 +359,14 @@
     }
     
     if (error) {
-        self.allowEmptyMoneyOptions = YES;
-        [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load options. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        if (![MTUtil internetReachable]) {
+            [UIAlertView showNoInternetAlert];
+        }
+        else {
+            self.allowEmptyMoneyOptions = YES;
+            [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to load options. Leave empty or try again later." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        }
+        
         return;
     }
     
@@ -663,7 +675,13 @@
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                
+                if (![MTUtil internetReachable]) {
+                    [UIAlertView showNoInternetAlert];
+                }
+                else {
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
             });
         }];
     }
@@ -750,7 +768,13 @@
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                
+                if (![MTUtil internetReachable]) {
+                    [UIAlertView showNoInternetAlert];
+                }
+                else {
+                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Invalid Registration Code" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                }
             });
         }];
     }
@@ -895,7 +919,7 @@
                                                                     
                                                                     MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                     if (![onboardingController checkForOnboarding]) {
-                                                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                                                        id challengesVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                                                                         [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                     }
                                                                 });
@@ -916,7 +940,13 @@
 
                                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                                                                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                    
+                                                                    if (![MTUtil internetReachable]) {
+                                                                        [UIAlertView showNoInternetAlert];
+                                                                    }
+                                                                    else {
+                                                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                    }
                                                                 });
                                                             }];
 }
@@ -955,7 +985,7 @@
                                                                     
                                                                     MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
                                                                     if (![onboardingController checkForOnboarding]) {
-                                                                        id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+                                                                        id challengesVC = [weakSelf.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                                                                         [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
                                                                     }
                                                                 });
@@ -972,7 +1002,13 @@
                                                                 
                                                                 dispatch_async(dispatch_get_main_queue(), ^{
                                                                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                                                                    [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                    
+                                                                    if (![MTUtil internetReachable]) {
+                                                                        [UIAlertView showNoInternetAlert];
+                                                                    }
+                                                                    else {
+                                                                        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+                                                                    }
                                                                 });
                                                             }];
 }
