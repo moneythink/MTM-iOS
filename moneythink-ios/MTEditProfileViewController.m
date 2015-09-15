@@ -149,6 +149,11 @@
 {
     [super viewDidAppear:animated];
     
+    AppDelegate *appDelegate = [MTUtil getAppDelegate];
+    if (appDelegate.logoutReason && appDelegate.logoutReason.length > 0) {
+        [[[UIAlertView alloc] initWithTitle:@"Class Archived" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+    
     [MTUtil GATrackScreen:@"Edit Profile"];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidShow:) name:UIKeyboardDidShowNotification object:nil];

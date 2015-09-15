@@ -86,6 +86,16 @@
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // Check for logout reason message
+    AppDelegate *appDelegate = [MTUtil getAppDelegate];
+    if (appDelegate.logoutReason && [appDelegate.logoutReason lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > 0) {
+        [[[UIAlertView alloc] initWithTitle:@"Logged Out" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
+}
+
 - (void)viewWillDisappear:(BOOL) animated
 {
     [super viewWillDisappear:animated];

@@ -17,6 +17,7 @@
 @property (nonatomic) BOOL reachable;
 @property (nonatomic, strong) UINavigationController *userViewController;
 @property (nonatomic) NSInteger currentUnreadCount;
+@property (nonatomic) NSString *logoutReason;
 
 - (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
