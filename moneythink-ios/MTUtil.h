@@ -47,4 +47,6 @@
 
 + (void)userDidLogin:(PFUser *)user;
 
++ (BOOL)NSStringIsValidEmail:(NSString *)checkString;
+
 @end

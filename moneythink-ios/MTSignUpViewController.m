@@ -483,6 +483,9 @@
     if (IsEmpty(self.email.text)) {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return NO;
+    } else if (![MTUtil NSStringIsValidEmail:self.email.text]) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is not valid" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
     }
     
     if (IsEmpty(self.password.text)) {
