@@ -56,6 +56,12 @@
 {
     [super viewDidLoad];
     
+    BOOL shouldDim = YES;
+    AppDelegate *appDelegate = [MTUtil getAppDelegate];
+    if (appDelegate.logoutReason && appDelegate.logoutReason.length > 0) {
+        shouldDim = NO;
+    }
+    
     self.viewFields.delegate = self;
     
     self.isMentor = [MTUser isCurrentUserMentor];
@@ -152,7 +158,11 @@
     AppDelegate *appDelegate = [MTUtil getAppDelegate];
     if (appDelegate.logoutReason && appDelegate.logoutReason.length > 0) {
         [[[UIAlertView alloc] initWithTitle:@"Class Archived" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
-        [appDelegate clearLogoutReason];        
+        [appDelegate clearLogoutReason];
+
+        [self bk_performBlockInBackground:^(id obj) {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        } afterDelay:1.0];
     }
     
     [MTUtil GATrackScreen:@"Edit Profile"];
