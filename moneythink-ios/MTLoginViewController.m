@@ -93,6 +93,7 @@
     AppDelegate *appDelegate = [MTUtil getAppDelegate];
     if (appDelegate.logoutReason && [appDelegate.logoutReason lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > 0) {
         [[[UIAlertView alloc] initWithTitle:@"Logged Out" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [appDelegate clearLogoutReason];
     }
 }
 

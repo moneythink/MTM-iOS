@@ -24,5 +24,6 @@
 - (void)updatePushMessagingInfo;
 - (void)configureZendesk;
 - (BOOL)shouldForceUpdate;
+- (void)clearLogoutReason;
 
 @end

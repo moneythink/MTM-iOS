@@ -152,6 +152,7 @@
     AppDelegate *appDelegate = [MTUtil getAppDelegate];
     if (appDelegate.logoutReason && appDelegate.logoutReason.length > 0) {
         [[[UIAlertView alloc] initWithTitle:@"Class Archived" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [appDelegate clearLogoutReason];        
     }
     
     [MTUtil GATrackScreen:@"Edit Profile"];

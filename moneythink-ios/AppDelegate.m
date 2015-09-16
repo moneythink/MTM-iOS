@@ -721,6 +721,10 @@
     }
 }
 
+- (void)clearLogoutReason {
+    self.logoutReason = nil;
+}
+
 
 #pragma mark - Realm Methods -
 - (void)setupRealm
