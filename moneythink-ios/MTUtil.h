@@ -14,16 +14,11 @@
 + (BOOL)internetReachable;
 + (id)getAppDelegate;
 
-+ (NSInteger)orderingForChallengeObjectId:(NSString *)objectId;
-+ (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId;
-+ (BOOL)isCurrentUserMentor;
-+ (BOOL)isUserMe:(PFUser *)user;
-+ (NSString *)currentUserType;
-+ (NSString *)currentUserTypeCapitalized;
-
 + (NSString *)lastViewedChallengeId;
 + (void)setLastViewedChallengedId:(NSString *)challengeId;
 
++ (NSString *)currentUserType;
++ (NSString *)currentUserTypeCapitalized;
 + (NSString *)capitalizeFirstLetter:(NSString *)string;
 
 + (BOOL)userChangedClass;
@@ -45,7 +40,7 @@
 // Google Analytics singleton
 + (void)GATrackScreen:(NSString *)string;
 
-+ (void)userDidLogin:(PFUser *)user;
++ (void)userDidLogin:(MTUser *)user;
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString;
 

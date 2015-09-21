@@ -49,12 +49,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [MTUtil GATrackScreen:self.title];
-
-    if (!self.editPost) {
-        [self.postText becomeFirstResponder];
-    }
+    [self.postText becomeFirstResponder];
 }
 
 

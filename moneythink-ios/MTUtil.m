@@ -8,6 +8,7 @@
 
 #import "MTUtil.h"
 #import <Google/Analytics.h>
+#import "MTUser.h"
 
 @implementation MTUtil
 
@@ -23,31 +24,6 @@
 + (id)getAppDelegate
 {
     return [UIApplication sharedApplication].delegate;
-}
-
-+ (NSInteger)orderingForChallengeObjectId:(NSString *)objectId
-{
-    if (IsEmpty(objectId)) {
-        return -1;
-    }
-    
-    NSNumber *ordering = [[NSUserDefaults standardUserDefaults] objectForKey:objectId];
-    if (ordering) {
-        return [ordering integerValue];
-    }
-    else {
-        return -1;
-    }
-}
-
-+ (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId
-{
-    if (IsEmpty(objectId)) {
-        return;
-    }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:ordering] forKey:objectId];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)lastViewedChallengeId
@@ -131,20 +107,9 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-
-+ (BOOL)isCurrentUserMentor
-{
-    if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-        return NO;
-    } else {
-        return YES;
-    }
-
-}
-
 + (NSString *)currentUserType
 {
-    if ([self isCurrentUserMentor]) {
+    if ([MTUser isCurrentUserMentor]) {
         return @"mentor";
     } else {
         return @"student";
@@ -163,16 +128,6 @@
     return [firstLetter stringByAppendingString:remainder];
 }
 
-+ (BOOL)isUserMe:(PFUser *)user
-{
-    if ([[PFUser currentUser].objectId isEqualToString:user.objectId]) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
-}
-
 + (void)GATrackScreen:(NSString *)string {
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:string];
@@ -182,38 +137,34 @@
 }
 
 /* View Controllers should call this whenever the user is successfully logged in. */
-+ (void)userDidLogin:(PFUser *)user {
++ (void)userDidLogin:(MTUser *)user {
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     
     // As per docs here: https://developers.google.com/analytics/devguides/collection/ios/v3/user-id
-    [tracker set:@"&uid" value:[user objectId]];
+    [tracker set:@"&uid" value:[NSString stringWithFormat:@"%ld", user.id]];
     
     // Dimension 1: UserID (NO PII!)
-    [tracker set:[GAIFields customDimensionForIndex:1] value:[user objectId]];
+    [tracker set:[GAIFields customDimensionForIndex:1] value:[NSString stringWithFormat:@"%ld", user.id]];
     
     // Dimension 2: School Name
-    NSString *schoolName = user[@"school"];
+    NSString *schoolName = user.organization.name;
     if (schoolName) {
         [tracker set:[GAIFields customDimensionForIndex:2] value:schoolName];
     }
     
     // Dimension 3: Class Name
-    NSString *className = user[@"class"];
+    NSString *className = user.userClass.name;
     if (className) {
         [tracker set:[GAIFields customDimensionForIndex:3] value:className];
     }
     
     // Dimension 4: School ID
-    PFSchools *school = user[@"school_p"];
-    if (school && school.objectId) {
-        [tracker set:[GAIFields customDimensionForIndex:4] value:school.objectId];
-    }
+    NSString *schoolID = [NSString stringWithFormat:@"%ld", user.organization.id];
+    [tracker set:[GAIFields customDimensionForIndex:4] value:schoolID];
     
     // Dimension 5: Class ID (currently indicates program lead)
-    PFClasses *class = user[@"class_p"];
-    if (class && class.objectId) {
-        [tracker set:[GAIFields customDimensionForIndex:5] value:class.objectId];
-    }
+    NSString *classID = [NSString stringWithFormat:@"%ld", user.userClass.id];
+    [tracker set:[GAIFields customDimensionForIndex:5] value:classID];
     
     // Dimension 6: User Type (student or mentor)
     NSString *type = user[@"type"];
@@ -226,7 +177,7 @@
                                                            label:nil              // Event label
                                                            value:nil] build]];    // Event value
     
-    NSLog(@"GA Track [Event]: %@ Sign In (ID: %@, School: %@, Class: %@)", [type capitalizedString], [user objectId], schoolName, className);
+    NSLog(@"GA Track [Event]: %@ Sign In (ID: %ld, School: %@, Class: %@)", [type capitalizedString], user.id, schoolName, className);
 }
 + (void)setRefreshedForKey:(NSString *)key
 {

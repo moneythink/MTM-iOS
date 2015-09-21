@@ -217,7 +217,7 @@
     }
     else if ([MTUser isUserLoggedIn]) {
 
-        [MTUtil userDidLogin:[user objectId]];
+        [MTUtil userDidLogin:[MTUser currentUser]];
 
         [[MTUtil getAppDelegate] configureZendesk];
         if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
@@ -363,7 +363,7 @@
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
         
-        [MTUtil userDidLogin:[user objectId]];
+        [MTUtil userDidLogin:[MTUser currentUser]];
 
         [[MTUtil getAppDelegate] configureZendesk];
         

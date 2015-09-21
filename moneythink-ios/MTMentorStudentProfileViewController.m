@@ -108,10 +108,10 @@
     }
     
     // Only show verified assets if current user is Mentor
-    cell.verifiedCheckbox.hidden = ![MTUtil isCurrentUserMentor];
-    cell.verifiedLabel.hidden = ![MTUtil isCurrentUserMentor];
+    cell.verifiedCheckbox.hidden = ![MTUser isCurrentUserMentor];
+    cell.verifiedLabel.hidden = ![MTUser isCurrentUserMentor];
 
-    if ([MTUtil isCurrentUserMentor]) {
+    if ([MTUser isCurrentUserMentor]) {
         cell.verified.on = cell.rowPost.isVerified;
     }
     

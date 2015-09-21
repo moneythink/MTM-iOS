@@ -56,7 +56,7 @@
 - (OnboardingViewController *)generateWelcomeVC {
     MTMakeWeakSelf();
     
-    UIImage *onboarding1 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_1_mentor"] : [UIImage imageNamed:@"onboarding_1_student"];
+    UIImage *onboarding1 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_1_mentor"] : [UIImage imageNamed:@"onboarding_1_student"];
     OnboardingContentViewController *welcomePage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding1 buttonText:@"Take A Tour" action:^{
     }];
     welcomePage.movesToNextViewController = YES;
@@ -66,32 +66,32 @@
     welcomePage.viewWillAppearBlock = ^{
     };
 
-    UIImage *onboarding2 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_2_mentor"] : [UIImage imageNamed:@"onboarding_2_student"];
+    UIImage *onboarding2 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_2_mentor"] : [UIImage imageNamed:@"onboarding_2_student"];
     OnboardingContentViewController *secondPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding2 buttonText:nil action:^{
     }];
     
-    UIImage *onboarding3 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_3_mentor"] :[UIImage imageNamed:@"onboarding_3_student"];
+    UIImage *onboarding3 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_3_mentor"] :[UIImage imageNamed:@"onboarding_3_student"];
     OnboardingContentViewController *thirdPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding3 buttonText:nil action:^{
     }];
     
-    UIImage *onboarding4 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_4_mentor"] : [UIImage imageNamed:@"onboarding_4_student"];
+    UIImage *onboarding4 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_4_mentor"] : [UIImage imageNamed:@"onboarding_4_student"];
     OnboardingContentViewController *fourthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding4 buttonText:nil action:^{
     }];
 
     // Skipping this until progress bar is complete
-    UIImage *onboarding5 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
+    UIImage *onboarding5 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_5_mentor"] : [UIImage imageNamed:@"onboarding_5_student"];
     OnboardingContentViewController *fifthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding5 buttonText:nil action:^{
     }];
 
-    UIImage *onboarding6 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_6_mentor"] : [UIImage imageNamed:@"onboarding_6_student"];
+    UIImage *onboarding6 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_6_mentor"] : [UIImage imageNamed:@"onboarding_6_student"];
     OnboardingContentViewController *sixthPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding6 buttonText:nil action:^{
     }];
 
-    UIImage *onboarding7 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_7_mentor"] : [UIImage imageNamed:@"onboarding_7_student"];
+    UIImage *onboarding7 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_7_mentor"] : [UIImage imageNamed:@"onboarding_7_student"];
     OnboardingContentViewController *seventhPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding7 buttonText:nil action:^{
     }];
 
-    UIImage *onboarding8 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_8_mentor"] : [UIImage imageNamed:@"onboarding_8_student"];
+    UIImage *onboarding8 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_8_mentor"] : [UIImage imageNamed:@"onboarding_8_student"];
     OnboardingContentViewController *photoUploadPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding8 buttonText:nil action:^{
         [self handleOnboardingCompletion];
     }];
@@ -116,7 +116,7 @@
         }
     };
     
-    UIImage *onboarding9 = [MTUtil isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_9_mentor"] : [UIImage imageNamed:@"onboarding_9_student"];
+    UIImage *onboarding9 = [MTUser isCurrentUserMentor] ? [UIImage imageNamed:@"onboarding_9_mentor"] : [UIImage imageNamed:@"onboarding_9_student"];
     OnboardingContentViewController *lastPage = [OnboardingContentViewController contentWithTitle:nil body:nil image:onboarding9 buttonText:@"Let's Do This!" action:^{
         [self handleOnboardingCompletion];
     }];
