@@ -39,11 +39,12 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PFChallenges *challenge = [self.challenges objectAtIndex:indexPath.section];
+    MTChallenge *challenge = [self.challenges objectAtIndex:indexPath.section];
     
     MTChallengeListTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ChallengeListTableViewCell" forIndexPath:indexPath];
-    cell.challengeNumber.text = [NSString stringWithFormat:@"%ld", indexPath.section+1];
-    cell.challengeTitle.text = challenge[@"title"];
+    NSInteger challengeNumber = indexPath.section+1;
+    cell.challengeNumber.text = [NSString stringWithFormat:@"%ld", (long)challengeNumber];
+    cell.challengeTitle.text = challenge.title;
     
     return cell;
 }
@@ -70,7 +71,7 @@
 
 
 #pragma mark - Public -
-- (void)setCurrentChallenge:(PFChallenges *)currentChallenge
+- (void)setCurrentChallenge:(MTChallenge *)currentChallenge
 {
     if (_currentChallenge != currentChallenge) {
         _currentChallenge = currentChallenge;

@@ -21,7 +21,7 @@
 #pragma mark - Onboarding -
 - (BOOL)checkForOnboarding
 {
-    BOOL userHasOnboarded = [[NSUserDefaults standardUserDefaults] boolForKey:kUserHasOnboardedKey];
+    BOOL userHasOnboarded = [MTUser currentUser].onboardingComplete;
     
     // if the user has already onboarded, just set up the normal root view controller
     // for the application, but don't animate it because there's no transition in this case
@@ -41,8 +41,7 @@
 }
 
 - (void)handleOnboardingCompletion {
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserHasOnboardedKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    [[MTNetworkManager sharedMTNetworkManager] setOnboardingCompleteForCurrentUserWithSuccess:nil failure:nil];
     
     SWRevealViewController *rootVC = (SWRevealViewController *)((AppDelegate *)[MTUtil getAppDelegate]).window.rootViewController;
     id challengesVC = [rootVC.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
@@ -106,9 +105,9 @@
 
     photoUploadPage.viewDidAppearBlock = ^{
         weakSelf.onboardingVC.swipingEnabled = NO;
-        PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-        if (profileImageFile) {
-            [weakPhotoUploadPage setProfileImageFile:profileImageFile];
+        MTUser *currentUser = [MTUser currentUser];
+        if (currentUser.userAvatar && !weakPhotoUploadPage.changedProfileImage) {
+            [weakPhotoUploadPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.imageData]];
         }
     };
     
@@ -131,7 +130,7 @@
 
 
     self.onboardingVC = nil;
-    if ([PFUser currentUser][@"profile_picture"]) {
+    if ([MTUser currentUser].userAvatar) {
         self.onboardingVC = [OnboardingViewController onboardWithBackgroundImage:nil contents:@[welcomePage, secondPage, thirdPage, fourthPage, fifthPage, sixthPage, seventhPage, lastPage]];
         self.onboardingVC.fadePageControlOnLastPage = YES;
     }
@@ -146,34 +145,15 @@
     lastPage.viewDidAppearBlock = ^{
         weakSelf.onboardingVC.swipingEnabled = YES;
         if (weakLastPage.profileImage) {
-            // just use existing in case they have scrolled away and back to this view
-            if (weakLastPage.changedProfileImage) {
-                // animate
-                [UIView animateWithDuration:0.15f animations:^{
-                    weakLastPage.profileImageButton.alpha = 0.0f;
-                } completion:^(BOOL finished) {
-                    [weakLastPage.profileImageButton setImage:weakLastPage.profileImage forState:UIControlStateNormal];
-                    [weakLastPage.profileImageButton setImage:nil forState:UIControlStateHighlighted];
-                    
-                    [UIView animateWithDuration:0.15f animations:^{
-                        weakLastPage.profileImageButton.alpha = 1.0f;
-                    }];
-                }];
-                
-                weakLastPage.changedProfileImage = NO;
-            }
-            else {
+            if (!weakLastPage.changedProfileImage) {
                 [weakLastPage.profileImageButton setImage:weakLastPage.profileImage forState:UIControlStateNormal];
                 [weakLastPage.profileImageButton setImage:nil forState:UIControlStateHighlighted];
             }
         }
-        else if (weakLastPage.profileFile) {
-            [weakLastPage setProfileImageFile:weakLastPage.profileFile];
-        }
         else {
-            PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-            if (profileImageFile) {
-                [weakLastPage setProfileImageFile:profileImageFile];
+            MTUser *currentUser = [MTUser currentUser];
+            if (currentUser.userAvatar) {
+                [weakLastPage setProfileImage:[UIImage imageWithData:currentUser.userAvatar.imageData]];
             }
         }
         

@@ -10,7 +10,7 @@
 
 @interface MTChallengeInfoViewController : UIViewController
 
-@property (strong, nonatomic) PFChallenges *challenge;
+@property (nonatomic, strong) MTChallenge *challenge;
 @property (nonatomic) NSUInteger pageIndex;
 
 @end

@@ -11,7 +11,7 @@
 @interface MTChallengeInfoViewController ()
 
 @property (nonatomic, strong) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, strong) IBOutlet PFImageView *challengeBanner;
+@property (nonatomic, strong) IBOutlet UIImageView *challengeBanner;
 
 @property (nonatomic, strong) IBOutlet UIView *rewardsView;
 @property (nonatomic, strong) IBOutlet UILabel *rewardLabel;
@@ -123,29 +123,21 @@
 #pragma mark - Private Methods -
 - (void)updateView
 {
-    NSPredicate *predicateChallengeBanner = [NSPredicate predicateWithFormat:@"challenge = %@", self.challenge];
-    PFQuery *queryChallangeBanners = [PFQuery queryWithClassName:[PFChallengeBanner parseClassName] predicate:predicateChallengeBanner];
-    
-    queryChallangeBanners.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
     MTMakeWeakSelf();
-    [queryChallangeBanners findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            PFChallengeBanner *banner = [objects firstObject];
-            PFFile *bannerFile = banner[@"image_mdpi"];
-            weakSelf.challengeBanner.file = bannerFile;
-            [weakSelf.challengeBanner loadInBackground:^(UIImage *image, NSError *error) {
-                if (!error) {
-                    weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:image];
-                }
-            }];
-        }
+    UIImage *bannerImage = [self.challenge loadBannerImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:responseData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load challenge banner: %@", [error mtErrorDescription]);
     }];
-        
+    
+    self.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:bannerImage];
+    
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
     
-    self.tagline.text = self.challenge[@"student_instructions"];
+    self.tagline.text = self.challenge.studentInstructions;
     
     [self.tagline sizeToFit];
     [self.missionView sizeToFit];
@@ -153,20 +145,19 @@
     [self.missionView setNeedsLayout];
     
     NSString *perString = @"per post";
-    NSArray *buttons = self.challenge[@"buttons"];
-    NSArray *secondaryButtons = self.challenge[@"secondary_buttons"];
-    if (!IsEmpty(buttons) || !IsEmpty(secondaryButtons)) {
+    
+    RLMResults *buttons = [MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id];
+    if (!IsEmpty(buttons)) {
         perString = @"per tap";
     }
     
+    NSString *pointsPerPostString = [NSString stringWithFormat:@"%ld pts %@,", (long)self.challenge.pointsPerPost, perString];
+    NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ %ld pts to complete", pointsPerPostString, (long)self.challenge.maxPoints];
     
-    NSString *pointsPerPostString = [NSString stringWithFormat:@"%@ pts %@,", self.challenge[@"points_per_post"], perString];
-    NSString *theMessage = [NSString stringWithFormat:@"Reward: %@ %@ pts to complete", pointsPerPostString, self.challenge[@"max_points"]];
-    
-    if (!IsEmpty(self.challenge[@"rewards_info"])) {
-        theMessage = [NSString stringWithFormat:@"Reward: %@", self.challenge[@"rewards_info"]];
+    if (!IsEmpty(self.challenge.rewardsInfo)) {
+        theMessage = [NSString stringWithFormat:@"Reward: %@", self.challenge.rewardsInfo];
     }
-                      
+    
     NSMutableAttributedString *theAttributedTitle = [[NSMutableAttributedString alloc] initWithString:theMessage];
     [theAttributedTitle addAttribute:NSForegroundColorAttributeName value:[UIColor blackColor] range:[theMessage rangeOfString:theMessage]];
     [theAttributedTitle addAttribute:NSFontAttributeName value:[UIFont mtFontOfSize:12.0f] range:[theMessage rangeOfString:theMessage]];
@@ -176,21 +167,22 @@
 
     self.rewardLabel.attributedText = theAttributedTitle;
     
-    if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
-        self.mentorInstructions.text = self.challenge[@"mentor_instructions"];
+    if ([MTUtil isCurrentUserMentor]) {
+        self.mentorInstructions.text = self.challenge.mentorInstructions;
         [self.mentorInstructions setTextColor:[UIColor primaryOrange]];
     } else {
         self.mentorInstructions.hidden = YES;
         self.mentorLabel.hidden = YES;
     }
     
-    self.challengeNumber.text = [NSString stringWithFormat:@"%lu", self.pageIndex+1];
-    self.challengeTitle.text = self.challenge[@"title"];
+    NSInteger challengeNumber = self.pageIndex+1;
+    self.challengeNumber.text = [NSString stringWithFormat:@"%lu", (long)challengeNumber];
+    self.challengeTitle.text = self.challenge.title;
 }
 
 
 #pragma mark - Public Methods -
-- (void)setChallenge:(PFChallenges *)challenge
+- (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
         _challenge = challenge;

@@ -9,56 +9,35 @@
 #import "MTMentorStudentProfileViewController.h"
 #import "MTStudentProfileTableViewCell.h"
 #import "MTStudentProfileTableViewCell.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 
 @interface MTMentorStudentProfileViewController ()
 
-@property (strong, nonatomic) NSArray *studentPosts;
-
+@property (strong, nonatomic) RLMResults *studentPosts;
 @property (strong, nonatomic) IBOutlet UILabel *userPoints;
 
 @end
 
 @implementation MTMentorStudentProfileViewController
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    id studentPoints = self.student[@"points"];
-    NSString *points = @"0";
-    if (studentPoints && studentPoints != [NSNull null]) {
-        points = [studentPoints stringValue];
-    }
+    NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
-    self.title = [NSString stringWithFormat:@"%@ %@", self.student[@"first_name"], self.student[@"last_name"]];
+    self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
     
-    self.profileImage.file = self.student[@"profile_picture"];
+    __block UIImageView *weakImageView = self.profileImage;
     self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
     self.profileImage.layer.masksToBounds = YES;
     self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-    
-    MTMakeWeakSelf();
-    [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
+    self.profileImage.image = [self.student loadAvatarImageWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (!error) {
-                if (image) {
-                    weakSelf.profileImage.image = image;
-                } else {
-                    weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-                weakSelf.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-            }
+            weakImageView.image = responseData;
         });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
     }];
 }
 
@@ -66,21 +45,17 @@
 {
     [super viewDidAppear:NO];
     
-    PFQuery *studentPostsQuery = [PFQuery queryWithClassName:[PFChallengePost parseClassName]];
-    [studentPostsQuery whereKey:@"user" equalTo:self.student];
-    [studentPostsQuery includeKey:@"verified_by"];
-    [studentPostsQuery includeKey:@"user"];
-    [studentPostsQuery orderByDescending:@"createdAt"];
+    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    [self.tableView reloadData];
     
-    studentPostsQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-    
-    [studentPostsQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            self.studentPosts = objects;
-            [self.tableView reloadData];
-        } else {
-            // error
-        }
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+            [weakSelf.tableView reloadData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load student posts");
     }];
 }
 
@@ -106,32 +81,25 @@
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
     }
     
-    PFChallengePost *post = self.studentPosts[row];
-    PFUser *user = post[@"user"];
+    MTChallengePost *post = [self.studentPosts objectAtIndex:row];
+    MTUser *user = post.user;
     
-    cell.postProfileImage.image = [UIImage imageNamed:@"profile_image"];
-    cell.postProfileImage.file = user[@"profile_picture"];
+    __block MTStudentProfileTableViewCell *weakCell = cell;
+    
     cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
     cell.postProfileImage.layer.masksToBounds = YES;
     cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
-    
-    [cell.postProfileImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                cell.postProfileImage.image = image;
-                [cell setNeedsDisplay];
-            }
-            else {
-                image = nil;
-            }
-        } else {
-            NSLog(@"error - %@", error);
-        }
+    cell.postProfileImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakCell.postProfileImage.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
     }];
 
     cell.rowPost = post;
     
-    NSDate *dateObject = [cell.rowPost createdAt];
+    NSDate *dateObject = cell.rowPost.createdAt;
     
     if (dateObject) {
         cell.timeSince.text = [dateObject niceRelativeTimeFromNow];
@@ -142,12 +110,11 @@
     cell.verifiedLabel.hidden = ![MTUtil isCurrentUserMentor];
 
     if ([MTUtil isCurrentUserMentor]) {
-        PFUser *verifier = cell.rowPost[@"verified_by"];
-        cell.verified.on = ![[verifier username] isEqualToString:@""];
+        cell.verified.on = cell.rowPost.isVerified;
     }
     
     // >>>>> Attributed hashtag
-    cell.postText.text = cell.rowPost[@"post_text"];
+    cell.postText.text = cell.rowPost.content;
     
     if (!IsEmpty(cell.postText.text)) {
         NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -162,20 +129,21 @@
     }
     // Attributed hashtag
 
-    NSInteger likesCount = 0;
-    if (cell.rowPost[@"likes"]) {
-        likesCount = [cell.rowPost[@"likes"] intValue];
-    }
-    if (likesCount > 0) {
+    // Get Likes
+    NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)self.student.id, (long)post.id];
+    MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
+    if (existing && existing.likeCount > 0 && !existing.isDeleted) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
-        cell.likeCount.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
-    } else {
+        cell.likeCount.text = [NSString stringWithFormat:@"%ld", (long)existing.likeCount];
+    }
+    else {
         cell.likes.image = [UIImage imageNamed:@"like_normal"];
         cell.likeCount.text = @"0";
     }
+    
     [cell.likeCount sizeToFit];
     
-    if (cell.rowPost[@"verified_by"]) {
+    if (cell.rowPost.isVerified) {
         cell.verifiedCheckbox.isChecked = YES;
     } else {
         cell.verifiedCheckbox.isChecked = NO;
@@ -199,9 +167,9 @@
     NSString *segueId = [segue identifier];
     
     if ([segueId isEqualToString:@"pushProfileToPost"]) {
-        MTPostViewController *destinationVC = (MTPostViewController *)[segue destinationViewController];
+        MTPostDetailViewController *destinationVC = (MTPostDetailViewController *)[segue destinationViewController];
         MTStudentProfileTableViewCell *cell = (MTStudentProfileTableViewCell *)sender;
-        PFChallengePost *rowObject = cell.rowPost;
+        MTChallengePost *rowObject = cell.rowPost;
         destinationVC.challengePost = rowObject;
     }
 }

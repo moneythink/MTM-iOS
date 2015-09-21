@@ -10,7 +10,7 @@
 
 @protocol MTChallengeListViewControllerDelegate <NSObject>
 
-- (void)didSelectChallenge:(PFChallenges *)challenge withIndex:(NSInteger)index;
+- (void)didSelectChallenge:(MTChallenge *)challenge withIndex:(NSInteger)index;
 
 @end
 
@@ -19,7 +19,7 @@
 @property (nonatomic, weak) id<MTChallengeListViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) NSArray *challenges;
-@property (nonatomic, strong) PFChallenges *currentChallenge;
+@property (nonatomic, strong) RLMResults *challenges;
+@property (nonatomic, strong) MTChallenge *currentChallenge;
 
 @end

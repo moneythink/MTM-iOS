@@ -10,6 +10,6 @@
 
 @interface MTExplorePostCollectionView : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
-@property (strong, nonatomic) PFChallenges *challenge;
+@property (strong, nonatomic) MTChallenge *challenge;
 
 @end

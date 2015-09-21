@@ -8,13 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTNotificationViewController : PFQueryTableViewController <UITextViewDelegate>
+@interface MTNotificationViewController : UITableViewController <UITextViewDelegate>
 
 @property (nonatomic, strong) NSArray *classNotifications;
-@property (nonatomic, strong) NSString *actionableNotificationId;
+@property (nonatomic) NSInteger actionableNotificationId;
 
-+ (void)markReadForNotificationId:(NSString *)notificationId;
-+ (void)markReadForNotification:(PFNotifications *)notification;
++ (void)markReadForNotificationId:(NSInteger)notificationId;
++ (void)markReadForNotification:(MTNotification *)notification;
 + (void)requestNotificationUnreadCountUpdateUsingCache:(BOOL)useCache;
 
 @end

@@ -16,6 +16,6 @@
 
 @interface MTChallengesViewController : MTViewController <MTCommentViewProtocol, UIPageViewControllerDelegate, UIPageViewControllerDataSource, MTChallengeContentViewControllerDelegate, MTChallengeListViewControllerDelegate>
 
-@property (nonatomic, strong) NSString *actionableChallengeId;
+@property (nonatomic) NSInteger actionableChallengeId;
 
 @end

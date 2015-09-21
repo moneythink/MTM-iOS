@@ -11,17 +11,16 @@
 
 @protocol MTCommentViewProtocol <NSObject>
 
-- (void) dismissCommentView;
+- (void)dismissCommentView;
 
 @end
 
-@interface MTCommentViewController : UIViewController <UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, UIAlertViewDelegate>
+@interface MTCommentViewController : UIViewController
 
 @property (nonatomic, weak) id <MTCommentViewProtocol> delegate;
 
-@property (nonatomic, strong) PFChallenges *challenge;
-@property (nonatomic, strong) PFChallengePost *post;
-@property (nonatomic, strong) PFChallengePostComment *challengePostComment;
-@property (nonatomic) BOOL editPost;
+@property (nonatomic, strong) MTChallengePost *post;
+@property (nonatomic, strong) MTChallengePostComment *challengePostComment;
+@property (nonatomic) BOOL editComment;
 
 @end

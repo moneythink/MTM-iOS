@@ -2,23 +2,27 @@
 //  MTMyClassTableViewController.m
 //  moneythink-ios
 //
-//  Created by jdburgie on 8/4/14.
-//  Copyright (c) 2014 Moneythink. All rights reserved.
+//  Created by dsica on 8/20/14.
+//  Copyright (c) 2015 Moneythink. All rights reserved.
 //
 
 #import "MTMyClassTableViewController.h"
 #import "MTPostsTableViewCell.h"
 #import "MTCommentViewController.h"
 #import "MTEmojiPickerCollectionView.h"
+#import "MTPostViewController.h"
 
 NSString *const kWillSaveNewChallengePostNotification = @"kWillSaveNewChallengePostNotification";
 NSString *const kDidDeleteChallengePostNotification = @"kDidDeleteChallengePostNotification";
 NSString *const kDidTapChallengeButtonNotification = @"kDidTapChallengeButtonNotification";
-NSString *const kSavingWithPhotoNewChallengePostNotification = @"kSavingWithPhotoNewChallengePostNotification";
 NSString *const kSavedMyClassChallengePostNotification = @"kSavedMyClassChallengePostNotification";
 NSString *const kFailedMyClassChallengePostNotification = @"kFailedMyClassChallengePostNotification";
+NSString *const kFailedMyClassChallengePostCommentNotification = @"kFailedMyClassChallengePostCommentNotification";
+NSString *const kFailedMyClassChallengePostCommentEditNotification = @"kFailedMyClassChallengePostCommentEditNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
+NSString *const kWillSaveEditPostCommentNotification = @"kWillSaveEditPostCommentNotification";
 NSString *const kDidSaveNewPostCommentNotification = @"kDidSaveNewPostCommentNotification";
+NSString *const kDidDeletePostCommentNotification = @"kDidDeletePostCommentNotification";
 NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification";
 NSString *const kDidSaveEditPostNotification = @"kDidSaveEditPostNotification";
 NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotification";
@@ -29,61 +33,41 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
 @property (nonatomic) BOOL isMentor;
-@property (nonatomic, strong) NSArray *postsLiked;
-@property (nonatomic, strong) NSArray *postsLikedFull;
-@property (nonatomic, strong) NSDictionary *buttonsTapped;
-@property (nonatomic, strong) NSDictionary *secondaryButtonsTapped;
 @property (nonatomic) BOOL iLike;
-@property (nonatomic, strong) NSMutableArray *myObjects;
-@property (nonatomic) BOOL deletingPost;
-@property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic, strong) UIButton *secondaryButton1;
 @property (nonatomic, strong) UIButton *secondaryButton2;
-@property (nonatomic) BOOL didUpdateLikedPosts;
-@property (nonatomic) BOOL updatedButtonsAndLikes;
 @property (nonatomic, strong) MTEmojiPickerCollectionView *emojiCollectionView;
 @property (nonatomic, strong) UIView *emojiDimView;
 @property (nonatomic, strong) UIView *emojiContainerView;
 @property (nonatomic) BOOL displaySpentView;
+@property (nonatomic, strong) RLMResults *challengePosts;
+@property (nonatomic, strong) RLMResults *buttons;
+@property (nonatomic, strong) NSMutableArray *challengeIdsQueried;
 
 @end
 
 @implementation MTMyClassTableViewController
-
-- (id)initWithCoder:(NSCoder *)aCoder {
-    self = [super initWithCoder:aCoder];
-    if (self) {
-        // The className to query on
-        self.parseClassName = [PFChallengePost parseClassName];
-        
-        // The key of the PFObject to display in the label of the default cell style
-        self.textKey = @"post_text";
-        
-        // Whether the built-in pull-to-refresh is enabled
-        self.pullToRefreshEnabled = YES;
-    }
-    
-    return self;
-}
-
 
 #pragma mark - Lifecycle -
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
+    self.challengeIdsQueried = [NSMutableArray array];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewChallengePost:) name:kWillSaveNewChallengePostNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savingWithPhoto:) name:kSavingWithPhotoNewChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postFailed) name:kFailedMyClassChallengePostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPostComment:) name:kWillSaveEditPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeletePostComment:) name:kDidDeletePostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentFailed) name:kFailedMyClassChallengePostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentEditFailed) name:kFailedMyClassChallengePostCommentEditNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
 
-    self.didUpdateLikedPosts = NO;
-    self.updatedButtonsAndLikes = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.emptyDataSetSource = self;
@@ -91,6 +75,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     // A little trick for removing the cell separators
     self.tableView.tableFooterView = [UIView new];
+    
+    self.refreshControl = [[UIRefreshControl alloc] init];
+    self.refreshControl.backgroundColor = [UIColor whiteColor];
+    self.refreshControl.tintColor = [UIColor primaryOrange];
+    [self.refreshControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -98,13 +87,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [super viewWillAppear:animated];
     
     self.title = @"My Class";
-    self.isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
+    self.isMentor = [MTUser isCurrentUserMentor];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     self.postViewController = nil;
 }
 
@@ -117,66 +105,144 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 }
 
 
-#pragma mark - Parse -
-- (void)objectsDidLoad:(NSError *)error
+#pragma mark - Data Loading -
+- (void)loadData
 {
-    [super objectsDidLoad:error];
+    [self refreshFromDatabase];
     
-    if (self.updatedButtonsAndLikes) {
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (IsEmpty(self.challengePosts) && ![self.challengeIdsQueried containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
+        
+        // Show this loading indicator only the first time empty, otherwise background update.
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Posts...";
+        hud.dimBackground = YES;
+    }
+
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.refreshControl endRefreshing];
+            [weakSelf refreshFromDatabase];
+            
+            if (!IsEmpty(weakSelf.challengePosts)) {
+                [weakSelf updateComments];
+                [weakSelf updateLikes];
+                
+                if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+                    [weakSelf updateButtonClicks];
+                }
+            }
+        });
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.refreshControl endRefreshing];
+            [weakSelf refreshFromDatabase];
+        });
+    }];
+}
+
+- (void)refreshFromDatabase
+{
+    if (self.challenge) {
+        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+        [self loadButtons];
+    }
+    else {
+        self.challengePosts = nil;
+        self.buttons = nil;
     }
     
-    self.myObjects = [NSMutableArray arrayWithArray:self.objects];
     [self.tableView reloadData];
 }
 
-// Override to customize what kind of query to perform on the class. The default is to query for
-// all objects ordered by createdAt descending.
-- (PFQuery *)queryForTable
+- (void)updateComments
 {
-    self.className = [PFUser currentUser][@"class"];
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadCommentsForChallengeId:self.challenge.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to update comments: %@", [error mtErrorDescription]);
+    }];
+}
+
+- (void)loadButtons
+{
+    self.buttons = [[MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id] sortedResultsUsingProperty:@"ranking" ascending:YES];
     
-    NSPredicate *challengePostQuery = [NSPredicate predicateWithFormat:@"challenge = %@ AND class = %@",
-                                    self.challenge, self.className];
+    self.hasButtons = NO;
+    self.hasSecondaryButtons = NO;
+    self.hasTertiaryButtons = NO;
     
-    if (self.challengeNumber) {
-        NSInteger challengeNumberInt = [self.challengeNumber intValue];
-        challengePostQuery = [NSPredicate predicateWithFormat:@"(challenge = %@ OR challenge_number = %d) AND class = %@",
-                                        self.challenge, challengeNumberInt, self.className];
+    if (!IsEmpty(self.buttons)) {
+        if ([[((MTChallengeButton *)[self.buttons firstObject]).buttonTypeCode uppercaseString] isEqualToString:@"VOTE"]) {
+            // Voting buttons (primary or tertiary)
+            if ([self.buttons count] == 4) {
+                // Tertiary
+                self.hasTertiaryButtons = YES;
+            }
+            else {
+                // Primary
+                self.hasButtons = YES;
+            }
+        }
+        else if (!self.isMentor) {
+            // Secondary
+            self.hasSecondaryButtons = YES;
+        }
     }
-    
-    PFQuery *query = [PFQuery queryWithClassName:self.parseClassName predicate:challengePostQuery];
-    [query orderByDescending:@"createdAt"];
-    
-    [query includeKey:@"user"];
-    [query includeKey:@"reference_post"];
+}
 
-    query.cachePolicy = kPFCachePolicyNetworkElseCache;
+- (void)updateButtonClicks
+{
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonClicksForChallengeId:self.challenge.id success:^(id responseData) {
+        [weakSelf.tableView reloadData];
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to updateButtonsClicks: %@", [error mtErrorDescription]);
+    }];
+}
 
-    return query;
+- (void)updateLikes
+{
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadLikesForChallengeId:self.challenge.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.tableView reloadData];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load/update likes: %@", [error mtErrorDescription]);
+    }];
 }
 
 
 #pragma mark - Public -
-- (void)setChallenge:(PFChallenges *)challenge
+- (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
+        BOOL refresh = (_challenge == nil || (_challenge != nil && (_challenge.id != challenge.id)));
         _challenge = challenge;
         
-        self.myObjects = nil;
-        self.didUpdateLikedPosts = NO;
-        self.updatedButtonsAndLikes = NO;
-        
-        self.displaySpentView = [challenge[@"display_extra_fields"] boolValue];
-
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        [self.tableView reloadData];
-        
-        [self updateButtonsAndLikes];
+        if (refresh) {
+            self.challengePosts = nil;
+            self.displaySpentView = !IsEmpty(challenge.postExtraFields);
+            self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+            [self loadData];
+        }
     }
 }
 
-- (void)didSelectLikeWithEmojiForPost:(PFChallengePost *)post
+- (void)didSelectLikeWithEmojiForPost:(MTChallengePost *)post
 {
     CGRect keyWindowFrame = [UIApplication sharedApplication].keyWindow.frame;
     self.emojiDimView = [[UIView alloc] initWithFrame:keyWindowFrame];
@@ -199,12 +265,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     self.emojiCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"EmojiPickerCollectionView"];
     self.emojiCollectionView.collectionView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
     self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 242.0f, 126.0f);
-    
-    // Sort by name, so consistent in presentation
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"emoji_order" ascending:YES];
-    NSArray *sortedEmojiArray = [self.emojiObjects sortedArrayUsingDescriptors:[NSArray arrayWithObject:sortDescriptor]];
-    
-    self.emojiCollectionView.emojiObjects = sortedEmojiArray;
+        
+    self.emojiCollectionView.emojiObjects = self.emojiObjects;
     self.emojiCollectionView.post = post;
     self.emojiCollectionView.delegate = self;
     
@@ -221,7 +283,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     UIButton *dismissButton = [UIButton buttonWithType:UIButtonTypeCustom];
     dismissButton.frame = self.emojiDimView.frame;
     dismissButton.backgroundColor = [UIColor clearColor];
-    [dismissButton addTarget:self action:@selector(dismissEmojiPrompt) forControlEvents:UIControlEventTouchUpInside];
+    [dismissButton addTarget:self action:@selector(cancelEmojiPrompt) forControlEvents:UIControlEventTouchUpInside];
     [self.emojiDimView addSubview:dismissButton];
     
     [self.emojiDimView addSubview:self.emojiContainerView];
@@ -257,167 +319,152 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 }
 
 
-#pragma mark - Class Methods -
-- (void)userButtonsTapped
-{
-    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostButtonsClicked parseClassName]];
-    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-    
-    MTMakeWeakSelf();
-    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-
-        if (!error) {
-            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-            for (PFChallengePostButtonsClicked *clicks in objects) {
-                id button = clicks[@"button_clicked"];
-                id post = [(PFChallengePost *)clicks[@"post"] objectId];
-                [tappedButtonObjects setValue:button forKey:post];
-            }
-            weakSelf.buttonsTapped = tappedButtonObjects;
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf loadObjects];
-            });
-
-        } else {
-            NSLog(@"Error - %@", error);
-        }
-    }];
-}
-
-- (void)updateSecondaryButtonsTapped
-{
-    PFQuery *buttonsTapped = [PFQuery queryWithClassName:[PFChallengePostSecondaryButtonsClicked parseClassName]];
-    [buttonsTapped whereKey:@"user" equalTo:[PFUser currentUser]];
-    [buttonsTapped includeKey:@"post"];
-    
-    MTMakeWeakSelf();
-    [buttonsTapped findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableDictionary *tappedButtonObjects = [NSMutableDictionary dictionary];
-            for (PFChallengePostSecondaryButtonsClicked *clicks in objects) {
-                PFChallengePost *post = (PFChallengePost *)clicks[@"post"];
-                PFChallenges *challenge = post[@"challenge"];
-                NSString *challengeObjectId = challenge.objectId;
-                
-                id postObjectId = [(PFChallengePost *)clicks[@"post"] objectId];
-                
-                if ([challengeObjectId isEqualToString:weakSelf.challenge.objectId]) {
-                    id button = clicks[@"button"];
-                    id count = clicks[@"count"];
-                    
-                    NSDictionary *buttonsDict;
-                    if ([tappedButtonObjects objectForKey:postObjectId]) {
-                        buttonsDict = [tappedButtonObjects objectForKey:postObjectId];
-                        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionaryWithDictionary:buttonsDict];
-                        [mutableDict setValue:count forKey:button];
-                        buttonsDict = [NSDictionary dictionaryWithDictionary:mutableDict];
-                    }
-                    else {
-                        buttonsDict = [NSDictionary dictionaryWithObjectsAndKeys:count, button, nil];
-                    }
-                    
-                    [tappedButtonObjects setValue:buttonsDict forKey:postObjectId];
-                }
-            }
-            weakSelf.secondaryButtonsTapped = tappedButtonObjects;
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.secondaryButton1.enabled = YES;
-                [weakSelf loadObjects];
-            });
-            
-        } else {
-            NSLog(@"Error - %@", error);
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakSelf.secondaryButton1.enabled = YES;
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-        }
-    }];
-}
-
-
 #pragma mark - NSNotification Methods -
 - (void)willSaveNewChallengePost:(NSNotification *)notif
 {
-    PFChallengePost *newPost = notif.object;
-    [self.myObjects insertObject:newPost atIndex:0];
-    
-    [self.tableView reloadData];
-}
-
-- (void)savingWithPhoto:(NSNotificationCenter *)notif
-{
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving New Post...";
+        hud.dimBackground = NO;
+    });
 }
 
 - (void)postSucceeded
 {
-    [self loadObjects];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self refreshFromDatabase];
+    });
 }
 
 - (void)postFailed
 {
-    [self loadObjects];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Your post failed to upload.";
-    hud.dimBackground = NO;
-    hud.mode = MBProgressHUDModeText;
-    [hud hide:YES afterDelay:1.5f];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Your post failed to upload.";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+    });
 }
 
 - (void)willSaveNewPostComment:(NSNotification *)notif
 {
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving New Comment...";
+        hud.dimBackground = NO;
+    });
+}
+
+- (void)willSaveEditPostComment:(NSNotification *)notif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving Updated Comment...";
+        hud.dimBackground = NO;
+    });
 }
 
 - (void)didSaveNewPostComment:(NSNotification *)notif
 {
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self refreshFromDatabase];
+    });
+}
+
+- (void)didDeletePostComment:(NSNotification *)notif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self refreshFromDatabase];
+    });
+}
+
+- (void)commentFailed
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Your comment failed to post.";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+    });
+}
+
+- (void)commentEditFailed
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Your comment failed to save.";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+    });
 }
 
 - (void)willSaveEditPost:(NSNotification *)notif
 {
-    [self.tableView reloadData];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving...";
+        hud.dimBackground = NO;
+    });
 }
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
-    [self loadObjects];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self refreshFromDatabase];
+    });
 }
 
 - (void)failedSaveEditPost:(NSNotification *)notif
 {
-    [self loadObjects];
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Your edit post failed to save.";
-    hud.dimBackground = NO;
-    hud.mode = MBProgressHUDModeText;
-    [hud hide:YES afterDelay:1.5f];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Your edit post failed to save.";
+        hud.dimBackground = NO;
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+    });
 }
 
 
 #pragma mark - Private -
 - (void)configureButtonsForCell:(MTPostsTableViewCell *)cell
 {
-    id buttonID = [self.buttonsTapped valueForKey:[cell.post objectId]];
-    NSInteger button = 0;
-    if (buttonID) {
-        button = [buttonID intValue];
-    }
+    MTChallengeButton *button1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
     
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button2.id];
+    
+    RLMResults *allButton1Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   cell.post.id, button1.id];
+    
+    RLMResults *allButton2Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   cell.post.id, button2.id];
+
     [self resetButtonsForCell:cell];
 
     [cell.button1 layer].masksToBounds = YES;
     [cell.button2 layer].masksToBounds = YES;
 
-    if ((button == 0) && buttonID) {
+    if (!IsEmpty(myButton1Clicks)) {
         [cell.button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:cell.button1.frame.size] forState:UIControlStateNormal];
         [cell.button1 setBackgroundImage:[UIImage imageWithColor:[UIColor primaryGreen] size:cell.button1.frame.size] forState:UIControlStateHighlighted];
 
@@ -434,7 +481,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [cell.button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button2.frame.size] forState:UIControlStateNormal];
         [cell.button2 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button2.frame.size] forState:UIControlStateHighlighted];
     }
-    else if (button == 1) {
+    else if (!IsEmpty(myButton2Clicks)) {
         [[cell.button1 layer] setBorderWidth:2.0f];
         [[cell.button1 layer] setBorderColor:[UIColor primaryGreen].CGColor];
         [cell.button1 setTintColor:[UIColor primaryGreen]];
@@ -477,25 +524,22 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button2 addTarget:self action:@selector(button2Tapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSArray *buttonTitles = self.challenge[@"buttons"];
-    NSArray *buttonsClicked = cell.post[@"buttons_clicked"];
-    
-    if (buttonTitles.count > 0) {
+    if (self.buttons.count > 1) {
         NSString *button1Title;
         NSString *button2Title;
         
-        if (buttonsClicked.count > 0) {
-            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+        if ([allButton1Clicks count] > 0) {
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, (unsigned long)[allButton1Clicks count]];
         }
         else {
-            button1Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[0]];
+            button1Title = [NSString stringWithFormat:@"%@ (0)", button1.label];
         }
         
-        if (buttonsClicked.count > 1) {
-            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        if (allButton2Clicks.count > 1) {
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, (unsigned long)[allButton2Clicks count]];
         }
         else {
-            button2Title = [NSString stringWithFormat:@"%@ (0)", buttonTitles[1]];
+            button2Title = [NSString stringWithFormat:@"%@ (0)", button2.label];
         }
         
         [cell.button1 setTitle:button1Title forState:UIControlStateNormal];
@@ -505,11 +549,17 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)configureSecondaryButtonsForCell:(MTPostsTableViewCell *)cell
 {
-    PFChallengePost *post = cell.post;
-    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:post.objectId];
+    MTChallengeButton *button1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
     
-    NSInteger button1Count = [[buttonDict objectForKey:@0] integerValue];
-    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button2.id];
+    
+    NSInteger button1Count = [myButton1Clicks count];
+    NSInteger button2Count = [myButton2Clicks count];
     
     [self resetButtonsForCell:cell];
     
@@ -572,11 +622,34 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)configureTertiaryButtonsForCell:(MTPostsTableViewCell *)cell
 {
-    id buttonID = [self.buttonsTapped valueForKey:[cell.post objectId]];
-    NSInteger button = 0;
-    if (buttonID) {
-        button = [buttonID intValue];
-    }
+    MTChallengeButton *button1 = [self.buttons objectAtIndex:0];
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
+    MTChallengeButton *button3 = [self.buttons objectAtIndex:2];
+    MTChallengeButton *button4 = [self.buttons objectAtIndex:3];
+    
+    RLMResults *myButton1Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button1.id];
+    
+    RLMResults *myButton2Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button2.id];
+
+    RLMResults *myButton3Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button3.id];
+
+    RLMResults *myButton4Clicks = [MTChallengeButtonClick objectsWhere:@"user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                   [MTUser currentUser].id, cell.post.id, button4.id];
+
+    RLMResults *allButton1Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    cell.post.id, button1.id];
+    
+    RLMResults *allButton2Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    cell.post.id, button2.id];
+
+    RLMResults *allButton3Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    cell.post.id, button3.id];
+
+    RLMResults *allButton4Clicks = [MTChallengeButtonClick objectsWhere:@"challengePost.id = %lu AND challengeButton.id = %lu AND isDeleted = NO",
+                                    cell.post.id, button4.id];
     
     [self resetButtonsForCell:cell];
     
@@ -585,7 +658,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.button3 layer].masksToBounds = YES;
     [cell.button4 layer].masksToBounds = YES;
 
-    if (!buttonID) {
+    if (IsEmpty(myButton1Clicks) && IsEmpty(myButton2Clicks) && IsEmpty(myButton3Clicks) && IsEmpty(myButton4Clicks)) {
         [[cell.button1 layer] setBorderWidth:2.0f];
         [[cell.button1 layer] setBorderColor:[UIColor votingRed].CGColor];
         [cell.button1 setTintColor:[UIColor votingRed]];
@@ -619,7 +692,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateHighlighted];
     }
     else {
-        if (button == 0) {
+        if (!IsEmpty(myButton1Clicks)) {
             // Selected
             [cell.button1 setBackgroundImage:[UIImage imageWithColor:[UIColor votingRed] size:cell.button1.frame.size] forState:UIControlStateNormal];
             [cell.button1 setBackgroundImage:[UIImage imageWithColor:[UIColor votingRed] size:cell.button1.frame.size] forState:UIControlStateHighlighted];
@@ -651,7 +724,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateNormal];
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateHighlighted];
         }
-        else if (button == 1) {
+        else if (!IsEmpty(myButton2Clicks)) {
             [[cell.button1 layer] setBorderWidth:2.0f];
             [[cell.button1 layer] setBorderColor:[UIColor votingRed].CGColor];
             [cell.button1 setTintColor:[UIColor votingRed]];
@@ -683,7 +756,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateNormal];
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateHighlighted];
         }
-        else if (button == 2) {
+        else if (!IsEmpty(myButton3Clicks)) {
             [[cell.button1 layer] setBorderWidth:2.0f];
             [[cell.button1 layer] setBorderColor:[UIColor votingRed].CGColor];
             [cell.button1 setTintColor:[UIColor votingRed]];
@@ -715,7 +788,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateNormal];
             [cell.button4 setBackgroundImage:[UIImage imageWithColor:[UIColor white] size:cell.button4.frame.size] forState:UIControlStateHighlighted];
         }
-        else if (button == 3) {
+        else {
             [[cell.button1 layer] setBorderWidth:2.0f];
             [[cell.button1 layer] setBorderColor:[UIColor votingRed].CGColor];
             [cell.button1 setTintColor:[UIColor votingRed]];
@@ -759,41 +832,38 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.button3 addTarget:self action:@selector(button3Tapped:) forControlEvents:UIControlEventTouchUpInside];
     [cell.button4 addTarget:self action:@selector(button4Tapped:) forControlEvents:UIControlEventTouchUpInside];
     
-    NSArray *buttonTitles = self.challenge[@"buttons"];
-    NSArray *buttonsClicked = cell.post[@"buttons_clicked"];
-    
-    if (buttonTitles.count == 4) {
+    if ([self.buttons count] == 4) {
         NSString *button1Title;
         NSString *button2Title;
         NSString *button3Title;
         NSString *button4Title;
         
-        if (buttonsClicked.count > 0 && [buttonsClicked[0] intValue] > 0) {
-            button1Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[0], buttonsClicked[0]];
+        if ([allButton1Clicks count] > 0) {
+            button1Title = [NSString stringWithFormat:@"%@ (%lu)", button1.label, (unsigned long)[allButton1Clicks count]];
         }
         else {
-            button1Title = [NSString stringWithFormat:@"%@", buttonTitles[0]];
+            button1Title = [NSString stringWithFormat:@"%@", button1.label];
         }
         
-        if (buttonsClicked.count > 1 && [buttonsClicked[1] intValue] > 0) {
-            button2Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[1], buttonsClicked[1]];
+        if ([allButton2Clicks count] > 0) {
+            button2Title = [NSString stringWithFormat:@"%@ (%lu)", button2.label, (unsigned long)[allButton2Clicks count]];
         }
         else {
-            button2Title = [NSString stringWithFormat:@"%@", buttonTitles[1]];
+            button2Title = [NSString stringWithFormat:@"%@", button2.label];
         }
 
-        if (buttonsClicked.count > 2 && [buttonsClicked[2] intValue] > 0) {
-            button3Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[2], buttonsClicked[2]];
+        if ([allButton3Clicks count] > 0) {
+            button3Title = [NSString stringWithFormat:@"%@ (%lu)", button3.label, (unsigned long)[allButton3Clicks count]];
         }
         else {
-            button3Title = [NSString stringWithFormat:@"%@", buttonTitles[2]];
+            button3Title = [NSString stringWithFormat:@"%@", button3.label];
         }
 
-        if (buttonsClicked.count > 3 && [buttonsClicked[3] intValue] > 0) {
-            button4Title = [NSString stringWithFormat:@"%@ (%@)", buttonTitles[3], buttonsClicked[3]];
+        if ([allButton4Clicks count] > 0) {
+            button4Title = [NSString stringWithFormat:@"%@ (%lu)", button4.label, (unsigned long)[allButton4Clicks count]];
         }
         else {
-            button4Title = [NSString stringWithFormat:@"%@", buttonTitles[3]];
+            button4Title = [NSString stringWithFormat:@"%@", button4.label];
         }
 
         [cell.button1 setTitle:button1Title forState:UIControlStateNormal];
@@ -813,7 +883,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     cell.button2.enabled = YES;
     cell.button3.enabled = YES;
     cell.button4.enabled = YES;
-
+    
     [cell.button1.titleLabel setFont:[UIFont systemFontOfSize:18.0f]];
     [cell.button1 setImage:nil forState:UIControlStateNormal];
     [cell.button1 setImage:nil forState:UIControlStateHighlighted];
@@ -862,12 +932,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 {
     NSString *key = @"ShownToastForChallenge";
     NSArray *shownArray = [[NSUserDefaults standardUserDefaults] objectForKey:key];
-    if (![shownArray containsObject:self.challenge.objectId]) {
+    if (![shownArray containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
         
         // If not added for this install but we have a title, no need to show this again
         if (!IsEmpty([self.secondaryButton1 titleForState:UIControlStateNormal])) {
             NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
-            [mutant addObject:self.challenge.objectId];
+            [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
             [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
             [[NSUserDefaults standardUserDefaults] synchronize];
 
@@ -883,7 +953,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             [hud hide:YES afterDelay:1.0f];
             
             NSMutableArray *mutant = [NSMutableArray arrayWithArray:shownArray];
-            [mutant addObject:self.challenge.objectId];
+            [mutant addObject:[NSNumber numberWithInteger:self.challenge.id]];
             [[NSUserDefaults standardUserDefaults] setObject:[NSArray arrayWithArray:mutant] forKey:key];
             [[NSUserDefaults standardUserDefaults] synchronize];
         }
@@ -893,142 +963,20 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     }
 }
 
-- (void)updateButtonsAndLikes
-{
-    NSInteger hiddenCount = [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    BOOL animated = hiddenCount > 0 ? NO : YES;
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:animated];
-    hud.labelText = @"Loading Challenge Data...";
-    hud.dimBackground = YES;
-
-    // Call updateButtons first which will then call updateLikes when done
-    [self performSelector:@selector(updateButtons) withObject:nil afterDelay:0.3f];
-}
-
-- (void)updateButtons
-{
-    NSPredicate *thisChallenge = [NSPredicate predicateWithFormat:@"objectId = %@", self.challenge.objectId];
-    PFQuery *challengeQuery = [PFQuery queryWithClassName:[PFChallenges parseClassName] predicate:thisChallenge];
-    [challengeQuery includeKey:@"verified_by"];
-    challengeQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MTMakeWeakSelf();
-    [challengeQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            PFChallenges *challenge = (PFChallenges *)[objects firstObject];
-            if (![[weakSelf.challenge objectId] isEqualToString:[challenge objectId]]) {
-                weakSelf.challenge = challenge;
-            }
-            
-            NSArray *buttons = challenge[@"buttons"];
-            NSArray *secondaryButtons = challenge[@"secondary_buttons"];
-            
-            weakSelf.hasButtons = NO;
-            weakSelf.hasSecondaryButtons = NO;
-            weakSelf.hasTertiaryButtons = NO;
-            
-            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-                if ([buttons count] == 4) {
-                    weakSelf.hasTertiaryButtons = YES;
-                }
-                else {
-                    weakSelf.hasButtons = YES;
-                }
-                
-                [weakSelf userButtonsTapped];
-            }
-            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !self.isMentor) {
-                weakSelf.hasSecondaryButtons = YES;
-                [weakSelf updateSecondaryButtonsTapped];
-            }
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf updateLikes];
-        });
-    }];
-}
-
-- (void)updateLikes
-{
-    MTMakeWeakSelf();
-    NSPredicate *myLikesPredicate = [NSPredicate predicateWithFormat:@"user = %@", [PFUser currentUser]];
-    PFQuery *myLikesQuery = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName] predicate:myLikesPredicate];
-    [myLikesQuery selectKeys:[NSArray arrayWithObjects:@"post", @"emoji", nil]];
-    
-    if (self.didUpdateLikedPosts) {
-        myLikesQuery.cachePolicy = kPFCachePolicyNetworkOnly;
-        self.didUpdateLikedPosts = NO;
-        [self.tableView reloadData];
-    }
-    else {
-        myLikesQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    }
-    
-    [myLikesQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableArray *mutableLiked = [NSMutableArray array];
-            NSMutableArray *mutableLikedFull = [NSMutableArray array];
-
-            for (PFChallengePostsLiked *thisPostLiked in objects) {
-                PFChallengePost *post = thisPostLiked[@"post"];
-                if (!IsEmpty(post.objectId)) {
-                    [mutableLiked addObject:post.objectId];
-                    [mutableLikedFull addObject:thisPostLiked];
-                }
-            }
-            
-            weakSelf.postsLiked = [NSArray arrayWithArray:mutableLiked];
-            weakSelf.postsLikedFull = [NSArray arrayWithArray:mutableLikedFull];
-        }
-        
-        weakSelf.updatedButtonsAndLikes = YES;
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadObjects];
-        });
-    }];
-}
-
 - (void)likeWithEmojiPrompt:(id)sender
 {
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
+    MTChallengePost *post = cell.post;
     
     [self didSelectLikeWithEmojiForPost:post];
 }
 
-- (void)loadLikesForPost:(PFChallengePost *)post withCell:(MTPostsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)cancelEmojiPrompt
 {
-    if (![cell.post.objectId isEqualToString:post.objectId]) {
-        return;
-    }
-    
-    PFQuery *queryPostEmojis = [PFQuery queryWithClassName:[PFChallengePostsLiked parseClassName]];
-    [queryPostEmojis whereKey:@"post" equalTo:post];
-    [queryPostEmojis includeKey:@"emoji"];
-    queryPostEmojis.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    [queryPostEmojis findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            NSMutableArray *emojiArray = [NSMutableArray array];
-            for (PFChallengePostsLiked *thisLike in objects) {
-                PFEmoji *thisEmoji = thisLike[@"emoji"];
-                if (thisEmoji) {
-                    [emojiArray addObject:thisEmoji];
-                }
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                cell.emojiArray = emojiArray;
-            });
-        } else {
-            NSLog(@"error - %@", error);
-        }
-    }];
+    [self dismissEmojiPromptWithCompletion:NULL];
 }
 
-- (void)dismissEmojiPrompt
+- (void)dismissEmojiPromptWithCompletion:(void (^)(BOOL finished))completion
 {
     CGRect keyWindowFrame = [UIApplication sharedApplication].keyWindow.frame;
     
@@ -1069,6 +1017,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             _emojiCollectionView = nil;
             _emojiContainerView = nil;
             _emojiDimView = nil;
+            
+            if (completion) {
+                completion(YES);
+            }
         }];
     }];
 }
@@ -1080,90 +1032,48 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     cell.spentLabel.text = @"";
     cell.savedLabel.text = @"";
 
-    if (self.displaySpentView && !IsEmpty(cell.post[@"extra_fields"])) {
-        NSData *data = [cell.post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if (self.displaySpentView && !IsEmpty(cell.post.extraFields)) {
+        NSData *data = [cell.post.extraFields dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
-        if ([jsonArray isKindOfClass:[NSArray class]]) {
-            NSArray *spentFieldsArray = (NSArray *)jsonArray;
-            for (id thisDict in spentFieldsArray) {
-                if ([thisDict isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *dict = (NSDictionary *)thisDict;
-                    NSString *nameForDict = [dict objectForKey:@"name"];
-                    
-                    if ([nameForDict isEqualToString:@"Spent"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            NSString *currencyString = [self currencyTextForString:spentString];
-                            if (!IsEmpty(currencyString)) {
-                                cell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", currencyString];
-                                cell.spentView.hidden = NO;
-                            }
-                        }
-                    }
-                    else if ([nameForDict isEqualToString:@"Saved"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *savedString = [[dict objectForKey:@"value"] stringValue];
-                            NSString *currencyString = [self currencyTextForString:savedString];
-
-                            if (!IsEmpty(currencyString)) {
-                                cell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", currencyString];
-                                cell.spentView.hidden = NO;
-                            }
-                        }
-                    }
-                    else {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            cell.spentLabel.text = @"";
-                            cell.savedLabel.text = @"";
-                            cell.spentView.hidden = YES;
-                        }
-                    }
-                }
+        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
+            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
+            NSString *currencyString = [self currencyTextForString:spentString];
+            if (!IsEmpty(currencyString)) {
+                cell.spentLabel.text = [NSString stringWithFormat:@"Spent %@", currencyString];
+                cell.spentView.hidden = NO;
+            }
+            
+            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
+            currencyString = [self currencyTextForString:savedString];
+            if (!IsEmpty(currencyString)) {
+                cell.savedLabel.text = [NSString stringWithFormat:@"Saved %@", currencyString];
+                cell.spentView.hidden = NO;
             }
         }
     }
 }
 
-- (BOOL)hasSpentContentForPost:(PFChallengePost *)post
+- (BOOL)hasSpentContentForPost:(MTChallengePost *)post
 {
     BOOL hasContent = NO;
-    if (self.displaySpentView && !IsEmpty(post[@"extra_fields"])) {
-        NSData *data = [post[@"extra_fields"] dataUsingEncoding:NSUTF8StringEncoding];
-        id jsonArray = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+    if (self.displaySpentView && !IsEmpty(post.extraFields)) {
+        NSData *data = [post.extraFields dataUsingEncoding:NSUTF8StringEncoding];
+        id jsonDict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         
-        if ([jsonArray isKindOfClass:[NSArray class]]) {
-            NSArray *spentFieldsArray = (NSArray *)jsonArray;
-            for (id thisDict in spentFieldsArray) {
-                if ([thisDict isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *dict = (NSDictionary *)thisDict;
-                    NSString *nameForDict = [dict objectForKey:@"name"];
-                    
-                    if ([nameForDict isEqualToString:@"Spent"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *spentString = [[dict objectForKey:@"value"] stringValue];
-                            NSString *currencyString = [self currencyTextForString:spentString];
-                            if (!IsEmpty(currencyString)) {
-                                hasContent = YES;
-                            }
-                        }
-                    }
-                    else if ([nameForDict isEqualToString:@"Saved"]) {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            NSString *savedString = [[dict objectForKey:@"value"] stringValue];
-                            NSString *currencyString = [self currencyTextForString:savedString];
-                            
-                            if (!IsEmpty(currencyString)) {
-                                hasContent = YES;
-                            }
-                        }
-                    }
-                    else {
-                        if ([[dict objectForKey:@"checked"] boolValue]) {
-                            hasContent = NO;
-                        }
-                    }
-                }
+        if ([jsonDict isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *savedSpentDict = (NSDictionary *)jsonDict;
+            NSString *spentString = [savedSpentDict objectForKey:@"spent"];
+            NSString *currencyString = [self currencyTextForString:spentString];
+            if (!IsEmpty(currencyString)) {
+                hasContent = YES;
+            }
+            
+            NSString *savedString = [savedSpentDict objectForKey:@"saved"];
+            currencyString = [self currencyTextForString:savedString];
+            if (!IsEmpty(currencyString)) {
+                hasContent = YES;
             }
         }
     }
@@ -1205,26 +1115,19 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 #pragma mark - UITableViewDataSource methods -
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.myObjects count];
+    return [self.challengePosts count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Override to use self.myObjects in below method.  Otherwise, crashes because
-    //  the PFQueryTableViewController gets called and can't find the object when
-    //  adding a new item.
-    return [self tableView:tableView cellForRowAtIndexPath:indexPath object:nil];
-}
+    __block MTChallengePost *post = (MTChallengePost *)[self.challengePosts objectAtIndex:indexPath.row];
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath object:(PFObject *)object
-{
-    __block PFChallengePost *post = (PFChallengePost *)[self.myObjects objectAtIndex:indexPath.row];
-
-    PFUser *user = post[@"user"];
+    MTUser *user = post.user;
     NSString *CellIdentifier = @"";
-    PFFile *postImage = post[@"picture"];
     
-    BOOL myPost = [MTUtil isUserMe:user];
+    BOOL hasImage = post.hasPostImage;
+    
+    BOOL myPost = [MTUser isUserMe:user];
     
     BOOL showButtons = NO;
     if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
@@ -1233,7 +1136,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     BOOL hasSpentContent = [self hasSpentContentForPost:post];
     
-    if (showButtons && postImage) {
+    if (showButtons && hasImage) {
         if (self.hasTertiaryButtons) {
             CellIdentifier = @"postCellWithQuadButtons";
         }
@@ -1257,7 +1160,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 CellIdentifier = @"postCellNoImageWithButtons";
             }
         }
-    } else if (postImage) {
+    } else if (hasImage) {
         CellIdentifier = @"postCell";
     } else {
         if (hasSpentContent) {
@@ -1271,17 +1174,15 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     MTPostsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     cell.post = post;
     
-    [self loadLikesForPost:post withCell:cell atIndexPath:indexPath];
     [self parseAndPopulateSpentFieldsForCell:cell];
     
     // Setup Verify
-    PFUser *currentUser = [PFUser currentUser];
-    BOOL isMentor = [currentUser[@"type"] isEqualToString:@"mentor"];
-    BOOL autoVerify = [self.challenge[@"auto_verify"] boolValue];
+    BOOL isMentor = [MTUser isCurrentUserMentor];
+    BOOL autoVerify = self.challenge.autoVerify;
     BOOL hideVerifySwitch = !isMentor || autoVerify;
 
     cell.verifiedCheckBox.hidden = hideVerifySwitch;
-    BOOL isChecked = (post[@"verified_by"] != nil);
+    BOOL isChecked = post.isVerified;
     [cell.verifiedCheckBox setIsChecked:isChecked];
     
     cell.verfiedLabel.hidden = hideVerifySwitch;
@@ -1311,29 +1212,18 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         }
     }
     
-    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+    cell.userName.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
     
-    cell.profileImage.image = [UIImage imageNamed:@"profile_image"];
-    cell.profileImage.file = user[@"profile_picture"];
-    cell.profileImage.layer.cornerRadius = round(cell.profileImage.frame.size.width / 2.0f);
-    cell.profileImage.layer.masksToBounds = YES;
-    cell.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-
-    [cell.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-        if (!error) {
-            if (image) {
-                cell.profileImage.image = image;
-                [cell setNeedsDisplay];
-            }
-            else {
-                image = nil;
-            }
-        } else {
-            NSLog(@"error - %@", error);
-        }
+    __block MTPostsTableViewCell *weakCell = cell;
+    cell.profileImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakCell.profileImage.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
     }];
     
-    cell.postText.text = post[@"post_text"];
+    cell.postText.text = post.content;
     
     if (!IsEmpty(cell.postText.text)) {
         NSRegularExpression *hashtags = [[NSRegularExpression alloc] initWithPattern:@"\\#\\w+" options:NSRegularExpressionCaseInsensitive error:nil];
@@ -1347,25 +1237,17 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         }];
     }
     
-    if (postImage) {
-        cell.postImage.image = nil;
-        cell.postImage.file = postImage;
-        [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
-                    CGRect frame = cell.postImage.frame;
-                    cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                    [cell setNeedsDisplay];
-                } else {
-                    cell.postImage.image = nil;
-                }
-            } else {
-                NSLog(@"error - %@", error);
-            }
+    if (hasImage) {
+        cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakCell.postImage.image = responseData;
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to load post image");
         }];
     }
     
-    NSDate *dateObject = [post createdAt];
+    NSDate *dateObject = post.createdAt;
     
     if (dateObject) {
         cell.postedWhen.text = [dateObject niceRelativeTimeFromNow];
@@ -1375,16 +1257,22 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         cell.postedWhen.text = [[NSDate dateWithTimeIntervalSinceNow:0.1f] niceRelativeTimeFromNow];
     }
     
-    NSInteger likes = 0;
-    if (post[@"likes"]) {
-        likes = [post[@"likes"] intValue];
+    // Likes Info
+    RLMResults *likesForPost = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", post.id];
+    NSMutableArray *emojiArray = [NSMutableArray array];
+    for (MTChallengePostLike *thisLike in likesForPost) {
+        MTEmoji *thisEmoji = thisLike.emoji;
+        if (thisEmoji) {
+            [emojiArray addObject:thisEmoji];
+        }
     }
     
-    // Set Like
-    NSString *postID = [post objectId];
-    BOOL like = [self.postsLiked containsObject:postID];
+    cell.emojiArray = emojiArray;
+
+    NSInteger likes = [likesForPost count];
+    BOOL iLike = [MTChallengePostLike postLikesContainsMyLike:likesForPost];
     
-    if (like) {
+    if (iLike) {
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
         [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
     }
@@ -1411,57 +1299,20 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
     [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
     cell.comments.text = @"";
-
-    if (dateObject) {
-        // Don't retrieve comment count on newly created objects
-        PFQuery *commentQuery = [PFQuery queryWithClassName:[PFChallengePostComment parseClassName]];
-        [commentQuery whereKey:@"challenge_post" equalTo:post];
-        [commentQuery includeKey:@"user"];
-
-        commentQuery.cachePolicy = kPFCachePolicyCacheThenNetwork;
-        
-        __block MTPostsTableViewCell *weakCell = cell;
-        [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                BOOL containsMe = NO;
-                for (PFChallengePostComment *thisPostComment in objects) {
-                    PFUser *thisUser = thisPostComment[@"user"];
-                    if ([MTUtil isUserMe:thisUser]) {
-                        containsMe = YES;
-                        break;
-                    }
-                }
-
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (containsMe) {
-                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
-                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
-                    } else {
-                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
-                        [weakCell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
-                    }
-                    
-                    weakCell.comments.text = [NSString stringWithFormat:@"%ld", (long)[objects count]];
-                });
-
-            } else {
-                NSLog(@"error - %@", error);
-            }
-        }];
-        
-        cell.activityIndicator.hidden = YES;
-        cell.deletePost.hidden = !canDelete;
-        cell.loadingView.alpha = 0.0f;
-        cell.selectionStyle = UITableViewCellSelectionStyleDefault;
+    
+    RLMResults *comments = [MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", post.id];
+    if ([MTChallengePostComment postCommentsContainsMyComment:comments]) {
+        [cell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateNormal];
+        [cell.commentButton setImage:[UIImage imageNamed:@"comment_active"] forState:UIControlStateDisabled];
+    } else {
+        [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateNormal];
+        [cell.commentButton setImage:[UIImage imageNamed:@"comment_normal"] forState:UIControlStateDisabled];
     }
-    else {
-        cell.comments.text = @"0";
-        cell.activityIndicator.hidden = NO;
-        [cell.activityIndicator startAnimating];
-        cell.deletePost.hidden = YES;
-        cell.loadingView.alpha = 0.3f;
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    }
+
+    cell.comments.text = [NSString stringWithFormat:@"%ld", (long)[comments count]];
+
+    cell.deletePost.hidden = !canDelete;
+    cell.selectionStyle = UITableViewCellSelectionStyleDefault;
     
     return cell;
 }
@@ -1473,13 +1324,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
     
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
-    if (cell.loadingView.alpha != 0.0f) {
-        return;
-    }
-    
-    PFChallengePost *rowObject = self.myObjects[indexPath.row];
-    self.postImage = rowObject[@"picture"];
-    
     [self performSegueWithIdentifier:@"pushViewPost" sender:cell];
 }
 
@@ -1489,15 +1333,15 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     CGFloat height = 0.0f;
     
-    if (row < [self.myObjects count]) {
-        PFChallengePost *rowObject = self.myObjects[row];
-        UIImage *postImage = rowObject[@"picture"];
+    if (row < [self.challengePosts count]) {
+        MTChallengePost *rowObject = self.challengePosts[row];
+        BOOL hasPostImage = rowObject.hasPostImage;
         
-        PFChallengePost *post = (PFChallengePost *)[self.myObjects objectAtIndex:indexPath.row];
-        PFUser *user = post[@"user"];
+        MTChallengePost *post = (MTChallengePost *)[self.challengePosts objectAtIndex:indexPath.row];
+        MTUser *user = post.user;
 
         BOOL myPost = NO;
-        if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        if ([MTUser isUserMe:user]) {
             myPost = YES;
         }
 
@@ -1508,7 +1352,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         
         BOOL hasSpentContent = [self hasSpentContentForPost:post];
 
-        if (showButtons && postImage) {
+        if (showButtons && hasPostImage) {
             if (self.hasTertiaryButtons) {
                 height = 500.0f;
             }
@@ -1532,7 +1376,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     height = 190.0f;
                 }
             }
-        } else if (postImage) {
+        } else if (hasPostImage) {
             height = 436.0f;
         } else {
             if (hasSpentContent) {
@@ -1615,44 +1459,40 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         UIButton *button = sender;
         
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-        PFChallengePost *post = cell.post;
+        MTChallengePost *post = cell.post;
   
         MTCommentViewController *destinationViewController = (MTCommentViewController *)[segue destinationViewController];
         destinationViewController.post = post;
-        destinationViewController.challenge = self.challenge;
         [destinationViewController setDelegate:self];
     }
     else if ([segueIdentifier isEqualToString:@"editPostSegue"]) {
         UIButton *button = sender;
         
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-        PFChallengePost *post = cell.post;
+        MTChallengePost *post = cell.post;
         
         UINavigationController *destinationViewController = (UINavigationController *)[segue destinationViewController];
         
-        MTCommentViewController *commentVC = (MTCommentViewController *)[destinationViewController topViewController];
-        commentVC.post = post;
-        commentVC.challenge = self.challenge;
-        commentVC.editPost = YES;
-        [commentVC setDelegate:self];
+        MTPostViewController *postVC = (MTPostViewController *)[destinationViewController topViewController];
+        postVC.post = post;
+        postVC.challenge = self.challenge;
+        postVC.editPost = YES;
     }
     else {
         MTPostsTableViewCell *cell = (MTPostsTableViewCell *)sender;
-        PFChallengePost *post = cell.post;
+        MTChallengePost *post = cell.post;
 
-        self.postViewController = (MTPostViewController*)[segue destinationViewController];
+        self.postViewController = (MTPostDetailViewController*)[segue destinationViewController];
         self.postViewController.challengePost = post;
         self.postViewController.challenge = self.challenge;
         self.postViewController.delegate = self;
-        self.postViewController.postsLiked = self.postsLiked;
-        self.postViewController.postsLikedFull = self.postsLikedFull;
         self.postViewController.emojiArray = cell.emojiArray;
         self.postViewController.myClassTableViewController = self;
 
-        PFUser *user = post[@"user"];
+        MTUser *user = post.user;
 
         BOOL myPost = NO;
-        if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        if ([MTUser isUserMe:user]) {
             myPost = YES;
         }
         
@@ -1665,15 +1505,13 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             self.postViewController.hasButtons = self.hasButtons;
             self.postViewController.hasSecondaryButtons = self.hasSecondaryButtons;
             self.postViewController.hasTertiaryButtons = self.hasTertiaryButtons;
-            self.postViewController.buttonsTapped = self.buttonsTapped;
-            self.postViewController.secondaryButtonsTapped = self.secondaryButtonsTapped;
         }
 
-        if (showButtons && self.postImage)
+        if (showButtons && post.hasPostImage)
             self.postViewController.postType = MTPostTypeWithButtonsWithImage;
         else if (showButtons)
             self.postViewController.postType = MTPostTypeWithButtonsNoImage;
-        else if (self.postImage)
+        else if (post.hasPostImage)
             self.postViewController.postType = MTPostTypeNoButtonsWithImage;
         else
             self.postViewController.postType = MTPostTypeNoButtonsNoImage;
@@ -1689,15 +1527,14 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 
 #pragma mark - MTPostViewControllerDelegate Methods -
-- (void)didDeletePost:(PFChallengePost *)challengePost
+- (void)didDeletePost:(MTChallengePost *)challengePost
 {
-    self.deletingPost = YES;
     self.tableView.userInteractionEnabled = NO;
     
     // Perform on delay after we get popped to here
     MTMakeWeakSelf();
     [self bk_performBlock:^(id obj) {
-        NSUInteger row = [weakSelf.myObjects indexOfObject:challengePost];
+        NSUInteger row = [weakSelf.challengePosts indexOfObject:challengePost];
         if (row != NSNotFound) {
             MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
             if (cell) {
@@ -1716,34 +1553,21 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             weakSelf.tableView.userInteractionEnabled = YES;
         }
         
-        weakSelf.deletingPost = NO;
     } afterDelay:0.35f];
 }
 
-- (void)willUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull;
+- (void)didUpdateLikes
 {
-    self.postsLiked = postsLiked;
-    self.postsLikedFull = postsLikedFull;
-    [self.tableView reloadData];
-}
-
-- (void)didUpdatePostsLiked:(NSArray *)postsLiked withPostLikedFull:(NSArray *)postsLikedFull
-{
-    self.didUpdateLikedPosts = YES;
-    self.postsLiked = postsLiked;
-    self.postsLikedFull = postsLikedFull;
     [self updateLikes];
 }
 
-- (void)didUpdateButtonsTapped:(NSDictionary *)buttonsTapped
+- (void)didUpdateButtons
 {
-    self.buttonsTapped = buttonsTapped;
     [self.tableView reloadData];
 }
 
-- (void)didUpdateSecondaryButtonsTapped:(NSDictionary *)secondaryButtonsTapped
+- (void)didUpdateVerification
 {
-    self.secondaryButtonsTapped = secondaryButtonsTapped;
     [self.tableView reloadData];
 }
 
@@ -1808,45 +1632,50 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)performDeletePostWithSender:(id)sender withConfirmation:(BOOL)withConfirmation
 {
     UIButton *button = sender;
-    PFUser *user = [PFUser currentUser];
     
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-    __block PFChallengePost *post = cell.post;
-    __block NSString *userID = [user objectId];
-    __block NSString *postID = [post objectId];
+    __block MTChallengePost *post = cell.post;
+    __block NSInteger postID = post.id;
     
-    if (withConfirmation)
-    {
-        if ([UIAlertController class])
-        {
+    if (withConfirmation) {
+        if ([UIAlertController class]) {
             UIAlertController *deletePostSheet = [UIAlertController alertControllerWithTitle:@"Delete this post?" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
             UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
                                      }];
             MTMakeWeakSelf();
             UIAlertAction *delete = [UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDestructive handler:^(UIAlertAction *action) {
-                                         NSInteger index = [weakSelf.myObjects indexOfObject:post];
-                                         [weakSelf.myObjects removeObject:post];
-                                         NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                                         [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 
-                                         [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                                             if (error) {
-                                                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                                                 NSLog(@"error - %@", error);
-                                             }
-                                             else {
-                                                 [[PFUser currentUser] fetchInBackground];
-                                                 dispatch_async(dispatch_get_main_queue(), ^{
-                                                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
-                                                 });
-                                             }
-                                             
-                                             dispatch_async(dispatch_get_main_queue(), ^{
-                                                 [weakSelf loadObjects];
-                                             });
-                                         }];
-                                     }];
-            
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+                postToDelete.isDeleted = YES;
+                [realm commitWriteTransaction];
+                [weakSelf refreshFromDatabase];
+
+                [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakSelf refreshFromDatabase];
+                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                        } failure:nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    });
+                } failure:^(NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"error - %@", [error mtErrorDescription]);
+
+                        RLMRealm *realm = [RLMRealm defaultRealm];
+                        [realm beginWriteTransaction];
+                        MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+                        postToDelete.isDeleted = NO;
+                        [realm commitWriteTransaction];
+                        [weakSelf refreshFromDatabase];
+
+                        [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                    });
+                }];
+            }];
+                                     
             [deletePostSheet addAction:cancel];
             [deletePostSheet addAction:delete];
             
@@ -1856,25 +1685,34 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
             MTMakeWeakSelf();
             UIActionSheet *deleteAction = [UIActionSheet bk_actionSheetWithTitle:@"Delete this post?"];
             [deleteAction bk_setDestructiveButtonWithTitle:@"Delete" handler:^{
-                NSInteger index = [weakSelf.myObjects indexOfObject:post];
-                [weakSelf.myObjects removeObject:post];
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                [weakSelf.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];\
                 
-                [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-                    if (error) {
-                        [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                        NSLog(@"error - %@", error);
-                    }
-                    else {
-                        [[PFUser currentUser] fetchInBackground];
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
-                        });
-                    }
-                    
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+                postToDelete.isDeleted = YES;
+                [realm commitWriteTransaction];
+                [weakSelf refreshFromDatabase];
+
+                [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf loadObjects];
+                        [weakSelf refreshFromDatabase];
+                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                        } failure:nil];
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    });
+                } failure:^(NSError *error) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"error - %@", [error mtErrorDescription]);
+                        
+                        RLMRealm *realm = [RLMRealm defaultRealm];
+                        [realm beginWriteTransaction];
+                        MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+                        postToDelete.isDeleted = NO;
+                        [realm commitWriteTransaction];
+                        [weakSelf refreshFromDatabase];
+
+                        [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                     });
                 }];
                 
@@ -1884,21 +1722,34 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         }
     }
     else {
+        RLMRealm *realm = [RLMRealm defaultRealm];
+        [realm beginWriteTransaction];
+        MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+        postToDelete.isDeleted = YES;
+        [realm commitWriteTransaction];
+        [self refreshFromDatabase];
+
         MTMakeWeakSelf();
-        NSInteger index = [self.myObjects indexOfObject:post];
-        [self.myObjects removeObject:post];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-        [self.tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        
-        [PFCloud callFunctionInBackground:@"deletePost" withParameters:@{@"user_id": userID, @"post_id": postID} block:^(id object, NSError *error) {
-            if (error) {
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-            
+        [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:weakSelf.challenge];
-                [weakSelf loadObjects];
+                [weakSelf refreshFromDatabase];
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"error - %@", [error mtErrorDescription]);
+                
+                RLMRealm *realm = [RLMRealm defaultRealm];
+                [realm beginWriteTransaction];
+                MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
+                postToDelete.isDeleted = NO;
+                [realm commitWriteTransaction];
+                [weakSelf refreshFromDatabase];
+                
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             });
         }];
     }
@@ -1930,63 +1781,78 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     button.enabled = NO;
     
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[button findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
+    __block NSIndexPath *weakIndexPath = [self.tableView indexPathForCell:cell];
     
-    PFUser *user = [PFUser currentUser];
+    MTChallengePost *post = cell.post;
+    MTChallengeButton *challengeButton = [self.buttons objectAtIndex:buttonNumber];
     
-    NSString *userID = [user objectId];
-    NSString *postID = [post objectId];
+    RLMResults *existingClick = [MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu",
+                                [MTUser currentUser].id, post.id];
     
-    NSDictionary *buttonTappedDict = @{@"user": userID, @"post": postID, @"button": [NSNumber numberWithInteger:buttonNumber]};
-    
+    MTChallengeButtonClick *thisClick = [existingClick firstObject];
+    if (thisClick.challengeButton.id == challengeButton.id) {
+        button.enabled = YES;
+        return;
+    }
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Submitting...";
     hud.dimBackground = YES;
     
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                [weakSelf.challenge fetchInBackground];
-                [post fetchInBackground];
-                [weakSelf userButtonsTapped];
-                [weakSelf loadObjects];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
-                });
-            }
-            else {
+    if (thisClick) {
+        // Delete old one first, then add
+        [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:thisClick.id success:^(id responseData) {
+            
+            [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:post.id buttonId:challengeButton.id success:^(id responseData) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    button.enabled = YES;
+                    [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
-                
-                NSLog(@"error - %@", error);
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    button.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-            
-            button.enabled = YES;
+            });
         }];
-    } afterDelay:0.35f];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:post.id buttonId:challengeButton.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
+                [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                button.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
 
 - (IBAction)verifiedTapped:(id)sender
 {
-    __block MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
-    __block PFChallengePost *post = postCell.post;
-    __block PFUser *currentUser = [PFUser currentUser];
-
-    NSString *postID = [post objectId];
-    NSString *verifiedBy = [currentUser objectId];
-
-    BOOL isChecked = (post[@"verified_by"] != nil);
+    MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
+    MTChallengePost *post = postCell.post;
     
-    if (isChecked) {
-        verifiedBy = @"";
-    }
-    
+    BOOL isVerified = post.isVerified;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    if (isChecked) {
+    if (isVerified) {
         hud.labelText = @"Removing Verification...";
     }
     else {
@@ -1997,32 +1863,36 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     postCell.verfiedLabel.text = @"Updating...";
     
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:@{@"verified_by" : verifiedBy, @"post_id" : postID} block:^(id object, NSError *error) {
-            
-            if (error) {
-                NSLog(@"error - %@", error);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-                
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+    if (isVerified) {
+        [[MTNetworkManager sharedMTNetworkManager] unVerifyPostId:post.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 [weakSelf.tableView reloadData];
-                
-            } else {
-                [currentUser fetchInBackground];
-                [weakSelf.challenge fetchInBackground];
-                
-                [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                        [weakSelf.tableView reloadData];
-                    });
-                }];
-            }
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
         }];
-        
-    } afterDelay:0.35f];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] verifyPostId:post.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadData];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
 
 - (void)secondaryButton1Tapped:(id)sender
@@ -2102,41 +1972,59 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)secondaryButton1ActionWithIncrement:(BOOL)increment
 {
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[self.secondaryButton1 findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
+    __block NSIndexPath *weakIndexPath = [self.tableView indexPathForCell:cell];
     
-    PFUser *user = [PFUser currentUser];
+    MTChallengePost *post = cell.post;
+    MTChallengeButton *button1 = [self.buttons objectAtIndex:0];
     
-    NSString *userID = [user objectId];
-    NSString *postID = [post objectId];
-    NSNumber *increaseNumber = [NSNumber numberWithBool:(increment ? YES : NO)];
-    
-    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": [NSNumber numberWithInt:0], @"increase": increaseNumber};
-
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Processing Points...";
     hud.dimBackground = YES;
-    
+
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                [weakSelf updateSecondaryButtonsTapped];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
-                });
-            }
-            else {
+    if (increment) {
+        // Create new buttonClick
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:post.id buttonId:button1.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton1.enabled = YES;
+                [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton1.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        // Delete existing buttonClick
+        MTChallengeButtonClick *oneClick = [[MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                            [MTUser currentUser].id, post.id, button1.id] firstObject];
+        
+        if (oneClick) {
+            [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:oneClick.id success:^(id responseData) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                     weakSelf.secondaryButton1.enabled = YES;
+                    [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
-                
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-        }];
-    } afterDelay:0.35f];
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton1.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+        }
+        else {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            weakSelf.secondaryButton1.enabled = YES;
+        }
+    }
 }
 
 - (void)secondaryButton2Tapped:(id)sender
@@ -2145,14 +2033,16 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     self.secondaryButton2 = (UIButton *)sender;
     
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[self.secondaryButton2 findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
-    NSDictionary *buttonDict = [self.secondaryButtonsTapped objectForKey:post.objectId];
+    MTChallengePost *post = cell.post;
     
-    NSInteger button2Count = [[buttonDict objectForKey:@1] integerValue];
-    BOOL markComplete = (button2Count > 0) ? NO : YES;
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
+    
+    RLMResults *clickResults = [MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                [MTUser currentUser].id, post.id, button2.id];
+    
+    BOOL markComplete = ([clickResults count] > 0) ? NO : YES;
     NSString *title = @"Mark this as complete?";
-
-    if (button2Count > 0) {
+    if (!markComplete) {
         // Now complete, marking incomplete
         title = @"Mark this as incomplete?";
     }
@@ -2202,179 +2092,146 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)secondaryButton2ActionWithMarkComplete:(BOOL)markComplete
 {
     MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[self.secondaryButton2 findSuperViewWithClass:[MTPostsTableViewCell class]];
-    PFChallengePost *post = cell.post;
-    
-    PFUser *user = [PFUser currentUser];
-    
-    NSString *userID = [user objectId];
-    NSString *postID = [post objectId];
-    NSNumber *completeNumber = [NSNumber numberWithBool:(markComplete ? YES : NO)];
-    
-    NSDictionary *buttonTappedDict = @{@"user_id": userID, @"post_id": postID, @"button": @1, @"increase": completeNumber};
-    
+    __block NSIndexPath *weakIndexPath = [self.tableView indexPathForCell:cell];
+
+    MTChallengePost *post = cell.post;
+    MTChallengeButton *button2 = [self.buttons objectAtIndex:1];
+
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = markComplete ? @"Marking Complete..." : @"Marking Incomplete...";
     hud.dimBackground = YES;
     
     MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [PFCloud callFunctionInBackground:@"challengePostSecondaryButtonClicked" withParameters:buttonTappedDict block:^(id object, NSError *error) {
-            if (!error) {
-                [[PFUser currentUser] fetchInBackground];
-                [weakSelf updateSecondaryButtonsTapped];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:weakSelf.challenge];
-                });
-            }
-            else {
+    if (markComplete) {
+        // Add click
+        [[MTNetworkManager sharedMTNetworkManager] addButtonClickForPostId:post.id buttonId:button2.id success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton2.enabled = YES;
+                [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.secondaryButton2.enabled = YES;
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        // Delete existing buttonClick
+        MTChallengeButtonClick *oneClick = [[MTChallengeButtonClick objectsWhere:@"isDeleted = NO AND user.id = %lu AND challengePost.id = %lu AND challengeButton.id = %lu",
+                                             [MTUser currentUser].id, post.id, button2.id] firstObject];
+        
+        if (oneClick) {
+            [[MTNetworkManager sharedMTNetworkManager] deleteButtonClickId:oneClick.id success:^(id responseData) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton2.enabled = YES;
+                    [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                 });
-                
-                NSLog(@"error - %@", error);
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-            }
-            
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    weakSelf.secondaryButton2.enabled = YES;
+                    [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                });
+            }];
+        }
+        else {
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             weakSelf.secondaryButton2.enabled = YES;
-        }];
-    } afterDelay:0.35f];
+        }
+    }
 }
 
-- (void)emojiLikedForPost:(PFChallengePost *)likedPost withEmoji:(PFEmoji *)emoji
+- (void)emojiLikedForPost:(MTChallengePost *)likedPost withEmoji:(MTEmoji *)emoji
 {
-    NSUInteger row = [self.myObjects indexOfObject:likedPost];
+    NSUInteger row = [self.challengePosts indexOfObject:likedPost];
     if (row == NSNotFound) {
         return;
     }
     
-    NSString *emojiName = emoji[@"name"];
+    NSString *emojiCode = emoji.code;
     
-    __block MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
-    __block PFChallengePost *post = likedPost;
+    __block MTChallengePost *post = likedPost;
     
-    PFUser *user = [PFUser currentUser];
+    MTUser *user = [MTUser currentUser];
+    RLMResults *likesForPost = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO AND user.id = %lu", post.id, user.id];
+    BOOL iLike = !IsEmpty(likesForPost);
     
-    NSString *userID = [user objectId];
-    NSString *postID = [post objectId];
-    
-    BOOL like = [self.postsLiked containsObject:postID];
-    
-    __block NSMutableArray *oldLikePosts = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSInteger oldLikesCount = [post[@"likes"] intValue];
-    
-    NSMutableArray *likes = [NSMutableArray arrayWithArray:self.postsLiked];
-    NSInteger likesCount = [post[@"likes"] intValue];
-    NSMutableArray *newEmojiArray = [NSMutableArray arrayWithArray:cell.emojiArray];
-    
-    if (!like) {
-        likesCount += 1;
-        [likes addObject:postID];
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (iLike) {
+        hud.detailsLabelText = @"Updating Emoji...";
     }
     else {
-        // We're replacing existing emoji like
-        BOOL foundMatch = NO;
-        for (PFChallengePostsLiked *thisPostLiked in self.postsLikedFull) {
-            PFChallengePost *post = thisPostLiked[@"post"];
-            if ([post.objectId isEqualToString:cell.post.objectId]) {
-                PFEmoji *originalMatchedEmoji = thisPostLiked[@"emoji"];
-                thisPostLiked[@"emoji"] = emoji;
-                
-                for (PFEmoji *thisEmoji in cell.emojiArray) {
-                    if ([thisEmoji.objectId isEqualToString:originalMatchedEmoji.objectId]) {
-                        [newEmojiArray removeObject:thisEmoji];
-                        foundMatch = YES;
-                        break;
-                    }
-                }
-            }
-            
-            if (foundMatch) {
-                break;
-            }
-        }
+        hud.detailsLabelText = @"Sending Emoji...";
     }
+    hud.dimBackground = YES;
+    hud.color = [UIColor colorWithWhite:1.0f alpha:1.0f];
+    hud.detailsLabelColor = [UIColor blackColor];
+    hud.detailsLabelFont = [UIFont mtFontOfSize:13.0f];
+
+    hud.mode = MBProgressHUDModeCustomView;
     
-    post[@"likes"] = [NSNumber numberWithInteger:likesCount];
-    self.postsLiked = likes;
-    
-    // Optimistically update view (can roll back on error below)
-    cell.likes.text = [NSString stringWithFormat:@"%ld", (long)likesCount];
-    
-    // Optimistically update the emoji likes
-    __block NSMutableArray *oldEmojiArray = [NSMutableArray arrayWithArray:cell.emojiArray];
-    [newEmojiArray insertObject:emoji atIndex:0];
-    cell.emojiArray = [NSArray arrayWithArray:newEmojiArray];
-    
-    // First, like, animate
-    if (!like) {
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateNormal];
-        [cell.likeButton setImage:[UIImage imageNamed:@"like_active"] forState:UIControlStateDisabled];
-        
-        // Animations are borked on < iOS 8.0 because of autolayout?
-        // http://stackoverflow.com/questions/25286022/animation-of-cgaffinetransform-in-ios8-looks-different-than-in-ios7?rq=1
-        if(NSFoundationVersionNumber <= NSFoundationVersionNumber_iOS_7_1) {
-            // no animation
-        } else {
-            [UIView animateWithDuration:0.2f animations:^{
-                cell.likeButton.transform = CGAffineTransformMakeScale(1.5, 1.5);
-            } completion:^(BOOL finished) {
-                [UIView animateWithDuration:0.2f animations:^{
-                    cell.likeButton.transform = CGAffineTransformMakeScale(1, 1);
-                } completion:NULL];
-            }];
-        }
-        
-    }
-    
+    UIImageView *emojiImageView = [[UIImageView alloc] initWithImage:[UIImage imageWithData:emoji.emojiImage.imageData]];
+    emojiImageView.frame = ({
+        CGRect newFrame = emojiImageView.frame;
+        newFrame.size = CGSizeMake(120.0f, 120.0f);
+        newFrame;
+    });
+    hud.customView = emojiImageView;
+
     MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"toggleLikePost" withParameters:@{@"user_id": userID, @"post_id" : postID, @"like" : @"1", @"emoji_name" : emojiName} block:^(id object, NSError *error) {
-        
-        if (!error) {
-            [weakSelf updateLikes];
-            
-            [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                // Load/update the objects but don't clear the table
-                [weakSelf loadObjects];
-            }];
-        }
-        else {
-            NSLog(@"error - %@", error);
-            weakSelf.postsLiked = oldLikePosts;
-            post[@"likes"] = [NSNumber numberWithInteger:oldLikesCount];
-            
-            cell.emojiArray = oldEmojiArray;
-            
+    if (iLike) {
+        NSInteger likeId = ((MTChallengePostLike *)[likesForPost firstObject]).id;
+        [[MTNetworkManager sharedMTNetworkManager] updateLikeId:likeId emojiCode:emojiCode success:^(id responseData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                
-                // Revert locally if network down
-                [weakSelf.tableView reloadData];
-                
-                // Then, sync with server
-                if ([MTUtil internetReachable]) {
-                    [weakSelf updateLikes];
-                    [post fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-                        // Load/update the objects but don't clear the table
-                        [weakSelf loadObjects];
-                    }];
-                }
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
             });
-        }
-    }];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] addLikeForPostId:post.id emojiCode:emojiCode success:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            });
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+        }];
+    }
 }
 
 
 #pragma mark - MTEmojiPickerCollectionViewDelegate Methods -
-- (void)didSelectEmoji:(PFEmoji *)emoji withPost:(PFChallengePost *)post;
+- (void)didSelectEmoji:(MTEmoji *)emoji withPost:(MTChallengePost *)post;
 {
+    __block MTEmoji *weakEmoji = emoji;
+    __block MTChallengePost *weakPost = post;
+    
+    MTMakeWeakSelf();
     if (self.postViewController) {
-        [self.postViewController emojiLiked:emoji];
+        [self dismissEmojiPromptWithCompletion:^(BOOL finished) {
+            [weakSelf.postViewController emojiLiked:weakEmoji];
+        }];
     }
     else {
-        [self emojiLikedForPost:post withEmoji:emoji];
+        [self dismissEmojiPromptWithCompletion:^(BOOL finished) {
+            [weakSelf emojiLikedForPost:weakPost withEmoji:weakEmoji];
+        }];
+
     }
-    
-    [self dismissEmojiPrompt];
 }
 
 
@@ -2406,7 +2263,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    if (IsEmpty(self.myObjects) && self.updatedButtonsAndLikes) {
+    if (IsEmpty(self.challengePosts)) {
         return YES;
     }
     else {
@@ -2419,9 +2276,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     return [UIColor whiteColor];
 }
 
-- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return CGPointMake(0, -56.0f);
+    return -142.0f;
 }
 
 

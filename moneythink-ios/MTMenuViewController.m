@@ -15,13 +15,12 @@
 @interface MTMenuViewController ()
 
 @property (nonatomic, strong) IBOutlet UIView *headerView;
-@property (nonatomic, strong) IBOutlet PFImageView *profileImage;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImage;
 @property (nonatomic, strong) IBOutlet UILabel *profileName;
 @property (nonatomic, strong) IBOutlet UILabel *profilePoints;
 @property (nonatomic, strong) IBOutlet UIView *footerView;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 
-@property (nonatomic, strong) NSArray *signUpCodes;
 @property (nonatomic, strong) NSIndexPath *currentlySelectedIndexPath;
 
 @end
@@ -46,73 +45,38 @@
     
     [self loadProfileImage];
 
-    PFUser *user = [PFUser currentUser];
-    self.profileName.text = user[@"first_name"];
+    MTUser *user = [MTUser currentUser];
+    self.profileName.text = user.firstName;
     
-    if ([MTUtil isCurrentUserMentor]) {
+    if ([MTUser isCurrentUserMentor]) {
         self.profilePoints.hidden = YES;
     }
     else {
         self.profilePoints.hidden = NO;
+        self.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+        
+        if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+            MTMakeWeakSelf();
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    MTUser *user = [MTUser currentUser];
+                    weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+                });
+            } failure:^(NSError *error) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    MTUser *user = [MTUser currentUser];
+                    weakSelf.profilePoints.text = [NSString stringWithFormat:@"%ldpts", (long)user.points];
+                });
+            }];
 
-        id userPoints = user[@"points"];
-        NSString *points = @"0";
-        if (userPoints && userPoints != [NSNull null]) {
-            points = [userPoints stringValue];
         }
-        
-        self.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
-        
-        MTMakeWeakSelf();
-        PFQuery *meQuery = [PFQuery queryWithClassName:[PFUser parseClassName]];
-        [meQuery whereKey:@"objectId" equalTo:user.objectId];
-        meQuery.cachePolicy = kPFCachePolicyNetworkOnly;
-        [meQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if ([objects count] == 1) {
-                    PFUser *thisUser = [objects firstObject];
-                    id userPoints = thisUser[@"points"];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSString *points = @"0";
-                        if (userPoints && userPoints != [NSNull null]) {
-                            points = [userPoints stringValue];
-                        }
-                        weakSelf.profilePoints.text = [NSString stringWithFormat:@"%@pts", points];
-                    });
-                }
-            }
-        }];
     }
-    
-    NSString *userClass = user[@"class"];
-    NSString *userSchool = user[@"school"];
-    
+
     __block NSIndexPath *indexPathForSelected = [self.tableView indexPathForSelectedRow];
     if (self.currentlySelectedIndexPath) {
         indexPathForSelected = [NSIndexPath indexPathForRow:self.currentlySelectedIndexPath.row inSection:self.currentlySelectedIndexPath.section];
         self.currentlySelectedIndexPath = nil;
-    }
-    
-    if ([MTUtil isCurrentUserMentor]) {
-        NSPredicate *signUpCode = [NSPredicate predicateWithFormat:@"class = %@ AND school = %@", userClass, userSchool];
-        PFQuery *querySignUpCodes = [PFQuery queryWithClassName:[PFSignupCodes parseClassName] predicate:signUpCode];
-        querySignUpCodes.cachePolicy = kPFCachePolicyNetworkElseCache;
-        
-        MTMakeWeakSelf();
-        [querySignUpCodes findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                weakSelf.signUpCodes = objects;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakSelf.tableView reloadData];
-                    if (!indexPathForSelected) {
-                        [weakSelf.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1] animated:NO scrollPosition:UITableViewScrollPositionNone];
-                    }
-                    else {
-                        [weakSelf.tableView selectRowAtIndexPath:indexPathForSelected animated:NO scrollPosition:UITableViewScrollPositionNone];
-                    }
-                });
-            }
-        }];
     }
     
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
@@ -168,7 +132,7 @@
     switch (section) {
         case 0:
         {
-            if ([MTUtil isCurrentUserMentor]) {
+            if ([MTUser isCurrentUserMentor]) {
                 return 1;
             }
             else {
@@ -185,8 +149,13 @@
           
         case 2:
         {
-            if ([MTUtil isCurrentUserMentor]) {
-                return [self.signUpCodes count];
+            if ([MTUser isCurrentUserMentor]) {
+                if (!IsEmpty([MTUser currentUser].userClass.studentSignupCode)) {
+                    return 1;
+                }
+                else {
+                    return 0;
+                }
             }
             else {
                 return 0;
@@ -252,18 +221,8 @@
         case 2:
         {
             CellIdentifier = @"Signup";
-            
-            NSString *type = @"";
-    
-            PFSignupCodes *signupCode = self.signUpCodes[row];
-            type = signupCode[@"type"];
-            code = signupCode[@"code"];
-    
-            if ([type isEqualToString:@"student"]) {
-                msg = @"Student Sign Up Code:";
-            } else if ([type isEqualToString:@"mentor"]) {
-                msg = @"Mentor Sign Up Code:";
-            }
+            msg = @"Student Sign Up Code:";
+            code = [MTUser currentUser].userClass.studentSignupCode;
     
             break;
         }
@@ -294,26 +253,7 @@
     if (indexPath.section == 2) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
-        NSString *msg = @"";
-
-        switch (indexPath.row) {
-            case 0: {
-                msg = @"Student";
-
-                // Mark user invited students
-                [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kUserInvitedStudents];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-            }
-                break;
-
-            default: {
-                msg = @"Mentor";
-            }
-                break;
-        }
-
-        PFSignupCodes *signupCode = self.signUpCodes[indexPath.row];
-        NSString *signupCodeString = [NSString stringWithFormat:@"%@ sign up code for class '%@' is '%@'", msg, [PFUser currentUser][@"class"], signupCode[@"code"]];
+        NSString *signupCodeString = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", [MTUser currentUser].userClass.name, [MTUser currentUser].userClass.studentSignupCode];
         NSArray *dataToShare = @[signupCodeString];
 
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:dataToShare
@@ -357,48 +297,61 @@
 
 - (void)logoutAction
 {
+    [[MTNetworkManager sharedMTNetworkManager] cancelExistingOperations];
+    
+    // Try deleting push registration first before deleting token
+    if ([MTUtil pushMessagingRegistrationId]) {
+        
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Logging out...";
+        hud.dimBackground = YES;
+        
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] deletePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] success:^(id responseData) {
+            NSLog(@"Successfully deleted push messaging registration ID");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf continueLogout];
+            });
+            
+        } failure:^(NSError *error) {
+            NSLog(@"Failed to delete push messaging registration ID");
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf continueLogout];
+            });
+        }];
+    }
+    else {
+        [self continueLogout];
+    }
+}
+
+- (void)continueLogout
+{
     [MTUtil logout];
+
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
     NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
     if (selectedIndexPath) {
         [self.tableView deselectRowAtIndexPath:selectedIndexPath animated:NO];
     }
-
+    
     [self.revealViewController setFrontViewController:[[MTUtil getAppDelegate] userViewController] animated:YES];
-    [self.revealViewController revealToggleAnimated:YES];
+    [self.revealViewController setFrontViewPosition:FrontViewPositionLeft animated:YES];
+    //    [self.revealViewController revealToggleAnimated:YES];
 }
 
 - (void)loadProfileImage
 {
-    __block PFFile *profileImageFile = [PFUser currentUser][@"profile_picture"];
-    
-    if (!self.profileImage.image) {
-        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-    }
-    
-    self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
-    self.profileImage.layer.borderColor = [UIColor whiteColor].CGColor;
-    self.profileImage.layer.borderWidth = 1.0f;
+    self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width/2.0f;
     self.profileImage.layer.masksToBounds = YES;
-    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-    
-    if (profileImageFile) {
-        // Load/update the profile image
-        MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            [self.profileImage setFile:profileImageFile];
-            [self.profileImage loadInBackground:^(UIImage *image, NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    weakSelf.profileImage.image = image;
-                });
-                
-                [[PFUser currentUser] fetchInBackground];
-            }];
-        } afterDelay:0.35f];
+    if ([MTUser currentUser].userAvatar) {
+        self.profileImage.image = [UIImage imageWithData:[MTUser currentUser].userAvatar.imageData];
     }
     else {
-        // Set to default
-        [self.profileImage setFile:nil];
         self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
     }
 }
@@ -426,7 +379,7 @@
     [self.revealViewController setFrontViewController:leaderboardVCNav animated:YES];
 }
 
-- (void)openNotificationsWithId:(NSString *)notificationId
+- (void)openNotificationsWithId:(NSInteger)notificationId
 {
     self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:2 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -441,7 +394,7 @@
     [self.revealViewController setFrontViewController:notificationsVCNav animated:YES];
 }
 
-- (void)openChallengesForChallengeId:(NSString *)challengeId
+- (void)openChallengesForChallengeId:(NSInteger)challengeId
 {
     self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -452,7 +405,7 @@
     UINavigationController *challengesVCNav = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
     MTChallengesViewController *challengesVC = (MTChallengesViewController *)challengesVCNav.topViewController;
     
-    if (!IsEmpty(challengeId)) {
+    if (challengeId > 0) {
         challengesVC.actionableChallengeId = challengeId;
     }
     
@@ -482,6 +435,7 @@
 - (void)userSavedProfileChanges:(NSNotification *)note
 {
     [self loadProfileImage];
+    self.profileName.text = [MTUser currentUser].firstName;
 }
 
 

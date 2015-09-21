@@ -192,9 +192,8 @@
                                            NSString *iTunesLink = @"https://itunes.apple.com/us/app/moneythink/id907176836?mt=8";
                                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
                                        }];
-
+        
             [updateAlert addAction:openAction];
-            
             self.forcedUpdateAlertController = updateAlert;
             [self presentViewController:updateAlert animated:YES completion:nil];
         } else {
@@ -202,7 +201,16 @@
             [self.forcedUpdateAlert show];
         }
     }
-    else if ([PFUser currentUser]) {
+    else if ([MTUser isUserLoggedIn]) {
+        [[MTUtil getAppDelegate] configureZendesk];
+        if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+            } failure:^(NSError *error) {
+                //
+            }];
+        }
+        
         self.view.backgroundColor = [UIColor primaryOrange];
         self.emailLabel.hidden = YES;
         self.passwordLabel.hidden = YES;
@@ -216,37 +224,17 @@
         for (UIView *thisView in self.separatorViews) {
             thisView.hidden = YES;
         }
-
-        PFUser *user = [PFUser currentUser];
         
-        MTMakeWeakSelf();
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = @"Loading...";
-        [PFCloud callFunctionInBackground:@"userLoggedIn" withParameters:@{@"user_id": [user objectId]} block:^(id object, NSError *error) {
-            [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
-            if (!error) {
-                [[MTUtil getAppDelegate] configureZendesk];
-                
-                // Update Notification count for this user.
-                [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
-                
-                MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
-                if (![onboardingController checkForOnboarding]) {
-                    id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
-                    [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-                
-                if (![MTUtil internetReachable]) {
-                    [UIAlertView showNoInternetAlert];
-                }
-                else {
-                    [UIAlertView showNetworkAlertWithError:error];
-                }
-            }
-        }];
-    } else {
+        // Update Notification count for this user.
+        [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+
+        MTOnboardingController *onboardingController = [[MTOnboardingController alloc] init];
+        if (![onboardingController checkForOnboarding]) {
+            id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
+            [self.revealViewController setFrontViewController:challengesVC animated:YES];
+        }
+    }
+    else {
         self.view.backgroundColor = [UIColor whiteColor];
         self.emailLabel.hidden = NO;
         self.passwordLabel.hidden = NO;
@@ -327,15 +315,22 @@
 - (IBAction)resetTapped:(id)sender
 {
     if (IsEmpty(self.emailTextField.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Reset Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        [[[UIAlertView alloc] initWithTitle:@"Forgot Password Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return;
     }
 
-    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:nil
+    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
                                                       message:@"Would you like to receive an email to reset your password?"
                                                      delegate:self
                                             cancelButtonTitle:@"Cancel"
-                                            otherButtonTitles:@"OK", nil];
+                                            otherButtonTitles:@"Request Email", nil];
+    
+    // For the token flow, not currently used
+//    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
+//                                                      message:@"Would you like to receive an email to reset your password?\n\nChoose Enter Token after receiving email."
+//                                                     delegate:self
+//                                            cancelButtonTitle:@"Cancel"
+//                                            otherButtonTitles:@"Request Email", @"Enter Token", nil];
     [confirm show];
 }
 
@@ -345,23 +340,19 @@
         return;
     }
     
-    PFUser *user = [PFUser user];
-    
-    user.username = self.emailTextField.text;
-    user.password = self.passwordTextField.text;
-    
-    MTMakeWeakSelf();
-    [PFUser logInWithUsernameInBackground:self.emailTextField.text password:self.passwordTextField.text block:^(PFUser *user, NSError *error) {
-        NSString *errorString = [error userInfo][@"error"];
-        
-        if (!error) {
-            [[MTUtil getAppDelegate] configureZendesk];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Logging In...";
 
-            // Update for Push Notifications
-            [[MTUtil getAppDelegate] updateParseInstallationState];
-            
-            // Check for custom playlist for this class
-            [[MTUtil getAppDelegate] checkForCustomPlaylistContentWithRefresh:NO];
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
+        
+        [[MTUtil getAppDelegate] configureZendesk];
+        
+        // Update for Push Notifications
+        [[MTUtil getAppDelegate] updatePushMessagingInfo];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             
             // Update Notification count for this user.
             [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
@@ -371,10 +362,14 @@
                 id challengesVC = [self.storyboard instantiateViewControllerWithIdentifier:@"challengesViewControllerNav"];
                 [weakSelf.revealViewController setFrontViewController:challengesVC animated:YES];
             }
-        }
-        else {
-            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:errorString delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-        }
+        });
+
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        });
+
     }];
 }
 
@@ -390,33 +385,82 @@
         }
         self.forcedUpdateAlert = nil;
     }
-    else if (buttonIndex != alertView.cancelButtonIndex) {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Sending Password Reset...";
-
-        MTMakeWeakSelf();
-        [self bk_performBlock:^(id obj) {
-            NSError *error = nil;
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-
-            if (error) {
-                NSLog(@"Error resetting password: %@", [error localizedDescription]);
+    else if (buttonIndex == alertView.cancelButtonIndex) {
+        return;
+    }
+    else if ([alertView.title isEqualToString:@"Enter Token"]) {
+        NSString *token = [alertView textFieldAtIndex:0].text;
+        NSString *newPassword = [alertView textFieldAtIndex:1].text;
+        
+        if (IsEmpty(token) || IsEmpty(newPassword)) {
+            NSString *title = IsEmpty(token) ? @"Token Required" : @"Password Required";
+            if ([UIAlertController class]) {
+                UIAlertController *changeSheet = [UIAlertController
+                                                  alertControllerWithTitle:title
+                                                  message:nil
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction
+                                           actionWithTitle:@"OK"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+                                           }];
+                
+                [changeSheet addAction:okAction];
+                [self presentViewController:changeSheet animated:YES completion:nil];
+            } else {
+                [[[UIAlertView alloc] initWithTitle:title message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             }
+
+            return;
+        }
+        
+        [[MTNetworkManager sharedMTNetworkManager] sendNewPassword:newPassword withToken:token success:^(id responseData) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Password Updated";
+            hud.mode = MBProgressHUDModeText;
+            [hud hide:YES afterDelay:1.5f];
+        } failure:^(NSError *error) {
+            NSString *title = @"Password Change Failed";
+            NSString *detailMessage = [error mtErrorDescription];
+            if ([UIAlertController class]) {
+                UIAlertController *changeSheet = [UIAlertController
+                                                  alertControllerWithTitle:title
+                                                  message:detailMessage
+                                                  preferredStyle:UIAlertControllerStyleAlert];
+                
+                UIAlertAction *okAction = [UIAlertAction
+                                           actionWithTitle:@"OK"
+                                           style:UIAlertActionStyleDefault
+                                           handler:^(UIAlertAction *action) {
+                                           }];
+                
+                [changeSheet addAction:okAction];
+                [self presentViewController:changeSheet animated:YES completion:nil];
+            } else {
+                [[[UIAlertView alloc] initWithTitle:title message:detailMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            }
+        }];
+    }
+    else if ([alertView.title isEqualToString:@"Password Reset"]) {
+        
+        if (buttonIndex == 1) {
+            // Request Email
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"Requesting Email...";
             
-            [PFUser requestPasswordResetForEmailInBackground:weakSelf.emailTextField.text block:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
+            MTMakeWeakSelf();
+            [self bk_performBlock:^(id obj) {
+                [[MTNetworkManager sharedMTNetworkManager] requestPasswordResetEmailForEmail:weakSelf.emailTextField.text success:^(id responseData) {
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-                    hud.labelText = @"Reset successfully sent.";
+                    hud.labelText = @"Email Sent";
                     hud.mode = MBProgressHUDModeText;
                     [hud hide:YES afterDelay:1.5f];
-                }
-                else {
-                    NSString *title = @"Reset Failed";
-                    NSString *detailMessage = [NSString stringWithFormat:@"No account was found with email %@.", weakSelf.emailTextField.text];
-                    
-                    NSString *generatedError = [[error userInfo] valueForKey:@"error"];
-                    if (!IsEmpty(generatedError)) {
-                        detailMessage = generatedError;
+                } failure:^(NSError *error) {
+                    NSString *title = @"Email Request Failed";
+                    NSString *detailMessage = [error firstValidationMessage];
+                    if (!detailMessage) {
+                        detailMessage = [error mtErrorDescription];
                     }
                     
                     if ([UIAlertController class]) {
@@ -436,10 +480,19 @@
                     } else {
                         [[[UIAlertView alloc] initWithTitle:title message:detailMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
                     }
-                }
-            }];
-            
-        } afterDelay:0.35f];
+                }];
+                
+            } afterDelay:0.35f];
+
+        }
+        else if (buttonIndex == 2) {
+            // Enter Token
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter Token" message:@"Enter the token received in email and your new password." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Send", nil];
+            alert.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+            [alert textFieldAtIndex:0].placeholder = @"Email Token";
+            [alert textFieldAtIndex:1].placeholder = @"New Password";
+            [alert show];
+        }
     }
 }
 

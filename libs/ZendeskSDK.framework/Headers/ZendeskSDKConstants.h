@@ -22,7 +22,6 @@ FOUNDATION_EXPORT NSString * const ZendeskSDKVersionString;
 
 
 #pragma mark - ZDKToast
-
 /**
  * Default toast animation time.
  */
@@ -196,6 +195,20 @@ extern NSString * const ZD_HC_ArticlesStarting;
  * Notification that help centre arcticles were updated.
  */
 extern NSString * const ZD_HC_ArticlesUpdated;
+
+/**
+ *  Notification that help centre arcticle is being fetched.
+ *
+ *  @since 1.3.1.1
+ */
+extern NSString * const ZD_HC_ArticleByIdStarting;
+
+/**
+ *  Notification that an article was successfulyl retrieved.
+ *
+ *  @since 1.3.1.1
+ */
+extern NSString * const ZD_HC_ArticleByIdSuccess;
 
 /**
  * Notification that help centre attachments are being fetched.
@@ -412,3 +425,30 @@ extern NSString * const ZDKRMANotificationFeedbackError;
 #pragma mark - Authentication types
 extern NSString * const ZDK_AUTHENTICATION_JWT;
 extern NSString * const ZDK_AUTHENTICATION_ANONYMOUS;
+
+
+/**
+ *  Reprsents the types of authentication SDK supports.
+ *
+ *  @since 1.3.4.1
+ */
+typedef NS_ENUM(NSUInteger, ZDKAuthenticationType){
+    /**
+     *  Authentication type unknown.
+     *
+     *  @since 1.3.4.1
+     */
+    ZDKAuthenticationTypeUnknown,
+    /**
+     *  JWT authentication.
+     *
+     *  @since 1.3.4.1
+     */
+    ZDKAuthenticationTypeJWT,
+    /**
+     *  Anonymous authentication.
+     *
+     *  @since 1.3.4.1
+     */
+    ZDKAuthenticationTypeAnonymous,
+};

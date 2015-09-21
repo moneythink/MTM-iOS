@@ -6,16 +6,15 @@
 //  Copyright (c) 2014 Moneythink. All rights reserved.
 //
 
-#import <Parse/Parse.h>
 #import "MICheckBox.h"
 
-@interface MTPostsTableViewCell : PFTableViewCell
+@interface MTPostsTableViewCell : UITableViewCell
 
-@property (nonatomic, strong) PFChallengePost *post;
-@property (nonatomic, strong) IBOutlet PFImageView *profileImage;
+@property (nonatomic, strong) MTChallengePost *post;
+@property (nonatomic, strong) IBOutlet UIImageView *profileImage;
 @property (nonatomic, strong) IBOutlet UILabel *userName;
 @property (nonatomic, strong) IBOutlet UILabel *postedWhen;
-@property (nonatomic, strong) IBOutlet PFImageView *postImage;
+@property (nonatomic, strong) IBOutlet UIImageView *postImage;
 @property (nonatomic, strong) IBOutlet UILabel *postText;
 @property (nonatomic, strong) IBOutlet UILabel *likes;
 @property (nonatomic, strong) IBOutlet UILabel *comments;
@@ -26,18 +25,12 @@
 @property (nonatomic, strong) IBOutlet UIButton *button3;
 @property (nonatomic, strong) IBOutlet UIButton *button4;
 @property (nonatomic, strong) IBOutlet UIButton *deletePost;
-@property (nonatomic, strong) IBOutlet UIActivityIndicatorView *activityIndicator;
-@property (nonatomic, strong) IBOutlet UIView *loadingView;
 @property (nonatomic, strong) IBOutlet MICheckBox *verifiedCheckBox;
 @property (nonatomic, strong) IBOutlet UILabel *verfiedLabel;
 @property (nonatomic, strong) IBOutlet UIView *emojiContainerView;
 @property (nonatomic, strong) IBOutlet UIView *spentView;
 @property (nonatomic, strong) IBOutlet UILabel *spentLabel;
 @property (nonatomic, strong) IBOutlet UILabel *savedLabel;
-
-@property (nonatomic, strong) NSArray *postsLiked;
-@property (assign, nonatomic) NSInteger postLikesCount;
-@property (assign, nonatomic) BOOL iLike;
 
 @property (nonatomic, strong) NSArray *emojiArray;
 

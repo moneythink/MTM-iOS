@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MTNotificationTableViewCell : PFTableViewCell
+@interface MTNotificationTableViewCell : UITableViewCell
 
 @property (nonatomic, strong) IBOutlet UITextView *messageTextView;
 @property (nonatomic, strong) IBOutlet UILabel *agePosted;
-@property (nonatomic, strong) IBOutlet PFImageView *avatarImageView;
+@property (nonatomic, strong) IBOutlet UIImageView *avatarImageView;
 
 @property (nonatomic, strong) NSIndexPath *currentIndexPath;
 

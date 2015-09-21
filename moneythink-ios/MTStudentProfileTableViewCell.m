@@ -10,14 +10,6 @@
 
 @implementation MTStudentProfileTableViewCell
 
-- (id)initWithCoder:(NSCoder *)aDecoder
-{
-    self = [super initWithCoder:aDecoder];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
 
 - (void)awakeFromNib
 {
@@ -39,34 +31,55 @@
     self.verified.hidden = YES;
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
-{
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
-}
-
 - (void)checkedVerifiedBox {
-    PFUser *mentor = [PFUser currentUser];
-    NSString *userID = [mentor objectId];
-    NSString *postID = [self.rowPost objectId];
-    
-    if (!self.verifiedCheckbox.isChecked) {
-        userID = @"";
+    BOOL isVerified = self.rowPost.isVerified;
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    if (isVerified) {
+        hud.labelText = @"Removing Verification...";
+    }
+    else {
+        hud.labelText = @"Verifying...";
     }
     
-    NSDictionary *verifiedDict = @{@"post_id": postID, @"verified_by": userID};
+    hud.dimBackground = YES;
+    self.verifiedCheckbox.enabled = NO;
     
-    [PFCloud callFunctionInBackground:@"updatePostVerification" withParameters:verifiedDict block:^(id object, NSError *error) {
-        if (!error) {
+    MTMakeWeakSelf();
+    if (isVerified) {
+        [[MTNetworkManager sharedMTNetworkManager] unVerifyPostId:self.rowPost.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.verifiedCheckbox.enabled = YES;
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
             
-        } else {
-            self.verifiedCheckbox.isChecked = !self.verifiedCheckbox.isChecked;
-            [self setNeedsLayout];
-            NSLog(@"error - %@", error);
-            [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-        }
-    }];
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.verifiedCheckbox.isChecked = weakSelf.rowPost.isVerified;
+                weakSelf.verifiedCheckbox.enabled = YES;
+                [weakSelf setNeedsLayout];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
+    else {
+        [[MTNetworkManager sharedMTNetworkManager] verifyPostId:self.rowPost.id success:^(AFOAuthCredential *credential) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.verifiedCheckbox.enabled = YES;
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            });
+            
+        } failure:^(NSError *error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                weakSelf.verifiedCheckbox.isChecked = weakSelf.rowPost.isVerified;
+                weakSelf.verifiedCheckbox.enabled = YES;
+                [weakSelf setNeedsLayout];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Update" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+            });
+        }];
+    }
 }
+
 
 @end

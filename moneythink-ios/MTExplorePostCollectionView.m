@@ -8,19 +8,16 @@
 
 #import "MTExplorePostCollectionView.h"
 #import "MTExploreCollectionViewCell.h"
-#import "MTPostViewController.h"
+#import "MTPostDetailViewController.h"
 
 @interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
-@property (strong, nonatomic) NSArray *posts;
+@property (nonatomic, strong) RLMResults *posts;
 
-@property (strong, nonatomic) IBOutlet UICollectionView *exploreCollectionView;
+@property (nonatomic, strong) IBOutlet UICollectionView *exploreCollectionView;
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
-
-@property (nonatomic, strong) UIImage *postImage;
-@property (nonatomic) BOOL pulledData;
 
 @end
 
@@ -32,13 +29,6 @@
     
     self.collectionView.emptyDataSetSource = self;
     self.collectionView.emptyDataSetDelegate = self;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    self.pulledData = NO;
-    [self loadPosts];
 }
 
 - (void)dealloc
@@ -53,57 +43,65 @@
 #pragma mark - Private Methods -
 - (void)loadPosts
 {
-    NSPredicate *postsWithPicturePredicate = [NSPredicate predicateWithFormat:@"picture != nil"];
-    PFQuery *query = [PFQuery queryWithClassName:[PFChallengePost parseClassName] predicate:postsWithPicturePredicate];
-    
-    [query orderByDescending:@"createdAt"];
-    [query includeKey:@"user"];
-    [query whereKey:@"challenge" equalTo:self.challenge];
-    [query setLimit:20];
-    
-    query.cachePolicy = kPFCachePolicyNetworkElseCache;
+    [self loadPostsFromDatabase];
     
     MTMakeWeakSelf();
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            weakSelf.posts = objects;
-            
-            NSArray *buttons = weakSelf.challenge[@"buttons"];
-            NSArray *secondaryButtons = weakSelf.challenge[@"secondary_buttons"];
-            BOOL isMentor = [[PFUser currentUser][@"type"] isEqualToString:@"mentor"];
-            
-            weakSelf.hasButtons = NO;
-            weakSelf.hasSecondaryButtons = NO;
-            weakSelf.hasTertiaryButtons = NO;
-            
-            if (!IsEmpty(buttons) && [buttons firstObject] != [NSNull null]) {
-                if ([buttons count] == 4) {
-                    weakSelf.hasTertiaryButtons = YES;
-                }
-                else {
-                    weakSelf.hasButtons = YES;
-                }
-            }
-            else if (!IsEmpty(secondaryButtons) && ([secondaryButtons firstObject] != [NSNull null]) && !isMentor) {
-                weakSelf.hasSecondaryButtons = YES;
-            }
-            
-            weakSelf.pulledData = YES;
-            [weakSelf.exploreCollectionView reloadData];
-        } else {
-            NSLog(@"Error getting Explore challenges: %@", [error localizedDescription]);
-        }
+    [[MTNetworkManager sharedMTNetworkManager] loadExplorePostsForChallengeId:self.challenge.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadPostsFromDatabase];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load explore posts: %@", [error mtErrorDescription]);
     }];
+}
+
+- (void)loadPostsFromDatabase
+{
+    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES", self.challenge.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    [self.collectionView reloadData];
+}
+
+- (void)loadButtons
+{
+    RLMResults *buttons = [[MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    
+    self.hasButtons = NO;
+    self.hasSecondaryButtons = NO;
+    self.hasTertiaryButtons = NO;
+    
+    BOOL isMentor = [MTUser isCurrentUserMentor];
+
+    if (!IsEmpty(buttons)) {
+        if ([[((MTChallengeButton *)[buttons firstObject]).buttonTypeCode uppercaseString] isEqualToString:@"VOTE"]) {
+            // Voting buttons (primary or tertiary)
+            if ([buttons count] == 4) {
+                // Tertiary
+                self.hasTertiaryButtons = YES;
+            }
+            else {
+                // Primary
+                self.hasButtons = YES;
+            }
+        }
+        else if (!isMentor) {
+            // Secondary
+            self.hasSecondaryButtons = YES;
+        }
+    }
 }
 
 
 #pragma mark - Public -
-- (void)setChallenge:(PFChallenges *)challenge
+- (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
+        BOOL refresh = (_challenge == nil || (_challenge != nil && (_challenge.id != challenge.id)));
         _challenge = challenge;
         
-        [self loadPosts];
+        if (refresh) {
+            [self loadPosts];
+            [self loadButtons];
+        }
     }
 }
 
@@ -121,44 +119,33 @@
     MTExploreCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exploreChallenge" forIndexPath:indexPath];
 
     if (indexPath.row <= self.posts.count) {
-        PFChallengePost *post = self.posts[indexPath.row];
-        PFUser *user = post[@"user"];
+        MTChallengePost *post = self.posts[indexPath.row];
+        MTUser *user = post.user;
         
-        cell.postText.text = post[@"post_text"];
-        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user[@"first_name"], user[@"last_name"]];
+        cell.postText.text = post.content;
+        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
         
-        cell.postImage.image = [UIImage imageNamed:@"photo_post"];
-        cell.postImage.file = post[@"picture"];
-        [cell.postImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
-                    CGRect frame = cell.postImage.frame;
-                    cell.postImage.image = [self imageByScalingAndCroppingForSize:frame.size withImage:image];
-                    [cell setNeedsDisplay];
-                } else {
-                    cell.postImage.image = [UIImage imageNamed:@"photo_post"];
-                }
-            }
-        }];
+        __block MTExploreCollectionViewCell *weakCell = cell;
+        if (post.hasPostImage) {
+            cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakCell.postImage.image = responseData;
+                });
+            } failure:^(NSError *error) {
+                NSLog(@"Unable to load post image");
+            }];
+        }
         
-        cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
-        cell.postUserImage.file = user[@"profile_picture"];
         cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
         cell.postUserImage.layer.masksToBounds = YES;
         cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
         
-        [cell.postUserImage loadInBackground:^(UIImage *image, NSError *error) {
-            if (!error) {
-                if (image) {
-                    cell.postUserImage.image = image;
-                    [cell setNeedsDisplay];
-                }
-                else {
-                    cell.postUserImage.image = [UIImage imageNamed:@"profile_image"];
-                }
-            } else {
-                NSLog(@"error - %@", error);
-            }
+        cell.postUserImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakCell.postUserImage.image = responseData;
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to load user avatar");
         }];
         
         return cell;
@@ -235,11 +222,7 @@
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    
-    PFChallengePost *rowObject = self.posts[indexPath.row];
-    self.postImage = rowObject[@"picture"];
-    
-    [self performSegueWithIdentifier:@"pushViewPost" sender:rowObject];
+    [self performSegueWithIdentifier:@"pushViewPost" sender:self.posts[indexPath.row]];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
@@ -262,15 +245,15 @@
     NSString *segueIdentifier = [segue identifier];
     
     if ([segueIdentifier hasPrefix:@"pushViewPost"]) {
-        MTPostViewController *destinationViewController = (MTPostViewController *)[segue destinationViewController];
-        destinationViewController.challengePost = (PFChallengePost *)sender;
+        MTPostDetailViewController *destinationViewController = (MTPostDetailViewController *)[segue destinationViewController];
+        destinationViewController.challengePost = (MTChallengePost *)sender;
         destinationViewController.challenge = self.challenge;
         
-        PFChallengePost *post = (PFChallengePost*)sender;
-        PFUser *user = post[@"user"];
+        MTChallengePost *post = (MTChallengePost *)sender;
+        MTUser *user = post[@"user"];
         
         BOOL myPost = NO;
-        if ([[user username] isEqualToString:[[PFUser currentUser] username]]) {
+        if ([MTUser isUserMe:user]) {
             myPost = YES;
         }
 
@@ -285,11 +268,11 @@
             destinationViewController.hasTertiaryButtons = self.hasTertiaryButtons;
         }
         
-        if (showButtons && self.postImage)
+        if (showButtons && post.hasPostImage)
             destinationViewController.postType = MTPostTypeWithButtonsWithImage;
         else if (showButtons)
             destinationViewController.postType = MTPostTypeWithButtonsNoImage;
-        else if (self.postImage)
+        else if (post.hasPostImage)
             destinationViewController.postType = MTPostTypeNoButtonsWithImage;
         else
             destinationViewController.postType = MTPostTypeNoButtonsNoImage;
@@ -304,7 +287,7 @@
 #pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Posts";
+    NSString *text = @"No Posts With Photos";
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor darkGrayColor]};
@@ -314,7 +297,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Be the first to post to this Challenge!";
+    NSString *text = @"Be the first to post (w/photo) to this Challenge!";
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
@@ -329,7 +312,7 @@
 
 - (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
 {
-    if (IsEmpty(self.posts) && self.pulledData) {
+    if (IsEmpty(self.posts)) {
         return YES;
     }
     else {
@@ -342,9 +325,9 @@
     return [UIColor whiteColor];
 }
 
-- (CGPoint)offsetForEmptyDataSet:(UIScrollView *)scrollView
+- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
-    return CGPointMake(0, -56.0f);
+    return -56.0f;
 }
 
 

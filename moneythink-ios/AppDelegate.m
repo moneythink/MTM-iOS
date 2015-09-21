@@ -14,51 +14,40 @@
 #import "MTNotificationViewController.h"
 #import "MTSupportViewController.h"
 #import "MTMenuViewController.h"
-#import "MTPostViewController.h"
-#import "MTAddSchoolViewController.h"
-#import "MTAddClassViewController.h"
+#import "MTPostDetailViewController.h"
+#import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef STAGE
-    static NSString *applicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-    static NSString *clientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+    static NSString *parseApplicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
+    static NSString *parseClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
 #else
-    static NSString *applicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
-    static NSString *clientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+    static NSString *parseApplicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
+    static NSString *parseClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
 #endif
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // Do first, in case there's a migration
+    [self setupRealm];
+
     [Fabric with:@[CrashlyticsKit]];
     
-    [Parse setApplicationId:applicationID clientKey:clientKey];
-    //[Parse enableLocalDatastore];
-    
-    // AFTER Parse setup
+    [self setupParse];
     [self clearZendesk];
     [self setupZendesk];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
-    [PFChallengeBanner registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFChallengePostButtonsClicked registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFChallengePost registerSubclass];
-    [PFSignupCodes registerSubclass];
-    [PFStudentPointDetails registerSubclass];
-    
-    // Set default ACLs
-    PFACL *defaultACL = [PFACL ACL];
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    // Clear keychain on first run in case of reinstallation
+    if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstTimeRunKey]) {
+        // Delete values from keychain here
+        [[NSUserDefaults standardUserDefaults] setValue:@"1strun" forKey:kFirstTimeRunKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+    }
     
     [self setWhiteNavBarAppearanceForNavigationBar:nil];
     
@@ -88,9 +77,15 @@
         ((SWRevealViewController *)revealVC).delegate = [MTUtil getAppDelegate];
     }
 
-    if ([PFUser currentUser] && [MTUtil internetReachable]) {
-        [[PFUser currentUser] fetchInBackground];
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable] && [MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+        } failure:^(NSError *error) {
+            //
+        }];
     }
+    
+    [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 
     [self checkForForceUpdate];
 
@@ -99,23 +94,32 @@
 
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
-    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:YES];
-    if ([PFUser currentUser] && [MTUtil internetReachable]) {
-        [[PFUser currentUser] fetchInBackground];
+    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+    if ([MTUser isUserLoggedIn] && [MTUser currentUser] && [MTUtil internetReachable] && [MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
+        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForMeUser];
+        } failure:^(NSError *error) {
+            //
+        }];
     }
     
     [self checkForForceUpdate];
+    [self updatePushMessagingInfo];
+}
+
+- (void)applicationDidEnterBackground:(UIApplication*)application
+{
+    [self purgeDeletedData];
 }
 
 
 #pragma mark - Push Notifications -
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
-    // Store the deviceToken in the current installation and save it to Parse.
+    // Store the deviceToken in the current installation and save it to Parse, then update the API.
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    currentInstallation.channels = @[@"global"];
-    [currentInstallation saveInBackground];
+    [self updatePushMessagingInfo];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -124,7 +128,6 @@
     // Device
     NSLog(@"didFailToRegisterForRemoteNotificationsWithError: %@", [error localizedDescription]);
 #endif
-
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
@@ -213,13 +216,21 @@
 
 - (void)handleUserUpdateWithfetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
-    PFUser *currentUser = [PFUser currentUser];
+    MTUser *currentUser = [MTUser currentUser];
     if (currentUser && [MTUtil internetReachable]) {
-        [currentUser fetchInBackgroundWithBlock:^(PFObject *object, NSError *error) {
-            if (handler) {
-                handler(UIBackgroundFetchResultNewData);
-            }
-        }];
+        if ([MTUser currentUser] && [MTUtil internetReachable]) {
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+
+                if (handler) {
+                    handler(UIBackgroundFetchResultNewData);
+                }
+            } failure:^(NSError *error) {
+                if (handler) {
+                    handler(UIBackgroundFetchResultNewData);
+                }
+            }];
+        }
     }
     else {
         if (handler) {
@@ -230,7 +241,7 @@
 
 - (void)handleActionNotificationWithUserInfo:(NSDictionary *)userInfo
 {
-    if (![PFUser currentUser]) {
+    if (![MTUser currentUser]) {
         return;
     }
 
@@ -242,17 +253,20 @@
         unknownNotification = YES;
     }
     
-    [MTNotificationViewController markReadForNotificationId:notificationId];
+    if (!IsEmpty(notificationId)) {
+        [MTNotificationViewController markReadForNotificationId:[notificationId integerValue]];
+    }
     
     if (unknownNotification || [notificationType isEqualToString:kNotificationPostComment] ||
-        [notificationType isEqualToString:kNotificationNewChallenge] ||
+        [notificationType isEqualToString:kNotificationChallengeActivated] ||
         [notificationType isEqualToString:kNotificationPostLiked] ||
-        [notificationType hasPrefix:kNotificationInactivity] ||
+        [notificationType isEqualToString:kNotificationStudentInactivity] ||
+        [notificationType isEqualToString:kNotificationMentorInactivity] ||
         [notificationType isEqualToString:kNotificationVerifyPost]) {
         
         SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
         MTMenuViewController *menuVC = (MTMenuViewController *)revealVC.rearViewController;
-        [menuVC openNotificationsWithId:notificationId];
+        [menuVC openNotificationsWithId:[notificationId integerValue]];
     }
     else if ([notificationType isEqualToString:kNotificationLeaderOn] ||
              [notificationType isEqualToString:kNotificationLeaderOff]) {
@@ -307,15 +321,12 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
-- (void)updateParseInstallationState
+- (void)updatePushMessagingInfo
 {
-    if (![PFUser currentUser]) {
-        NSLog(@"Have no user object to update installation with");
+    if (![MTUser isUserLoggedIn] || ![MTUser currentUser]) {
         return;
     }
     
-    PFUser *user = [PFUser currentUser];
-
     PFInstallation *currentInstallation = [PFInstallation currentInstallation];
     
     // Don't update if Installation doesn't have a deviceToken (i.e simulator)
@@ -323,89 +334,25 @@
         return;
     }
     
-    [currentInstallation setObject:user forKey:@"user"];
-
-    NSString *className = user[@"class"];
-    NSString *schoolName = user[@"school"];
-    
-    if (!IsEmpty(className)) {
-        [currentInstallation setObject:className forKey:@"class_name"];
-    }
-    if (!IsEmpty(schoolName)) {
-        [currentInstallation setObject:schoolName forKey:@"school_name"];
-    }
-    
     currentInstallation.channels = @[@"global"];
     [currentInstallation saveInBackground];
-}
-
-- (void)checkForCustomPlaylistContentWithRefresh:(BOOL)refresh;
-{
-    // Only need to do this if we have custom playlists
-    NSString *userClass = [PFUser currentUser][@"class"];
-    NSString *userSchool = [PFUser currentUser][@"school"];
     
-    PFQuery *userClassQuery = [PFQuery queryWithClassName:[PFClasses parseClassName]];
-    [userClassQuery whereKey:@"name" equalTo:userClass];
-    [userClassQuery whereKey:@"school" equalTo:userSchool];
-    userClassQuery.cachePolicy = kPFCachePolicyNetworkElseCache;
-    
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    if (refresh) {
-        hud.labelText = @"Refreshing Content...";
+    if ([MTUtil pushMessagingRegistrationId]) {
+        // Update
+        [[MTNetworkManager sharedMTNetworkManager] updatePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] withDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+            NSLog(@"Successfully updated push messaging registration");
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to update push messaging registration: %@", [error mtErrorDescription]);
+        }];
     }
     else {
-        hud.labelText = @"Loading Content...";
-    }
-    hud.dimBackground = YES;
-    
-    MTMakeWeakSelf();
-    [self bk_performBlock:^(id obj) {
-        [userClassQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-            if (!error) {
-                if (!IsEmpty(objects)) {
-                    PFClasses *userClass = [objects firstObject];
-                    NSLog(@"%@", userClass);
-                    
-                    // Next, determine if this class has custom challenges
-                    __block PFQuery *customPlaylist = [PFQuery queryWithClassName:[PFPlaylist parseClassName]];
-                    [customPlaylist whereKey:@"class" equalTo:userClass];
-                    customPlaylist.cachePolicy = kPFCachePolicyNetworkElseCache;
-                    
-                    [customPlaylist findObjectsInBackgroundWithBlock:^(NSArray *playlistObjects, NSError *error) {
-                        if (!error) {
-                            if (!IsEmpty(playlistObjects)) {
-                                // Pre-load the content
-                                [weakSelf loadCustomChallengesForPlaylist:[playlistObjects firstObject]];
-                            }
-                            else {
-                                dispatch_async(dispatch_get_main_queue(), ^{
-                                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                });
-                            }
-                        }
-                        else {
-                            NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
-                            dispatch_async(dispatch_get_main_queue(), ^{
-                                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                            });
-                        }
-                    }];
-                }
-                else {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                    });
-                }
-            }
-            else {
-                NSLog(@"Error loading custom playlists: %@", [error localizedDescription]);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                });
-            }
+        // Create
+        [[MTNetworkManager sharedMTNetworkManager] createPushMessagingRegistrationWithDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+            NSLog(@"Successfully created push messaging registration");
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to create push messaging registration: %@", [error mtErrorDescription]);
         }];
-    } afterDelay:0.35f];
+    }
 }
 
 - (UINavigationController *)userViewController
@@ -422,31 +369,6 @@
 
 
 #pragma mark - Private Methods -
-- (void)loadCustomChallengesForPlaylist:(PFPlaylist *)playlist
-{
-    PFQuery *allCustomChallenges = [PFQuery queryWithClassName:[PFPlaylistChallenges parseClassName]];
-    [allCustomChallenges whereKey:@"playlist" equalTo:playlist];
-    [allCustomChallenges orderByAscending:@"ordering"];
-    [allCustomChallenges includeKey:@"challenge"];
-    
-    [allCustomChallenges findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
-        
-        if (!error) {
-            for (PFPlaylistChallenges *thisPlaylistChallenge in objects) {
-                PFCustomChallenges *thisChallenge = thisPlaylistChallenge[@"challenge"];
-                NSInteger ordering = [thisPlaylistChallenge[@"ordering"] integerValue];
-                [MTUtil setOrdering:ordering forChallengeObjectId:thisChallenge.objectId];
-            }
-        }
-        else {
-            NSLog(@"Unable to load custom challenges");
-        }
-    }];
-}
-
 - (void)setupZendesk
 {
     [self configureZendesk];
@@ -599,11 +521,7 @@
 }
 
 - (void)configureZendesk
-{
-    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
-                                   zendeskUrl:@"https://moneythink.zendesk.com"
-                                  andClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"];
-    
+{    
 //    [ZDKDispatcher setDebugLogging:YES];
 //    [ZDKLogger enable:YES];
 
@@ -632,22 +550,21 @@
     }];
 
     // Set Anonymous user info
-    PFUser *userCurrent = [PFUser currentUser];
+    MTUser *userCurrent = [MTUser currentUser];
     if (userCurrent) {
         ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
-        newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent[@"first_name"], userCurrent[@"last_name"]];
-        newIdentity.email = userCurrent[@"email"];
-        newIdentity.externalId = [userCurrent objectId];
+        newIdentity.name = [NSString stringWithFormat:@"%@ %@", userCurrent.firstName, userCurrent.lastName];
+        newIdentity.email = userCurrent.email;
+        newIdentity.externalId = [NSString stringWithFormat:@"%ld", (long)userCurrent.id];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
     }
 }
 
 - (void)checkForForceUpdate
 {
-    // TODO: Remove/disable for 2.1 update. That means remove the NSUserDefaults and/or return NO from shouldForceUpdate below.
-    //    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
-    //    [[NSUserDefaults standardUserDefaults] synchronize];
-    //    return;
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    return;
     
     NSDictionary *parameters = [NSDictionary dictionaryWithObject:@"ios" forKey:@"platform"];
     
@@ -680,10 +597,6 @@
         }
         
         if (self.userViewController) {
-            id visibleVC = [self.userViewController visibleViewController];
-            if ([visibleVC isKindOfClass:[MTAddSchoolViewController class]] || [visibleVC isKindOfClass:[MTAddClassViewController class]]) {
-                [visibleVC dismissViewControllerAnimated:NO completion:nil];
-            }
             [self.userViewController popToRootViewControllerAnimated:NO];
             
             id topVC = [self.userViewController topViewController];
@@ -703,7 +616,34 @@
 
 - (BOOL)shouldForceUpdate
 {
+    // Bypass this for now until we decide whether to keep in.
+    return NO;
     return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
+}
+
+- (void)purgeDeletedData
+{
+    // Start background task to remove deleted records
+    __block UIBackgroundTaskIdentifier bgTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        bgTask = UIBackgroundTaskInvalid;
+    }];
+    
+    [MTUtil cleanDeletedItemsInDatabase];
+    [[UIApplication sharedApplication] endBackgroundTask:bgTask];
+}
+
+- (void)setupParse
+{
+    // Parse -- Only used for Push Notification support, database not used.
+    [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
+    PFACL *defaultACL = [PFACL ACL];
+    [defaultACL setPublicReadAccess:YES];
+    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
+    if ([PFUser currentUser]) {
+        [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
+            NSLog(@"Successfully logged out legacy/Parse user");
+        }];
+    }
 }
 
 
@@ -720,11 +660,9 @@
     if (revealController.frontViewPosition == FrontViewPositionRight) {
         UIView *lockingView = [UIView new];
         lockingView.translatesAutoresizingMaskIntoConstraints = NO;
-        
-        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:revealController action:@selector(revealToggle:)];
-        
+                
         __block SWRevealViewController *weakReveal = revealController;
-        tap = [[UITapGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
+        UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] bk_initWithHandler:^(UIGestureRecognizer *sender, UIGestureRecognizerState state, CGPoint location) {
             if (weakReveal.frontViewPosition == FrontViewPositionRight) {
                 [weakReveal revealToggle:nil];
             }
@@ -758,6 +696,38 @@
             [frontView addGestureRecognizer:revealController.panGestureRecognizer];
         }
     }
+}
+
+
+#pragma mark - Realm Methods -
+- (void)setupRealm
+{
+    // Can clear database on launch for testing
+//    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
+//    [MTUser logout];
+    
+    RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
+    // Set the new schema version. This must be greater than the previously used
+    // version (if you've never set a schema version before, the version is 0).
+    config.schemaVersion = 23;
+    
+    // Set the block which will be called automatically when opening a Realm with a
+    // schema version lower than the one set above
+    config.migrationBlock = ^(RLMMigration *migration, uint64_t oldSchemaVersion) {
+        // We haven’t migrated anything yet, so oldSchemaVersion == 0
+        if (oldSchemaVersion < 1) {
+            // Nothing to do!
+            // Realm will automatically detect new properties and removed properties
+            // And will update the schema on disk automatically
+        }
+    };
+    
+    // Tell Realm to use this new configuration object for the default Realm
+    [RLMRealmConfiguration setDefaultConfiguration:config];
+    
+    // Now that we've told Realm how to handle the schema change, opening the file
+    // will automatically perform the migration
+    [RLMRealm defaultRealm];
 }
 
 

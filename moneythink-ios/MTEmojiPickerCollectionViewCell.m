@@ -14,7 +14,6 @@
 {
     [super prepareForReuse];
     self.emojiImage.image = nil;
-    self.emojiImageView.image = nil;
 }
 
 
