@@ -27,6 +27,8 @@ static NSString *stageString = @"";
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    [MTUtil GATrackScreen:@"Support"];
     
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.view.frame.size.width, 30.0f)];
     UILabel *versionLabel = [[UILabel alloc] initWithFrame:footerView.frame];

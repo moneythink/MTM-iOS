@@ -168,6 +168,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // GA Track - 'Sign Up: Student'
+    // GA Track - 'Sign Up: Mentor'
+    NSString *signupTypeCapitalized = [MTUtil capitalizeFirstLetter:self.signUpType];
+    NSString *screenName = [NSString stringWithFormat:@"Sign Up: %@", signupTypeCapitalized];
+    [MTUtil GATrackScreen:screenName];
 
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 
@@ -476,6 +482,9 @@
     
     if (IsEmpty(self.email.text)) {
         [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+        return NO;
+    } else if (![MTUtil NSStringIsValidEmail:self.email.text]) {
+        [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Email is not valid" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         return NO;
     }
     

@@ -7,6 +7,8 @@
 //
 
 #import "MTUtil.h"
+#import <Google/Analytics.h>
+#import "MTUser.h"
 
 @implementation MTUtil
 
@@ -22,31 +24,6 @@
 + (id)getAppDelegate
 {
     return [UIApplication sharedApplication].delegate;
-}
-
-+ (NSInteger)orderingForChallengeObjectId:(NSString *)objectId
-{
-    if (IsEmpty(objectId)) {
-        return -1;
-    }
-    
-    NSNumber *ordering = [[NSUserDefaults standardUserDefaults] objectForKey:objectId];
-    if (ordering) {
-        return [ordering integerValue];
-    }
-    else {
-        return -1;
-    }
-}
-
-+ (void)setOrdering:(NSInteger)ordering forChallengeObjectId:(NSString *)objectId
-{
-    if (IsEmpty(objectId)) {
-        return;
-    }
-    
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:ordering] forKey:objectId];
-    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 + (NSString *)lastViewedChallengeId
@@ -130,27 +107,78 @@
     [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
-
-+ (BOOL)isCurrentUserMentor
++ (NSString *)currentUserType
 {
-    if ([[[PFUser currentUser] valueForKey:@"type"] isEqualToString:@"student"]) {
-        return NO;
+    if ([MTUser isCurrentUserMentor]) {
+        return @"mentor";
     } else {
-        return YES;
+        return @"student";
     }
-
 }
 
-+ (BOOL)isUserMe:(PFUser *)user
++ (NSString *)currentUserTypeCapitalized
 {
-    if ([[PFUser currentUser].objectId isEqualToString:user.objectId]) {
-        return YES;
-    }
-    else{
-        return NO;
-    }
+    return [self capitalizeFirstLetter:[self currentUserType]];
 }
 
++ (NSString *)capitalizeFirstLetter:(NSString *)string
+{
+    NSString *firstLetter = [[string substringToIndex:1] capitalizedString];
+    NSString *remainder = [string substringFromIndex:1];
+    return [firstLetter stringByAppendingString:remainder];
+}
+
++ (void)GATrackScreen:(NSString *)string {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:string];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
+    
+    NSLog(@"GA Track [Screen]: %@", string);
+}
+
+/* View Controllers should call this whenever the user is successfully logged in. */
++ (void)userDidLogin:(MTUser *)user {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    
+    // As per docs here: https://developers.google.com/analytics/devguides/collection/ios/v3/user-id
+    [tracker set:@"&uid" value:[NSString stringWithFormat:@"%ld", user.id]];
+    
+    // Dimension 1: UserID (NO PII!)
+    [tracker set:[GAIFields customDimensionForIndex:1] value:[NSString stringWithFormat:@"%ld", user.id]];
+    
+    // Dimension 2: School Name
+    NSString *schoolName = user.organization.name;
+    if (schoolName) {
+        [tracker set:[GAIFields customDimensionForIndex:2] value:schoolName];
+    }
+    
+    // Dimension 3: Class Name
+    NSString *className = user.userClass.name;
+    if (className) {
+        [tracker set:[GAIFields customDimensionForIndex:3] value:className];
+    }
+    
+    // Dimension 4: School ID
+    NSString *schoolID = [NSString stringWithFormat:@"%ld", user.organization.id];
+    [tracker set:[GAIFields customDimensionForIndex:4] value:schoolID];
+    
+    // Dimension 5: Class ID (currently indicates program lead)
+    NSString *classID = [NSString stringWithFormat:@"%ld", user.userClass.id];
+    [tracker set:[GAIFields customDimensionForIndex:5] value:classID];
+    
+    // Dimension 6: User Type (student or mentor)
+    NSString *type = user[@"type"];
+    if (type) {
+        [tracker set:[GAIFields customDimensionForIndex:6] value:type];
+    }
+    
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"UX"            // Event category (required)
+                                                          action:@"User Sign In"  // Event action (required)
+                                                           label:nil              // Event label
+                                                           value:nil] build]];    // Event value
+    
+    NSLog(@"GA Track [Event]: %@ Sign In (ID: %ld, School: %@, Class: %@)", [type capitalizedString], user.id, schoolName, className);
+}
 + (void)setRefreshedForKey:(NSString *)key
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:key];
@@ -227,5 +255,15 @@
     [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
 }
 
+
++(BOOL) NSStringIsValidEmail:(NSString *)checkString
+{
+    BOOL stricterFilter = NO; // Discussion http://blog.logichigh.com/2010/09/02/validating-an-e-mail-address/
+    NSString *stricterFilterString = @"^[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$";
+    NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
+    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:checkString];
+}
 
 @end

@@ -73,6 +73,9 @@
 {
     [super viewWillAppear:animated];
     
+    // GA Track - 'Login'
+    [MTUtil GATrackScreen:@"Login"];
+    
     [self.navigationController setNavigationBarHidden:YES animated:NO];
     [self updateView];
     
@@ -81,6 +84,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
 
     [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    // Check for logout reason message
+    AppDelegate *appDelegate = [MTUtil getAppDelegate];
+    if (appDelegate.logoutReason && [appDelegate.logoutReason lengthOfBytesUsingEncoding:NSUTF8StringEncoding] > 0) {
+        [[[UIAlertView alloc] initWithTitle:@"Logged Out" message:appDelegate.logoutReason delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+        [appDelegate clearLogoutReason];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL) animated
@@ -202,6 +216,9 @@
         }
     }
     else if ([MTUser isUserLoggedIn]) {
+
+        [MTUtil userDidLogin:[MTUser currentUser]];
+
         [[MTUtil getAppDelegate] configureZendesk];
         if ([MTUtil shouldRefreshForKey:kRefreshForMeUser]) {
             [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -346,6 +363,8 @@
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] authenticateForUsername:self.emailTextField.text withPassword:self.passwordTextField.text success:^(id responseData) {
         
+        [MTUtil userDidLogin:[MTUser currentUser]];
+
         [[MTUtil getAppDelegate] configureZendesk];
         
         // Update for Push Notifications

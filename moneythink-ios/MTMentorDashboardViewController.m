@@ -10,6 +10,7 @@
 #import "MTStudentProgressTableViewCell.h"
 #import "MICheckBox.h"
 #import "MTMentorStudentProfileViewController.h"
+#import <Google/Analytics.h>
 
 @interface MTMentorDashboardViewController ()
 
@@ -26,6 +27,16 @@
     [super viewDidLoad];
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
     [self loadData];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // GA Track - 'Dashboard: Mentor'
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Dashboard: Mentor"];
+    [tracker send:[[GAIDictionaryBuilder createScreenView] build]];
 }
 
 - (void)viewDidAppear:(BOOL)animated

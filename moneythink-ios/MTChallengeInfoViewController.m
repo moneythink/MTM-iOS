@@ -167,7 +167,7 @@
 
     self.rewardLabel.attributedText = theAttributedTitle;
     
-    if ([MTUtil isCurrentUserMentor]) {
+    if ([MTUser isCurrentUserMentor]) {
         self.mentorInstructions.text = self.challenge.mentorInstructions;
         [self.mentorInstructions setTextColor:[UIColor primaryOrange]];
     } else {

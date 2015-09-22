@@ -43,6 +43,8 @@
 {
     [super viewWillAppear:animated];
     
+    [MTUtil GATrackScreen:@"Menu"];
+    
     [self loadProfileImage];
 
     MTUser *user = [MTUser currentUser];
@@ -420,7 +422,7 @@
     [self.tableView reloadData];
 
     if (!indexPathForSelected) {
-        if ([MTUtil isCurrentUserMentor]) {
+        if ([MTUser isCurrentUserMentor]) {
             [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
         }
         else {

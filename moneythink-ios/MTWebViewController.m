@@ -25,6 +25,12 @@
     [self.backButton setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [MTUtil GATrackScreen:@"Web View"];
+}
+
 
 #pragma mark - IBActions -
 - (IBAction)goBack:(id)sender

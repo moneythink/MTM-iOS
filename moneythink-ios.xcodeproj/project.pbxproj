@@ -18,6 +18,7 @@
 		106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */; };
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
+		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -56,6 +57,7 @@
 		58BC2341198AD84700FCE3BC /* MTPostsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58BC2340198AD84700FCE3BC /* MTPostsTableViewCell.m */; };
 		58CBD0B71991308E0056BE8F /* MTStudentProfileTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */; };
 		58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */; };
+		7E7A56B365462B34245FE785 /* libPods-moneythink-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D77E708FFEC9E5D5E524D38 /* libPods-moneythink-ios.a */; };
 		89007BD319F6E271008B4F8C /* UIFont+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */; };
 		8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D89D19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m */; };
 		8901D8A119FAB2FA006E9168 /* MTPostImageTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8901D8A019FAB2FA006E9168 /* MTPostImageTableViewCell.m */; };
@@ -281,6 +283,10 @@
 		106309901A3A3DD80093C209 /* MICheckBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MICheckBox.h; sourceTree = "<group>"; };
 		106309911A3A3DD80093C209 /* MICheckBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MICheckBox.m; sourceTree = "<group>"; };
 		1063099B1A3A3E180093C209 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		108C9EB90A1115E74A7892AC /* Pods-moneythink-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.release.xcconfig"; sourceTree = "<group>"; };
+		2D77E708FFEC9E5D5E524D38 /* libPods-moneythink-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-moneythink-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (stage).xcconfig"; sourceTree = "<group>"; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		5806A4F219746655000B3656 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = System/Library/Frameworks/Accounts.framework; sourceTree = SDKROOT; };
@@ -597,6 +603,9 @@
 		89FF355F1A8179560025735E /* ZendeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZendeskSDK.framework; sourceTree = "<group>"; };
 		89FF35611A8179950025735E /* ZendeskSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDK.bundle; sourceTree = "<group>"; };
 		89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDKStrings.bundle; sourceTree = "<group>"; };
+		CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (stage).xcconfig"; sourceTree = "<group>"; };
+		D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (production).xcconfig"; sourceTree = "<group>"; };
+		FA986CE90DF7F2AC274CAE12 /* Pods-moneythink-ios.debug (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (production).xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -630,6 +639,7 @@
 				5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */,
 				5876E2AD196F2C1F00C176EC /* UIKit.framework in Frameworks */,
 				5876E2A9196F2C1F00C176EC /* Foundation.framework in Frameworks */,
+				7E7A56B365462B34245FE785 /* libPods-moneythink-ios.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -737,6 +747,13 @@
 			path = MICheckboxUtils;
 			sourceTree = "<group>";
 		};
+		3B1DFAC31B90B6900052FABA /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
 		58676B131974268E0070F604 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -749,7 +766,6 @@
 			isa = PBXGroup;
 			children = (
 				895F78BB1B167DA200055759 /* Common */,
-				895F78BA1B167D0300055759 /* Login */,
 				89C3E8101B1547680084EA48 /* Menu */,
 				895F78B41B167C5F00055759 /* Mentor Dashboard */,
 				895F78B51B167C6800055759 /* Challenges */,
@@ -764,10 +780,12 @@
 		5876E29C196F2C1F00C176EC = {
 			isa = PBXGroup;
 			children = (
+				3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */,
 				5876E2AE196F2C1F00C176EC /* moneythink-ios */,
 				5876E2D0196F2C1F00C176EC /* moneythink-iosTests */,
 				5876E2A7196F2C1F00C176EC /* Frameworks */,
 				5876E2A6196F2C1F00C176EC /* Products */,
+				A9BD03A101DAB05D591D59D4 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -801,6 +819,7 @@
 				5876E2F2196F2CD400C176EC /* SystemConfiguration.framework */,
 				5806A4EC197460A9000B3656 /* Twitter.framework */,
 				5876E2AC196F2C1F00C176EC /* UIKit.framework */,
+				2D77E708FFEC9E5D5E524D38 /* libPods-moneythink-ios.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1168,6 +1187,7 @@
 				58676B1C1974273E0070F604 /* MTSignUpViewController.m */,
 				58676B191974273E0070F604 /* MTLoginViewController.h */,
 				58676B1E1974273E0070F604 /* MTLoginViewController.m */,
+				3B1DFAC31B90B6900052FABA /* New Group */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -1180,6 +1200,7 @@
 				58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */,
 				58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */,
 				8905874A1A0181F500DB8CD4 /* MTWebViewController.h */,
+				895F78BA1B167D0300055759 /* Login */,
 				8905874B1A0181F500DB8CD4 /* MTWebViewController.m */,
 			);
 			name = Common;
@@ -1337,6 +1358,18 @@
 			path = Bundles;
 			sourceTree = "<group>";
 		};
+		A9BD03A101DAB05D591D59D4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				FA986CE90DF7F2AC274CAE12 /* Pods-moneythink-ios.debug (production).xcconfig */,
+				D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */,
+				CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */,
+				55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */,
+				108C9EB90A1115E74A7892AC /* Pods-moneythink-ios.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1344,12 +1377,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5876E2DA196F2C1F00C176EC /* Build configuration list for PBXNativeTarget "moneythink-ios" */;
 			buildPhases = (
+				E88D2B20366C08EECF5AB9EF /* Check Pods Manifest.lock */,
 				10F7E8341A2638F40045E944 /* ShellScript */,
 				5876E2A1196F2C1F00C176EC /* Sources */,
 				5876E2A2196F2C1F00C176EC /* Frameworks */,
 				5876E2A3196F2C1F00C176EC /* Resources */,
 				1083254A19949131008C0488 /* ShellScript */,
 				897278231A97BBF800557B66 /* ShellScript */,
+				7E6C52F81BB5594EAAEB2A44 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -1493,6 +1528,7 @@
 				89271F3D1B5DA32000C66DD8 /* checked.png in Resources */,
 				89271F401B5DA32000C66DD8 /* unchecked@2x.png in Resources */,
 				89A0E80E1B38678100F01BFF /* picker@2x.png in Resources */,
+				3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */,
 				895F789A1B16452A00055759 /* nav-icons-editprofile@2x.png in Resources */,
 				8921062919DA1F37000CFBF6 /* info_icon.png in Resources */,
 				895F78AA1B16456000055759 /* nav-icons-support@2x.png in Resources */,
@@ -1532,6 +1568,21 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$CONFIGURATION\" != \"Release\"  && \"$CONFIGURATION\" != \"Adhoc (Stage)\" && \"$CONFIGURATION\" != \"Adhoc (Production)\" ]]; then\nexit 0\nfi\n./xcode-build-bump.sh\n";
 		};
+		7E6C52F81BB5594EAAEB2A44 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		897278231A97BBF800557B66 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1544,6 +1595,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "echo \"Total lines of code:\"\nfind \"${SRCROOT}\" \\( -name \"*.h\" -or -name \"*.m\" \\) -and \\( -path \"${SRCROOT}/Pods/*\" -prune -o -print0 \\) | xargs -0 cat | wc -l\n\nKEYWORDS=\"TODO|FIXME|\\?\\?\\?:|\\!\\!\\!:\"\nfind \"${SRCROOT}/\" \\( -name \"*.h\" -or -name \"*.m\" \\) -and \\( -path \"${SRCROOT}/Pods/*\" -prune -o -print0 \\) | xargs -0 egrep --with-filename --line-number --only-matching \"($KEYWORDS).*\\$\" | perl -p -e \"s/($KEYWORDS)/ warning: \\$1/\"\n";
+		};
+		E88D2B20366C08EECF5AB9EF /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1729,11 +1795,13 @@
 		};
 		5876E2DC196F2C1F00C176EC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 108C9EB90A1115E74A7892AC /* Pods-moneythink-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1758,7 +1826,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "4bfa5f38-a24f-4e3e-b939-fac3470f6fef";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1808,11 +1876,13 @@
 		};
 		897278221A96484000557B66 /* Adhoc (Stage) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1837,7 +1907,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "41a254af-8e79-4e28-bb28-316cd7e09fb6";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1887,11 +1957,13 @@
 		};
 		8982071819D9F77D0008ED5D /* Debug (Stage) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1916,7 +1988,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "f450cb62-2a2c-47bb-a2b3-afd609d95072";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1965,11 +2037,13 @@
 		};
 		8982071A19D9F78D0008ED5D /* Debug (Production) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = FA986CE90DF7F2AC274CAE12 /* Pods-moneythink-ios.debug (production).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1994,7 +2068,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "f450cb62-2a2c-47bb-a2b3-afd609d95072";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2043,11 +2117,13 @@
 		};
 		89E8577D19E44F1500E1C708 /* Adhoc (Production) */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
-				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "$(SDKROOT)/ResourceRules.plist";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -2072,7 +2148,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "41a254af-8e79-4e28-bb28-316cd7e09fb6";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

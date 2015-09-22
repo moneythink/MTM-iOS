@@ -10,6 +10,7 @@
 #import <Parse/Parse.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
+#import <Google/Analytics.h>
 #import "UIColor+Palette.h"
 #import "MTNotificationViewController.h"
 #import "MTSupportViewController.h"
@@ -48,6 +49,28 @@
         
         [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
     }
+
+    // ------------------------------
+    // START: Set up Google Analytics
+    //
+    // Configure tracker from GoogleService-Info.plist.
+    NSError *configureError;
+    [[GGLContext sharedInstance] configureWithError:&configureError];
+    NSAssert(!configureError, @"Error configuring Google services: %@", configureError);
+    
+    // Optional: configure GAI options.
+    GAI *gai = [GAI sharedInstance];
+    gai.trackUncaughtExceptions = NO;  // do not report uncaught exceptions; we have a lot of tracking already!
+    // gai.logger.logLevel = kGAILogLevelVerbose;
+    
+    NSString *GADryRun = [[NSProcessInfo processInfo] environment][@"GA_DRY_RUN"];
+    if ([GADryRun isEqualToString:@"true"]) {
+        NSLog(@"Setting Google Analytics instance to Dry Run; will not send hits.");
+        [[GAI sharedInstance] setDryRun:YES];
+    }
+    
+    // ----------------------------
+    // END: Set up Google Analytics
     
     [self setWhiteNavBarAppearanceForNavigationBar:nil];
     
@@ -696,6 +719,10 @@
             [frontView addGestureRecognizer:revealController.panGestureRecognizer];
         }
     }
+}
+
+- (void)clearLogoutReason {
+    self.logoutReason = nil;
 }
 
 

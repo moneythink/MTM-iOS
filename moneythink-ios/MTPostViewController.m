@@ -42,6 +42,8 @@
     
     self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
     self.spentDoneButton.hidden = YES;
+
+    [MTUtil GATrackScreen:@"Post Detail"];
     
     if (self.displaySpentView) {
         self.spentView.hidden = NO;

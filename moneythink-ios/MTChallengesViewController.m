@@ -10,6 +10,7 @@
 #import "MTExplorePostCollectionView.h"
 #import "MTMyClassTableViewController.h"
 #import "MTPostViewController.h"
+#import <Google/Analytics.h>
 
 @interface MTChallengesViewController ()
 
@@ -71,6 +72,9 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    // GA Track - 'Challenges'
+    [MTUtil GATrackScreen:@"Challenges"];
     
     [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 
@@ -772,6 +776,23 @@
     }
 }
 
+// - (void)forceLogout {
+//     AppDelegate *appDelegate = [MTUtil getAppDelegate];
+    
+//     if ([[PFUser currentUser][@"type"] isEqualToString:@"mentor"]) {
+//         // Bounce mentor to edit profile view
+//         UIViewController *editProfileController = [self.storyboard instantiateViewControllerWithIdentifier:@"editProfileNavigation"];
+//         appDelegate.logoutReason = @"That class is now archived. Please join a currently active class, or create a new one.";
+//         [self.revealViewController setFrontViewController:editProfileController animated:YES];
+//     } else {
+//         // Logout student, who should make a new account
+//         [MTUtil logout];
+//         [[MTUtil getAppDelegate] setDarkNavBarAppearanceForNavigationBar:nil];
+//         appDelegate.logoutReason = @"Your previous class has been archived. Please create a new account with a current Sign Up Code.";
+//         [self.revealViewController setFrontViewController:[appDelegate userViewController] animated:YES];
+//     }
+// }
+    
 
 #pragma mark - Navigation -
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

@@ -45,6 +45,8 @@
 {
     [super viewDidAppear:NO];
     
+    [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
+
     self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
@@ -106,10 +108,10 @@
     }
     
     // Only show verified assets if current user is Mentor
-    cell.verifiedCheckbox.hidden = ![MTUtil isCurrentUserMentor];
-    cell.verifiedLabel.hidden = ![MTUtil isCurrentUserMentor];
+    cell.verifiedCheckbox.hidden = ![MTUser isCurrentUserMentor];
+    cell.verifiedLabel.hidden = ![MTUser isCurrentUserMentor];
 
-    if ([MTUtil isCurrentUserMentor]) {
+    if ([MTUser isCurrentUserMentor]) {
         cell.verified.on = cell.rowPost.isVerified;
     }
     
