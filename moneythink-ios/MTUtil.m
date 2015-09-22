@@ -167,7 +167,7 @@
     [tracker set:[GAIFields customDimensionForIndex:5] value:classID];
     
     // Dimension 6: User Type (student or mentor)
-    NSString *type = user[@"type"];
+    NSString *type = [MTUtil currentUserType];
     if (type) {
         [tracker set:[GAIFields customDimensionForIndex:6] value:type];
     }
