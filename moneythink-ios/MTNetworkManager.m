@@ -1492,7 +1492,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     parameters[@"username"] = username;
     parameters[@"password"] = password;
     parameters[@"grant_type"] = @"password";
-    
+
     NSURL *baseURL = [NSURL URLWithString:MTNetworkURLString];
     AFOAuth2Manager *OAuth2Manager = [[AFOAuth2Manager alloc] initWithBaseURL:baseURL
                                                                      clientID:MTNetworkClientID
@@ -1501,9 +1501,12 @@ static NSString * const MTRefreshingErrorCode = @"701";
     MTMakeWeakSelf();
     [OAuth2Manager authenticateUsingOAuthWithURLString:@"oauth" parameters:parameters success:^(AFOAuthCredential *credential) {
         NSLog(@"New AFOAuthCredential: %@", [credential description]);
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+
         [AFOAuthCredential storeCredential:credential withIdentifier:MTNetworkServiceOAuthCredentialKey];
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:credential];
-        [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        [weakSelf GET:@"users/me" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
 //            NSLog(@"Found me user");
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
@@ -2249,7 +2252,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
             NSLog(@"updateCurrentUser success response");
             
             if (responseObject) {
-                MTUser *meUser = [self processUserRequestWithResponseObject:responseObject];
+                MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
                 NSLog(@"updated User: %@", meUser);
             }
             
@@ -2312,7 +2315,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:responseData];
-        [weakSelf GET:@"users/me" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
+        
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+
+        [weakSelf GET:@"users/me" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"refreshCurrentUserDataWithSuccess");
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {

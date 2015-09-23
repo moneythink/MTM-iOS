@@ -9,6 +9,7 @@
 #import "MTExplorePostCollectionView.h"
 #import "MTExploreCollectionViewCell.h"
 #import "MTPostDetailViewController.h"
+#import "MTMyClassTableViewController.h"
 
 @interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -29,6 +30,21 @@
     
     self.collectionView.emptyDataSetSource = self;
     self.collectionView.emptyDataSetDelegate = self;
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    // Make sure posts get updated on appearance.
+    [self loadPostsFromDatabase];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostNotification object:nil];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)dealloc
@@ -328,6 +344,16 @@
 - (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
 {
     return -56.0f;
+}
+
+
+#pragma mark - NSNotification Methods -
+- (void)postSucceeded
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        [self loadPostsFromDatabase];
+    });
 }
 
 
