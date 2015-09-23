@@ -682,7 +682,11 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;   // return NO to not change text
 {
-    if ([textField.text containsString:@"."] && [string containsString:@"."]) {
+    // Add iOS 7 compatible string search, had 43 crashes here using containsString
+    NSString *delimiter = @".";
+    NSRange textFieldRange = [textField.text rangeOfString:delimiter];
+    NSRange stringRange = [string rangeOfString:delimiter];
+    if (textFieldRange.location != NSNotFound && stringRange.location != NSNotFound) {
         return NO;
     }
     
