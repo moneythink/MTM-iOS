@@ -144,7 +144,7 @@
 		8967C7981A77F7E300BE125E /* schedule-check.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7961A77F7E300BE125E /* schedule-check.png */; };
 		8967C7991A77F7E300BE125E /* schedule-check@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8967C7971A77F7E300BE125E /* schedule-check@2x.png */; };
 		896E11091B740A7C00CEEF17 /* NSError+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 896E11081B740A7C00CEEF17 /* NSError+MTAdditions.m */; };
-		89712E1B1BA356AD00777DA7 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89712E1A1BA356AD00777DA7 /* BBBadgeBarButtonItem.m */; settings = {ASSET_TAGS = (); }; };
+		89712E1B1BA356AD00777DA7 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89712E1A1BA356AD00777DA7 /* BBBadgeBarButtonItem.m */; };
 		89758EA81B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EA51B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m */; };
 		89758EA91B4F204D002B73E3 /* AFOAuth2Manager.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EA71B4F204D002B73E3 /* AFOAuth2Manager.m */; };
 		89758EAC1B4F279A002B73E3 /* MTNetworkManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 89758EAB1B4F279A002B73E3 /* MTNetworkManager.m */; };
@@ -224,8 +224,6 @@
 		89E7805F1B974B7B00BD44EE /* MTNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805E1B974B7B00BD44EE /* MTNotification.m */; };
 		89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */; };
 		89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF35591A81792C0025735E /* Bolts.framework */; };
-		89FF355C1A8179350025735E /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355B1A8179350025735E /* Crashlytics.framework */; };
-		89FF355E1A8179400025735E /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355D1A8179400025735E /* Fabric.framework */; };
 		89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355F1A8179560025735E /* ZendeskSDK.framework */; };
 		89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35611A8179950025735E /* ZendeskSDK.bundle */; };
 		89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */; };
@@ -598,8 +596,6 @@
 		89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuViewController.h; sourceTree = "<group>"; };
 		89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuViewController.m; sourceTree = "<group>"; };
 		89FF35591A81792C0025735E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		89FF355B1A8179350025735E /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		89FF355D1A8179400025735E /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		89FF355F1A8179560025735E /* ZendeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZendeskSDK.framework; sourceTree = "<group>"; };
 		89FF35611A8179950025735E /* ZendeskSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDK.bundle; sourceTree = "<group>"; };
 		89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDKStrings.bundle; sourceTree = "<group>"; };
@@ -614,7 +610,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				895907501B54320B003AB574 /* libc++.dylib in Frameworks */,
-				89FF355E1A8179400025735E /* Fabric.framework in Frameworks */,
 				1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */,
 				1063098A1A3A3C8F0093C209 /* ParseUI.framework in Frameworks */,
 				89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */,
@@ -627,7 +622,6 @@
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
-				89FF355C1A8179350025735E /* Crashlytics.framework in Frameworks */,
 				5876E2EF196F2CC200C176EC /* Security.framework in Frameworks */,
 				5876E2ED196F2CBC00C176EC /* QuartzCore.framework in Frameworks */,
 				106309711A3A3BBF0093C209 /* Parse.framework in Frameworks */,
@@ -651,8 +645,6 @@
 			children = (
 				106309421A3A3BBF0093C209 /* BlocksKit */,
 				89FF35591A81792C0025735E /* Bolts.framework */,
-				89FF355B1A8179350025735E /* Crashlytics.framework */,
-				89FF355D1A8179400025735E /* Fabric.framework */,
 				1063096B1A3A3BBF0093C209 /* libBlocksKit.a */,
 				1063096C1A3A3BBF0093C209 /* Parse.framework */,
 				106309891A3A3C8F0093C209 /* ParseUI.framework */,
