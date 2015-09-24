@@ -19,6 +19,7 @@
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
 		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
+		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; settings = {ASSET_TAGS = (); }; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -41,7 +42,6 @@
 		5876E2B3196F2C1F00C176EC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2B1196F2C1F00C176EC /* InfoPlist.strings */; };
 		5876E2B5196F2C1F00C176EC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B4196F2C1F00C176EC /* main.m */; };
 		5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5876E2B8196F2C1F00C176EC /* AppDelegate.m */; };
-		5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
 		5876E2C4196F2C1F00C176EC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2C3196F2C1F00C176EC /* Images.xcassets */; };
 		5876E2E3196F2C8500C176EC /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E2196F2C8500C176EC /* AudioToolbox.framework */; };
 		5876E2E5196F2C8E00C176EC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5876E2E4196F2C8E00C176EC /* CFNetwork.framework */; };
@@ -1485,6 +1485,7 @@
 				89A793BA1B2B80D6000BFA40 /* challenge-list-icon.png in Resources */,
 				895F78AD1B1650E700055759 /* nav-icons-arrow-backwards.png in Resources */,
 				8921063F19DA1F37000CFBF6 /* profile_image.png in Resources */,
+				3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */,
 				8977E3E71B223E16009AD452 /* like_highlighted@2x.png in Resources */,
 				8977E3EA1B223E41009AD452 /* comment_highlighted.png in Resources */,
 				8918B3241B18F6C800880E62 /* arrow_left_white_normal.png in Resources */,
@@ -1505,7 +1506,6 @@
 				8921ED0C1B25FCEF00010E3F /* nav-icons-signup@2x.png in Resources */,
 				8918B3271B18F6C800880E62 /* arrow_right_white_disabled@2x.png in Resources */,
 				895F78A21B16454400055759 /* nav-icons-notifications@2x.png in Resources */,
-				5876E2BC196F2C1F00C176EC /* Main_iPhone.storyboard in Resources */,
 				8967C78C1A77F79500BE125E /* challenges-icon.png in Resources */,
 				89A0E8121B38A01000F01BFF /* picker_highlighted@2x.png in Resources */,
 				8921063D19DA1F37000CFBF6 /* post.png in Resources */,
