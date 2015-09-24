@@ -1655,9 +1655,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf refreshFromDatabase];
-                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
-                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
-                        } failure:nil];
+                        if (![MTUser isCurrentUserMentor]) {
+                            // Update current user (to get current point total)
+                            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                            } failure:nil];
+                        }
                         [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                     });
                 } failure:^(NSError *error) {
@@ -1696,9 +1699,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [weakSelf refreshFromDatabase];
-                        [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
-                            [MTUtil setRefreshedForKey:kRefreshForMeUser];
-                        } failure:nil];
+                        if (![MTUser isCurrentUserMentor]) {
+                            // Update current user (to get current point total)
+                            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                            } failure:nil];
+                        }
                         [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
                     });
                 } failure:^(NSError *error) {
@@ -1733,9 +1739,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf refreshFromDatabase];
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
-                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
-                } failure:nil];
+                if (![MTUser isCurrentUserMentor]) {
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
+                }
                 [[NSNotificationCenter defaultCenter] postNotificationName:kDidDeleteChallengePostNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
             });
         } failure:^(NSError *error) {

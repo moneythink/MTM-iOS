@@ -599,6 +599,13 @@
     }
     
     [[MTNetworkManager sharedMTNetworkManager] createPostForChallengeId:self.challenge.id content:self.postText.text postImageData:imageData extraFields:extraFields success:^(AFOAuthCredential *credential) {
+        if (![MTUser isCurrentUserMentor]) {
+            // Update current user (to get current point total)
+            [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                [MTUtil setRefreshedForKey:kRefreshForMeUser];
+            } failure:nil];
+        }
+
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kSavedMyClassChallengePostNotification object:nil];
         });

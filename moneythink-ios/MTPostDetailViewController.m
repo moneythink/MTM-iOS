@@ -1085,9 +1085,12 @@ typedef enum {
     else {
         [[MTNetworkManager sharedMTNetworkManager] deletePostId:self.challengePost.id success:^(AFOAuthCredential *credential) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
-                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
-                } failure:nil];
+                if (![MTUser isCurrentUserMentor]) {
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
+                }
                 [self.navigationController popViewControllerAnimated:YES];
             });
         } failure:^(NSError *error) {

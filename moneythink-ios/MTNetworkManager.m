@@ -2214,8 +2214,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         
         MTUser *currentUser = [MTUser currentUser];
-        NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)currentUser.id];
-        
+        NSString *urlString = [NSString stringWithFormat:@"users/%ld?maxdepth=1", (long)currentUser.id];
+
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         
         if (!IsEmpty(firstName)) {
