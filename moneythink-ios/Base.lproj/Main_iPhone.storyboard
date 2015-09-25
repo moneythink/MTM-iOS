@@ -499,7 +499,7 @@
                                                             <constraint firstAttribute="height" constant="1" id="UKA-yz-qnK"/>
                                                         </constraints>
                                                     </view>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Must include one capital letter and one number." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VV0-rD-UGu">
+                                                    <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Must include one capital letter and one number." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VV0-rD-UGu">
                                                         <rect key="frame" x="16" y="392" width="300" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="20" id="Lce-Ya-4I4"/>
@@ -738,13 +738,6 @@
                         <segue destination="z8Z-Rq-rRI" kind="push" identifier="showWebView" id="yad-P5-d3y"/>
                     </connections>
                 </viewController>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="In8-hc-WB5" userLabel="Separator View">
-                    <rect key="frame" x="0.0" y="0.0" width="318" height="1"/>
-                    <color key="backgroundColor" red="0.74901960779999999" green="0.74901960779999999" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="1" id="cTX-mY-i9J"/>
-                    </constraints>
-                </view>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="NWr-7h-0qD" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="tGy-vH-4cW" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
@@ -5919,7 +5912,7 @@
                                                             <outlet property="delegate" destination="e6J-bE-0Mw" id="8Bo-iE-MoP"/>
                                                         </connections>
                                                     </textField>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Must include one capital letter and one number." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="x63-Op-1OU">
+                                                    <textField opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Must include one capital letter and one number." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="x63-Op-1OU">
                                                         <rect key="frame" x="10" y="232" width="300" height="20"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="20" id="vJv-hW-hR3"/>
