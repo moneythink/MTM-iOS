@@ -3,8 +3,8 @@
 
 target 'moneythink-ios' do
   pod 'Google/Analytics', '~> 1.0.0'
-  pod 'Crashlytics', '~> 3.2.0'
-  pod 'Fabric', '~> 1.4'
+  pod 'Fabric'
+  pod 'Crashlytics'
   pod 'TPKeyboardAvoiding', '~> 1.2'
 end
 
