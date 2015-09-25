@@ -13,13 +13,12 @@
 #import "AFURLResponseSerialization.h"
 #import "MTOAuthRefreshOperation.h"
 
-// TODO: Create dev and prod keys/urls
 #ifdef STAGE
 static NSString * const MTNetworkAPIKey = @"123456";
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
-static NSString * const MTNetworkAPIKey = @"123456";
-static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
+static NSString * const MTNetworkAPIKey = @"cE4.G0_$";
+static NSString * const MTNetworkURLString = @"http://api.moneythink.org/";
 #endif
 
 static NSString * const MTNetworkClientID = @"ios";
@@ -692,7 +691,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         for (NSDictionary *thisData in extraFieldsArray) {
                             NSString *name = [thisData valueForKey:@"name"];
                             NSString *value = [thisData valueForKey:@"value"];
-                            [extraFieldsDict setObject:value forKey:name];
+                            if (!IsEmpty(value)) {
+                                [extraFieldsDict setObject:value forKey:name];
+                            }
                         }
                         if (!IsEmpty(extraFieldsDict)) {
                             NSError *error;

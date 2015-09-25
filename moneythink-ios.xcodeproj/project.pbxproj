@@ -224,9 +224,6 @@
 		89F36D6F1BB496870003654B /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F36D6E1BB496870003654B /* Realm.framework */; settings = {ASSET_TAGS = (); }; };
 		89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */; };
 		89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF35591A81792C0025735E /* Bolts.framework */; };
-		89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355F1A8179560025735E /* ZendeskSDK.framework */; };
-		89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35611A8179950025735E /* ZendeskSDK.bundle */; };
-		89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -596,9 +593,6 @@
 		89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuViewController.h; sourceTree = "<group>"; };
 		89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuViewController.m; sourceTree = "<group>"; };
 		89FF35591A81792C0025735E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
-		89FF355F1A8179560025735E /* ZendeskSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZendeskSDK.framework; sourceTree = "<group>"; };
-		89FF35611A8179950025735E /* ZendeskSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDK.bundle; sourceTree = "<group>"; };
-		89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ZendeskSDKStrings.bundle; sourceTree = "<group>"; };
 		CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (stage).xcconfig"; sourceTree = "<group>"; };
 		D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (production).xcconfig"; sourceTree = "<group>"; };
 		FA986CE90DF7F2AC274CAE12 /* Pods-moneythink-ios.debug (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (production).xcconfig"; sourceTree = "<group>"; };
@@ -615,7 +609,6 @@
 				89A50CED19DE0141003BE1D8 /* MessageUI.framework in Frameworks */,
 				89DFDB5F19D9A67B0063EEA3 /* StoreKit.framework in Frameworks */,
 				106309701A3A3BBF0093C209 /* libBlocksKit.a in Frameworks */,
-				89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */,
 				58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */,
 				89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */,
 				89F36D6F1BB496870003654B /* Realm.framework in Frameworks */,
@@ -649,7 +642,6 @@
 				1063096C1A3A3BBF0093C209 /* Parse.framework */,
 				106309891A3A3C8F0093C209 /* ParseUI.framework */,
 				89F36D6E1BB496870003654B /* Realm.framework */,
-				89FF355F1A8179560025735E /* ZendeskSDK.framework */,
 			);
 			path = libs;
 			sourceTree = SOURCE_ROOT;
@@ -819,7 +811,6 @@
 		5876E2AE196F2C1F00C176EC /* moneythink-ios */ = {
 			isa = PBXGroup;
 			children = (
-				89FF35581A8178540025735E /* Bundles */,
 				5876E2AF196F2C1F00C176EC /* Global */,
 				106309411A3A3BBF0093C209 /* libs */,
 				106309721A3A3C4D0093C209 /* ThirdParty */,
@@ -1341,15 +1332,6 @@
 			name = "Challenge List";
 			sourceTree = "<group>";
 		};
-		89FF35581A8178540025735E /* Bundles */ = {
-			isa = PBXGroup;
-			children = (
-				89FF35611A8179950025735E /* ZendeskSDK.bundle */,
-				89FF35621A8179950025735E /* ZendeskSDKStrings.bundle */,
-			);
-			path = Bundles;
-			sourceTree = "<group>";
-		};
 		A9BD03A101DAB05D591D59D4 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1492,11 +1474,9 @@
 				895F789D1B16453800055759 /* nav-icons-leaderboard.png in Resources */,
 				890587471A01816000DB8CD4 /* EndUserAgreement.html in Resources */,
 				895F789E1B16453800055759 /* nav-icons-leaderboard@2x.png in Resources */,
-				89FF35641A8179950025735E /* ZendeskSDKStrings.bundle in Resources */,
 				8967C7981A77F7E300BE125E /* schedule-check.png in Resources */,
 				8921062A19DA1F37000CFBF6 /* info_icon@2x.png in Resources */,
 				895F78AE1B1650E700055759 /* nav-icons-arrow-backwards@2x.png in Resources */,
-				89FF35631A8179950025735E /* ZendeskSDK.bundle in Resources */,
 				899906811AD46B5D007A4F3E /* icon_button_dollar_pressed@2x.png in Resources */,
 				899F309A19F16948004F6B10 /* check-unactive@2x.png in Resources */,
 				8921062D19DA1F37000CFBF6 /* like_active.png in Resources */,
@@ -1899,7 +1879,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "61046227-d95f-43bc-bba1-66ed789e5565";
+				PROVISIONING_PROFILE = "b28b1504-722c-462b-9d47-974ffb65c547";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1980,7 +1960,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "47b004d7-2959-4cf7-a59b-f9bf811e41ff";
+				PROVISIONING_PROFILE = "e3af9ba8-b57e-49b0-8860-d1a05d5b6825";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2060,7 +2040,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "47b004d7-2959-4cf7-a59b-f9bf811e41ff";
+				PROVISIONING_PROFILE = "e3af9ba8-b57e-49b0-8860-d1a05d5b6825";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2140,7 +2120,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "61046227-d95f-43bc-bba1-66ed789e5565";
+				PROVISIONING_PROFILE = "b28b1504-722c-462b-9d47-974ffb65c547";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

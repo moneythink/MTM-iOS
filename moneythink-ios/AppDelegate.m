@@ -31,9 +31,6 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Do first, in case there's a migration
-    //
-    // TODO: Pull in new Realm static framework before shipping 2.1, see: https://github.com/realm/realm-cocoa/issues/2572
-    //
     [self setupRealm];
 
     [Fabric with:@[CrashlyticsKit]];

@@ -6,5 +6,6 @@ target 'moneythink-ios' do
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'TPKeyboardAvoiding', '~> 1.2'
+  pod 'ZendeskSDK'
 end
 
