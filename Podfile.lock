@@ -16,11 +16,13 @@ PODS:
   - GoogleSymbolUtilities (1.0.0)
   - GoogleUtilities (1.0.1):
     - GoogleSymbolUtilities (~> 1.0)
+  - TPKeyboardAvoiding (1.2.9)
 
 DEPENDENCIES:
   - Crashlytics (~> 3.2.0)
   - Fabric (~> 1.4)
   - Google/Analytics (~> 1.0.0)
+  - TPKeyboardAvoiding (~> 1.2)
 
 SPEC CHECKSUMS:
   Crashlytics: a29e4f820aa401482b26043dc5d78adf08ac7573
@@ -30,5 +32,6 @@ SPEC CHECKSUMS:
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
   GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
   GoogleUtilities: e3475cd4d45134221d2f3f3626095a1c49b62041
+  TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
 
 COCOAPODS: 0.38.2
