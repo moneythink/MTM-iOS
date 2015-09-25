@@ -759,11 +759,11 @@
                         <viewControllerLayoutGuide type="bottom" id="GLU-G9-lNn"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="9xt-gk-ufl">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="800"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mZc-nn-Jmd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="756"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="556"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -771,7 +771,7 @@
                                 </connections>
                             </webView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7mE-7T-FkV">
-                                <rect key="frame" x="0.0" y="756" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="556" width="320" height="44"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QJI-Zc-Xnl">
                                         <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
@@ -5783,11 +5783,11 @@
                         <viewControllerLayoutGuide type="bottom" id="gbv-it-wvs"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="jCH-i6-HSY">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="782-wm-myG" customClass="TPKeyboardAvoidingScrollView">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HhK-40-bPj" userLabel="Content View">
                                         <rect key="frame" x="0.0" y="84" width="320" height="491"/>
@@ -6148,7 +6148,7 @@
                     <navigationItem key="navigationItem" id="Mba-lq-s7E"/>
                     <keyCommands/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="320" height="700"/>
+                    <size key="freeformSize" width="320" height="600"/>
                     <connections>
                         <outlet property="agreeCheckbox" destination="Wuw-y8-ifY" id="vfO-bC-p0x"/>
                         <outlet property="email" destination="nxG-Og-7jS" id="sKL-a6-eKt"/>
@@ -6180,11 +6180,11 @@
                         <viewControllerLayoutGuide type="bottom" id="u19-De-zpx"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="62H-Lm-tkx">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="700"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYj-DD-60g">
-                                <rect key="frame" x="20" y="20" width="280" height="680"/>
+                                <rect key="frame" x="20" y="20" width="280" height="580"/>
                                 <animations/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <string key="text">Moneythink Volunteer Release and Waiver of Liability Form
@@ -6440,7 +6440,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="yad-P5-d3y"/>
+        <segue reference="fGY-fc-BPd"/>
         <segue reference="FBG-cj-gjr"/>
         <segue reference="Q4R-Y6-fhV"/>
         <segue reference="nYB-OV-yVU"/>
