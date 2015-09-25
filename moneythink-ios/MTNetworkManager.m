@@ -692,7 +692,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         for (NSDictionary *thisData in extraFieldsArray) {
                             NSString *name = [thisData valueForKey:@"name"];
                             NSString *value = [thisData valueForKey:@"value"];
-                            [extraFieldsDict setObject:value forKey:name];
+                            if (value != nil) {
+                                [extraFieldsDict setObject:value forKey:name];
+                            }
                         }
                         if (!IsEmpty(extraFieldsDict)) {
                             NSError *error;
