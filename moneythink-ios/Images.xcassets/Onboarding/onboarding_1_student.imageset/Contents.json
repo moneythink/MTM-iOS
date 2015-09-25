@@ -2,13 +2,13 @@
   "images" : [
     {
       "idiom" : "iphone",
-      "scale" : "1x",
-      "filename" : "onboarding_1_student.png"
+      "filename" : "onboarding_1_student.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "iphone",
-      "scale" : "2x",
-      "filename" : "onboarding_1_student@2x.png"
+      "filename" : "onboarding_1_student@2x.png",
+      "scale" : "2x"
     },
     {
       "idiom" : "iphone",

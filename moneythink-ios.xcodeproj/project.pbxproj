@@ -119,7 +119,6 @@
 		8950C19719DF0D7200847F85 /* UIView+MTAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 8950C19619DF0D7200847F85 /* UIView+MTAdditions.m */; };
 		8952510C1B193ABD008068C6 /* MTChallengeListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */; };
 		8952510F1B1A667E008068C6 /* MTChallengeListTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8952510E1B1A667E008068C6 /* MTChallengeListTableViewCell.m */; };
-		89540A6C1B54313600448DB5 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89540A6B1B54313600448DB5 /* Realm.framework */; };
 		895907501B54320B003AB574 /* libc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 8959074F1B54320B003AB574 /* libc++.dylib */; };
 		895907531B5465A2003AB574 /* MTUser.m in Sources */ = {isa = PBXBuildFile; fileRef = 895907521B5465A2003AB574 /* MTUser.m */; };
 		895907561B546AAC003AB574 /* MTOrganization.m in Sources */ = {isa = PBXBuildFile; fileRef = 895907551B546AAC003AB574 /* MTOrganization.m */; };
@@ -222,6 +221,7 @@
 		89E56D2B1A0448A300C187C9 /* login-header@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89E56D291A0448A300C187C9 /* login-header@2x.png */; };
 		89E7805C1B9656CC00BD44EE /* MTChallengeProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */; };
 		89E7805F1B974B7B00BD44EE /* MTNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 89E7805E1B974B7B00BD44EE /* MTNotification.m */; };
+		89F36D6F1BB496870003654B /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89F36D6E1BB496870003654B /* Realm.framework */; settings = {ASSET_TAGS = (); }; };
 		89F9F8251B1505CE0067ED3D /* MTMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */; };
 		89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF35591A81792C0025735E /* Bolts.framework */; };
 		89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89FF355F1A8179560025735E /* ZendeskSDK.framework */; };
@@ -440,7 +440,6 @@
 		8952510B1B193ABD008068C6 /* MTChallengeListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeListViewController.m; sourceTree = "<group>"; };
 		8952510D1B1A667E008068C6 /* MTChallengeListTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTChallengeListTableViewCell.h; sourceTree = "<group>"; };
 		8952510E1B1A667E008068C6 /* MTChallengeListTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTChallengeListTableViewCell.m; sourceTree = "<group>"; };
-		89540A6B1B54313600448DB5 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		8959074F1B54320B003AB574 /* libc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libc++.dylib"; path = "usr/lib/libc++.dylib"; sourceTree = SDKROOT; };
 		895907511B5465A2003AB574 /* MTUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTUser.h; path = "Data Classes/MTUser.h"; sourceTree = "<group>"; };
 		895907521B5465A2003AB574 /* MTUser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTUser.m; path = "Data Classes/MTUser.m"; sourceTree = "<group>"; };
@@ -593,6 +592,7 @@
 		89E7805B1B9656CC00BD44EE /* MTChallengeProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTChallengeProgress.m; path = "Data Classes/MTChallengeProgress.m"; sourceTree = "<group>"; };
 		89E7805D1B974B7B00BD44EE /* MTNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MTNotification.h; path = "Data Classes/MTNotification.h"; sourceTree = "<group>"; };
 		89E7805E1B974B7B00BD44EE /* MTNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNotification.m; path = "Data Classes/MTNotification.m"; sourceTree = "<group>"; };
+		89F36D6E1BB496870003654B /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Realm.framework; sourceTree = "<group>"; };
 		89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuViewController.h; sourceTree = "<group>"; };
 		89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuViewController.m; sourceTree = "<group>"; };
 		89FF35591A81792C0025735E /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Bolts.framework; sourceTree = "<group>"; };
@@ -618,7 +618,7 @@
 				89FF35601A8179560025735E /* ZendeskSDK.framework in Frameworks */,
 				58EB5E8C19CF525800CED4B8 /* AVFoundation.framework in Frameworks */,
 				89FF355A1A81792C0025735E /* Bolts.framework in Frameworks */,
-				89540A6C1B54313600448DB5 /* Realm.framework in Frameworks */,
+				89F36D6F1BB496870003654B /* Realm.framework in Frameworks */,
 				5806A4F319746655000B3656 /* Accounts.framework in Frameworks */,
 				5806A4EF1974610A000B3656 /* Social.framework in Frameworks */,
 				5876E2F3196F2CD400C176EC /* SystemConfiguration.framework in Frameworks */,
@@ -648,7 +648,7 @@
 				1063096B1A3A3BBF0093C209 /* libBlocksKit.a */,
 				1063096C1A3A3BBF0093C209 /* Parse.framework */,
 				106309891A3A3C8F0093C209 /* ParseUI.framework */,
-				89540A6B1B54313600448DB5 /* Realm.framework */,
+				89F36D6E1BB496870003654B /* Realm.framework */,
 				89FF355F1A8179560025735E /* ZendeskSDK.framework */,
 			);
 			path = libs;
@@ -1899,7 +1899,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "4148181d-05df-4d9c-96ca-9bc1deed4727";
+				PROVISIONING_PROFILE = "61046227-d95f-43bc-bba1-66ed789e5565";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1980,7 +1980,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
+				PROVISIONING_PROFILE = "47b004d7-2959-4cf7-a59b-f9bf811e41ff";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2060,7 +2060,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
+				PROVISIONING_PROFILE = "47b004d7-2959-4cf7-a59b-f9bf811e41ff";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -2140,7 +2140,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "4148181d-05df-4d9c-96ca-9bc1deed4727";
+				PROVISIONING_PROFILE = "61046227-d95f-43bc-bba1-66ed789e5565";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
