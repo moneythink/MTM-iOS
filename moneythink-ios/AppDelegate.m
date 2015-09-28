@@ -21,9 +21,11 @@
 #ifdef STAGE
     static NSString *parseApplicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
     static NSString *parseClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
+    static NSString *apiServerKey = @"STAGE";
 #else
     static NSString *parseApplicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
     static NSString *parseClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
+    static NSString *apiServerKey = @"PRODUCTION";
 #endif
 
 @implementation AppDelegate
@@ -38,6 +40,14 @@
     [self setupParse];
     [self clearZendesk];
     [self setupZendesk];
+    
+    // If switching between staging and production, logout user
+    NSString *previousServer = [[NSUserDefaults standardUserDefaults] objectForKey:kAPIServerKey];
+    if (IsEmpty(previousServer) || ![previousServer isEqualToString:apiServerKey]) {
+        [MTUtil logout];
+    }
+    [[NSUserDefaults standardUserDefaults] setObject:apiServerKey forKey:kAPIServerKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     

@@ -14,13 +14,12 @@
 #import "MTOAuthRefreshOperation.h"
 
 #ifdef STAGE
-static NSString * const MTNetworkAPIKey = @"123456";
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
-static NSString * const MTNetworkAPIKey = @"cE4.G0_$";
 static NSString * const MTNetworkURLString = @"http://api.moneythink.org/";
 #endif
 
+static NSString * const MTNetworkAPIKey = @"cE4.G0_$";
 static NSString * const MTNetworkClientID = @"ios";
 static NSString * const MTRefreshingErrorCode = @"701";
 

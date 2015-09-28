@@ -7,5 +7,6 @@ target 'moneythink-ios' do
   pod 'Crashlytics'
   pod 'TPKeyboardAvoiding', '~> 1.2'
   pod 'ZendeskSDK'
+  pod 'Realm'
 end
 

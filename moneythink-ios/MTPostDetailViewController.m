@@ -78,16 +78,15 @@ typedef enum {
     
     self.title = @"Post Detail";
     
+    if (IsEmpty(self.emojiObjects)) {
+        [self loadEmoji];
+    }
+
     if (self.notification) {
         self.postType = MTPostTypeNoButtonsNoImage;
         self.isMentor = NO;
         self.hideVerifySwitch = YES;
         [self.tableView reloadData];
-        
-        if (IsEmpty(self.emojiObjects)) {
-            [self loadEmoji];
-        }
-        
         [self loadFromNotification];
     }
     else {
@@ -1308,6 +1307,10 @@ typedef enum {
                     if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                         [weakSelf.delegate didUpdateButtons];
                     }
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1335,6 +1338,10 @@ typedef enum {
                 if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                     [weakSelf.delegate didUpdateButtons];
                 }
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1440,6 +1447,10 @@ typedef enum {
                 if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                     [weakSelf.delegate didUpdateButtons];
                 }
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1464,6 +1475,10 @@ typedef enum {
                     if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                         [weakSelf.delegate didUpdateButtons];
                     }
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1558,6 +1573,10 @@ typedef enum {
                 if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                     [weakSelf.delegate didUpdateButtons];
                 }
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1582,6 +1601,10 @@ typedef enum {
                     if ([weakSelf.delegate respondsToSelector:@selector(didUpdateButtons)]) {
                         [weakSelf.delegate didUpdateButtons];
                     }
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{

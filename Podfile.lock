@@ -16,18 +16,22 @@ PODS:
   - GoogleSymbolUtilities (1.0.0)
   - GoogleUtilities (1.1.0):
     - GoogleSymbolUtilities (~> 1.0.0)
+  - Realm (0.95.2):
+    - Realm/Headers (= 0.95.2)
+  - Realm/Headers (0.95.2)
   - TPKeyboardAvoiding (1.2.9)
-  - ZendeskSDK (1.4.1.1):
-    - ZendeskSDK/Core (= 1.4.1.1)
-    - ZendeskSDK/Localization (= 1.4.1.1)
-  - ZendeskSDK/Core (1.4.1.1)
-  - ZendeskSDK/Localization (1.4.1.1):
+  - ZendeskSDK (1.4.1.2):
+    - ZendeskSDK/Core (= 1.4.1.2)
+    - ZendeskSDK/Localization (= 1.4.1.2)
+  - ZendeskSDK/Core (1.4.1.2)
+  - ZendeskSDK/Localization (1.4.1.2):
     - ZendeskSDK/Core
 
 DEPENDENCIES:
   - Crashlytics
   - Fabric
   - Google/Analytics (~> 1.0.0)
+  - Realm
   - TPKeyboardAvoiding (~> 1.2)
   - ZendeskSDK
 
@@ -39,7 +43,8 @@ SPEC CHECKSUMS:
   GoogleNetworkingUtilities: 292992ab31b7b4ba32809a0e8b40e324cdfb2c0c
   GoogleSymbolUtilities: a7b0feed1fe667c8d5e647177938d0ecd62d6948
   GoogleUtilities: 8ed9134debe11719097881711464752900668f10
+  Realm: 4c026902041bb39c4bd083ebc5e88f4f17973d72
   TPKeyboardAvoiding: ff1ee4e5a5a0c119b965552af8f183868ea20207
-  ZendeskSDK: 162b062ae1d24450ad8ef56db8708fa061062ea8
+  ZendeskSDK: c100e5e75b988ccc58ae29c236cc270b967235be
 
 COCOAPODS: 0.38.2

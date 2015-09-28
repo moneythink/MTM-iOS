@@ -42,6 +42,7 @@
 #define kRefreshForChallenges               @"kRefreshForChallenges"
 #define kRefreshForButtons                  @"kRefreshForButtons"
 #define kRefreshForMeUser                   @"kRefreshForMeUser"
+#define kAPIServerKey                       @"kAPIServerKey"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

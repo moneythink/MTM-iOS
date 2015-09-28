@@ -20,6 +20,7 @@
 @property (nonatomic, strong) RLMResults *notifications;
 
 @property (nonatomic) BOOL showingAlert;
+@property (nonatomic, strong) MBProgressHUD *hud;
 
 @end
 
@@ -107,12 +108,13 @@
     self.notifications = [[MTNotification objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
-    __block MBProgressHUD *thisHUD = nil;
     if (!self.showingAlert && IsEmpty(self.notifications) && self.actionableNotificationId == 0) {
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        thisHUD = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        thisHUD.labelText = @"Loading...";
-        thisHUD.dimBackground = YES;
+        if (self.hud) {
+            [self.hud hide:NO];
+        }
+        self.hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        self.hud.labelText = @"Loading...";
+        self.hud.dimBackground = YES;
     }
     
     BOOL includeRead = NO;
@@ -126,7 +128,7 @@
     [[MTNetworkManager sharedMTNetworkManager] loadNotificationsWithSinceDate:lastFetchDate includeRead:includeRead success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.refreshControl endRefreshing];
-            [thisHUD hide:YES];
+            [weakSelf.hud hide:YES];
             weakSelf.notifications = [[MTNotification objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"createdAt" ascending:NO];
             RLMResults *myUnReadNotifs = [MTNotification objectsWhere:@"isDeleted = NO AND read = NO"];
             ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = [myUnReadNotifs count];
@@ -138,8 +140,7 @@
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.refreshControl endRefreshing];
-            [thisHUD hide:YES];
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf.hud hide:YES];
         });
     }];
 }
@@ -381,14 +382,14 @@
         [self actionForNotification:thisNotification];
     }
     else {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading Notification...";
-        hud.dimBackground = YES;
+        self.hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        self.hud.labelText = @"Loading Notification...";
+        self.hud.dimBackground = YES;
         
         MTMakeWeakSelf();
         [[MTNetworkManager sharedMTNetworkManager] loadNotificationId:self.actionableNotificationId success:^(id responseData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.hud hide:YES];
                 MTNotification *thisNotification = [MTNotification objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.actionableNotificationId]];
                 weakSelf.actionableNotificationId = 0;
                 
@@ -399,7 +400,7 @@
             
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.hud hide:YES];
                 
                 weakSelf.actionableNotificationId = 0;
                 weakSelf.showingAlert = YES;
@@ -544,18 +545,19 @@
 #pragma mark - Actions -
 - (void)markAllRead
 {
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Marking All Read...";
-    hud.dimBackground = YES;
+    self.hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    self.hud.labelText = @"Marking All Read...";
+    self.hud.dimBackground = YES;
     
+    MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] markAllNotificationsReadWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [weakSelf.hud hide:YES];
             [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
         });
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+            [weakSelf.hud hide:YES];
         });
 
         NSLog(@"Unable to mark ALL read: %@", [error mtErrorDescription]);
@@ -615,16 +617,12 @@
     else {
         [[MTNetworkManager sharedMTNetworkManager] loadNotificationsWithSinceDate:[MTUtil lastNotificationFetchDate] includeRead:NO success:^(id responseData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
                 RLMResults *myUnReadNotifs = [MTNotification objectsWhere:@"isDeleted = NO AND read = NO"];
                 ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = [myUnReadNotifs count];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:[myUnReadNotifs count]]];
                 [MTUtil setLastNotificationFetchDate:[NSDate date]];
             });
         } failure:^(NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-            });
         }];
     }
 }

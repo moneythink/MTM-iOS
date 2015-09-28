@@ -226,9 +226,7 @@
 {
     CGFloat delay = 0.35f;
     if (loading) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     }
     else {
         delay = 0.0f;
@@ -356,9 +354,7 @@
 {
     CGFloat delay = 0.35f;
     if (loading) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        });
+        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
     }
     else {
         delay = 0.0f;

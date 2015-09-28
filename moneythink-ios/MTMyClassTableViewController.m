@@ -265,7 +265,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     self.emojiCollectionView = [self.storyboard instantiateViewControllerWithIdentifier:@"EmojiPickerCollectionView"];
     self.emojiCollectionView.collectionView.backgroundColor = [UIColor colorWithHexString:@"#fbfaf7"];
     self.emojiCollectionView.collectionView.frame = CGRectMake(0.0f, 25.0f, 242.0f, 126.0f);
-        
+    
     self.emojiCollectionView.emojiObjects = self.emojiObjects;
     self.emojiCollectionView.post = post;
     self.emojiCollectionView.delegate = self;
@@ -1819,6 +1819,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     button.enabled = YES;
                     [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -1843,6 +1847,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 button.enabled = YES;
                 [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -1999,6 +2007,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 weakSelf.secondaryButton1.enabled = YES;
                 [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2020,6 +2032,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     weakSelf.secondaryButton1.enabled = YES;
                     [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2119,6 +2135,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 weakSelf.secondaryButton2.enabled = YES;
                 [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                 [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                // Update current user (to get current point total)
+                [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                    [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                } failure:nil];
             });
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -2140,6 +2160,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                     weakSelf.secondaryButton2.enabled = YES;
                     [weakSelf.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:weakIndexPath] withRowAnimation:UITableViewRowAnimationNone];
                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidTapChallengeButtonNotification object:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+                    // Update current user (to get current point total)
+                    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+                        [MTUtil setRefreshedForKey:kRefreshForMeUser];
+                    } failure:nil];
                 });
             } failure:^(NSError *error) {
                 dispatch_async(dispatch_get_main_queue(), ^{
