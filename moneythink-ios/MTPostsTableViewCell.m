@@ -27,6 +27,10 @@
     
     self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width/2.0f;
     self.profileImage.layer.masksToBounds = YES;
+    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
+    
+    self.postImage.contentMode = UIViewContentModeScaleAspectFill;
+    self.postImage.clipsToBounds = YES;
 }
 
 - (void)prepareForReuse

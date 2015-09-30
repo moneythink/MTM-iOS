@@ -1456,6 +1456,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     commentCount = [commentsArray count];
                 }
                 
+                if ([innerEmbeddedDict objectForKey:@"feedFromPost"]) {
+                    thisPost.isCrossPost = YES;
+                }
+                
                 NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)thisUser.id, (long)thisPost.id];
                 MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
                 if (!existing) {

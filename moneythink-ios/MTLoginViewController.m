@@ -171,49 +171,7 @@
 - (void)updateView
 {
     if ([((AppDelegate *)[MTUtil getAppDelegate]) shouldForceUpdate]) {
-        if (self.presentingForcedUpdateAlert) {
-            return;
-        }
-        
-        self.presentingForcedUpdateAlert = YES;
-        self.view.backgroundColor = [UIColor primaryOrange];
-        self.emailLabel.hidden = YES;
-        self.passwordLabel.hidden = YES;
-        self.studentSignUpButton.hidden = YES;
-        self.mentorSignUpButton.hidden = YES;
-        self.loginButton.hidden = YES;
-        self.forgotPasswordButton.hidden = YES;
-        self.emailTextField.hidden = YES;
-        self.passwordTextField.hidden = YES;
-        
-        for (UIView *thisView in self.separatorViews) {
-            thisView.hidden = YES;
-        }
-        
-        NSString *title = @"Update Required";
-        NSString *message = @"You have an unsupported version installed. Please update in the App Store to continue using Moneythink.";
-        if ([UIAlertController class]) {
-            UIAlertController *updateAlert = [UIAlertController
-                                              alertControllerWithTitle:title
-                                              message:message
-                                              preferredStyle:UIAlertControllerStyleAlert];
-            
-            UIAlertAction *openAction = [UIAlertAction
-                                       actionWithTitle:@"Open App Store"
-                                       style:UIAlertActionStyleDefault
-                                       handler:^(UIAlertAction *action) {
-                                           self.presentingForcedUpdateAlert = NO;
-                                           NSString *iTunesLink = @"https://itunes.apple.com/us/app/moneythink/id907176836?mt=8";
-                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
-                                       }];
-        
-            [updateAlert addAction:openAction];
-            self.forcedUpdateAlertController = updateAlert;
-            [self presentViewController:updateAlert animated:YES completion:nil];
-        } else {
-            self.forcedUpdateAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"Open App Store", nil];
-            [self.forcedUpdateAlert show];
-        }
+        [self displayForceUpdate];
     }
     else if ([MTUser isUserLoggedIn]) {
 
@@ -294,6 +252,10 @@
         [self.mentorSignUpButton setTitleColor:[UIColor white] forState:UIControlStateNormal];
         [self.mentorSignUpButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateHighlighted];
         [self.forgotPasswordButton setTitleColor:[UIColor darkGrayColor] forState:UIControlStateHighlighted];
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldDisplayAPIMigrationAlertKey]) {
+            [self displayAPIMigrationAlert];
+        }
     }
 }
 
@@ -325,6 +287,84 @@
 - (void)shouldUpdateView
 {
     [self updateView];
+}
+
+- (void)displayAPIMigrationAlert
+{
+    // This is an upgrade installation from 2.0.x to 2.1 (new API sans Parse)
+    //  Display alert instructions to user
+    NSString *title = @"Moneythink Alert";
+    NSString *messageToDisplay = @"You have upgraded to the new Moneythink release, please Login to continue use.";
+    
+    if ([UIAlertController class]) {
+        UIAlertController *alertController = [UIAlertController
+                                              alertControllerWithTitle:title
+                                              message:messageToDisplay
+                                              preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *close = [UIAlertAction
+                                actionWithTitle:@"Close"
+                                style:UIAlertActionStyleCancel
+                                handler:^(UIAlertAction *action) {
+                                    [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
+                                }];
+        
+        [alertController addAction:close];
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else {
+        [UIAlertView bk_showAlertViewWithTitle:title message:messageToDisplay cancelButtonTitle:@"Close" otherButtonTitles:nil handler:nil];
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldDisplayAPIMigrationAlertKey];
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kDisplayedAPIMigrationAlertKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
+- (void)displayForceUpdate
+{
+    if (self.presentingForcedUpdateAlert) {
+        return;
+    }
+    
+    self.presentingForcedUpdateAlert = YES;
+    self.view.backgroundColor = [UIColor primaryOrange];
+    self.emailLabel.hidden = YES;
+    self.passwordLabel.hidden = YES;
+    self.studentSignUpButton.hidden = YES;
+    self.mentorSignUpButton.hidden = YES;
+    self.loginButton.hidden = YES;
+    self.forgotPasswordButton.hidden = YES;
+    self.emailTextField.hidden = YES;
+    self.passwordTextField.hidden = YES;
+    
+    for (UIView *thisView in self.separatorViews) {
+        thisView.hidden = YES;
+    }
+    
+    NSString *title = @"Update Required";
+    NSString *message = @"You have an unsupported version installed. Please update in the App Store to continue using Moneythink.";
+    if ([UIAlertController class]) {
+        UIAlertController *updateAlert = [UIAlertController
+                                          alertControllerWithTitle:title
+                                          message:message
+                                          preferredStyle:UIAlertControllerStyleAlert];
+        
+        UIAlertAction *openAction = [UIAlertAction
+                                     actionWithTitle:@"Open App Store"
+                                     style:UIAlertActionStyleDefault
+                                     handler:^(UIAlertAction *action) {
+                                         self.presentingForcedUpdateAlert = NO;
+                                         NSString *iTunesLink = @"https://itunes.apple.com/us/app/moneythink/id907176836?mt=8";
+                                         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:iTunesLink]];
+                                     }];
+        
+        [updateAlert addAction:openAction];
+        self.forcedUpdateAlertController = updateAlert;
+        [self presentViewController:updateAlert animated:YES completion:nil];
+    } else {
+        self.forcedUpdateAlert = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"Open App Store", nil];
+        [self.forcedUpdateAlert show];
+    }
 }
 
 

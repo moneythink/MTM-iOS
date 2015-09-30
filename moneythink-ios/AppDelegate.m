@@ -595,6 +595,8 @@
 
 - (void)checkForForceUpdate
 {
+    // Force update not active for 2.1+, will need to replace PFCloud function call with
+    //  new API for continued use.
     [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
     return;
@@ -651,7 +653,8 @@
 {
     // Bypass this for now until we decide whether to keep in.
     return NO;
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
+    
+//    return [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
 }
 
 - (void)purgeDeletedData
@@ -676,6 +679,11 @@
         [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
             NSLog(@"Successfully logged out legacy/Parse user");
         }];
+        
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:kDisplayedAPIMigrationAlertKey]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldDisplayAPIMigrationAlertKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
     }
 }
 
@@ -746,7 +754,7 @@
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 23;
+    config.schemaVersion = 24;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above

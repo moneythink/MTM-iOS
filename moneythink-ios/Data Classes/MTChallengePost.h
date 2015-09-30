@@ -18,6 +18,7 @@
 @property MTOptionalImage *postImage;
 @property BOOL hasPostImage;
 @property NSString *extraFields;
+@property BOOL isCrossPost;
 @property BOOL isDeleted;
 
 @property MTUser *user;

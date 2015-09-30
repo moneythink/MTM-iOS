@@ -13,6 +13,8 @@
 - (void)awakeFromNib {
     self.spentLabel.textColor = [UIColor votingRed];
     self.savedLabel.textColor = [UIColor votingBlue];
+    self.postImage.contentMode = UIViewContentModeTop;
+    self.postImage.clipsToBounds = YES;
 }
 
 - (void)prepareForReuse

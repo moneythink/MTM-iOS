@@ -2068,7 +2068,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Lup-rP-ttr"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="6an-Ex-hZp">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="696"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
@@ -2089,7 +2089,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" allowsSelection="NO" rowHeight="110" sectionHeaderHeight="1" sectionFooterHeight="1" translatesAutoresizingMaskIntoConstraints="NO" id="x8M-C9-wsX">
-                                <rect key="frame" x="0.0" y="143" width="320" height="273"/>
+                                <rect key="frame" x="0.0" y="143" width="320" height="553"/>
                                 <animations/>
                                 <inset key="separatorInset" minX="15" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
@@ -2846,10 +2846,9 @@
                                                     <animations/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="320" id="6vd-qN-KdO"/>
-                                                        <constraint firstAttribute="height" constant="320" id="Mc5-4n-RUK"/>
                                                     </constraints>
                                                 </imageView>
-                                                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1yA-Mp-m7W" userLabel="Spent View">
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1yA-Mp-m7W" userLabel="Spent View">
                                                     <rect key="frame" x="0.0" y="286" width="320" height="34"/>
                                                     <subviews>
                                                         <view alpha="0.69999999999999984" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FmD-dn-Mb1" userLabel="Background View">
@@ -2874,10 +2873,18 @@
                                                     </subviews>
                                                     <animations/>
                                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="34" id="PdD-n3-qbU"/>
+                                                        <constraint firstAttribute="width" constant="320" id="WFM-2o-5Yt"/>
+                                                    </constraints>
                                                 </view>
                                             </subviews>
                                             <animations/>
                                             <constraints>
+                                                <constraint firstItem="1yA-Mp-m7W" firstAttribute="leading" secondItem="1gV-og-nOe" secondAttribute="leading" id="6AJ-fc-g0k"/>
+                                                <constraint firstAttribute="trailing" secondItem="1yA-Mp-m7W" secondAttribute="trailing" id="NGe-b0-c3U"/>
+                                                <constraint firstAttribute="bottom" secondItem="YDe-6A-oGp" secondAttribute="bottom" id="Vt0-7P-GHa"/>
+                                                <constraint firstItem="1yA-Mp-m7W" firstAttribute="bottom" secondItem="YDe-6A-oGp" secondAttribute="bottom" id="XAF-TV-buF"/>
                                                 <constraint firstItem="YDe-6A-oGp" firstAttribute="top" secondItem="1gV-og-nOe" secondAttribute="top" id="mvI-rK-kz5"/>
                                                 <constraint firstAttribute="trailing" secondItem="YDe-6A-oGp" secondAttribute="trailing" id="p4s-bA-Mwg"/>
                                                 <constraint firstItem="YDe-6A-oGp" firstAttribute="leading" secondItem="1gV-og-nOe" secondAttribute="leading" id="rod-wi-5nV"/>
@@ -6446,12 +6453,12 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="vqR-nj-yuL"/>
-        <segue reference="nYB-OV-yVU"/>
-        <segue reference="LS9-Mg-yad"/>
-        <segue reference="FBG-cj-gjr"/>
-        <segue reference="Q4R-Y6-fhV"/>
         <segue reference="fGY-fc-BPd"/>
+        <segue reference="FBG-cj-gjr"/>
         <segue reference="nWx-Jd-e9Z"/>
+        <segue reference="o0E-h6-NZi"/>
+        <segue reference="LS9-Mg-yad"/>
+        <segue reference="48k-xo-w1Z"/>
+        <segue reference="ds8-qb-8o8"/>
     </inferredMetricsTieBreakers>
 </document>

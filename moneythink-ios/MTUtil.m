@@ -237,7 +237,8 @@
     NSString *appDomain = [[NSBundle mainBundle] bundleIdentifier];
     NSDictionary *defaultsDictionary = [[NSUserDefaults standardUserDefaults] persistentDomainForName: appDomain];
     for (NSString *key in [defaultsDictionary allKeys]) {
-        if (![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey] && ![key isEqualToString:kPushMessagingRegistrationKey]) {
+        if (![key isEqualToString:kForcedUpdateKey] && ![key isEqualToString:kFirstTimeRunKey] &&
+            ![key isEqualToString:kPushMessagingRegistrationKey] && ![key isEqualToString:kAPIServerKey]) {
             NSLog(@"Removing user pref for %@", key);
             [[NSUserDefaults standardUserDefaults] removeObjectForKey:key];
         }

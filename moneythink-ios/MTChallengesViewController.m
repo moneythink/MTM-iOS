@@ -391,7 +391,10 @@
             RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
             weakSelf.emojiObjects = emojis;
             weakSelf.myClassTableView.emojiObjects = weakSelf.emojiObjects;
-            [weakSelf.myClassTableView.tableView reloadData];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf.myClassTableView.tableView reloadData];
+            });
+
         } failure:^(NSError *error) {
             NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
         }];

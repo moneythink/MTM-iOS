@@ -47,13 +47,13 @@
     
     [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
 
-    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
             [weakSelf.tableView reloadData];
         });
     } failure:^(NSError *error) {

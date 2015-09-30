@@ -54,6 +54,7 @@ typedef enum {
 @property (nonatomic, strong) RLMResults *buttons;
 @property (nonatomic) BOOL loadedComments;
 @property (nonatomic) BOOL loadedLikes;
+@property (nonatomic, strong) UIImage *postImage;
 
 @end
 
@@ -100,6 +101,7 @@ typedef enum {
         
         [self loadCommentsOnlyDatabase:NO];
         [self loadPostText];
+        [self loadPostImage];
         [self loadLikesOnlyDatabase:NO];
         [self loadButtonsOnlyDatabase:YES];
         [self configureChallengePermissions];
@@ -140,6 +142,7 @@ typedef enum {
         
         [self loadCommentsOnlyDatabase:YES];
         [self loadPostText];
+        [self loadPostImage];
         [self loadLikesOnlyDatabase:YES];
         [self loadButtonsOnlyDatabase:YES];
         [self configureChallengePermissions];
@@ -291,6 +294,23 @@ typedef enum {
     [self.tableView reloadData];
 }
 
+- (void)loadPostImage
+{
+    if (self.challengePost.hasPostImage) {
+        MTMakeWeakSelf();
+        self.postImage = [self.challengePost loadPostImageWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakSelf.postImage = responseData;
+                [weakSelf.tableView reloadData];
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to load post image");
+        }];
+        
+        [self.tableView reloadData];
+    }
+}
+
 - (void)loadButtonsOnlyDatabase:(BOOL)onlyDatabase
 {
     self.buttons = [[MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id] sortedResultsUsingProperty:@"ranking" ascending:YES];
@@ -341,6 +361,12 @@ typedef enum {
         // We already have buttons, just update clicks
         [self updateButtonClicks];
         return;
+    }
+    else {
+        if (self.challengePost.hasPostImage)
+            self.postType = MTPostTypeNoButtonsWithImage;
+        else
+            self.postType = MTPostTypeNoButtonsNoImage;
     }
     
     if (onlyDatabase) {
@@ -521,9 +547,6 @@ typedef enum {
     UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
     UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
     
-    button1.enabled = [self.challengePost isPostInMyClass];
-    button2.enabled = [self.challengePost isPostInMyClass];
-
     [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [button1 addTarget:self action:@selector(button1Tapped:) forControlEvents:UIControlEventTouchUpInside];
 
@@ -632,9 +655,6 @@ typedef enum {
 {
     UIButton *button1 = (UIButton *)[cell.contentView viewWithTag:1];
     UIButton *button2 = (UIButton *)[cell.contentView viewWithTag:2];
-    
-    button1.enabled = [self.challengePost isPostInMyClass];
-    button2.enabled = [self.challengePost isPostInMyClass];
     
     [button1 removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [button1 addTarget:self action:@selector(secondaryButton1Tapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -850,9 +870,6 @@ typedef enum {
     
     [button1.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
     [button2.titleLabel setFont:[UIFont systemFontOfSize:14.0f]];
-    
-    button1.enabled = [self.challengePost isPostInMyClass];
-    button2.enabled = [self.challengePost isPostInMyClass];
 }
 
 
@@ -1732,8 +1749,16 @@ typedef enum {
                     height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
-                    height = 320.0f;
+                {
+                    if (self.postImage) {
+                        CGFloat ratio = self.postImage.size.height/self.postImage.size.width;
+                        height = self.tableView.frame.size.width * ratio;
+                    }
+                    else {
+                        height = 320.0f;
+                    }
                     break;
+                }
                 case MTPostTableCellTypeSpentSaved:
                     height = 0.0f;
                     break;
@@ -1814,8 +1839,16 @@ typedef enum {
                     height = 57.0f;
                     break;
                 case MTPostTableCellTypeImage:
-                    height = 320.0f;
+                {
+                    if (self.postImage) {
+                        CGFloat ratio = self.postImage.size.height/self.postImage.size.width;
+                        height = self.tableView.frame.size.width * ratio;
+                    }
+                    else {
+                        height = 320.0f;
+                    }
                     break;
+                }
                 case MTPostTableCellTypeSpentSaved:
                     height = 0.0f;
                     break;
@@ -2193,15 +2226,12 @@ typedef enum {
             __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
-            __block MTPostImageTableViewCell *weakCell = imageCell;
-            if (self.challengePost.hasPostImage) {
-                imageCell.postImage.image = [self.challengePost loadPostImageWithSuccess:^(id responseData) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        weakCell.postImage.image = responseData;
-                    });
-                } failure:^(NSError *error) {
-                    NSLog(@"Unable to load post image");
-                }];
+            if (self.postImage) {
+                CGFloat ratio = self.postImage.size.height/self.postImage.size.width;
+                CGFloat height = self.tableView.frame.size.width * ratio;
+
+                CGSize photoSize = CGSizeMake(self.tableView.frame.size.width, height);
+                imageCell.postImage.image = [self imageByScalingAndCroppingForSize:photoSize withImage:self.postImage];
             }
             
             if (self.displaySpentView && self.hasSpentSavedContent) {
@@ -2352,11 +2382,6 @@ typedef enum {
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
             
             [MTPostsTableViewCell layoutEmojiForContainerView:likeCommentCell.emojiContainerView withEmojiArray:self.emojiArray];
-
-            likeCommentCell.verifiedCheckBox.enabled = [self.challengePost isPostInMyClass];
-            likeCommentCell.likePost.enabled = [self.challengePost isPostInMyClass];
-            likeCommentCell.comment.enabled = [self.challengePost isPostInMyClass];
-            likeCommentCell.commentPost.hidden = ![self.challengePost isPostInMyClass];
 
             cell = likeCommentCell;
             

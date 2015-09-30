@@ -21,6 +21,10 @@ static NSString * const reuseIdentifier = @"Cell";
     [super viewDidLoad];
     
     [self.collectionView registerClass:[MTEmojiPickerCollectionViewCell class] forCellWithReuseIdentifier:@"EmojiPickerCollectionViewCell"];
+    
+    if (IsEmpty(self.emojiObjects)) {
+        [self loadEmoji];
+    }
 }
 
 
@@ -75,6 +79,43 @@ static NSString * const reuseIdentifier = @"Cell";
 {
     MTEmojiPickerCollectionViewCell *cell = (MTEmojiPickerCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
     cell.emojiImage.layer.borderWidth = 0.0f;
+}
+
+
+#pragma mark - Private Methods -
+- (void)loadEmoji
+{
+    RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO AND emojiImage != nil"] sortedResultsUsingProperty:@"ranking" ascending:YES];
+    if (!IsEmpty(emojis)) {
+        self.emojiObjects = emojis;
+        [self.collectionView reloadData];
+    }
+    
+    if (IsEmpty(emojis) || [MTUtil shouldRefreshForKey:kRefreshForEmoji]) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Emoji...";
+        hud.dimBackground = YES;
+
+        MTMakeWeakSelf();
+        [[MTNetworkManager sharedMTNetworkManager] loadEmojiWithSuccess:^(id responseData) {
+            [MTUtil setRefreshedForKey:kRefreshForEmoji];
+            
+            RLMResults *emojis = [[MTEmoji objectsWhere:@"isDeleted = NO"] sortedResultsUsingProperty:@"ranking" ascending:YES];
+            weakSelf.emojiObjects = emojis;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                [weakSelf.collectionView reloadData];
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to fetch emojis: %@", [error mtErrorDescription]);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+                [UIAlertView bk_showAlertViewWithTitle:@"Unable to Load Emoji" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                [weakSelf.collectionView reloadData];
+            });
+        }];
+    }
 }
 
 

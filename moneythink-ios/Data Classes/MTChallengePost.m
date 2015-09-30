@@ -15,6 +15,7 @@
              @"hasPostImage": @NO,
              @"extraFields": @"",
              @"content": @"",
+             @"isCrossPost": @NO,
              @"isDeleted": @NO};
 }
 
