@@ -66,6 +66,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [contentTypes addObject:@"application/hal+json"];
     [contentTypes addObject:@"application/api-problem+json"];
     [contentTypes addObject:@"application/problem+json"];
+    [contentTypes addObject:@"text/html"];
     responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
     return responseSerializer;
 }
@@ -212,9 +213,15 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm beginWriteTransaction];
     
     // Create and assign my class (organization created also)
+    if (IsEmpty([embeddedDict objectForKey:@"organization"])) {
+        return nil;
+    }
     MTOrganization *userOrganization = [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"organization"]];
     userOrganization.isDeleted = NO;
     
+    if (IsEmpty([embeddedDict objectForKey:@"class"])) {
+        return nil;
+    }
     MTClass *userClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
     userClass.isDeleted = NO;
     userClass.organization = userOrganization;
@@ -455,10 +462,14 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                    if (IsEmpty(challengeDict)) {
+                        continue;
+                    }
                     
                     // Now create/update challenge
                     MTChallenge *challenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
                     challenge.ranking = thisRanking;
+                    challenge.isPlaylistChallenge = YES;
                     challenge.isDeleted = NO;
                     
                     if ([[challengeDict objectForKey:@"postExtraFieldDefinitions"] isKindOfClass:[NSDictionary class]]) {
@@ -514,6 +525,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id post in postsArray) {
         if ([post isKindOfClass:[NSDictionary class]]) {
             
+            if (IsEmpty(post)) {
+                continue;
+            }
             MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
             challengePost.isDeleted = NO;
             
@@ -525,11 +539,20 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get user
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
+                    
+                    if (IsEmpty(classDict)) {
+                        continue;
+                    }
                     MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
                     thisClass.isDeleted = NO;
                     challengePost.challengeClass = thisClass;
                     
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    
+                    if (IsEmpty(userDict)) {
+                        challengePost.isDeleted = YES;
+                        continue;
+                    }
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
                     thisUser.isDeleted = NO;
                     
@@ -555,9 +578,21 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     challengePost.user = thisUser;
 
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    thisChallenge.isDeleted = NO;
-                    challengePost.challenge = thisChallenge;
+                    
+                    if (IsEmpty(challengeDict)) {
+                        challengePost.isDeleted = YES;
+                        continue;
+                    }
+                    
+                    NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                    if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                        MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                        challengePost.challenge = thisChallenge;
+                    }
+                    else {
+                        challengePost.isDeleted = YES;
+                        continue;
+                    }
                     
                     id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
                     if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
@@ -565,8 +600,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         for (NSDictionary *thisData in extraFieldsArray) {
                             NSString *name = [thisData valueForKey:@"name"];
                             NSString *value = [thisData valueForKey:@"value"];
-                            
-                            if (name && value) {
+                            if (!IsEmpty(name) && !IsEmpty(value)) {
                                 [extraFieldsDict setObject:value forKey:name];
                             }
                         }
@@ -639,6 +673,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id post in postsArray) {
         if ([post isKindOfClass:[NSDictionary class]]) {
             
+            if (IsEmpty(post)) {
+                continue;
+            }
             MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
             challengePost.isDeleted = NO;
             
@@ -650,11 +687,19 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get user
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
+                    
+                    if (IsEmpty(classDict)) {
+                        continue;
+                    }
                     MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
                     thisClass.isDeleted = NO;
                     challengePost.challengeClass = thisClass;
                     
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
+                    
+                    if (IsEmpty(userDict)) {
+                        continue;
+                    }
                     MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
                     thisUser.isDeleted = NO;
                     
@@ -680,9 +725,21 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     challengePost.user = thisUser;
                     
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    thisChallenge.isDeleted = NO;
-                    challengePost.challenge = thisChallenge;
+                    
+                    if (IsEmpty(challengeDict)) {
+                        challengePost.isDeleted = YES;
+                        continue;
+                    }
+                    
+                    NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                    if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                        MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                        challengePost.challenge = thisChallenge;
+                    }
+                    else {
+                        challengePost.isDeleted = YES;
+                        continue;
+                    }
                     
                     id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
                     if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
@@ -690,7 +747,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                         for (NSDictionary *thisData in extraFieldsArray) {
                             NSString *name = [thisData valueForKey:@"name"];
                             NSString *value = [thisData valueForKey:@"value"];
-                            if (!IsEmpty(value)) {
+                            if (!IsEmpty(name) && !IsEmpty(value)) {
                                 [extraFieldsDict setObject:value forKey:name];
                             }
                         }
@@ -755,47 +812,66 @@ static NSString * const MTRefreshingErrorCode = @"701";
         // Get user
         if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
             NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
-            MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
-            thisClass.isDeleted = NO;
-            challengePost.challengeClass = thisClass;
+            MTClass *thisClass = nil;
+            
+            if (!IsEmpty(classDict)) {
+                MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+                thisClass.isDeleted = NO;
+                challengePost.challengeClass = thisClass;
+            }
             
             NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
-            MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-            thisUser.isDeleted = NO;
             
-            if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
-                NSDictionary *linksDict = [userDict objectForKey:@"_links"];
-                if ([linksDict objectForKey:@"avatar"]) {
-                    thisUser.hasAvatar = YES;
+            if (!IsEmpty(userDict)) {
+                MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                thisUser.isDeleted = NO;
+                
+                if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                    NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                    if ([linksDict objectForKey:@"avatar"]) {
+                        thisUser.hasAvatar = YES;
+                    }
+                    else {
+                        thisUser.hasAvatar = NO;
+                    }
                 }
-                else {
-                    thisUser.hasAvatar = NO;
+                
+                // Make sure my ID is not overwritten with missing data (class/org) from feed
+                if ([MTUser isUserMe:thisUser]) {
+                    thisUser.userClass = myClass;
+                    thisUser.organization = myOrganization;
                 }
+                else if (thisClass) {
+                    thisUser.userClass = thisClass;
+                }
+                
+                challengePost.user = thisUser;
             }
-            
-            // Make sure my ID is not overwritten with missing data (class/org) from feed
-            if ([MTUser isUserMe:thisUser]) {
-                thisUser.userClass = myClass;
-                thisUser.organization = myOrganization;
-            }
-            else if (thisClass) {
-                thisUser.userClass = thisClass;
-            }
-            
-            challengePost.user = thisUser;
             
             NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-            MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-            thisChallenge.isDeleted = NO;
-            challengePost.challenge = thisChallenge;
             
+            if (IsEmpty(challengeDict)) {
+                challengePost.isDeleted = YES;
+            }
+            
+            NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+            if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                challengePost.challenge = thisChallenge;
+            }
+            else {
+                challengePost.isDeleted = YES;
+            }
+
             id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
             if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
                 NSMutableDictionary *extraFieldsDict = [NSMutableDictionary dictionary];
                 for (NSDictionary *thisData in extraFieldsArray) {
                     NSString *name = [thisData valueForKey:@"name"];
                     NSString *value = [thisData valueForKey:@"value"];
-                    [extraFieldsDict setObject:value forKey:name];
+                    if (!IsEmpty(name) && !IsEmpty(value)) {
+                        [extraFieldsDict setObject:value forKey:name];
+                    }
                 }
                 if (!IsEmpty(extraFieldsDict)) {
                     NSError *error;
@@ -871,6 +947,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id comment in commentsArray) {
         if ([comment isKindOfClass:[NSDictionary class]]) {
             
+            if (IsEmpty(comment)) {
+                continue;
+            }
             MTChallengePostComment *challengePostComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:comment];
             challengePostComment.isDeleted = NO;
             
@@ -882,25 +961,31 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get user
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
-                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    thisUser.isDeleted = NO;
                     
-                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
-                        if ([linksDict objectForKey:@"avatar"]) {
-                            thisUser.hasAvatar = YES;
+                    if (!IsEmpty(userDict)) {
+                        MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                        thisUser.isDeleted = NO;
+                        
+                        if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                            NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                            if ([linksDict objectForKey:@"avatar"]) {
+                                thisUser.hasAvatar = YES;
+                            }
+                            else {
+                                thisUser.hasAvatar = NO;
+                            }
                         }
-                        else {
-                            thisUser.hasAvatar = NO;
-                        }
+                        
+                        challengePostComment.user = thisUser;
                     }
-
-                    challengePostComment.user = thisUser;
                     
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
-                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
-                    thisChallengePost.isDeleted = NO;
-                    challengePostComment.challengePost = thisChallengePost;
+                    
+                    if (!IsEmpty(challengePostDict)) {
+                        MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                        thisChallengePost.isDeleted = NO;
+                        challengePostComment.challengePost = thisChallengePost;
+                    }
                 }
             }
         }
@@ -953,6 +1038,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 }
             }
             
+            if (IsEmpty(emoji)) {
+                continue;
+            }
             MTEmoji *emojiObject = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emoji];
             emojiObject.isDeleted = NO;
             
@@ -1022,6 +1110,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id like in likesArray) {
         if ([like isKindOfClass:[NSDictionary class]]) {
             
+            if (IsEmpty(like)) {
+                continue;
+            }
             MTChallengePostLike *challengePostLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:like];
             challengePostLike.isDeleted = NO;
             
@@ -1033,34 +1124,41 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get embedded data
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
-                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
                     
-                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
-                        if ([linksDict objectForKey:@"avatar"]) {
-                            thisUser.hasAvatar = YES;
+                    if (!IsEmpty(userDict)) {
+                        MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                        
+                        if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                            NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                            if ([linksDict objectForKey:@"avatar"]) {
+                                thisUser.hasAvatar = YES;
+                            }
+                            else {
+                                thisUser.hasAvatar = NO;
+                            }
                         }
-                        else {
-                            thisUser.hasAvatar = NO;
-                        }
+                        
+                        thisUser.isDeleted = NO;
+                        challengePostLike.user = thisUser;
                     }
-
-                    thisUser.isDeleted = NO;
-                    challengePostLike.user = thisUser;
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
-                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
-                    thisChallengePost.isDeleted = NO;
-                    challengePostLike.challengePost = thisChallengePost;
+                    if (!IsEmpty(challengePostDict)) {
+                        MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                        thisChallengePost.isDeleted = NO;
+                        challengePostLike.challengePost = thisChallengePost;
+                    }
                 }
 
                 if ([[innerEmbeddedDict objectForKey:@"emoji"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *emojiDict = [innerEmbeddedDict objectForKey:@"emoji"];
-                    MTEmoji *thisEmoji = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emojiDict];
-                    thisEmoji.isDeleted = NO;
-                    challengePostLike.emoji = thisEmoji;
+                    if (!IsEmpty(emojiDict)) {
+                        MTEmoji *thisEmoji = [MTEmoji createOrUpdateInRealm:realm withJSONDictionary:emojiDict];
+                        thisEmoji.isDeleted = NO;
+                        challengePostLike.emoji = thisEmoji;
+                    }
                 }
             }
         }
@@ -1099,6 +1197,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     for (id button in buttonsArray) {
         if ([button isKindOfClass:[NSDictionary class]]) {
+            
+            if (IsEmpty(button)) {
+                continue;
+            }
             MTChallengeButton *challengeButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:button];
             challengeButton.isDeleted = NO;
             
@@ -1117,9 +1219,22 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    thisChallenge.isDeleted = NO;
-                    challengeButton.challenge = thisChallenge;
+                    if (!IsEmpty(challengeDict)) {
+                        
+                        NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                        if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                            MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                            challengeButton.challenge = thisChallenge;
+                        }
+                        else {
+                            challengeButton.isDeleted = YES;
+                            continue;
+                        }
+                    }
+                    else {
+                        challengeButton.isDeleted = YES;
+                        continue;
+                    }
                 }
             }
         }
@@ -1170,6 +1285,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     for (id buttonClick in buttonClicksArray) {
         if ([buttonClick isKindOfClass:[NSDictionary class]]) {
+            
+            if (IsEmpty(buttonClick)) {
+                continue;
+            }
             MTChallengeButtonClick *challengeButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:buttonClick];
             challengeButtonClick.isDeleted = NO;
             
@@ -1181,23 +1300,29 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get embedded data
                 if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
-                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    thisUser.isDeleted = NO;
-                    challengeButtonClick.user = thisUser;
+                    if (!IsEmpty(userDict)) {
+                        MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                        thisUser.isDeleted = NO;
+                        challengeButtonClick.user = thisUser;
+                    }
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"post"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengePostDict = [innerEmbeddedDict objectForKey:@"post"];
-                    MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
-                    thisChallengePost.isDeleted = NO;
-                    challengeButtonClick.challengePost = thisChallengePost;
+                    if (!IsEmpty(challengePostDict)) {
+                        MTChallengePost *thisChallengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:challengePostDict];
+                        thisChallengePost.isDeleted = NO;
+                        challengeButtonClick.challengePost = thisChallengePost;
+                    }
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"button"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *buttonDict = [innerEmbeddedDict objectForKey:@"button"];
-                    MTChallengeButton *thisButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:buttonDict];
-                    thisButton.isDeleted = NO;
-                    challengeButtonClick.challengeButton = thisButton;
+                    if (!IsEmpty(buttonDict)) {
+                        MTChallengeButton *thisButton = [MTChallengeButton createOrUpdateInRealm:realm withJSONDictionary:buttonDict];
+                        thisButton.isDeleted = NO;
+                        challengeButtonClick.challengeButton = thisButton;
+                    }
                 }
             }
         }
@@ -1235,6 +1360,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     
     for (id progress in studentChallengesArray) {
         if ([progress isKindOfClass:[NSDictionary class]]) {
+            
+            if (IsEmpty(progress)) {
+                continue;
+            }
             MTChallengeProgress *challengeProgress = [MTChallengeProgress createOrUpdateInRealm:realm withJSONDictionary:progress];
             challengeProgress.isDeleted = NO;
             challengeProgress.user = [MTUser currentUser];
@@ -1247,9 +1376,21 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get embedded data
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    thisChallenge.isDeleted = NO;
-                    challengeProgress.challenge = thisChallenge;
+                    if (!IsEmpty(challengeDict)) {
+                        NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                        if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                            MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                            challengeProgress.challenge = thisChallenge;
+                        }
+                        else {
+                            challengeProgress.isDeleted = YES;
+                            continue;
+                        }
+                    }
+                    else {
+                        challengeProgress.isDeleted = YES;
+                        continue;
+                    }
                 }
             }
         }
@@ -1284,7 +1425,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm beginWriteTransaction];
     
     for (id notification in notificationsArray) {
-        if ([notification isKindOfClass:[NSDictionary class]]) {
+        if ([notification isKindOfClass:[NSDictionary class]] && !IsEmpty(notification)) {
             MTNotification *thisNotification = [MTNotification createOrUpdateInRealm:realm withJSONDictionary:notification];
             thisNotification.isDeleted = NO;
             
@@ -1293,9 +1434,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
             // Related Comment
             if ([[notificationDict objectForKey:@"relatedComment"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *relatedCommentDict = [notificationDict objectForKey:@"relatedComment"];
-                MTChallengePostComment *relatedComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:relatedCommentDict];
-                relatedComment.isDeleted = NO;
-                thisNotification.relatedComment = relatedComment;
+                if (!IsEmpty(relatedCommentDict)) {
+                    MTChallengePostComment *relatedComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:relatedCommentDict];
+                    relatedComment.isDeleted = NO;
+                    thisNotification.relatedComment = relatedComment;
+                }
             }
 
             if ([[notificationDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
@@ -1305,34 +1448,46 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 // Get embedded data, related data
                 if ([[innerEmbeddedDict objectForKey:@"relatedChallenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"relatedChallenge"];
-                    MTChallenge *thisChallenge = [MTChallenge createOrUpdateInRealm:realm withJSONDictionary:challengeDict];
-                    thisChallenge.isDeleted = NO;
-                    thisNotification.relatedChallenge = thisChallenge;
+                    if (!IsEmpty(challengeDict)) {
+                        NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                        if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                            MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                            thisNotification.relatedChallenge = thisChallenge;
+                        }
+                        else {
+                            thisNotification.isDeleted = YES;
+                            continue;
+                        }
+                    }
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"relatedPost"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *postDict = [innerEmbeddedDict objectForKey:@"relatedPost"];
-                    MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
-                    thisPost.isDeleted = NO;
-                    thisNotification.relatedPost = thisPost;
+                    if (!IsEmpty(postDict)) {
+                        MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
+                        thisPost.isDeleted = NO;
+                        thisNotification.relatedPost = thisPost;
+                    }
                 }
                 
                 if ([[innerEmbeddedDict objectForKey:@"relatedUser"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"relatedUser"];
-                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    
-                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
-                        if ([linksDict objectForKey:@"avatar"]) {
-                            thisUser.hasAvatar = YES;
+                    if (!IsEmpty(userDict)) {
+                        MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
+                        
+                        if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                            NSDictionary *linksDict = [userDict objectForKey:@"_links"];
+                            if ([linksDict objectForKey:@"avatar"]) {
+                                thisUser.hasAvatar = YES;
+                            }
+                            else {
+                                thisUser.hasAvatar = NO;
+                            }
                         }
-                        else {
-                            thisUser.hasAvatar = NO;
-                        }
+                        
+                        thisUser.isDeleted = NO;
+                        thisNotification.relatedUser = thisUser;
                     }
-
-                    thisUser.isDeleted = NO;
-                    thisNotification.relatedUser = thisUser;
                 }
             }
         }
@@ -1371,6 +1526,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
             
             NSDictionary *userDict = (NSDictionary *)user;
             
+            if (IsEmpty(userDict)) {
+                continue;
+            }
             MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
             thisUser.isDeleted = NO;
             thisUser.organization = [MTUser currentUser].organization;
@@ -1435,6 +1593,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     for (id post in postsArray) {
         if ([post isKindOfClass:[NSDictionary class]]) {
             NSDictionary *postDict = (NSDictionary *)post;
+            if (IsEmpty(postDict)) {
+                continue;
+            }
             MTChallengePost *thisPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:postDict];
             thisPost.isDeleted = NO;
             thisPost.user = thisUser;
@@ -2059,6 +2220,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
         NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
         [contentTypes addObject:@"image/jpeg"];
+        [contentTypes addObject:@"image/png"];
         responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
         manager.responseSerializer = responseSerializer;
         
@@ -2618,6 +2780,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
         NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
         [contentTypes addObject:@"image/jpeg"];
+        [contentTypes addObject:@"image/png"];
         responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
         manager.responseSerializer = responseSerializer;
         
@@ -2775,7 +2938,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"createPostForChallengeId success response");
             
-            if (responseObject) {
+            if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePost *newPost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:responseObject];
@@ -3220,7 +3383,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"createCommentForPostId success response");
             
-            if (responseObject) {
+            if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostComment *newComment = [MTChallengePostComment createOrUpdateInRealm:realm withJSONDictionary:responseObject];
@@ -3555,7 +3718,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"addLikeForPostId success response");
             
-            if (responseObject) {
+            if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostLike *newLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
@@ -3612,7 +3775,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateLikeId success response");
             
-            if (responseObject) {
+            if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengePostLike *updatedLike = [MTChallengePostLike createOrUpdateInRealm:realm withJSONDictionary:responseObject];
@@ -3732,7 +3895,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"addButtonClickForPostId success response");
             
-            if (responseObject) {
+            if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
                 [realm beginWriteTransaction];
                 MTChallengeButtonClick *newButtonClick = [MTChallengeButtonClick createOrUpdateInRealm:realm withJSONDictionary:responseObject];

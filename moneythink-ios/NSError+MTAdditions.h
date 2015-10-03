@@ -14,6 +14,7 @@ FOUNDATION_EXPORT NSString *const MTErrorDomain;
 
 - (NSString *)mtErrorDescription;
 - (NSInteger)mtErrorCode;
+- (NSString *)mtErrorDetail;
 - (NSString *)firstValidationMessage;
 - (NSString *)detailMessage;
 

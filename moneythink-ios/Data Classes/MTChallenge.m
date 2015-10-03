@@ -27,6 +27,7 @@
              @"postExtraFields": @"",
              @"title": @"",
              @"rewardsInfo": @"",
+             @"isPlaylistChallenge": @NO,
              @"isDeleted": @NO};
 }
 

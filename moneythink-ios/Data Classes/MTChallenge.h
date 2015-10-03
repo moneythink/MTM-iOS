@@ -30,6 +30,7 @@
 @property NSDate *updatedAt;
 @property NSString *postExtraFields;
 @property NSString *rewardsInfo;
+@property BOOL isPlaylistChallenge;
 @property BOOL isDeleted;
 
 + (void)markAllDeleted;

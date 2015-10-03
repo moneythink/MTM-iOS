@@ -40,6 +40,8 @@
     self.spentView.hidden = YES;
     self.spentLabel.text = @"";
     self.savedLabel.text = @"";
+    self.profileImage.image = nil;
+    self.postImage.image = nil;
 
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateNormal];
     [self.likeButton setImage:[UIImage imageNamed:@"like_normal"] forState:UIControlStateDisabled];

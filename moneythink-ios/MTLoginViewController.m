@@ -294,7 +294,7 @@
     // This is an upgrade installation from 2.0.x to 2.1 (new API sans Parse)
     //  Display alert instructions to user
     NSString *title = @"Moneythink Alert";
-    NSString *messageToDisplay = @"You have upgraded to the new Moneythink release, please Login to continue use.";
+    NSString *messageToDisplay = @"Moneythink has been updated. As part of this update, we need to log you out. Don't worry, none of your data will be lost. Please log in again.";
     
     if ([UIAlertController class]) {
         UIAlertController *alertController = [UIAlertController
@@ -518,7 +518,11 @@
                 } failure:^(NSError *error) {
                     NSString *title = @"Email Request Failed";
                     NSString *detailMessage = [error firstValidationMessage];
-                    if (!detailMessage) {
+                    
+                    if ([error mtErrorCode] == 404) {
+                        detailMessage = [error mtErrorDetail];
+                    }
+                    else if (!detailMessage) {
                         detailMessage = [error mtErrorDescription];
                     }
                     
