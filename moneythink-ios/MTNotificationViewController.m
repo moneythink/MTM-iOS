@@ -64,6 +64,8 @@
 
     [self.markAllReadButtonItem setTarget:self];
     [self.markAllReadButtonItem setAction:@selector(markAllRead)];
+    
+    self.markAllReadButtonItem.enabled = (((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount > 0);
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -333,10 +335,22 @@
     }
     else if ([notificationType isEqualToString:kNotificationVerifyPost]) {
         if (!IsEmpty(notificationMessage)) {
-            cell.messageTextView.text = notificationMessage;
+            MTChallenge *challenge = notification.relatedChallenge;
+            if (!IsEmpty(challenge.title)) {
+                cell.messageTextView.text = [NSString stringWithFormat:@"%@ (%@)", notificationMessage, challenge.title];
+            }
+            else {
+                cell.messageTextView.text = notificationMessage;
+            }
         }
         else {
-            cell.messageTextView.text = @"Your class has posts that need verification!";
+            MTChallenge *challenge = notification.relatedChallenge;
+            if (!IsEmpty(challenge.title)) {
+                cell.messageTextView.text = [NSString stringWithFormat:@"Your class has posts that need verification! (%@)", challenge.title];
+            }
+            else {
+                cell.messageTextView.text = @"Your class has posts that need verification!";
+            }
         }
 
     }
@@ -553,6 +567,8 @@
     [[MTNetworkManager sharedMTNetworkManager] markAllNotificationsReadWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.hud hide:YES];
+            weakSelf.markAllReadButtonItem.enabled = NO;
+
             [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
         });
     } failure:^(NSError *error) {
@@ -590,7 +606,8 @@
     }
     
     ((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount = currentCount;
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kUnreadNotificationCountNotification object:[NSNumber numberWithInteger:currentCount]];
+
     [[MTNetworkManager sharedMTNetworkManager] markReadForNotificationId:notification.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MTNotificationViewController requestNotificationUnreadCountUpdateUsingCache:NO];
@@ -635,6 +652,8 @@
     
     BBBadgeBarButtonItem *barButton = (BBBadgeBarButtonItem *)self.navigationItem.leftBarButtonItem;
     barButton.badgeValue = [NSString stringWithFormat:@"%ld", (long)[count integerValue]];
+    
+    self.markAllReadButtonItem.enabled = ((long)[count integerValue] > 0);
     [self.tableView reloadData];
 }
 

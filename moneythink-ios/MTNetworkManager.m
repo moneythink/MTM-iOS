@@ -3820,7 +3820,8 @@ static NSString * const MTRefreshingErrorCode = @"701";
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = @"999";
-        
+        parameters[@"class_id"] = [NSNumber numberWithInteger:[MTUser currentUser].userClass.id];
+
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"buttons" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadButtonsWithSuccess success response");

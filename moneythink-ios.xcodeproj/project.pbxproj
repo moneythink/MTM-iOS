@@ -176,6 +176,7 @@
 		89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */; };
 		89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */; };
 		89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */; };
+		89AB9C311BC304DC001AFC88 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89AB9C301BC304DC001AFC88 /* BBBadgeBarButtonItem.m */; settings = {ASSET_TAGS = (); }; };
 		89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */; };
 		89C3E80F1B15468D0084EA48 /* nav-icons-dashboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */; };
 		89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */; };
@@ -479,6 +480,8 @@
 		89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OnboardingViewController.m; sourceTree = "<group>"; };
 		89A793C41B2F2C80000BFA40 /* MTOnboardingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOnboardingController.h; sourceTree = "<group>"; };
 		89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOnboardingController.m; sourceTree = "<group>"; };
+		89AB9C2F1BC304DC001AFC88 /* BBBadgeBarButtonItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BBBadgeBarButtonItem.h; sourceTree = "<group>"; };
+		89AB9C301BC304DC001AFC88 /* BBBadgeBarButtonItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BBBadgeBarButtonItem.m; sourceTree = "<group>"; };
 		89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard.png"; sourceTree = "<group>"; };
 		89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "nav-icons-dashboard@2x.png"; sourceTree = "<group>"; };
 		89C3E8111B1547B10084EA48 /* MTMenuTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuTableViewCell.h; sourceTree = "<group>"; };
@@ -599,6 +602,7 @@
 			isa = PBXGroup;
 			children = (
 				89758EA31B4F204D002B73E3 /* AFOAuth2Manager */,
+				89AB9C2E1BC304DC001AFC88 /* BBBadgeBarButtonItem */,
 				1063098B1A3A3DD80093C209 /* MICheckboxUtils */,
 				89A793BC1B2F25CA000BFA40 /* Onboard */,
 				892594301B73EC7E00B40E06 /* Realm+JSON */,
@@ -1109,6 +1113,15 @@
 			path = Onboard;
 			sourceTree = "<group>";
 		};
+		89AB9C2E1BC304DC001AFC88 /* BBBadgeBarButtonItem */ = {
+			isa = PBXGroup;
+			children = (
+				89AB9C2F1BC304DC001AFC88 /* BBBadgeBarButtonItem.h */,
+				89AB9C301BC304DC001AFC88 /* BBBadgeBarButtonItem.m */,
+			);
+			path = BBBadgeBarButtonItem;
+			sourceTree = "<group>";
+		};
 		89C3E8101B1547680084EA48 /* Menu */ = {
 			isa = PBXGroup;
 			children = (
@@ -1475,6 +1488,7 @@
 				892594411B73EC7E00B40E06 /* RLMObject+Copying.m in Sources */,
 				89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
+				89AB9C311BC304DC001AFC88 /* BBBadgeBarButtonItem.m in Sources */,
 				8952510F1B1A667E008068C6 /* MTChallengeListTableViewCell.m in Sources */,
 				106309981A3A3DD80093C209 /* MICheckBox.m in Sources */,
 				895F78B31B167C4B00055759 /* MTLeaderboardViewController.m in Sources */,
@@ -1677,7 +1691,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "b28b1504-722c-462b-9d47-974ffb65c547";
+				PROVISIONING_PROFILE = "de831839-93e5-4366-9bc0-aefb0253277a";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1760,7 +1774,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e3af9ba8-b57e-49b0-8860-d1a05d5b6825";
+				PROVISIONING_PROFILE = "9809eb97-64a1-45c4-84f9-5326cd7aafae";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1842,7 +1856,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e3af9ba8-b57e-49b0-8860-d1a05d5b6825";
+				PROVISIONING_PROFILE = "9809eb97-64a1-45c4-84f9-5326cd7aafae";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1924,7 +1938,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "b28b1504-722c-462b-9d47-974ffb65c547";
+				PROVISIONING_PROFILE = "de831839-93e5-4366-9bc0-aefb0253277a";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};

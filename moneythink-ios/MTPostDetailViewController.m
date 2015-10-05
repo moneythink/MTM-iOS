@@ -213,8 +213,11 @@ typedef enum {
     [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePost.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.loadedComments = YES;
-            weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-            [weakSelf.tableView reloadData];
+            
+            if (!weakSelf.challengePost.isInvalidated) {
+                weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+                [weakSelf.tableView reloadData];
+            }
             
             if (weakSelf.loadedLikes) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -249,18 +252,21 @@ typedef enum {
     [[MTNetworkManager sharedMTNetworkManager] loadLikesForPostId:self.challengePost.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.loadedLikes = YES;
-            weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id];
             
-            NSMutableArray *emojiArray = [NSMutableArray array];
-            for (MTChallengePostLike *thisLike in weakSelf.likes) {
-                MTEmoji *thisEmoji = thisLike.emoji;
-                if (thisEmoji) {
-                    [emojiArray addObject:thisEmoji];
+            if (!weakSelf.challengePost.isInvalidated) {
+                weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id];
+                
+                NSMutableArray *emojiArray = [NSMutableArray array];
+                for (MTChallengePostLike *thisLike in weakSelf.likes) {
+                    MTEmoji *thisEmoji = thisLike.emoji;
+                    if (thisEmoji) {
+                        [emojiArray addObject:thisEmoji];
+                    }
                 }
+                
+                weakSelf.emojiArray = emojiArray;
+                [weakSelf.tableView reloadData];
             }
-            
-            weakSelf.emojiArray = emojiArray;
-            [weakSelf.tableView reloadData];
             
             if (weakSelf.loadedComments) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -2223,7 +2229,7 @@ typedef enum {
         }
         case MTPostTableCellTypeImage:
         {
-            __block MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
+            MTPostImageTableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:@"PostImageCell" forIndexPath:indexPath];
             imageCell.selectionStyle = UITableViewCellSelectionStyleNone;
             
             if (self.postImage) {

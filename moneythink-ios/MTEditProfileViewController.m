@@ -133,19 +133,29 @@
     
     self.userProfileButton.imageView.layer.cornerRadius = round(self.userProfileButton.imageView.frame.size.width / 2.0f);
     self.userProfileButton.imageView.layer.masksToBounds = YES;
-    
     self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-
-    if (self.userCurrent.userAvatar) {
+    
+    MTMakeWeakSelf();
+    UIImage *profileImage = [[MTUser currentUser] loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf.userProfileButton setImage:responseData forState:UIControlStateNormal];
+            if (profileImage) {
+                weakSelf.profileImageLabel.text = @"Change Photo";
+            }
+            else {
+                weakSelf.profileImageLabel.text = @"Add Photo";
+            }
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
+    }];
+    
+    [self.userProfileButton setImage:profileImage forState:UIControlStateNormal];
+    if (profileImage) {
         self.profileImageLabel.text = @"Change Photo";
-
-        self.userProfileButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        UIImage *profileImage = [UIImage imageWithData:self.userCurrent.userAvatar.imageData];
-        [self.userProfileButton setImage:profileImage forState:UIControlStateNormal];
     }
     else {
         self.profileImageLabel.text = @"Add Photo";
-        [self.userProfileButton setImage:[UIImage imageNamed:@"profile_image.png"] forState:UIControlStateNormal];
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
@@ -474,6 +484,7 @@
 - (IBAction)cancelChanges:(id)sender
 {
     BOOL dirty = NO;
+    dirty = [self haveUpdatedUserInfoToSave];
     
     if (self.updatedProfileImage) {
         dirty = YES;
@@ -483,9 +494,7 @@
             dirty = YES;
         }
     }
-    
-    dirty = [self haveUpdatedUserInfoToSave];
-    
+
     if (dirty) {
         if ([UIAlertController class]) {
             UIAlertController *saveSheet = [UIAlertController

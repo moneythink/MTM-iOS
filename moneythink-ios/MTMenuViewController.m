@@ -350,12 +350,16 @@
 {
     self.profileImage.layer.cornerRadius = self.profileImage.frame.size.width/2.0f;
     self.profileImage.layer.masksToBounds = YES;
-    if ([MTUser currentUser].userAvatar) {
-        self.profileImage.image = [UIImage imageWithData:[MTUser currentUser].userAvatar.imageData];
-    }
-    else {
-        self.profileImage.image = [UIImage imageNamed:@"profile_image.png"];
-    }
+    self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
+    
+    __block UIImageView *weakImageView = self.profileImage;
+    self.profileImage.image = [[MTUser currentUser] loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakImageView.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
+    }];
 }
 
 

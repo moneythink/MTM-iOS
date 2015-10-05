@@ -9,7 +9,6 @@ target 'moneythink-ios' do
   pod 'ZendeskSDK'
   pod 'Realm'
   pod "AFNetworking", "~> 2.0"
-  pod 'BBBadgeBarButtonItem'
   pod 'JGActionSheet'
   pod 'MBProgressHUD'
   pod 'Parse'
