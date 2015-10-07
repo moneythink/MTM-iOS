@@ -853,7 +853,7 @@
             }
             else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    [weakSelf displaySavedConfirmation];
                 });
             }
         } failure:^(NSError *error) {
@@ -881,7 +881,7 @@
                 }
                 else {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                        [weakSelf displaySavedConfirmation];
                     });
                 }
             } failure:^(NSError *error) {
@@ -917,7 +917,7 @@
                                                                       classId:classId
                                                                       success:^(id responseData) {
                                                                           dispatch_async(dispatch_get_main_queue(), ^{
-                                                                              [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                                                              [weakSelf displaySavedConfirmation];
                                                                               
                                                                               weakSelf.organizationsDict = nil;
                                                                               weakSelf.classesDict = nil;
@@ -944,6 +944,15 @@
                                                                               [weakSelf updateViewForCurrentUser];
                                                                           });
                                                                       }];
+}
+
+- (void)displaySavedConfirmation
+{
+    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
+    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Saved!";
+    hud.mode = MBProgressHUDModeText;
+    [hud hide:YES afterDelay:1.0f];
 }
 
 - (void)dismiss

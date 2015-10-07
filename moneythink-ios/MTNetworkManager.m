@@ -3023,7 +3023,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData hadImage:(BOOL)hadImage extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -3036,9 +3036,6 @@ static NSString * const MTRefreshingErrorCode = @"701";
         if (!IsEmpty(extraFields)) {
             parameters[@"extraFieldValues"] = extraFields;
         }
-        
-        MTChallengePost *oldPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
-        BOOL hadImage = oldPost.hasPostImage;
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {

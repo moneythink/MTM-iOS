@@ -17,7 +17,7 @@ extern NSString *const kDidTapChallengeButtonNotification;
 extern NSString *const kSavedMyClassChallengePostNotification;
 extern NSString *const kFailedMyClassChallengePostNotification;
 extern NSString *const kFailedMyClassChallengePostCommentNotification;
-extern NSString *const kFailedMyClassChallengePostCommentEditNotification;
+extern NSString *const kFailedChallengePostCommentEditNotification;
 extern NSString *const kWillSaveNewPostCommentNotification;
 extern NSString *const kWillSaveEditPostCommentNotification;
 extern NSString *const kDidSaveNewPostCommentNotification;

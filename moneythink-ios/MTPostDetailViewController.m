@@ -55,6 +55,7 @@ typedef enum {
 @property (nonatomic) BOOL loadedComments;
 @property (nonatomic) BOOL loadedLikes;
 @property (nonatomic, strong) UIImage *postImage;
+@property (nonatomic) BOOL savingEdit;
 
 @end
 
@@ -71,6 +72,8 @@ typedef enum {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewPostComment:) name:kWillSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeletePostComment:) name:kDidDeletePostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPostComment:) name:kWillSaveEditPostCommentNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentEditFailed) name:kFailedChallengePostCommentEditNotification object:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -90,7 +93,7 @@ typedef enum {
         [self.tableView reloadData];
         [self loadFromNotification];
     }
-    else {
+    else if (!self.savingEdit) {
         self.displaySpentView = !IsEmpty(self.challenge.postExtraFields);
         if (self.displaySpentView) {
             [self parseSpentFields];
@@ -2519,18 +2522,12 @@ typedef enum {
 #pragma mark - NSNotification Methods -
 - (void)willSaveNewPostComment:(NSNotification *)notif
 {
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-//        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-//        hud.labelText = @"Saving New Comment...";
-//        hud.dimBackground = NO;
-//    });
 }
 
 - (void)didSaveNewPostComment:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-//        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        self.savingEdit = NO;
         [self loadCommentsOnlyDatabase:YES];
         [self.tableView reloadData];
     });
@@ -2548,52 +2545,60 @@ typedef enum {
 - (void)willSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Saving...";
-        hud.dimBackground = NO;
+        self.savingEdit = YES;
+        [self updateViewForEditedPost];
     });
 }
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        self.savingEdit = NO;
+        [self updateViewForEditedPost];
+    });
+}
 
-        NSNumber *postId = [NSNumber numberWithInteger:self.challengePost.id];
-        MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
-        
-        if (editedPost) {
-            self.challengePost = editedPost;
+- (void)updateViewForEditedPost
+{
+    NSNumber *postId = [NSNumber numberWithInteger:self.challengePost.id];
+    MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
+    
+    if (editedPost) {
+        self.challengePost = editedPost;
+        if (self.displaySpentView) {
             [self parseSpentFields];
         }
-        
-        BOOL myPost = NO;
-        if ([MTUser isUserMe:self.postUser]) {
-            myPost = YES;
-        }
-        
-        BOOL showButtons = NO;
-        if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
-            showButtons = YES;
-        }
-        
-        if (showButtons && self.challengePost.hasPostImage)
-            self.postType = MTPostTypeWithButtonsWithImage;
-        else if (showButtons)
-            self.postType = MTPostTypeWithButtonsNoImage;
-        else if (self.challengePost.hasPostImage)
-            self.postType = MTPostTypeNoButtonsWithImage;
-        else
-            self.postType = MTPostTypeNoButtonsNoImage;
-        
-        [self.tableView reloadData];
-    });
+        [self loadPostText];
+        [self loadPostImage];
+    }
+    
+    BOOL myPost = NO;
+    if ([MTUser isUserMe:self.postUser]) {
+        myPost = YES;
+    }
+    
+    BOOL showButtons = NO;
+    if (self.hasButtons || (self.hasSecondaryButtons && myPost) || self.hasTertiaryButtons) {
+        showButtons = YES;
+    }
+    
+    if (showButtons && self.challengePost.hasPostImage)
+        self.postType = MTPostTypeWithButtonsWithImage;
+    else if (showButtons)
+        self.postType = MTPostTypeWithButtonsNoImage;
+    else if (self.challengePost.hasPostImage)
+        self.postType = MTPostTypeNoButtonsWithImage;
+    else
+        self.postType = MTPostTypeNoButtonsNoImage;
+    
+    [self.tableView reloadData];
 }
 
 - (void)failedSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
+        self.savingEdit = NO;
+
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
         
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -2601,6 +2606,26 @@ typedef enum {
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeText;
         [hud hide:YES afterDelay:1.5f];
+        
+        [self updateViewForEditedPost];
+    });
+}
+
+- (void)willSaveEditPostComment:(NSNotification *)notif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.savingEdit = YES;
+        [self loadCommentsOnlyDatabase:YES];
+        [self updateViewForEditedPost];
+    });
+}
+
+- (void)commentEditFailed
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.savingEdit = NO;
+        [self loadCommentsOnlyDatabase:YES];
+        [self updateViewForEditedPost];
     });
 }
 

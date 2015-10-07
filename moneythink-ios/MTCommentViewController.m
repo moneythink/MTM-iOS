@@ -70,22 +70,22 @@
             return;
         }
 
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        
-        NSString *labelString = @"Posting Comment...";
         if (self.editComment) {
-            labelString = @"Updating Comment...";
-        }
-        hud.labelText = labelString;
-        hud.dimBackground = YES;
-        
-        if (self.editComment) {
+            // Proactively, update DB
+            __block NSInteger oldCommentId = self.challengePostComment.id;
+            __block NSString *oldContent = self.challengePostComment.content;
+            __block NSDate *oldUpdatedAt = self.challengePostComment.updatedAt;
+            
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            self.challengePostComment.content = self.postText.text;
+            [realm commitWriteTransaction];
+
             [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostCommentNotification object:nil];
 
             [[MTNetworkManager sharedMTNetworkManager] updateCommentId:self.challengePostComment.id content:self.postText.text success:^(id responseData) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveNewPostCommentNotification object:nil];
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
                 });
                 
                 [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -95,12 +95,26 @@
                 NSLog(@"Edit comment error - %@", [error mtErrorDescription]);
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedMyClassChallengePostCommentEditNotification object:nil];
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                    MTChallengePostComment *comment = [MTChallengePostComment objectForPrimaryKey:[NSNumber numberWithInteger:oldCommentId]];
+                    if (comment && !comment.isInvalidated) {
+                        RLMRealm *realm = [RLMRealm defaultRealm];
+                        [realm beginWriteTransaction];
+                        comment.content = oldContent;
+                        comment.updatedAt = oldUpdatedAt;
+                        [realm commitWriteTransaction];
+                    }
+
+                    [[NSNotificationCenter defaultCenter] postNotificationName:kFailedChallengePostCommentEditNotification object:nil];
                 });
             }];
         }
         else {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            
+            NSString *labelString = @"Posting Comment...";
+            hud.labelText = labelString;
+            hud.dimBackground = YES;
+
             [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveNewPostCommentNotification object:nil];
 
             [[MTNetworkManager sharedMTNetworkManager] createCommentForPostId:self.post.id content:self.postText.text success:^(id responseData) {

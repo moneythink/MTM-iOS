@@ -18,7 +18,7 @@ NSString *const kDidTapChallengeButtonNotification = @"kDidTapChallengeButtonNot
 NSString *const kSavedMyClassChallengePostNotification = @"kSavedMyClassChallengePostNotification";
 NSString *const kFailedMyClassChallengePostNotification = @"kFailedMyClassChallengePostNotification";
 NSString *const kFailedMyClassChallengePostCommentNotification = @"kFailedMyClassChallengePostCommentNotification";
-NSString *const kFailedMyClassChallengePostCommentEditNotification = @"kFailedMyClassChallengePostCommentEditNotification";
+NSString *const kFailedChallengePostCommentEditNotification = @"kFailedChallengePostCommentEditNotification";
 NSString *const kWillSaveNewPostCommentNotification = @"kWillSaveNewPostCommentNotification";
 NSString *const kWillSaveEditPostCommentNotification = @"kWillSaveEditPostCommentNotification";
 NSString *const kDidSaveNewPostCommentNotification = @"kDidSaveNewPostCommentNotification";
@@ -63,7 +63,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveNewPostComment:) name:kDidSaveNewPostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didDeletePostComment:) name:kDidDeletePostCommentNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentFailed) name:kFailedMyClassChallengePostCommentNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentEditFailed) name:kFailedMyClassChallengePostCommentEditNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(commentEditFailed) name:kFailedChallengePostCommentEditNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(failedSaveEditPost:) name:kFailedSaveEditPostNotification object:nil];
@@ -363,10 +363,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)willSaveEditPostComment:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Saving Updated Comment...";
-        hud.dimBackground = NO;
+        [self refreshFromDatabase];
     });
 }
 
@@ -401,29 +398,20 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)commentEditFailed
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Your comment failed to save.";
-        hud.dimBackground = NO;
-        hud.mode = MBProgressHUDModeText;
-        [hud hide:YES afterDelay:1.5f];
+        [self refreshFromDatabase];
     });
 }
 
 - (void)willSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Saving...";
-        hud.dimBackground = NO;
+        [self refreshFromDatabase];
     });
 }
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
         [self refreshFromDatabase];
     });
 }
@@ -437,6 +425,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeText;
         [hud hide:YES afterDelay:1.5f];
+        
+        [self refreshFromDatabase];
     });
 }
 

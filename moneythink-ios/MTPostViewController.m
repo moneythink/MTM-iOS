@@ -534,19 +534,85 @@
     }
     
     NSData *imageData = nil;
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:nil];
 
     if (self.postImage) {
         imageData = UIImageJPEGRepresentation(self.postImage, 0.5f);
     }
     
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData extraFields:extraFields success:^(AFOAuthCredential *credential) {
+    // Proactively, update object
+    BOOL hadImage = self.post.hasPostImage;
+    
+    __block NSInteger oldPostId = self.post.id;
+    __block NSString *oldContent = self.post.content;
+    __block MTOptionalImage *oldImage = self.post.postImage;
+    __block NSString *oldExtraFields = self.post.extraFields;
+    __block NSDate *oldUpdatedAt = self.post.updatedAt;
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    self.post.content = self.postText.text;
+    if (!IsEmpty(extraFields)) {
+        NSError *error;
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extraFields options:0 error:&error];
+        if (!error) {
+            NSString *extraFieldsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+            self.post.extraFields = extraFieldsString;
+        }
+    }
+    else {
+        self.post.extraFields = @"";
+    }
+    
+    if (imageData) {
+        MTOptionalImage *postImage = self.post.postImage;
+        if (!postImage) {
+            postImage = [[MTOptionalImage alloc] init];
+        }
+        
+        postImage.isDeleted = NO;
+        postImage.imageData = imageData;
+        postImage.updatedAt = [NSDate date];
+        self.post.postImage = postImage;
+        self.post.hasPostImage = YES;
+    }
+    else {
+        self.post.postImage = nil;
+        self.post.hasPostImage = NO;
+    }
+
+    [realm commitWriteTransaction];
+
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWillSaveEditPostNotification object:nil];
+    
+    [[MTNetworkManager sharedMTNetworkManager] updatePostId:self.post.id content:self.postText.text postImageData:imageData hadImage:hadImage extraFields:extraFields success:^(AFOAuthCredential *credential) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [[NSNotificationCenter defaultCenter] postNotificationName:kDidSaveEditPostNotification object:nil];
         });
     } failure:^(NSError *error) {
-        NSLog(@"Unable to update post for id:%lu", (long)weakSelf.post.id);
+        NSLog(@"Unable to update post for id:%lu", (long)oldPostId);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Revert changes
+            RLMRealm *realm = [RLMRealm defaultRealm];
+            [realm beginWriteTransaction];
+            MTChallengePost *post = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:oldPostId]];
+            if (post && !post.isInvalidated) {
+                post.content = oldContent;
+                if (oldImage) {
+                    post.hasPostImage = YES;
+                }
+                else {
+                    post.hasPostImage = NO;
+                }
+                post.postImage = oldImage;
+                post.extraFields = oldExtraFields;
+                post.updatedAt = oldUpdatedAt;
+            }
+            [realm commitWriteTransaction];
+
+            [[NSNotificationCenter defaultCenter] postNotificationName:kFailedSaveEditPostNotification object:nil];
+        });
+
     }];
     
     [self dismissViewControllerAnimated:YES completion:NULL];
