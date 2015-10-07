@@ -8,9 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MTSignUpViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate>
+@interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
 - (void)shouldUpdateView;
+
++ (NSArray *)helpActionSheetButtons;
 
 @end

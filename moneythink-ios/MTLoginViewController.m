@@ -369,25 +369,41 @@
 
 
 #pragma mark - Login Methods -
-- (IBAction)resetTapped:(id)sender
+- (IBAction)helpTapped:(id)sender
 {
-    if (IsEmpty(self.emailTextField.text)) {
-        [[[UIAlertView alloc] initWithTitle:@"Forgot Password Error" message:@"Email is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+    NSArray *buttons = [[self class] helpActionSheetButtons];
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Help and Support" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:buttons[0], buttons[1], nil];
+    [sheet showInView:self.view];
+}
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    NSArray *actionButtons = [[self class] helpActionSheetButtons];
+    if (buttonIndex == actionSheet.cancelButtonIndex || buttonIndex > ([actionButtons count] - 1)) {
         return;
     }
+    NSString *buttonTitle = actionButtons[buttonIndex];
 
-    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
-                                                      message:@"Would you like to receive an email to reset your password?"
-                                                     delegate:self
-                                            cancelButtonTitle:@"Cancel"
-                                            otherButtonTitles:@"Request Email", nil];
+    if ([buttonTitle isEqualToString:@"Forgotten Password"]) {
+        [self resetTapped:nil];
+        return;
+    }
     
-    // For the token flow, not currently used
-//    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset"
-//                                                      message:@"Would you like to receive an email to reset your password?\n\nChoose Enter Token after receiving email."
-//                                                     delegate:self
-//                                            cancelButtonTitle:@"Cancel"
-//                                            otherButtonTitles:@"Request Email", @"Enter Token", nil];
+    if ([buttonTitle isEqualToString:@"Contact Support"]) {
+        [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+        return;
+    }
+}
+
+- (IBAction)resetTapped:(id)sender
+{
+    NSString *email = self.emailTextField.text;
+    UIAlertView *confirm = [[UIAlertView alloc] initWithTitle:@"Password Reset" message:@"Enter your email:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Reset", nil];
+    confirm.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField *emailTextField = [confirm textFieldAtIndex:0];
+    if (emailTextField != nil) {
+        emailTextField.text = email;
+    }
     [confirm show];
 }
 
@@ -519,7 +535,7 @@
                     NSString *title = @"Email Request Failed";
                     NSString *detailMessage = [error firstValidationMessage];
                     
-                    if ([error mtErrorCode] == 404) {
+                    if ([error mtErrorCode] == 404 || [error mtErrorCode] == 422) {
                         detailMessage = [error mtErrorDetail];
                     }
                     else if (!detailMessage) {
@@ -607,5 +623,9 @@
     [self updateView];
 }
 
+#pragma mark - Constants
++ (NSArray *)helpActionSheetButtons {
+    return @[@"Forgotten Password", @"Contact Support"];
+}
 
 @end
