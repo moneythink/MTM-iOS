@@ -519,6 +519,15 @@
     }
     else if ([alertView.title isEqualToString:@"Password Reset"]) {
         
+        NSString *email = [[alertView textFieldAtIndex:0] text];
+        if (email == nil || [email length] == 0) {
+            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+            hud.labelText = @"You must enter an email.";
+            hud.mode = MBProgressHUDModeText;
+            [hud hide:YES afterDelay:1.5f];
+            return;
+        }
+        
         if (buttonIndex == 1) {
             // Request Email
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -526,7 +535,7 @@
             
             MTMakeWeakSelf();
             [self bk_performBlock:^(id obj) {
-                [[MTNetworkManager sharedMTNetworkManager] requestPasswordResetEmailForEmail:weakSelf.emailTextField.text success:^(id responseData) {
+                [[MTNetworkManager sharedMTNetworkManager] requestPasswordResetEmailForEmail:email success:^(id responseData) {
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
                     hud.labelText = @"Email Sent";
                     hud.mode = MBProgressHUDModeText;
