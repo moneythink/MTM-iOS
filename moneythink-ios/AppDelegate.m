@@ -590,9 +590,6 @@
         newIdentity.email = userCurrent.email;
         newIdentity.externalId = [NSString stringWithFormat:@"%ld", (long)userCurrent.id];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
-    } else {
-        ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
-        [[ZDKConfig instance] setUserIdentity:newIdentity];
     }
 }
 

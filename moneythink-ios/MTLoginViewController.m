@@ -481,7 +481,26 @@
 
 - (IBAction)supportTapped:(id)sender {
     [[MTUtil getAppDelegate] initializeZendesk];
-    [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+    
+    NSString *title = @"Enter Your Email";
+    NSString *message = @"We need your email in order to respond to your support request.";
+    if ([UIAlertController class]) {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        [ac addAction:[UIAlertAction actionWithTitle:@"Continue" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSString *email = [[[ac textFields] firstObject] text];
+            [self newSupportRequestWithEmail:email];
+        }]];
+        [ac addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.placeholder = @"email@example.com";
+        }];
+        [self presentViewController:ac animated:YES completion:nil];
+    } else {
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        [av show];
+    }
 }
 
 
@@ -609,6 +628,10 @@
             } afterDelay:0.35f];
 
         }
+        else if ([alertView.title isEqualToString:@"Enter Your Email"]) {
+            NSString *email = [[alertView textFieldAtIndex:0] text];
+            [self newSupportRequestWithEmail:email];
+        }
         else if (buttonIndex == 2) {
             // Enter Token
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter Token" message:@"Enter the token received in email and your new password." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Send", nil];
@@ -666,6 +689,20 @@
 - (void)willEnterForeground:(NSNotification *)notification
 {
     [self updateView];
+}
+
+- (void)newSupportRequestWithEmail:(NSString *)email {
+    if (email == nil || [email length] == 0) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"You must enter an email.";
+        hud.mode = MBProgressHUDModeText;
+        [hud hide:YES afterDelay:1.5f];
+        return;
+    }
+    ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
+    newIdentity.email = email;
+    [[ZDKConfig instance] setUserIdentity:newIdentity];
+    [ZDKRequests showRequestCreationWithNavController:self.navigationController];
 }
 
 #pragma mark - Constants
