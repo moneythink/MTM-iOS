@@ -555,8 +555,8 @@
 
 - (void)configureZendesk
 {    
-//    [ZDKDispatcher setDebugLogging:YES];
-//    [ZDKLogger enable:YES];
+    [ZDKDispatcher setDebugLogging:YES];
+    [ZDKLogger enable:YES];
 
     [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
         
@@ -590,7 +590,28 @@
         newIdentity.email = userCurrent.email;
         newIdentity.externalId = [NSString stringWithFormat:@"%ld", (long)userCurrent.id];
         [[ZDKConfig instance] setUserIdentity:newIdentity];
+    } else {
+        ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
+        [[ZDKConfig instance] setUserIdentity:newIdentity];
     }
+}
+
+// This method should only be called when you're ready to use Zendesk, since
+// if it was called on app startup it might generate confusing error messages.
+- (void)initializeZendesk {
+    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
+                                   zendeskUrl:@"https://moneythink.zendesk.com"
+                                     ClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"
+                                    onSuccess:^{
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                        });
+                                    } onError:^(NSError *error) {
+                                        dispatch_async(dispatch_get_main_queue(), ^{
+                                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+                                            [UIAlertView bk_showAlertViewWithTitle:@"Unable to connect to Moneythink Support" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
+                                        });
+                                    }];
 }
 
 - (void)checkForForceUpdate

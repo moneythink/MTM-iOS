@@ -61,19 +61,7 @@ static NSString *stageString = @"";
     hud.dimBackground = YES;
     
     [[MTUtil getAppDelegate] configureZendesk];
-    [[ZDKConfig instance] initializeWithAppId:@"654c0b54d71d4ec0aee909890c4191c391d5f35430d46d8c"
-                                   zendeskUrl:@"https://moneythink.zendesk.com"
-                                     ClientId:@"mobile_sdk_client_aa71675d30d20f4e22dd"
-                                    onSuccess:^{
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                        });
-                                    } onError:^(NSError *error) {
-                                        dispatch_async(dispatch_get_main_queue(), ^{
-                                            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                                            [UIAlertView bk_showAlertViewWithTitle:@"Unable to connect to Moneythink Support" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
-                                        });
-                                    }];
+    [[MTUtil getAppDelegate] initializeZendesk];
 }
 
 

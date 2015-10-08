@@ -421,7 +421,7 @@
     }
     
     if ([buttonTitle isEqualToString:@"Contact Support"]) {
-        [ZDKRequests showRequestCreationWithNavController:self.navigationController];
+        [self supportTapped:nil];
         return;
     }
 }
@@ -480,6 +480,7 @@
 }
 
 - (IBAction)supportTapped:(id)sender {
+    [[MTUtil getAppDelegate] initializeZendesk];
     [ZDKRequests showRequestCreationWithNavController:self.navigationController];
 }
 
