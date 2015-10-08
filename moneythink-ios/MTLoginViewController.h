@@ -12,6 +12,8 @@
 
 @interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
 
+// UIActionSheetDelegate is deprecated. However, we still target iOS 7.x devices.
+
 - (void)shouldUpdateView;
 
 + (NSArray *)helpActionSheetButtons;

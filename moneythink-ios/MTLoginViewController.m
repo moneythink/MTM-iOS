@@ -371,9 +371,40 @@
 #pragma mark - Login Methods -
 - (IBAction)helpTapped:(id)sender
 {
+    NSString *title = @"Help and Support";
+    NSString *cancel = @"Cancel";
     NSArray *buttons = [[self class] helpActionSheetButtons];
-    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"Help and Support" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:buttons[0], buttons[1], nil];
-    [sheet showInView:self.view];
+    
+    if ([UIAlertController class]) {
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:title
+                                                                    message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+        // Forgotten password
+        [ac addAction:[UIAlertAction actionWithTitle:buttons[0] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self resetTapped:nil];
+        }]];
+        
+        // Contact Us
+        [ac addAction:[UIAlertAction actionWithTitle:buttons[1] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self supportTapped:nil];
+        }]];
+        
+        // Cancel
+        [ac addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            [self dismissViewControllerAnimated:YES completion:nil];
+        }]];
+        
+
+        [self presentViewController:ac animated:YES completion:nil];
+        
+    } else {
+        UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:title
+                                                           delegate:self
+                                                  cancelButtonTitle:cancel
+                                             destructiveButtonTitle:nil
+                                                  otherButtonTitles:buttons[0], buttons[1], nil];
+        [sheet showInView:self.view];
+    }
 }
 
 - (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
@@ -446,6 +477,10 @@
         });
 
     }];
+}
+
+- (IBAction)supportTapped:(id)sender {
+    [ZDKRequests showRequestCreationWithNavController:self.navigationController];
 }
 
 
