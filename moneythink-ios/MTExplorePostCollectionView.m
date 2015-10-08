@@ -262,7 +262,7 @@
     
     if ([segueIdentifier hasPrefix:@"pushViewPost"]) {
         MTPostDetailViewController *destinationViewController = (MTPostDetailViewController *)[segue destinationViewController];
-        destinationViewController.challengePost = (MTChallengePost *)sender;
+        destinationViewController.challengePostId = ((MTChallengePost *)sender).id;
         destinationViewController.challenge = self.challenge;
         
         MTChallengePost *post = (MTChallengePost *)sender;

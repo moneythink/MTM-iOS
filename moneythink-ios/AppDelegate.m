@@ -45,6 +45,9 @@
     NSString *previousServer = [[NSUserDefaults standardUserDefaults] objectForKey:kAPIServerKey];
     if (IsEmpty(previousServer) || ![previousServer isEqualToString:apiServerKey]) {
         [MTUtil logout];
+        
+        // Also, specifically, remove the push messaging key (which usually doesn't get wiped on logout)
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kPushMessagingRegistrationKey];
     }
     [[NSUserDefaults standardUserDefaults] setObject:apiServerKey forKey:kAPIServerKey];
     [[NSUserDefaults standardUserDefaults] synchronize];

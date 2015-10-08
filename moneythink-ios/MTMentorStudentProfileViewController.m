@@ -172,7 +172,7 @@
         MTPostDetailViewController *destinationVC = (MTPostDetailViewController *)[segue destinationViewController];
         MTStudentProfileTableViewCell *cell = (MTStudentProfileTableViewCell *)sender;
         MTChallengePost *rowObject = cell.rowPost;
-        destinationVC.challengePost = rowObject;
+        destinationVC.challengePostId = rowObject.id;
     }
 }
 

@@ -35,7 +35,7 @@ typedef enum {
 
 @property (nonatomic, strong) MTMyClassTableViewController *myClassTableViewController;
 @property (nonatomic, strong) MTChallenge *challenge;
-@property (nonatomic, strong) MTChallengePost *challengePost;
+@property (nonatomic) NSInteger challengePostId;
 @property (nonatomic) MTPostType postType;
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;

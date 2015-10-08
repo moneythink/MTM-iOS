@@ -34,6 +34,8 @@ typedef enum {
 
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 
+@property (nonatomic, strong) MTChallengePost *challengePost;
+
 @property (nonatomic, strong) MTUser *currentUser;
 @property (nonatomic, strong) MTUser *postUser;
 @property (nonatomic) BOOL isMyClass;
@@ -65,6 +67,8 @@ typedef enum {
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.challengePost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:self.challengePostId]];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveEditPost:) name:kWillSaveEditPostNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didSaveEditPost:) name:kDidSaveEditPostNotification object:nil];
@@ -130,6 +134,7 @@ typedef enum {
         thisPost.isDeleted = NO;
         [[RLMRealm defaultRealm] commitWriteTransaction];
         
+        self.challengePostId = self.notification.relatedPost.id;
         self.challengePost = thisPost;
         self.challenge = thisPost.challenge;
         
@@ -175,6 +180,7 @@ typedef enum {
                 return;
             }
             
+            weakSelf.challengePostId = weakSelf.notification.relatedPost.id;
             weakSelf.challengePost = thisPost;
             weakSelf.challenge = thisPost.challenge;
             
@@ -205,7 +211,7 @@ typedef enum {
 
 - (void)loadCommentsOnlyDatabase:(BOOL)onlyDatabase
 {
-    self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    self.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePostId] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     [self.tableView reloadData];
     
     if (onlyDatabase) {
@@ -213,14 +219,12 @@ typedef enum {
     }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePost.id success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] loadCommentsForPostId:self.challengePostId success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.loadedComments = YES;
             
-            if (!weakSelf.challengePost.isInvalidated) {
-                weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-                [weakSelf.tableView reloadData];
-            }
+            weakSelf.comments = [[MTChallengePostComment objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePostId] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+            [weakSelf.tableView reloadData];
             
             if (weakSelf.loadedLikes) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -234,7 +238,7 @@ typedef enum {
 
 - (void)loadLikesOnlyDatabase:(BOOL)onlyDatabase;
 {
-    self.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePost.id];
+    self.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", self.challengePostId];
     
     NSMutableArray *emojiArray = [NSMutableArray array];
     for (MTChallengePostLike *thisLike in self.likes) {
@@ -252,24 +256,22 @@ typedef enum {
     }
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadLikesForPostId:self.challengePost.id success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] loadLikesForPostId:self.challengePostId success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakSelf.loadedLikes = YES;
             
-            if (!weakSelf.challengePost.isInvalidated) {
-                weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePost.id];
-                
-                NSMutableArray *emojiArray = [NSMutableArray array];
-                for (MTChallengePostLike *thisLike in weakSelf.likes) {
-                    MTEmoji *thisEmoji = thisLike.emoji;
-                    if (thisEmoji) {
-                        [emojiArray addObject:thisEmoji];
-                    }
+            weakSelf.likes = [MTChallengePostLike objectsWhere:@"challengePost.id = %lu AND isDeleted = NO", weakSelf.challengePostId];
+            
+            NSMutableArray *emojiArray = [NSMutableArray array];
+            for (MTChallengePostLike *thisLike in weakSelf.likes) {
+                MTEmoji *thisEmoji = thisLike.emoji;
+                if (thisEmoji) {
+                    [emojiArray addObject:thisEmoji];
                 }
-                
-                weakSelf.emojiArray = emojiArray;
-                [weakSelf.tableView reloadData];
             }
+            
+            weakSelf.emojiArray = emojiArray;
+            [weakSelf.tableView reloadData];
             
             if (weakSelf.loadedComments) {
                 [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
@@ -2560,7 +2562,7 @@ typedef enum {
 
 - (void)updateViewForEditedPost
 {
-    NSNumber *postId = [NSNumber numberWithInteger:self.challengePost.id];
+    NSNumber *postId = [NSNumber numberWithInteger:self.challengePostId];
     MTChallengePost *editedPost = [MTChallengePost objectForPrimaryKey:postId];
     
     if (editedPost) {

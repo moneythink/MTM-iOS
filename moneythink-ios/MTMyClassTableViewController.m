@@ -1414,7 +1414,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         MTChallengePost *post = cell.post;
 
         self.postViewController = (MTPostDetailViewController*)[segue destinationViewController];
-        self.postViewController.challengePost = post;
+        self.postViewController.challengePostId = post.id;
         self.postViewController.challenge = self.challenge;
         self.postViewController.delegate = self;
         self.postViewController.emojiArray = cell.emojiArray;
