@@ -8,9 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "MTSignUpViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate>
+@interface MTLoginViewController : UIViewController <UINavigationControllerDelegate, UITextFieldDelegate, UIActionSheetDelegate>
+
+// UIActionSheetDelegate is deprecated. However, we still target iOS 7.x devices.
 
 - (void)shouldUpdateView;
+
++ (NSArray *)helpActionSheetButtons;
 
 @end

@@ -23,6 +23,7 @@
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)updatePushMessagingInfo;
 - (void)configureZendesk;
+- (void)initializeZendesk;
 - (BOOL)shouldForceUpdate;
 - (void)clearLogoutReason;
 
