@@ -499,6 +499,7 @@
         [self presentViewController:ac animated:YES completion:nil];
     } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        av.alertViewStyle = UIAlertViewStylePlainTextInput;
         [av show];
     }
 }
@@ -549,7 +550,7 @@
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
             hud.labelText = @"Password Updated";
             hud.mode = MBProgressHUDModeText;
-            [hud hide:YES afterDelay:1.5f];
+            [hud hide:YES afterDelay:2.0f];
         } failure:^(NSError *error) {
             NSString *title = @"Password Change Failed";
             NSString *detailMessage = [error mtErrorDescription];
@@ -579,7 +580,7 @@
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
             hud.labelText = @"You must enter an email.";
             hud.mode = MBProgressHUDModeText;
-            [hud hide:YES afterDelay:1.5f];
+            [hud hide:YES afterDelay:2.0f];
             return;
         }
         
@@ -588,13 +589,12 @@
             MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
             hud.labelText = @"Requesting Email...";
             
-            MTMakeWeakSelf();
             [self bk_performBlock:^(id obj) {
                 [[MTNetworkManager sharedMTNetworkManager] requestPasswordResetEmailForEmail:email success:^(id responseData) {
                     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
                     hud.labelText = @"Email Sent";
                     hud.mode = MBProgressHUDModeText;
-                    [hud hide:YES afterDelay:1.5f];
+                    [hud hide:YES afterDelay:2.0f];
                 } failure:^(NSError *error) {
                     NSString *title = @"Email Request Failed";
                     NSString *detailMessage = [error firstValidationMessage];
@@ -628,10 +628,6 @@
             } afterDelay:0.35f];
 
         }
-        else if ([alertView.title isEqualToString:@"Enter Your Email"]) {
-            NSString *email = [[alertView textFieldAtIndex:0] text];
-            [self newSupportRequestWithEmail:email];
-        }
         else if (buttonIndex == 2) {
             // Enter Token
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Enter Token" message:@"Enter the token received in email and your new password." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Send", nil];
@@ -640,6 +636,10 @@
             [alert textFieldAtIndex:1].placeholder = @"New Password";
             [alert show];
         }
+    }
+    else if ([alertView.title isEqualToString:@"Enter Your Email"]) {
+        NSString *email = [[alertView textFieldAtIndex:0] text];
+        [self newSupportRequestWithEmail:email];
     }
 }
 
@@ -696,7 +696,7 @@
         MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"You must enter an email.";
         hud.mode = MBProgressHUDModeText;
-        [hud hide:YES afterDelay:1.5f];
+        [hud hide:YES afterDelay:2.0f];
         return;
     }
     ZDKAnonymousIdentity *newIdentity = [ZDKAnonymousIdentity new];
