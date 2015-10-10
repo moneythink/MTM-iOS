@@ -135,20 +135,15 @@
 
 + (BOOL)isCurrentUserMentor
 {
-    NSString *role = [[MTUser currentUser].roleCode uppercaseString];
-    if ([role isEqualToString:@"MENTOR"] ||
-        [role isEqualToString:@"LEAD"] ||
-        [role isEqualToString:@"ADMIN"]) {
-        return YES;
-    }
-    else {
-        return NO;
-    }
+    return [MTUser isUserMentor:[MTUser currentUser]];
 }
 
 + (BOOL)isUserMentor:(MTUser *)user
 {
-    if ([[user.roleCode uppercaseString] isEqualToString:@"MENTOR"]) {
+    NSString *role = [user.roleCode uppercaseString];
+    if ([role isEqualToString:@"MENTOR"] ||
+        [role isEqualToString:@"LEAD"] ||
+        [role isEqualToString:@"ADMIN"]) {
         return YES;
     }
     else {
