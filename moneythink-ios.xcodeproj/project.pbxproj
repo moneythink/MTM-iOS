@@ -1193,6 +1193,7 @@
 				897278231A97BBF800557B66 /* ShellScript */,
 				7E6C52F81BB5594EAAEB2A44 /* Copy Pods Resources */,
 				89D032B91BBDEBF000ABA46B /* ShellScript */,
+				80C5D259F15C3B9017081BCD /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1370,6 +1371,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		80C5D259F15C3B9017081BCD /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		897278231A97BBF800557B66 /* ShellScript */ = {

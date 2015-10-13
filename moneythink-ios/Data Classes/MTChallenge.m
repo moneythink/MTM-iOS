@@ -13,7 +13,7 @@
 + (NSDictionary *)defaultPropertyValues {
     return @{@"autoVerify" : @NO,
              @"challengeDescription": @"",
-             @"difficulty": @"",
+             @"difficulty": @0,
              @"goal": @"",
              @"isActive": @NO,
              @"isPrivate": @NO,

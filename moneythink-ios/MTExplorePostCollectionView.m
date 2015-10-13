@@ -142,6 +142,10 @@
         cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
         
         __block MTExploreCollectionViewCell *weakCell = cell;
+        
+        cell.postImage.layer.masksToBounds = YES;
+        cell.postImage.contentMode = UIViewContentModeScaleAspectFill;
+
         if (post.hasPostImage) {
             cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
                 dispatch_async(dispatch_get_main_queue(), ^{

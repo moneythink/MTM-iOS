@@ -346,32 +346,28 @@
     
     [self updateViews];
     
-    if (IsEmpty(self.challenges) || [MTUtil shouldRefreshForKey:kRefreshForChallenges]) {
-        if (IsEmpty(self.challenges)) {
-            MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-            hud.labelText = @"Loading Challenges...";
-            hud.dimBackground = YES;
-        }
-        
-        MTMakeWeakSelf();
-        [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MTUtil setRefreshedForKey:kRefreshForChallenges];
-                
-                if ([MTUtil userChangedClass]) {
-                    [MTUtil setUserChangedClass:NO];
-                }
-                
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-                [weakSelf getChallenges];
-                [weakSelf updateViews];
-            });
-        } failure:^(NSError *error) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            });
-        }];
+    if (IsEmpty(self.challenges)) {
+        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Loading Challenges...";
+        hud.dimBackground = YES;
     }
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadChallengesWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([MTUtil userChangedClass]) {
+                [MTUtil setUserChangedClass:NO];
+            }
+            
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            [weakSelf getChallenges];
+            [weakSelf updateViews];
+        });
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+        });
+    }];
 }
 
 - (void)loadEmoji

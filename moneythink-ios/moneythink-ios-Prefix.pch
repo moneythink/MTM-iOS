@@ -39,7 +39,6 @@
 #define kLastNotificationFetchDateKey       @"kLastNotificationFetchDateKey"
 #define kPushMessagingRegistrationKey       @"kPushMessagingRegistrationKey"
 #define kRefreshForEmoji                    @"kRefreshForEmoji"
-#define kRefreshForChallenges               @"kRefreshForChallenges"
 #define kRefreshForButtons                  @"kRefreshForButtons"
 #define kRefreshForMeUser                   @"kRefreshForMeUser"
 #define kAPIServerKey                       @"kAPIServerKey"

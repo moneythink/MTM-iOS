@@ -978,13 +978,22 @@ typedef enum {
 }
 
 - (CGFloat)heightForPostCommentsCellAtIndexPath:(NSIndexPath *)indexPath {
+    MTChallengePostComment *comment = nil;
+    if ([self.comments count] > indexPath.row) {
+        comment = [self.comments objectAtIndex:indexPath.row];
+    }
+    
+    if (!comment || IsEmpty(comment.content)) {
+        return 0.0f;
+    }
+    
     static MTPostCommentItemsTableViewCell *sizingCell = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"PostCommentItemsCell"];
     });
     
-    [self configurePostCommentsCell:sizingCell atIndexPath:indexPath];
+    [self configurePostCommentsCell:sizingCell atIndexPath:indexPath comment:comment];
     return [self calculateHeightForCommentsConfiguredSizingCell:sizingCell];
 }
 
@@ -998,8 +1007,7 @@ typedef enum {
     return size.height;
 }
 
-- (void)configurePostCommentsCell:(MTPostCommentItemsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    MTChallengePostComment *comment = self.comments[indexPath.row];
+- (void)configurePostCommentsCell:(MTPostCommentItemsTableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath comment:(MTChallengePostComment *)comment {
     cell.commentLabel.text = comment.content;
     [cell.commentLabel setFont:[UIFont mtFontOfSize:13.0f]];
     
@@ -2045,7 +2053,7 @@ typedef enum {
                     rows = 1;
                     break;
                 case MTPostTableCellTypePostComments:
-                    rows = self.comments.count;
+                    rows = [self.comments count];
                     break;
                 case MTPostTableCellTypeLikeUsers:
                     rows = [self.likes count];

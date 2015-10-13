@@ -558,7 +558,6 @@
 
 - (void)configureZendesk
 {    
-    [ZDKDispatcher setDebugLogging:YES];
     [ZDKLogger enable:YES];
 
     [ZDKRequests configure:^(ZDKAccount *account, ZDKRequestCreationConfig *requestCreationConfig) {
@@ -775,7 +774,7 @@
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 25;
+    config.schemaVersion = 26;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above
