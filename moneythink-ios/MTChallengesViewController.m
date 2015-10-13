@@ -65,7 +65,8 @@
 
     [self setupViews];
     [self loadEmoji];
-    [self loadButtons];
+    
+    // Load buttons will be called after challenges are loaded.
     [self loadChallenges];
 }
 
@@ -360,6 +361,8 @@
             }
             
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
+            
+            [weakSelf loadButtons];
             [weakSelf getChallenges];
             [weakSelf updateViews];
         });
@@ -399,13 +402,10 @@
 
 - (void)loadButtons
 {
-    if ([MTUtil shouldRefreshForKey:kRefreshForButtons]) {
-        [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
-            [MTUtil setRefreshedForKey:kRefreshForButtons];
-        } failure:^(NSError *error) {
-            NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
-        }];
-    }
+    [[MTNetworkManager sharedMTNetworkManager] loadButtonsWithSuccess:^(id responseData) {
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to updateButtons: %@", [error mtErrorDescription]);
+    }];
 }
 
 - (void)getChallenges

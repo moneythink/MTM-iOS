@@ -126,13 +126,13 @@
     MTMakeWeakSelf();
     UIImage *bannerImage = [self.challenge loadBannerImageWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:responseData];
+            weakSelf.challengeBanner.image = [weakSelf imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:responseData];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load challenge banner: %@", [error mtErrorDescription]);
     }];
     
-    self.challengeBanner.image = [self imageByScalingAndCroppingForSize:weakSelf.challengeBanner.frame.size withImage:bannerImage];
+    self.challengeBanner.image = [self imageByScalingAndCroppingForSize:self.challengeBanner.frame.size withImage:bannerImage];
     
     [self.tagline setBackgroundColor:[UIColor primaryOrange]];
     [self.tagline setTextColor:[UIColor white]];
