@@ -499,16 +499,20 @@
             [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Birthdate is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             return NO;
         }
-        
+
+        /*
         if (IsEmpty(self.zipCode.text)) {
             [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Zip Code is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             return NO;
         }
+        */
         
-        if (!self.allowEmptyEthnicities && IsEmpty(self.ethnicity.text)) {
+        /*
+         if (!self.allowEmptyEthnicities && IsEmpty(self.ethnicity.text)) {
             [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"Ethnicity is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
             return NO;
         }
+        */
         
         if (!self.allowEmptyMoneyOptions && IsEmpty(self.selectedMoneyOptions)) {
             [[[UIAlertView alloc] initWithTitle:@"Signup Error" message:@"I keep money is required" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];

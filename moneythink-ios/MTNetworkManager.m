@@ -1827,8 +1827,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSDictionary *codeDict = [NSDictionary dictionaryWithObject:@"STUDENT" forKey:@"code"];
     parameters[@"role"] = codeDict;
     
-    NSDictionary *ethnicityDict = [NSDictionary dictionaryWithObject:[ethnicity valueForKey:@"code"] forKey:@"code"];
-    parameters[@"ethnicity"] = ethnicityDict;
+    if (ethnicity != nil) {
+        NSDictionary *ethnicityDict = [NSDictionary dictionaryWithObject:[ethnicity valueForKey:@"code"] forKey:@"code"];
+        parameters[@"ethnicity"] = ethnicityDict;
+    }
     
     NSMutableArray *moneyOptionsArray = [NSMutableArray array];
     for (NSDictionary *moneyOption in moneyOptions) {
