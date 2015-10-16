@@ -1624,7 +1624,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "4bfa5f38-a24f-4e3e-b939-fac3470f6fef";
+				PROVISIONING_PROFILE = "e0cafe8d-cbdb-43c2-9029-20d14c356388";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
 			};
