@@ -496,10 +496,12 @@
         [ac addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
             textField.placeholder = @"email@example.com";
         }];
+        [[[ac textFields] firstObject] becomeFirstResponder];
         [self presentViewController:ac animated:YES completion:nil];
     } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
         av.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [[av textFieldAtIndex:0] becomeFirstResponder];
         [av show];
     }
 }
