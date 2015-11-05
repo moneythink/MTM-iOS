@@ -16,7 +16,7 @@
 #ifdef STAGE
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
-static NSString * const MTNetworkURLString = @"http://api.moneythink.org/";
+static NSString * const MTNetworkURLString = @"https://api.moneythink.org/";
 #endif
 
 static NSString * const MTNetworkAPIKey = @"cE4.G0_$";

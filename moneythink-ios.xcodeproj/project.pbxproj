@@ -15,7 +15,7 @@
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
 		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
-		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; settings = {ASSET_TAGS = (); }; };
+		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -176,7 +176,7 @@
 		89A793C11B2F25CC000BFA40 /* OnboardingContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793BE1B2F25CA000BFA40 /* OnboardingContentViewController.m */; };
 		89A793C21B2F25CC000BFA40 /* OnboardingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C01B2F25CA000BFA40 /* OnboardingViewController.m */; };
 		89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A793C51B2F2C80000BFA40 /* MTOnboardingController.m */; };
-		89AB9C311BC304DC001AFC88 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89AB9C301BC304DC001AFC88 /* BBBadgeBarButtonItem.m */; settings = {ASSET_TAGS = (); }; };
+		89AB9C311BC304DC001AFC88 /* BBBadgeBarButtonItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89AB9C301BC304DC001AFC88 /* BBBadgeBarButtonItem.m */; };
 		89C3E80E1B15468D0084EA48 /* nav-icons-dashboard.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80C1B15468D0084EA48 /* nav-icons-dashboard.png */; };
 		89C3E80F1B15468D0084EA48 /* nav-icons-dashboard@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 89C3E80D1B15468D0084EA48 /* nav-icons-dashboard@2x.png */; };
 		89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 89C3E8121B1547B10084EA48 /* MTMenuTableViewCell.m */; };

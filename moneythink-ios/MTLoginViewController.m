@@ -375,6 +375,8 @@
     NSString *cancel = @"Cancel";
     NSArray *buttons = [[self class] helpActionSheetButtons];
     
+    [self.view endEditing:YES];
+    
     if ([UIAlertController class]) {
         UIAlertController *ac = [UIAlertController alertControllerWithTitle:title
                                                                     message:nil
@@ -481,7 +483,7 @@
 
 - (IBAction)supportTapped:(id)sender {
     [[MTUtil getAppDelegate] initializeZendesk];
-    
+        
     NSString *title = @"Enter Your Email";
     NSString *message = @"We need your email in order to respond to your support request.";
     if ([UIAlertController class]) {
@@ -496,12 +498,11 @@
         [ac addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
             textField.placeholder = @"email@example.com";
         }];
-        [[[ac textFields] firstObject] becomeFirstResponder];
+        NSLog(@"Become first reponder");
         [self presentViewController:ac animated:YES completion:nil];
     } else {
         UIAlertView *av = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
         av.alertViewStyle = UIAlertViewStylePlainTextInput;
-        [[av textFieldAtIndex:0] becomeFirstResponder];
         [av show];
     }
 }
