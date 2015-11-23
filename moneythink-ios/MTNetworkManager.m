@@ -1601,6 +1601,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
             thisPost.user = thisUser;
             thisPost.challengeClass = thisUser.userClass;
             
+            if ([[post objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *innerLinksDict = (NSDictionary *)[post objectForKey:@"_links"];
+                if (innerLinksDict[@"picture"]) {
+                    thisPost.hasPostImage = YES;
+                }
+            }
+            
             if ([[post objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *innerEmbeddedDict = (NSDictionary *)[post objectForKey:@"_embedded"];
                 

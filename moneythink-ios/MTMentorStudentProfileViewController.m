@@ -88,6 +88,22 @@
     
     __block MTStudentProfileTableViewCell *weakCell = cell;
     
+    cell.postImage.layer.masksToBounds = YES;
+    cell.postImage.contentMode = UIViewContentModeScaleAspectFill;
+    
+    if (post.hasPostImage) {
+        cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakCell.postImage.image = responseData;
+            });
+        } failure:^(NSError *error) {
+            NSLog(@"Unable to load post image");
+        }];
+    } else {
+        cell.postImageHeightConstraint.constant = 0;
+        [cell.postImage setHidden:YES];
+    }
+    
     cell.postProfileImage.layer.cornerRadius = round(cell.postProfileImage.frame.size.width / 2.0f);
     cell.postProfileImage.layer.masksToBounds = YES;
     cell.postProfileImage.contentMode = UIViewContentModeScaleAspectFill;
@@ -159,6 +175,21 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     return 0.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 454.0f;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
+{
+    MTChallengePost *post = [self.studentPosts objectAtIndex:indexPath.row];
+    if (post.hasPostImage) {
+        return 454.0f;
+    } else {
+        return 120.0f;
+    }
 }
 
 
