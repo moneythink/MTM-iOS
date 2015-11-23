@@ -14,6 +14,8 @@
 @property (strong, nonatomic) MTChallengePost *rowPost;
 
 @property (strong, nonatomic) IBOutlet PFImageView *postProfileImage;
+@property (strong, nonatomic) IBOutlet PFImageView *postImage;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *postImageHeightConstraint;
 @property (strong, nonatomic) IBOutlet UILabel *timeSince;
 @property (strong, nonatomic) IBOutlet UITextField *postText;
 
