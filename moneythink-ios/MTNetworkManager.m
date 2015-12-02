@@ -422,7 +422,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     return sortedArray;
 }
 
-- (void)processClassChallengesWithResponseObject:(id)responseObject
+- (void)processChallengePlaylistWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No user response data");
@@ -432,33 +432,33 @@ static NSString * const MTRefreshingErrorCode = @"701";
     NSDictionary *responseDict = (NSDictionary *)responseObject;
     
     if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"No embedded class-challenges data");
+        NSLog(@"No embedded challenges data");
         return;
     }
     
     NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
     
-    if (![[embeddedDict objectForKey:@"classChallenges"] isKindOfClass:[NSArray class]]) {
-        NSLog(@"No classChallenges data");
+    if (![[embeddedDict objectForKey:@"playlist"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No playlist data");
         return;
     }
     
-    NSArray *classChallengesArray = [embeddedDict objectForKey:@"classChallenges"];
+    NSArray *playlistArray = [embeddedDict objectForKey:@"playlist"];
     
     RLMRealm *realm = [RLMRealm defaultRealm];
     
     // Mark existing challenges deleted to filter out deleted challenges
     [MTChallenge markAllDeleted];
     [realm beginWriteTransaction];
-
-    for (id classChallenge in classChallengesArray) {
-        if ([classChallenge isKindOfClass:[NSDictionary class]]) {
+    
+    for (id playlistEntry in playlistArray) {
+        if ([playlistEntry isKindOfClass:[NSDictionary class]]) {
             
-            NSDictionary *classChallengeDict = (NSDictionary *)classChallenge;
-            if ([[classChallengeDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+            NSDictionary *playlistEntryDict = (NSDictionary *)playlistEntry;
+            if ([[playlistEntryDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
                 
-                NSInteger thisRanking = [[classChallengeDict valueForKey:@"ranking"] integerValue];
-                NSDictionary *innerEmbeddedDict = [classChallengeDict objectForKey:@"_embedded"];
+                NSInteger thisRanking = [[playlistEntryDict valueForKey:@"ranking"] integerValue];
+                NSDictionary *innerEmbeddedDict = [playlistEntryDict objectForKey:@"_embedded"];
                 
                 if ([[innerEmbeddedDict objectForKey:@"challenge"] isKindOfClass:[NSDictionary class]]) {
                     NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
@@ -2563,13 +2563,25 @@ static NSString * const MTRefreshingErrorCode = @"701";
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = @"999";
+        
+
+        NSString *path = nil;
+        if ([MTUser currentUser] != nil && [[MTUser currentUser] userClass] != nil) {
+            NSUInteger currentClassId = [[[MTUser currentUser] userClass] id];
+            path = [NSString stringWithFormat:@"classes/%lu/playlist", (unsigned long)currentClassId, nil];
+        }
+        
+        if (path == nil) {
+            NSError * error = [NSError errorWithDomain:@"No valid class id" code:1 userInfo:nil];
+            return failure(error);
+        }
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:@"class-challenges" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        [weakSelf GET:path parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadChallengesWithSuccess success response");
             
             if (responseObject) {
-                [self processClassChallengesWithResponseObject:responseObject];
+                [self processChallengePlaylistWithResponseObject:responseObject];
             }
             
             if (success) {
