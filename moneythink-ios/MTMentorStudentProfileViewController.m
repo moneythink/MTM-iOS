@@ -11,6 +11,9 @@
 #import "MTStudentProfileTableViewCell.h"
 #import "MTPostDetailViewController.h"
 
+#define kHeightBase 120.f
+#define kHeightPictureAndPadding 322.f
+
 @interface MTMentorStudentProfileViewController ()
 
 @property (strong, nonatomic) RLMResults *studentPosts;
@@ -124,6 +127,12 @@
     }
     
     // Only show verified assets if current user is Mentor
+    MTChallenge *challenge = post.challenge;
+    if (challenge != nil) {
+        cell.challengeIsAutoVerified = [challenge autoVerify];
+    } else {
+        cell.challengeIsAutoVerified = NO;
+    }
     cell.verifiedCheckbox.hidden = ![MTUser isCurrentUserMentor];
     cell.verifiedLabel.hidden = ![MTUser isCurrentUserMentor];
 
@@ -167,6 +176,9 @@
         cell.verifiedCheckbox.isChecked = NO;
     }
     
+    [cell setNeedsLayout];
+    [cell layoutIfNeeded];
+    
     return cell;
 }
 
@@ -179,16 +191,20 @@
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 454.0f;
+    return kHeightBase + kHeightPictureAndPadding;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
     MTChallengePost *post = [self.studentPosts objectAtIndex:indexPath.row];
     if (post.hasPostImage) {
-        return 454.0f;
+        CGFloat textHeight = 0.f;
+        
+        // TODO: Calculate text height and actually resize challenge post views.
+        
+        return kHeightBase + kHeightPictureAndPadding + textHeight;
     } else {
-        return 120.0f;
+        return kHeightBase;
     }
 }
 
