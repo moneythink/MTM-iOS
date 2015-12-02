@@ -3279,9 +3279,9 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"999";
+        parameters[@"page_size"] = @"10";
         
-        NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)userId];
+        NSString *urlString = [NSString stringWithFormat:@"posts?user_id=%ld", (long)userId];
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
