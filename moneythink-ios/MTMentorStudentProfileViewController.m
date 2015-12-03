@@ -12,7 +12,7 @@
 #import "MTPostDetailViewController.h"
 
 #define kHeightBase 120.f
-#define kHeightPictureAndPadding 322.f
+#define kHeightPictureAndPadding 300.f
 
 @interface MTMentorStudentProfileViewController ()
 
@@ -28,7 +28,7 @@
     [super viewDidLoad];
     
     [self.loadingView setMessage:@"Loading latest posts..."];
-    
+        
     NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
     self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
@@ -103,6 +103,8 @@
     if (cell == nil) {
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
     }
+    
+    if (row >= self.studentPosts.count) return nil;
     
     MTChallengePost *post = [self.studentPosts objectAtIndex:row];
     MTUser *user = post.user;
@@ -217,9 +219,23 @@
     MTChallengePost *post = [self.studentPosts objectAtIndex:indexPath.row];
     if (post.hasPostImage) {
         CGFloat textHeight = 0.f;
+
+        if (self.dummyCell == nil ) {
+            NSIndexPath *dummyIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+            self.dummyCell = (MTStudentProfileTableViewCell *)[self tableView:tableView cellForRowAtIndexPath:dummyIndexPath];
+        }
         
-        // TODO: Calculate text height and actually resize challenge post views.
+        CGSize postTextSize = CGSizeMake(self.dummyCell.postText.frame.size.width, CGFLOAT_MAX);
         
+        // Calculate for this postText
+        self.dummyCell.postText.text = post.content;
+        NSDictionary *attributes = @{NSFontAttributeName: self.dummyCell.postText.font};
+        CGRect dummyContentRect = [post.content boundingRectWithSize:postTextSize
+                                                             options:NSStringDrawingUsesLineFragmentOrigin
+                                                          attributes:attributes
+                                                             context:nil];
+        textHeight = dummyContentRect.size.height;
+
         return kHeightBase + kHeightPictureAndPadding + textHeight;
     } else {
         return kHeightBase;
