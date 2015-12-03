@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MTLoadingView.h"
 
 @interface MTMentorStudentProfileViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @property (strong, nonatomic) MTUser *student;
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet MTLoadingView *loadingView;
 
 @end

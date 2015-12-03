@@ -27,6 +27,8 @@
 {
     [super viewDidLoad];
     
+    [self.loadingView setMessage:@"Loading latest posts..."];
+    
     NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
     self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
@@ -49,19 +51,34 @@
     [super viewDidAppear:NO];
     
     [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
-
-    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-    [self.tableView reloadData];
+    
+    [self.loadingView setHidden:NO];
     
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            weakSelf.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO", weakSelf.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-            [weakSelf.tableView reloadData];
+            [weakSelf loadLocalPosts];
+            [weakSelf.loadingView setHidden:YES];
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load student posts");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadLocalPosts];
+            [self.loadingView setIsLoading:NO];
+            if (weakSelf.studentPosts.count == 0) {
+                [self.loadingView setHidden:NO];
+                [self.loadingView setMessage:@"No posts yet by this student."];
+            } else {
+                [self.loadingView setHidden:YES];
+            }
+        });
     }];
+}
+
+// @Private
+- (void)loadLocalPosts {
+    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO AND challenge != NULL", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    [self.tableView reloadData];
 }
 
 
@@ -73,6 +90,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if (self.studentPosts == nil) return 0;
     NSInteger rows = [self.studentPosts count];
     return rows;
 }
