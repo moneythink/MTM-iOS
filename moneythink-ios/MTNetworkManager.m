@@ -1628,6 +1628,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
                     thisPost.isCrossPost = YES;
                 }
                 
+                NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                    MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                    thisPost.challenge = thisChallenge;
+                }
+                
                 NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)thisUser.id, (long)thisPost.id];
                 MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
                 if (!existing) {
@@ -3266,10 +3273,11 @@ static NSString * const MTRefreshingErrorCode = @"701";
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
+        parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = @"10";
+        parameters[@"user_id"] = [NSString stringWithFormat:@"%ld", (long)userId];
         
-        NSString *urlString = [NSString stringWithFormat:@"posts?user_id=%ld", (long)userId];
+        NSString *urlString = @"posts";
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
