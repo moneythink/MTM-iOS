@@ -28,6 +28,11 @@
     [super viewDidLoad];
     
     [self.loadingView setMessage:@"Loading latest posts..."];
+    
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
+    [self.tableView addSubview:refreshControl];
+    self.refreshControl = refreshControl;
         
     NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
@@ -52,33 +57,22 @@
     
     [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
     
-    [self.loadingView setHidden:NO];
-    
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadLocalPosts];
-            [weakSelf.loadingView setHidden:YES];
-        });
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to load student posts");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadLocalPosts];
-            [self.loadingView setIsLoading:NO];
-            if (weakSelf.studentPosts.count == 0) {
-                [self.loadingView setHidden:NO];
-                [self.loadingView setMessage:@"No posts yet by this student."];
-            } else {
-                [self.loadingView setHidden:YES];
-            }
-        });
-    }];
+    [self refreshAction:nil];
 }
 
 // @Private
 - (void)loadLocalPosts {
-    self.studentPosts = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO AND challenge != NULL", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-    [self.tableView reloadData];
+    MTMakeWeakSelf();
+    RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO AND challenge != NULL", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        weakSelf.studentPosts = newResults;
+        [weakSelf.tableView beginUpdates];
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+        [weakSelf.tableView endUpdates];
+        
+        [weakSelf.refreshControl endRefreshing];
+    });
 }
 
 
@@ -255,6 +249,33 @@
         MTChallengePost *rowObject = cell.rowPost;
         destinationVC.challengePostId = rowObject.id;
     }
+}
+
+#pragma mark - IBAction
+- (IBAction)refreshAction:(UIRefreshControl *)refreshControl {
+    if (refreshControl == nil) {
+        [self.loadingView setHidden:NO];
+    }
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadLocalPosts];
+            [weakSelf.loadingView setHidden:YES];
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load student posts");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakSelf loadLocalPosts];
+            [self.loadingView setIsLoading:NO];
+            if (weakSelf.studentPosts.count == 0) {
+                [self.loadingView setHidden:NO];
+                [self.loadingView setMessage:@"No posts yet by this student."];
+            } else {
+                [self.loadingView setHidden:YES];
+            }
+        });
+    }];
 }
 
 
