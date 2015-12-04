@@ -41,15 +41,15 @@ BOOL autoAdvance = YES; // TODO switch
     [self.tableView addSubview:refreshControl];
     self.refreshControl = refreshControl;
         
-    NSString *points = [NSString stringWithFormat:@"%lu", (long)self.student.points];
+    NSString *points = [NSString stringWithFormat:@"%lu", (long)self.studentUser.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
-    self.title = [NSString stringWithFormat:@"%@ %@", self.student.firstName, self.student.lastName];
+    self.title = [NSString stringWithFormat:@"%@ %@", self.studentUser.firstName, self.studentUser.lastName];
     
     __block UIImageView *weakImageView = self.profileImage;
     self.profileImage.layer.cornerRadius = round(self.profileImage.frame.size.width / 2.0f);
     self.profileImage.layer.masksToBounds = YES;
     self.profileImage.contentMode = UIViewContentModeScaleAspectFill;
-    self.profileImage.image = [self.student loadAvatarImageWithSuccess:^(id responseData) {
+    self.profileImage.image = [self.studentUser loadAvatarImageWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             weakImageView.image = responseData;
         });
@@ -85,7 +85,11 @@ BOOL autoAdvance = YES; // TODO switch
 // @Private
 - (void)loadLocalPosts:(MTSuccessBlock)callback {
     MTMakeWeakSelf();
-    RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO AND challenge != NULL", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    
+    NSArray *sorts = @[
+       [RLMSortDescriptor sortDescriptorWithProperty:@"createdAt" ascending:NO],
+    ];
+    RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND challenge != NULL", self.studentUser.id] sortedResultsUsingDescriptors:sorts];
     
     dispatch_async(dispatch_get_main_queue(), ^{
         weakSelf.studentPosts = newResults;
@@ -198,7 +202,7 @@ BOOL autoAdvance = YES; // TODO switch
     // Attributed hashtag
 
     // Get Likes
-    NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)self.student.id, (long)post.id];
+    NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)self.studentUser.id, (long)post.id];
     MTUserPostPropertyCount *existing = [MTUserPostPropertyCount objectForPrimaryKey:complexId];
     if (existing && existing.likeCount > 0 && !existing.isDeleted) {
         cell.likes.image = [UIImage imageNamed:@"like_active"];
@@ -299,7 +303,7 @@ BOOL autoAdvance = YES; // TODO switch
 
 - (void)loadRemotePostsForCurrentPage {
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.studentUser.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
         totalItems = totalCount;
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingView setHidden:YES];

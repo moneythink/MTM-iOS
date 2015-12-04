@@ -145,7 +145,7 @@
     if ([segueID isEqualToString:@"userProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
         MTUser *student = sender;
-        destinationVC.student = student;
+        destinationVC.studentUser = student;
     }
 }
 
