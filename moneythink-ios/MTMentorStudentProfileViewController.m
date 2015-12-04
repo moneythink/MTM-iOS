@@ -18,16 +18,22 @@
 
 @property (strong, nonatomic) RLMResults *studentPosts;
 @property (strong, nonatomic) IBOutlet UILabel *userPoints;
+@property (strong, nonatomic) MTStudentProfileTableViewCell *dummyCell;
+@property (strong, nonatomic) UIRefreshControl *refreshControl;
 
 @end
 
 @implementation MTMentorStudentProfileViewController
+
+NSUInteger currentPage = 1;
+BOOL autoAdvance = YES; // TODO switch
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     [self.loadingView setMessage:@"Loading latest posts..."];
+    [self.loadingView setHidden:YES];
     
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
     [refreshControl addTarget:self action:@selector(refreshAction:) forControlEvents:UIControlEventValueChanged];
@@ -51,6 +57,17 @@
     }];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.loadingView setHidden:YES];
+    [self loadLocalPosts:^(NSError *error) {
+        if (error == nil) {
+            [self.loadingView setHidden:self.studentPosts.count > 0];
+        }
+    }];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:NO];
@@ -60,8 +77,12 @@
     [self refreshAction:nil];
 }
 
-// @Private
 - (void)loadLocalPosts {
+    [self loadLocalPosts:nil];
+}
+
+// @Private
+- (void)loadLocalPosts:(MTSuccessBlock)callback {
     MTMakeWeakSelf();
     RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND isCrossPost = NO AND challenge != NULL", self.student.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     
@@ -72,6 +93,10 @@
         [weakSelf.tableView endUpdates];
         
         [weakSelf.refreshControl endRefreshing];
+        
+        if (callback != nil) {
+            callback(nil);
+        }
     });
 }
 
@@ -98,7 +123,8 @@
         cell = [[MTStudentProfileTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"studentPosts"];
     }
     
-    if (row >= self.studentPosts.count) return nil;
+    // TODO: Fix the intermittent crash here.
+    if (row >= self.studentPosts.count) return cell;
     
     MTChallengePost *post = [self.studentPosts objectAtIndex:row];
     MTUser *user = post.user;
@@ -210,6 +236,9 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
+    if (indexPath.row > self.studentPosts.count) {
+        return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
+    }
     MTChallengePost *post = [self.studentPosts objectAtIndex:indexPath.row];
     if (post.hasPostImage) {
         CGFloat textHeight = 0.f;
@@ -236,6 +265,14 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.row == [self tableView:tableView numberOfRowsInSection:indexPath.section] - 1) {
+        // this is the last cell, load the next page
+        [self loadRemotePostsForCurrentPage];
+    }
+}
+
 
 #pragma mark - Navigation
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -253,15 +290,27 @@
 
 #pragma mark - IBAction
 - (IBAction)refreshAction:(UIRefreshControl *)refreshControl {
-    if (refreshControl == nil) {
-        [self.loadingView setHidden:NO];
-    }
-    
+    currentPage = 1;
+    [self loadRemotePostsForCurrentPage];
+}
+
+- (void)loadRemotePostsForCurrentPage {
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadLocalPosts];
             [weakSelf.loadingView setHidden:YES];
+            NSLog(@"Loaded page %lu of %lu", (unsigned long)currentPage, (unsigned long)numPages);
+            if (!lastPage) {
+                currentPage++;
+                if (autoAdvance) {
+                    [weakSelf loadRemotePostsForCurrentPage];
+                } else {
+                    [weakSelf loadLocalPosts];
+                }
+            } else {
+                NSLog(@"Loading local posts");
+                [weakSelf loadLocalPosts];
+            }
         });
     } failure:^(NSError *error) {
         NSLog(@"Unable to load student posts");

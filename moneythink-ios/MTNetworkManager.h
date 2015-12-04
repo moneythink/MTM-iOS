@@ -9,6 +9,8 @@
 #import "AFOAuth2Manager.h"
 
 typedef void (^MTNetworkSuccessBlock)(id responseData);
+typedef void (^MTNetworkPaginatedSuccessBlock)(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount);
+typedef void (^MTSuccessBlock)(NSError *error);
 typedef void (^MTNetworkOAuthSuccessBlock)(AFOAuthCredential *credential);
 typedef void (^MTNetworkFailureBlock)(NSError *error);
 
@@ -81,7 +83,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)deletePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)verifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)unVerifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
-- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Comments
 - (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

@@ -11,27 +11,10 @@
 @implementation MTStudentProfileTableViewCell
 
 
-- (void)awakeFromNib
-{
-    // Initialization code
-    
-    CGRect frame = self.verified.frame;
-    frame.origin.x += (frame.size.width / 2) - 10.0f;
-    frame.origin.y += (frame.size.height / 2) - 10.0f;
-    frame.size.width = 20.0f;
-    frame.size.height = 20.0f;
-    
-    self.verifiedCheckbox =[[MICheckBox alloc]initWithFrame:frame];
-    [self.verifiedCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.verifiedCheckbox setTitle:@"" forState:UIControlStateNormal];
-    [self addSubview:self.verifiedCheckbox];
-    
-    [self.verifiedCheckbox addTarget:self action:@selector(checkedVerifiedBox) forControlEvents:UIControlEventTouchUpInside];
-    self.verified.hidden = YES;
-}
-
 - (void)layoutIfNeeded {
     [super layoutIfNeeded];
+    
+    [self overrideVerificationCheckbox];
 
     [self.verifiedCheckbox setHidden:YES];
     [self.verifiedLabel setHidden:YES];
@@ -100,6 +83,24 @@
             });
         }];
     }
+}
+
+- (void)overrideVerificationCheckbox {
+    if (self.verifiedCheckbox != nil) return;
+    
+    CGRect frame = self.verified.frame;
+    frame.origin.x += (frame.size.width / 2) - 10.0f;
+    frame.origin.y += (frame.size.height / 2) - 10.0f;
+    frame.size.width = 20.0f;
+    frame.size.height = 20.0f;
+    
+    self.verifiedCheckbox =[[MICheckBox alloc]initWithFrame:frame];
+    [self.verifiedCheckbox setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [self.verifiedCheckbox setTitle:@"" forState:UIControlStateNormal];
+    [self addSubview:self.verifiedCheckbox];
+    
+    [self.verifiedCheckbox addTarget:self action:@selector(checkedVerifiedBox) forControlEvents:UIControlEventTouchUpInside];
+    self.verified.hidden = YES;
 }
 
 
