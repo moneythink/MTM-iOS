@@ -26,6 +26,7 @@
 @implementation MTMentorStudentProfileViewController
 
 NSUInteger currentPage = 1;
+NSInteger totalItems = -1;
 BOOL autoAdvance = YES; // TODO switch
 
 - (void)viewDidLoad
@@ -269,7 +270,9 @@ BOOL autoAdvance = YES; // TODO switch
 {
     if (indexPath.row == [self tableView:tableView numberOfRowsInSection:indexPath.section] - 1) {
         // this is the last cell, load the next page
-        [self loadRemotePostsForCurrentPage];
+        if (totalItems > 0 && totalItems < indexPath.row) {
+            [self loadRemotePostsForCurrentPage];
+        }
     }
 }
 
@@ -297,6 +300,7 @@ BOOL autoAdvance = YES; // TODO switch
 - (void)loadRemotePostsForCurrentPage {
     MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.student.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
+        totalItems = totalCount;
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakSelf.loadingView setHidden:YES];
             NSLog(@"Loaded page %lu of %lu", (unsigned long)currentPage, (unsigned long)numPages);
