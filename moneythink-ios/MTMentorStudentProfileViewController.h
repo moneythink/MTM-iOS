@@ -18,9 +18,6 @@
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet MTLoadingView *loadingView;
 
-@property (strong, nonatomic) MTStudentProfileTableViewCell *dummyCell;
-@property (strong, nonatomic) UIRefreshControl *refreshControl;
-
 - (IBAction)refreshAction:(id)sender;
 
 @end

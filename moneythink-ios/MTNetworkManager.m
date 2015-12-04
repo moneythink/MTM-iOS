@@ -3268,14 +3268,23 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPostsForUserId:userId page:1 success:success failure:failure];
+}
+
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        NSUInteger pageSize = 1;
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"10";
+        parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
+        parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
         parameters[@"user_id"] = [NSString stringWithFormat:@"%ld", (long)userId];
+        
+        NSLog(@"Querying page %lu", (unsigned long)page);
         
         NSString *urlString = @"posts";
 
@@ -3288,7 +3297,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
             }
             
             if (success) {
-                success(nil);
+                NSUInteger numPages = (NSUInteger)[[responseObject objectForKey:@"page_count"] integerValue];
+                NSUInteger totalItems = (NSUInteger)[[responseObject objectForKey:@"total_items"] integerValue];
+                BOOL lastPage = page >= numPages;
+                success(lastPage, numPages, totalItems);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);
