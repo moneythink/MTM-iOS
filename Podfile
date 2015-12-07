@@ -15,5 +15,6 @@ target 'moneythink-ios' do
   pod 'ParseUI'
   pod 'DZNEmptyDataSet'
   pod 'Reachability'
+  pod "JYRefreshController"
 end
 

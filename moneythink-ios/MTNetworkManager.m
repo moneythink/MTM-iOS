@@ -1633,6 +1633,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
                     MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
                     thisPost.challenge = thisChallenge;
+                    thisPost.challengeRanking = thisChallenge.ranking;
                 }
                 
                 NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)thisUser.id, (long)thisPost.id];
