@@ -11,7 +11,7 @@
 
 @class MTStudentProfileTableViewCell;
 
-@interface MTMentorStudentProfileViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface MTMentorStudentProfileViewController : UIViewController <UIScrollViewDelegate>
 
 @property (strong, nonatomic) MTUser *studentUser;
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;

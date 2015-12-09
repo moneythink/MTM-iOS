@@ -85,6 +85,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)unVerifyPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page params:(NSDictionary *)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Comments
 - (void)loadCommentsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

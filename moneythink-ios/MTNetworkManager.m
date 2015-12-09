@@ -14,7 +14,7 @@
 #import "MTOAuthRefreshOperation.h"
 
 #ifdef STAGE
-static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
+static NSString * const MTNetworkURLString = @"http://localhost:8888/";
 #else
 static NSString * const MTNetworkURLString = @"https://api.moneythink.org/";
 #endif
@@ -3288,10 +3288,15 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
 - (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+    [self loadPostsForUserId:userId page:page params:@{} success:success failure:failure];
+}
+
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page params:(NSDictionary*)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        NSUInteger pageSize = 1;
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
+        NSUInteger pageSize = 10;
         parameters[@"maxdepth"] = @"1";
         parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
         parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
