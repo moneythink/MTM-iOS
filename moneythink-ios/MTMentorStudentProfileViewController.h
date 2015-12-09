@@ -7,17 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MTLoadingView.h"
+#import "MTIncrementalLoadingTableViewController.h"
 
 @class MTStudentProfileTableViewCell;
 
-@interface MTMentorStudentProfileViewController : UIViewController <UIScrollViewDelegate>
+@interface MTMentorStudentProfileViewController : MTIncrementalLoadingTableViewController
 
 @property (strong, nonatomic) MTUser *studentUser;
 @property (strong, nonatomic) IBOutlet UIImageView *profileImage;
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (strong, nonatomic) IBOutlet MTLoadingView *loadingView;
-
-- (IBAction)refreshAction:(id)sender;
 
 @end

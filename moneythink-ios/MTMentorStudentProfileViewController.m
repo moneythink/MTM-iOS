@@ -8,41 +8,23 @@
 
 #import "MTMentorStudentProfileViewController.h"
 #import "MTStudentProfileTableViewCell.h"
-#import "MTStudentProfileTableViewCell.h"
 #import "MTPostDetailViewController.h"
-#import "JYPullToRefreshController.h"
-#import "JYPullToLoadMoreController.h"
-#import "MTRefreshView.h"
 
 #define kHeightBase 120.f
 #define kHeightPictureAndPadding 300.f
 
-@interface MTMentorStudentProfileViewController () <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface MTMentorStudentProfileViewController ()
 
-@property (strong, nonatomic) RLMResults *studentPosts;
 @property (strong, nonatomic) IBOutlet UILabel *userPoints;
 @property (strong, nonatomic) MTStudentProfileTableViewCell *dummyCell;
-@property (strong, nonatomic) JYPullToRefreshController *refreshController;
-@property (strong, nonatomic) JYPullToLoadMoreController *loadMoreController;
-@property (strong, nonatomic) MTRefreshView *refreshControllerRefreshView;
-@property (strong, nonatomic) MTRefreshView *loadMoreControllerRefreshView;
-
-- (void)configureRefreshController;
-- (void)configureLoadMoreController;
 
 @end
 
 @implementation MTMentorStudentProfileViewController
 
-NSUInteger currentPage = 1;
-NSInteger totalItems = -1;
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    [self.loadingView setMessage:@"Loading latest posts..."];
-    [self.loadingView setHidden:YES];
         
     NSString *points = [NSString stringWithFormat:@"%lu", (long)self.studentUser.points];
     self.userPoints.text = [points stringByAppendingString:@" pts"];
@@ -61,100 +43,39 @@ NSInteger totalItems = -1;
     }];
 }
 
-- (void)configureRefreshController {
-    if (self.refreshController || self.refreshControllerRefreshView) return;
-    
-    MTMakeWeakSelf();
-    self.refreshController = [[JYPullToRefreshController alloc] initWithScrollView:self.tableView];
-    
-    MTRefreshView *refreshView = [[MTRefreshView alloc] initWithFrame:CGRectMake(0,0,self.tableView.frame.size.width, 44.0f)];
-    [self.refreshController setCustomView:refreshView];
-    self.refreshControllerRefreshView = refreshView;
-    
-    self.refreshController.pullToRefreshHandleAction = ^{
-        currentPage = 1;
-        [weakSelf loadRemotePostsForCurrentPage];
-    };
-}
-
-- (void)configureLoadMoreController {
-    if (self.loadMoreController || self.loadMoreControllerRefreshView) return;
-    
-    MTMakeWeakSelf();
-    self.loadMoreController = [[JYPullToLoadMoreController alloc] initWithScrollView:self.tableView];
-    self.loadMoreController.autoLoadMore = NO;
-    
-    MTRefreshView *refreshView = [[MTRefreshView alloc] initWithFrame:CGRectMake(0,0,self.tableView.frame.size.width, 44.0f)];
-    [self.loadMoreController setCustomView:refreshView];
-    self.loadMoreControllerRefreshView = refreshView;
-    
-    self.loadMoreController.pullToLoadMoreHandleAction = ^{
-        [weakSelf loadRemotePostsForCurrentPage];
-    };
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    [self.loadingView setHidden:YES];
-    [self loadLocalPosts:^(NSError *error) {
-        if (error == nil) {
-            [self.loadingView setHidden:self.studentPosts.count > 0];
-        }
-    }];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:NO];
-    
-    [self configureRefreshController];
-    [self configureLoadMoreController];
+    [super viewDidAppear:animated];
     
     [MTUtil GATrackScreen:@"Student Profile View: Mentor"];
 }
 
-- (void)loadLocalPosts {
-    [self loadLocalPosts:nil];
-}
-
-// @Private
-- (void)loadLocalPosts:(MTSuccessBlock)callback {
-    MTMakeWeakSelf();
-    
+#pragma mark - Superclass methods
+// @Override
+- (void)loadLocalResults:(MTSuccessBlock)callback {
     NSArray *sorts = @[
        [RLMSortDescriptor sortDescriptorWithProperty:@"createdAt" ascending:NO],
     ];
     RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND challenge != NULL AND isCrossPost = NO", self.studentUser.id] sortedResultsUsingDescriptors:sorts];
     
-    dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.studentPosts = newResults;
-        [weakSelf.tableView beginUpdates];
-        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [weakSelf.tableView endUpdates];
-        
-        [weakSelf.refreshController stopRefreshWithAnimated:YES completion:nil];
-        
-        if (callback != nil) {
-            callback(nil);
-        }
-    });
+    [self didLoadLocalResults:newResults withCallback:callback];
 }
 
-
-#pragma mark - UITableViewController delegate methods
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView // Default is 1 if not implemented
-{
-    return 1;
+// @Override
+- (void)loadRemoteResultsForCurrentPage {
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.studentUser.id page:[self currentPage] params:@{@"allow_fed_posts": @"false"} success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
+        struct MTIncrementalLoadingResponse response;
+        response.lastPage = lastPage;
+        response.numPages = numPages;
+        response.totalCount = totalCount;
+        [self didLoadRemoteResultsWithSuccessfulResponse:response];
+    } failure:^(NSError *error) {
+        [self didLoadRemoteResultsWithError:error];
+    }];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    if (self.studentPosts == nil) return 0;
-    NSInteger rows = [self.studentPosts count];
-    return rows;
-}
-
+#pragma mark - UITableViewCellDataSource methods
+// @Override
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger row = indexPath.row;
@@ -165,9 +86,9 @@ NSInteger totalItems = -1;
     }
     
     // TODO: Fix the intermittent crash here.
-    if (row >= self.studentPosts.count) return cell;
+    if (row >= self.results.count) return cell;
     
-    MTChallengePost *post = [self.studentPosts objectAtIndex:row];
+    MTChallengePost *post = [self.results objectAtIndex:row];
     MTUser *user = post.user;
     
     __block MTStudentProfileTableViewCell *weakCell = cell;
@@ -277,10 +198,10 @@ NSInteger totalItems = -1;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(nonnull NSIndexPath *)indexPath
 {
-    if (indexPath.row > self.studentPosts.count) {
+    if (indexPath.row > self.results.count) {
         return [self tableView:tableView estimatedHeightForRowAtIndexPath:indexPath];
     }
-    MTChallengePost *post = [self.studentPosts objectAtIndex:indexPath.row];
+    MTChallengePost *post = [self.results objectAtIndex:indexPath.row];
     if (post.hasPostImage) {
         CGFloat textHeight = 0.f;
 
@@ -306,16 +227,6 @@ NSInteger totalItems = -1;
     }
 }
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row == [self tableView:tableView numberOfRowsInSection:indexPath.section] - 1) {
-        // this is the last cell, load the next page
-        if (totalItems > 0 && totalItems < indexPath.row) {
-            [self loadRemotePostsForCurrentPage];
-        }
-    }
-}
-
 
 #pragma mark - Navigation
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -328,51 +239,6 @@ NSInteger totalItems = -1;
         MTStudentProfileTableViewCell *cell = (MTStudentProfileTableViewCell *)sender;
         MTChallengePost *rowObject = cell.rowPost;
         destinationVC.challengePostId = rowObject.id;
-    }
-}
-
-- (void)loadRemotePostsForCurrentPage {
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.studentUser.id page:currentPage params:@{@"allow_fed_posts": @"false"} success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
-        totalItems = totalCount;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf.loadingView setHidden:YES];
-            
-            if (self.refreshController.refreshState == JYRefreshStateLoading) {
-                [self.refreshController stopRefreshWithAnimated:YES completion:nil];
-            }
-            if (self.loadMoreController.loadMoreState == JYLoadMoreStateLoading) {
-                [self.loadMoreController stopLoadMoreCompletion:nil];
-            }
-            NSLog(@"Loaded page %lu of %lu", (unsigned long)currentPage, (unsigned long)numPages);
-            if (!lastPage) {
-                currentPage++;
-            }
-            [weakSelf loadLocalPosts];
-        });
-    } failure:^(NSError *error) {
-        NSLog(@"Unable to load student posts");
-        [self.refreshController stopRefreshWithAnimated:YES completion:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakSelf loadLocalPosts];
-            [self.loadingView setIsLoading:NO];
-            if (weakSelf.studentPosts.count == 0) {
-                [self.loadingView setHidden:NO];
-                [self.loadingView setMessage:@"No posts yet by this student."];
-            } else {
-                [self.loadingView setHidden:YES];
-            }
-        });
-    }];
-}
-
-// MARK: UIScrollViewDelegate
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (scrollView.contentOffset.y < 0) {
-        [self.refreshControllerRefreshView scrollView:scrollView contentOffsetDidUpdate:scrollView.contentOffset];
-    } else {
-        [self.loadMoreControllerRefreshView scrollView:scrollView contentOffsetDidUpdate:scrollView.contentOffset];
     }
 }
 
