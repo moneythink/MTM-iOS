@@ -244,8 +244,8 @@
     NSString *segueID = [segue identifier];
     if ([segueID isEqualToString:@"mentorStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        MTUser *student = sender;
-        destinationVC.student = student;
+        MTUser *studentUser = sender;
+        destinationVC.studentUser = studentUser;
     }
 }
 

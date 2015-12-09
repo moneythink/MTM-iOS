@@ -1744,12 +1744,12 @@ typedef enum {
     }
     else if ([segueIdentifier isEqualToString:@"pushStudentProfileFromPost"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        destinationVC.student = self.challengePost[@"user"];
+        destinationVC.studentUser = self.challengePost[@"user"];
     }
     else if ([segueIdentifier isEqualToString:@"postDetailStudentProfileView"]) {
         MTMentorStudentProfileViewController *destinationVC = (MTMentorStudentProfileViewController *)[segue destinationViewController];
-        MTUser *student = sender;
-        destinationVC.student = student;
+        MTUser *studentUser = sender;
+        destinationVC.studentUser = studentUser;
     }
 }
 

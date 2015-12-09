@@ -1601,6 +1601,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
             thisPost.user = thisUser;
             thisPost.challengeClass = thisUser.userClass;
             
+            if ([[post objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *innerLinksDict = (NSDictionary *)[post objectForKey:@"_links"];
+                if (innerLinksDict[@"picture"]) {
+                    thisPost.hasPostImage = YES;
+                }
+            }
+            
             if ([[post objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
                 NSDictionary *innerEmbeddedDict = (NSDictionary *)[post objectForKey:@"_embedded"];
                 
@@ -1619,6 +1626,14 @@ static NSString * const MTRefreshingErrorCode = @"701";
                 
                 if ([innerEmbeddedDict objectForKey:@"feedFromPost"]) {
                     thisPost.isCrossPost = YES;
+                }
+                
+                NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
+                NSNumber *challengeId = [challengeDict objectForKey:@"id"];
+                if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
+                    MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
+                    thisPost.challenge = thisChallenge;
+                    thisPost.challengeRanking = thisChallenge.ranking;
                 }
                 
                 NSString *complexId = [NSString stringWithFormat:@"%lu-%lu", (long)thisUser.id, (long)thisPost.id];
@@ -3266,15 +3281,30 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)loadPostsForUserId:(NSInteger)userId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPostsForUserId:userId page:1 success:success failure:failure];
+}
+
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPostsForUserId:userId page:page params:@{} success:success failure:failure];
+}
+
+- (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page params:(NSDictionary*)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"999";
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
+        NSUInteger pageSize = 10;
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
+        parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
+        parameters[@"user_id"] = [NSString stringWithFormat:@"%ld", (long)userId];
         
-        NSString *urlString = [NSString stringWithFormat:@"users/%ld", (long)userId];
+        NSLog(@"Querying page %lu", (unsigned long)page);
+        
+        NSString *urlString = @"posts";
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3285,7 +3315,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
             }
             
             if (success) {
-                success(nil);
+                NSUInteger numPages = (NSUInteger)[[responseObject objectForKey:@"page_count"] integerValue];
+                NSUInteger totalItems = (NSUInteger)[[responseObject objectForKey:@"total_items"] integerValue];
+                BOOL lastPage = page >= numPages;
+                success(lastPage, numPages, totalItems);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);

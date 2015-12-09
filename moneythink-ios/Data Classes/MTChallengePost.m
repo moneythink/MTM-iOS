@@ -16,7 +16,8 @@
              @"extraFields": @"",
              @"content": @"",
              @"isCrossPost": @NO,
-             @"isDeleted": @NO};
+             @"isDeleted": @NO,
+             @"challengeRanking": @1};
 }
 
 // Specify properties to ignore (Realm won't persist these)

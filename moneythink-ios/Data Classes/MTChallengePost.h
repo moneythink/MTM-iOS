@@ -20,6 +20,7 @@
 @property NSString *extraFields;
 @property BOOL isCrossPost;
 @property BOOL isDeleted;
+@property NSInteger challengeRanking;
 
 @property MTUser *user;
 @property MTChallenge *challenge;
