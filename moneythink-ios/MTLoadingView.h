@@ -16,6 +16,8 @@
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
 
 - (void)setMessage:(NSString *)message;
-- (void)setIsLoading:(BOOL)isLoading;
+
+- (void)startLoading;
+- (void)stopLoadingSuccessfully:(BOOL)success;
 
 @end

@@ -11,9 +11,8 @@
 
 @class MTStudentProfileTableViewCell;
 
-@interface MTMentorStudentProfileViewController : MTIncrementalLoadingTableViewController
+@interface MTMentorStudentProfileViewController : UIViewController
 
 @property (strong, nonatomic) MTUser *studentUser;
-@property (strong, nonatomic) IBOutlet UIImageView *profileImage;
 
 @end

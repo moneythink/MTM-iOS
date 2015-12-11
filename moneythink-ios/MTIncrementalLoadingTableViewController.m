@@ -28,20 +28,23 @@
 
 @implementation MTIncrementalLoadingTableViewController
 
-NSUInteger currentPage = 1;
 NSInteger totalItems = -1;
 
 #pragma mark - View Methods
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.currentPage = 1;
 
+    if (self.loadingView == nil) {
+        CGPoint origin = self.tableView.frame.origin;
+        MTLoadingView *loadingView = [[MTLoadingView alloc] initWithFrame:CGRectMake(origin.x, origin.y, self.tableView.bounds.size.width, self.tableView.bounds.size.height)];
+        loadingView.layer.zPosition++;
+        [self.view addSubview:loadingView];
+        self.loadingView = loadingView;
+    }
     [self.loadingView setMessage:@"Loading latest posts..."];
-    [self.loadingView setHidden:YES];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // TODO: May want to release old results
+    [self.loadingView startLoading];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -50,7 +53,7 @@ NSInteger totalItems = -1;
     [self.loadingView setHidden:YES];
     [self loadLocalResults:^(NSError *error) {
         if (error == nil) {
-            [self.loadingView setHidden:self.results.count > 0];
+            [self.loadingView stopLoadingSuccessfully:YES];
         }
     }];
 }
@@ -99,23 +102,29 @@ NSInteger totalItems = -1;
 }
 
 #pragma mark - Clients should call these methods
+- (void)willLoadRemoteResultsForCurrentPage {
+    if (IsEmpty(self.results)) {
+        [self.loadingView startLoading];
+    }
+}
 - (void)didLoadRemoteResultsWithSuccessfulResponse:(struct MTIncrementalLoadingResponse)response
 {
     MTMakeWeakSelf();
     totalItems = response.totalCount;
     
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf.loadingView setHidden:YES];
+        [weakSelf.loadingView stopLoadingSuccessfully:totalItems > 0];
         
         if (self.refreshController.refreshState == JYRefreshStateLoading) {
-            [self.refreshController stopRefreshWithAnimated:YES completion:nil];
+            BOOL shouldAnimate = self.results.count > 0; // Refreshing existing feed?
+            [self.refreshController stopRefreshWithAnimated:shouldAnimate completion:nil];
         }
         if (self.loadMoreController.loadMoreState == JYLoadMoreStateLoading) {
             [self.loadMoreController stopLoadMoreCompletion:nil];
         }
-        NSLog(@"Loaded page %lu of %lu", (unsigned long)currentPage, (unsigned long)response.numPages);
+        NSLog(@"Loaded page %lu of %lu", (unsigned long)self.currentPage, (unsigned long)response.numPages);
         if (!response.lastPage) {
-            currentPage++;
+            self.currentPage++;
         }
         [weakSelf loadLocalResults];
     });
@@ -127,13 +136,7 @@ NSInteger totalItems = -1;
     [self.refreshController stopRefreshWithAnimated:YES completion:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf loadLocalResults];
-        [self.loadingView setIsLoading:NO];
-        if (weakSelf.results.count == 0) {
-            [self.loadingView setHidden:NO];
-            [self.loadingView setMessage:@"No posts yet by this student."];
-        } else {
-            [self.loadingView setHidden:YES];
-        }
+        [self.loadingView stopLoadingSuccessfully:weakSelf.results.count > 0];
     });
 }
 
@@ -153,10 +156,6 @@ NSInteger totalItems = -1;
     });
 }
 
-- (NSUInteger)currentPage {
-    return currentPage;
-}
-
 #pragma mark - UIScrollViewDelegate
 // MARK: UIScrollViewDelegate
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -172,23 +171,21 @@ NSInteger totalItems = -1;
 - (void)configureRefreshController {
     if (self.refreshController || self.refreshControllerRefreshView) return;
     
-    MTMakeWeakSelf();
     self.refreshController = [[JYPullToRefreshController alloc] initWithScrollView:self.tableView];
     
     MTRefreshView *refreshView = [[MTRefreshView alloc] initWithFrame:CGRectMake(0,0,self.tableView.frame.size.width, 44.0f)];
     [self.refreshController setCustomView:refreshView];
     self.refreshControllerRefreshView = refreshView;
     
+    MTMakeWeakSelf();
     self.refreshController.pullToRefreshHandleAction = ^{
-        currentPage = 1;
-        [weakSelf loadRemoteResultsForCurrentPage];
+        [weakSelf handlePullToRefresh];
     };
 }
 
 - (void)configureLoadMoreController {
     if (self.loadMoreController || self.loadMoreControllerRefreshView) return;
     
-    MTMakeWeakSelf();
     self.loadMoreController = [[JYPullToLoadMoreController alloc] initWithScrollView:self.tableView];
     self.loadMoreController.autoLoadMore = NO;
     
@@ -196,9 +193,20 @@ NSInteger totalItems = -1;
     [self.loadMoreController setCustomView:refreshView];
     self.loadMoreControllerRefreshView = refreshView;
     
+    MTMakeWeakSelf();
     self.loadMoreController.pullToLoadMoreHandleAction = ^{
-        [weakSelf loadRemoteResultsForCurrentPage];
+        [weakSelf handlePullToLoadMore];
     };
+}
+
+#pragma mark - Handlers
+- (void)handlePullToRefresh {
+    self.currentPage = 1;
+    [self loadRemoteResultsForCurrentPage];
+}
+
+- (void)handlePullToLoadMore {
+    [self loadRemoteResultsForCurrentPage];
 }
 
 @end

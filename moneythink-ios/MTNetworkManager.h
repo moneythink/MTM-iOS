@@ -75,7 +75,10 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)loadChallengeProgressWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Posts
-- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page params:(NSDictionary *)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+
 - (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

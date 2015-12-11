@@ -18,8 +18,19 @@
     [self.activityIndicator setHidden:!isLoading];
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder {
+- (instancetype)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
+    if (self)
+    {
+        [[NSBundle mainBundle] loadNibNamed:@"MTLoadingView" owner:self options:nil];
+        self.view.frame = CGRectMakeCenteredInScreen(self.frame.size.width, self.frame.size.height);
+        [self addSubview:self.view];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
     if (self)
     {
         [[NSBundle mainBundle] loadNibNamed:@"MTLoadingView" owner:self options:nil];
@@ -32,6 +43,21 @@
 - (void)awakeFromNib {
     [super awakeFromNib];
     [self.activityIndicator startAnimating];
+}
+
+- (void)startLoading {
+    [self setIsLoading:YES];
+    [self setHidden:NO];
+    [self.activityIndicator startAnimating];
+}
+
+- (void)stopLoadingSuccessfully:(BOOL)success {
+    [self setIsLoading:NO];
+    [self.activityIndicator stopAnimating];
+    [self setHidden:success];
+    if (!success) {
+        [self setMessage:@"No results found."];
+    }
 }
 
 @end

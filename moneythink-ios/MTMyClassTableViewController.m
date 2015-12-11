@@ -40,7 +40,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic, strong) UIView *emojiDimView;
 @property (nonatomic, strong) UIView *emojiContainerView;
 @property (nonatomic) BOOL displaySpentView;
-@property (nonatomic, strong) RLMResults *challengePosts;
 @property (nonatomic, strong) RLMResults *buttons;
 @property (nonatomic, strong) NSMutableArray *challengeIdsQueried;
 
@@ -70,16 +69,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-    self.tableView.emptyDataSetSource = self;
-    self.tableView.emptyDataSetDelegate = self;
+//    self.tableView.emptyDataSetSource = self;
+//    self.tableView.emptyDataSetDelegate = self;
     
     // A little trick for removing the cell separators
     self.tableView.tableFooterView = [UIView new];
-    
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    self.refreshControl.backgroundColor = [UIColor whiteColor];
-    self.refreshControl.tintColor = [UIColor primaryOrange];
-    [self.refreshControl addTarget:self action:@selector(loadData) forControlEvents:UIControlEventValueChanged];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -105,64 +99,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 }
 
 
-#pragma mark - Data Loading -
-- (void)loadData
-{
-    [self refreshFromDatabase];
-    
-    if (IsEmpty(self.challengePosts) && ![self.challengeIdsQueried containsObject:[NSNumber numberWithInteger:self.challenge.id]]) {
-        
-        // Show this loading indicator only the first time empty, otherwise background update.
-        [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading Posts...";
-        hud.dimBackground = YES;
-    }
-
-    MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id success:^(id responseData) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            
-            [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.refreshControl endRefreshing];
-            [weakSelf refreshFromDatabase];
-            
-            if (!IsEmpty(weakSelf.challengePosts)) {
-                [weakSelf updateComments];
-                [weakSelf updateLikes];
-                
-                if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
-                    [weakSelf updateButtonClicks];
-                }
-            }
-        });
-        
-    } failure:^(NSError *error) {
-        NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [weakSelf.refreshControl endRefreshing];
-            [weakSelf refreshFromDatabase];
-        });
-    }];
-}
-
-- (void)refreshFromDatabase
-{
-    if (self.challenge) {
-        self.challengePosts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-        [self loadButtons];
-    }
-    else {
-        self.challengePosts = nil;
-        self.buttons = nil;
-    }
-    
-    [self.tableView reloadData];
-}
-
+#pragma mark - Data Loading
 - (void)updateComments
 {
     MTMakeWeakSelf();
@@ -234,10 +171,16 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         _challenge = challenge;
         
         if (refresh) {
-            self.challengePosts = nil;
+            self.results = nil;
             self.displaySpentView = !IsEmpty(challenge.postExtraFields);
             self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-            [self loadData];
+            [self.tableView setContentOffset:CGPointZero animated:NO];
+            self.currentPage = 1; // Reset current page for new challenge
+            [self loadLocalResults:^(NSError *error) {
+                if (IsEmpty(self.results)) {
+                    [self loadRemoteResultsForCurrentPage];
+                }
+            }];
         }
     }
 }
@@ -334,8 +277,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        [self refreshFromDatabase];
     });
+    [self loadLocalResults];
 }
 
 - (void)postFailed
@@ -362,25 +305,23 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)willSaveEditPostComment:(NSNotification *)notif
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshFromDatabase];
-    });
+    [self loadLocalResults];
 }
 
 - (void)didSaveNewPostComment:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        [self refreshFromDatabase];
     });
+    [self loadLocalResults];
 }
 
 - (void)didDeletePostComment:(NSNotification *)notif
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-        [self refreshFromDatabase];
     });
+    [self loadLocalResults];
 }
 
 - (void)commentFailed
@@ -397,23 +338,17 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)commentEditFailed
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshFromDatabase];
-    });
+    [self loadLocalResults];
 }
 
 - (void)willSaveEditPost:(NSNotification *)notif
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshFromDatabase];
-    });
+    [self loadLocalResults];
 }
 
 - (void)didSaveEditPost:(NSNotification *)notif
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self refreshFromDatabase];
-    });
+    [self loadLocalResults];
 }
 
 - (void)failedSaveEditPost:(NSNotification *)notif
@@ -425,9 +360,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         hud.dimBackground = NO;
         hud.mode = MBProgressHUDModeText;
         [hud hide:YES afterDelay:1.5f];
-        
-        [self refreshFromDatabase];
     });
+    [self loadLocalResults];
 }
 
 
@@ -1103,14 +1037,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 
 #pragma mark - UITableViewDataSource methods -
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    return [self.challengePosts count];
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    __block MTChallengePost *post = (MTChallengePost *)[self.challengePosts objectAtIndex:indexPath.row];
+    __block MTChallengePost *post = (MTChallengePost *)[self.results objectAtIndex:indexPath.row];
 
     MTUser *user = post.user;
     NSString *CellIdentifier = @"";
@@ -1323,11 +1252,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     CGFloat height = 0.0f;
     
-    if (row < [self.challengePosts count]) {
-        MTChallengePost *rowObject = self.challengePosts[row];
+    if (row < [self.results count]) {
+        MTChallengePost *rowObject = self.results[row];
         BOOL hasPostImage = rowObject.hasPostImage;
         
-        MTChallengePost *post = (MTChallengePost *)[self.challengePosts objectAtIndex:indexPath.row];
+        MTChallengePost *post = (MTChallengePost *)[self.results objectAtIndex:indexPath.row];
         MTUser *user = post.user;
 
         BOOL myPost = NO;
@@ -1465,7 +1394,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     // Perform on delay after we get popped to here
     MTMakeWeakSelf();
     [self bk_performBlock:^(id obj) {
-        NSUInteger row = [weakSelf.challengePosts indexOfObject:challengePost];
+        NSUInteger row = [weakSelf.results indexOfObject:challengePost];
         if (row != NSNotFound) {
             MTPostsTableViewCell *cell = (MTPostsTableViewCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:0]];
             if (cell) {
@@ -1581,11 +1510,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
                 postToDelete.isDeleted = YES;
                 [realm commitWriteTransaction];
-                [weakSelf refreshFromDatabase];
+                [weakSelf loadLocalResults];
 
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
+                    [weakSelf loadLocalResults];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf refreshFromDatabase];
                         if (![MTUser isCurrentUserMentor]) {
                             // Update current user (to get current point total)
                             [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -1603,7 +1532,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                         MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
                         postToDelete.isDeleted = NO;
                         [realm commitWriteTransaction];
-                        [weakSelf refreshFromDatabase];
+                        [weakSelf loadLocalResults];
 
                         [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                     });
@@ -1625,11 +1554,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
                 postToDelete.isDeleted = YES;
                 [realm commitWriteTransaction];
-                [weakSelf refreshFromDatabase];
+                [weakSelf loadLocalResults];
 
                 [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
+                    [weakSelf loadLocalResults];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [weakSelf refreshFromDatabase];
                         if (![MTUser isCurrentUserMentor]) {
                             // Update current user (to get current point total)
                             [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -1647,7 +1576,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                         MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
                         postToDelete.isDeleted = NO;
                         [realm commitWriteTransaction];
-                        [weakSelf refreshFromDatabase];
+                        [weakSelf loadLocalResults];
 
                         [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
                     });
@@ -1664,12 +1593,12 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
         postToDelete.isDeleted = YES;
         [realm commitWriteTransaction];
-        [self refreshFromDatabase];
+        [self loadLocalResults];
 
         MTMakeWeakSelf();
         [[MTNetworkManager sharedMTNetworkManager] deletePostId:postID success:^(AFOAuthCredential *credential) {
+            [weakSelf loadLocalResults];
             dispatch_async(dispatch_get_main_queue(), ^{
-                [weakSelf refreshFromDatabase];
                 if (![MTUser isCurrentUserMentor]) {
                     // Update current user (to get current point total)
                     [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
@@ -1687,7 +1616,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 MTChallengePost *postToDelete = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postID]];
                 postToDelete.isDeleted = NO;
                 [realm commitWriteTransaction];
-                [weakSelf refreshFromDatabase];
+                [weakSelf loadLocalResults];
                 
                 [UIAlertView bk_showAlertViewWithTitle:@"Unable to Delete" message:[error localizedDescription] cancelButtonTitle:@"OK" otherButtonTitles:nil handler:nil];
             });
@@ -2113,7 +2042,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (void)emojiLikedForPost:(MTChallengePost *)likedPost withEmoji:(MTEmoji *)emoji
 {
-    NSUInteger row = [self.challengePosts indexOfObject:likedPost];
+    NSUInteger row = [self.results indexOfObject:likedPost];
     if (row == NSNotFound) {
         return;
     }
@@ -2198,52 +2127,49 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     }
 }
 
-
-#pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
-- (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
-{
-    NSString *text = @"No Posts";
+#pragma mark - MTIncrementalLoading methods
+- (void)loadLocalResults:(MTSuccessBlock)callback {
+    RLMResults *newResults = nil;
     
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
-                                 NSForegroundColorAttributeName: [UIColor darkGrayColor]};
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-}
-
-- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
-{
-    NSString *text = @"Be the first to post to this Challenge!";
-    
-    NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
-    paragraph.lineBreakMode = NSLineBreakByWordWrapping;
-    paragraph.alignment = NSTextAlignmentCenter;
-    
-    NSDictionary *attributes = @{NSFontAttributeName: [UIFont systemFontOfSize:14.0],
-                                 NSForegroundColorAttributeName: [UIColor lightGrayColor],
-                                 NSParagraphStyleAttributeName: paragraph};
-    
-    return [[NSAttributedString alloc] initWithString:text attributes:attributes];
-}
-
-- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
-{
-    if (IsEmpty(self.challengePosts)) {
-        return YES;
+    if (self.challenge) {
+        newResults = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+        [self loadButtons];
+    } else {
+        self.buttons = nil;
     }
-    else {
-        return NO;
-    }
+    
+    [self didLoadLocalResults:newResults withCallback:callback];
 }
 
-- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
-{
-    return [UIColor whiteColor];
+- (void)loadRemoteResultsForCurrentPage {
+    [self willLoadRemoteResultsForCurrentPage];
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] loadPostsForChallengeId:self.challenge.id page:[self currentPage] success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
+     
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            
+            if (!IsEmpty(weakSelf.results)) {
+                [weakSelf updateComments];
+                [weakSelf updateLikes];
+                
+                if (weakSelf.hasButtons || weakSelf.hasSecondaryButtons || weakSelf.hasTertiaryButtons) {
+                    [weakSelf updateButtonClicks];
+                }
+            }
+        });
+        struct MTIncrementalLoadingResponse response;
+        response.lastPage = lastPage;
+        response.numPages = numPages;
+        response.totalCount = totalCount;
+        [self didLoadRemoteResultsWithSuccessfulResponse:response];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to load post data: %@", [error mtErrorDescription]);
+        
+        [weakSelf loadLocalResults];
+    }];
 }
-
-- (CGFloat)verticalOffsetForEmptyDataSet:(UIScrollView *)scrollView
-{
-    return -142.0f;
-}
-
 
 @end

@@ -13,4 +13,7 @@
 
 - (void)scrollView:(UIScrollView *)scrollView contentOffsetDidUpdate:(CGPoint)contentOffset;
 
+- (void)startAnimating;
+- (void)stopAnimating;
+
 @end

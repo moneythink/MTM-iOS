@@ -14,19 +14,21 @@ struct MTIncrementalLoadingResponse {
     NSUInteger totalCount;
 };
 
-@interface MTIncrementalLoadingTableViewController : UIViewController <UIScrollViewDelegate>
+@interface MTIncrementalLoadingTableViewController : UITableViewController <UIScrollViewDelegate>
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) RLMResults *results;
-
-- (NSUInteger)currentPage;
+@property (assign, nonatomic) NSUInteger currentPage;
 
 - (void)loadLocalResults:(MTSuccessBlock)callback;
 - (void)loadLocalResults;
 - (void)loadRemoteResultsForCurrentPage;
 
+- (void)willLoadRemoteResultsForCurrentPage;
 - (void)didLoadRemoteResultsWithSuccessfulResponse:(struct MTIncrementalLoadingResponse)response;
 - (void)didLoadRemoteResultsWithError:(NSError *)error;
 - (void)didLoadLocalResults:(RLMResults *)results withCallback:(MTSuccessBlock)callback;
+
+- (void)handlePullToRefresh;
+- (void)handlePullToLoadMore;
 
 @end

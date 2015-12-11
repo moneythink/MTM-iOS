@@ -21,7 +21,7 @@
 - (UIActivityIndicatorView *)setupActivityIndicatorView {
     if (!_activityIndicatorView) {
         UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-        [activityIndicatorView setColor:[UIColor orangeColor]];
+        [activityIndicatorView setColor:[UIColor primaryOrange]];
         [activityIndicatorView setHidesWhenStopped:NO];
         [self addSubview:activityIndicatorView];
         _activityIndicatorView = activityIndicatorView;

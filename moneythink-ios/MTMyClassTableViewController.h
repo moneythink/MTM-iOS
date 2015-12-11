@@ -10,6 +10,7 @@
 #import "MTCommentViewController.h"
 #import "MTPostDetailViewController.h"
 #import "MTEmojiPickerCollectionView.h"
+#import "MTIncrementalLoadingTableViewController.h"
 
 extern NSString *const kWillSaveNewChallengePostNotification;
 extern NSString *const kDidDeleteChallengePostNotification;
@@ -26,7 +27,7 @@ extern NSString *const kWillSaveEditPostNotification;
 extern NSString *const kDidSaveEditPostNotification;
 extern NSString *const kFailedSaveEditPostNotification;
 
-@interface MTMyClassTableViewController : UITableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate, MBProgressHUDDelegate>
+@interface MTMyClassTableViewController : MTIncrementalLoadingTableViewController <MTCommentViewProtocol, MTEmojiPickerCollectionViewDelegate, MTPostViewControllerDelegate>
 
 @property (nonatomic, strong) MTChallenge *challenge;
 @property (nonatomic, strong) NSString *challengeNumber;

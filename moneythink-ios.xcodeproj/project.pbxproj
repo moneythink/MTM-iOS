@@ -17,6 +17,7 @@
 		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
 		3B5457FB1C0FB76200023611 /* MTLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5457FA1C0FB76200023611 /* MTLoadingView.m */; };
 		3B5457FD1C0FB92900023611 /* MTLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5457FC1C0FB92900023611 /* MTLoadingView.xib */; };
+		3B7154FF1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */; };
 		3B8243081C16424D00874D3A /* MTRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8243071C16424D00874D3A /* MTRefreshView.m */; };
 		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
 		3BBEFAF81C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEFAF71C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m */; };
@@ -252,6 +253,8 @@
 		3B5457F91C0FB76200023611 /* MTLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLoadingView.h; sourceTree = "<group>"; };
 		3B5457FA1C0FB76200023611 /* MTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoadingView.m; sourceTree = "<group>"; };
 		3B5457FC1C0FB92900023611 /* MTLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MTLoadingView.xib; sourceTree = "<group>"; };
+		3B7154FD1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProfileTableViewController.h; sourceTree = "<group>"; };
+		3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProfileTableViewController.m; sourceTree = "<group>"; };
 		3B8243031C163E6F00874D3A /* moneythink-ios-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "moneythink-ios-Bridging-Header.h"; sourceTree = "<group>"; };
 		3B8243061C16424D00874D3A /* MTRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTRefreshView.h; sourceTree = "<group>"; };
 		3B8243071C16424D00874D3A /* MTRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTRefreshView.m; sourceTree = "<group>"; };
@@ -1088,6 +1091,8 @@
 			children = (
 				5860BF3A1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.h */,
 				5860BF3B1986ED6D007D9BB3 /* MTMentorStudentProfileViewController.m */,
+				3B7154FD1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.h */,
+				3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */,
 				58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */,
 				58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */,
 				8905874A1A0181F500DB8CD4 /* MTWebViewController.h */,
@@ -1479,6 +1484,7 @@
 				8901D8AE19FF2662006E9168 /* MTPostCommentItemsTableViewCell.m in Sources */,
 				892105C319DA1EEA000CFBF6 /* MTPostDetailViewController.m in Sources */,
 				89DE8A711B8268270050C9A6 /* MTChallenge.m in Sources */,
+				3B7154FF1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,
 				898FBE601B0D2A6B0058F3B4 /* SWRevealViewController.m in Sources */,

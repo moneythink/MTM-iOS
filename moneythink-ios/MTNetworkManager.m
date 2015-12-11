@@ -22,8 +22,11 @@ static NSString * const MTNetworkURLString = @"https://api.moneythink.org/";
 static NSString * const MTNetworkAPIKey = @"cE4.G0_$";
 static NSString * const MTNetworkClientID = @"ios";
 static NSString * const MTRefreshingErrorCode = @"701";
+static NSUInteger const pageSize = 10;
 
-@interface MTNetworkManager (Private)
+@interface MTNetworkManager ()
+
+- (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end
 
@@ -487,7 +490,7 @@ static NSString * const MTRefreshingErrorCode = @"701";
     [realm commitWriteTransaction];
 }
 
-- (void)processPostsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId
+- (void)processPostsWithResponseObject:(id)responseObject extraParams:(NSDictionary *)extraParams
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No posts response data");
@@ -513,10 +516,13 @@ static NSString * const MTRefreshingErrorCode = @"701";
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     
-    // Mark existing posts deleted to filter out deleted posts
-    RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu", challengeId];
-    for (MTChallengePost *thisPost in existingPosts) {
-        thisPost.isDeleted = YES;
+    if (extraParams[@"challengeId"]) {
+        // Mark existing posts deleted to filter out deleted posts
+        NSUInteger challengeId = (unsigned)[extraParams[@"challengeId"] integerValue];
+        RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu", challengeId];
+        for (MTChallengePost *thisPost in existingPosts) {
+            thisPost.isDeleted = YES;
+        }
     }
     
     MTClass *myClass = [MTUser currentUser].userClass;
@@ -2720,45 +2726,23 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
 
 #pragma mark - Post Methods -
-- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)loadPostsForChallengeId:(NSInteger)challengeId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
-    
-    MTMakeWeakSelf();
-    [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
-//        NSLog(@"loadPostsForChallengeId success response; wait time: %f", finishWaitTime-startTime);
+    [self loadPostsForChallengeId:challengeId page:1 success:success failure:failure];
+}
 
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"999";
-        parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
-        
-        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:@"posts" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"loadPostsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
-            
-            if (responseObject) {
-                [self processPostsWithResponseObject:responseObject challengeId:challengeId];
-            }
-            
-//            NSLog(@"loadPostsForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
-            if (success) {
-                success(nil);
-            }
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed loadPostsForChallengeId with error: %@", [error mtErrorDescription]);
-            if (failure) {
-                failure(error);
-            }
-        }];
-    } failure:^(NSError *error) {
-        NSLog(@"Failed loadPostsForChallengeId with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            failure(error);
-        }
-    }];
+- (void)loadPostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPostsForChallengeId:challengeId page:page params:@{} success:success failure:failure];
+}
+
+- (void)loadPostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page params:(NSDictionary *)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+   
+    NSMutableDictionary *extraParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    extraParams[@"challenge_id"] = [NSString stringWithFormat:@"%lu", (unsigned long)challengeId];
+    extraParams[@"maxdepth"] = @"2";
+    [self loadPaginatedResource:@"posts" processSelector:@selector(processPostsWithResponseObject:extraParams:) page:page extraParams:extraParams success:success failure:failure];
 }
 
 - (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -3293,45 +3277,10 @@ static NSString * const MTRefreshingErrorCode = @"701";
 
 - (void)loadPostsForUserId:(NSInteger)userId page:(NSUInteger)page params:(NSDictionary*)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    MTMakeWeakSelf();
-    [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionaryWithDictionary:params];
-        NSUInteger pageSize = 10;
-        parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
-        parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
-        parameters[@"user_id"] = [NSString stringWithFormat:@"%ld", (long)userId];
-        
-        NSLog(@"Querying page %lu", (unsigned long)page);
-        
-        NSString *urlString = @"posts";
-
-        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSLog(@"loadPostsForUserId success response");
-            
-            if (responseObject) {
-                [self processUserPostsWithResponseObject:responseObject userId:userId];
-            }
-            
-            if (success) {
-                NSUInteger numPages = (NSUInteger)[[responseObject objectForKey:@"page_count"] integerValue];
-                NSUInteger totalItems = (NSUInteger)[[responseObject objectForKey:@"total_items"] integerValue];
-                BOOL lastPage = page >= numPages;
-                success(lastPage, numPages, totalItems);
-            }
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);
-            if (failure) {
-                failure(error);
-            }
-        }];
-    } failure:^(NSError *error) {
-        NSLog(@"Failed loadPostsForUserId with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            failure(error);
-        }
-    }];
+    NSMutableDictionary *extraParams = [NSMutableDictionary dictionaryWithDictionary:params];
+    extraParams[@"user_id"] = [NSString stringWithFormat:@"%lu", (unsigned long)userId];
+    extraParams[@"maxdepth"] = @"1";
+    [self loadPaginatedResource:@"posts" processSelector:@selector(processPostsWithResponseObject:extraParams:) page:page extraParams:extraParams success:success failure:failure];
 }
 
 
@@ -4423,6 +4372,49 @@ static NSString * const MTRefreshingErrorCode = @"701";
     }];
 }
 
-
+#pragma mark - Main Paginated loader
+// Call this from your specific, deprecated method (i.e. loadPostsForUserId:...)
+- (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"maxdepth"] = @"1";
+        parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
+        parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
+        
+        [parameters addEntriesFromDictionary:extraParams];
+        
+        NSLog(@"%@: Querying page %lu", resourcePath, (unsigned long)page);
+        
+        NSString *urlString = resourcePath;
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"%@: success response", resourcePath);
+            
+            if (responseObject) {
+                [self performSelector:processSelector withObject:responseObject];
+            }
+            
+            if (success) {
+                NSUInteger numPages = (NSUInteger)[[responseObject objectForKey:@"page_count"] integerValue];
+                NSUInteger totalItems = (NSUInteger)[[responseObject objectForKey:@"total_items"] integerValue];
+                BOOL lastPage = page >= numPages;
+                success(lastPage, numPages, totalItems);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"%@: Failed with error: %@", resourcePath, [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"%@: Failed with error: %@", resourcePath, [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
 
 @end
