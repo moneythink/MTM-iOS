@@ -120,7 +120,8 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)deletePushMessagingRegistrationId:(NSInteger)pushMessagingRegistrationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Explore
-- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 // Dashboard
 - (void)loadDashboardUsersWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

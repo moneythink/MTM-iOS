@@ -641,7 +641,7 @@ static NSUInteger const pageSize = 10;
     [realm commitWriteTransaction];
 }
 
-- (void)processExplorePostsWithResponseObject:(id)responseObject challengeId:(NSInteger)challengeId
+- (void)processExplorePostsWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No explore posts response data");
@@ -668,10 +668,6 @@ static NSUInteger const pageSize = 10;
     [realm beginWriteTransaction];
     
     // Mark existing posts (not in user class) deleted to filter out deleted explore posts
-    RLMResults *existingPosts = [MTChallengePost objectsWhere:@"challenge.id = %lu AND challengeClass.id != %lu", challengeId, [MTUser currentUser].userClass.id];
-    for (MTChallengePost *thisPost in existingPosts) {
-        thisPost.isDeleted = YES;
-    }
     
     MTClass *myClass = [MTUser currentUser].userClass;
     MTOrganization *myOrganization = myClass.organization;
@@ -4222,45 +4218,19 @@ static NSUInteger const pageSize = 10;
 
 
 #pragma mark - Explore -
-- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    [self loadExplorePostsForChallengeId:challengeId page:1 success:success failure:failure];
+}
+
+- (void)loadExplorePostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-//    __block NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
-
-    MTMakeWeakSelf();
-    [self checkforOAuthTokenWithSuccess:^(id responseData) {
-        __block NSTimeInterval finishWaitTime = [[NSDate date] timeIntervalSince1970];
-//        NSLog(@"loadExplorePostsForChallengeId success response; wait time: %f", finishWaitTime-startTime);
-
-        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"20";
-        
-        NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", (long)challengeId];
-        
-        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
-        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
-            NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
-            NSLog(@"loadExplorePostsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
-            
-            if (responseObject) {
-                [self processExplorePostsWithResponseObject:responseObject challengeId:challengeId];
-            }
-//            NSLog(@"loadExplorePostsForChallengeId process time: %f seconds", [[NSDate date] timeIntervalSince1970]-finishTime);
-            if (success) {
-                success(nil);
-            }
-        } failure:^(NSURLSessionDataTask *task, NSError *error) {
-            NSLog(@"Failed loadExplorePostsForChallengeId with error: %@", [error mtErrorDescription]);
-            if (failure) {
-                failure(error);
-            }
-        }];
-    } failure:^(NSError *error) {
-        NSLog(@"Failed loadExplorePostsForChallengeId with error: %@", [error mtErrorDescription]);
-        if (failure) {
-            failure(error);
-        }
-    }];
+    NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", (long)challengeId];
+    NSDictionary *params = @{
+                             @"maxdepth" : @"2",
+                             @"page_size" : @"20",
+                             @"no_limit" : @"true"
+                           };
+    [self loadPaginatedResource:urlString processSelector:@selector(processExplorePostsWithResponseObject:) page:page extraParams:params success:success failure:failure];
 }
 
 

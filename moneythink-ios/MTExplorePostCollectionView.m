@@ -11,6 +11,8 @@
 #import "MTPostDetailViewController.h"
 #import "MTMyClassTableViewController.h"
 
+#define kExplorePageSize 20
+
 @interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic, strong) RLMResults *posts;
@@ -24,12 +26,19 @@
 
 @implementation MTExplorePostCollectionView
 
+BOOL isLoadingMore = false;
+NSUInteger currentPage = 0,
+           numberOfPages = 0;
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.collectionView.emptyDataSetSource = self;
     self.collectionView.emptyDataSetDelegate = self;
+    isLoadingMore = false;
+    currentPage = 0;
+    numberOfPages = 0;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -38,6 +47,10 @@
     
     // Make sure posts get updated on appearance.
     [self loadPostsFromDatabase];
+    [self loadPosts];
+    
+    [self.collectionView reloadData];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(postSucceeded) name:kSavedMyClassChallengePostNotification object:nil];
 }
 
@@ -59,22 +72,46 @@
 #pragma mark - Private Methods -
 - (void)loadPosts
 {
-    [self loadPostsFromDatabase];
+    
+    // Don't load until we know how many local posts we have
+    if (currentPage == 0) return;
     
     MTMakeWeakSelf();
-    [[MTNetworkManager sharedMTNetworkManager] loadExplorePostsForChallengeId:self.challenge.id success:^(id responseData) {
+    if (numberOfPages > 0 && currentPage > numberOfPages) {
+        // No more to load
+        [self loadPostsFromDatabase];
+        return;
+    };
+    
+    isLoadingMore = YES;
+    [[MTNetworkManager sharedMTNetworkManager] loadExplorePostsForChallengeId:self.challenge.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            numberOfPages = numPages;
+            NSLog(@"total would be %lu across %lu", (unsigned long)totalCount, numberOfPages);
+            currentPage++;
             [weakSelf loadPostsFromDatabase];
+            [weakSelf.collectionView reloadData];
+            isLoadingMore = NO;
         });
     } failure:^(NSError *error) {
+        isLoadingMore = NO;
         NSLog(@"Unable to load explore posts: %@", [error mtErrorDescription]);
     }];
 }
 
 - (void)loadPostsFromDatabase
 {
-    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES", self.challenge.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
-    [self.collectionView reloadData];
+    MTClass *myClass = [MTUser currentUser].userClass;
+    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES AND challengeClass != %@", self.challenge.id, myClass] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    
+    if (currentPage == 0) {
+        if (self.posts.count == 0) {
+            currentPage = 1;
+        } else {
+            currentPage = self.posts.count / kExplorePageSize + 1;
+            NSLog(@"Starting page is %lu", (unsigned long)currentPage);
+        }
+    }
 }
 
 - (void)loadButtons
@@ -115,7 +152,7 @@
         _challenge = challenge;
         
         if (refresh) {
-            [self loadPosts];
+            [self loadPostsFromDatabase];
             [self loadButtons];
         }
     }
@@ -134,44 +171,41 @@
 {
     MTExploreCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exploreChallenge" forIndexPath:indexPath];
 
-    if (indexPath.row <= self.posts.count) {
-        MTChallengePost *post = self.posts[indexPath.row];
-        MTUser *user = post.user;
-        
-        cell.postText.text = post.content;
-        cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
-        
-        __block MTExploreCollectionViewCell *weakCell = cell;
-        
-        cell.postImage.layer.masksToBounds = YES;
-        cell.postImage.contentMode = UIViewContentModeScaleAspectFill;
+    MTChallengePost *post = self.posts[indexPath.row];
+    MTUser *user = post.user;
+    
+    cell.postText.text = post.content;
+    cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    
+    cell.postImage.layer.masksToBounds = YES;
+    cell.postImage.image = [UIImage imageNamed:@"placeholder"];
+    cell.postImage.contentMode = UIViewContentModeScaleAspectFill;
 
-        if (post.hasPostImage) {
-            cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    weakCell.postImage.image = responseData;
-                });
-            } failure:^(NSError *error) {
-                NSLog(@"Unable to load post image");
-            }];
-        }
-        
-        cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
-        cell.postUserImage.layer.masksToBounds = YES;
-        cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
-        
-        cell.postUserImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+    if (post.hasPostImage) {
+        cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                weakCell.postUserImage.image = responseData;
+                MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+                cell.postImage.image = responseData;
             });
         } failure:^(NSError *error) {
-            NSLog(@"Unable to load user avatar");
+            NSLog(@"Unable to load post image");
         }];
-        
-        return cell;
-    } else {
-        return nil;
     }
+    
+    cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
+    cell.postUserImage.layer.masksToBounds = YES;
+    cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
+    
+    cell.postUserImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            cell.postUserImage.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load user avatar");
+    }];
+    
+    return cell;
 }
 
 - (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize withImage:(UIImage *)image
@@ -257,6 +291,15 @@
     cell.backgroundColor = [UIColor whiteColor];
 }
 
+- (void)collectionView:(UICollectionView *)collectionView willDisplayCell:(UICollectionViewCell *)cell forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (isLoadingMore) return;
+    
+    if (indexPath.row == [collectionView numberOfItemsInSection:indexPath.section] - 1) {
+        [self loadPosts];
+    }
+}
+
 
 #pragma mark - Navigation -
 // In a storyboard-based application, you will often want to do a little preparation before navigation
@@ -307,7 +350,7 @@
 #pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"No Posts With Photos";
+    NSString *text = @"Loading posts...";
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor darkGrayColor]};
@@ -317,7 +360,7 @@
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Be the first to post (w/photo) to this Challenge!";
+    NSString *text = @"Explore posts from other Moneythink students everywhere.";
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;
