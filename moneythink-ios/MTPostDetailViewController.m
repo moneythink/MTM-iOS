@@ -1234,7 +1234,14 @@ typedef enum {
 
 - (IBAction)verifiedTapped:(id)sender
 {
-    MTPostLikeCommentTableViewCell *likeCommentCell = (MTPostLikeCommentTableViewCell *)[sender findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
+    UIView *subview = sender;
+    if ([sender isKindOfClass:[UITapGestureRecognizer class]]) {
+        UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
+        subview = tapGestureRecognizer.view;
+    }
+    
+    MTPostLikeCommentTableViewCell *likeCommentCell;
+    likeCommentCell = (MTPostLikeCommentTableViewCell *)[subview findSuperViewWithClass:[MTPostLikeCommentTableViewCell class]];
     
     BOOL isVerified = self.challengePost.isVerified;
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];

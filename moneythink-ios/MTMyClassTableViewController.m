@@ -1724,7 +1724,14 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 - (IBAction)verifiedTapped:(id)sender
 {
-    MTPostsTableViewCell *postCell = (MTPostsTableViewCell *)[sender findSuperViewWithClass:[MTPostsTableViewCell class]];
+    UIView *subview = sender;
+    if ([sender isKindOfClass:[UITapGestureRecognizer class]]) {
+        UITapGestureRecognizer *tapGestureRecognizer = (UITapGestureRecognizer *)sender;
+        subview = tapGestureRecognizer.view;
+    }
+    
+    MTPostsTableViewCell *postCell;
+    postCell = (MTPostsTableViewCell *)[subview findSuperViewWithClass:[MTPostsTableViewCell class]];
     MTChallengePost *post = postCell.post;
     
     BOOL isVerified = post.isVerified;
