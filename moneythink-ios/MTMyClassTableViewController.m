@@ -42,6 +42,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 @property (nonatomic) BOOL displaySpentView;
 @property (nonatomic, strong) RLMResults *buttons;
 @property (nonatomic, strong) NSMutableArray *challengeIdsQueried;
+@property (nonatomic, strong) UITapGestureRecognizer *verifiedTapGestureRecognizer;
+
+- (void)attachTapGestureRecognizerToCell:(MTPostsTableViewCell *)cell;
 
 @end
 
@@ -1131,6 +1134,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         }
     }
     
+    [self attachTapGestureRecognizerToCell:cell];
+    
     cell.userName.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
     
     __block MTPostsTableViewCell *weakCell = cell;
@@ -2177,6 +2182,22 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         
         [weakSelf loadLocalResults];
     }];
+}
+
+- (void)attachTapGestureRecognizerToCell:(MTPostsTableViewCell *)cell
+{
+    if (self.verifiedTapGestureRecognizer && self.verifiedTapGestureRecognizer.view) {
+        [self.verifiedTapGestureRecognizer.view removeGestureRecognizer:self.verifiedTapGestureRecognizer];
+        self.verifiedTapGestureRecognizer = nil;
+    }
+    
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(verifiedTapped:)];
+    recognizer.numberOfTapsRequired = 1;
+    recognizer.numberOfTouchesRequired = 1;
+    cell.verfiedLabel.userInteractionEnabled = YES;
+    [cell.verfiedLabel addGestureRecognizer:recognizer];
+    [recognizer setCancelsTouchesInView:YES];
+    self.verifiedTapGestureRecognizer = recognizer;
 }
 
 @end

@@ -59,6 +59,10 @@ typedef enum {
 @property (nonatomic, strong) UIImage *postImage;
 @property (nonatomic) BOOL savingEdit;
 
+@property (nonatomic, strong) UITapGestureRecognizer *verifiedTapGestureRecognizer;
+
+- (void)attachTapGestureRecognizerToCell:(MTPostLikeCommentTableViewCell *)cell;
+
 @end
 
 @implementation MTPostDetailViewController
@@ -2408,6 +2412,8 @@ typedef enum {
             [likeCommentCell.commentPost setTitleColor:[UIColor primaryOrangeDark] forState:UIControlStateHighlighted];
             
             [MTPostsTableViewCell layoutEmojiForContainerView:likeCommentCell.emojiContainerView withEmojiArray:self.emojiArray];
+            
+            [self attachTapGestureRecognizerToCell:likeCommentCell];
 
             cell = likeCommentCell;
             
@@ -2646,5 +2652,20 @@ typedef enum {
     });
 }
 
+- (void)attachTapGestureRecognizerToCell:(MTPostsTableViewCell *)cell
+{
+    if (self.verifiedTapGestureRecognizer && self.verifiedTapGestureRecognizer.view) {
+        [self.verifiedTapGestureRecognizer.view removeGestureRecognizer:self.verifiedTapGestureRecognizer];
+        self.verifiedTapGestureRecognizer = nil;
+    }
+    
+    UITapGestureRecognizer *recognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(verifiedTapped:)];
+    recognizer.numberOfTapsRequired = 1;
+    recognizer.numberOfTouchesRequired = 1;
+    cell.verfiedLabel.userInteractionEnabled = YES;
+    [cell.verfiedLabel addGestureRecognizer:recognizer];
+    [recognizer setCancelsTouchesInView:YES];
+    self.verifiedTapGestureRecognizer = recognizer;
+}
 
 @end

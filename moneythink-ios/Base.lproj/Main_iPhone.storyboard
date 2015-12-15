@@ -2084,7 +2084,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="F41A58CF-F7B2-4D15-A063-D8EAF27F982E" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0C079EFE-D765-4BC1-AC13-851B3D12622B" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <animations/>
                                 <constraints>
@@ -3110,20 +3110,6 @@
                                                         <constraint firstAttribute="height" constant="26" id="YxF-4S-ZJP"/>
                                                     </constraints>
                                                 </view>
-                                                <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.70000000000000018" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k2g-Es-h3P" userLabel="Verified Label">
-                                                    <rect key="frame" x="159" y="62" width="50" height="15"/>
-                                                    <animations/>
-                                                    <gestureRecognizers/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="15" id="Nc6-Qd-NPj"/>
-                                                        <constraint firstAttribute="width" constant="50" id="gEY-nj-Y5L"/>
-                                                    </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                                    <nil key="highlightedColor"/>
-                                                    <connections>
-                                                        <outletCollection property="gestureRecognizers" destination="zD8-fP-I5q" appends="YES" id="gUs-Kt-XVG"/>
-                                                    </connections>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c2q-6D-Uk1" userLabel="Comment Button">
                                                     <rect key="frame" x="233" y="57" width="71" height="24"/>
                                                     <animations/>
@@ -3139,8 +3125,8 @@
                                                         <action selector="commentTapped:" destination="83z-FJ-qxJ" eventType="touchUpInside" id="3Yc-BI-pWI"/>
                                                     </connections>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83d-3l-hNb" userLabel="Verified Checkbox Button" customClass="MICheckBox">
-                                                    <rect key="frame" x="131" y="59" width="20" height="20"/>
+                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" adjustsImageWhenHighlighted="NO" adjustsImageWhenDisabled="NO" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83d-3l-hNb" userLabel="Verified Checkbox Button" customClass="MICheckBox">
+                                                    <rect key="frame" x="124" y="57" width="20" height="20"/>
                                                     <animations/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="20" id="ImV-0r-Cjj"/>
@@ -3158,6 +3144,17 @@
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </view>
+                                                <label opaque="NO" clipsSubviews="YES" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Verified" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.70000000000000018" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="k2g-Es-h3P" userLabel="Verified Label">
+                                                    <rect key="frame" x="150" y="50" width="68" height="34"/>
+                                                    <animations/>
+                                                    <gestureRecognizers/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="15" id="Nc6-Qd-NPj"/>
+                                                        <constraint firstAttribute="width" constant="50" id="gEY-nj-Y5L"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <animations/>
                                             <constraints>
@@ -3347,11 +3344,6 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ofO-90-8Gt" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="ltS-05-clY" userLabel="Exit" sceneMemberID="exit"/>
-                <tapGestureRecognizer id="zD8-fP-I5q">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="83z-FJ-qxJ" id="jf4-sL-7fG"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-2119" y="-5866"/>
         </scene>
@@ -3914,9 +3906,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="wLB-jv-nOk" appends="YES" id="Yq9-at-Zsz"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ADr-4h-mJc" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="395" width="48" height="32"/>
@@ -4083,9 +4072,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="Fkk-bp-szN" appends="YES" id="GBd-Op-8og"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TwF-lc-hku" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="98" width="48" height="32"/>
@@ -4274,9 +4260,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="wZT-LK-BcL" appends="YES" id="i9A-ac-f1K"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tX2-Wm-Kbi" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="132" width="48" height="32"/>
@@ -4496,9 +4479,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="zGT-1y-BaQ" appends="YES" id="rRR-lw-KYH"/>
-                                            </connections>
                                         </label>
                                     </subviews>
                                     <animations/>
@@ -4715,9 +4695,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="XjR-Ke-DQf" appends="YES" id="XNH-wF-f3s"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZaJ-vF-jV2" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="465" width="48" height="32"/>
@@ -4902,9 +4879,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="ats-0r-aJj" appends="YES" id="ALw-8y-kPB"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ozk-lg-fTP" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="144" width="48" height="32"/>
@@ -5109,9 +5083,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="Q25-Gx-IQN" appends="YES" id="KFQ-A1-OSY"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XVk-4k-QjB" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="178" width="48" height="32"/>
@@ -5303,9 +5274,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="aXs-HV-GCU" appends="YES" id="rkH-UD-Wjh"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8eG-m0-yeZ" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="178" width="48" height="32"/>
@@ -5319,6 +5287,7 @@
                                         </button>
                                     </subviews>
                                     <animations/>
+                                    <gestureRecognizers/>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="ETc-cG-iMu" secondAttribute="trailing" constant="20" id="PGq-5x-AbS"/>
                                         <constraint firstItem="ETc-cG-iMu" firstAttribute="top" secondItem="s0K-H7-o8S" secondAttribute="top" constant="13" id="QeP-1m-oDu"/>
@@ -5522,9 +5491,6 @@
                                             <gestureRecognizers/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
-                                            <connections>
-                                                <outletCollection property="gestureRecognizers" destination="0e9-Wh-Vhh" appends="YES" id="brQ-rL-MG4"/>
-                                            </connections>
                                         </label>
                                         <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="akQ-rO-6HQ" userLabel="Edit/Delete Toggle">
                                             <rect key="frame" x="260" y="212" width="48" height="32"/>
@@ -5583,51 +5549,6 @@
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MnK-Is-ORV" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="zGT-1y-BaQ">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="OoN-xv-7pT"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="XjR-Ke-DQf">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="kXj-Y9-C4h"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="ats-0r-aJj">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="atC-KN-eAG"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="Q25-Gx-IQN">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="cht-Q0-sOb"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="aXs-HV-GCU">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="77F-j0-yxd"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="0e9-Wh-Vhh">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="G6P-zp-iy7"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="wLB-jv-nOk">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="ZjQ-W0-5Lk"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="Fkk-bp-szN">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="Q8b-sG-CxG"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="wZT-LK-BcL">
-                    <connections>
-                        <action selector="verifiedTapped:" destination="wSc-Em-WQ4" id="4vm-It-hOv"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="-1635" y="-5529"/>
         </scene>
@@ -6467,7 +6388,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         </scene>
     </scenes>
     <resources>
-        <image name="F41A58CF-F7B2-4D15-A063-D8EAF27F982E" width="90" height="90">
+        <image name="0C079EFE-D765-4BC1-AC13-851B3D12622B" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -7113,9 +7034,9 @@ AAAAAACNNw
         <segue reference="fGY-fc-BPd"/>
         <segue reference="Q4R-Y6-fhV"/>
         <segue reference="xm4-7b-aI0"/>
-        <segue reference="vqR-nj-yuL"/>
+        <segue reference="48k-xo-w1Z"/>
         <segue reference="LS9-Mg-yad"/>
-        <segue reference="nYB-OV-yVU"/>
+        <segue reference="ds8-qb-8o8"/>
         <segue reference="nWx-Jd-e9Z"/>
     </inferredMetricsTieBreakers>
 </document>
