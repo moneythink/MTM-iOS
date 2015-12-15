@@ -27,8 +27,8 @@
 @implementation MTExplorePostCollectionView
 
 BOOL isLoadingMore = false;
-NSUInteger currentPage = 0,
-           numberOfPages = 0;
+NSUInteger currentPage = 0;
+NSInteger numberOfPages = 0;
 
 - (void)viewDidLoad
 {
@@ -46,7 +46,6 @@ NSUInteger currentPage = 0,
     [super viewWillAppear:animated];
     
     // Make sure posts get updated on appearance.
-    [self loadPostsFromDatabase];
     [self loadPosts];
     
     [self.collectionView reloadData];
@@ -84,16 +83,25 @@ NSUInteger currentPage = 0,
     };
     
     isLoadingMore = YES;
+    [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
     [[MTNetworkManager sharedMTNetworkManager] loadExplorePostsForChallengeId:self.challenge.id page:currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            numberOfPages = numPages;
+            [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
+            if (numPages == 0) {
+                numberOfPages = -1; // None at all to find
+            } else {
+                numberOfPages = numPages;
+            }
             NSLog(@"total would be %lu across %lu", (unsigned long)totalCount, numberOfPages);
-            currentPage++;
+            if (numPages > 0) {
+                currentPage++;
+            }
             [weakSelf loadPostsFromDatabase];
             [weakSelf.collectionView reloadData];
             isLoadingMore = NO;
         });
     } failure:^(NSError *error) {
+        [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         isLoadingMore = NO;
         NSLog(@"Unable to load explore posts: %@", [error mtErrorDescription]);
     }];
@@ -148,11 +156,15 @@ NSUInteger currentPage = 0,
 - (void)setChallenge:(MTChallenge *)challenge
 {
     if (_challenge != challenge) {
-        BOOL refresh = (_challenge == nil || (_challenge != nil && (_challenge.id != challenge.id)));
+        BOOL firstLoad = _challenge == nil;
+        BOOL refresh = (firstLoad || (_challenge != nil && (_challenge.id != challenge.id)));
         _challenge = challenge;
         
         if (refresh) {
+            currentPage = 0; // Reset for new challenge
+            self.posts = nil;
             [self loadPostsFromDatabase];
+            [self viewWillAppear:YES];
             [self loadButtons];
         }
     }
@@ -350,7 +362,12 @@ NSUInteger currentPage = 0,
 #pragma mark - DZNEmptyDataSetDelegate/Datasource Methods -
 - (NSAttributedString *)titleForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Loading posts...";
+    NSString *text;
+    if (numberOfPages == -1) {
+        text = @"No posts to load.";
+    } else {
+        text = @"Loading posts...";
+    }
     
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18.0],
                                  NSForegroundColorAttributeName: [UIColor darkGrayColor]};
@@ -360,7 +377,12 @@ NSUInteger currentPage = 0,
 
 - (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
 {
-    NSString *text = @"Explore posts from other Moneythink students everywhere.";
+    NSString *text;
+    if (numberOfPages == -1) {
+        text = @"This challenge doesn't have any posts at all. Be the first!";
+    } else {
+        text = @"Explore posts from other Moneythink students everywhere.";;
+    }
     
     NSMutableParagraphStyle *paragraph = [NSMutableParagraphStyle new];
     paragraph.lineBreakMode = NSLineBreakByWordWrapping;

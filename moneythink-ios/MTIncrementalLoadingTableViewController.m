@@ -34,7 +34,8 @@ NSInteger totalItems = -1;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.currentPage = 1;
+    self.currentPage = 0;
+    self.pageSize = 10;
 
     if (self.loadingView == nil) {
         CGPoint origin = self.tableView.frame.origin;
@@ -50,7 +51,7 @@ NSInteger totalItems = -1;
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.loadingView setHidden:YES];
+    [self.loadingView setHidden:self.results.count > 0];
     [self loadLocalResults:^(NSError *error) {
         if (error == nil) {
             [self.loadingView stopLoadingSuccessfully:YES];
@@ -63,6 +64,11 @@ NSInteger totalItems = -1;
     
     [self configureRefreshController];
     [self configureLoadMoreController];
+}
+
+- (void)resetResults {
+    self.results = nil;
+    self.currentPage = 0;
 }
 
 #pragma mark - UITableViewController delegate methods
@@ -103,7 +109,7 @@ NSInteger totalItems = -1;
 
 #pragma mark - Clients should call these methods
 - (void)willLoadRemoteResultsForCurrentPage {
-    if (IsEmpty(self.results)) {
+    if (IsEmpty(self.results) && self.refreshController.refreshState == JYRefreshStateStop) {
         [self.loadingView startLoading];
     }
 }
@@ -123,7 +129,7 @@ NSInteger totalItems = -1;
             [self.loadMoreController stopLoadMoreCompletion:nil];
         }
         NSLog(@"Loaded page %lu of %lu", (unsigned long)self.currentPage, (unsigned long)response.numPages);
-        if (!response.lastPage) {
+        if (!response.lastPage && response.numPages > 0) {
             self.currentPage++;
         }
         [weakSelf loadLocalResults];
@@ -144,9 +150,29 @@ NSInteger totalItems = -1;
     MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
         weakSelf.results = results;
-        [weakSelf.tableView beginUpdates];
-        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
-        [weakSelf.tableView endUpdates];
+        
+        if (weakSelf.currentPage == 0) {
+            if (weakSelf.results.count == 0) {
+                weakSelf.currentPage = 1;
+            } else {
+                weakSelf.currentPage = (weakSelf.results.count / weakSelf.pageSize) + 1;
+                NSLog(@"%@: Starting page is %lu", NSStringFromClass([weakSelf class]), (unsigned long)weakSelf.currentPage);
+            }
+        }
+        
+        if (weakSelf.results.count > 0) {
+            [weakSelf.loadingView setHidden:YES];
+            if ([weakSelf.tableView numberOfRowsInSection:0] > 0) {
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView endUpdates];
+            } else {
+                [weakSelf.tableView reloadData];
+            }
+        } else {
+            [weakSelf.loadingView setHidden:NO];
+            [weakSelf.tableView reloadData]; // Empty it out
+        }
         
         [weakSelf.refreshController stopRefreshWithAnimated:YES completion:nil];
         
@@ -169,7 +195,9 @@ NSInteger totalItems = -1;
 
 #pragma mark - Private Methods
 - (void)configureRefreshController {
-    if (self.refreshController || self.refreshControllerRefreshView) return;
+    if (self.refreshController || self.refreshControllerRefreshView) {
+        return;
+    }
     
     self.refreshController = [[JYPullToRefreshController alloc] initWithScrollView:self.tableView];
     
@@ -206,7 +234,9 @@ NSInteger totalItems = -1;
 }
 
 - (void)handlePullToLoadMore {
-    [self loadRemoteResultsForCurrentPage];
+    if (self.results.count > 0) {
+        [self loadRemoteResultsForCurrentPage];
+    }
 }
 
 @end

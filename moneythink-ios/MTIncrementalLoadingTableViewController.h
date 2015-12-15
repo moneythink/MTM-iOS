@@ -18,6 +18,7 @@ struct MTIncrementalLoadingResponse {
 
 @property (strong, nonatomic) RLMResults *results;
 @property (assign, nonatomic) NSUInteger currentPage;
+@property (assign, nonatomic) NSUInteger pageSize;
 
 - (void)loadLocalResults:(MTSuccessBlock)callback;
 - (void)loadLocalResults;
@@ -30,5 +31,7 @@ struct MTIncrementalLoadingResponse {
 
 - (void)handlePullToRefresh;
 - (void)handlePullToLoadMore;
+
+- (void)resetResults;
 
 @end

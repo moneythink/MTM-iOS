@@ -480,6 +480,11 @@
         
         self.pageViewControllers = @[self.myClassTableView];
         [self.myClassPageViewController setViewControllers:self.pageViewControllers direction:UIPageViewControllerNavigationDirectionReverse animated:YES completion:nil];
+        
+        // Reload if the feed has none
+        if (self.myClassTableView.results.count == 0) {
+            [self.myClassTableView loadRemoteResultsForCurrentPage];
+        }
     }
 }
 

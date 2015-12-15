@@ -72,9 +72,6 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
-//    self.tableView.emptyDataSetSource = self;
-//    self.tableView.emptyDataSetDelegate = self;
-    
     // A little trick for removing the cell separators
     self.tableView.tableFooterView = [UIView new];
 }
@@ -174,11 +171,10 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
         _challenge = challenge;
         
         if (refresh) {
-            self.results = nil;
+            [self resetResults]; // Reset current page for new challenge
             self.displaySpentView = !IsEmpty(challenge.postExtraFields);
             self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
             [self.tableView setContentOffset:CGPointZero animated:NO];
-            self.currentPage = 1; // Reset current page for new challenge
             [self loadLocalResults:^(NSError *error) {
                 if (IsEmpty(self.results)) {
                     [self loadRemoteResultsForCurrentPage];
@@ -1138,9 +1134,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     
     cell.userName.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
     
-    __block MTPostsTableViewCell *weakCell = cell;
     cell.profileImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            MTPostsTableViewCell *weakCell = [tableView cellForRowAtIndexPath:indexPath];
             weakCell.profileImage.image = responseData;
         });
     } failure:^(NSError *error) {
@@ -1164,6 +1160,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     if (hasImage) {
         cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                MTPostsTableViewCell *weakCell = [tableView cellForRowAtIndexPath:indexPath];
                 weakCell.postImage.image = responseData;
             });
         } failure:^(NSError *error) {
@@ -2146,11 +2143,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     if (self.challenge) {
         newResults = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
         [self loadButtons];
+        [self didLoadLocalResults:newResults withCallback:callback];
     } else {
         self.buttons = nil;
+        self.results = nil;
     }
-    
-    [self didLoadLocalResults:newResults withCallback:callback];
 }
 
 - (void)loadRemoteResultsForCurrentPage {
@@ -2198,6 +2195,13 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
     [cell.verfiedLabel addGestureRecognizer:recognizer];
     [recognizer setCancelsTouchesInView:YES];
     self.verifiedTapGestureRecognizer = recognizer;
+}
+
+- (void)reset {
+    self.results = nil;
+    self.challengeIdsQueried = [NSMutableArray array];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.tableFooterView = [UIView new];
 }
 
 @end
