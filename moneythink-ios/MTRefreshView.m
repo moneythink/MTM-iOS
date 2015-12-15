@@ -22,7 +22,7 @@
     if (!_activityIndicatorView) {
         UIActivityIndicatorView *activityIndicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         [activityIndicatorView setColor:[UIColor primaryOrange]];
-        [activityIndicatorView setHidesWhenStopped:NO];
+        [activityIndicatorView setHidesWhenStopped:YES];
         [self addSubview:activityIndicatorView];
         _activityIndicatorView = activityIndicatorView;
     }
@@ -86,6 +86,9 @@
         CGFloat base = contentOffsetBottom - scrollViewContentHeight;
         ratio = base / 44.0f;
     }
+    
+    // Hide the activity indicator only if they are not pulling anything
+    [self.activityIndicatorView setHidesWhenStopped:ratio == 0];
     
     ratio = fmin(ratio, 1.50f); // Max it out at 1.5x
     CGFloat degOffset = 20; // To compensate for the fact that the rotation isn't really visible until the indicator is more scrolled.
