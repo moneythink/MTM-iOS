@@ -164,7 +164,7 @@ NSInteger totalItems = -1;
             [weakSelf.loadingView setHidden:YES];
             if ([weakSelf.tableView numberOfRowsInSection:0] > 0) {
                 [weakSelf.tableView beginUpdates];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [weakSelf.tableView endUpdates];
             } else {
                 [weakSelf.tableView reloadData];
