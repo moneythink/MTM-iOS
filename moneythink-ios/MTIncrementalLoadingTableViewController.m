@@ -44,7 +44,11 @@ NSInteger totalItems = -1;
         [self.view addSubview:loadingView];
         self.loadingView = loadingView;
     }
-    [self.loadingView setMessage:@"Loading latest posts..."];
+    
+    if (self.loadingMessage == nil) {
+        self.loadingMessage = @"Loading latest posts...";
+    }
+    [self.loadingView setMessage:self.loadingMessage];
     [self.loadingView startLoading];
 }
 
@@ -100,11 +104,11 @@ NSInteger totalItems = -1;
 }
 
 - (void)loadLocalResults:(MTSuccessBlock)callback {
-    @throw @"Not implemented in subclass";
+    @throw [NSException exceptionWithName:@"NotImplemented" reason:@"Not implemented in subclass" userInfo:nil];
 }
 
 - (void)loadRemoteResultsForCurrentPage {
-    @throw @"Not implemented in subclass";
+    @throw [NSException exceptionWithName:@"NotImplemented" reason:@"Not implemented in subclass" userInfo:nil];
 }
 
 #pragma mark - Clients should call these methods
@@ -150,6 +154,10 @@ NSInteger totalItems = -1;
     MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
         weakSelf.results = results;
+        
+        if (weakSelf.results == nil) {
+            @throw [NSException exceptionWithName:@"MTIncrementalLoadingTableViewControllerImplementationError" reason:@"You must define self.results before calling didLoadLocalResults:withCallback:." userInfo:nil];
+        }
         
         if (weakSelf.currentPage == 0) {
             if (weakSelf.results.count == 0) {

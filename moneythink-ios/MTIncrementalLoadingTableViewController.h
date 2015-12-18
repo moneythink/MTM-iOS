@@ -20,6 +20,8 @@ struct MTIncrementalLoadingResponse {
 @property (assign, nonatomic) NSUInteger currentPage;
 @property (assign, nonatomic) NSUInteger pageSize;
 
+@property (assign, nonatomic) NSString   *loadingMessage;
+
 - (void)loadLocalResults:(MTSuccessBlock)callback;
 - (void)loadLocalResults;
 - (void)loadRemoteResultsForCurrentPage;

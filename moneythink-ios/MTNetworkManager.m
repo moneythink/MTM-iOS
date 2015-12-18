@@ -27,6 +27,7 @@ static NSUInteger const pageSize = 10;
 @interface MTNetworkManager ()
 
 - (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams extraHeaders:(NSDictionary *)extraHeaders success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 @end
 
@@ -327,6 +328,36 @@ static NSUInteger const pageSize = 10;
     }
     
     return classesDict;
+}
+
+- (void)processAndSaveClassesFromResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"classes"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No classes response data");
+        return;
+    }
+    
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"classes"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    for (NSDictionary *classDict in responseArray) {
+        MTClass *class = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+        class.isDeleted = NO;
+    }
+    [realm commitWriteTransaction];
 }
 
 - (NSDictionary *)processCreateClassRequestWithResponseObject:(id)responseObject
@@ -1976,6 +2007,7 @@ static NSUInteger const pageSize = 10;
     }];
 }
 
+// @deprecated
 - (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
@@ -2018,8 +2050,13 @@ static NSUInteger const pageSize = 10;
             failure(error);
         }
     }];
-    
 }
+
+- (void)getClassesWithPage:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPaginatedResource:@"classes" processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:@{} success:success failure:failure];
+}
+
 
 - (void)createClassWithName:(NSString *)name organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
@@ -2069,6 +2106,7 @@ static NSUInteger const pageSize = 10;
     
 }
 
+// @deprecated
 - (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -2106,6 +2144,14 @@ static NSUInteger const pageSize = 10;
             });
         }
     }];
+}
+
+- (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    NSString *resourcePath = [NSString stringWithFormat:@"organizations/%ld/@classes", organizationId];
+    NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
+    
+    [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:@{} extraHeaders:headers success:success failure:failure];
 }
 
 - (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
@@ -4343,8 +4389,13 @@ static NSUInteger const pageSize = 10;
 }
 
 #pragma mark - Main Paginated loader
-// Call this from your specific, deprecated method (i.e. loadPostsForUserId:...)
 - (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self loadPaginatedResource:resourcePath processSelector:processSelector page:page extraParams:extraParams extraHeaders:@{} success:success failure:failure];
+}
+
+// Call this from your specific, deprecated method (i.e. loadPostsForUserId:...)
+- (void)loadPaginatedResource:(NSString *)resourcePath processSelector:(SEL)processSelector page:(NSUInteger)page extraParams:(NSDictionary *)extraParams extraHeaders:(NSDictionary *)extraHeaders success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -4360,6 +4411,12 @@ static NSUInteger const pageSize = 10;
         NSString *urlString = resourcePath;
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        // Set custom headers
+        for (NSString *headerKey in extraHeaders) {
+            [self.requestSerializer setValue:extraHeaders[headerKey] forHTTPHeaderField:headerKey];
+        }
+        
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"%@: success response", resourcePath);
             

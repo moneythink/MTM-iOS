@@ -3,7 +3,7 @@
 
 target 'moneythink-ios' do
   pod 'Google/Analytics', '~> 1.0.0'
-  pod 'TPKeyboardAvoiding', '~> 1.2'
+  pod 'TPKeyboardAvoiding', '~> 1.2.11'
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'ZendeskSDK'
@@ -16,5 +16,7 @@ target 'moneythink-ios' do
   pod 'DZNEmptyDataSet'
   pod 'Reachability'
   pod "JYRefreshController"
+  # pod "IHKeyboardAvoiding"
+  pod "IQKeyboardManager"
 end
 

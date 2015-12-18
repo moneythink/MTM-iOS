@@ -8,6 +8,9 @@
 
 #import "MTEditProfileViewController.h"
 #import "Reachability.h"
+#import "MTClassSelectionNavigationController.h"
+
+#define kSelectClassIdentifier @"selectClass"
 
 @interface MTEditProfileViewController ()
 
@@ -19,15 +22,12 @@
 @property (strong, nonatomic) IBOutlet UITextField *confirmPassword;
 @property (strong, nonatomic) IBOutlet UIButton *userProfileButton;
 @property (strong, nonatomic) IBOutlet UILabel *profileImageLabel;
-@property (strong, nonatomic) IBOutlet UIView *fieldBackground;
-@property (strong, nonatomic) IBOutlet UITextField *userSchool;
-@property (strong, nonatomic) IBOutlet UITextField *userClassName;
+@property (strong, nonatomic) IBOutlet UILabel *userSchool;
+@property (strong, nonatomic) IBOutlet UILabel *userClassName;
 @property (strong, nonatomic) IBOutlet UITextField *phoneNumber;
 
 @property (nonatomic, strong) IBOutlet UIButton *cancelButton;
 @property (nonatomic, strong) IBOutlet UIButton *saveButton;
-
-@property (nonatomic, strong) IBOutletCollection(UIView) NSArray *separatorViews;
 
 @property (assign, nonatomic) BOOL isMentor;
 @property (nonatomic, strong) UIImage *updatedProfileImage;
@@ -62,22 +62,17 @@
         shouldDim = NO;
     }
     
-    self.viewFields.delegate = self;
-    
     self.isMentor = [MTUser isCurrentUserMentor];
     
-    self.userSchool.enabled = self.isMentor;
-    self.userClassName.enabled = self.isMentor;
-
     self.navigationItem.title = @"Edit Profile";
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveChanges:)];
-    
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
-                                   initWithTarget:self
-                                   action:@selector(dismissKeyboard)];
-    
-    [self.view addGestureRecognizer:tap];
+
+//    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
+//                                   initWithTarget:self
+//                                   action:@selector(dismissKeyboard)];
+//    
+//    [self.view addGestureRecognizer:tap];
     
     self.userCurrent = [MTUser currentUser];
     [self updateViewForCurrentUser];
@@ -116,6 +111,7 @@
                 }
                 
                 if([scrollViewSubview isKindOfClass: [UITextField class]]) {
+                    ((UITextField*)scrollViewSubview).inputAccessoryView = self.viewFields;
                     ((UITextField*)scrollViewSubview).delegate = (id) self;
                     [((UITextField*)scrollViewSubview) setBackgroundColor:[UIColor white]];
                 }
@@ -152,10 +148,10 @@
     
     [self.userProfileButton setImage:profileImage forState:UIControlStateNormal];
     if (profileImage) {
-        self.profileImageLabel.text = @"Change Photo";
+        self.profileImageLabel.text = @"Tap to change your photo";
     }
     else {
-        self.profileImageLabel.text = @"Add Photo";
+        self.profileImageLabel.text = @"Tap to add a photo";
     }
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
@@ -190,19 +186,11 @@
     [self dismissKeyboard];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-
-
-#pragma mark - Actions -
-- (IBAction)loadMentorOrganizations
+- (IBAction)unwindToEditProfile:(UIStoryboardSegue *)sender
 {
-    if (!self.isMentor) {
-        return;
-    }
-    
-    [self dismissKeyboard];
-    [self promptForMentorCode];
 }
 
+#pragma mark - Actions -
 - (void)promptForMentorCode
 {
     MTMakeWeakSelf();
@@ -256,7 +244,7 @@
         weakSelf.organizationsDict = responseData;
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-            [weakSelf presentOrganizationsSheet];
+//            [weakSelf presentOrganizationsSheet];
         });
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -266,111 +254,63 @@
     }];
 }
 
-- (void)presentOrganizationsSheet
-{
-    NSArray *sortedOrganizations = [[self.organizationsDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    
-    MTMakeWeakSelf();
-    NSString *message = @"Choose School";
-    if ([UIAlertController class]) {
-        UIAlertController *organizationSheet = [UIAlertController
-                                                alertControllerWithTitle:@""
-                                                message:message
-                                                preferredStyle:UIAlertControllerStyleActionSheet];
-        
-        UIAlertAction *cancel = [UIAlertAction
-                                 actionWithTitle:@"Cancel"
-                                 style:UIAlertActionStyleCancel
-                                 handler:^(UIAlertAction *action) {
-                                 }];
-        
-        UIAlertAction *organizationName;
-        
-        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
-            organizationName = [UIAlertAction
-                                actionWithTitle:sortedOrganizations[buttonItem]
-                                style:UIAlertActionStyleDefault
-                                handler:^(UIAlertAction *action) {
-                                    NSNumber *newOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
-                                    if (!weakSelf.selectedOrganizationId || [weakSelf.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
-                                        weakSelf.classesDict = nil;
-                                    }
-                                    weakSelf.selectedOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
-                                    weakSelf.userSchool.text = sortedOrganizations[buttonItem];
-                                    [weakSelf loadMentorClasses];
-                                }];
-            [organizationSheet addAction:organizationName];
-        }
-        
-        [organizationSheet addAction:cancel];
-        
-        [weakSelf presentViewController:organizationSheet animated:YES completion:nil];
-    } else {
-        UIActionSheet *organizationSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
-        
-        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
-            [organizationSheet addButtonWithTitle:sortedOrganizations[buttonItem]];
-        }
-        
-        [organizationSheet addButtonWithTitle:@"Cancel"];
-        organizationSheet.cancelButtonIndex = sortedOrganizations.count;
-        
-        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
-        if ([window.subviews containsObject:weakSelf.view]) {
-            [organizationSheet showInView:weakSelf.view];
-        } else {
-            [organizationSheet showInView:window];
-        }
-    }
-}
-
-- (IBAction)loadMentorClasses
-{
-    if (!self.isMentor) {
-        return;
-    }
-
-    [self dismissKeyboard];
-    
-    if (!IsEmpty(self.classesDict)) {
-        [self presentClassesSheet];
-    }
-    else {
-        MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-        hud.labelText = @"Loading Classes...";
-        hud.dimBackground = YES;
-        
-        MTMakeWeakSelf();
-        if (self.selectedOrganizationId && [self.selectedOrganizationId integerValue] != self.userCurrent.organization.id) {
-            [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:self.mentorCode organizationId:[self.selectedOrganizationId integerValue] success:^(id responseData) {
-                weakSelf.classesDict = responseData;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    [weakSelf presentClassesSheet];
-                });
-            } failure:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to Load Classes" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                });
-            }];
-        }
-        else {
-            [[MTNetworkManager sharedMTNetworkManager] getClassesWithSuccess:^(id responseData) {
-                weakSelf.classesDict = responseData;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    [weakSelf presentClassesSheet];
-                });
-            } failure:^(NSError *error) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-                    [[[UIAlertView alloc] initWithTitle:@"Load Error" message:@"Unable to Load Classes" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
-                });
-            }];
-        }
-    }
-}
+//- (void)presentOrganizationsSheet
+//{
+//    NSArray *sortedOrganizations = [[self.organizationsDict allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+//    
+//    MTMakeWeakSelf();
+//    NSString *message = @"Choose School";
+//    if ([UIAlertController class]) {
+//        UIAlertController *organizationSheet = [UIAlertController
+//                                                alertControllerWithTitle:@""
+//                                                message:message
+//                                                preferredStyle:UIAlertControllerStyleActionSheet];
+//        
+//        UIAlertAction *cancel = [UIAlertAction
+//                                 actionWithTitle:@"Cancel"
+//                                 style:UIAlertActionStyleCancel
+//                                 handler:^(UIAlertAction *action) {
+//                                 }];
+//        
+//        UIAlertAction *organizationName;
+//        
+//        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+//            organizationName = [UIAlertAction
+//                                actionWithTitle:sortedOrganizations[buttonItem]
+//                                style:UIAlertActionStyleDefault
+//                                handler:^(UIAlertAction *action) {
+//                                    NSNumber *newOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+//                                    if (!weakSelf.selectedOrganizationId || [weakSelf.selectedOrganizationId integerValue] != [newOrganizationId integerValue]) {
+//                                        weakSelf.classesDict = nil;
+//                                    }
+//                                    weakSelf.selectedOrganizationId = [weakSelf.organizationsDict objectForKey:sortedOrganizations[buttonItem]];
+//                                    weakSelf.userSchool.text = sortedOrganizations[buttonItem];
+//                                    [weakSelf loadMentorClasses];
+//                                }];
+//            [organizationSheet addAction:organizationName];
+//        }
+//        
+//        [organizationSheet addAction:cancel];
+//        
+//        [weakSelf presentViewController:organizationSheet animated:YES completion:nil];
+//    } else {
+//        UIActionSheet *organizationSheet = [[UIActionSheet alloc] initWithTitle:message delegate:weakSelf cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:nil, nil];
+//        
+//        for (NSInteger buttonItem = 0; buttonItem < [sortedOrganizations count]; buttonItem++) {
+//            [organizationSheet addButtonWithTitle:sortedOrganizations[buttonItem]];
+//        }
+//        
+//        [organizationSheet addButtonWithTitle:@"Cancel"];
+//        organizationSheet.cancelButtonIndex = sortedOrganizations.count;
+//        
+//        UIWindow* window = [[[UIApplication sharedApplication] delegate] window];
+//        if ([window.subviews containsObject:weakSelf.view]) {
+//            [organizationSheet showInView:weakSelf.view];
+//        } else {
+//            [organizationSheet showInView:window];
+//        }
+//    }
+//}
 
 - (void)presentClassesSheet
 {
@@ -593,35 +533,8 @@
 
 - (void)textFieldsConfigure
 {
-    UIView *bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                    self.userSchool.frame.size.height - 1.0f,
-                                                                    self.userSchool.frame.size.width,
-                                                                    1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    UIView *rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.userSchool.frame.size.width - 1.0f,
-                                                                   0.0f,
-                                                                   1.0f,
-                                                                   self.userSchool.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.userSchool addSubview:bottomBorder];
-    [self.userSchool addSubview:rightBorder];
-    [self.userSchool setBackgroundColor:[UIColor white]];
-    
-    bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                            self.userSchool.frame.size.height - 1.0f,
-                                                            self.userSchool.frame.size.width,
-                                                            1.0f)];
-    bottomBorder.backgroundColor = [UIColor primaryOrange];
-    rightBorder = [[UIView alloc] initWithFrame:CGRectMake(self.userSchool.frame.size.width - 1.0f,
-                                                           0.0f,
-                                                           1.0f,
-                                                           self.userSchool.frame.size.height)];
-    rightBorder.backgroundColor = [UIColor primaryOrange];
-    
-    [self.userClassName addSubview:bottomBorder];
-    [self.userClassName addSubview:rightBorder];
-    [self.userClassName setBackgroundColor:[UIColor white]];
+    UIView *bottomBorder;
+    UIView *rightBorder;
     
     bottomBorder = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
                                                             self.firstName.frame.size.height - 1.0f,
@@ -712,10 +625,6 @@
     [self.confirmPassword addSubview:bottomBorder];
     [self.confirmPassword addSubview:rightBorder];
     [self.confirmPassword setBackgroundColor:[UIColor white]];
-    
-    for (UIView *thisView in self.separatorViews) {
-        [self.viewFields bringSubviewToFront:thisView];
-    }
 }
 
 - (void)dismissKeyboard
@@ -991,9 +900,9 @@
 
         [editProfileImage addAction:cancel];
         
-        if ([self.profileImageLabel.text isEqualToString:@"Change Photo"]) {
+        if ([self.profileImageLabel.text isEqualToString:@"Tap to change your photo"]) {
             UIAlertAction *removePhoto = [UIAlertAction
-                                          actionWithTitle:@"Remove Existing Photo"
+                                          actionWithTitle:@"Tap to remove"
                                           style:UIAlertActionStyleDestructive
                                           handler:^(UIAlertAction *action) {
                                               [self removePicture];
@@ -1009,7 +918,7 @@
     } else {
         UIActionSheet *editProfileImage = nil;
         
-        if ([self.profileImageLabel.text isEqualToString:@"Change Photo"]) {
+        if ([self.profileImageLabel.text isEqualToString:@"Tap to change your photo"]) {
             editProfileImage = [[UIActionSheet alloc] initWithTitle:@"Change Profile Image" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Remove Existing Photo" otherButtonTitles:@"Take Photo", @"Choose from Library", nil];
         }
         else {
@@ -1101,7 +1010,7 @@
             }
             self.selectedOrganizationId = [self.organizationsDict objectForKey:[actionSheet buttonTitleAtIndex:buttonIndex]];
             self.userSchool.text = [actionSheet buttonTitleAtIndex:buttonIndex];
-            [self loadMentorClasses];
+//            [self loadMentorClasses];
         }
     }
     else if ([title isEqualToString:@"Choose Class"]) {
@@ -1182,7 +1091,7 @@
         } completion:^(BOOL finished) {
             [weakSelf.userProfileButton setImage:self.updatedProfileImage forState:UIControlStateNormal];
 
-            weakSelf.profileImageLabel.text = @"Change Photo";
+            weakSelf.profileImageLabel.text = @"Tap to change your photo";
 
             [UIView animateWithDuration:0.2f animations:^{
                 weakSelf.userProfileButton.alpha = 1.0f;
@@ -1261,12 +1170,14 @@
     }
 }
 
-
-#pragma mark - UIScrollViewDelegate -
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (self.showingKeyboard) {
-        [self dismissKeyboard];
+#pragma mark - Segues
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:kSelectClassIdentifier]) {
+        
+        // Set initial selected class and organization
+        MTClassSelectionNavigationController *navController = (MTClassSelectionNavigationController *)segue.destinationViewController;
+        navController.selectedClass = [MTUser currentUser].userClass;
+        navController.selectedOrganization = [MTUser currentUser].userClass.organization;
     }
 }
 

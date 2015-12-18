@@ -15,6 +15,9 @@
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
 		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
+		3B2ECFBB1C24A754005E7F82 /* MTClassSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */; };
+		3B2ECFBE1C24A895005E7F82 /* MTOrganizationSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */; };
+		3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */; };
 		3B5457FB1C0FB76200023611 /* MTLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5457FA1C0FB76200023611 /* MTLoadingView.m */; };
 		3B5457FD1C0FB92900023611 /* MTLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5457FC1C0FB92900023611 /* MTLoadingView.xib */; };
 		3B7154FF1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */; };
@@ -250,6 +253,12 @@
 		108C9EB90A1115E74A7892AC /* Pods-moneythink-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.release.xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.release.xcconfig"; sourceTree = "<group>"; };
 		2D77E708FFEC9E5D5E524D38 /* libPods-moneythink-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-moneythink-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		3B2ECFB91C24A754005E7F82 /* MTClassSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTClassSelectionViewController.h; sourceTree = "<group>"; };
+		3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassSelectionViewController.m; sourceTree = "<group>"; };
+		3B2ECFBC1C24A895005E7F82 /* MTOrganizationSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTOrganizationSelectionViewController.h; sourceTree = "<group>"; };
+		3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOrganizationSelectionViewController.m; sourceTree = "<group>"; };
+		3B2ECFBF1C24AE23005E7F82 /* MTClassSelectionNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTClassSelectionNavigationController.h; sourceTree = "<group>"; };
+		3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassSelectionNavigationController.m; sourceTree = "<group>"; };
 		3B5457F91C0FB76200023611 /* MTLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLoadingView.h; sourceTree = "<group>"; };
 		3B5457FA1C0FB76200023611 /* MTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoadingView.m; sourceTree = "<group>"; };
 		3B5457FC1C0FB92900023611 /* MTLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MTLoadingView.xib; sourceTree = "<group>"; };
@@ -650,6 +659,19 @@
 			name = "New Group";
 			sourceTree = "<group>";
 		};
+		3B2ECFB81C24A6F4005E7F82 /* Class Selection */ = {
+			isa = PBXGroup;
+			children = (
+				3B2ECFB91C24A754005E7F82 /* MTClassSelectionViewController.h */,
+				3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */,
+				3B2ECFBC1C24A895005E7F82 /* MTOrganizationSelectionViewController.h */,
+				3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */,
+				3B2ECFBF1C24AE23005E7F82 /* MTClassSelectionNavigationController.h */,
+				3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */,
+			);
+			name = "Class Selection";
+			sourceTree = "<group>";
+		};
 		58676B131974268E0070F604 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -661,6 +683,7 @@
 		587464B2197EFEA30030D706 /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				3B2ECFB81C24A6F4005E7F82 /* Class Selection */,
 				895F78BB1B167DA200055759 /* Common */,
 				89C3E8101B1547680084EA48 /* Menu */,
 				895F78B41B167C5F00055759 /* Mentor Dashboard */,
@@ -1471,6 +1494,7 @@
 				8925B8C71B61A3C80027A0AF /* NSDictionary+MTAdditions.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
+				3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */,
 				89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */,
 				89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */,
 				8977E3E31B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m in Sources */,
@@ -1514,6 +1538,7 @@
 				580B5AF11982EC740092AA9C /* MTSupportViewController.m in Sources */,
 				3B5457FB1C0FB76200023611 /* MTLoadingView.m in Sources */,
 				892594421B73EC7E00B40E06 /* RLMObject+JSON.m in Sources */,
+				3B2ECFBB1C24A754005E7F82 /* MTClassSelectionViewController.m in Sources */,
 				89758EA91B4F204D002B73E3 /* AFOAuth2Manager.m in Sources */,
 				896E11091B740A7C00CEEF17 /* NSError+MTAdditions.m in Sources */,
 				89154ABD1AF29A5B0075D4A6 /* MTPostLikeUserTableViewCell.m in Sources */,
@@ -1531,6 +1556,7 @@
 				895F78C01B17A2C300055759 /* MTChallengeContentViewController.m in Sources */,
 				89758EA81B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
+				3B2ECFBE1C24A895005E7F82 /* MTOrganizationSelectionViewController.m in Sources */,
 				892594411B73EC7E00B40E06 /* RLMObject+Copying.m in Sources */,
 				89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */,
 				581E8844198F500800AD3CF4 /* MTStudentProgressTableViewCell.m in Sources */,
