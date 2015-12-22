@@ -38,6 +38,8 @@
     self.title = @"Change Class";
     self.navigationItem.hidesBackButton = YES;
     
+    self.tableView.sectionIndexColor = [UIColor lightGrey];
+    
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     
     [self loadLocalResults];
