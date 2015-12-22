@@ -44,4 +44,6 @@
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString;
 
++ (NSArray<NSString *> *)englishAlphabet;
+
 @end

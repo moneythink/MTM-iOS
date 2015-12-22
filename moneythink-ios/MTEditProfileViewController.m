@@ -66,8 +66,6 @@
     
     self.navigationItem.title = @"Edit Profile";
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(saveChanges:)];
-
 //    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc]
 //                                   initWithTarget:self
 //                                   action:@selector(dismissKeyboard)];
@@ -153,8 +151,12 @@
     else {
         self.profileImageLabel.text = @"Tap to add a photo";
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     
-    self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+    [self updateViewForCurrentUser];
 }
 
 - (void)viewDidAppear:(BOOL)animated

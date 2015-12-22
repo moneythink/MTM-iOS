@@ -28,6 +28,7 @@ struct MTIncrementalLoadingResponse {
 
 - (void)willLoadRemoteResultsForCurrentPage;
 - (void)didLoadRemoteResultsWithSuccessfulResponse:(struct MTIncrementalLoadingResponse)response;
+- (void)didLoadRemoteResultsSuccessfullyWithLastPage:(BOOL)lastPage numPages:(NSUInteger)numPages totalCount:(NSUInteger)totalCount;
 - (void)didLoadRemoteResultsWithError:(NSError *)error;
 - (void)didLoadLocalResults:(RLMResults *)results withCallback:(MTSuccessBlock)callback;
 
@@ -35,5 +36,9 @@ struct MTIncrementalLoadingResponse {
 - (void)handlePullToLoadMore;
 
 - (void)resetResults;
+
+- (BOOL)shouldConfigureRefreshController;
+- (BOOL)shouldConfigureLoadMoreController;
+- (NSUInteger)incrementallyLoadedSectionIndex;
 
 @end

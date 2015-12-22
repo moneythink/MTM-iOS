@@ -117,6 +117,16 @@ NSInteger totalItems = -1;
         [self.loadingView startLoading];
     }
 }
+
+- (void)didLoadRemoteResultsSuccessfullyWithLastPage:(BOOL)lastPage numPages:(NSUInteger)numPages totalCount:(NSUInteger)totalCount {
+    struct MTIncrementalLoadingResponse response;
+    response.lastPage = lastPage;
+    response.numPages = numPages;
+    response.totalCount = totalCount;
+    [self didLoadRemoteResultsWithSuccessfulResponse:response];
+}
+
+
 - (void)didLoadRemoteResultsWithSuccessfulResponse:(struct MTIncrementalLoadingResponse)response
 {
     MTMakeWeakSelf();
@@ -170,9 +180,9 @@ NSInteger totalItems = -1;
         
         if (weakSelf.results.count > 0) {
             [weakSelf.loadingView setHidden:YES];
-            if ([weakSelf.tableView numberOfRowsInSection:0] > 0) {
+            if ([weakSelf.tableView numberOfRowsInSection:[self incrementallyLoadedSectionIndex]] > 0) {
                 [weakSelf.tableView beginUpdates];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:[self incrementallyLoadedSectionIndex]] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [weakSelf.tableView endUpdates];
             } else {
                 [weakSelf.tableView reloadData];
@@ -203,6 +213,8 @@ NSInteger totalItems = -1;
 
 #pragma mark - Private Methods
 - (void)configureRefreshController {
+    if (![self shouldConfigureRefreshController]) return;
+    
     if (self.refreshController || self.refreshControllerRefreshView) {
         return;
     }
@@ -220,6 +232,8 @@ NSInteger totalItems = -1;
 }
 
 - (void)configureLoadMoreController {
+    if (![self shouldConfigureLoadMoreController]) return;
+    
     if (self.loadMoreController || self.loadMoreControllerRefreshView) return;
     
     self.loadMoreController = [[JYPullToLoadMoreController alloc] initWithScrollView:self.tableView];
@@ -245,6 +259,19 @@ NSInteger totalItems = -1;
     if (self.results.count > 0) {
         [self loadRemoteResultsForCurrentPage];
     }
+}
+
+#pragma mark - Configuration
+- (BOOL)shouldConfigureRefreshController {
+    return YES;
+}
+
+- (BOOL)shouldConfigureLoadMoreController {
+    return YES;
+}
+
+- (NSUInteger)incrementallyLoadedSectionIndex {
+    return 0;
 }
 
 @end

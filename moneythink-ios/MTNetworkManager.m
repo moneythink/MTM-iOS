@@ -354,7 +354,16 @@ static NSUInteger const pageSize = 10;
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     for (NSDictionary *classDict in responseArray) {
-        MTClass *class = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
+        MTClass *class = [[MTClass alloc] initWithJSONDictionary:classDict];
+        NSDictionary *organizationDict = classDict[@"_embedded"][@"organization"];
+        
+        MTOrganization *organization = [MTOrganization objectForPrimaryKey:organizationDict[@"id"]];
+        if (!organization) {
+            [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:organizationDict];
+        }
+        class.organization = organization;
+        
+        [MTClass createOrUpdateInRealm:realm withValue:class];
         class.isDeleted = NO;
     }
     [realm commitWriteTransaction];
