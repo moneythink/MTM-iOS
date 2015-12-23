@@ -13,7 +13,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *postText;
 @property (strong, nonatomic) IBOutlet UILabel *postUser;
 
-@property (strong, nonatomic) IBOutlet PFImageView *postImage;
-@property (strong, nonatomic) IBOutlet PFImageView *postUserImage;
+@property (strong, nonatomic) IBOutlet UIImageView *postImage;
+@property (strong, nonatomic) IBOutlet UIImageView *postUserImage;
 
 @end

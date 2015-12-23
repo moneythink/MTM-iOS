@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+@class MTClass;
+@class MTOrganization;
 
 @interface MTClassSelectionNavigationController : UINavigationController
 

@@ -267,8 +267,15 @@
     return [emailTest evaluateWithObject:checkString];
 }
 
-+ (NSArray<NSString *> *)englishAlphabet {
-    return [@"A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z" componentsSeparatedByString:@","];
++ (NSString *)stringFromAPNSTokenData:(NSData *)deviceToken {
+    const char *data = [deviceToken bytes];
+    NSMutableString *token = [NSMutableString string];
+    
+    for (NSUInteger i = 0; i < [deviceToken length]; i++) {
+        [token appendFormat:@"%02.2hhX", data[i]];
+    }
+    
+    return [token copy];
 }
 
 @end

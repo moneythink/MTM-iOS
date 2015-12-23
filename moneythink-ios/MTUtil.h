@@ -44,6 +44,6 @@
 
 + (BOOL)NSStringIsValidEmail:(NSString *)checkString;
 
-+ (NSArray<NSString *> *)englishAlphabet;
++ (NSString *)stringFromAPNSTokenData:(NSData *)deviceToken;
 
 @end

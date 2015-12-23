@@ -11,12 +11,15 @@ target 'moneythink-ios' do
   pod "AFNetworking", "~> 2.0"
   pod 'JGActionSheet'
   pod 'MBProgressHUD'
-  pod 'Parse'
-  pod 'ParseUI'
   pod 'DZNEmptyDataSet'
   pod 'Reachability'
   pod "JYRefreshController"
-  # pod "IHKeyboardAvoiding"
   pod "IQKeyboardManager"
+  pod "CCBottomRefreshControl"
 end
 
+target 'moneythink-iosTests' do
+  pod 'OCMock'
+  pod "AFNetworking", "~> 2.0"
+
+end

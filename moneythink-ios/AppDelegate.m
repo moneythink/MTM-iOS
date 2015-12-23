@@ -7,7 +7,6 @@
 //
 
 #import "AppDelegate.h"
-#import <Parse/Parse.h>
 #import <Fabric/Fabric.h>
 #import <Crashlytics/Crashlytics.h>
 #import <Google/Analytics.h>
@@ -19,12 +18,8 @@
 #import "AFNetworkActivityIndicatorManager.h"
 
 #ifdef STAGE
-    static NSString *parseApplicationID = @"OFZ4TDvgCYnu40A5bKIui53PwO43Z2x5CgUKJRWz";
-    static NSString *parseClientKey = @"2OBw9Ggbl5p0gJ0o6Y7n8rK7gxhFTGcRQAXH6AuM";
     static NSString *apiServerKey = @"STAGE";
 #else
-    static NSString *parseApplicationID = @"9qekFr9m2QTFAEmdw9tXSesLn31cdnmkGzLjOBxo";
-    static NSString *parseClientKey = @"k5hfuAu2nAgoi9vNk149DJL0YEGCObqwEEZhzWQh";
     static NSString *apiServerKey = @"PRODUCTION";
 #endif
 
@@ -37,7 +32,6 @@
 
     [Fabric with:@[CrashlyticsKit]];
     
-    [self setupParse];
     [self clearZendesk];
     [self setupZendesk];
     
@@ -51,8 +45,6 @@
     }
     [[NSUserDefaults standardUserDefaults] setObject:apiServerKey forKey:kAPIServerKey];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    [PFAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
     
     // Clear keychain on first run in case of reinstallation
     if (![[NSUserDefaults standardUserDefaults] objectForKey:kFirstTimeRunKey]) {
@@ -123,8 +115,6 @@
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
 
-    [self checkForForceUpdate];
-
     return YES;
 }
 
@@ -138,9 +128,6 @@
             //
         }];
     }
-    
-    [self checkForForceUpdate];
-    [self updatePushMessagingInfo];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication*)application
@@ -152,10 +139,8 @@
 #pragma mark - Push Notifications -
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
-    // Store the deviceToken in the current installation and save it to Parse, then update the API.
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    [currentInstallation setDeviceTokenFromData:newDeviceToken];
-    [self updatePushMessagingInfo];
+    // Update the API with new devicetoken.
+    [self updatePushMessagingInfoWithToken:newDeviceToken];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -357,25 +342,22 @@
     [UIApplication sharedApplication].statusBarStyle = UIStatusBarStyleDefault;
 }
 
-- (void)updatePushMessagingInfo
+- (void)updatePushMessagingInfoWithToken:(NSData *)deviceToken
 {
     if (![MTUser isUserLoggedIn] || ![MTUser currentUser]) {
         return;
     }
     
-    PFInstallation *currentInstallation = [PFInstallation currentInstallation];
-    
     // Don't update if Installation doesn't have a deviceToken (i.e simulator)
-    if (IsEmpty(currentInstallation.deviceToken)) {
+    if (IsEmpty(deviceToken)) {
         return;
     }
     
-    currentInstallation.channels = @[@"global"];
-    [currentInstallation saveInBackground];
+    NSString *deviceTokenString = [MTUtil stringFromAPNSTokenData:deviceToken];
     
     if ([MTUtil pushMessagingRegistrationId]) {
         // Update
-        [[MTNetworkManager sharedMTNetworkManager] updatePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] withDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+        [[MTNetworkManager sharedMTNetworkManager] updatePushMessagingRegistrationId:[MTUtil pushMessagingRegistrationId] withDeviceToken:deviceTokenString success:^(id responseData) {
             NSLog(@"Successfully updated push messaging registration");
         } failure:^(NSError *error) {
             NSLog(@"Unable to update push messaging registration: %@", [error mtErrorDescription]);
@@ -383,7 +365,7 @@
     }
     else {
         // Create
-        [[MTNetworkManager sharedMTNetworkManager] createPushMessagingRegistrationWithDeviceToken:currentInstallation.deviceToken success:^(id responseData) {
+        [[MTNetworkManager sharedMTNetworkManager] createPushMessagingRegistrationWithDeviceToken:deviceTokenString success:^(id responseData) {
             NSLog(@"Successfully created push messaging registration");
         } failure:^(NSError *error) {
             NSLog(@"Unable to create push messaging registration: %@", [error mtErrorDescription]);
@@ -613,35 +595,6 @@
                                     }];
 }
 
-- (void)checkForForceUpdate
-{
-    // Force update not active for 2.1+, will need to replace PFCloud function call with
-    //  new API for continued use.
-    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kForcedUpdateKey];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    return;
-    
-    NSDictionary *parameters = [NSDictionary dictionaryWithObject:@"ios" forKey:@"platform"];
-    
-    MTMakeWeakSelf();
-    [PFCloud callFunctionInBackground:@"checkForceUpdate" withParameters:parameters block:^(id object, NSError *error) {
-        if (!error) {
-            BOOL previousForcedUpdate = [[NSUserDefaults standardUserDefaults] boolForKey:kForcedUpdateKey];
-            BOOL newForcedUpdate = [object boolValue];
-            
-            [[NSUserDefaults standardUserDefaults] setBool:newForcedUpdate forKey:kForcedUpdateKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-            
-            if ((previousForcedUpdate != newForcedUpdate) || newForcedUpdate) {
-                // Force back to login view
-                [weakSelf performSelector:@selector(executeForceUpdateRefresh) withObject:nil afterDelay:0.5f];
-            }
-        } else {
-            NSLog(@"error retrieving force update - %@", [error localizedDescription]);
-        }
-    }];
-}
-
 - (void)executeForceUpdateRefresh
 {
     SWRevealViewController *revealVC = (SWRevealViewController *)self.window.rootViewController;
@@ -687,26 +640,6 @@
     [MTUtil cleanDeletedItemsInDatabase];
     [[UIApplication sharedApplication] endBackgroundTask:bgTask];
 }
-
-- (void)setupParse
-{
-    // Parse -- Only used for Push Notification support, database not used.
-    [Parse setApplicationId:parseApplicationID clientKey:parseClientKey];
-    PFACL *defaultACL = [PFACL ACL];
-    [defaultACL setPublicReadAccess:YES];
-    [PFACL setDefaultACL:defaultACL withAccessForCurrentUser:YES];
-    if ([PFUser currentUser]) {
-        [PFUser logOutInBackgroundWithBlock:^(NSError *error) {
-            NSLog(@"Successfully logged out legacy/Parse user");
-        }];
-        
-        if (![[NSUserDefaults standardUserDefaults] boolForKey:kDisplayedAPIMigrationAlertKey]) {
-            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldDisplayAPIMigrationAlertKey];
-            [[NSUserDefaults standardUserDefaults] synchronize];
-        }
-    }
-}
-
 
 #pragma mark - SWRevealViewControllerDelegate Methods -
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position;

@@ -14,6 +14,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *postUsername;
 @property (nonatomic, weak) IBOutlet UIButton *deletePost;
 @property (nonatomic, weak) IBOutlet UILabel *whenPosted;
-@property (nonatomic, strong) PFImageView *postImage;
+@property (nonatomic, strong) UIImageView *postImage;
 
 @end

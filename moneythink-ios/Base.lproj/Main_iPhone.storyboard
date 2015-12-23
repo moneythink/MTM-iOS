@@ -2151,7 +2151,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="CE8F8E71-4049-4BDE-A743-8549F9728C36" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="68CF9F71-FEB3-490D-BD71-D7D3CA2C2D26" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <animations/>
                                 <constraints>
@@ -2659,7 +2659,7 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gC5-iW-pMT" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gC5-iW-pMT">
                                             <rect key="frame" x="8" y="54" width="304" height="304"/>
                                             <animations/>
                                             <constraints>
@@ -3438,7 +3438,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="156" height="205"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_post.png" translatesAutoresizingMaskIntoConstraints="NO" id="EgB-f5-Wuh" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo_post.png" translatesAutoresizingMaskIntoConstraints="NO" id="EgB-f5-Wuh">
                                             <rect key="frame" x="10" y="10" width="136" height="136"/>
                                             <animations/>
                                             <constraints>
@@ -3456,7 +3456,7 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="rE0-Op-7YM" userLabel="User Image" customClass="PFImageView">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="rE0-Op-7YM" userLabel="User Image">
                                             <rect key="frame" x="10" y="170" width="30" height="30"/>
                                             <animations/>
                                             <constraints>
@@ -6456,7 +6456,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         </scene>
     </scenes>
     <resources>
-        <image name="CE8F8E71-4049-4BDE-A743-8549F9728C36" width="90" height="90">
+        <image name="68CF9F71-FEB3-490D-BD71-D7D3CA2C2D26" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
