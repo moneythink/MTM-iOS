@@ -14,13 +14,23 @@ struct MTIncrementalLoadingResponse {
     NSUInteger totalCount;
 };
 
+@protocol MTIncrementalLoadingTableViewControllerDelegate <NSObject>
+
+- (void)willReloadSection:(NSUInteger)section;
+- (void)didReloadSection:(NSUInteger)section;
+
+@end
+
 @interface MTIncrementalLoadingTableViewController : UITableViewController <UIScrollViewDelegate>
 
 @property (strong, nonatomic) RLMResults *results;
 @property (assign, nonatomic) NSUInteger currentPage;
+@property (strong, nonatomic) NSString   *currentSearchText;
 @property (assign, nonatomic) NSUInteger pageSize;
 
 @property (assign, nonatomic) NSString   *loadingMessage;
+
+@property (weak, nonatomic) id<MTIncrementalLoadingTableViewControllerDelegate> incrementalLoadingControllerDelegate;
 
 - (void)loadLocalResults:(MTSuccessBlock)callback;
 - (void)loadLocalResults;
@@ -38,7 +48,7 @@ struct MTIncrementalLoadingResponse {
 - (void)resetResults;
 
 - (BOOL)shouldConfigureRefreshController;
-- (BOOL)shouldConfigureLoadMoreController;
+- (BOOL)shouldConfigureLoadMoreControl;
 - (NSUInteger)incrementallyLoadedSectionIndex;
 
 @end

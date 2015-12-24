@@ -9,20 +9,19 @@
 #import "MTIncrementalLoadingTableViewController.h"
 #import "MTLoadingView.h"
 #import "JYPullToRefreshController.h"
-#import "JYPullToLoadMoreController.h"
 #import "MTRefreshView.h"
+#import <CCBottomRefreshControl/UIScrollView+BottomRefreshControl.h>
 
 @interface MTIncrementalLoadingTableViewController () <UITableViewDataSource, UITableViewDelegate>
 
 @property (strong, nonatomic) IBOutlet MTLoadingView *loadingView;
 
 @property (strong, nonatomic) JYPullToRefreshController *refreshController;
-@property (strong, nonatomic) JYPullToLoadMoreController *loadMoreController;
 @property (strong, nonatomic) MTRefreshView *refreshControllerRefreshView;
-@property (strong, nonatomic) MTRefreshView *loadMoreControllerRefreshView;
+@property (strong, nonatomic) UIRefreshControl *loadMoreControl;
 
 - (void)configureRefreshController;
-- (void)configureLoadMoreController;
+- (void)configureLoadMoreControl;
 
 @end
 
@@ -67,7 +66,7 @@ NSInteger totalItems = -1;
     [super viewDidAppear:animated];
     
     [self configureRefreshController];
-    [self configureLoadMoreController];
+    [self configureLoadMoreControl];
 }
 
 - (void)resetResults {
@@ -134,17 +133,16 @@ NSInteger totalItems = -1;
     
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakSelf.loadingView stopLoadingSuccessfully:totalItems > 0];
+        NSLog(@"Ended refreshing");
+        [weakSelf.loadMoreControl endRefreshing];
         
-        if (self.refreshController.refreshState == JYRefreshStateLoading) {
-            BOOL shouldAnimate = self.results.count > 0; // Refreshing existing feed?
-            [self.refreshController stopRefreshWithAnimated:shouldAnimate completion:nil];
-        }
-        if (self.loadMoreController.loadMoreState == JYLoadMoreStateLoading) {
-            [self.loadMoreController stopLoadMoreCompletion:nil];
+        if (weakSelf.refreshController.refreshState == JYRefreshStateLoading) {
+            BOOL shouldAnimate = weakSelf.results.count > 0; // Refreshing existing feed?
+            [weakSelf.refreshController stopRefreshWithAnimated:shouldAnimate completion:nil];
         }
         NSLog(@"Loaded page %lu of %lu", (unsigned long)self.currentPage, (unsigned long)response.numPages);
         if (!response.lastPage && response.numPages > 0) {
-            self.currentPage++;
+            weakSelf.currentPage++;
         }
         [weakSelf loadLocalResults];
     });
@@ -153,10 +151,10 @@ NSInteger totalItems = -1;
 - (void)didLoadRemoteResultsWithError:(NSError *)error {
     MTMakeWeakSelf();
     NSLog(@"%@: Unable to load results", NSStringFromClass([self class]));
-    [self.refreshController stopRefreshWithAnimated:YES completion:nil];
+    [self.refreshController stopRefreshWithAnimated:NO completion:nil];
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakSelf loadLocalResults];
-        [self.loadingView stopLoadingSuccessfully:weakSelf.results.count > 0];
+        [weakSelf.loadMoreControl endRefreshing];
+        [weakSelf.loadingView stopLoadingSuccessfully:weakSelf.results.count > 0];
     });
 }
 
@@ -180,12 +178,12 @@ NSInteger totalItems = -1;
         
         if (weakSelf.results.count > 0) {
             [weakSelf.loadingView setHidden:YES];
-            if ([weakSelf.tableView numberOfRowsInSection:[self incrementallyLoadedSectionIndex]] > 0) {
-                [weakSelf.tableView beginUpdates];
-                [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:[self incrementallyLoadedSectionIndex]] withRowAnimation:UITableViewRowAnimationAutomatic];
-                [weakSelf.tableView endUpdates];
-            } else {
-                [weakSelf.tableView reloadData];
+            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(willReloadSection:)]) {
+                [weakSelf.incrementalLoadingControllerDelegate willReloadSection:[self incrementallyLoadedSectionIndex]];
+            }
+            [weakSelf.tableView reloadData];
+            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(didReloadSection:)]) {
+                [weakSelf.incrementalLoadingControllerDelegate didReloadSection:[self incrementallyLoadedSectionIndex]];
             }
         } else {
             [weakSelf.loadingView setHidden:NO];
@@ -206,8 +204,6 @@ NSInteger totalItems = -1;
 {
     if (scrollView.contentOffset.y < 0) {
         [self.refreshControllerRefreshView scrollView:scrollView contentOffsetDidUpdate:scrollView.contentOffset];
-    } else {
-        [self.loadMoreControllerRefreshView scrollView:scrollView contentOffsetDidUpdate:scrollView.contentOffset];
     }
 }
 
@@ -231,23 +227,19 @@ NSInteger totalItems = -1;
     };
 }
 
-- (void)configureLoadMoreController {
-    if (![self shouldConfigureLoadMoreController]) return;
+- (void)configureLoadMoreControl {
+    if (![self shouldConfigureLoadMoreControl]) return;
     
-    if (self.loadMoreController || self.loadMoreControllerRefreshView) return;
+    if (self.loadMoreControl) return;
     
-    self.loadMoreController = [[JYPullToLoadMoreController alloc] initWithScrollView:self.tableView];
-    self.loadMoreController.autoLoadMore = NO;
-    
-    MTRefreshView *refreshView = [[MTRefreshView alloc] initWithFrame:CGRectMake(0,0,self.tableView.frame.size.width, 44.0f)];
-    [self.loadMoreController setCustomView:refreshView];
-    self.loadMoreControllerRefreshView = refreshView;
-    
-    MTMakeWeakSelf();
-    self.loadMoreController.pullToLoadMoreHandleAction = ^{
-        [weakSelf handlePullToLoadMore];
-    };
+    UIRefreshControl *loadMoreControl = [UIRefreshControl new];
+    [loadMoreControl addTarget:self action:@selector(handlePullToLoadMore) forControlEvents:UIControlEventValueChanged];
+    loadMoreControl.tintColor = [UIColor primaryOrange];
+    loadMoreControl.attributedTitle = [[NSAttributedString alloc] initWithString:@""];
+    self.tableView.bottomRefreshControl = loadMoreControl;
+    self.loadMoreControl = loadMoreControl;
 }
+
 
 #pragma mark - Handlers
 - (void)handlePullToRefresh {
@@ -266,12 +258,21 @@ NSInteger totalItems = -1;
     return YES;
 }
 
-- (BOOL)shouldConfigureLoadMoreController {
+- (BOOL)shouldConfigureLoadMoreControl {
     return YES;
 }
 
 - (NSUInteger)incrementallyLoadedSectionIndex {
     return 0;
+}
+
+#pragma mark - UISearchBarDelegate
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if (searchText.length == 0) {
+        self.currentSearchText = nil;
+    } else {
+        self.currentSearchText = searchText;
+    }
 }
 
 @end

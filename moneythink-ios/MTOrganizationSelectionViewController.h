@@ -8,6 +8,6 @@
 
 #import "MTIncrementalLoadingTableViewController.h"
 
-@interface MTOrganizationSelectionViewController : MTIncrementalLoadingTableViewController
+@interface MTOrganizationSelectionViewController : MTIncrementalLoadingTableViewController <UISearchBarDelegate>
 
 @end

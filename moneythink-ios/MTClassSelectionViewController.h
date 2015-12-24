@@ -8,6 +8,6 @@
 
 #import "MTIncrementalLoadingTableViewController.h"
 
-@interface MTClassSelectionViewController : MTIncrementalLoadingTableViewController
+@interface MTClassSelectionViewController : MTIncrementalLoadingTableViewController <MTIncrementalLoadingTableViewControllerDelegate, UIAlertViewDelegate>
 
 @end

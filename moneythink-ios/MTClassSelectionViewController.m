@@ -12,6 +12,7 @@
 #define kCellIdentifier @"Class Name Cell"
 #define kAllSchoolsSection 0
 #define kClassesSection 1
+#define kMentorCodeKey @"kMentorCodeKey"
 
 @interface MTClassSelectionViewController ()
 
@@ -22,6 +23,8 @@
 
 - (MTOrganization *)selectedOrganization;
 - (NSString *)mentorCode;
+
+- (void)promptForMentorCode;
 
 - (void)handleError:(NSError *)error;
 
@@ -35,12 +38,10 @@
     self.loadingMessage = @"Loading classes...";
     [super viewDidLoad];
     
-    self.title = @"Change Class";
     self.navigationItem.hidesBackButton = YES;
     
-    self.tableView.sectionIndexColor = [UIColor lightGrey];
-    
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
+    self.incrementalLoadingControllerDelegate = self;
     
     [self loadLocalResults];
 }
@@ -85,7 +86,7 @@
     if (self.selectedOrganization.id != [MTUser currentUser].organization.id) {
         [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:self.mentorCode organizationId:self.selectedOrganization.id page:self.currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
             [weakSelf loadLocalResults];
-            [self didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
+            [weakSelf didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf handleError:error];
@@ -136,7 +137,7 @@
         return cell;
     }
     
-    MTClass *class = [self.results objectAtIndex:indexPath.row];
+    MTClass *class = self.results[indexPath.row];
     cell.textLabel.text = class.name;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -148,12 +149,17 @@
 }
 
 #pragma mark - UITableViewDelegate
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kAllSchoolsSection) {
-        [self.navigationController popViewControllerAnimated:YES];
+        if (!IsEmpty(self.mentorCode)) {
+            [self.navigationController popViewControllerAnimated:YES];
+        } else {
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [self promptForMentorCode];
+        }
+        return nil;
     } else {
         // Update the mentor's class
-        
         NSUInteger row = [self.results indexOfObject:self.selectedClass];
         
         MTClass *class = (MTClass *)self.results[indexPath.row];
@@ -164,10 +170,8 @@
         
         [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
-}
-
-- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
-    return [MTUtil englishAlphabet];
+    
+    return indexPath;
 }
 
 #pragma mark - Accessors of changes to be made
@@ -187,10 +191,67 @@
     return ((MTClassSelectionNavigationController *)self.navigationController).mentorCode;
 }
 
+- (void)setMentorCode:(NSString *)mentorCode {
+    [[NSUserDefaults standardUserDefaults] setObject:mentorCode forKey:kMentorCodeKey];
+    ((MTClassSelectionNavigationController *)self.navigationController).mentorCode = mentorCode;
+}
+
 #pragma mark - private methods
 - (void)handleError:(NSError *)error {
     [[[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Unable to load classes. Please check your Internet connection. If this issue happens more than once, please contact us!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
     [self didLoadRemoteResultsWithError:error];
+}
+
+- (void)promptForMentorCode {
+    
+    NSString *mentorCodeFromUserDefaults = [[NSUserDefaults standardUserDefaults] objectForKey:kMentorCodeKey];
+    if (!IsEmpty(mentorCodeFromUserDefaults)) {
+        return [self selectOrganizationIfCorrectWithCode:mentorCodeFromUserDefaults];
+    }
+    
+    NSString *message = @"Enter your mentor code to change organizations.";
+    NSString *title = @"Mentor Code";
+    if ([UIAlertController class]) {
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+        [controller addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.placeholder = title;
+        }];
+        [controller addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [controller addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            NSString *mentorCode = [[controller textFields] firstObject].text;
+            [self selectOrganizationIfCorrectWithCode:mentorCode];
+        }]];
+        [self presentViewController:controller animated:YES completion:nil];
+    } else {
+        UIAlertView *alertViewChangeName = [[UIAlertView alloc]initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        alertViewChangeName.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alertViewChangeName show];
+    }
+}
+
+- (void)selectOrganizationIfCorrectWithCode:(NSString *)mentorCode {
+    MTMakeWeakSelf();
+    
+    MBProgressHUD *hud = [[MBProgressHUD alloc] init];
+    
+    if (IsEmpty([[NSUserDefaults standardUserDefaults] objectForKey:kMentorCodeKey])) {
+        hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Validating code...";
+        hud.dimBackground = YES;
+    }
+    
+    [[MTNetworkManager sharedMTNetworkManager] getOrganizationsWithSignupCode:mentorCode page:1 success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
+        [hud hide:YES];
+        [self setMentorCode:mentorCode];
+        self.currentPage = 1;
+        [weakSelf.navigationController popViewControllerAnimated:YES];
+    } failure:^(NSError *error) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hide:YES];
+            [[[UIAlertView alloc] initWithTitle:@"Invalid code." message:@"Please check your code. You can always contact Moneythink for help from the Talk to Moneythink menu." delegate:nil cancelButtonTitle:@"Try Again" otherButtonTitles:nil] show];
+        });
+    }];
+    
 }
 
 #pragma mark - MTIncrementalLoading configuration
@@ -208,6 +269,7 @@
     RLMRealm *realm = [RLMRealm defaultRealm];
     
     [realm beginWriteTransaction];
+    user.organization = self.selectedOrganization;
     user.userClass = self.selectedClass;
     [realm commitWriteTransaction];
     
@@ -216,6 +278,22 @@
 
 - (IBAction)saveAction:(UIBarButtonItem *)sender {
     [self saveAndDismiss];
+}
+
+#pragma mark - MTIncrementalLoadingTableViewControllerDelegate
+- (void)didReloadSection:(NSUInteger)section {
+    if (section == 1) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.results indexOfObject:self.selectedClass] inSection:section];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    }
+}
+
+#pragma mark - UIAlertViewDelegate
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    NSString *mentorCode = [alertView textFieldAtIndex:0].text;
+    if (!IsEmpty(mentorCode) && buttonIndex != alertView.cancelButtonIndex) {
+        [self selectOrganizationIfCorrectWithCode:mentorCode];
+    }
 }
 
 @end

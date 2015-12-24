@@ -369,6 +369,38 @@ static NSUInteger const pageSize = 10;
     [realm commitWriteTransaction];
 }
 
+- (void)processAndSaveOrganizationsFromResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No organizations response data");
+        return;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No organizations response data");
+        return;
+    }
+    
+    NSDictionary *embeddedDict = (NSDictionary *)[responseDict objectForKey:@"_embedded"];
+    if (![[embeddedDict objectForKey:@"organizations"] isKindOfClass:[NSArray class]]) {
+        NSLog(@"No organizations response data");
+        return;
+    }
+    NSArray *responseArray = (NSArray *)[embeddedDict objectForKey:@"organizations"];
+        
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    for (NSDictionary *organizationDict in responseArray) {
+        MTOrganization *organization = [MTOrganization objectForPrimaryKey:organizationDict[@"id"]];
+        if (!organization) {
+            [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:organizationDict];
+        }
+        organization.isDeleted = NO;
+    }
+    [realm commitWriteTransaction];
+}
+
 - (NSDictionary *)processCreateClassRequestWithResponseObject:(id)responseObject
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
@@ -2016,6 +2048,11 @@ static NSUInteger const pageSize = 10;
     }];
 }
 
+- (void)getOrganizationsWithSignupCode:(NSString *)signupCode page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
+    [self loadPaginatedResource:@"mentor-organizations" processSelector:@selector(processAndSaveOrganizationsFromResponseObject:) page:page extraParams:@{@"maxdepth": @"0", @"page_size":@"50"} extraHeaders:headers success:success failure:failure];
+}
+
 // @deprecated
 - (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
@@ -2157,7 +2194,7 @@ static NSUInteger const pageSize = 10;
 
 - (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    NSString *resourcePath = [NSString stringWithFormat:@"organizations/%ld/@classes", organizationId];
+    NSString *resourcePath = [NSString stringWithFormat:@"organizations/%ld/classes", organizationId];
     NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
     
     [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:@{} extraHeaders:headers success:success failure:failure];
