@@ -90,7 +90,7 @@
         [[UIApplication sharedApplication] registerUserNotificationSettings:settings];
     }
     else {
-        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+        [self registerForPushNotifications];
     }
     
     // Set up Reachability
@@ -137,6 +137,10 @@
 
 
 #pragma mark - Push Notifications -
+- (void)registerForPushNotifications {
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound)];
+}
+
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)newDeviceToken
 {
     // Update the API with new devicetoken.

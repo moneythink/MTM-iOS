@@ -457,7 +457,7 @@
         [[MTUtil getAppDelegate] configureZendesk];
         
         // Update for Push Notifications
-        [[MTUtil getAppDelegate] updatePushMessagingInfo];
+        [[MTUtil getAppDelegate] registerForPushNotifications];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];

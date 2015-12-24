@@ -21,8 +21,8 @@
 
 - (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
-- (void)updatePushMessagingInfo;
 - (void)configureZendesk;
+- (void)registerForPushNotifications;
 - (void)initializeZendesk;
 - (BOOL)shouldForceUpdate;
 - (void)clearLogoutReason;
