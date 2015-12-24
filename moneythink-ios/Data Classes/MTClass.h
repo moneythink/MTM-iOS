@@ -16,6 +16,7 @@
 @property NSString *name;
 @property NSString *studentSignupCode;
 @property BOOL isDeleted;
+@property BOOL isArchived;
 
 @property MTOrganization *organization;
 

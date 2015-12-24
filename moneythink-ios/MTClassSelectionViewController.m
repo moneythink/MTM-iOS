@@ -74,7 +74,7 @@
 #pragma mark - MTIncrementalLoading
 - (void)loadLocalResults:(MTSuccessBlock)callback {
     
-    RLMResults *results = [[MTClass objectsWhere:@"organization.id = %d", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
+    RLMResults *results = [[MTClass objectsWhere:@"organization.id = %d AND isArchived = NO", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
     
     [self didLoadLocalResults:results withCallback:nil];
 }

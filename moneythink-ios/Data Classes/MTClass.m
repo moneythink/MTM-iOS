@@ -15,7 +15,8 @@
 + (NSDictionary *)defaultPropertyValues {
     return @{@"name" : @"",
              @"studentSignupCode": @"",
-             @"isDeleted": @NO};
+             @"isDeleted": @NO,
+             @"isArchived": @NO};
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -36,6 +37,7 @@
              @"id": @"id",
              @"name": @"name",
              @"studentSignupCode": @"studentSignupCode",
+             @"isArchived" : @"isArchived"
              };
 }
 

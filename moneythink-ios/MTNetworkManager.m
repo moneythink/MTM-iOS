@@ -2197,7 +2197,10 @@ static NSUInteger const pageSize = 10;
     NSString *resourcePath = [NSString stringWithFormat:@"organizations/%ld/classes", organizationId];
     NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
     
-    [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:@{} extraHeaders:headers success:success failure:failure];
+    // include archived items in response so that we can actually clear them out.
+    NSDictionary *extraParams = @{@"includeArchived" : @"true"};
+    
+    [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams extraHeaders:headers success:success failure:failure];
 }
 
 - (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
