@@ -2553,6 +2553,39 @@ static NSUInteger const pageSize = 10;
     }];
 }
 
+- (void)updateCurrentUserWithDictionary:(NSDictionary *)parameters success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        MTUser *currentUser = [MTUser currentUser];
+        NSString *urlString = [NSString stringWithFormat:@"users/%ld?maxdepth=1", (long)currentUser.id];
+        
+        MTMakeWeakSelf();
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"updateCurrentUserWithDictionary success response");
+            
+            if (responseObject) {
+                MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
+                NSLog(@"updated User: %@", meUser);
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed updateCurrentUserWithDictionary with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed updateCurrentUserWithDictionary with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
 - (void)setOnboardingCompleteForCurrentUserWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();

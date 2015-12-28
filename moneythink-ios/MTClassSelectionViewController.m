@@ -51,6 +51,18 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setToolbarHidden:NO animated:YES];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self.navigationController setToolbarHidden:YES animated:YES];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -151,12 +163,7 @@
 #pragma mark - UITableViewDelegate
 - (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kAllSchoolsSection) {
-        if (!IsEmpty(self.mentorCode)) {
-            [self.navigationController popViewControllerAnimated:YES];
-        } else {
-            [tableView deselectRowAtIndexPath:indexPath animated:YES];
-            [self promptForMentorCode];
-        }
+        [self changeSchoolOrOrganizationButtonTapped:nil];
         return nil;
     } else {
         // Update the mentor's class
@@ -205,8 +212,11 @@
 - (void)promptForMentorCode {
     
     NSString *mentorCodeFromUserDefaults = [[NSUserDefaults standardUserDefaults] objectForKey:kMentorCodeKey];
-    if (!IsEmpty(mentorCodeFromUserDefaults)) {
-        return [self selectOrganizationIfCorrectWithCode:mentorCodeFromUserDefaults];
+    if (!IsEmpty(mentorCodeFromUserDefaults) && IsEmpty(self.mentorCode)) {
+        // Assume user default code is correct
+        self.mentorCode = mentorCodeFromUserDefaults;
+        [self.navigationController popViewControllerAnimated:YES];
+        return;
     }
     
     NSString *message = @"Enter your mentor code to change organizations.";
@@ -268,16 +278,46 @@
     MTUser *user = [MTUser currentUser];
     RLMRealm *realm = [RLMRealm defaultRealm];
     
-    [realm beginWriteTransaction];
-    user.organization = self.selectedOrganization;
-    user.userClass = self.selectedClass;
-    [realm commitWriteTransaction];
+    // Write to server
+    MBProgressHUD *hud = [[MBProgressHUD alloc] init];
     
-    [self performSegueWithIdentifier:@"dismiss" sender:self];
+    hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Saving...";
+    hud.dimBackground = YES;
+    
+    NSDictionary *dictionary = @{
+         @"organization" : @{ @"id" : [NSNumber numberWithInteger:self.selectedOrganization.id] },
+         @"class" : @{ @"id" : [NSNumber numberWithInteger:self.selectedClass.id] }
+    };
+    
+    [[MTNetworkManager sharedMTNetworkManager] updateCurrentUserWithDictionary:dictionary success:^(id responseData) {
+        [hud hide:YES];
+        
+        // Write locally
+        [realm beginWriteTransaction];
+        user.organization = self.selectedOrganization;
+        user.userClass = self.selectedClass;
+        [realm commitWriteTransaction];
+        
+        [self performSegueWithIdentifier:@"dismiss" sender:self];
+        
+    } failure:^(NSError *error) {
+        [hud hide:YES];
+        
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles:nil] show];
+    }];
 }
 
 - (IBAction)saveAction:(UIBarButtonItem *)sender {
     [self saveAndDismiss];
+}
+
+- (IBAction)changeSchoolOrOrganizationButtonTapped:(id)sender {
+    if (!IsEmpty(self.mentorCode)) {
+        [self.navigationController popViewControllerAnimated:YES];
+    } else {
+        [self promptForMentorCode];
+    }
 }
 
 #pragma mark - MTIncrementalLoadingTableViewControllerDelegate
