@@ -446,6 +446,8 @@
         return;
     }
     
+    [self.view endEditing:YES];
+    
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
     hud.labelText = @"Logging In...";
 
