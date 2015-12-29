@@ -16,6 +16,7 @@ struct MTIncrementalLoadingResponse {
 
 @protocol MTIncrementalLoadingTableViewControllerDelegate <NSObject>
 
+@optional
 - (void)willReloadSection:(NSUInteger)section;
 - (void)didReloadSection:(NSUInteger)section;
 

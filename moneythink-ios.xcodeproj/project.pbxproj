@@ -28,6 +28,7 @@
 		3B902B651C2B23BF008A0FF3 /* MTOrganizationSelectionViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B902B521C2B2171008A0FF3 /* MTOrganizationSelectionViewControllerTest.m */; };
 		3BBEFAF81C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEFAF71C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m */; };
 		3BC174641C2BB0D7008F5009 /* MTClassTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC174631C2BB0D7008F5009 /* MTClassTest.m */; };
+		3BE15A641C32061100547CDA /* MTNoKeyboardAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE15A631C32061100547CDA /* MTNoKeyboardAlertView.m */; };
 		5806A4EB19746009000B3656 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */; };
 		5806A4EF1974610A000B3656 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4EE1974610A000B3656 /* Social.framework */; };
 		5806A4F319746655000B3656 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5806A4F219746655000B3656 /* Accounts.framework */; };
@@ -293,6 +294,8 @@
 		3BBEFAF61C18D3B000A7143B /* MTIncrementalLoadingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTIncrementalLoadingTableViewController.h; sourceTree = "<group>"; };
 		3BBEFAF71C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTIncrementalLoadingTableViewController.m; sourceTree = "<group>"; };
 		3BC174631C2BB0D7008F5009 /* MTClassTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassTest.m; sourceTree = "<group>"; };
+		3BE15A621C32061100547CDA /* MTNoKeyboardAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNoKeyboardAlertView.h; sourceTree = "<group>"; };
+		3BE15A631C32061100547CDA /* MTNoKeyboardAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNoKeyboardAlertView.m; sourceTree = "<group>"; };
 		55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (stage).xcconfig"; sourceTree = "<group>"; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -840,6 +843,8 @@
 				89758EAB1B4F279A002B73E3 /* MTNetworkManager.m */,
 				899CF52C1B8637D60058F59C /* MTOAuthRefreshOperation.h */,
 				899CF52D1B8637D60058F59C /* MTOAuthRefreshOperation.m */,
+				3BE15A621C32061100547CDA /* MTNoKeyboardAlertView.h */,
+				3BE15A631C32061100547CDA /* MTNoKeyboardAlertView.m */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1714,6 +1719,7 @@
 				895F78C01B17A2C300055759 /* MTChallengeContentViewController.m in Sources */,
 				89758EA81B4F204D002B73E3 /* AFHTTPRequestSerializer+OAuth2.m in Sources */,
 				58536FE6199C286E002AC2E1 /* MTNotificationTableViewCell.m in Sources */,
+				3BE15A641C32061100547CDA /* MTNoKeyboardAlertView.m in Sources */,
 				3B2ECFBE1C24A895005E7F82 /* MTOrganizationSelectionViewController.m in Sources */,
 				892594411B73EC7E00B40E06 /* RLMObject+Copying.m in Sources */,
 				89A793C61B2F2C80000BFA40 /* MTOnboardingController.m in Sources */,
