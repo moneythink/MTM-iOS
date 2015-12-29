@@ -9,7 +9,7 @@
 #import "MTLeaderboardViewController.h"
 #import "MTMentorStudentProfileViewController.h"
 
-@interface MTLeaderboardViewController ()
+@interface MTLeaderboardViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
 @property (nonatomic, strong) RLMResults *leaders;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
@@ -18,10 +18,16 @@
 
 @implementation MTLeaderboardViewController
 
+BOOL isLoaded = false;
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
+    
+    
+    self.tableView.emptyDataSetSource = self;
+    self.tableView.emptyDataSetDelegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -51,6 +57,9 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
             weakSelf.leaders = [[MTUser objectsWhere:@"isDeleted = NO AND roleCode = %@ AND userClass.id = %lu", @"STUDENT", [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"points" ascending:NO];
+            if (IsEmpty(weakSelf.leaders)) {
+                isLoaded = YES;
+            }
             [weakSelf.tableView reloadData];
         });
     } failure:^(NSError *error) {
@@ -147,6 +156,23 @@
         MTUser *student = sender;
         destinationVC.studentUser = student;
     }
+}
+
+#pragma mark - DZNEmptyDataSource
+- (NSAttributedString *)descriptionForEmptyDataSet:(UIScrollView *)scrollView
+{
+    self.tableView.tableFooterView = [UIView new];
+    return [[NSAttributedString alloc] initWithString:@"No students in the class."];
+}
+
+- (UIColor *)backgroundColorForEmptyDataSet:(UIScrollView *)scrollView
+{
+    return [UIColor whiteColor];
+}
+
+- (BOOL)emptyDataSetShouldDisplay:(UIScrollView *)scrollView
+{
+    return isLoaded && self.leaders.count == 0;
 }
 
 
