@@ -178,12 +178,12 @@ NSInteger totalItems = -1;
         
         if (weakSelf.results.count > 0) {
             [weakSelf.loadingView setHidden:YES];
-            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(willReloadSection:)]) {
-                [weakSelf.incrementalLoadingControllerDelegate willReloadSection:[self incrementallyLoadedSectionIndex]];
+            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(willReloadResults)]) {
+                [weakSelf.incrementalLoadingControllerDelegate willReloadResults];
             }
             [weakSelf.tableView reloadData];
-            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(didReloadSection:)]) {
-                [weakSelf.incrementalLoadingControllerDelegate didReloadSection:[self incrementallyLoadedSectionIndex]];
+            if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(didReloadResults)]) {
+                [weakSelf.incrementalLoadingControllerDelegate didReloadResults];
             }
         } else {
             [weakSelf.loadingView setHidden:NO];

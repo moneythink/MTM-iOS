@@ -15,6 +15,8 @@
 
 @interface MTOrganizationSelectionViewController ()
 
+- (NSIndexPath *)resultIndexPath:(RLMObject *)object;
+
 @end
 
 @implementation MTOrganizationSelectionViewController
@@ -27,6 +29,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     
     self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.prompt = self.selectedOrganization.name;
 
     // Immediately push to class selection so that this nav controller opens in the second view
     UIStoryboard *sb = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil];
@@ -55,13 +58,20 @@
 - (void)loadLocalResults:(MTSuccessBlock)callback {
     
     RLMResults *results;
-    if (!IsEmpty(self.currentSearchText)) {
-        results = [[MTOrganization objectsWhere:@"name CONTAINS %@", self.currentSearchText] sortedResultsUsingProperty:@"name" ascending:YES];
-    } else {
+//    if (!IsEmpty(self.currentSearchText)) {
+//        results = [[MTOrganization objectsWhere:@"name CONTAINS %@", self.currentSearchText] sortedResultsUsingProperty:@"name" ascending:YES];
+//    } else {
         results = [[MTOrganization allObjects] sortedResultsUsingProperty:@"name" ascending:YES];
-    }
+//    }
 
-    [self didLoadLocalResults:results withCallback:nil];
+    [self didLoadLocalResults:results withCallback:^(NSError *error) {
+        if (!IsEmpty(self.results)) {
+            NSIndexPath *selectedPath = [self resultIndexPath:self.selectedOrganization];
+            if (selectedPath != nil) {
+                [self.tableView scrollToRowAtIndexPath:selectedPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+            }
+        }
+    }];
 }
 
 - (void)loadRemoteResultsForCurrentPage {
@@ -98,6 +108,13 @@
 }
 
 #pragma mark - UITableViewDelegate
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MTOrganization *organization = (MTOrganization *)self.results[indexPath.row];
+    self.navigationItem.prompt = organization.name;
+    
+    return indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
         // Update the mentor's class
     MTOrganization *organization = (MTOrganization *)self.results[indexPath.row];
@@ -127,6 +144,15 @@
 #pragma mark - MTIncrementalLoading configuration
 - (BOOL)shouldConfigureRefreshController {
     return NO;
+}
+
+#pragma mark - PRivate methods
+- (NSIndexPath *)resultIndexPath:(RLMObject *)object {
+    NSInteger resultIndex = [self.results indexOfObject:object];
+    if (resultIndex != NSNotFound) {
+        return [NSIndexPath indexPathForRow:resultIndex inSection:0];
+    }
+    return nil;
 }
 
 @end

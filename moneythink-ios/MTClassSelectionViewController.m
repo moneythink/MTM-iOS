@@ -13,6 +13,7 @@
 #define kActiveClassesSection 0
 #define kArchivedClassesSection 1
 #define kMentorCodeKey @"kMentorCodeKey"
+#define kShowArchivedClassesText @"Show Archived Classes"
 
 #import "MTNoKeyboardAlertView.h"
 
@@ -49,6 +50,8 @@
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     self.incrementalLoadingControllerDelegate = self;
+    
+    self.navigationItem.prompt = self.selectedOrganization.name;
     
     [self loadLocalResults];
 }
@@ -131,7 +134,7 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if (section == kActiveClassesSection) {
-        return [NSString stringWithFormat:@"Classes in %@", self.selectedOrganization.name];
+        return @"Active Classes";
     } else {
         return @"Archived Classes";
     }
@@ -154,8 +157,13 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
     
     if (indexPath.section == kArchivedClassesSection) {
-        NSAttributedString *title = [[NSAttributedString alloc] initWithString:@"Show Archived Classes" attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0f]}];
-        cell.textLabel.attributedText = title;
+        if (self.archivedResults != nil && self.archivedResults.count == 0) {
+            cell.textLabel.text = @"No archived classes.";
+        } else {
+            NSAttributedString *title = [[NSAttributedString alloc] initWithString:kShowArchivedClassesText attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0f]}];
+            cell.textLabel.attributedText = title;
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
         cell.selected = false;
         return cell;
     }
@@ -168,6 +176,10 @@
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     
+    if (indexPath.section == kArchivedClassesSection) {
+        cell.textLabel.textColor = [UIColor darkGrayColor];
+    }
+    
     return cell;
 }
 
@@ -176,23 +188,32 @@
     // Needs to reload the new row and reload the currently selected row(s) of the previously selected class
     
     if (indexPath.section == kArchivedClassesSection) {
-        [self changeSchoolOrOrganizationButtonTapped:nil];
-        return nil;
+        UITableViewCell *firstCell = [tableView cellForRowAtIndexPath:indexPath];
+        if (firstCell != nil) {
+            if ([firstCell.textLabel.text isEqualToString:kShowArchivedClassesText])
+            [self showArchivedClasses:nil];
+            return nil;
+        } else {
+            return nil;
+        }
     }
     
     // Update the mentor's class
     NSIndexPath * currentCheckedIndexPath = [self resultIndexPath:self.selectedClass];
     
     MTClass *class = [self classAtIndexPath:indexPath];
+    
+    if (![class isEqual:self.selectedClass]) {
+        self.saveButton.enabled = YES;
+    }
     self.selectedClass = class;
-    self.saveButton.enabled = YES;
     
     NSMutableArray *rows = [NSMutableArray arrayWithArray:tableView.indexPathsForSelectedRows];
     [rows addObject:indexPath];
     [rows addObject:currentCheckedIndexPath];
     [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
-    
-    return indexPath;
+
+    return nil;
 }
 
 #pragma mark - Accessors of changes to be made
@@ -281,6 +302,8 @@
 }
 
 - (NSIndexPath *)resultIndexPath:(RLMObject *)object {
+    if (object == nil) return nil;
+    
     NSInteger resultIndex = [self.results indexOfObject:object];
     if (resultIndex != NSNotFound) {
         return [NSIndexPath indexPathForRow:resultIndex inSection:kActiveClassesSection];
@@ -296,14 +319,22 @@
 
 - (MTClass *)classAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.section == kActiveClassesSection) {
+        if (self.results == nil || self.results.count == 0) return nil;
         return [self.results objectAtIndex:indexPath.row];
     }
     
     if (indexPath.section == kArchivedClassesSection) {
+        if (self.archivedResults == nil || self.archivedResults.count == 0) return nil;
         return [self.archivedResults objectAtIndex:indexPath.row];
     }
     
     return nil;
+}
+
+- (IBAction)showArchivedClasses:(id)sender {
+    RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND isArchived = YES", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
+    self.archivedResults = archivedResults;
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kArchivedClassesSection] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 #pragma mark - MTIncrementalLoading configuration
@@ -363,9 +394,9 @@
 }
 
 #pragma mark - MTIncrementalLoadingTableViewControllerDelegate
-- (void)didReloadSection:(NSUInteger)section {
-    if (section == 0) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.results indexOfObject:self.selectedClass] inSection:section];
+- (void)didReloadResults {
+    NSIndexPath *indexPath = [self resultIndexPath:self.selectedClass];
+    if (!self.tableView.isDragging && !self.tableView.isDecelerating) {
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
 }
