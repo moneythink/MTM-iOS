@@ -2100,7 +2100,8 @@ static NSUInteger const pageSize = 10;
 
 - (void)getClassesWithPage:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    [self loadPaginatedResource:@"classes" processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:@{} success:success failure:failure];
+    NSDictionary *extraParams = @{ @"page_size" : @"50" };
+    [self loadPaginatedResource:@"classes" processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams success:success failure:failure];
 }
 
 
@@ -2198,7 +2199,7 @@ static NSUInteger const pageSize = 10;
     NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
     
     // include archived items in response so that we can actually clear them out.
-    NSDictionary *extraParams = @{@"includeArchived" : @"true"};
+    NSDictionary *extraParams = @{@"includeArchived" : @"true", @"page_size" : @"50"};
     
     [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams extraHeaders:headers success:success failure:failure];
 }
