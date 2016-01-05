@@ -191,6 +191,7 @@
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     
+    cell.textLabel.textColor = [UIColor blackColor];
     if (indexPath.section == kArchivedClassesSection) {
         cell.textLabel.textColor = [UIColor darkGrayColor];
     }
