@@ -2100,7 +2100,7 @@ static NSUInteger const pageSize = 10;
 
 - (void)getClassesWithPage:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    NSDictionary *extraParams = @{ @"page_size" : @"50" };
+    NSDictionary *extraParams = @{ @"page_size" : @"50", @"includeArchived" : @"true" };
     [self loadPaginatedResource:@"classes" processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams success:success failure:failure];
 }
 

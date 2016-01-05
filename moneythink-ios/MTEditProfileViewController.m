@@ -11,6 +11,7 @@
 #import "MTClassSelectionNavigationController.h"
 
 #define kSelectClassIdentifier @"selectClass"
+#define kNewClassCodeIdentifier @"newClassCode"
 
 @interface MTEditProfileViewController ()
 
@@ -46,6 +47,8 @@
 @property (nonatomic, strong) NSString *mentorNewClassName;
 @property (nonatomic, strong) NSString *mentorCode;
 @property (nonatomic) BOOL showedEmailWarning;
+@property (weak, nonatomic) IBOutlet UIButton *changeClassButton;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *changeClassButtonHeightConstraint;
 
 @end
 
@@ -73,6 +76,22 @@
 //    [self.view addGestureRecognizer:tap];
     
     self.userCurrent = [MTUser currentUser];
+    
+    if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
+        if ([self.userCurrent.userClass isArchived]) {
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:self.userClassName.text];
+            [text addAttributes:@{
+              NSStrikethroughStyleAttributeName: @(NSUnderlineStyleSingle),
+              NSStrikethroughColorAttributeName: [UIColor blackColor]
+            } range:NSMakeRange(0, text.length)];
+            [self.userClassName setAttributedText:text];
+            [self.changeClassButton setTitle:@"Leave Archived Class..." forState:UIControlStateNormal];
+        } else {
+            self.changeClassButtonHeightConstraint.constant = 0.0f;
+            self.changeClassButton.hidden = YES;
+        }
+    }
+    
     [self updateViewForCurrentUser];
     
     [self.profileImageLabel setBackgroundColor:[UIColor clearColor]];
@@ -415,6 +434,10 @@
         [alert textFieldAtIndex:0].placeholder = @"New Class Name";
         [alert show];
     }
+}
+
+- (void)promptForNewClassCode {
+    [self performSegueWithIdentifier:kNewClassCodeIdentifier sender:nil];
 }
 
 - (IBAction)saveChanges:(id)sender
@@ -1183,5 +1206,15 @@
     }
 }
 
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
+    if ([identifier isEqualToString:kSelectClassIdentifier]) {
+        if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"] && [self.userCurrent.userClass isArchived]) {
+            [self promptForNewClassCode];
+            return NO;
+        }
+    }
+    
+    return YES;
+}
 
 @end

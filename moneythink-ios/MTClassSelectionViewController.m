@@ -45,6 +45,7 @@
 - (void)viewDidLoad {
     self.loadingMessage = @"Loading classes...";
     [super viewDidLoad];
+    self.pageSize = 50;    
     
     self.navigationItem.hidesBackButton = YES;
     
@@ -52,6 +53,10 @@
     self.incrementalLoadingControllerDelegate = self;
     
     self.navigationItem.prompt = self.selectedOrganization.name;
+    
+    if ([self.selectedClass isArchived]) {
+        [self showArchivedClasses:nil];
+    }
     
     [self loadLocalResults];
 }
@@ -63,6 +68,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.currentPage = 1; // Reset current page on load
     
     [self.navigationController setToolbarHidden:NO animated:YES];
 }
@@ -96,7 +102,7 @@
 #pragma mark - MTIncrementalLoading
 - (void)loadLocalResults:(MTSuccessBlock)callback {
     
-    RLMResults *results = [[MTClass objectsWhere:@"organization.id = %d AND isArchived = NO", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
+    RLMResults *results = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt == nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
     
     [self didLoadLocalResults:results withCallback:nil];
 }
@@ -157,18 +163,27 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
     
     if (indexPath.section == kArchivedClassesSection) {
-        if (self.archivedResults != nil && self.archivedResults.count == 0) {
-            cell.textLabel.text = @"No archived classes.";
-        } else {
+        if (self.archivedResults == nil) {
             NSAttributedString *title = [[NSAttributedString alloc] initWithString:kShowArchivedClassesText attributes:@{ NSFontAttributeName: [UIFont boldSystemFontOfSize:16.0f]}];
             cell.textLabel.attributedText = title;
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.selected = false;
+            return cell;
+        } else {
+            if (self.archivedResults.count == 0) {
+                cell.textLabel.text = @"No archived classes.";
+                cell.selected = false;
+                return cell;
+            }
         }
-        cell.selected = false;
-        return cell;
     }
     
-    MTClass *class = self.results[indexPath.row];
+    MTClass *class;
+    if (indexPath.section == kArchivedClassesSection) {
+        class = self.archivedResults[indexPath.row];
+    } else {
+        class = self.results[indexPath.row];
+    }
     cell.textLabel.text = class.name;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
@@ -190,11 +205,10 @@
     if (indexPath.section == kArchivedClassesSection) {
         UITableViewCell *firstCell = [tableView cellForRowAtIndexPath:indexPath];
         if (firstCell != nil) {
-            if ([firstCell.textLabel.text isEqualToString:kShowArchivedClassesText])
+            if ([firstCell.textLabel.text isEqualToString:kShowArchivedClassesText]) {
             [self showArchivedClasses:nil];
             return nil;
-        } else {
-            return nil;
+            }
         }
     }
     
@@ -309,9 +323,12 @@
         return [NSIndexPath indexPathForRow:resultIndex inSection:kActiveClassesSection];
     }
     
-    resultIndex = [self.archivedResults indexOfObject:object];
-    if (resultIndex != NSNotFound) {
-        return [NSIndexPath indexPathForRow:resultIndex inSection:kArchivedClassesSection];
+    NSInteger otherResultIndex = [self.archivedResults indexOfObject:object];
+    if (self.archivedResults == nil) {
+        otherResultIndex = NSNotFound;
+    }
+    if (otherResultIndex != NSNotFound) {
+        return [NSIndexPath indexPathForRow:otherResultIndex inSection:kArchivedClassesSection];
     }
     
     return nil;
@@ -332,7 +349,7 @@
 }
 
 - (IBAction)showArchivedClasses:(id)sender {
-    RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND isArchived = YES", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
+    RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt != nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
     self.archivedResults = archivedResults;
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kArchivedClassesSection] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
@@ -396,7 +413,8 @@
 #pragma mark - MTIncrementalLoadingTableViewControllerDelegate
 - (void)didReloadResults {
     NSIndexPath *indexPath = [self resultIndexPath:self.selectedClass];
-    if (!self.tableView.isDragging && !self.tableView.isDecelerating) {
+    if (indexPath != nil && !self.tableView.isDragging && !self.tableView.isDecelerating) {
+        NSLog(@"%lu %lu", indexPath.section, indexPath.row);
         [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     }
 }

@@ -25,6 +25,7 @@
     self.loadingMessage = @"Loading organizations...";
     
     [super viewDidLoad];
+    self.pageSize = 50;
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     
@@ -45,6 +46,7 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    self.currentPage = 0;
     
     [self loadLocalResults];
 }
