@@ -16,12 +16,14 @@
 @property NSString *name;
 @property NSString *studentSignupCode;
 @property BOOL isDeleted;
-@property BOOL isArchived;
+@property NSDate *archivedAt;
 
 @property MTOrganization *organization;
 
 + (void)markAllDeleted;
 + (void)removeAllDeleted;
+
+- (BOOL)isArchived;
 
 @end
 

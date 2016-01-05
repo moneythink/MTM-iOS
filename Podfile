@@ -7,7 +7,7 @@ target 'moneythink-ios' do
   pod 'Fabric'
   pod 'Crashlytics'
   pod 'ZendeskSDK'
-  pod 'Realm'
+  pod 'Realm', '~> 0.97'
   pod "AFNetworking", "~> 2.0"
   pod 'JGActionSheet'
   pod 'MBProgressHUD'

@@ -16,7 +16,11 @@
     return @{@"name" : @"",
              @"studentSignupCode": @"",
              @"isDeleted": @NO,
-             @"isArchived": @NO};
+             @"archivedAt": [NSNull null]};
+}
+
++ (NSArray *)requiredProperties {
+    return @[@"name"];
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -37,7 +41,7 @@
              @"id": @"id",
              @"name": @"name",
              @"studentSignupCode": @"studentSignupCode",
-             @"isArchived" : @"isArchived"
+             @"archivedAt" : @"archivedAt"
              };
 }
 
@@ -79,5 +83,8 @@
     NSLog(@"Removed deleted MTClass (%ld) objects", (long)count);
 }
 
+- (BOOL)isArchived {
+    return self.archivedAt != nil;
+}
 
 @end

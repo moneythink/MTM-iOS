@@ -27,6 +27,10 @@
              @"isDeleted": @NO};
 }
 
++ (NSArray *)requiredProperties {
+    return @[@"username", @"email", @"roleCode"];
+}
+
 // Specify properties to ignore (Realm won't persist these)
 
 //+ (NSArray *)ignoredProperties
