@@ -55,11 +55,6 @@ static NSString *stageString = @"";
     
     self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"logo_actionbar"]];
     
-    [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:NO];
-    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Loading...";
-    hud.dimBackground = YES;
-    
     [[MTUtil getAppDelegate] configureZendesk];
     [[MTUtil getAppDelegate] initializeZendesk];
 }

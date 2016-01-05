@@ -26,6 +26,7 @@
 		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
 		3B902B5B1C2B21FD008A0FF3 /* moneythink_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B902B5A1C2B21FD008A0FF3 /* moneythink_iosTests.m */; };
 		3B902B651C2B23BF008A0FF3 /* MTOrganizationSelectionViewControllerTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B902B521C2B2171008A0FF3 /* MTOrganizationSelectionViewControllerTest.m */; };
+		3B96383E1C3B149500994321 /* MTNewClassCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B96383D1C3B149500994321 /* MTNewClassCodeViewController.m */; };
 		3BBEFAF81C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEFAF71C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m */; };
 		3BC174641C2BB0D7008F5009 /* MTClassTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BC174631C2BB0D7008F5009 /* MTClassTest.m */; };
 		3BE15A641C32061100547CDA /* MTNoKeyboardAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3BE15A631C32061100547CDA /* MTNoKeyboardAlertView.m */; };
@@ -291,6 +292,8 @@
 		3B902B5A1C2B21FD008A0FF3 /* moneythink_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = moneythink_iosTests.m; sourceTree = "<group>"; };
 		3B902B5C1C2B21FD008A0FF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B902B671C2B321D008A0FF3 /* TestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TestHelper.h; sourceTree = "<group>"; };
+		3B96383C1C3B149500994321 /* MTNewClassCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTNewClassCodeViewController.h; sourceTree = "<group>"; };
+		3B96383D1C3B149500994321 /* MTNewClassCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNewClassCodeViewController.m; sourceTree = "<group>"; };
 		3BBEFAF61C18D3B000A7143B /* MTIncrementalLoadingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTIncrementalLoadingTableViewController.h; sourceTree = "<group>"; };
 		3BBEFAF71C18D3B000A7143B /* MTIncrementalLoadingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTIncrementalLoadingTableViewController.m; sourceTree = "<group>"; };
 		3BC174631C2BB0D7008F5009 /* MTClassTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassTest.m; sourceTree = "<group>"; };
@@ -832,6 +835,8 @@
 				5876E2B1196F2C1F00C176EC /* InfoPlist.strings */,
 				5876E2BD196F2C1F00C176EC /* Main_iPad.storyboard */,
 				5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */,
+				3B96383C1C3B149500994321 /* MTNewClassCodeViewController.h */,
+				3B96383D1C3B149500994321 /* MTNewClassCodeViewController.m */,
 				5876E2B4196F2C1F00C176EC /* main.m */,
 				5876E2B0196F2C1F00C176EC /* moneythink-ios-Info.plist */,
 				5876E2B6196F2C1F00C176EC /* moneythink-ios-Prefix.pch */,
@@ -1656,6 +1661,7 @@
 				8901D89E19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.m in Sources */,
 				8925B8C71B61A3C80027A0AF /* NSDictionary+MTAdditions.m in Sources */,
 				5869D45A199446D20037B517 /* MTExplorePostCollectionView.m in Sources */,
+				3B96383E1C3B149500994321 /* MTNewClassCodeViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */,
 				89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */,
