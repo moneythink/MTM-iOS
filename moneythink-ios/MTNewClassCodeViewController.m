@@ -31,13 +31,20 @@
         return;
     }
     
-    NSUInteger organizationId = [MTUser currentUser].organization.id;
-    NSLog(@"%@ %ul", signupCode, (unsigned long)organizationId);
+    MTUser *currentUser = [MTUser currentUser];
+    NSUInteger organizationId = currentUser.organization.id;
+    NSLog(@"%@ %lu", signupCode, (unsigned long)organizationId);
     
-    [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:signupCode organizationId:organizationId success:^(id responseData) {
-        //
+    sender.enabled = NO;
+    
+    MTMakeWeakSelf();
+    [[MTNetworkManager sharedMTNetworkManager] userChangeClassWithSignupCode:signupCode success:^(id responseData) {
+        // User already will have been updated
+        sender.enabled = YES;
+        [self performSegueWithIdentifier:@"dismiss" sender:self];
     } failure:^(NSError *error) {
-        self.errorMessage.hidden = NO;
+        sender.enabled = YES;
+        weakSelf.errorMessage.hidden = NO;
     }];
 }
 

@@ -14,7 +14,7 @@
 #import "MTOAuthRefreshOperation.h"
 
 #ifdef STAGE
-static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
+static NSString * const MTNetworkURLString = @"http://localhost:8888/";
 #else
 static NSString * const MTNetworkURLString = @"https://api.moneythink.org/";
 #endif
@@ -2581,6 +2581,40 @@ static NSUInteger const pageSize = 10;
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed updateCurrentUserWithDictionary with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)userChangeClassWithSignupCode:(NSString *)signupCode success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        
+        MTUser *currentUser = [MTUser currentUser];
+        NSString *urlString = [NSString stringWithFormat:@"users/%ld/change-class", (long)currentUser.id];
+        
+        MTMakeWeakSelf();
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        NSDictionary *parameters = @{ @"studentSignupCode" : signupCode };
+        [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"userChangeClassWithSignupCode success response");
+            
+            if (responseObject) {
+                MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
+                NSLog(@"updated User: %@", meUser);
+            }
+            
+            if (success) {
+                success(nil);
+            }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed userChangeClassWithSignupCode with error: %@", [error mtErrorDescription]);
+            if (failure) {
+                failure(error);
+            }
+        }];
+    } failure:^(NSError *error) {
+        NSLog(@"Failed userChangeClassWithSignupCode with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }

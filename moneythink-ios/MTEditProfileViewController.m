@@ -77,21 +77,6 @@
     
     self.userCurrent = [MTUser currentUser];
     
-    if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
-        if ([self.userCurrent.userClass isArchived]) {
-            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:self.userClassName.text];
-            [text addAttributes:@{
-              NSStrikethroughStyleAttributeName: @(NSUnderlineStyleSingle),
-              NSStrikethroughColorAttributeName: [UIColor blackColor]
-            } range:NSMakeRange(0, text.length)];
-            [self.userClassName setAttributedText:text];
-            [self.changeClassButton setTitle:@"Leave Archived Class..." forState:UIControlStateNormal];
-        } else {
-            self.changeClassButtonHeightConstraint.constant = 0.0f;
-            self.changeClassButton.hidden = YES;
-        }
-    }
-    
     [self updateViewForCurrentUser];
     
     [self.profileImageLabel setBackgroundColor:[UIColor clearColor]];
@@ -668,6 +653,20 @@
     self.phoneNumber.text = self.userCurrent.phoneNumber;
     self.userPassword.text = @"";
     self.confirmPassword.text = @"";
+    
+    if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
+        if ([self.userCurrent.userClass isArchived]) {
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
+            [text addAttributes:@{
+                                  NSForegroundColorAttributeName : [UIColor grayColor]
+                                  } range:NSMakeRange(0, text.length)];
+            [self.userClassName setAttributedText:text];
+            [self.changeClassButton setTitle:@"Leave Archived Class..." forState:UIControlStateNormal];
+        } else {
+            self.changeClassButtonHeightConstraint.constant = 0.0f;
+            self.changeClassButton.hidden = YES;
+        }
+    }
 }
 
 
