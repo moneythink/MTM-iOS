@@ -225,7 +225,10 @@
     
     NSMutableArray *rows = [NSMutableArray arrayWithArray:tableView.indexPathsForSelectedRows];
     [rows addObject:indexPath];
-    [rows addObject:currentCheckedIndexPath];
+    
+    if (currentCheckedIndexPath != nil) {
+        [rows addObject:currentCheckedIndexPath];
+    }
     [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
 
     return nil;
