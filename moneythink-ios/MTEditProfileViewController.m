@@ -655,17 +655,17 @@
     self.confirmPassword.text = @"";
     
     if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
-//        if ([self.userCurrent.userClass isArchived]) {
-        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
-        [text addAttributes:@{
-                              NSForegroundColorAttributeName : [UIColor grayColor]
-                              } range:NSMakeRange(0, text.length)];
-        [self.userClassName setAttributedText:text];
         [self.changeClassButton setTitle:@"Join New Class" forState:UIControlStateNormal];
-//        } else {
-//            self.changeClassButtonHeightConstraint.constant = 0.0f;
-//            self.changeClassButton.hidden = YES;
-//        }
+        if ([self.userCurrent.userClass isArchived]) {
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
+            [text addAttributes:@{
+                                  NSForegroundColorAttributeName : [UIColor grayColor]
+                                  } range:NSMakeRange(0, text.length)];
+            [self.userClassName setAttributedText:text];
+        }
+//      Could use this if you wanted to HIDE the change class button for students.
+//      self.changeClassButtonHeightConstraint.constant = 0.0f;
+//      self.changeClassButton.hidden = YES;
     }
 }
 
@@ -1207,7 +1207,7 @@
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if ([identifier isEqualToString:kSelectClassIdentifier]) {
-        if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"] && [self.userCurrent.userClass isArchived]) {
+        if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
             [self promptForNewClassCode];
             return NO;
         }
