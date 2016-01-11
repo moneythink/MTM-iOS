@@ -655,17 +655,17 @@
     self.confirmPassword.text = @"";
     
     if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
-        if ([self.userCurrent.userClass isArchived]) {
-            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
-            [text addAttributes:@{
-                                  NSForegroundColorAttributeName : [UIColor grayColor]
-                                  } range:NSMakeRange(0, text.length)];
-            [self.userClassName setAttributedText:text];
-            [self.changeClassButton setTitle:@"Leave Archived Class..." forState:UIControlStateNormal];
-        } else {
-            self.changeClassButtonHeightConstraint.constant = 0.0f;
-            self.changeClassButton.hidden = YES;
-        }
+//        if ([self.userCurrent.userClass isArchived]) {
+        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
+        [text addAttributes:@{
+                              NSForegroundColorAttributeName : [UIColor grayColor]
+                              } range:NSMakeRange(0, text.length)];
+        [self.userClassName setAttributedText:text];
+        [self.changeClassButton setTitle:@"Join New Class" forState:UIControlStateNormal];
+//        } else {
+//            self.changeClassButtonHeightConstraint.constant = 0.0f;
+//            self.changeClassButton.hidden = YES;
+//        }
     }
 }
 

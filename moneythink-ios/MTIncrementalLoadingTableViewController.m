@@ -164,7 +164,8 @@ NSInteger totalItems = -1;
         weakSelf.results = results;
         
         if (weakSelf.results == nil) {
-            @throw [NSException exceptionWithName:@"MTIncrementalLoadingTableViewControllerImplementationError" reason:@"You must define self.results before calling didLoadLocalResults:withCallback:." userInfo:nil];
+            NSLog(@"MTIncrementalLoadingController: You must define self.results before calling didLoadLocalResults:withCallback:.");
+            return;
         }
         
         if (weakSelf.currentPage == 0) {
