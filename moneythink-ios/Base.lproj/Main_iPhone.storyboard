@@ -2030,7 +2030,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0195BC6C-B152-44EF-96B2-8DC285231ADB" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="2C3C09FD-3B79-4BE3-97F4-761716BD5AE5" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="esJ-hw-DJW"/>
@@ -2119,31 +2119,8 @@
                                 <rect key="frame" x="0.0" y="74" width="320" height="346"/>
                                 <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Dashboard" id="j3V-IJ-KFJ" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="j3V-IJ-KFJ" id="civ-nL-uhV">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-dashboard.png" translatesAutoresizingMaskIntoConstraints="NO" id="p2Y-tN-sdG">
-                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Dashboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sdi-rd-W9W">
-                                                    <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <segue destination="Z58-Qd-jFF" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="ovD-yt-Uio"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Challenges" id="l6i-oa-4UE" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l6i-oa-4UE" id="2KW-mY-hhV">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2166,7 +2143,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Leaderboard" id="cQ7-gb-hkw" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="110" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cQ7-gb-hkw" id="P0h-I9-tPv">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2189,7 +2166,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Notifications" id="D4c-BR-nhK" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="154" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="110" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D4c-BR-nhK" id="hfI-BP-idy">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2226,7 +2203,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Edit Profile" id="0tX-Vq-uWv" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="198" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="154" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0tX-Vq-uWv" id="gPz-89-Xnn">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2249,7 +2226,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Talk to Moneythink" id="reX-vB-np7" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="242" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="198" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="reX-vB-np7" id="W5L-NO-9on">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2272,7 +2249,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Signup" id="rbI-tu-uBI" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="286" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="242" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rbI-tu-uBI" id="cdV-Sr-Yzj">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -5994,7 +5971,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         </scene>
     </scenes>
     <resources>
-        <image name="0195BC6C-B152-44EF-96B2-8DC285231ADB" width="90" height="90">
+        <image name="2C3C09FD-3B79-4BE3-97F4-761716BD5AE5" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -6618,7 +6595,6 @@ AAAAAACNNw
         <image name="login-header.png" width="320" height="166"/>
         <image name="nav-icons-arrow-backwards.png" width="16" height="30"/>
         <image name="nav-icons-challenges.png" width="32" height="32"/>
-        <image name="nav-icons-dashboard.png" width="32" height="32"/>
         <image name="nav-icons-editprofile.png" width="32" height="32"/>
         <image name="nav-icons-leaderboard.png" width="32" height="32"/>
         <image name="nav-icons-notifications.png" width="32" height="32"/>
