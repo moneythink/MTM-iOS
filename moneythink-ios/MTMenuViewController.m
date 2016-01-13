@@ -126,7 +126,7 @@
 #pragma mark - UITableViewDataSource Methods -
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -134,22 +134,11 @@
     switch (section) {
         case 0:
         {
-            if ([MTUser isCurrentUserMentor]) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-            break;
-        }
-            
-        case 1:
-        {
             return 5;
             break;
         }
           
-        case 2:
+        case 1:
         {
             if ([MTUser isCurrentUserMentor]) {
                 if (!IsEmpty([MTUser currentUser].userClass.studentSignupCode)) {
@@ -181,15 +170,9 @@
 
     switch (indexPath.section)
     {
-        // Mentor Dashboard
-        case 0:
-        {
-            CellIdentifier = @"Dashboard";
-            break;
-        }
            
         // Common Content
-        case 1:
+        case 0:
         {
             switch (row) {
                 case 0:
@@ -220,7 +203,7 @@
         }
 
         // Mentor Code(s)
-        case 2:
+        case 1:
         {
             CellIdentifier = @"Signup";
             msg = @"Student Sign Up Code:";
@@ -232,12 +215,12 @@
 
     MTMenuTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: CellIdentifier forIndexPath: indexPath];
     
-    if (indexPath.section == 2) {
+    if (indexPath.section == 1) {
         cell.signupLabel.text = msg;
         cell.signupCode.text = code;
     }
     
-    if (indexPath.section == 1 && indexPath.row == 2) {
+    if (indexPath.section == 0 && indexPath.row == 2) {
         cell.unreadCountLabel.text = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
         if (((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount > 0) {
             cell.unreadCountView.hidden = NO;
@@ -252,7 +235,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath;
 {
-    if (indexPath.section == 2) {
+    if (indexPath.section == 1) {
         [tableView deselectRowAtIndexPath:indexPath animated:YES];
         
         NSString *signupCodeString = [NSString stringWithFormat:@"Student sign up code for class '%@' is '%@'", [MTUser currentUser].userClass.name, [MTUser currentUser].userClass.studentSignupCode];
