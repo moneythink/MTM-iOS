@@ -5728,7 +5728,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <constraint firstAttribute="width" constant="160" id="CkA-Kj-jMN"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                 <connections>
                                     <outlet property="delegate" destination="1pc-pU-Jyo" id="ja0-1L-8Bt"/>
                                 </connections>
