@@ -41,6 +41,7 @@
     [[MTNetworkManager sharedMTNetworkManager] userChangeClassWithSignupCode:signupCode success:^(id responseData) {
         // User already will have been updated
         [sender setTitle:@"Done!" forState:UIControlStateDisabled];
+        [sender setTitleColor:[UIColor primaryGreenDark] forState:UIControlStateDisabled];
         sender.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1 * NSEC_PER_SEC))), dispatch_get_main_queue(), ^{
             [self performSegueWithIdentifier:@"dismiss" sender:self];
