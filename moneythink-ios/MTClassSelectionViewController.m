@@ -452,10 +452,13 @@
     [self save:^(BOOL success) {
         if (success) {
             [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
+            
+            // Select the row to confirm the save and give them a sense of finality.
             if (currentCheckedIndexPath != nil) {
                 [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
             }
             
+            // Dismiss after a second.
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 [weakSelf performSegueWithIdentifier:@"dismiss" sender:nil];
             });
