@@ -50,6 +50,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *changeClassButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *changeClassButtonHeightConstraint;
 
+- (NSString *)appendArchivedTo:(NSString *)className;
+
 @end
 
 @implementation MTEditProfileViewController
@@ -514,7 +516,7 @@
     }
     
     NSString *className = self.userCurrent.userClass.name ? self.userCurrent.userClass.name : @"";
-    if (![self.userClassName.text isEqualToString:className]) {
+    if (![self.userClassName.text isEqualToString:className] && ![self.userClassName.text isEqualToString:[self appendArchivedTo:className]]) {
         dirty = YES;
     }
     
@@ -657,7 +659,7 @@
     if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
         [self.changeClassButton setTitle:@"Join New Class" forState:UIControlStateNormal];
         if ([self.userCurrent.userClass isArchived]) {
-            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ (Archived)", self.userClassName.text]];
+            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[self appendArchivedTo:self.userCurrent.userClass.name]];
             [text addAttributes:@{
                                   NSForegroundColorAttributeName : [UIColor grayColor]
                                   } range:NSMakeRange(0, text.length)];
@@ -1214,6 +1216,11 @@
     }
     
     return YES;
+}
+
+#pragma mark - Private methods
+- (NSString *)appendArchivedTo:(NSString *)className {
+    return [NSString stringWithFormat:@"%@ (Archived)", className];
 }
 
 @end
