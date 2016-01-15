@@ -181,7 +181,7 @@
                 NSString *title = @"Moneythink Alert";
                 NSString *messageToDisplay = !IsEmpty(alertMessage) ? alertMessage : @"";
 
-                if ([UIAlertController class]) {
+                if (NSClassFromString(@"UIAlertController")) {
                     UIAlertController *changeSheet = [UIAlertController
                                                       alertControllerWithTitle:title
                                                       message:messageToDisplay

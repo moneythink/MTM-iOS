@@ -15,16 +15,20 @@
 #define kMentorCodeKey @"kMentorCodeKey"
 #define kShowArchivedClassesText @"Show Archived Classes"
 
+#define kAlertViewTag_MentorCode 1
+#define kAlertViewTag_ConfirmSelect 2
+
 #import "MTNoKeyboardAlertView.h"
 
 @interface MTClassSelectionViewController ()
 
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *saveButton;
-
 @property (strong, nonatomic) RLMResults *archivedResults;
+
+@property (strong, nonatomic) MTClass *temporaryClassSelection; // Only used while we support UIAlertView.
 
 - (MTClass *)selectedClass;
 - (void)setSelectedClass:(MTClass *)selectedClass;
+- (void)confirmSelectClass:(MTClass *)class atIndexPath:(NSIndexPath *)indexPath;
 
 - (MTOrganization *)selectedOrganization;
 - (NSString *)mentorCode;
@@ -33,7 +37,7 @@
 
 - (void)handleError:(NSError *)error;
 
-- (void)saveAndDismiss;
+- (void)save:(void (^)(BOOL success))blockName;
 
 - (NSIndexPath *)resultIndexPath:(RLMObject *)object;
 - (MTClass *)classAtIndexPath:(NSIndexPath *)indexPath;
@@ -213,23 +217,10 @@
         }
     }
     
-    // Update the mentor's class
-    NSIndexPath * currentCheckedIndexPath = [self resultIndexPath:self.selectedClass];
-    
     MTClass *class = [self classAtIndexPath:indexPath];
-    
     if (![class isEqual:self.selectedClass]) {
-        self.saveButton.enabled = YES;
+        [self confirmSelectClass:class atIndexPath:indexPath];
     }
-    self.selectedClass = class;
-    
-    NSMutableArray *rows = [NSMutableArray arrayWithArray:tableView.indexPathsForSelectedRows];
-    [rows addObject:indexPath];
-    
-    if (currentCheckedIndexPath != nil) {
-        [rows addObject:currentCheckedIndexPath];
-    }
-    [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
 
     return nil;
 }
@@ -289,8 +280,9 @@
         }]];
         [self presentViewController:controller animated:YES completion:nil];
     } else {
-        UIAlertView *alertViewChangeName = [[UIAlertView alloc]initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
+        UIAlertView *alertViewChangeName = [[UIAlertView alloc] initWithTitle:title message:message delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Continue", nil];
         alertViewChangeName.alertViewStyle = UIAlertViewStylePlainTextInput;
+        alertViewChangeName.tag = kAlertViewTag_MentorCode;
         [alertViewChangeName show];
     }
 }
@@ -352,6 +344,8 @@
     return nil;
 }
 
+
+#pragma mark - IBActions
 - (IBAction)showArchivedClasses:(id)sender {
     RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt != nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
     self.archivedResults = archivedResults;
@@ -368,7 +362,7 @@
 }
 
 #pragma mark - Handle Saves
-- (void)saveAndDismiss {
+- (void)save:(void (^)(BOOL success))blockName {
     MTUser *user = [MTUser currentUser];
     RLMRealm *realm = [RLMRealm defaultRealm];
     
@@ -393,17 +387,15 @@
         user.userClass = self.selectedClass;
         [realm commitWriteTransaction];
         
-        [self performSegueWithIdentifier:@"dismiss" sender:self];
+        blockName(YES);
         
     } failure:^(NSError *error) {
         [hud hide:YES];
         
         [[[UIAlertView alloc] initWithTitle:@"Error" message:error.localizedDescription delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles:nil] show];
+        
+        blockName(NO);
     }];
-}
-
-- (IBAction)saveAction:(UIBarButtonItem *)sender {
-    [self saveAndDismiss];
 }
 
 - (IBAction)changeSchoolOrOrganizationButtonTapped:(id)sender {
@@ -412,6 +404,63 @@
     } else {
         [self promptForMentorCode];
     }
+}
+
+- (void)confirmSelectClass:(MTClass *)class atIndexPath:(NSIndexPath *)indexPath {
+    
+    NSString *title = @"Confirm Change";
+    NSString *message = [NSString stringWithFormat:@"Are you sure you'd like to move to %@?", class.name, nil];
+    
+    // Success
+    if (NSClassFromString(@"UIAlertController")) {
+        MTMakeWeakSelf();
+        UIAlertController *alert = [[UIAlertController alloc] init];
+        alert.title = title;
+        alert.message = message;
+        [alert addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+        [alert addAction:[UIAlertAction actionWithTitle:@"Confirm" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf classSelectionWasConfirmed:class atIndexPath:indexPath];
+        }]];
+        [self.navigationController presentViewController:alert animated:YES completion:nil];
+    } else {
+        UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
+                                                     message:message
+                                                    delegate:self
+                                           cancelButtonTitle:@"Cancel"
+                                           otherButtonTitles:@"Confirm", nil];
+        self.temporaryClassSelection = class;
+        av.tag = kAlertViewTag_ConfirmSelect;
+        [av show];
+    }
+}
+
+- (void)classSelectionWasConfirmed:(MTClass *)class atIndexPath:(NSIndexPath *)indexPath {
+    
+    // Update the mentor's class
+    NSIndexPath * currentCheckedIndexPath = [self resultIndexPath:self.selectedClass];
+    
+    NSMutableArray *rows = [NSMutableArray arrayWithArray:self.tableView.indexPathsForSelectedRows];
+    [rows addObject:indexPath];
+    
+    if (currentCheckedIndexPath != nil) {
+        [rows addObject:currentCheckedIndexPath];
+    }
+    
+    self.selectedClass = class;
+    
+    MTMakeWeakSelf();
+    [self save:^(BOOL success) {
+        if (success) {
+            [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
+            if (currentCheckedIndexPath != nil) {
+                [self.tableView selectRowAtIndexPath:indexPath animated:YES scrollPosition:UITableViewScrollPositionMiddle];
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [weakSelf performSegueWithIdentifier:@"dismiss" sender:nil];
+            });
+        }
+    }];
 }
 
 #pragma mark - MTIncrementalLoadingTableViewControllerDelegate
@@ -425,12 +474,35 @@
 
 #pragma mark - UIAlertViewDelegate
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    NSString *mentorCode = [alertView textFieldAtIndex:0].text;
-    [[alertView textFieldAtIndex:0] resignFirstResponder];
-    [self.view endEditing:YES];
-    if (!IsEmpty(mentorCode) && buttonIndex != alertView.cancelButtonIndex) {
-        [self selectOrganizationIfCorrectWithCode:mentorCode];
+    
+    UITextField *textField = [alertView textFieldAtIndex:0];
+    NSString *mentorCode; // compiler won't allow this to be inside the block...
+    
+    switch (alertView.tag) {
+        case kAlertViewTag_MentorCode:
+            // pass
+            mentorCode = textField.text;
+            [textField resignFirstResponder];
+            [self.view endEditing:YES];
+            if (!IsEmpty(mentorCode) && buttonIndex != alertView.cancelButtonIndex) {
+                [self selectOrganizationIfCorrectWithCode:mentorCode];
+            }
+            
+            break;
+            
+        case kAlertViewTag_ConfirmSelect:
+            if (buttonIndex != alertView.cancelButtonIndex) {
+                MTClass *class = self.temporaryClassSelection;
+                NSIndexPath *indexPath = [self resultIndexPath:class];
+                [self classSelectionWasConfirmed:class atIndexPath:indexPath];
+                self.temporaryClassSelection = nil;
+            }
+            break;
     }
+}
+
+#pragma mark -
+- (IBAction)unwindToSelectClassScene:(UIStoryboardSegue *)segue {
 }
 
 @end

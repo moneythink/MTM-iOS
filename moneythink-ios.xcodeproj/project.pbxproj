@@ -21,6 +21,7 @@
 		3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */; };
 		3B5457FB1C0FB76200023611 /* MTLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5457FA1C0FB76200023611 /* MTLoadingView.m */; };
 		3B5457FD1C0FB92900023611 /* MTLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5457FC1C0FB92900023611 /* MTLoadingView.xib */; };
+		3B5CE63D1C47430D00387E4D /* MTCreateClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5CE63C1C47430D00387E4D /* MTCreateClassViewController.m */; };
 		3B7154FF1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */; };
 		3B8243081C16424D00874D3A /* MTRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B8243071C16424D00874D3A /* MTRefreshView.m */; };
 		3B89CAE41BB49E6C00A366E9 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5876E2BA196F2C1F00C176EC /* Main_iPhone.storyboard */; };
@@ -282,6 +283,8 @@
 		3B5457F91C0FB76200023611 /* MTLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLoadingView.h; sourceTree = "<group>"; };
 		3B5457FA1C0FB76200023611 /* MTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoadingView.m; sourceTree = "<group>"; };
 		3B5457FC1C0FB92900023611 /* MTLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MTLoadingView.xib; sourceTree = "<group>"; };
+		3B5CE63B1C47430D00387E4D /* MTCreateClassViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTCreateClassViewController.h; sourceTree = "<group>"; };
+		3B5CE63C1C47430D00387E4D /* MTCreateClassViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTCreateClassViewController.m; sourceTree = "<group>"; };
 		3B7154FD1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMentorStudentProfileTableViewController.h; sourceTree = "<group>"; };
 		3B7154FE1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMentorStudentProfileTableViewController.m; sourceTree = "<group>"; };
 		3B8243031C163E6F00874D3A /* moneythink-ios-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "moneythink-ios-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -708,6 +711,8 @@
 				3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */,
 				3B2ECFBF1C24AE23005E7F82 /* MTClassSelectionNavigationController.h */,
 				3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */,
+				3B5CE63B1C47430D00387E4D /* MTCreateClassViewController.h */,
+				3B5CE63C1C47430D00387E4D /* MTCreateClassViewController.m */,
 			);
 			name = "Class Selection";
 			sourceTree = "<group>";
@@ -1664,6 +1669,7 @@
 				3B96383E1C3B149500994321 /* MTNewClassCodeViewController.m in Sources */,
 				58676B211974273E0070F604 /* MTSignUpViewController.m in Sources */,
 				3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */,
+				3B5CE63D1C47430D00387E4D /* MTCreateClassViewController.m in Sources */,
 				89271F431B5DAC5600C66DD8 /* MTTextField.m in Sources */,
 				89C3E8131B1547B10084EA48 /* MTMenuTableViewCell.m in Sources */,
 				8977E3E31B1E26FB009AD452 /* MTEmojiPickerCollectionViewCell.m in Sources */,

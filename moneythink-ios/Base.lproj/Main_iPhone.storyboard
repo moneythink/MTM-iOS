@@ -1315,7 +1315,7 @@
                                         <color key="textColor" white="0.51475378714109721" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" placeholderIntrinsicWidth="101" placeholderIntrinsicHeight="30" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yP-co-IHD">
+                                    <button opaque="NO" contentMode="scaleToFill" placeholderIntrinsicWidth="101" placeholderIntrinsicHeight="30" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2yP-co-IHD">
                                         <rect key="frame" x="110" y="188" width="101" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="30" id="giH-yD-c9z"/>
@@ -1336,7 +1336,7 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Fall15_SanFran_10am" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHd-RV-veF" userLabel="Class Name Label">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fall15_SanFran_10am" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DHd-RV-veF" userLabel="Class Name Label">
                                         <rect key="frame" x="0.0" y="166" width="320" height="21"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="21" id="PAl-qR-REY"/>
@@ -1345,7 +1345,7 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FRN-qF-4hy" userLabel="Stack View &quot;Lite&quot;">
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FRN-qF-4hy" userLabel="Stack View &quot;Lite&quot;">
                                         <rect key="frame" x="0.0" y="234" width="320" height="276"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JlR-7l-nvM" userLabel="Top Separator">
@@ -1789,6 +1789,7 @@
                     <toolbarItems>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Xjz-5K-VgC"/>
                         <barButtonItem title="Change School or Organization" id="7Iu-lc-7FO">
+                            <color key="tintColor" red="1" green="0.42352941179999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="changeSchoolOrOrganizationButtonTapped:" destination="6mh-NR-80P" id="RsS-eR-1xk"/>
                             </connections>
@@ -1801,16 +1802,14 @@
                                 <segue destination="Dji-05-cEa" kind="unwind" unwindAction="unwindToEditProfile:" id="W6i-eW-f6c"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" enabled="NO" style="plain" systemItem="save" id="k8p-dl-Aa5">
-                            <color key="tintColor" red="1" green="0.42352941179999998" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <barButtonItem key="rightBarButtonItem" title="+ New" id="P5V-pv-AHq">
                             <connections>
-                                <action selector="saveAction:" destination="6mh-NR-80P" id="YRa-nx-29d"/>
+                                <segue destination="kgf-pt-jvo" kind="modal" id="8Ud-fg-aFl"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <connections>
-                        <outlet property="saveButton" destination="k8p-dl-Aa5" id="CIq-eL-xHp"/>
                         <segue destination="Dji-05-cEa" kind="unwind" identifier="dismiss" unwindAction="unwindToEditProfile:" id="FtS-T4-2nC"/>
                     </connections>
                 </tableViewController>
@@ -1818,6 +1817,65 @@
                 <exit id="Dji-05-cEa" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="-2229" y="-2728"/>
+        </scene>
+        <!--New Class-->
+        <scene sceneID="Hqw-DR-mPM">
+            <objects>
+                <viewController id="ZtP-Yb-a0x" customClass="MTCreateClassViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YKY-HU-zr9"/>
+                        <viewControllerLayoutGuide type="bottom" id="Tav-Wu-Aag"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Nr8-8n-wFx">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Class Name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Hzk-xa-cjA">
+                                <rect key="frame" x="16" y="150" width="288" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
+                                <connections>
+                                    <outlet property="delegate" destination="ZtP-Yb-a0x" id="dMF-da-6i9"/>
+                                </connections>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter the name for the new class." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OQw-NI-JB5">
+                                <rect key="frame" x="33" y="112" width="255" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Hzk-xa-cjA" firstAttribute="leading" secondItem="Nr8-8n-wFx" secondAttribute="leadingMargin" id="6T1-Ba-aJ7"/>
+                            <constraint firstItem="Hzk-xa-cjA" firstAttribute="trailing" secondItem="Nr8-8n-wFx" secondAttribute="trailingMargin" id="Bo3-CZ-LEi"/>
+                            <constraint firstItem="Hzk-xa-cjA" firstAttribute="top" secondItem="OQw-NI-JB5" secondAttribute="bottom" constant="17" id="bMS-Hu-olx"/>
+                            <constraint firstItem="OQw-NI-JB5" firstAttribute="centerX" secondItem="Nr8-8n-wFx" secondAttribute="centerX" id="n38-D1-ovs"/>
+                            <constraint firstItem="OQw-NI-JB5" firstAttribute="top" secondItem="YKY-HU-zr9" secondAttribute="bottom" constant="48" id="yaZ-u7-5cq"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="New Class" id="6e1-Bm-Ql7">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="7lZ-dq-43z">
+                            <connections>
+                                <segue destination="mgZ-U8-Z6v" kind="unwind" identifier="dismiss" unwindAction="unwindToSelectClassScene:" id="hzF-yf-jdE"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="K5Y-Rk-pEP">
+                            <connections>
+                                <action selector="doneButtonTapped:" destination="ZtP-Yb-a0x" id="c3E-bj-ANw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="cancelButton" destination="7lZ-dq-43z" id="i9V-E4-4nc"/>
+                        <outlet property="classNameTextField" destination="Hzk-xa-cjA" id="wvX-pi-5zl"/>
+                        <outlet property="doneButton" destination="K5Y-Rk-pEP" id="OcY-4c-SSP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ctG-dK-xkw" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="mgZ-U8-Z6v" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="-1276" y="-2728"/>
         </scene>
         <!--Class Selection Navigation Controller-->
         <scene sceneID="tJm-LE-yGa">
@@ -2030,7 +2088,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="74989A7F-D355-4A32-AC01-A917F862563D" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="28A9F201-ED67-472E-A868-81A3D46AE51D" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="esJ-hw-DJW"/>
@@ -5969,9 +6027,27 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
             </objects>
             <point key="canvasLocation" x="-2998" y="-2098"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Ets-Qz-fjv">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="kgf-pt-jvo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Nej-Ay-TyI">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="ZtP-Yb-a0x" kind="relationship" relationship="rootViewController" id="vjO-KZ-aIB"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7Kf-kM-XFc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1808" y="-2728"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="74989A7F-D355-4A32-AC01-A917F862563D" width="90" height="90">
+        <image name="28A9F201-ED67-472E-A868-81A3D46AE51D" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
