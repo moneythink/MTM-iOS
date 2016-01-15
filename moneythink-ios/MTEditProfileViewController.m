@@ -51,6 +51,7 @@
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *changeClassButtonHeightConstraint;
 
 - (NSString *)appendArchivedTo:(NSString *)className;
+- (void)reloadUser:(void (^)(BOOL result))callback;
 
 @end
 
@@ -163,6 +164,12 @@
     [super viewWillAppear:animated];
     
     [self updateViewForCurrentUser];
+    
+    // Update from server, just in case class has changed (been archived, etc.)
+    MTMakeWeakSelf();
+    [self reloadUser:^(BOOL result) {
+        [weakSelf updateViewForCurrentUser];
+    }];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -1221,6 +1228,14 @@
 #pragma mark - Private methods
 - (NSString *)appendArchivedTo:(NSString *)className {
     return [NSString stringWithFormat:@"%@ (Archived)", className];
+}
+
+- (void)reloadUser:(void (^)(BOOL result))callback {
+    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+        callback(YES);
+    } failure:^(NSError *error) {
+        callback(NO);
+    }];
 }
 
 @end
