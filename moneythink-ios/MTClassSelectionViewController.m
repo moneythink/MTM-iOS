@@ -41,6 +41,7 @@
 
 - (NSIndexPath *)resultIndexPath:(RLMObject *)object;
 - (MTClass *)classAtIndexPath:(NSIndexPath *)indexPath;
+- (void)loadArchivedResults;
 
 @end
 
@@ -128,7 +129,7 @@
     else {
         [[MTNetworkManager sharedMTNetworkManager] getClassesWithPage:self.currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
             [weakSelf loadLocalResults];
-            [self didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
+            [weakSelf didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
         } failure:^(NSError *error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakSelf handleError:error];
@@ -184,6 +185,9 @@
     
     MTClass *class;
     if (indexPath.section == kArchivedClassesSection) {
+        if (indexPath.row > 0) {
+            [self loadArchivedResults];
+        }
         class = self.archivedResults[indexPath.row];
     } else {
         class = self.results[indexPath.row];
@@ -287,11 +291,14 @@
     }
 }
 
+- (void)loadArchivedResults {
+    RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt != nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
+    self.archivedResults = archivedResults;
+}
+
 - (void)selectOrganizationIfCorrectWithCode:(NSString *)mentorCode {
     MTMakeWeakSelf();
-    
     MBProgressHUD *hud = [[MBProgressHUD alloc] init];
-    
     if (IsEmpty([[NSUserDefaults standardUserDefaults] objectForKey:kMentorCodeKey])) {
         hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
         hud.labelText = @"Validating code...";
@@ -347,8 +354,7 @@
 
 #pragma mark - IBActions
 - (IBAction)showArchivedClasses:(id)sender {
-    RLMResults *archivedResults = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt != nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
-    self.archivedResults = archivedResults;
+    [self loadArchivedResults];
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:kArchivedClassesSection] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 

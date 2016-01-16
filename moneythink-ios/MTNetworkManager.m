@@ -12,6 +12,7 @@
 #import "AFURLRequestSerialization.h"
 #import "AFURLResponseSerialization.h"
 #import "MTOAuthRefreshOperation.h"
+#import "RLMObject+MTAdditions.h"
 
 #ifdef STAGE
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
@@ -229,16 +230,7 @@ static NSUInteger const pageSize = 10;
     MTClass *userClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:[embeddedDict objectForKey:@"class"]];
     userClass.isDeleted = NO;
     userClass.organization = userOrganization;
-    
-    // withJSONDictionary does not seem to work with new, Realm 0.92 "nullable" columns
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    id dateString = embeddedDict[@"class"][@"archivedAt"];
-    if (![dateString isKindOfClass:[NSNull class]]) {
-        NSDate *date = [formatter dateFromString:(NSString *)dateString];
-        userClass.archivedAt = date;
-    } else {
-        userClass.archivedAt = nil;
-    }
+    [userClass setValue:embeddedDict[@"class"][@"archivedAt"] forNullableDateKey:@"archivedAt"];
 
     // Create new ME User and send back
     MTUser *user = [MTUser createOrUpdateInRealm:realm withJSONDictionary:responseDict];
@@ -372,8 +364,8 @@ static NSUInteger const pageSize = 10;
             [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:organizationDict];
         }
         class.organization = organization;
-        
         [MTClass createOrUpdateInRealm:realm withValue:class];
+        [class setValue:classDict[@"archivedAt"] forNullableDateKey:@"archivedAt"];
         class.isDeleted = NO;
     }
     [realm commitWriteTransaction];
