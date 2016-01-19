@@ -29,7 +29,7 @@ struct MTIncrementalLoadingResponse {
 @property (strong, nonatomic) NSString   *currentSearchText;
 @property (assign, nonatomic) NSUInteger pageSize;
 
-@property (assign, nonatomic) NSString   *loadingMessage;
+@property (assign, nonatomic) NSString   *loadingResourceName;
 
 @property (weak, nonatomic) id<MTIncrementalLoadingTableViewControllerDelegate> incrementalLoadingControllerDelegate;
 

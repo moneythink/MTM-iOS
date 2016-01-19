@@ -48,8 +48,8 @@
 @implementation MTClassSelectionViewController
 
 - (void)viewDidLoad {
-    self.loadingMessage = @"Loading classes...";
     [super viewDidLoad];
+    self.loadingResourceName = @"classes";    
     self.pageSize = 50;    
     
     self.navigationItem.hidesBackButton = YES;

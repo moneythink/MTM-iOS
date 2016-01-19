@@ -48,6 +48,12 @@
 - (void)startLoading {
     [self setIsLoading:YES];
     [self setHidden:NO];
+    
+    if (self.resourceName == nil) {
+        self.resourceName = @"items";
+    }
+    
+    [self setMessage:[NSString stringWithFormat:@"Loading latest %@...", self.resourceName]];
     [self.activityIndicator startAnimating];
 }
 
@@ -56,7 +62,11 @@
     [self.activityIndicator stopAnimating];
     [self setHidden:success];
     if (!success) {
-        [self setMessage:@"No results found."];
+        if (self.resourceName != nil) {
+            [self setMessage:[NSString stringWithFormat:@"No %@ found.", self.resourceName]];
+        } else {
+            [self setMessage:@"No results found."];
+        }
     }
 }
 

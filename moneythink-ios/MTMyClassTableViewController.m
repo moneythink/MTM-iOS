@@ -54,7 +54,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    [self setLoadingResourceName:@"posts"];
     self.challengeIdsQueried = [NSMutableArray array];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willSaveNewChallengePost:) name:kWillSaveNewChallengePostNotification object:nil];

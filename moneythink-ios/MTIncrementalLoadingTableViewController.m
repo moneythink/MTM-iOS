@@ -43,16 +43,13 @@ NSInteger totalItems = -1;
         [self.view addSubview:loadingView];
         self.loadingView = loadingView;
     }
-    
-    if (self.loadingMessage == nil) {
-        self.loadingMessage = @"Loading latest posts...";
-    }
-    [self.loadingView setMessage:self.loadingMessage];
-    [self.loadingView startLoading];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    self.loadingView.resourceName = self.loadingResourceName;
+    [self.loadingView startLoading];
     
     [self.loadingView setHidden:self.results.count > 0];
     [self loadLocalResults:^(NSError *error) {

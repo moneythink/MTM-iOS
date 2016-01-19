@@ -15,6 +15,8 @@
 @property (nonatomic, retain) IBOutlet UILabel *textLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *activityIndicator;
 
+@property (nonatomic, retain) NSString *resourceName;
+
 - (void)setMessage:(NSString *)message;
 
 - (void)startLoading;
