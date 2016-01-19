@@ -1981,7 +1981,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"0";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"pageSize"] = @"25";
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         
         [self GET:@"organizations" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -2029,7 +2029,7 @@ static NSUInteger const pageSize = 10;
     
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
-    parameters[@"page_size"] = @"999";
+    parameters[@"pageSize"] = @"50";
     
     NSString *signupCodeString = [NSString stringWithFormat:@"SignupCode %@", signupCode];
     [self.requestSerializer setValue:signupCodeString forHTTPHeaderField:@"Authorization"];
@@ -2064,7 +2064,7 @@ static NSUInteger const pageSize = 10;
 
 - (void)getOrganizationsWithSignupCode:(NSString *)signupCode page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
     NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
-    [self loadPaginatedResource:@"mentor-organizations" processSelector:@selector(processAndSaveOrganizationsFromResponseObject:) page:page extraParams:@{@"maxdepth": @"0", @"page_size":@"50"} extraHeaders:headers success:success failure:failure];
+    [self loadPaginatedResource:@"mentor-organizations" processSelector:@selector(processAndSaveOrganizationsFromResponseObject:) page:page extraParams:@{@"maxdepth": @"0", @"pageSize":@"50"} extraHeaders:headers success:success failure:failure];
 }
 
 // @deprecated
@@ -2074,7 +2074,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
+        parameters[@"pageSize"] = @"25";
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         
         [self GET:@"classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -2114,7 +2114,7 @@ static NSUInteger const pageSize = 10;
 
 - (void)getClassesWithPage:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    NSDictionary *extraParams = @{ @"page_size" : @"50", @"includeArchived" : @"true" };
+    NSDictionary *extraParams = @{ @"pageSize" : @"50", @"includeArchived" : @"true" };
     [self loadPaginatedResource:@"classes" processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams success:success failure:failure];
 }
 
@@ -2124,14 +2124,12 @@ static NSUInteger const pageSize = 10;
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
-        parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"9990";
         parameters[@"name"] = name;
         parameters[@"organization"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:organizationId] forKey:@"id"];
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         
-        [self POST:@"classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+        [self POST:@"classes?maxdepth=1" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"Success createClassWithName response");
             NSDictionary *classesDict = [self processCreateClassRequestWithResponseObject:responseObject];
             
@@ -2172,7 +2170,7 @@ static NSUInteger const pageSize = 10;
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
-    parameters[@"page_size"] = @"999";
+    parameters[@"pageSize"] = @"50";
     
     NSString *urlString = [NSString stringWithFormat:@"organizations/%ld/classes", (long)organizationId];
 
@@ -2213,7 +2211,7 @@ static NSUInteger const pageSize = 10;
     NSDictionary *headers = @{@"Authorization" : [NSString stringWithFormat:@"SignupCode %@", signupCode]};
     
     // include archived items in response so that we can actually clear them out.
-    NSDictionary *extraParams = @{@"includeArchived" : @"true", @"page_size" : @"50"};
+    NSDictionary *extraParams = @{@"includeArchived" : @"true", @"pageSize" : @"50"};
     
     [self loadPaginatedResource:resourcePath processSelector:@selector(processAndSaveClassesFromResponseObject:) page:page extraParams:extraParams extraHeaders:headers success:success failure:failure];
 }
@@ -2222,7 +2220,7 @@ static NSUInteger const pageSize = 10;
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
-    parameters[@"page_size"] = @"999";
+    parameters[@"pageSize"] = @"50";
 
     [self GET:@"ethnicities" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Success getting Ethnicities response");
@@ -2256,7 +2254,7 @@ static NSUInteger const pageSize = 10;
 {
     NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
     parameters[@"maxdepth"] = @"0";
-    parameters[@"page_size"] = @"999";
+    parameters[@"pageSize"] = @"50";
 
     [self GET:@"money-options" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Success getting Money Options response");
@@ -2756,7 +2754,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
 
         NSString *path = nil;
@@ -2870,7 +2868,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"student-challenges" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -2924,7 +2922,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         NSString *urlString = [NSString stringWithFormat:@"posts/%ld", (long)postId];
 
@@ -3469,7 +3467,7 @@ static NSUInteger const pageSize = 10;
 
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3506,7 +3504,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3680,7 +3678,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"emojis" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
@@ -3804,7 +3802,7 @@ static NSUInteger const pageSize = 10;
 
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3841,7 +3839,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"post_id"] = [NSNumber numberWithInteger:postId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -3985,7 +3983,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"class_id"] = [NSNumber numberWithInteger:[MTUser currentUser].userClass.id];
 
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -4019,7 +4017,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         parameters[@"challenge_id"] = [NSNumber numberWithInteger:challengeId];
         
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
@@ -4150,7 +4148,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         if (!includeRead) {
             parameters[@"filter"] = @"unread";
@@ -4191,7 +4189,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         NSString *urlString = [NSString stringWithFormat:@"notifications/%ld", (long)notificationId];
         
@@ -4404,8 +4402,7 @@ static NSUInteger const pageSize = 10;
     NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", (long)challengeId];
     NSDictionary *params = @{
                              @"maxdepth" : @"2",
-                             @"page_size" : @"20",
-                             @"no_limit" : @"true"
+                             @"pageSize" : @"20"
                            };
     [self loadPaginatedResource:urlString processSelector:@selector(processExplorePostsWithResponseObject:) page:page extraParams:params success:success failure:failure];
 }
@@ -4418,7 +4415,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = @"999";
+        parameters[@"pageSize"] = @"50";
         
         NSString *urlString = [NSString stringWithFormat:@"classes/%lu/students", (long)[MTUser currentUser].userClass.id];
         
@@ -4532,7 +4529,7 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"1";
-        parameters[@"page_size"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
+        parameters[@"pageSize"] = [NSString stringWithFormat:@"%lu", (unsigned long)pageSize];
         parameters[@"page"] = [NSString stringWithFormat:@"%lu", (unsigned long)page];
         
         [parameters addEntriesFromDictionary:extraParams];
