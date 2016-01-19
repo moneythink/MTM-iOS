@@ -95,7 +95,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:nil];
+    if ([MTUser currentUser] != nil) {
+        [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:nil];
+    }
 }
 
 
