@@ -477,7 +477,7 @@
     } failure:^(NSError *error) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [MBProgressHUD hideAllHUDsForView:[UIApplication sharedApplication].keyWindow animated:YES];
-            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:[error localizedDescription] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
+            [[[UIAlertView alloc] initWithTitle:@"Login Error" message:[error detailMessage] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil, nil] show];
         });
 
     }];
