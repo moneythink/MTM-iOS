@@ -15,6 +15,7 @@
 		106309971A3A3DD80093C209 /* checkbox_ticked@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1063098F1A3A3DD80093C209 /* checkbox_ticked@2x.png */; };
 		106309981A3A3DD80093C209 /* MICheckBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 106309911A3A3DD80093C209 /* MICheckBox.m */; };
 		1063099C1A3A3E180093C209 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1063099B1A3A3E180093C209 /* libsqlite3.dylib */; };
+		3B1DDD411C4EF7D800023C38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DDD401C4EF7D800023C38 /* LaunchScreen.storyboard */; };
 		3B1DFABF1B8FA6300052FABA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */; };
 		3B2ECFBB1C24A754005E7F82 /* MTClassSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */; };
 		3B2ECFBE1C24A895005E7F82 /* MTOrganizationSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */; };
@@ -274,6 +275,7 @@
 		1A531E4889778AF585FC2BD2 /* Pods-moneythink-iosTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.release.xcconfig"; sourceTree = "<group>"; };
 		2957BC1269B6F841BFC27E61 /* Pods-moneythink-iosTests.adhoc (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.adhoc (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.adhoc (production).xcconfig"; sourceTree = "<group>"; };
 		2D77E708FFEC9E5D5E524D38 /* libPods-moneythink-ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-moneythink-ios.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3B1DDD401C4EF7D800023C38 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "moneythink-ios/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3B2ECFB91C24A754005E7F82 /* MTClassSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTClassSelectionViewController.h; sourceTree = "<group>"; };
 		3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassSelectionViewController.m; sourceTree = "<group>"; };
@@ -772,6 +774,7 @@
 		5876E29C196F2C1F00C176EC = {
 			isa = PBXGroup;
 			children = (
+				3B1DDD401C4EF7D800023C38 /* LaunchScreen.storyboard */,
 				3B1DFABE1B8FA6300052FABA /* GoogleService-Info.plist */,
 				5876E2AE196F2C1F00C176EC /* moneythink-ios */,
 				5876E2D0196F2C1F00C176EC /* moneythink-iosTests */,
@@ -1468,6 +1471,7 @@
 				895F78A11B16454400055759 /* nav-icons-notifications.png in Resources */,
 				8921063E19DA1F37000CFBF6 /* post@2x.png in Resources */,
 				8921063019DA1F37000CFBF6 /* like_normal@2x.png in Resources */,
+				3B1DDD411C4EF7D800023C38 /* LaunchScreen.storyboard in Resources */,
 				8921063819DA1F37000CFBF6 /* notifications_active@2x.png in Resources */,
 				89A0E80A1B34FCBD00F01BFF /* comment_normal@2x.png in Resources */,
 				89A793BA1B2B80D6000BFA40 /* challenge-list-icon.png in Resources */,
@@ -2018,7 +2022,6 @@
 			baseConfigurationReference = 108C9EB90A1115E74A7892AC /* Pods-moneythink-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Moneythink (YN5DHE47NH)";
@@ -2050,7 +2053,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e0cafe8d-cbdb-43c2-9029-20d14c356388";
+				PROVISIONING_PROFILE = "4bfa5f38-a24f-4e3e-b939-fac3470f6fef";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2108,7 +2111,6 @@
 			baseConfigurationReference = CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Moneythink (YN5DHE47NH)";
@@ -2140,7 +2142,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "034db306-1bd4-487d-b9d4-94f6ac718111";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2199,11 +2201,9 @@
 			baseConfigurationReference = 55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DISPLAY_NAME = "MT Stage";
 				ENABLE_BITCODE = NO;
@@ -2231,7 +2231,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "d58301ff-e5bd-4e65-91cb-ff2c83197159";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2289,11 +2289,9 @@
 			baseConfigurationReference = FA986CE90DF7F2AC274CAE12 /* Pods-moneythink-ios.debug (production).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				DISPLAY_NAME = Moneythink;
 				ENABLE_BITCODE = NO;
@@ -2321,7 +2319,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "d58301ff-e5bd-4e65-91cb-ff2c83197159";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2379,7 +2377,6 @@
 			baseConfigurationReference = D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CFBundleShortVersionString = 1.0.2;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Moneythink (YN5DHE47NH)";
@@ -2411,7 +2408,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "034db306-1bd4-487d-b9d4-94f6ac718111";
+				PROVISIONING_PROFILE = "aa9acbd8-8aee-4d32-b028-1246657d288e";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
