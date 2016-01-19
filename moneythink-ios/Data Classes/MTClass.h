@@ -21,6 +21,7 @@
 @property MTOrganization *organization;
 
 + (void)markAllDeleted;
++ (void)markAllDeletedExcept:(RLMObject *)object;
 + (void)removeAllDeleted;
 
 - (BOOL)isArchived;

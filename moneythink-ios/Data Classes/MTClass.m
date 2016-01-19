@@ -69,6 +69,24 @@
     NSLog(@"Marked MTClass (%ld) deleted", (long)count);
 }
 
++ (void)markAllDeletedExcept:(RLMObject *)object
+{
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    RLMResults *allObjects = [MTClass allObjects];
+    NSInteger count = [allObjects count];
+    for (MTClass *thisObject in allObjects) {
+        if ([object isEqual:thisObject]) {
+            count--;
+            continue;
+        }
+        thisObject.isDeleted = YES;
+    }
+    [realm commitWriteTransaction];
+    
+    NSLog(@"Marked MTClass (%ld) deleted", (long)count);
+}
+
 + (void)removeAllDeleted
 {
     RLMRealm *realm = [RLMRealm defaultRealm];

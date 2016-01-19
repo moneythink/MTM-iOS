@@ -180,6 +180,21 @@ static NSUInteger const pageSize = 10;
     }
 }
 
+- (MTClass *)createOrUpdateMTClassFromJSONDictionary:(NSDictionary *)classDict {
+    MTClass *class = [[MTClass alloc] initWithJSONDictionary:classDict];
+    NSDictionary *organizationDict = classDict[@"_embedded"][@"organization"];
+    
+    MTOrganization *organization = [MTOrganization objectForPrimaryKey:organizationDict[@"id"]];
+    if (!organization) {
+        [MTOrganization createOrUpdateInRealm:[RLMRealm defaultRealm] withJSONDictionary:organizationDict];
+    }
+    class.organization = organization;
+    [MTClass createOrUpdateInRealm:[RLMRealm defaultRealm] withValue:class];
+    [class setValue:classDict[@"archivedAt"] forNullableDateKey:@"archivedAt"];
+    class.isDeleted = NO;
+    return class;
+}
+
 #pragma mark - UIAlertViewDelegate methods -
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
@@ -356,17 +371,7 @@ static NSUInteger const pageSize = 10;
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     for (NSDictionary *classDict in responseArray) {
-        MTClass *class = [[MTClass alloc] initWithJSONDictionary:classDict];
-        NSDictionary *organizationDict = classDict[@"_embedded"][@"organization"];
-        
-        MTOrganization *organization = [MTOrganization objectForPrimaryKey:organizationDict[@"id"]];
-        if (!organization) {
-            [MTOrganization createOrUpdateInRealm:realm withJSONDictionary:organizationDict];
-        }
-        class.organization = organization;
-        [MTClass createOrUpdateInRealm:realm withValue:class];
-        [class setValue:classDict[@"archivedAt"] forNullableDateKey:@"archivedAt"];
-        class.isDeleted = NO;
+        MTClass *class = [self createOrUpdateMTClassFromJSONDictionary:classDict];
     }
     [realm commitWriteTransaction];
 }
@@ -415,6 +420,11 @@ static NSUInteger const pageSize = 10;
     NSMutableDictionary *classesDict = [NSMutableDictionary dictionary];
     NSString *className = [responseDict objectForKey:@"name"];
     NSNumber *classId = [responseDict objectForKey:@"id"];
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    [self createOrUpdateMTClassFromJSONDictionary:responseDict];
+    [realm commitWriteTransaction];
     
     if (!IsEmpty(className) && [classId integerValue] > 0) {
         [classesDict setValue:classId forKey:className];
