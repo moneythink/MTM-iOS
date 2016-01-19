@@ -14,6 +14,7 @@
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *cancelButton;
 @property (nonatomic, retain) IBOutlet UIBarButtonItem *doneButton;
 @property (nonatomic, retain) IBOutlet UITextField *classNameTextField;
+@property (weak, nonatomic) IBOutlet UILabel *errorMessageLabel;
 
 - (MTOrganization *)selectedOrganization;
 
@@ -39,6 +40,8 @@
     } else {
         self.doneButton.enabled = YES;
     }
+    
+    [self.errorMessageLabel setHidden:YES];
     return YES;
 }
 
@@ -54,11 +57,25 @@
         weakSelf.classNameTextField.enabled = NO;
         weakSelf.classNameTextField.text = @"";
         weakSelf.classNameTextField.placeholder = @"Saved!";
+        
+        // Load the newly created class
+        NSDictionary *responseDict = (NSDictionary *)responseData;
+        NSNumber *justCreatedClassId = (NSNumber *)responseDict[className];
+        MTClass *justCreatedClass = [MTClass objectForPrimaryKey:[justCreatedClassId stringValue]];
+        [weakSelf setSelectedClass:justCreatedClass];
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
            [weakSelf performSegueWithIdentifier:@"dismiss" sender:nil];
         });
     } failure:^(NSError *error) {
-        NSLog(@"failed for some reason");
+        [self.errorMessageLabel setHidden:NO];
+        if (error) {
+            self.errorMessageLabel.text = error.detailMessage;
+        } else {
+            self.errorMessageLabel.text = @"An unknown error has occurred.";
+        }
+        self.classNameTextField.enabled = YES;
+        self.classNameTextField.placeholder = @"Class Name";
         sender.enabled = YES;
     }];
 }
@@ -69,9 +86,9 @@
     return controller.selectedOrganization;
 }
 
-- (MTOrganization *)setSelectedClass:(MTClass *)class {
+- (void)setSelectedClass:(MTClass *)class {
     MTClassSelectionNavigationController *controller = (MTClassSelectionNavigationController *)self.presentingViewController;
-    return controller.selectedClass = class;
+    controller.selectedClass = class;
 }
 
 @end
