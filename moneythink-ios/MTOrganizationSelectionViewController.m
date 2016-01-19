@@ -22,10 +22,10 @@
 @implementation MTOrganizationSelectionViewController
 
 - (void)viewDidLoad {
-    self.loadingMessage = @"Loading organizations...";
     
     [super viewDidLoad];
     self.pageSize = 50;
+    self.loadingResourceName = @"organizations";    
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     
