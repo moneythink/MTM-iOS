@@ -30,6 +30,8 @@
 // @Override
 - (void)loadLocalResults:(MTSuccessBlock)callback {
     dispatch_async(dispatch_get_main_queue(), ^{
+        if ([MTUser currentUser] == nil) return;
+        
         NSArray *sorts = @[
                            [RLMSortDescriptor sortDescriptorWithProperty:@"createdAt" ascending:NO],
                            ];

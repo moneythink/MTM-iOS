@@ -653,6 +653,8 @@
 
 - (void)updateViewForCurrentUser
 {
+    if ([MTUser currentUser] == nil) return;
+    
     self.userSchool.text = self.userCurrent.organization.name;
     self.userClassName.text = self.userCurrent.userClass.name;
     

@@ -2138,10 +2138,9 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 
 #pragma mark - MTIncrementalLoading methods
 - (void)loadLocalResults:(MTSuccessBlock)callback {
-    RLMResults *newResults = nil;
-    
     if ([MTUser currentUser] == nil) return;
     
+    RLMResults *newResults = nil;
     if (self.challenge) {
         newResults = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
         [self loadButtons];

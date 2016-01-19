@@ -106,6 +106,7 @@
 
 #pragma mark - MTIncrementalLoading
 - (void)loadLocalResults:(MTSuccessBlock)callback {
+    if ([MTUser currentUser] == nil) return;
     
     RLMResults *results = [[MTClass objectsWhere:@"organization.id = %d AND archivedAt == nil", self.selectedOrganization.id] sortedResultsUsingProperty:@"name" ascending:YES];
     

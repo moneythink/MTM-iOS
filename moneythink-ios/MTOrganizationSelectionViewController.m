@@ -58,6 +58,7 @@
 }
 
 - (void)loadLocalResults:(MTSuccessBlock)callback {
+    if ([MTUser currentUser] == nil) return;
     
     RLMResults *results;
 //    if (!IsEmpty(self.currentSearchText)) {
