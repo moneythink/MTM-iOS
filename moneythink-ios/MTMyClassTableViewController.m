@@ -2140,6 +2140,8 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
 - (void)loadLocalResults:(MTSuccessBlock)callback {
     RLMResults *newResults = nil;
     
+    if ([MTUser currentUser] == nil) return;
+    
     if (self.challenge) {
         newResults = [[MTChallengePost objectsWhere:@"challenge.id = %d AND challengeClass.id = %d AND isDeleted = NO", self.challenge.id, [MTUser currentUser].userClass.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
         [self loadButtons];
@@ -2158,7 +2160,11 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
      
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            if ([MTUser currentUser] == nil) return;
+            
+            if (weakSelf.challenge != nil) {
+                [weakSelf.challengeIdsQueried addObject:[NSNumber numberWithInteger:weakSelf.challenge.id]];
+            }
             
             if (!IsEmpty(weakSelf.results)) {
                 [weakSelf updateComments];

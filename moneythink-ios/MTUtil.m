@@ -252,6 +252,7 @@
     [[ZDKSdkStorage instance].settingsStorage deleteStoredData];
     
     [MTUtil markDatabaseDeleted];
+    [MTUtil cleanDeletedItemsInDatabase];
     
     [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
 }

@@ -1216,7 +1216,7 @@
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender {
     if ([identifier isEqualToString:kSelectClassIdentifier]) {
-        if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
+        if (self.userCurrent != nil  && [self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
             [self promptForNewClassCode];
             return NO;
         }

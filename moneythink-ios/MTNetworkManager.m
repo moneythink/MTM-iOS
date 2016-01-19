@@ -169,6 +169,7 @@ static NSUInteger const pageSize = 10;
                                        actionWithTitle:@"OK"
                                        style:UIAlertActionStyleDefault
                                        handler:^(UIAlertAction *action) {
+                                           [MTUtil logout];
                                            self.displayingInternetAndReAuthAlert = NO;
                                        }];
             [alertController addAction:okAction];
@@ -199,6 +200,7 @@ static NSUInteger const pageSize = 10;
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     self.displayingInternetAndReAuthAlert = NO;
+    [MTUtil logout];
 }
 
 

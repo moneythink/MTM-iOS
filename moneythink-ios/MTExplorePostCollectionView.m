@@ -109,6 +109,8 @@ NSInteger numberOfPages = 0;
 
 - (void)loadPostsFromDatabase
 {
+    if ([MTUser currentUser] == nil) return;
+    
     MTClass *myClass = [MTUser currentUser].userClass;
     self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES AND challengeClass != %@", self.challenge.id, myClass] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     
