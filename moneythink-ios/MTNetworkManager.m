@@ -181,6 +181,10 @@ static NSUInteger const pageSize = 10;
     }
 }
 
+- (BOOL)requestShouldDie {
+    return [MTUser currentUser] == nil;
+}
+
 - (MTClass *)createOrUpdateMTClassFromJSONDictionary:(NSDictionary *)classDict {
     MTClass *class = [[MTClass alloc] initWithJSONDictionary:classDict];
     NSDictionary *organizationDict = classDict[@"_embedded"][@"organization"];
@@ -1985,6 +1989,8 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         
         [self GET:@"organizations" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            if ([self requestShouldDie]) return;
+            
             NSLog(@"Success getOrganizationsWithSuccess response");
             NSDictionary *organizationsDict = [self processOrganizationsRequestWithResponseObject:responseObject];
             
@@ -2003,6 +2009,8 @@ static NSUInteger const pageSize = 10;
                 }
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            if ([self requestShouldDie]) return;
+            
             NSLog(@"Failed getOrganizationsWithSuccess with error: %@", [error mtErrorDescription]);
             if (failure) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -2036,6 +2044,8 @@ static NSUInteger const pageSize = 10;
     
     [self GET:@"mentor-organizations" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Success getting Organizations response");
+        if ([self requestShouldDie]) return;
+
         NSDictionary *organizationsDict = [self processOrganizationsRequestWithResponseObject:responseObject];
         
         if ([organizationsDict count] > 0) {
@@ -2054,6 +2064,8 @@ static NSUInteger const pageSize = 10;
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"Failed to get organizations with error: %@", [error mtErrorDescription]);
+        if ([self requestShouldDie]) return;
+        
         if (failure) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 failure(error);
@@ -2079,6 +2091,8 @@ static NSUInteger const pageSize = 10;
         
         [self GET:@"classes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"Success getClassesWithSuccess response");
+            if ([self requestShouldDie]) return;
+
             NSDictionary *classesDict = [self processClassesRequestWithResponseObject:responseObject];
             
             if ([classesDict count] > 0) {
@@ -2097,6 +2111,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed getClassesWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failure(error);
@@ -2131,6 +2147,8 @@ static NSUInteger const pageSize = 10;
         
         [self POST:@"classes?maxdepth=1" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"Success createClassWithName response");
+            if ([self requestShouldDie]) return;
+            
             NSDictionary *classesDict = [self processCreateClassRequestWithResponseObject:responseObject];
             
             if ([classesDict count] > 0) {
@@ -2149,6 +2167,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failure(error);
@@ -2179,6 +2199,8 @@ static NSUInteger const pageSize = 10;
     
     [self GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
         NSLog(@"Success getting Classes response");
+        if ([self requestShouldDie]) return;
+        
         NSDictionary *classesDict = [self processClassesRequestWithResponseObject:responseObject];
         
         if ([classesDict count] > 0) {
@@ -2197,6 +2219,8 @@ static NSUInteger const pageSize = 10;
         }
     } failure:^(NSURLSessionDataTask *task, NSError *error) {
         NSLog(@"Failed to get classes with error: %@", [error mtErrorDescription]);
+        if ([self requestShouldDie]) return;
+        
         if (failure) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 failure(error);
@@ -2356,7 +2380,7 @@ static NSUInteger const pageSize = 10;
         
         if (!requestError) {
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//                NSLog(@"getAvatarForUserId success response");
+                if ([self requestShouldDie]) return;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -2383,6 +2407,7 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed to get user avatar with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
                 
                 if ([error mtErrorCode] == 404) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -2441,6 +2466,7 @@ static NSUInteger const pageSize = 10;
             request.HTTPBody = imageData;
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSLog(@"setAvatarForUserId success response");
+                if ([self requestShouldDie]) return;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -2472,6 +2498,8 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed to set user avatar with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
+                
                 if (failure) {
                     failure(error);
                 }
@@ -2543,6 +2571,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateCurrentUser success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
@@ -2554,12 +2583,15 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updateCurrentUser with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed updateCurrentUser with error: %@", [error mtErrorDescription]);
+        
         if (failure) {
             failure(error);
         }
@@ -2576,6 +2608,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateCurrentUserWithDictionary success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
@@ -2587,6 +2620,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updateCurrentUserWithDictionary with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -2610,6 +2645,7 @@ static NSUInteger const pageSize = 10;
         NSDictionary *parameters = @{ @"studentSignupCode" : signupCode };
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"userChangeClassWithSignupCode success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
@@ -2621,6 +2657,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed userChangeClassWithSignupCode with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -2647,6 +2685,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"setOnboardingCompleteForCurrentUserWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -2658,6 +2697,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed setOnboardingCompleteForCurrentUserWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -2681,6 +2722,8 @@ static NSUInteger const pageSize = 10;
 
         [weakSelf GET:@"users/me" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"refreshCurrentUserDataWithSuccess");
+            if ([self requestShouldDie]) return;
+            
             MTUser *meUser = [weakSelf processUserRequestWithResponseObject:responseObject];
             if (meUser) {
                 //                NSLog(@"Parsed meUser object: %@", meUser);
@@ -2723,6 +2766,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"refreshCurrentUserData error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             // Silently fail on network connection errors
             NSInteger code = [error code];
             if (code == NSURLErrorTimedOut || code == NSURLErrorCancelled || code == NSURLErrorCannotFindHost ||
@@ -2771,6 +2816,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:path parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadChallengesWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processChallengePlaylistWithResponseObject:responseObject];
@@ -2781,6 +2827,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadChallengesWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -2816,6 +2864,8 @@ static NSUInteger const pageSize = 10;
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 //                NSLog(@"getChallengeBannerImageForChallengeId success response");
                 
+                if ([self requestShouldDie]) return;
+                
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
                     [realm beginWriteTransaction];
@@ -2840,6 +2890,8 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed getChallengeBannerImageForChallengeId with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
+                
                 if (failure) {
                     failure(error);
                 }
@@ -2873,6 +2925,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"student-challenges" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadChallengeProgressWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processChallengeProgressWithResponseObject:responseObject];
@@ -2883,6 +2936,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadChallengeProgressWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -2929,6 +2984,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processPostWithResponseObject:responseObject];
@@ -2939,6 +2995,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+
             if (failure) {
                 failure(error);
             }
@@ -2974,6 +3032,7 @@ static NSUInteger const pageSize = 10;
         if (!requestError) {
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //                NSLog(@"getImageForPostId success response");
+                if ([self requestShouldDie]) return;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3000,6 +3059,8 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed to get post image with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
+                
                 if (failure) {
                     failure(error);
                 }
@@ -3047,6 +3108,7 @@ static NSUInteger const pageSize = 10;
             request.HTTPBody = imageData;
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
                 NSLog(@"updatePostImageForPostId success response");
+                if ([self requestShouldDie]) return;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3080,6 +3142,8 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed updatePostImageForPostId with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
+                
                 if (failure) {
                     failure(error);
                 }
@@ -3121,6 +3185,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"createPostForChallengeId success response");
+            if ([self requestShouldDie]) return;
             
             if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3195,6 +3260,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed createPostForChallengeId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3224,6 +3291,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updatePostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3293,6 +3361,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updatePostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3315,6 +3385,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"deletePostId success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -3330,6 +3401,8 @@ static NSUInteger const pageSize = 10;
          
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed deletePostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3353,6 +3426,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:@"posts/verify" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"verifyPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3377,6 +3451,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed verifyPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3400,6 +3476,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:@"posts/unverify" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"unVerifyPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3424,6 +3501,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed unVerifyPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3474,6 +3553,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
             NSLog(@"loadCommentsForChallengeId success response; load time: %f", finishTime-finishWaitTime);
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processCommentsWithResponseObject:responseObject challengeId:challengeId postId:0];
@@ -3486,6 +3566,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadCommentsForChallengeId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3510,6 +3592,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"comments" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadCommentsForPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processCommentsWithResponseObject:responseObject challengeId:0 postId:postId];
@@ -3520,6 +3603,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadCommentsForPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3546,6 +3631,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"createCommentForPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3574,6 +3660,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed createCommentForPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3599,6 +3687,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateCommentId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3621,6 +3710,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updateCommentId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3643,6 +3734,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"deleteCommentId success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -3658,6 +3750,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed deleteCommentId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3683,6 +3777,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"emojis" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadEmojiWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processEmojisWithResponseObject:responseObject];
@@ -3693,6 +3788,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadEmojiWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3727,6 +3824,7 @@ static NSUInteger const pageSize = 10;
         if (!requestError) {
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
 //                NSLog(@"getEmojiImageForEmojiName success response");
+                if ([self requestShouldDie]) return;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3755,6 +3853,7 @@ static NSUInteger const pageSize = 10;
                 }
             } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                 NSLog(@"Failed getEmojiImageForEmojiName with error: %@", [error mtErrorDescription]);
+                if ([self requestShouldDie]) return;
                 
                 if ([error mtErrorCode] == 404) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3809,6 +3908,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf GET:@"likes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSTimeInterval finishTime = [[NSDate date] timeIntervalSince1970];
             NSLog(@"loadLikesForChallengeId success response; load time: %f", finishTime-finishWaitTime);
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processLikesWithResponseObject:responseObject challengeId:challengeId postId:0];
@@ -3821,6 +3921,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadLikesForChallengeId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3845,6 +3947,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"likes" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadLikesForPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processLikesWithResponseObject:responseObject challengeId:0 postId:postId];
@@ -3855,6 +3958,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadLikesForPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3881,6 +3986,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"addLikeForPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3913,6 +4019,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed addLikeForPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3938,6 +4046,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updateLikeId success response");
+            if ([self requestShouldDie]) return;
             
             if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -3963,6 +4072,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updateLikeId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -3989,6 +4100,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"buttons" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadButtonsWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processButtonsWithResponseObject:responseObject];
@@ -4005,6 +4117,8 @@ static NSUInteger const pageSize = 10;
         }];
     } failure:^(NSError *error) {
         NSLog(@"Failed loadButtonsWithSuccess with error: %@", [error mtErrorDescription]);
+        if ([self requestShouldDie]) return;
+        
         if (failure) {
             failure(error);
         }
@@ -4023,6 +4137,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"button-clicks" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadButtonClicksForChallengeId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processButtonClicksWithResponseObject:responseObject challengeId:challengeId postId:0];
@@ -4033,6 +4148,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadButtonClicksForChallengeId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4059,6 +4176,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"addButtonClickForPostId success response");
+            if ([self requestShouldDie]) return;
             
             if (!IsEmpty(responseObject)) {
                 RLMRealm *realm = [RLMRealm defaultRealm];
@@ -4091,6 +4209,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed addButtonClickForPostId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4113,6 +4233,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"deleteButtonClickId success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -4128,6 +4249,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed deleteButtonClickId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4161,6 +4284,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:@"notifications" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadNotificationsWithSinceDate success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processNotificationsWithResponseObject:responseObject];
@@ -4171,6 +4295,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadNotificationsWithSinceDate with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4196,6 +4322,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadNotificationId success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processNotificationsWithResponseObject:responseObject];
@@ -4206,6 +4333,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadNotificationId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4227,6 +4356,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"markReadForNotificationId success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -4242,6 +4372,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed markReadForNotificationId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4261,6 +4393,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:@"notifications/read-all" parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"markAllNotificationsReadWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -4276,6 +4409,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed markAllNotificationsReadWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4303,6 +4438,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf POST:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"createPushMessagingRegistrationWithDeviceToken success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 if ([responseObject objectForKey:@"id"]) {
@@ -4321,6 +4457,8 @@ static NSUInteger const pageSize = 10;
             
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed createPushMessagingRegistrationWithDeviceToken with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4347,11 +4485,15 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"updatePushMessagingRegistrationId success response");
+            if ([self requestShouldDie]) return;
+            
             if (success) {
                 success(nil);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed updatePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4373,12 +4515,16 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf DELETE:urlString parameters:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"deletePushMessagingRegistrationId success response");
+            if ([self requestShouldDie]) return;
+            
             [MTUtil setPushMessagingRegistrationId:0];
             if (success) {
                 success(nil);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed deletePushMessagingRegistrationId with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4422,6 +4568,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"loadDashboardUsersWithSuccess success response");
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self processDashboardUsersWithResponseObject:responseObject];
@@ -4432,6 +4579,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed loadDashboardUsersWithSuccess with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4456,6 +4605,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"setBankValue success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -4468,6 +4618,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed setBankValue with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4492,6 +4644,7 @@ static NSUInteger const pageSize = 10;
         [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
         [weakSelf PUT:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"setResumeValue success response");
+            if ([self requestShouldDie]) return;
             
             RLMRealm *realm = [RLMRealm defaultRealm];
             [realm beginWriteTransaction];
@@ -4504,6 +4657,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed setResumeValue with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
@@ -4547,6 +4702,7 @@ static NSUInteger const pageSize = 10;
         
         [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
             NSLog(@"%@: success response", resourcePath);
+            if ([self requestShouldDie]) return;
             
             if (responseObject) {
                 [self performSelector:processSelector withObject:responseObject];
@@ -4560,6 +4716,8 @@ static NSUInteger const pageSize = 10;
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"%@: Failed with error: %@", resourcePath, [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
             if (failure) {
                 failure(error);
             }
