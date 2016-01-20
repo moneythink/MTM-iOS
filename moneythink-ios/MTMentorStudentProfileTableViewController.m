@@ -23,7 +23,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.loadingResourceName = @"posts";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self loadRemoteResultsForCurrentPage];
 }
 
 #pragma mark - Superclass methods
@@ -43,6 +49,8 @@
 
 // @Override
 - (void)loadRemoteResultsForCurrentPage {
+    [self willLoadRemoteResultsForCurrentPage];
+    
     [[MTNetworkManager sharedMTNetworkManager] loadPostsForUserId:self.studentUser.id page:self.currentPage params:@{@"allow_fed_posts": @"false"} success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
         struct MTIncrementalLoadingResponse response;
         response.lastPage = lastPage;
