@@ -46,4 +46,7 @@
 
 + (NSString *)stringFromAPNSTokenData:(NSData *)deviceToken;
 
++ (void)setRecentlyLoggedOut:(BOOL)value;
++ (BOOL)userRecentlyLoggedOut;
+
 @end

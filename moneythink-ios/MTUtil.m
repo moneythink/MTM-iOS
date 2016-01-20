@@ -138,6 +138,8 @@
 
 /* View Controllers should call this whenever the user is successfully logged in. */
 + (void)userDidLogin:(MTUser *)user {
+    [self setRecentlyLoggedOut:NO];
+    
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     
     // As per docs here: https://developers.google.com/analytics/devguides/collection/ios/v3/user-id
@@ -255,8 +257,20 @@
     [MTUtil cleanDeletedItemsInDatabase];
     
     [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+    
+    [self setRecentlyLoggedOut:YES];
 }
 
++ (void)setRecentlyLoggedOut:(BOOL)value
+{
+    [[NSUserDefaults standardUserDefaults] setBool:value forKey:kRecentlyLoggedOutKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+}
+
++ (BOOL)userRecentlyLoggedOut
+{
+    return [[NSUserDefaults standardUserDefaults] boolForKey:kRecentlyLoggedOutKey];
+}
 
 +(BOOL) NSStringIsValidEmail:(NSString *)checkString
 {

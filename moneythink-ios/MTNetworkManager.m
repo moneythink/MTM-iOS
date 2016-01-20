@@ -182,7 +182,7 @@ static NSUInteger const pageSize = 10;
 }
 
 - (BOOL)requestShouldDie {
-    return [MTUser currentUser] == nil;
+    return [MTUser currentUser] == nil && [MTUtil userRecentlyLoggedOut];
 }
 
 - (MTClass *)createOrUpdateMTClassFromJSONDictionary:(NSDictionary *)classDict {

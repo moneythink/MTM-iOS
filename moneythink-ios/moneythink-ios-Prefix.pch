@@ -43,6 +43,7 @@
 #define kAPIServerKey                       @"kAPIServerKey"
 #define kDisplayedAPIMigrationAlertKey      @"kDisplayedAPIMigrationAlertKey"
 #define kShouldDisplayAPIMigrationAlertKey  @"kShouldDisplayAPIMigrationAlertKey"
+#define kRecentlyLoggedOutKey               @"kRecentlyLoggedOutKey"
 
 #ifdef __OBJC__
 #import <UIKit/UIKit.h>

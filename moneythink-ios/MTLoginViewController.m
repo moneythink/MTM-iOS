@@ -264,6 +264,8 @@
     NSString *segueID = [segue identifier];
     id segueDVC = [segue destinationViewController];
     
+    [MTUtil setRecentlyLoggedOut:NO];
+    
     if ([segueID isEqualToString:@"studentSignup"]) {
         [[MTUtil getAppDelegate] setWhiteNavBarAppearanceForNavigationBar:self.navigationController.navigationBar];
 
