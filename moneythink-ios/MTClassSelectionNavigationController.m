@@ -14,4 +14,9 @@
 
 @implementation MTClassSelectionNavigationController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.currentUserNeedsSave = NO;
+}
+
 @end

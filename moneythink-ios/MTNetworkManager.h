@@ -9,6 +9,7 @@
 #import "AFOAuth2Manager.h"
 
 typedef void (^MTNetworkSuccessBlock)(id responseData);
+typedef void (^MTNetworkSuccessBlockWithObject)(id responseData, RLMObject *object);
 typedef void (^MTNetworkPaginatedSuccessBlock)(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount);
 typedef void (^MTSuccessBlock)(NSError *error);
 typedef void (^MTNetworkOAuthSuccessBlock)(AFOAuthCredential *credential);
@@ -56,6 +57,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)getClassesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getClassesWithPage:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)createClassWithName:(NSString *)name organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)createClassObjectWithName:(NSString *)name organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlockWithObject)success failure:(MTNetworkFailureBlock)failure;
 - (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getClassesWithSignupCode:(NSString *)signupCode organizationId:(NSInteger)organizationId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getEthnicitiesWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

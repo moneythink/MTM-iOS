@@ -76,6 +76,18 @@
     self.currentPage = 1; // Reset current page on load
     
     [self.navigationController setToolbarHidden:NO animated:YES];
+    
+    if ([self currentUserNeedsSave]) {
+        MTMakeWeakSelf();
+        [self saveWithLoadingMessage:NO block:^(BOOL success) {
+            [weakSelf clearCurrentUserNeedsSave];
+            
+            NSIndexPath *path = [self resultIndexPath:weakSelf.selectedClass];
+            if (path != nil) {
+                [weakSelf.tableView scrollToRowAtIndexPath:path atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+            }
+        }];
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -127,11 +139,7 @@
             });
         }];
     }
-    else {
-        // Clear classes in case some have been removed.
-        [MTClass markAllDeletedExcept:self.selectedClass];
-        [MTClass removeAllDeleted];
-        
+    else {       
         [[MTNetworkManager sharedMTNetworkManager] getClassesWithPage:self.currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
             [weakSelf loadLocalResults];
             [weakSelf didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
@@ -200,7 +208,7 @@
     cell.textLabel.text = class.name;
     
     cell.accessoryType = UITableViewCellAccessoryNone;
-    if ([class isEqual:self.selectedClass]) {
+    if (class.id == self.selectedClass.id) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     }
     
@@ -254,6 +262,14 @@
 - (void)setMentorCode:(NSString *)mentorCode {
     [[NSUserDefaults standardUserDefaults] setObject:mentorCode forKey:kMentorCodeKey];
     ((MTClassSelectionNavigationController *)self.navigationController).mentorCode = mentorCode;
+}
+
+- (BOOL)currentUserNeedsSave {
+    return ((MTClassSelectionNavigationController *)self.navigationController).currentUserNeedsSave;
+}
+
+- (void)clearCurrentUserNeedsSave {
+    ((MTClassSelectionNavigationController *)self.navigationController).currentUserNeedsSave = NO;
 }
 
 #pragma mark - private methods
@@ -373,28 +389,40 @@
 }
 
 #pragma mark - Handle Saves
-- (void)save:(void (^)(BOOL success))blockName {
+
+- (void)save:(void (^)(BOOL))blockName {
+    [self saveWithLoadingMessage:YES block:blockName];
+}
+
+- (void)saveWithLoadingMessage:(BOOL)showLoadingMessage block:(void (^)(BOOL success))blockName {
+
     MTUser *user = [MTUser currentUser];
     RLMRealm *realm = [RLMRealm defaultRealm];
     
-    // Write to server
     MBProgressHUD *hud = [[MBProgressHUD alloc] init];
+    if (showLoadingMessage) {
+        hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+        hud.labelText = @"Saving...";
+        hud.dimBackground = YES;
+    }
     
-    hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
-    hud.labelText = @"Saving...";
-    hud.dimBackground = YES;
-    
+    // Write to server
     NSDictionary *dictionary = @{
          @"organization" : @{ @"id" : [NSNumber numberWithInteger:self.selectedOrganization.id] },
          @"class" : @{ @"id" : [NSNumber numberWithInteger:self.selectedClass.id] }
     };
     
+    MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] updateCurrentUserWithDictionary:dictionary success:^(id responseData) {
         [hud hide:YES];
         
+        // "Reload" the object before writing it to make positive we have the same object in the realm
+        MTOrganization *selectedOrganization = [MTOrganization objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.selectedOrganization.id]];
+        weakSelf.selectedClass = [MTClass objectForPrimaryKey:[NSNumber numberWithInteger:weakSelf.selectedClass.id]];
+        
         // Write locally
         [realm beginWriteTransaction];
-        user.organization = self.selectedOrganization;
+        user.organization = selectedOrganization;
         user.userClass = self.selectedClass;
         [realm commitWriteTransaction];
         

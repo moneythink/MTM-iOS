@@ -194,9 +194,9 @@ static NSUInteger const pageSize = 10;
         [MTOrganization createOrUpdateInRealm:[RLMRealm defaultRealm] withJSONDictionary:organizationDict];
     }
     class.organization = organization;
-    [MTClass createOrUpdateInRealm:[RLMRealm defaultRealm] withValue:class];
     [class setValue:classDict[@"archivedAt"] forNullableDateKey:@"archivedAt"];
     class.isDeleted = NO;
+    [MTClass createOrUpdateInRealm:[RLMRealm defaultRealm] withValue:class];
     return class;
 }
 
@@ -377,7 +377,7 @@ static NSUInteger const pageSize = 10;
     RLMRealm *realm = [RLMRealm defaultRealm];
     [realm beginWriteTransaction];
     for (NSDictionary *classDict in responseArray) {
-        MTClass *class = [self createOrUpdateMTClassFromJSONDictionary:classDict];
+        [self createOrUpdateMTClassFromJSONDictionary:classDict];
     }
     [realm commitWriteTransaction];
 }
@@ -437,6 +437,23 @@ static NSUInteger const pageSize = 10;
     }
     
     return classesDict;
+}
+
+- (MTClass *)processCreateClassObjectRequestWithResponseObject:(id)responseObject
+{
+    if (![responseObject isKindOfClass:[NSDictionary class]]) {
+        NSLog(@"No classes response data");
+        return nil;
+    }
+    
+    NSDictionary *responseDict = (NSDictionary *)responseObject;
+    
+    RLMRealm *realm = [RLMRealm defaultRealm];
+    [realm beginWriteTransaction];
+    MTClass *class = [self createOrUpdateMTClassFromJSONDictionary:responseDict];
+    [realm commitWriteTransaction];
+    
+    return class;
 }
 
 - (NSArray *)processEthnicitiesRequestWithResponseObject:(id)responseObject
@@ -2165,6 +2182,45 @@ static NSUInteger const pageSize = 10;
                     });
                 }
             }
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
+            if (failure) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    failure(error);
+                });
+            }
+        }];
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+    
+}
+
+- (void)createClassObjectWithName:(NSString *)name organizationId:(NSInteger)organizationId success:(MTNetworkSuccessBlockWithObject)success failure:(MTNetworkFailureBlock)failure
+{
+    MTMakeWeakSelf();
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
+        parameters[@"name"] = name;
+        parameters[@"organization"] = [NSDictionary dictionaryWithObject:[NSNumber numberWithInteger:organizationId] forKey:@"id"];
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        [self POST:@"classes?maxdepth=1" parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"Success createClassWithName response");
+            if ([self requestShouldDie]) return;
+            
+            MTClass *class = [self processCreateClassObjectRequestWithResponseObject:responseObject];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                success(responseObject, class);
+            });
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"Failed createClassWithName with error: %@", [error mtErrorDescription]);
             if ([self requestShouldDie]) return;

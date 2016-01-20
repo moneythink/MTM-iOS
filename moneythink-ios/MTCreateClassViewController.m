@@ -52,17 +52,18 @@
     self.classNameTextField.enabled = NO;
     self.classNameTextField.text = @"";
     self.classNameTextField.placeholder = @"Saving...";
-    [[MTNetworkManager sharedMTNetworkManager] createClassWithName:className organizationId:self.selectedOrganization.id success:^(id responseData) {
+    [[MTNetworkManager sharedMTNetworkManager] createClassObjectWithName:className organizationId:self.selectedOrganization.id success:^(id responseData, RLMObject *object) {
         // save it locally
         weakSelf.classNameTextField.enabled = NO;
         weakSelf.classNameTextField.text = @"";
         weakSelf.classNameTextField.placeholder = @"Saved!";
         
-        // Load the newly created class
-        NSDictionary *responseDict = (NSDictionary *)responseData;
-        NSNumber *justCreatedClassId = (NSNumber *)responseDict[className];
-        MTClass *justCreatedClass = [MTClass objectForPrimaryKey:[justCreatedClassId stringValue]];
-        [weakSelf setSelectedClass:justCreatedClass];
+        // set the newly created class
+        MTClass *newClass = (MTClass*)object;
+        if (newClass != nil) {
+            [weakSelf setSelectedClass:newClass];
+            [weakSelf setCurrentUserNeedsSave];
+        }
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
            [weakSelf performSegueWithIdentifier:@"dismiss" sender:nil];
@@ -89,6 +90,11 @@
 - (void)setSelectedClass:(MTClass *)class {
     MTClassSelectionNavigationController *controller = (MTClassSelectionNavigationController *)self.presentingViewController;
     controller.selectedClass = class;
+}
+
+- (void)setCurrentUserNeedsSave {
+    MTClassSelectionNavigationController *controller = (MTClassSelectionNavigationController *)self.presentingViewController;
+    controller.currentUserNeedsSave = YES;
 }
 
 @end

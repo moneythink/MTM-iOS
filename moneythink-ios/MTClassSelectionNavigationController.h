@@ -15,5 +15,6 @@
 @property (nonatomic, retain) MTClass *selectedClass;
 @property (nonatomic, retain) MTOrganization *selectedOrganization;
 @property (nonatomic, retain) NSString *mentorCode;
+@property (assign) BOOL currentUserNeedsSave;
 
 @end
