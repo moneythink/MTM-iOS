@@ -2050,7 +2050,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "e0cafe8d-cbdb-43c2-9029-20d14c356388";
+				PROVISIONING_PROFILE = "4bfa5f38-a24f-4e3e-b939-fac3470f6fef";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
 				WRAPPER_EXTENSION = app;
@@ -2140,7 +2140,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "034db306-1bd4-487d-b9d4-94f6ac718111";
+				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2231,7 +2231,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "d58301ff-e5bd-4e65-91cb-ff2c83197159";
+				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2321,7 +2321,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "d58301ff-e5bd-4e65-91cb-ff2c83197159";
+				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2411,7 +2411,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
 				PRODUCT_NAME = Moneythink;
-				PROVISIONING_PROFILE = "034db306-1bd4-487d-b9d4-94f6ac718111";
+				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = 1;
