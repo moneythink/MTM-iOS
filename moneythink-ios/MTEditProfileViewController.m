@@ -667,17 +667,24 @@
     
     if ([self.userCurrent.roleCode isEqualToString:@"STUDENT"]) {
         [self.changeClassButton setTitle:@"Join New Class" forState:UIControlStateNormal];
-        if ([self.userCurrent.userClass isArchived]) {
-            NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[self appendArchivedTo:self.userCurrent.userClass.name]];
-            [text addAttributes:@{
-                                  NSForegroundColorAttributeName : [UIColor grayColor]
-                                  } range:NSMakeRange(0, text.length)];
-            [self.userClassName setAttributedText:text];
-        }
-//      Could use this if you wanted to HIDE the change class button for students.
+    }
+    
+    if ([self.userCurrent.userClass isArchived]) {
+        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:[self appendArchivedTo:self.userCurrent.userClass.name]];
+        [text addAttributes:@{
+                              NSForegroundColorAttributeName : [UIColor grayColor]
+                              } range:NSMakeRange(0, text.length)];
+        [self.userClassName setAttributedText:text];
+    } else {
+        NSMutableAttributedString *text = [[NSMutableAttributedString alloc] initWithString:self.userCurrent.userClass.name];
+        [text addAttributes:@{
+                              NSForegroundColorAttributeName : [UIColor blackColor]
+                              } range:NSMakeRange(0, text.length)];
+        [self.userClassName setAttributedText:text];
+    }
+//      Could use this if you wanted to HIDE the change class button.
 //      self.changeClassButtonHeightConstraint.constant = 0.0f;
 //      self.changeClassButton.hidden = YES;
-    }
 }
 
 
@@ -1233,7 +1240,9 @@
 }
 
 - (void)reloadUser:(void (^)(BOOL result))callback {
+    MTMakeWeakSelf();
     [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+        weakSelf.userCurrent = [MTUser currentUser];
         callback(YES);
     } failure:^(NSError *error) {
         callback(NO);
