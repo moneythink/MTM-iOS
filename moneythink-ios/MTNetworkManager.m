@@ -4768,7 +4768,7 @@ static NSUInteger const pageSize = 10;
                 NSUInteger numPages = (NSUInteger)[[responseObject objectForKey:@"page_count"] integerValue];
                 NSUInteger totalItems = (NSUInteger)[[responseObject objectForKey:@"total_items"] integerValue];
                 BOOL lastPage = page >= numPages;
-                success(lastPage, numPages, totalItems);
+                success(lastPage, numPages || 1, totalItems);
             }
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             NSLog(@"%@: Failed with error: %@", resourcePath, [error mtErrorDescription]);

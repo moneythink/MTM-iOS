@@ -50,6 +50,7 @@ struct MTIncrementalLoadingResponse {
 
 - (BOOL)shouldConfigureRefreshController;
 - (BOOL)shouldConfigureLoadMoreControl;
+- (BOOL)shouldAutomaticallyLoadMore;
 - (NSUInteger)incrementallyLoadedSectionIndex;
 
 @end

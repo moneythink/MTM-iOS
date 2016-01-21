@@ -142,6 +142,15 @@ NSInteger totalItems = -1;
             weakSelf.currentPage++;
         }
         [weakSelf loadLocalResults];
+        
+        if ([weakSelf shouldAutomaticallyLoadMore]
+            && response.numPages > 1
+            && weakSelf.currentPage > 0
+            && weakSelf.currentPage <= response.numPages) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakSelf loadRemoteResultsForCurrentPage];
+            });
+        }
     });
 }
 
@@ -258,6 +267,10 @@ NSInteger totalItems = -1;
 
 - (BOOL)shouldConfigureLoadMoreControl {
     return YES;
+}
+
+- (BOOL)shouldAutomaticallyLoadMore {
+    return NO;
 }
 
 - (NSUInteger)incrementallyLoadedSectionIndex {

@@ -17,6 +17,7 @@
 @property BOOL isDeleted;
 
 + (void)markAllDeleted;
++ (void)markAllDeletedExcept:(RLMObject *)object;
 + (void)removeAllDeleted;
 
 @end

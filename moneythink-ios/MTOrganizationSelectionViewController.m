@@ -54,6 +54,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    [self loadRemoteResultsForCurrentPage];
+    
     [MTUtil GATrackScreen:@"Edit Profile: Select Organization"];
 }
 

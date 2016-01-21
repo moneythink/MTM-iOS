@@ -99,8 +99,6 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    // Scroll the table view to selected class
-    
     [self loadRemoteResultsForCurrentPage];
     
     [MTUtil GATrackScreen:@"Edit Profile: Select Class"];
@@ -129,7 +127,7 @@
     [self willLoadRemoteResultsForCurrentPage];
     
     MTMakeWeakSelf();
-    if (self.selectedOrganization.id != [MTUser currentUser].organization.id) {
+    if (self.selectedOrganization != nil && self.selectedOrganization.id != [MTUser currentUser].organization.id) {
         [[MTNetworkManager sharedMTNetworkManager] getClassesWithSignupCode:self.mentorCode organizationId:self.selectedOrganization.id page:self.currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
             [weakSelf loadLocalResults];
             [weakSelf didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
@@ -382,6 +380,14 @@
 #pragma mark - MTIncrementalLoading configuration
 - (BOOL)shouldConfigureRefreshController {
     return NO;
+}
+
+- (BOOL)shouldConfigureLoadMoreControl {
+    return NO;
+}
+
+- (BOOL)shouldAutomaticallyLoadMore {
+    return YES;
 }
 
 - (NSUInteger)incrementallyLoadedSectionIndex {
