@@ -136,8 +136,7 @@
                 [weakSelf handleError:error];
             });
         }];
-    }
-    else {       
+    } else {
         [[MTNetworkManager sharedMTNetworkManager] getClassesWithPage:self.currentPage success:^(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount) {
             [weakSelf loadLocalResults];
             [weakSelf didLoadRemoteResultsSuccessfullyWithLastPage:lastPage numPages:numPages totalCount:totalCount];
