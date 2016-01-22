@@ -44,6 +44,8 @@
         [sender setTitleColor:[UIColor primaryGreenDark] forState:UIControlStateDisabled];
         sender.enabled = NO;
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1 * NSEC_PER_SEC))), dispatch_get_main_queue(), ^{
+            [MTChallengePost markAllDeleted];
+            [MTChallengePost removeAllDeleted];
             [self performSegueWithIdentifier:@"dismiss" sender:self];
         });
     } failure:^(NSError *error) {
