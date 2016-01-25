@@ -10,6 +10,7 @@
 #import "MTExploreCollectionViewCell.h"
 #import "MTPostDetailViewController.h"
 #import "MTMyClassTableViewController.h"
+#import "DRPLoadingSpinner.h"
 
 #define kExplorePageSize 20
 
@@ -21,6 +22,7 @@
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
 @property (nonatomic) BOOL hasTertiaryButtons;
+@property (nonatomic, retain) DRPLoadingSpinner *spinner;
 
 @end
 
@@ -39,6 +41,14 @@ NSInteger numberOfPages = 0;
     isLoadingMore = false;
     currentPage = 0;
     numberOfPages = 0;
+    
+    // Spinner
+    self.spinner = [[DRPLoadingSpinner alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
+    self.spinner.center = CGPointMake([UIScreen mainScreen].bounds.size.width / 2,
+                                      [UIScreen mainScreen].bounds.size.height - 38);
+    self.spinner.rotationCycleDuration = 2;
+    self.spinner.minimumArcLength = M_PI / 4;
+    self.spinner.drawCycleDuration = 1;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -57,6 +67,8 @@ NSInteger numberOfPages = 0;
 {
     [super viewWillDisappear:animated];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self.spinner stopAnimating];
+    [self.spinner removeFromSuperview];
 }
 
 - (void)dealloc
@@ -99,10 +111,12 @@ NSInteger numberOfPages = 0;
             [weakSelf loadPostsFromDatabase];
             [weakSelf.collectionView reloadData];
             isLoadingMore = NO;
+            [self.spinner stopAnimating];
         });
     } failure:^(NSError *error) {
         [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:NO];
         isLoadingMore = NO;
+        [self.spinner stopAnimating];
         NSLog(@"Unable to load explore posts: %@", [error mtErrorDescription]);
     }];
 }
@@ -310,6 +324,13 @@ NSInteger numberOfPages = 0;
     if (isLoadingMore) return;
     
     if (indexPath.row == [collectionView numberOfItemsInSection:indexPath.section] - 1) {
+        if (self.spinner.superview == nil) {
+            [[UIApplication sharedApplication].keyWindow addSubview:self.spinner];
+        }
+        
+        if (self.isVisible) {
+            [self.spinner startAnimating];
+        }
         [self loadPosts];
     }
 }

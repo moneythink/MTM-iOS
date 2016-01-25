@@ -73,7 +73,9 @@
         if (!IsEmpty(self.results)) {
             NSIndexPath *selectedPath = [self resultIndexPath:self.selectedOrganization];
             if (selectedPath != nil) {
-                [self.tableView scrollToRowAtIndexPath:selectedPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.tableView scrollToRowAtIndexPath:selectedPath atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+                });
             }
         }
     }];
@@ -149,6 +151,10 @@
 #pragma mark - MTIncrementalLoading configuration
 - (BOOL)shouldConfigureRefreshController {
     return NO;
+}
+
+- (BOOL)shouldAutomaticallyLoadMore {
+    return YES;
 }
 
 #pragma mark - PRivate methods

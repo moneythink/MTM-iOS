@@ -23,6 +23,7 @@ PODS:
   - CCBottomRefreshControl (0.5.1):
     - Masonry (~> 0.6.2)
   - Crashlytics (3.3.4)
+  - DRPLoadingSpinner (0.0.1)
   - DZNEmptyDataSet (1.7.2)
   - Fabric (1.5.5):
     - Fabric/Base (= 1.5.5)
@@ -62,6 +63,7 @@ DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - CCBottomRefreshControl
   - Crashlytics
+  - DRPLoadingSpinner
   - DZNEmptyDataSet
   - Fabric
   - Google/Analytics (~> 1.0.0)
@@ -79,6 +81,7 @@ SPEC CHECKSUMS:
   AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   CCBottomRefreshControl: 57a596348855260f627ffc2b311328ed15b94877
   Crashlytics: 41c082440d2e14da444186fff65e79c0b4b35d4c
+  DRPLoadingSpinner: e4ae07d392543c8a4e211d284b5b9947baa85635
   DZNEmptyDataSet: 0ec00bfc230d7450997b60c127afdd0b9f24f3b6
   Fabric: 190bf1a6eb65f7500de1347d027d2e59a7e53db1
   Google: 875f5a8ade86dd02e36586e4a54814843938c7f6

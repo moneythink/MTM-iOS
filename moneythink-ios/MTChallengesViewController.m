@@ -267,6 +267,7 @@
         self.myFeedButton.selected = NO;
         self.exploreHighlightView.backgroundColor = [UIColor primaryGreen];
         self.myFeedHighlightView.backgroundColor = [UIColor challengeViewToggleHighlightNormal];
+        [self.exploreCollectionView setIsVisible:YES];
     }
     else {
         self.exploreCollectionView.collectionView.scrollsToTop = NO;
@@ -276,6 +277,7 @@
         self.exploreButton.selected = NO;
         self.myFeedHighlightView.backgroundColor = [UIColor primaryGreen];
         self.exploreHighlightView.backgroundColor = [UIColor challengeViewToggleHighlightNormal];
+        [self.exploreCollectionView setIsVisible:NO];
     }
 }
 

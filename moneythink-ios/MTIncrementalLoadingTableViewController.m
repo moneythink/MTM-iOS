@@ -137,9 +137,10 @@ NSInteger totalItems = -1;
             BOOL shouldAnimate = weakSelf.results.count > 0; // Refreshing existing feed?
             [weakSelf.refreshController stopRefreshWithAnimated:shouldAnimate completion:nil];
         }
-        NSLog(@"Loaded page %lu of %lu", (unsigned long)self.currentPage, (unsigned long)response.numPages);
         if (!response.lastPage && response.numPages > 0) {
+            NSLog(@"Loaded page %lu of %lu", (unsigned long)self.currentPage, (unsigned long)response.numPages);
             weakSelf.currentPage++;
+            NSLog(@"--> Moving to page %lu", (unsigned long)self.currentPage);
         }
         [weakSelf loadLocalResults];
         
@@ -148,7 +149,12 @@ NSInteger totalItems = -1;
             && weakSelf.currentPage > 0
             && weakSelf.currentPage <= response.numPages) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"--> Requesting page %lu of %lu", (unsigned long)weakSelf.currentPage, (unsigned long)response.numPages);
                 [weakSelf loadRemoteResultsForCurrentPage];
+                
+                if (weakSelf.currentPage == response.numPages) {
+                    weakSelf.currentPage++;
+                }
             });
         }
     });
@@ -167,7 +173,9 @@ NSInteger totalItems = -1;
 - (void)didLoadLocalResults:(RLMResults *)results withCallback:(MTSuccessBlock)callback {
     MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
+        NSUInteger oldResultsCount = [weakSelf.tableView numberOfRowsInSection:0];
         weakSelf.results = results;
+        NSUInteger newResultsCount = results.count;
         
         if (weakSelf.results == nil) {
             NSLog(@"MTIncrementalLoadingController: You must define self.results before calling didLoadLocalResults:withCallback:.");
@@ -188,7 +196,34 @@ NSInteger totalItems = -1;
             if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(willReloadResults)]) {
                 [weakSelf.incrementalLoadingControllerDelegate willReloadResults];
             }
-            [weakSelf.tableView reloadData];
+            
+            // Compute changes
+            NSMutableArray *indexPathsToAdd = [NSMutableArray array];
+            NSMutableArray *indexPathsToRemove = [NSMutableArray array];
+            NSLog(@"new results: %d, old results: %d", newResultsCount, oldResultsCount);
+            
+            if (newResultsCount > oldResultsCount) {
+                for (NSUInteger i = oldResultsCount; i < newResultsCount; i++) {
+                    [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                }
+            } else if (oldResultsCount > newResultsCount) {
+                for (NSUInteger i = newResultsCount; i > oldResultsCount; i--) {
+                    [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                }
+            }
+            
+            if (indexPathsToAdd.count > 0) {
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.tableView insertRowsAtIndexPaths:[indexPathsToAdd copy] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView endUpdates];
+            } else if (indexPathsToRemove.count > 0){
+                [weakSelf.tableView beginUpdates];
+                [weakSelf.tableView deleteRowsAtIndexPaths:[indexPathsToRemove copy] withRowAnimation:UITableViewRowAnimationNone];
+                [weakSelf.tableView endUpdates];
+            } else {
+                [weakSelf.tableView reloadData];
+            }
+            
             if ([weakSelf.incrementalLoadingControllerDelegate respondsToSelector:@selector(didReloadResults)]) {
                 [weakSelf.incrementalLoadingControllerDelegate didReloadResults];
             }
@@ -242,7 +277,7 @@ NSInteger totalItems = -1;
     UIRefreshControl *loadMoreControl = [UIRefreshControl new];
     [loadMoreControl addTarget:self action:@selector(handlePullToLoadMore) forControlEvents:UIControlEventValueChanged];
     loadMoreControl.tintColor = [UIColor primaryOrange];
-    loadMoreControl.attributedTitle = [[NSAttributedString alloc] initWithString:@""];
+    loadMoreControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Pull to load more..."];
     self.tableView.bottomRefreshControl = loadMoreControl;
     self.loadMoreControl = loadMoreControl;
 }

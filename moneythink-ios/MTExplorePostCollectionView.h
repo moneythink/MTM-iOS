@@ -11,5 +11,6 @@
 @interface MTExplorePostCollectionView : UICollectionViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (strong, nonatomic) MTChallenge *challenge;
+@property (assign) BOOL isVisible;
 
 @end
