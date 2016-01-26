@@ -495,7 +495,8 @@
     MTMakeWeakSelf();
     [self save:^(BOOL success) {
         if (success) {
-            [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
+//            [self.tableView reloadRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationNone];
+            [self.tableView reloadData];
             
             // Select the row to confirm the save and give them a sense of finality.
             if (currentCheckedIndexPath != nil) {

@@ -2636,19 +2636,21 @@ typedef enum {
 
 - (void)willSaveEditPostComment:(NSNotification *)notif
 {
+    MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingEdit = YES;
-        [self loadCommentsOnlyDatabase:YES];
-        [self updateViewForEditedPost];
+        weakSelf.savingEdit = YES;
+        [weakSelf loadCommentsOnlyDatabase:YES];
+        [weakSelf updateViewForEditedPost];
     });
 }
 
 - (void)commentEditFailed
 {
+    MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
-        self.savingEdit = NO;
-        [self loadCommentsOnlyDatabase:YES];
-        [self updateViewForEditedPost];
+        weakSelf.savingEdit = NO;
+        [weakSelf loadCommentsOnlyDatabase:YES];
+        [weakSelf updateViewForEditedPost];
     });
 }
 

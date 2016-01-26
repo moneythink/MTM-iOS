@@ -179,6 +179,7 @@ NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotificat
                 if (IsEmpty(self.results)) {
                     [self loadRemoteResultsForCurrentPage];
                 }
+                [self.tableView reloadData];
             }];
         }
     }
