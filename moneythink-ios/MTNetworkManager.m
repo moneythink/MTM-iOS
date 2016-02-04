@@ -4789,4 +4789,45 @@ static NSUInteger const pageSize = 10;
     }];
 }
 
+#pragma mark - Layer SDK
+- (void)requestLayerSDKIdentityTokenForCurrentUserWithAppID:(NSString *)appID nonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion
+{
+    
+    NSParameterAssert(appID);
+    NSParameterAssert(nonce);
+    NSParameterAssert(completion);
+    
+    MTMakeWeakSelf();
+    NSString *urlString = @"user/direct-messaging-identity-token";
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        NSDictionary *parameters = @{
+             @"nonce" : nonce
+        };
+        
+        [weakSelf.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        
+        [weakSelf GET:urlString parameters:parameters success:^(NSURLSessionDataTask *task, id responseObject) {
+            NSLog(@"%@: success response", urlString);
+            if ([self requestShouldDie]) return;
+            
+            NSString *identityToken = responseObject[@"identity_token"];
+            if (!IsEmpty(identityToken)) {
+                completion(identityToken, nil);
+            } else {
+                completion(nil, [NSError errorWithDomain:@"Layer" code:500 userInfo:nil]);
+            }
+            
+        } failure:^(NSURLSessionDataTask *task, NSError *error) {
+            NSLog(@"%@: Failed with error: %@", urlString, [error mtErrorDescription]);
+            if ([self requestShouldDie]) return;
+            
+            completion(nil, [NSError errorWithDomain:@"Layer" code:500 userInfo:nil]);
+        }];
+    }
+    failure:^(NSError *error) {
+        NSLog(@"%@: Failed with error: %@", urlString, [error mtErrorDescription]);
+        completion(nil, error);
+    }];
+}
+
 @end
