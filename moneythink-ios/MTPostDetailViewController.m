@@ -2520,7 +2520,9 @@ typedef enum {
     if (indexPath.section == MTPostTableCellTypeLikeUsers) {
         MTChallengePostLike *like = self.likes[indexPath.row];
         MTUser *likeUser = like.user;
-        [self performSegueWithIdentifier:@"postDetailStudentProfileView" sender:likeUser];
+        if (![MTUser isUserMe:likeUser]) {
+            [self performSegueWithIdentifier:@"postDetailStudentProfileView" sender:likeUser];
+        }
     }
     else if (indexPath.section == MTPostTableCellTypePostComments) {
         MTPostCommentItemsTableViewCell *cell = (MTPostCommentItemsTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];

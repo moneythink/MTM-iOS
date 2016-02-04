@@ -10,6 +10,7 @@
 
 #import "MTStudentProfileTableViewCell.h"
 
+#import "MTPostDetailViewController.h"
 #define kHeightBase 120.f
 #define kHeightPictureAndPadding 300.f
 
@@ -211,6 +212,15 @@
     } else {
         return kHeightBase;
     }
+}
+
+#pragma mark - Delegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    MTChallengePost *post = [self.results objectAtIndex:indexPath.row];
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"Main_iPhone" bundle:nil] instantiateViewControllerWithIdentifier:@"challengePost"];
+    MTPostDetailViewController *postDetailViewController = (MTPostDetailViewController*)vc;
+    postDetailViewController.challengePostId = post.id;
+    [self.navigationController pushViewController:postDetailViewController animated:YES];
 }
 
 @end
