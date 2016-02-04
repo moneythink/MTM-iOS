@@ -23,6 +23,8 @@
 
 @property (nonatomic, strong) NSIndexPath *currentlySelectedIndexPath;
 
+- (BOOL)conversationsEnabled;
+
 @end
 
 @implementation MTMenuViewController
@@ -136,7 +138,7 @@
     switch (section) {
         case 0:
         {
-            return 5;
+            return [self conversationsEnabled] ? 6 : 5;
             break;
         }
           
@@ -178,22 +180,27 @@
         {
             switch (row) {
                 case 0:
-                    CellIdentifier = @"Challenges";
+                    CellIdentifier = @"Notifications";
                     break;
                   
                 case 1:
-                    CellIdentifier = @"Leaderboard";
+                    CellIdentifier = @"Challenges";
                     break;
 
                 case 2:
-                    CellIdentifier = @"Notifications";
+                    CellIdentifier = @"Leaderboard";
                     break;
 
                 case 3:
-                    CellIdentifier = @"Edit Profile";
+                    CellIdentifier = [self conversationsEnabled] ? @"Conversations" : @"Edit Profile";
                     break;
 
                 case 4:
+                    CellIdentifier = [self conversationsEnabled] ? @"Edit Profile" : @"Talk to Moneythink";
+                    break;
+                    
+                case 5:
+                    // Only if conversations enabled
                     CellIdentifier = @"Talk to Moneythink";
                     break;
 
@@ -429,5 +436,11 @@
     self.profileName.text = [MTUser currentUser].firstName;
 }
 
+- (BOOL)conversationsEnabled {
+    MTUser *currentUser = [MTUser currentUser];
+    if (currentUser == nil || currentUser.organization == nil) return NO;
+    
+    return currentUser.organization.subscriptionIncludesDirectMessaging;
+}
 
 @end

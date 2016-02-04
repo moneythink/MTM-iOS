@@ -2099,7 +2099,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="6B5B725E-078F-4725-A561-F03DF69FAEDB" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EF81FC34-6164-4CA5-89EE-42277071CAC4" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="esJ-hw-DJW"/>
@@ -2188,54 +2188,8 @@
                                 <rect key="frame" x="0.0" y="74" width="320" height="346"/>
                                 <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Challenges" id="l6i-oa-4UE" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l6i-oa-4UE" id="2KW-mY-hhV">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-challenges.png" translatesAutoresizingMaskIntoConstraints="NO" id="Oyh-dx-tR7">
-                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenges" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53e-8i-4dt">
-                                                    <rect key="frame" x="55" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <segue destination="AcO-mI-oxr" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="BTw-kc-jSv"/>
-                                        </connections>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Leaderboard" id="cQ7-gb-hkw" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cQ7-gb-hkw" id="P0h-I9-tPv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-leaderboard.png" translatesAutoresizingMaskIntoConstraints="NO" id="C2i-Y1-hVs">
-                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leaderboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yal-6m-7Yt">
-                                                    <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
-                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
-                                        <connections>
-                                            <segue destination="W1e-NZ-6tK" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="Rp3-jZ-NGW"/>
-                                        </connections>
-                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Notifications" id="D4c-BR-nhK" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="110" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D4c-BR-nhK" id="hfI-BP-idy">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2246,7 +2200,7 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Notifications" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6z3-K6-UTG">
                                                     <rect key="frame" x="52" y="0.0" width="120" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -2271,8 +2225,77 @@
                                             <segue destination="sjw-tE-ynH" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="XS6-KU-wsU"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Edit Profile" id="0tX-Vq-uWv" customClass="MTMenuTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Challenges" id="l6i-oa-4UE" customClass="MTMenuTableViewCell">
+                                        <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="l6i-oa-4UE" id="2KW-mY-hhV">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-challenges.png" translatesAutoresizingMaskIntoConstraints="NO" id="Oyh-dx-tR7">
+                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Challenges" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="53e-8i-4dt">
+                                                    <rect key="frame" x="52" y="0.0" width="150" height="44"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <segue destination="AcO-mI-oxr" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="BTw-kc-jSv"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Leaderboard" id="cQ7-gb-hkw" customClass="MTMenuTableViewCell">
+                                        <rect key="frame" x="0.0" y="110" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="cQ7-gb-hkw" id="P0h-I9-tPv">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-leaderboard.png" translatesAutoresizingMaskIntoConstraints="NO" id="C2i-Y1-hVs">
+                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Leaderboard" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Yal-6m-7Yt">
+                                                    <rect key="frame" x="52" y="0.0" width="150" height="44"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <segue destination="W1e-NZ-6tK" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="Rp3-jZ-NGW"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Conversations" id="6IS-Ve-tdm" userLabel="Conversations" customClass="MTMenuTableViewCell">
                                         <rect key="frame" x="0.0" y="154" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6IS-Ve-tdm" id="jBh-41-KZR">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-support.png" translatesAutoresizingMaskIntoConstraints="NO" id="NK8-DM-2nb">
+                                                    <rect key="frame" x="15" y="6" width="32" height="32"/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Conversations" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PAD-XA-mdR">
+                                                    <rect key="frame" x="52" y="0.0" width="150" height="44"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" red="0.13725490200000001" green="0.63137254899999995" blue="0.4549019608" alpha="1" colorSpace="calibratedRGB"/>
+                                        <connections>
+                                            <segue destination="1xs-zr-Iah" kind="custom" customClass="SWRevealViewControllerSeguePushController" id="qJW-ou-N7U"/>
+                                        </connections>
+                                    </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Edit Profile" id="0tX-Vq-uWv" customClass="MTMenuTableViewCell">
+                                        <rect key="frame" x="0.0" y="198" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="0tX-Vq-uWv" id="gPz-89-Xnn">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2283,7 +2306,7 @@
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Edit Profile" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dGY-3w-mwS">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -2295,18 +2318,18 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Talk to Moneythink" id="reX-vB-np7" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="198" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="242" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="reX-vB-np7" id="W5L-NO-9on">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-support.png" translatesAutoresizingMaskIntoConstraints="NO" id="7vq-o1-EWh">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="nav-icons-help.png" translatesAutoresizingMaskIntoConstraints="NO" id="7vq-o1-EWh">
                                                     <rect key="frame" x="15" y="6" width="32" height="32"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Talk to Moneythink" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zxf-dE-Jlg">
                                                     <rect key="frame" x="52" y="0.0" width="150" height="44"/>
-                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Medium" family="Helvetica Neue" pointSize="16"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -2318,7 +2341,7 @@
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Signup" id="rbI-tu-uBI" customClass="MTMenuTableViewCell">
-                                        <rect key="frame" x="0.0" y="242" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="286" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rbI-tu-uBI" id="cdV-Sr-Yzj">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -2438,6 +2461,35 @@
             </objects>
             <point key="canvasLocation" x="-4820" y="-1715"/>
         </scene>
+        <!--Conversations-->
+        <scene sceneID="WUW-em-iBc">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5yR-MO-UXp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tableViewController storyboardIdentifier="conversationsVC" title="Conversations" id="zIx-dA-bnj" customClass="MTConversationsViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="pgI-4u-ACX">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="aWF-lG-DMB">
+                                <rect key="frame" x="0.0" y="92" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aWF-lG-DMB" id="FtY-qc-MYc">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="zIx-dA-bnj" id="CnF-DA-msH"/>
+                            <outlet property="delegate" destination="zIx-dA-bnj" id="HiQ-LU-X2q"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Conversations" id="QBf-4R-LRF"/>
+                </tableViewController>
+            </objects>
+            <point key="canvasLocation" x="-3457" y="-3649"/>
+        </scene>
         <!--Edit Profile Navigation-->
         <scene sceneID="A7c-8k-ECE">
             <objects>
@@ -2461,7 +2513,7 @@
                 <pageViewController storyboardIdentifier="myClassChallengePostsPageViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="bma-YJ-mU1" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="flE-gx-sz9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1635" y="-3814"/>
+            <point key="canvasLocation" x="-1103" y="-3814"/>
         </scene>
         <!--Mentor Student Profile Table View Controller-->
         <scene sceneID="v4l-3h-ZYT">
@@ -3566,7 +3618,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pNX-12-nHD" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-441" y="-3833"/>
+            <point key="canvasLocation" x="91" y="-3833"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="yvh-Ke-GNI">
@@ -5351,7 +5403,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MuE-w4-X9T" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3165" y="-3638"/>
+            <point key="canvasLocation" x="-2633" y="-3638"/>
         </scene>
         <!--Mentor Sign Up-->
         <scene sceneID="i6e-B5-lOU">
@@ -5934,7 +5986,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PtW-0y-EHg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2593" y="-3638"/>
+            <point key="canvasLocation" x="-2061" y="-3638"/>
         </scene>
         <!--Emoji Collection-->
         <scene sceneID="vJD-Cy-GnB">
@@ -6081,7 +6133,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="Kxf-3L-v4r"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="6418B2B4-0470-48DC-A258-4D6C77D0E204" translatesAutoresizingMaskIntoConstraints="NO" id="vVz-4C-6iT" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="FC5F8DAB-D1EE-42D7-9E2A-5BAA600086A4" translatesAutoresizingMaskIntoConstraints="NO" id="vVz-4C-6iT" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="V1c-rB-hFg"/>
@@ -6119,9 +6171,27 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
             </objects>
             <point key="canvasLocation" x="-2119" y="-6768"/>
         </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="y8i-KU-J9b">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="1xs-zr-Iah" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="vde-9I-hgQ">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="zIx-dA-bnj" kind="relationship" relationship="rootViewController" id="ZBu-vs-6e3"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HWh-UU-suV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3866" y="-3649"/>
+        </scene>
     </scenes>
     <resources>
-        <image name="6418B2B4-0470-48DC-A258-4D6C77D0E204" width="90" height="90">
+        <image name="EF81FC34-6164-4CA5-89EE-42277071CAC4" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -6670,7 +6740,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgEAAAMAAAABAFoAAAEBAAMAAAABAFoAAAEC
 AAMAAAAEAAB/RgEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAESAAMAAAABAAEAAAEV
 AAMAAAABAAQAAAEWAAMAAAABAFoAAAEXAAQAAAABAAB+kAEcAAMAAAABAAEAAAFSAAMAAAABAAIAAAFT
 AAMAAAAEAAB/TodzAAcAAAxIAAB/VgAAAAAACAAIAAgACAABAAEAAQABAAAMSExpbm8CEAAAbW50clJH
-QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAAAAPbWAAEAAAAA
+QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAEAAPbWAAEAAAAA
 0y1IUCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARY3BydAAA
 AVAAAAAzZGVzYwAAAYQAAABsd3RwdAAAAfAAAAAUYmtwdAAAAgQAAAAUclhZWgAAAhgAAAAUZ1hZWgAA
 AiwAAAAUYlhZWgAAAkAAAAAUZG1uZAAAAlQAAABwZG1kZAAAAsQAAACIdnVlZAAAA0wAAACGdmlldwAA
@@ -6731,7 +6801,7 @@ w4zSjNaM3YzljPKM94z5jPuNAI0IjQuNEI0YjRuNLY0wjTUAAAAAAAACAQAAAAAAAAA+AAAAAAAAAAAA
 AAAAAACNNw
 </mutableData>
         </image>
-        <image name="6B5B725E-078F-4725-A561-F03DF69FAEDB" width="90" height="90">
+        <image name="FC5F8DAB-D1EE-42D7-9E2A-5BAA600086A4" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -7280,7 +7350,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgEAAAMAAAABAFoAAAEBAAMAAAABAFoAAAEC
 AAMAAAAEAAB/RgEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAESAAMAAAABAAEAAAEV
 AAMAAAABAAQAAAEWAAMAAAABAFoAAAEXAAQAAAABAAB+kAEcAAMAAAABAAEAAAFSAAMAAAABAAIAAAFT
 AAMAAAAEAAB/TodzAAcAAAxIAAB/VgAAAAAACAAIAAgACAABAAEAAQABAAAMSExpbm8CEAAAbW50clJH
-QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAAAAPbWAAEAAAAA
+QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAEAAPbWAAEAAAAA
 0y1IUCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARY3BydAAA
 AVAAAAAzZGVzYwAAAYQAAABsd3RwdAAAAfAAAAAUYmtwdAAAAgQAAAAUclhZWgAAAhgAAAAUZ1hZWgAA
 AiwAAAAUYlhZWgAAAkAAAAAUZG1uZAAAAlQAAABwZG1kZAAAAsQAAACIdnVlZAAAA0wAAACGdmlldwAA
@@ -7356,10 +7426,11 @@ AAAAAACNNw
         <image name="nav-icons-arrow-backwards.png" width="16" height="30"/>
         <image name="nav-icons-challenges.png" width="32" height="32"/>
         <image name="nav-icons-editprofile.png" width="32" height="32"/>
+        <image name="nav-icons-help.png" width="32" height="32"/>
         <image name="nav-icons-leaderboard.png" width="32" height="32"/>
         <image name="nav-icons-notifications.png" width="32" height="32"/>
         <image name="nav-icons-signup.png" width="32" height="32"/>
-        <image name="nav-icons-support.png" width="32" height="42"/>
+        <image name="nav-icons-support.png" width="32" height="32"/>
         <image name="notifications_active.png" width="25" height="25"/>
         <image name="photo_post.png" width="71" height="71"/>
         <image name="picker.png" width="36" height="24"/>
