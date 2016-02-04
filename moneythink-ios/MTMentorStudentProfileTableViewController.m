@@ -35,13 +35,14 @@
 #pragma mark - Superclass methods
 // @Override
 - (void)loadLocalResults:(MTSuccessBlock)callback {
+    MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([MTUser currentUser] == nil) return;
         
         NSArray *sorts = @[
                            [RLMSortDescriptor sortDescriptorWithProperty:@"createdAt" ascending:NO],
                            ];
-        RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND challenge != NULL AND isCrossPost = NO", self.studentUser.id] sortedResultsUsingDescriptors:sorts];
+        RLMResults *newResults = [[MTChallengePost objectsWhere:@"isDeleted = NO AND user.id = %lu AND challenge != NULL AND isCrossPost = NO", weakSelf.studentUser.id] sortedResultsUsingDescriptors:sorts];
         
         [self didLoadLocalResults:newResults withCallback:callback];
     });

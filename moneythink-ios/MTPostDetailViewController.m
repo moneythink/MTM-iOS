@@ -88,7 +88,7 @@ typedef enum {
 {
     [super viewWillAppear:animated];
     
-    self.title = @"Post Detail";
+    self.title = [NSString stringWithFormat:@"%@ Post", self.challengePost.challenge.title];
     
     if (IsEmpty(self.emojiObjects)) {
         [self loadEmoji];
@@ -2526,6 +2526,8 @@ typedef enum {
         MTPostCommentItemsTableViewCell *cell = (MTPostCommentItemsTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
         if ([MTUser isUserMe:cell.comment.user]) {
             [self editDeleteCommentTapped:cell];
+        } else {
+            [self performSegueWithIdentifier:@"postDetailStudentProfileView" sender:cell.comment.user];
         }
     }
 }
