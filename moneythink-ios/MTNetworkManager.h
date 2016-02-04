@@ -135,4 +135,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)setBankValue:(BOOL)bankValue forUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)setResumeValue:(BOOL)bankValue forUserId:(NSInteger)userId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
+// Layer SDK
+- (void)requestLayerSDKIdentityTokenForCurrentUserWithAppID:(NSString *)appID nonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion;
+
 @end

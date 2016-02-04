@@ -16,7 +16,9 @@
     return @{@"name" : @"",
              @"mentorSignupCode": @"",
              @"isActive": @YES,
-             @"isDeleted": @NO};
+             @"isDeleted": @NO,
+             @"subscriptionIncludesDirectMessaging": @NO
+             };
 }
 
 // Specify properties to ignore (Realm won't persist these)
@@ -37,6 +39,7 @@
              @"id": @"id",
              @"name": @"name",
              @"mentorSignupCode": @"mentorSignupCode",
+             @"subscriptionIncludesDirectMessaging" : @"subscriptionIncludesDirectMessaging"
              };
 }
 
@@ -45,6 +48,7 @@
              @"id": @"id",
              @"name": @"name",
              @"mentorSignupCode": @"mentorSignupCode",
+             @"subscriptionIncludesDirectMessaging": @"subscriptionIncludesDirectMessaging"
              };
 }
 

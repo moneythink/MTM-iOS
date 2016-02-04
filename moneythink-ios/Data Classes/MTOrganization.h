@@ -15,6 +15,7 @@
 @property NSString *mentorSignupCode;
 @property BOOL isActive;
 @property BOOL isDeleted;
+@property BOOL subscriptionIncludesDirectMessaging;
 
 + (void)markAllDeleted;
 + (void)markAllDeletedExcept:(RLMObject *)object;

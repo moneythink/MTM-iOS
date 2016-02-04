@@ -44,6 +44,7 @@ PODS:
   - IQKeyboardManager (3.3.4)
   - JGActionSheet (1.0.5)
   - JYRefreshController (0.3.5)
+  - LayerKit (0.16.0)
   - Masonry (0.6.3)
   - MBProgressHUD (0.9.1)
   - OCMock (3.2)
@@ -70,6 +71,7 @@ DEPENDENCIES:
   - IQKeyboardManager
   - JGActionSheet
   - JYRefreshController
+  - LayerKit
   - MBProgressHUD
   - OCMock
   - Reachability
@@ -92,6 +94,7 @@ SPEC CHECKSUMS:
   IQKeyboardManager: ac803e61e5b50efae6b3aeedd95a02c7c7d3b2b3
   JGActionSheet: 2cfca820b57a11ec4b4a5655d45ee599fbeddc05
   JYRefreshController: ba88a036d6ef35ecc6e5cd81ae912b4bf8f77a05
+  LayerKit: 8976a2a4d5f73b808e6328a5c66732605a3c247a
   Masonry: ff105a956abcd19a618b2028b121cb638d7a8e2f
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   OCMock: 28def049ef47f996b515a8eeea958be7ccab2dbb

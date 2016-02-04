@@ -17,6 +17,7 @@ target 'moneythink-ios' do
   pod "IQKeyboardManager"
   pod "CCBottomRefreshControl"
   pod "DRPLoadingSpinner"
+  pod "LayerKit"
 end
 
 target 'moneythink-iosTests' do
