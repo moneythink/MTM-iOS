@@ -808,7 +808,7 @@
                                         <rect key="frame" x="0.0" y="60" width="320" height="90"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zfh-h6-o4J" id="FMb-oB-P0Y">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="89.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SbZ-Ur-fjK" userLabel="User View">
@@ -878,7 +878,7 @@
                                         <rect key="frame" x="0.0" y="150" width="320" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uq6-kY-xOe" id="eg7-eF-1pd">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="6oh-VM-HjM">
@@ -1777,7 +1777,7 @@
                                 <rect key="frame" x="0.0" y="92" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="75y-1r-bXR" id="bMl-iE-Vad">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2099,7 +2099,7 @@
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="AX1-gS-w5P"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="6CDFA5CF-2BF6-412A-8F6E-8A3405C8AC33" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="9287216B-F9B4-40A0-AD73-AA40DC07F0A5" translatesAutoresizingMaskIntoConstraints="NO" id="Hma-82-hoP" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="esJ-hw-DJW"/>
@@ -2474,7 +2474,7 @@
                                 <rect key="frame" x="0.0" y="92" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aWF-lG-DMB" id="FtY-qc-MYc">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -2528,7 +2528,7 @@
                                 <rect key="frame" x="0.0" y="28" width="320" height="434"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mxf-OF-CNF" id="c7y-nf-chN">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="434"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="433.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="ago" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4px-Qa-43u">
@@ -2652,7 +2652,7 @@
                                 <rect key="frame" x="0.0" y="462" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="FBr-J7-Cdc" id="qGH-aN-f6J">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -5269,10 +5269,10 @@
                                 <color key="separatorColor" red="0.74509803919999995" green="0.74509803919999995" blue="0.74509803919999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="defaultCell" id="3Vc-WG-Spa">
-                                        <rect key="frame" x="0.0" y="114" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="113.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Vc-WG-Spa" id="ilF-XN-Q1m">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
@@ -5339,7 +5339,7 @@
                                         <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="nLl-fy-eAY" id="WvJ-6g-SFu">
-                                            <rect key="frame" x="0.0" y="0.0" width="287" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UEH-eE-HNd">
@@ -5928,7 +5928,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                 <rect key="frame" x="0.0" y="86" width="320" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="sew-EW-JOh" id="5Du-O6-Oc3">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_image.png" translatesAutoresizingMaskIntoConstraints="NO" id="jvE-UW-75V" userLabel="Avatar Image View">
@@ -6137,7 +6137,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
                                     <segue destination="K1i-VE-ace" kind="embed" identifier="tableViewController" id="Kxf-3L-v4r"/>
                                 </connections>
                             </containerView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="EA1756AC-35D7-4E02-BEB1-10AF936C9409" translatesAutoresizingMaskIntoConstraints="NO" id="vVz-4C-6iT" userLabel="Avatar Image">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="855BBA23-3824-4C8E-9AF7-DCF5B8B63585" translatesAutoresizingMaskIntoConstraints="NO" id="vVz-4C-6iT" userLabel="Avatar Image">
                                 <rect key="frame" x="115" y="10" width="90" height="90"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="90" id="V1c-rB-hFg"/>
@@ -6195,7 +6195,7 @@ Volunteer understands that the scope of Volunteer’s relationship with Moneythi
         </scene>
     </scenes>
     <resources>
-        <image name="6CDFA5CF-2BF6-412A-8F6E-8A3405C8AC33" width="90" height="90">
+        <image name="855BBA23-3824-4C8E-9AF7-DCF5B8B63585" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -6805,7 +6805,7 @@ w4zSjNaM3YzljPKM94z5jPuNAI0IjQuNEI0YjRuNLY0wjTUAAAAAAAACAQAAAAAAAAA+AAAAAAAAAAAA
 AAAAAACNNw
 </mutableData>
         </image>
-        <image name="EA1756AC-35D7-4E02-BEB1-10AF936C9409" width="90" height="90">
+        <image name="9287216B-F9B4-40A0-AD73-AA40DC07F0A5" width="90" height="90">
             <mutableData key="keyedArchiveRepresentation">
 YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3ASAAGGoK0HCBEW
 GxwgISgrLjQ3VSRudWxs1AkKCwwNDg8QViRjbGFzc1xOU0ltYWdlRmxhZ3NWTlNSZXBzV05TQ29sb3KA
@@ -7354,7 +7354,7 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgEAAAMAAAABAFoAAAEBAAMAAAABAFoAAAEC
 AAMAAAAEAAB/RgEDAAMAAAABAAEAAAEGAAMAAAABAAIAAAERAAQAAAABAAAACAESAAMAAAABAAEAAAEV
 AAMAAAABAAQAAAEWAAMAAAABAFoAAAEXAAQAAAABAAB+kAEcAAMAAAABAAEAAAFSAAMAAAABAAIAAAFT
 AAMAAAAEAAB/TodzAAcAAAxIAAB/VgAAAAAACAAIAAgACAABAAEAAQABAAAMSExpbm8CEAAAbW50clJH
-QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAAAAPbWAAEAAAAA
+QiBYWVogB84AAgAJAAYAMQAAYWNzcE1TRlQAAAAASUVDIHNSR0IAAAAAAAAAAAAAAAEAAPbWAAEAAAAA
 0y1IUCAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARY3BydAAA
 AVAAAAAzZGVzYwAAAYQAAABsd3RwdAAAAfAAAAAUYmtwdAAAAgQAAAAUclhZWgAAAhgAAAAUZ1hZWgAA
 AiwAAAAUYlhZWgAAAkAAAAAUZG1uZAAAAlQAAABwZG1kZAAAAsQAAACIdnVlZAAAA0wAAACGdmlldwAA
