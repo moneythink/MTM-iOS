@@ -46,6 +46,8 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)((1 * NSEC_PER_SEC))), dispatch_get_main_queue(), ^{
             [MTChallengePost markAllDeleted];
             [MTChallengePost removeAllDeleted];
+            // Class was changed, so clear explore posts
+            [MTExplorePost deleteAll];
             [self performSegueWithIdentifier:@"dismiss" sender:self];
         });
     } failure:^(NSError *error) {
