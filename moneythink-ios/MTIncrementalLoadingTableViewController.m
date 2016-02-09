@@ -173,7 +173,7 @@ NSInteger totalItems = -1;
 - (void)didLoadLocalResults:(RLMResults *)results withCallback:(MTSuccessBlock)callback {
     MTMakeWeakSelf();
     dispatch_async(dispatch_get_main_queue(), ^{
-        NSUInteger oldResultsCount = [weakSelf.tableView numberOfRowsInSection:0];
+        NSUInteger oldResultsCount = [weakSelf.tableView numberOfRowsInSection:[self incrementallyLoadedSectionIndex]];
         weakSelf.results = results;
         NSUInteger newResultsCount = results.count;
         
@@ -200,24 +200,44 @@ NSInteger totalItems = -1;
             // Compute changes
             NSMutableArray *indexPathsToAdd = [NSMutableArray array];
             NSMutableArray *indexPathsToRemove = [NSMutableArray array];
-            NSLog(@"new results: %d, old results: %d", newResultsCount, oldResultsCount);
+            NSLog(@"new results: %lu, old results: %lu", (unsigned long)newResultsCount, (unsigned long)oldResultsCount);
             
             if (newResultsCount > oldResultsCount) {
                 for (NSUInteger i = oldResultsCount; i < newResultsCount; i++) {
-                    [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                    [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:[self incrementallyLoadedSectionIndex]]];
                 }
             } else if (oldResultsCount > newResultsCount) {
                 for (NSUInteger i = newResultsCount; i > oldResultsCount; i--) {
-                    [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                    [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:[self incrementallyLoadedSectionIndex]]];
+                }
+            }
+            
+            // Check to see if other sections also changed their values
+            for (int sectionIndex = 0; sectionIndex < [weakSelf numberOfSectionsInTableView:weakSelf.tableView]; sectionIndex++) {
+                if (sectionIndex == [self incrementallyLoadedSectionIndex]) continue;
+                
+                long oldCount = [weakSelf.tableView numberOfRowsInSection:sectionIndex];
+                long newCount = [weakSelf tableView:weakSelf.tableView numberOfRowsInSection:sectionIndex];
+                
+                if (newCount > oldCount) {
+                    for (NSUInteger i = oldCount; i < newCount; i++) {
+                        [indexPathsToAdd addObject:[NSIndexPath indexPathForRow:i inSection:sectionIndex]];
+                    }
+                } else if (oldResultsCount > newCount) {
+                    for (NSUInteger i = newCount; i > oldCount; i--) {
+                        [indexPathsToRemove addObject:[NSIndexPath indexPathForRow:i inSection:sectionIndex]];
+                    }
                 }
             }
             
             if (indexPathsToAdd.count > 0) {
                 [weakSelf.tableView beginUpdates];
+                NSLog(@"Inserting %lu rows", (unsigned long)indexPathsToAdd.count);
                 [weakSelf.tableView insertRowsAtIndexPaths:[indexPathsToAdd copy] withRowAnimation:UITableViewRowAnimationNone];
                 [weakSelf.tableView endUpdates];
             } else if (indexPathsToRemove.count > 0){
                 [weakSelf.tableView beginUpdates];
+                NSLog(@"Inserting %lu rows", (unsigned long)indexPathsToAdd.count);                
                 [weakSelf.tableView deleteRowsAtIndexPaths:[indexPathsToRemove copy] withRowAnimation:UITableViewRowAnimationNone];
                 [weakSelf.tableView endUpdates];
             } else {
