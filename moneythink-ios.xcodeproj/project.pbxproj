@@ -752,15 +752,6 @@
 			name = Conversations;
 			sourceTree = "<group>";
 		};
-		3BB26D5D1C64162E00136BCA /* Conversations */ = {
-			isa = PBXGroup;
-			children = (
-				3BB26D5E1C64163F00136BCA /* MTConversationsViewController.h */,
-				3BB26D5F1C64163F00136BCA /* MTConversationsViewController.m */,
-			);
-			name = Conversations;
-			sourceTree = "<group>";
-		};
 		3BC174621C2BB0CC008F5009 /* Models */ = {
 			isa = PBXGroup;
 			children = (
