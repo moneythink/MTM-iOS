@@ -774,7 +774,7 @@ static NSUInteger const pageSize = 10;
     [realm commitWriteTransaction];
 }
 
-- (void)processPostWithResponseObject:(id)responseObject
+- (void)processPostWithResponseObject:(id)responseObject optionalThumbnailImage:(MTOptionalImage *)optionalImage
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No posts response data");
@@ -2917,7 +2917,11 @@ static NSUInteger const pageSize = 10;
     [self loadPaginatedResource:@"posts" processSelector:@selector(processPostsWithResponseObject:extraParams:) page:page extraParams:extraParams success:success failure:failure];
 }
 
-- (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+- (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    [self loadPostId:postId success:success failure:failure];
+}
+
+- (void)loadPostId:(NSInteger)postId optionalThumbnailImage:(MTOptionalImage *)optionalImage success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
@@ -2933,7 +2937,7 @@ static NSUInteger const pageSize = 10;
             if ([self requestShouldDie]) return;
             
             if (responseObject) {
-                [self processPostWithResponseObject:responseObject];
+                [self processPostWithResponseObject:responseObject optionalThumbnailImage:optionalImage];
             }
             
             if (success) {
