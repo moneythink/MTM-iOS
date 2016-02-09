@@ -61,6 +61,7 @@
 #import "MTChallenge.h"
 #import "MTChallengePost.h"
 #import "MTChallengePostComment.h"
+#import "MTExplorePost.h"
 #import "MTEmoji.h"
 #import "MTChallengePostLike.h"
 #import "MTChallengeButton.h"

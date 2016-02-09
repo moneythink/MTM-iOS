@@ -87,7 +87,11 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 - (void)loadPostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page params:(NSDictionary *)params success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 - (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)loadPostId:(NSInteger)postId optionalThumbnailImage:(MTOptionalImage *)optionalImage success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getImageForExplorePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getImageForPostId:(NSInteger)postId model:(Class)model success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)getUserAvatarForExplorePost:(MTExplorePost *)post success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)createPostForChallengeId:(NSInteger)challengeId content:(NSString *)content postImageData:(NSData *)postImageData extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)updatePostId:(NSInteger)postId content:(NSString *)content postImageData:(NSData *)postImageData hadImage:(BOOL)hadImage extraFields:(NSDictionary *)extraFields success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 - (void)deletePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;

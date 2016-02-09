@@ -10,6 +10,7 @@
 #define moneythink_iosTests_h
 
 #import <Realm/Realm.h>
+#import "RLMObject+JSON.h"
 
 #import "AFHTTPRequestSerializer+OAuth2.h"
 #import "AFNetworking.h"
@@ -18,7 +19,8 @@
 #import "MTNetworkManager.h"
 #import "MTOrganizationSelectionViewController.h"
 #import "MTClassSelectionNavigationController.h"
-#import "MTClass.h"
 #import "MTOrganization.h"
+#import "MTClass.h"
+#import "MTExplorePost.h"
 
 #endif /* moneythink_iosTests_h */

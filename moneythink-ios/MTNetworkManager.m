@@ -756,138 +756,21 @@ static NSUInteger const pageSize = 10;
     }
     
     NSDictionary *responseDict = (NSDictionary *)responseObject;
-    
-    if (![[responseDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
-        NSLog(@"No embedded explore posts data");
-        return;
-    }
-    
-    NSDictionary *embeddedDict = [responseDict objectForKey:@"_embedded"];
-    
-    if (![[embeddedDict objectForKey:@"posts"] isKindOfClass:[NSArray class]]) {
-        NSLog(@"No explore posts data");
-        return;
-    }
-    
-    NSArray *postsArray = [embeddedDict objectForKey:@"posts"];
+    NSDictionary *embeddedDict = responseDict[@"_embedded"];
+    NSArray *postsArray = embeddedDict[@"posts"];
     
     RLMRealm *realm = [RLMRealm defaultRealm];
+    
     [realm beginWriteTransaction];
     
-    // Mark existing posts (not in user class) deleted to filter out deleted explore posts
-    
-    MTClass *myClass = [MTUser currentUser].userClass;
-    MTOrganization *myOrganization = myClass.organization;
-    
-    for (id post in postsArray) {
-        if ([post isKindOfClass:[NSDictionary class]]) {
-            
-            if (IsEmpty(post)) {
-                continue;
-            }
-            MTChallengePost *challengePost = [MTChallengePost createOrUpdateInRealm:realm withJSONDictionary:post];
-            challengePost.isDeleted = NO;
-            
-            NSDictionary *postDict = (NSDictionary *)post;
-            if ([[postDict objectForKey:@"_embedded"] isKindOfClass:[NSDictionary class]]) {
-                
-                NSDictionary *innerEmbeddedDict = [postDict objectForKey:@"_embedded"];
-                
-                // Get user
-                if ([[innerEmbeddedDict objectForKey:@"user"] isKindOfClass:[NSDictionary class]]) {
-                    NSDictionary *classDict = [innerEmbeddedDict objectForKey:@"class"];
-                    
-                    if (IsEmpty(classDict)) {
-                        continue;
-                    }
-                    MTClass *thisClass = [MTClass createOrUpdateInRealm:realm withJSONDictionary:classDict];
-                    thisClass.isDeleted = NO;
-                    challengePost.challengeClass = thisClass;
-                    
-                    NSDictionary *userDict = [innerEmbeddedDict objectForKey:@"user"];
-                    
-                    if (IsEmpty(userDict)) {
-                        continue;
-                    }
-                    MTUser *thisUser = [MTUser createOrUpdateInRealm:realm withJSONDictionary:userDict];
-                    thisUser.isDeleted = NO;
-                    
-                    if ([[userDict objectForKey:@"_links"] isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary *linksDict = [userDict objectForKey:@"_links"];
-                        if ([linksDict objectForKey:@"avatar"]) {
-                            thisUser.hasAvatar = YES;
-                        }
-                        else {
-                            thisUser.hasAvatar = NO;
-                        }
-                    }
-                    
-                    // Make sure my ID is not overwritten with missing data (class/org) from feed
-                    if ([MTUser isUserMe:thisUser]) {
-                        thisUser.userClass = myClass;
-                        thisUser.organization = myOrganization;
-                    }
-                    else if (thisClass) {
-                        thisUser.userClass = thisClass;
-                    }
-                    
-                    challengePost.user = thisUser;
-                    
-                    NSDictionary *challengeDict = [innerEmbeddedDict objectForKey:@"challenge"];
-                    
-                    if (IsEmpty(challengeDict)) {
-                        challengePost.isDeleted = YES;
-                        continue;
-                    }
-                    
-                    NSNumber *challengeId = [challengeDict objectForKey:@"id"];
-                    if (challengeId && [MTChallenge objectForPrimaryKey:challengeId]) {
-                        MTChallenge *thisChallenge = [MTChallenge objectForPrimaryKey:challengeId];
-                        challengePost.challenge = thisChallenge;
-                    }
-                    else {
-                        challengePost.isDeleted = YES;
-                        continue;
-                    }
-                    
-                    id extraFieldsArray = [innerEmbeddedDict objectForKey:@"extraFieldValues"];
-                    if ([extraFieldsArray isKindOfClass:[NSArray class]] && !IsEmpty(extraFieldsArray)) {
-                        NSMutableDictionary *extraFieldsDict = [NSMutableDictionary dictionary];
-                        for (NSDictionary *thisData in extraFieldsArray) {
-                            NSString *name = [thisData valueForKey:@"name"];
-                            NSString *value = [thisData valueForKey:@"value"];
-                            if (!IsEmpty(name) && !IsEmpty(value)) {
-                                [extraFieldsDict setObject:value forKey:name];
-                            }
-                        }
-                        if (!IsEmpty(extraFieldsDict)) {
-                            NSError *error;
-                            NSData *jsonData = [NSJSONSerialization dataWithJSONObject:extraFieldsDict options:0 error:&error];
-                            if (!error) {
-                                NSString *extraFieldsString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-                                challengePost.extraFields = extraFieldsString;
-                            }
-                        }
-                        else {
-                            challengePost.extraFields = @"";
-                        }
-                    }
-                    else {
-                        challengePost.extraFields = @"";
-                    }
-                }
-                
-                // Get Image
-                NSDictionary *linksDict = [postDict objectForKey:@"_links"];
-                if ([linksDict objectForKey:@"picture"]) {
-                    challengePost.hasPostImage = YES;
-                }
-                else {
-                    challengePost.hasPostImage = NO;
-                }
-            }
-        }
+    for (NSDictionary *explorePostRecord in postsArray) {
+        NSMutableDictionary *castedExplorePost = [NSMutableDictionary dictionaryWithDictionary:explorePostRecord];
+        castedExplorePost[@"challenge_id"] = [NSNumber numberWithInt:[explorePostRecord[@"challenge_id"] intValue]];
+        castedExplorePost[@"user_id"] = [NSNumber numberWithInt:[explorePostRecord[@"user_id"] intValue]];
+        castedExplorePost[@"post_id"] = [NSNumber numberWithInt:[explorePostRecord[@"post_id"] intValue]];
+        [MTExplorePost createOrUpdateInRealm:realm withJSONDictionary:castedExplorePost];
     }
+    
     [realm commitWriteTransaction];
 }
 
@@ -1001,7 +884,10 @@ static NSUInteger const pageSize = 10;
         
         // Get Image
         NSDictionary *linksDict = [responseDict objectForKey:@"_links"];
-        if ([linksDict objectForKey:@"picture"]) {
+        if (optionalImage != nil) {
+            challengePost.hasPostImage = YES;
+            challengePost.postImage = optionalImage;
+        } else if ([linksDict objectForKey:@"picture"]) {
             challengePost.hasPostImage = YES;
         }
         else {
@@ -2440,22 +2326,26 @@ static NSUInteger const pageSize = 10;
                 
                 if (responseObject) {
                     RLMRealm *realm = [RLMRealm defaultRealm];
-                    [realm beginWriteTransaction];
                     
-                    MTUser *thisUser = [MTUser objectForPrimaryKey:[NSNumber numberWithInteger:userId]];
-                    
-                    MTOptionalImage *optionalImage = thisUser.userAvatar;
-                    if (!optionalImage) {
-                        optionalImage = [[MTOptionalImage alloc] init];
+                    MTUser *thisUser = nil;
+                    NSString *queryString = [NSString stringWithFormat:@"%@ = ", [MTUser primaryKey]];
+                    RLMResults *users = [MTUser objectsWhere:[queryString stringByAppendingString:@"%d"], [NSNumber numberWithInteger:userId]];
+                    if ([users count] > 0) {
+                        thisUser = [users firstObject];
+                        [realm beginWriteTransaction];
+                        MTOptionalImage *optionalImage = thisUser.userAvatar;
+                        if (!optionalImage) {
+                            optionalImage = [[MTOptionalImage alloc] init];
+                        }
+                        
+                        optionalImage.isDeleted = NO;
+                        optionalImage.imageData = responseObject;
+                        optionalImage.updatedAt = [NSDate date];
+                        thisUser.userAvatar = optionalImage;
+                        thisUser.hasAvatar = YES;
+                        
+                        [realm commitWriteTransaction];
                     }
-                    
-                    optionalImage.isDeleted = NO;
-                    optionalImage.imageData = responseObject;
-                    optionalImage.updatedAt = [NSDate date];
-                    thisUser.userAvatar = optionalImage;
-                    thisUser.hasAvatar = YES;
-                    
-                    [realm commitWriteTransaction];
                 }
                 
                 if (success) {
@@ -3067,6 +2957,16 @@ static NSUInteger const pageSize = 10;
 
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+    [self getImageForPostId:postId model:[MTChallengePost class] success:success failure:failure];
+}
+
+- (void)getImageForExplorePostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self getImageForPostId:postId model:[MTExplorePost class] success:success failure:failure];
+}
+
+- (void)getImageForPostId:(NSInteger)postId model:(Class)model success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
         NSString *urlString = [NSString stringWithFormat:@"%@posts/%ld/picture", self.baseURL, (long)postId];
@@ -3094,10 +2994,14 @@ static NSUInteger const pageSize = 10;
                     RLMRealm *realm = [RLMRealm defaultRealm];
                     [realm beginWriteTransaction];
                     
-                    MTChallengePost *thisPost = [MTChallengePost objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
-                    thisPost.isDeleted = NO;
+                    RLMObject *thisPost = [model objectForPrimaryKey:[NSNumber numberWithInteger:postId]];
                     
-                    MTOptionalImage *optionalImage = thisPost.postImage;
+                    MTOptionalImage *optionalImage = nil;
+                    if (thisPost != nil && [thisPost isKindOfClass:[MTChallengePost class]]) {
+                        optionalImage = ((MTChallengePost*)thisPost).postImage;
+                    } else {
+                        optionalImage = ((MTExplorePost *)thisPost).postPicture;
+                    }
                     if (!optionalImage) {
                         optionalImage = [[MTOptionalImage alloc] init];
                     }
@@ -3105,7 +3009,12 @@ static NSUInteger const pageSize = 10;
                     optionalImage.isDeleted = NO;
                     optionalImage.imageData = responseObject;
                     optionalImage.updatedAt = [NSDate date];
-                    thisPost.postImage = optionalImage;
+                    
+                    if (thisPost != nil && [thisPost isKindOfClass:[MTChallengePost class]]) {
+                        ((MTChallengePost*)thisPost).postImage = optionalImage;
+                    } else {
+                        ((MTExplorePost*)thisPost).postPicture = optionalImage;
+                    }
                     
                     [realm commitWriteTransaction];
                 }
@@ -3133,6 +3042,71 @@ static NSUInteger const pageSize = 10;
         
     } failure:^(NSError *error) {
         NSLog(@"Failed to Auth to get post image with error: %@", [error mtErrorDescription]);
+        if (failure) {
+            failure(error);
+        }
+    }];
+}
+
+- (void)getUserAvatarForExplorePost:(MTExplorePost *)post success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
+    [self checkforOAuthTokenWithSuccess:^(id responseData) {
+        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:self.baseURL];
+        NSString *urlString = [NSString stringWithFormat:@"%@users/%ld/avatar", self.baseURL, [post.userId integerValue]];
+        
+        [manager.requestSerializer setAuthorizationHeaderFieldWithCredential:(AFOAuthCredential *)responseData];
+        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Accept"];
+        [manager.requestSerializer setValue:@"image/jpeg" forHTTPHeaderField:@"Content-Type"];
+        
+        AFHTTPResponseSerializer *responseSerializer = [AFHTTPResponseSerializer serializer];
+        NSMutableSet *contentTypes = [NSMutableSet setWithSet:[responseSerializer acceptableContentTypes]];
+        [contentTypes addObject:@"image/jpeg"];
+        [contentTypes addObject:@"image/png"];
+        responseSerializer.acceptableContentTypes = [NSSet setWithSet:contentTypes];
+        manager.responseSerializer = responseSerializer;
+        
+        NSError *requestError = nil;
+        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:nil error:&requestError];
+        
+        if (!requestError) {
+            AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if ([self requestShouldDie]) return;
+                
+                if (responseObject) {
+                    RLMRealm *realm = [RLMRealm defaultRealm];
+                    
+                    MTOptionalImage *optionalImage = post.userAvatar;
+
+                    if (!optionalImage) {
+                        optionalImage = [[MTOptionalImage alloc] init];
+                    }
+                    
+                    [realm beginWriteTransaction];
+                    optionalImage.isDeleted = NO;
+                    optionalImage.imageData = responseObject;
+                    optionalImage.updatedAt = [NSDate date];
+                    post.userAvatar = optionalImage;
+                    [realm commitWriteTransaction];
+                }
+                
+                if (success) {
+                    success([UIImage imageWithData:responseObject]);
+                }
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                NSLog(@"Failed to get explore post user avatar with error: %@", [error mtErrorDescription]);
+            }];
+            
+            [requestOperation start];
+        }
+        else {
+            NSLog(@"Unable to construct request: %@", [requestError mtErrorDescription]);
+            if (failure) {
+                failure(requestError);
+            }
+        }
+        
+    } failure:^(NSError *error) {
+        NSLog(@"Failed to Auth to get user avatar with error: %@", [error mtErrorDescription]);
         if (failure) {
             failure(error);
         }
@@ -4601,10 +4575,9 @@ static NSUInteger const pageSize = 10;
 
 - (void)loadExplorePostsForChallengeId:(NSInteger)challengeId page:(NSUInteger)page success:(MTNetworkPaginatedSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
-    NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore", (long)challengeId];
+    NSString *urlString = [NSString stringWithFormat:@"challenges/%lu/explore2", (long)challengeId];
     NSDictionary *params = @{
-                             @"maxdepth" : @"2",
-                             @"pageSize" : @"20"
+                             @"pageSize" : @"25"
                            };
     [self loadPaginatedResource:urlString processSelector:@selector(processExplorePostsWithResponseObject:) page:page extraParams:params success:success failure:failure];
 }
