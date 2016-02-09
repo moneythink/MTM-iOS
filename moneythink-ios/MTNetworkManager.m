@@ -774,7 +774,7 @@ static NSUInteger const pageSize = 10;
     [realm commitWriteTransaction];
 }
 
-- (void)processPostWithResponseObject:(id)responseObject
+- (void)processPostWithResponseObject:(id)responseObject optionalThumbnailImage:(MTOptionalImage *)optionalImage
 {
     if (![responseObject isKindOfClass:[NSDictionary class]]) {
         NSLog(@"No posts response data");
@@ -886,6 +886,7 @@ static NSUInteger const pageSize = 10;
         NSDictionary *linksDict = [responseDict objectForKey:@"_links"];
         if (optionalImage != nil) {
             challengePost.hasPostImage = YES;
+            optionalImage.isThumbnail = YES;
             challengePost.postImage = optionalImage;
         } else if ([linksDict objectForKey:@"picture"]) {
             challengePost.hasPostImage = YES;
@@ -2919,6 +2920,11 @@ static NSUInteger const pageSize = 10;
 
 - (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
+    [self loadPostId:postId optionalThumbnailImage:nil success:success failure:failure];
+}
+
+- (void)loadPostId:(NSInteger)postId optionalThumbnailImage:(MTOptionalImage *)optionalImage success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
+{
     MTMakeWeakSelf();
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
@@ -2933,7 +2939,7 @@ static NSUInteger const pageSize = 10;
             if ([self requestShouldDie]) return;
             
             if (responseObject) {
-                [self processPostWithResponseObject:responseObject];
+                [self processPostWithResponseObject:responseObject optionalThumbnailImage:optionalImage];
             }
             
             if (success) {
@@ -2954,7 +2960,6 @@ static NSUInteger const pageSize = 10;
         }
     }];
 }
-
 - (void)getImageForPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
 {
     [self getImageForPostId:postId model:[MTChallengePost class] success:success failure:failure];
@@ -2983,7 +2988,11 @@ static NSUInteger const pageSize = 10;
         manager.responseSerializer = responseSerializer;
         
         NSError *requestError = nil;
-        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:nil error:&requestError];
+        NSDictionary *parameters = nil;
+        if ([MTUtil shouldLoadHighResolutionImages]) {
+            parameters = @{@"preferredResolution": @"2x"};
+        }
+        NSMutableURLRequest *request = [manager.requestSerializer requestWithMethod:@"GET" URLString:urlString parameters:parameters error:&requestError];
         
         if (!requestError) {
             AFHTTPRequestOperation *requestOperation = [manager HTTPRequestOperationWithRequest:request success:^(AFHTTPRequestOperation *operation, id responseObject) {
