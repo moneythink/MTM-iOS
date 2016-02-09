@@ -7,7 +7,8 @@
 //
 
 #import <XCTest/XCTest.h>
-#import "MTClass.h"
+#import "TestHelper.h"
+@class MTClass;
 
 @interface MTClassTest : XCTestCase
 
@@ -27,11 +28,11 @@ MTClass *classObject;
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
     
-    classObject[@"isArchived"] = [NSNumber numberWithBool:YES];
+    classObject[@"archivedAt"] = [NSDate date];
     
     XCTAssert([classObject isArchived]);
     
-    classObject[@"isArchived"] = [NSNumber numberWithBool:NO];
+    classObject[@"archivedAt"] = nil;
     
     XCTAssertFalse([classObject isArchived]);
 }
