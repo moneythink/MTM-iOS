@@ -47,6 +47,13 @@
     
     [MTUtil GATrackScreen:@"Menu"];
     
+    // Update organization so that we can make sure conversations should or should not display
+    [[MTUser currentUser] refreshFromServer:^(id responseData) {
+        [self.tableView reloadData];
+    } failure:^(NSError *error) {
+        // pass
+    }];
+    
     [self loadProfileImage];
 
     MTUser *user = [MTUser currentUser];

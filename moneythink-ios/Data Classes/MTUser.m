@@ -137,6 +137,10 @@
     }
 }
 
+- (void)refreshFromServer:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
+    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:success failure:failure];
+}
+
 + (BOOL)isCurrentUserMentor
 {
     return [MTUser isUserMentor:[MTUser currentUser]];
