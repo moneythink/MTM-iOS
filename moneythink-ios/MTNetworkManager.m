@@ -4759,6 +4759,14 @@ static NSUInteger const pageSize = 10;
             NSLog(@"%@: Failed with error: %@", resourcePath, [error mtErrorDescription]);
             if ([self requestShouldDie]) return;
             
+            if (error.userInfo != nil) {
+                NSHTTPURLResponse *response = error.userInfo[AFNetworkingOperationFailingURLResponseErrorKey];
+                NSLog(@"%@", response);
+                if (response.statusCode == 409 /*Conflict*/) {
+                    return failure(nil);
+                }
+            }
+            
             if (failure) {
                 failure(error);
             }
