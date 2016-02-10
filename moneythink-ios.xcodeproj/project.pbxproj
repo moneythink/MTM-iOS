@@ -231,6 +231,7 @@
 /* Begin PBXFileReference section */
 		02F2ABF7693D8F892EE7CE30 /* Pods-moneythink-iosTests.debug (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.debug (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.debug (stage).xcconfig"; sourceTree = "<group>"; };
 		07213A1A7138F937EC1374B9 /* libPods-moneythink-iosTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-moneythink-iosTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		0CE25DABA3AF26DE403B3199 /* Pods-moneythink-ios.debug (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (development).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (development).xcconfig"; sourceTree = "<group>"; };
 		106309431A3A3BBF0093C209 /* A2BlockInvocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2BlockInvocation.h; sourceTree = "<group>"; };
 		106309441A3A3BBF0093C209 /* A2DynamicDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = A2DynamicDelegate.h; sourceTree = "<group>"; };
 		106309451A3A3BBF0093C209 /* BKMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BKMacros.h; sourceTree = "<group>"; };
@@ -320,6 +321,7 @@
 		3BE15A631C32061100547CDA /* MTNoKeyboardAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTNoKeyboardAlertView.m; sourceTree = "<group>"; };
 		3BFDDBB51C49AA5000E4CF9C /* RLMObject+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "RLMObject+MTAdditions.h"; sourceTree = "<group>"; };
 		3BFDDBB61C49AA5000E4CF9C /* RLMObject+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "RLMObject+MTAdditions.m"; sourceTree = "<group>"; };
+		4BF6CFCB7A065B43ECB07F43 /* Pods-moneythink-iosTests.debug (development).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.debug (development).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.debug (development).xcconfig"; sourceTree = "<group>"; };
 		55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.debug (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.debug (stage).xcconfig"; sourceTree = "<group>"; };
 		5806A4EC197460A9000B3656 /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		5806A4EE1974610A000B3656 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
@@ -385,6 +387,7 @@
 		58CBD0B51991308E0056BE8F /* MTStudentProfileTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTStudentProfileTableViewCell.h; sourceTree = "<group>"; };
 		58CBD0B61991308E0056BE8F /* MTStudentProfileTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTStudentProfileTableViewCell.m; sourceTree = "<group>"; };
 		58EB5E8B19CF525800CED4B8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		7E10ADBE2F03A2ABCBB5C8F0 /* Pods-moneythink-ios.test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.test.xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.test.xcconfig"; sourceTree = "<group>"; };
 		89007BD119F6E271008B4F8C /* UIFont+MTAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+MTAdditions.h"; sourceTree = "<group>"; };
 		89007BD219F6E271008B4F8C /* UIFont+MTAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+MTAdditions.m"; sourceTree = "<group>"; };
 		8901D89C19FAB0F5006E9168 /* MTPostUserInfoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTPostUserInfoTableViewCell.h; sourceTree = "<group>"; };
@@ -584,6 +587,7 @@
 		89E7805E1B974B7B00BD44EE /* MTNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MTNotification.m; path = "Data Classes/MTNotification.m"; sourceTree = "<group>"; };
 		89F9F8231B1505CE0067ED3D /* MTMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMenuViewController.h; sourceTree = "<group>"; };
 		89F9F8241B1505CE0067ED3D /* MTMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMenuViewController.m; sourceTree = "<group>"; };
+		9D3B2338BE81788F737DCE5D /* Pods-moneythink-iosTests.test.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.test.xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.test.xcconfig"; sourceTree = "<group>"; };
 		AB630EE9FCBDDA3FEA92DBB9 /* Pods-moneythink-iosTests.debug (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-iosTests.debug (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-iosTests/Pods-moneythink-iosTests.debug (production).xcconfig"; sourceTree = "<group>"; };
 		CD5216CED5B0FFCEA1C13C89 /* Pods-moneythink-ios.adhoc (stage).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (stage).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (stage).xcconfig"; sourceTree = "<group>"; };
 		D557BE9AC4196CE4797C87CA /* Pods-moneythink-ios.adhoc (production).xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-moneythink-ios.adhoc (production).xcconfig"; path = "Pods/Target Support Files/Pods-moneythink-ios/Pods-moneythink-ios.adhoc (production).xcconfig"; sourceTree = "<group>"; };
@@ -1336,6 +1340,10 @@
 				EC816F0588FAA0FB76E845CC /* Pods-moneythink-iosTests.adhoc (stage).xcconfig */,
 				02F2ABF7693D8F892EE7CE30 /* Pods-moneythink-iosTests.debug (stage).xcconfig */,
 				1A531E4889778AF585FC2BD2 /* Pods-moneythink-iosTests.release.xcconfig */,
+				7E10ADBE2F03A2ABCBB5C8F0 /* Pods-moneythink-ios.test.xcconfig */,
+				9D3B2338BE81788F737DCE5D /* Pods-moneythink-iosTests.test.xcconfig */,
+				0CE25DABA3AF26DE403B3199 /* Pods-moneythink-ios.debug (development).xcconfig */,
+				4BF6CFCB7A065B43ECB07F43 /* Pods-moneythink-iosTests.debug (development).xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1880,7 +1888,7 @@
 		};
 		3B0787371C6BCBE70076FC6B /* Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 55926B864C50C78DDCF21146 /* Pods-moneythink-ios.debug (stage).xcconfig */;
+			baseConfigurationReference = 7E10ADBE2F03A2ABCBB5C8F0 /* Pods-moneythink-ios.test.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -1926,7 +1934,7 @@
 		};
 		3B0787381C6BCBE70076FC6B /* Test */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 02F2ABF7693D8F892EE7CE30 /* Pods-moneythink-iosTests.debug (stage).xcconfig */;
+			baseConfigurationReference = 9D3B2338BE81788F737DCE5D /* Pods-moneythink-iosTests.test.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -2148,6 +2156,150 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moneythink.app/Moneythink";
 			};
 			name = Release;
+		};
+		3BC5D1041C6BD59F00516743 /* Debug (Development) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					"DEVELOPMENT=1",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_MODULE_NAME = moneythink;
+				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Debug (Development)";
+		};
+		3BC5D1051C6BD59F00516743 /* Debug (Development) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0CE25DABA3AF26DE403B3199 /* Pods-moneythink-ios.debug (development).xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CFBundleShortVersionString = 1.0.2;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Colin Young (6DH9FXTZ62)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Colin Young (6DH9FXTZ62)";
+				CODE_SIGN_RESOURCE_RULES_PATH = "";
+				DISPLAY_NAME = "MT Stage";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = NO;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/**",
+					"$(PROJECT_DIR)/moneythink-ios",
+					"$(PROJECT_DIR)/ThirdParty",
+					"$(PROJECT_DIR)/libs",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "moneythink-ios/moneythink-ios-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"$(PROJECT_DIR)/**",
+				);
+				INFOPLIST_FILE = "moneythink-ios/moneythink-ios-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/libs",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
+				PRODUCT_NAME = Moneythink;
+				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
+				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Debug (Development)";
+		};
+		3BC5D1061C6BD59F00516743 /* Debug (Development) */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4BF6CFCB7A065B43ECB07F43 /* Pods-moneythink-iosTests.debug (development).xcconfig */;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "moneythink-iosTests/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "org.moneythink.moneythink-iosTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Moneythink.app/Moneythink";
+			};
+			name = "Debug (Development)";
 		};
 		5876E2D9196F2C1F00C176EC /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -2608,6 +2760,7 @@
 				3B902B611C2B21FD008A0FF3 /* Adhoc (Production) */,
 				3B902B621C2B21FD008A0FF3 /* Adhoc (Stage) */,
 				3B902B631C2B21FD008A0FF3 /* Debug (Stage) */,
+				3BC5D1061C6BD59F00516743 /* Debug (Development) */,
 				3B0787381C6BCBE70076FC6B /* Test */,
 				3B902B641C2B21FD008A0FF3 /* Release */,
 			);
@@ -2621,6 +2774,7 @@
 				89E8577C19E44F1500E1C708 /* Adhoc (Production) */,
 				897278211A96484000557B66 /* Adhoc (Stage) */,
 				8982071719D9F77D0008ED5D /* Debug (Stage) */,
+				3BC5D1041C6BD59F00516743 /* Debug (Development) */,
 				3B0787361C6BCBE70076FC6B /* Test */,
 				5876E2D9196F2C1F00C176EC /* Release */,
 			);
@@ -2634,6 +2788,7 @@
 				89E8577D19E44F1500E1C708 /* Adhoc (Production) */,
 				897278221A96484000557B66 /* Adhoc (Stage) */,
 				8982071819D9F77D0008ED5D /* Debug (Stage) */,
+				3BC5D1051C6BD59F00516743 /* Debug (Development) */,
 				3B0787371C6BCBE70076FC6B /* Test */,
 				5876E2DC196F2C1F00C176EC /* Release */,
 			);

@@ -728,7 +728,7 @@
 {
     // Can clear database on launch for testing
 //    [[NSFileManager defaultManager] removeItemAtPath:[[RLMRealm defaultRealm] path] error:nil];
-//    [MTUser logout];
+//    [MTUtil logout];
     
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used

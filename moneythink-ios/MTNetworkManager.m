@@ -14,7 +14,9 @@
 #import "MTOAuthRefreshOperation.h"
 #import "RLMObject+MTAdditions.h"
 
-#ifdef STAGE
+#ifdef DEVELOPMENT
+static NSString * const MTNetworkURLString = @"http://localhost:8888/";
+#elif STAGE
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
 static NSString * const MTNetworkURLString = @"https://api.moneythink.org/";
