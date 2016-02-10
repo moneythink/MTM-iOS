@@ -8,6 +8,9 @@
 
 #import "AFOAuth2Manager.h"
 
+@class MTOptionalImage;
+@class MTExplorePost;
+
 typedef void (^MTNetworkSuccessBlock)(id responseData);
 typedef void (^MTNetworkSuccessBlockWithObject)(id responseData, RLMObject *object);
 typedef void (^MTNetworkPaginatedSuccessBlock)(BOOL lastPage, NSUInteger numPages, NSUInteger totalCount);
