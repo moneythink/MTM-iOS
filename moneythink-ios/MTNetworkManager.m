@@ -2919,11 +2919,6 @@ static NSUInteger const pageSize = 10;
 }
 
 - (void)loadPostId:(NSInteger)postId success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
-    [self loadPostId:postId success:success failure:failure];
-}
-
-- (void)loadPostId:(NSInteger)postId optionalThumbnailImage:(MTOptionalImage *)optionalImage success:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure
-{
     [self loadPostId:postId optionalThumbnailImage:nil success:success failure:failure];
 }
 
@@ -2933,7 +2928,6 @@ static NSUInteger const pageSize = 10;
     [self checkforOAuthTokenWithSuccess:^(id responseData) {
         NSMutableDictionary *parameters = [NSMutableDictionary dictionary];
         parameters[@"maxdepth"] = @"2";
-        parameters[@"pageSize"] = @"50";
         
         NSString *urlString = [NSString stringWithFormat:@"posts/%ld", (long)postId];
 
