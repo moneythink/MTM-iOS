@@ -15,7 +15,7 @@
 #import "RLMObject+MTAdditions.h"
 
 #ifdef DEVELOPMENT
-static NSString * const MTNetworkURLString = @"http://localhost:8888/";
+static NSString * const MTNetworkURLString = @"http://127.0.0.1:8888/";
 #elif STAGE
 static NSString * const MTNetworkURLString = @"http://moneythink-api.staging.causelabs.com/";
 #else
