@@ -61,7 +61,7 @@ PODS:
     - ZendeskSDK/Core
 
 DEPENDENCIES:
-  - AFNetworking (~> 2.6)
+  - AFNetworking (~> 2.6.3)
   - CCBottomRefreshControl
   - Crashlytics
   - DRPLoadingSpinner

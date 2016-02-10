@@ -727,7 +727,7 @@
 - (void)setupRealm
 {
     // Can clear database on launch for testing
-//    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
+//    [[NSFileManager defaultManager] removeItemAtPath:[[RLMRealm defaultRealm] path] error:nil];
 //    [MTUser logout];
     
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
