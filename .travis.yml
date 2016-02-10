@@ -1,3 +1,5 @@
 language: objective-c
 xcode_workspace: moneythink-ios.xcworkspace
 xcode_scheme: MT(Stage Debug Adhoc)
+before_install:
+  - gem install cocoapods -v '0.39.0'
