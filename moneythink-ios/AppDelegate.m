@@ -114,6 +114,10 @@
     }
     
     [AFNetworkActivityIndicatorManager sharedManager].enabled = YES;
+    
+    // Set up LayerKit (http://layer.com)
+    NSURL *appID = [NSURL URLWithString:@"layer:///apps/staging/d242b6d8-b640-11e5-befe-c52f5f090bc5"];
+    self.layerClient = [LYRClient clientWithAppID:appID];
 
     return YES;
 }
@@ -645,6 +649,24 @@
     [[UIApplication sharedApplication] endBackgroundTask:bgTask];
 }
 
+- (void)authenticateCurrentUserWithLayerSDK {
+    MTUser *currentUser = [MTUser currentUser];
+    if (currentUser == nil) return;
+    
+    [self.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
+        if (!success) {
+            NSLog(@"Failed to connect to Layer: %@", error);
+        } else {
+            NSString *userIDString = [NSString stringWithFormat:@"%lu", currentUser.id];
+            [self authenticateLayerWithUserID:userIDString completion:^(BOOL success, NSError *error) {
+                if (!success) {
+                    NSLog(@"Failed Authenticating Layer Client with error:%@", error);
+                }
+            }];
+        }
+    }];
+}
+
 #pragma mark - SWRevealViewControllerDelegate Methods -
 - (void)revealController:(SWRevealViewController *)revealController willMoveToPosition:(FrontViewPosition)position;
 {
@@ -705,13 +727,13 @@
 - (void)setupRealm
 {
     // Can clear database on launch for testing
-//    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
-//    [MTUser logout];
+//    [[NSFileManager defaultManager] removeItemAtPath:[[RLMRealm defaultRealm] path] error:nil];
+//    [MTUtil logout];
     
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 30;
+    config.schemaVersion = 40;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above
@@ -732,5 +754,91 @@
     [RLMRealm defaultRealm];
 }
 
+#pragma mark - Layer SDK methods
+- (void)authenticateLayerWithUserID:(NSString *)userID completion:(void (^)(BOOL success, NSError * error))completion
+{
+    // Check to see if the layerClient is already authenticated.
+    if (self.layerClient.authenticatedUserID) {
+        // If the layerClient is authenticated with the requested userID, complete the authentication process.
+        if ([self.layerClient.authenticatedUserID isEqualToString:userID]){
+            NSLog(@"Layer Authenticated as User %@", self.layerClient.authenticatedUserID);
+            if (completion) completion(YES, nil);
+            return;
+        } else {
+            //If the authenticated userID is different, then deauthenticate the current client and re-authenticate with the new userID.
+            [self.layerClient deauthenticateWithCompletion:^(BOOL success, NSError *error) {
+                if (!error){
+                    [self authenticationTokenWithUserId:userID completion:^(BOOL success, NSError *error) {
+                        if (completion){
+                            completion(success, error);
+                        }
+                    }];
+                } else {
+                    if (completion){
+                        completion(NO, error);
+                    }
+                }
+            }];
+        }
+    } else {
+        // If the layerClient isn't already authenticated, then authenticate.
+        [self authenticationTokenWithUserId:userID completion:^(BOOL success, NSError *error) {
+            if (completion){
+                completion(success, error);
+            }
+        }];
+    }
+}
+
+- (void)authenticationTokenWithUserId:(NSString *)userID completion:(void (^)(BOOL success, NSError* error))completion{
+    
+    /*
+     * 1. Request an authentication Nonce from Layer
+     */
+    [self.layerClient requestAuthenticationNonceWithCompletion:^(NSString *nonce, NSError *error) {
+        if (!nonce) {
+            if (completion) {
+                completion(NO, error);
+            }
+            return;
+        }
+        
+        /*
+         * 2. Acquire identity Token from Layer Identity Service
+         */
+        [[MTNetworkManager sharedMTNetworkManager] requestLayerSDKIdentityTokenForCurrentUserWithAppID:[self.layerClient.appID absoluteString] nonce:nonce completion:^(NSString *identityToken, NSError *error) {
+            if (!identityToken) {
+                if (completion) {
+                    completion(NO, error);
+                }
+                return;
+            }
+            
+            /*
+             * 3. Submit identity token to Layer for validation
+             */
+            [self.layerClient authenticateWithIdentityToken:identityToken completion:^(NSString *authenticatedUserID, NSError *error) {
+                if (authenticatedUserID) {
+                    if (completion) {
+                        completion(YES, nil);
+                    }
+                    NSLog(@"Layer Authenticated as User: %@", authenticatedUserID);
+                } else {
+                    completion(NO, error);
+                }
+            }];
+        }];
+    }];
+}
+
+- (void)requestLayerSDKIdentityTokenForUserID:(NSString *)userID appID:(NSString *)appID nonce:(NSString *)nonce completion:(void(^)(NSString *identityToken, NSError *error))completion
+{
+    NSParameterAssert(userID);
+    NSParameterAssert(appID);
+    NSParameterAssert(nonce);
+    NSParameterAssert(completion);
+    
+    
+}
 
 @end

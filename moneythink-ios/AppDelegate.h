@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "Reachability.h"
 #import "MTLoginViewController.h"
+#import <LayerKit/LayerKit.h>
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
@@ -18,6 +19,7 @@
 @property (nonatomic, strong) UINavigationController *userViewController;
 @property (nonatomic) NSInteger currentUnreadCount;
 @property (nonatomic) NSString *logoutReason;
+@property (nonatomic) LYRClient *layerClient;
 
 - (void)setDarkNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
 - (void)setWhiteNavBarAppearanceForNavigationBar:(UINavigationBar *)navigationBar;
@@ -26,5 +28,7 @@
 - (void)initializeZendesk;
 - (BOOL)shouldForceUpdate;
 - (void)clearLogoutReason;
+
+- (void)authenticateCurrentUserWithLayerSDK;
 
 @end

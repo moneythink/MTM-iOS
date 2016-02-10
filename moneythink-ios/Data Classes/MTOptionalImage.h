@@ -13,6 +13,7 @@
 @property NSData *imageData;
 @property NSDate *updatedAt;
 @property BOOL isDeleted;
+@property BOOL isThumbnail;
 
 + (void)markAllDeleted;
 + (void)removeAllDeleted;

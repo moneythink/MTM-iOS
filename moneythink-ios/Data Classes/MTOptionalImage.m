@@ -11,7 +11,10 @@
 @implementation MTOptionalImage
 
 + (NSDictionary *)defaultPropertyValues {
-    return @{@"isDeleted": @NO};
+    return @{
+             @"isDeleted": @NO,
+             @"isThumbnail": @NO
+             };
 }
 
 // Specify properties to ignore (Realm won't persist these)

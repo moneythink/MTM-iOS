@@ -39,6 +39,7 @@ typedef void (^MTNetworkFailureBlock)(NSError *error);
 @property MTClass *userClass;
 
 - (UIImage *)loadAvatarImageWithSuccess:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
+- (void)refreshFromServer:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure;
 
 + (BOOL)isCurrentUserMentor;
 + (BOOL)isUserMentor:(MTUser *)user;

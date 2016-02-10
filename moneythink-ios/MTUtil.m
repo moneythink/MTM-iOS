@@ -10,6 +10,8 @@
 #import <Google/Analytics.h>
 #import "MTUser.h"
 
+static NSNumber *isRetinaBool = nil;
+
 @implementation MTUtil
 
 + (BOOL)internetReachable
@@ -180,7 +182,13 @@
                                                            value:nil] build]];    // Event value
     
     NSLog(@"GA Track [Event]: %@ Sign In (ID: %ld, School: %@, Class: %@)", [type capitalizedString], user.id, schoolName, className);
+    
+    // Login to Layer
+    if (user.organization.subscriptionIncludesDirectMessaging) {
+        [(AppDelegate *)[MTUtil getAppDelegate] authenticateCurrentUserWithLayerSDK];
+    }
 }
+
 + (void)setRefreshedForKey:(NSString *)key
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:key];
@@ -232,6 +240,7 @@
     [MTClass removeAllDeleted];
     [MTOrganization removeAllDeleted];
     [MTUser removeAllDeleted];
+    [MTExplorePost deleteAll];
 }
 
 + (void)logout
@@ -257,6 +266,8 @@
     [MTUtil cleanDeletedItemsInDatabase];
     
     [AFOAuthCredential deleteCredentialWithIdentifier:MTNetworkServiceOAuthCredentialKey];
+    
+    [((AppDelegate *)[MTUtil getAppDelegate]).layerClient deauthenticateWithCompletion:nil];
     
     [self setRecentlyLoggedOut:YES];
 }
@@ -291,6 +302,14 @@
     }
     
     return [token copy];
+}
+
++ (BOOL)shouldLoadHighResolutionImages {
+    if (isRetinaBool == nil) {
+        BOOL isRetina = [[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale >= 2.0);
+        isRetinaBool = [NSNumber numberWithBool:isRetina];
+    }
+    return [isRetinaBool boolValue];
 }
 
 @end

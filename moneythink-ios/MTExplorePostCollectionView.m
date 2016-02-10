@@ -13,6 +13,7 @@
 #import "DRPLoadingSpinner.h"
 
 #define kExplorePageSize 20
+#define kOpenPostSegueIdentifier @"pushViewPost"
 
 @interface MTExplorePostCollectionView () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
 
@@ -125,8 +126,7 @@ NSInteger numberOfPages = 0;
 {
     if ([MTUser currentUser] == nil) return;
     
-    MTClass *myClass = [MTUser currentUser].userClass;
-    self.posts = [[MTChallengePost objectsWhere:@"challenge.id = %d AND isDeleted = NO AND hasPostImage = YES AND challengeClass != %@", self.challenge.id, myClass] sortedResultsUsingProperty:@"createdAt" ascending:NO];
+    self.posts = [[MTExplorePost objectsWhere:@"challengeId = %d", self.challenge.id] sortedResultsUsingProperty:@"createdAt" ascending:NO];
     
     if (currentPage == 0) {
         if (self.posts.count == 0) {
@@ -137,36 +137,6 @@ NSInteger numberOfPages = 0;
         }
     }
 }
-
-- (void)loadButtons
-{
-    RLMResults *buttons = [[MTChallengeButton objectsWhere:@"isDeleted = NO AND challenge.id = %lu", self.challenge.id] sortedResultsUsingProperty:@"ranking" ascending:YES];
-    
-    self.hasButtons = NO;
-    self.hasSecondaryButtons = NO;
-    self.hasTertiaryButtons = NO;
-    
-    BOOL isMentor = [MTUser isCurrentUserMentor];
-
-    if (!IsEmpty(buttons)) {
-        if ([[((MTChallengeButton *)[buttons firstObject]).buttonTypeCode uppercaseString] isEqualToString:@"VOTE"]) {
-            // Voting buttons (primary or tertiary)
-            if ([buttons count] == 4) {
-                // Tertiary
-                self.hasTertiaryButtons = YES;
-            }
-            else {
-                // Primary
-                self.hasButtons = YES;
-            }
-        }
-        else if (!isMentor) {
-            // Secondary
-            self.hasSecondaryButtons = YES;
-        }
-    }
-}
-
 
 #pragma mark - Public -
 - (void)setChallenge:(MTChallenge *)challenge
@@ -181,7 +151,6 @@ NSInteger numberOfPages = 0;
             self.posts = nil;
             [self loadPostsFromDatabase];
             [self viewWillAppear:YES];
-            [self loadButtons];
         }
     }
 }
@@ -199,32 +168,29 @@ NSInteger numberOfPages = 0;
 {
     MTExploreCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"exploreChallenge" forIndexPath:indexPath];
 
-    MTChallengePost *post = self.posts[indexPath.row];
-    MTUser *user = post.user;
+    MTExplorePost *post = self.posts[indexPath.row];
     
-    cell.postText.text = post.content;
-    cell.postUser.text = [NSString stringWithFormat:@"%@ %@", user.firstName, user.lastName];
+    cell.postText.text = post.postContent;
+    cell.postUser.text = post.userName;
     
     cell.postImage.layer.masksToBounds = YES;
     cell.postImage.image = [UIImage imageNamed:@"placeholder"];
     cell.postImage.contentMode = UIViewContentModeScaleAspectFill;
 
-    if (post.hasPostImage) {
-        cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
-                cell.postImage.image = responseData;
-            });
-        } failure:^(NSError *error) {
-            NSLog(@"Unable to load post image");
-        }];
-    }
+    cell.postImage.image = [post loadPostImageWithSuccess:^(id responseData) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+            cell.postImage.image = responseData;
+        });
+    } failure:^(NSError *error) {
+        NSLog(@"Unable to load post image");
+    }];
     
     cell.postUserImage.layer.cornerRadius = round(cell.postUserImage.frame.size.width / 2.0f);
     cell.postUserImage.layer.masksToBounds = YES;
     cell.postUserImage.contentMode = UIViewContentModeScaleAspectFill;
     
-    cell.postUserImage.image = [user loadAvatarImageWithSuccess:^(id responseData) {
+    cell.postUserImage.image = [post loadUserAvatarWithSuccess:^(id responseData) {
         dispatch_async(dispatch_get_main_queue(), ^{
             MTExploreCollectionViewCell *cell = (MTExploreCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
             cell.postUserImage.image = responseData;
@@ -304,7 +270,30 @@ NSInteger numberOfPages = 0;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     [collectionView deselectItemAtIndexPath:indexPath animated:NO];
-    [self performSegueWithIdentifier:@"pushViewPost" sender:self.posts[indexPath.row]];
+    
+    MTExplorePost *explorePost = self.posts[indexPath.row];
+    
+    // If post is already loaded, open it immediately
+    RLMResults *results = [MTChallengePost objectsWhere:@"id = %@", explorePost.postId];
+    if ([results count] > 0) {
+        [self performSegueWithIdentifier:kOpenPostSegueIdentifier sender:[results firstObject]];
+        return;
+    }
+    
+    // Otherwise, briefly show a hud and then load it
+    MBProgressHUD *hud = [[MBProgressHUD alloc] init];
+    hud = [MBProgressHUD showHUDAddedTo:[UIApplication sharedApplication].keyWindow animated:YES];
+    hud.labelText = @"Loading...";
+    hud.dimBackground = YES;
+    
+    [[MTNetworkManager sharedMTNetworkManager] loadPostId:[explorePost.postId integerValue] optionalThumbnailImage:explorePost.postPicture success:^(id responseData) {
+        [hud hide:YES];
+        MTChallengePost *post = [MTChallengePost objectForPrimaryKey:explorePost.postId];
+        [self performSegueWithIdentifier:kOpenPostSegueIdentifier sender:post];
+    } failure:^(NSError *error) {
+        [hud hide:YES];
+        [[[UIAlertView alloc] initWithTitle:@"Error" message:@"Error loading post." delegate:nil cancelButtonTitle:@"Continue" otherButtonTitles:nil] show];
+    }];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath
