@@ -27,7 +27,7 @@ NSString *const kWillSaveEditPostNotification = @"kWillSaveEditPostNotification"
 NSString *const kDidSaveEditPostNotification = @"kDidSaveEditPostNotification";
 NSString *const kFailedSaveEditPostNotification = @"kFailedSaveEditPostNotification";
 
-@interface MTMyClassTableViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate>
+@interface MTMyClassTableViewController () <DZNEmptyDataSetSource, DZNEmptyDataSetDelegate, MBProgressHUDDelegate>
 
 @property (nonatomic) BOOL hasButtons;
 @property (nonatomic) BOOL hasSecondaryButtons;
