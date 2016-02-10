@@ -8,7 +8,7 @@ target 'moneythink-ios' do
   pod 'Crashlytics'
   pod 'ZendeskSDK'
   pod 'Realm', '~> 0.97'
-  pod "AFNetworking", "~> 2.0"
+  pod "AFNetworking", "~> 2.6"
   pod 'JGActionSheet'
   pod 'MBProgressHUD'
   pod 'DZNEmptyDataSet'
@@ -21,6 +21,5 @@ end
 
 target 'moneythink-iosTests' do
   pod 'OCMock'
-  pod "AFNetworking", "~> 2.0"
-
+  pod "AFNetworking", "~> 2.6"
 end
