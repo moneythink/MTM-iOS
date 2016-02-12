@@ -374,7 +374,7 @@
 #pragma mark - Public Methods -
 - (void)openLeaderboard
 {
-    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:2 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];
@@ -386,7 +386,7 @@
 
 - (void)openNotificationsWithId:(NSInteger)notificationId
 {
-    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:2 inSection:1];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];
@@ -401,7 +401,7 @@
 
 - (void)openChallengesForChallengeId:(NSInteger)challengeId
 {
-    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    self.currentlySelectedIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
     [self.tableView selectRowAtIndexPath:self.currentlySelectedIndexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
     if (self.revealViewController.frontViewPosition == FrontViewPositionRight) {
         [self.revealViewController revealToggleAnimated:NO];

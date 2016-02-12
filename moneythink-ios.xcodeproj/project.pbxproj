@@ -19,6 +19,7 @@
 		3B2ECFBB1C24A754005E7F82 /* MTClassSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBA1C24A754005E7F82 /* MTClassSelectionViewController.m */; };
 		3B2ECFBE1C24A895005E7F82 /* MTOrganizationSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */; };
 		3B2ECFC11C24AE23005E7F82 /* MTClassSelectionNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */; };
+		3B4A2B521C6CFCB900C15D94 /* MTMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B4A2B511C6CFCB900C15D94 /* MTMessagesViewController.m */; };
 		3B5457FB1C0FB76200023611 /* MTLoadingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5457FA1C0FB76200023611 /* MTLoadingView.m */; };
 		3B5457FD1C0FB92900023611 /* MTLoadingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B5457FC1C0FB92900023611 /* MTLoadingView.xib */; };
 		3B5CE63D1C47430D00387E4D /* MTCreateClassViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B5CE63C1C47430D00387E4D /* MTCreateClassViewController.m */; };
@@ -288,6 +289,8 @@
 		3B2ECFBD1C24A895005E7F82 /* MTOrganizationSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTOrganizationSelectionViewController.m; sourceTree = "<group>"; };
 		3B2ECFBF1C24AE23005E7F82 /* MTClassSelectionNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTClassSelectionNavigationController.h; sourceTree = "<group>"; };
 		3B2ECFC01C24AE23005E7F82 /* MTClassSelectionNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTClassSelectionNavigationController.m; sourceTree = "<group>"; };
+		3B4A2B501C6CFCB900C15D94 /* MTMessagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTMessagesViewController.h; sourceTree = "<group>"; };
+		3B4A2B511C6CFCB900C15D94 /* MTMessagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTMessagesViewController.m; sourceTree = "<group>"; };
 		3B5457F91C0FB76200023611 /* MTLoadingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTLoadingView.h; sourceTree = "<group>"; };
 		3B5457FA1C0FB76200023611 /* MTLoadingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoadingView.m; sourceTree = "<group>"; };
 		3B5457FC1C0FB92900023611 /* MTLoadingView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MTLoadingView.xib; sourceTree = "<group>"; };
@@ -752,6 +755,8 @@
 			children = (
 				3BB26D5E1C64163F00136BCA /* MTConversationsViewController.h */,
 				3BB26D5F1C64163F00136BCA /* MTConversationsViewController.m */,
+				3B4A2B501C6CFCB900C15D94 /* MTMessagesViewController.h */,
+				3B4A2B511C6CFCB900C15D94 /* MTMessagesViewController.m */,
 			);
 			name = Conversations;
 			sourceTree = "<group>";
@@ -1732,6 +1737,7 @@
 				892105C319DA1EEA000CFBF6 /* MTPostDetailViewController.m in Sources */,
 				89DE8A711B8268270050C9A6 /* MTChallenge.m in Sources */,
 				3B7154FF1C1B927C00DB2166 /* MTMentorStudentProfileTableViewController.m in Sources */,
+				3B4A2B521C6CFCB900C15D94 /* MTMessagesViewController.m in Sources */,
 				3BB26D601C64163F00136BCA /* MTConversationsViewController.m in Sources */,
 				58509438197C068000EDC969 /* MTCommentViewController.m in Sources */,
 				5876E2B9196F2C1F00C176EC /* AppDelegate.m in Sources */,

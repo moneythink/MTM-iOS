@@ -138,7 +138,12 @@
 }
 
 - (void)refreshFromServer:(MTNetworkSuccessBlock)success failure:(MTNetworkFailureBlock)failure {
-    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:success failure:failure];
+    [[MTNetworkManager sharedMTNetworkManager] refreshCurrentUserDataWithSuccess:^(id responseData) {
+        success(responseData);
+        [[MTUtil getAppDelegate] authenticateCurrentUserWithLayerSDK];
+    } failure:^(NSError *error) {
+        failure(error);
+    }];
 }
 
 + (BOOL)isCurrentUserMentor

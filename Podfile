@@ -18,6 +18,8 @@ target 'moneythink-ios' do
   pod "CCBottomRefreshControl"
   pod "DRPLoadingSpinner"
   pod "LayerKit"
+  pod 'JSQMessagesViewController'
+  pod 'THContactPicker', '~> 1.2' 
 end
 
 target 'moneythink-iosTests' do

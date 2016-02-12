@@ -10,4 +10,6 @@
 
 @interface MTTableViewController : UITableViewController
 
+- (void)addRefreshControllerWithSelector:(SEL)selector;
+
 @end

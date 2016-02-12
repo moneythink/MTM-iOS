@@ -17,10 +17,15 @@
 #import "MTPostDetailViewController.h"
 #import "AFNetworkActivityIndicatorManager.h"
 
-#ifdef STAGE
+#ifdef DEVELOPMENT
+    static NSString *apiServerKey = @"DEVELOPMENT";
+    static NSString *layerEnvironmentName = @"development";
+#elif STAGE
     static NSString *apiServerKey = @"STAGE";
+    static NSString *layerEnvironmentName = @"staging";
 #else
     static NSString *apiServerKey = @"PRODUCTION";
+    static NSString *layerEnvironmentName = @"production";
 #endif
 
 @implementation AppDelegate
@@ -652,15 +657,22 @@
 - (void)authenticateCurrentUserWithLayerSDK {
     MTUser *currentUser = [MTUser currentUser];
     if (currentUser == nil) return;
+    if (self.layerClient.authenticatedUserID != nil) return;
     
     [self.layerClient connectWithCompletion:^(BOOL success, NSError *error) {
         if (!success) {
-            NSLog(@"Failed to connect to Layer: %@", error);
+            NSLog(@"LYR: Failed to connect to Layer: %@", error);
         } else {
             NSString *userIDString = [NSString stringWithFormat:@"%lu", currentUser.id];
+            NSString *environmentName = layerEnvironmentName;
+            if (environmentName == nil || [environmentName length] == 0) {
+                environmentName = @"development";
+            }
+            
+            userIDString = [NSString stringWithFormat:@"%@-%@", environmentName, userIDString];
             [self authenticateLayerWithUserID:userIDString completion:^(BOOL success, NSError *error) {
                 if (!success) {
-                    NSLog(@"Failed Authenticating Layer Client with error:%@", error);
+                    NSLog(@"LYR: Failed Authenticating Layer Client with error:%@", error);
                 }
             }];
         }
@@ -761,7 +773,7 @@
     if (self.layerClient.authenticatedUserID) {
         // If the layerClient is authenticated with the requested userID, complete the authentication process.
         if ([self.layerClient.authenticatedUserID isEqualToString:userID]){
-            NSLog(@"Layer Authenticated as User %@", self.layerClient.authenticatedUserID);
+            NSLog(@"LYR: Layer Authenticated as User %@", self.layerClient.authenticatedUserID);
             if (completion) completion(YES, nil);
             return;
         } else {
