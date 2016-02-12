@@ -98,6 +98,11 @@
         }
     }
     
+    if (self.hasPostImage && self.postImage.isThumbnail) {
+        NSLog(@"Fetching again, is thumbnail");
+        shouldFetchImage = YES;
+    }
+    
     if (shouldFetchImage) {
         [[MTNetworkManager sharedMTNetworkManager] getImageForPostId:self.id success:^(id responseData) {
             if (success) {

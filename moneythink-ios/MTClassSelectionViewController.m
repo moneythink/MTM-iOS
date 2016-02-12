@@ -431,6 +431,9 @@
         user.userClass = self.selectedClass;
         [realm commitWriteTransaction];
         
+        // Class was changed, so clear explore posts
+        [MTExplorePost deleteAll];
+        
         blockName(YES);
         
     } failure:^(NSError *error) {

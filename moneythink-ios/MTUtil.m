@@ -10,6 +10,8 @@
 #import <Google/Analytics.h>
 #import "MTUser.h"
 
+static NSNumber *isRetinaBool = nil;
+
 @implementation MTUtil
 
 + (BOOL)internetReachable
@@ -238,6 +240,7 @@
     [MTClass removeAllDeleted];
     [MTOrganization removeAllDeleted];
     [MTUser removeAllDeleted];
+    [MTExplorePost deleteAll];
 }
 
 + (void)logout
@@ -299,6 +302,14 @@
     }
     
     return [token copy];
+}
+
++ (BOOL)shouldLoadHighResolutionImages {
+    if (isRetinaBool == nil) {
+        BOOL isRetina = [[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale >= 2.0);
+        isRetinaBool = [NSNumber numberWithBool:isRetina];
+    }
+    return [isRetinaBool boolValue];
 }
 
 @end

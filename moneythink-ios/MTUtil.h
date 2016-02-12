@@ -49,4 +49,6 @@
 + (void)setRecentlyLoggedOut:(BOOL)value;
 + (BOOL)userRecentlyLoggedOut;
 
++ (BOOL)shouldLoadHighResolutionImages;
+
 @end

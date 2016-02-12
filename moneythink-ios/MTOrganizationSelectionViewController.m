@@ -144,7 +144,9 @@
 
 #pragma mark - private methods
 - (void)handleError:(NSError *)error {
-    [[[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Unable to load organizations. Please check your Internet connection. If this issue happens more than once, please contact us!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    if (error != nil) {
+        [[[UIAlertView alloc] initWithTitle:@"Network Error" message:@"Unable to load organizations. Please check your Internet connection. If this issue happens more than once, please contact us!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] show];
+    }
     [self didLoadRemoteResultsWithError:error];
 }
 

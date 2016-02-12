@@ -727,13 +727,13 @@
 - (void)setupRealm
 {
     // Can clear database on launch for testing
-//    [[NSFileManager defaultManager] removeItemAtPath:[RLMRealm defaultRealmPath] error:nil];
-//    [MTUser logout];
+//    [[NSFileManager defaultManager] removeItemAtPath:[[RLMRealm defaultRealm] path] error:nil];
+//    [MTUtil logout];
     
     RLMRealmConfiguration *config = [RLMRealmConfiguration defaultConfiguration];
     // Set the new schema version. This must be greater than the previously used
     // version (if you've never set a schema version before, the version is 0).
-    config.schemaVersion = 31;
+    config.schemaVersion = 40;
     
     // Set the block which will be called automatically when opening a Realm with a
     // schema version lower than the one set above
