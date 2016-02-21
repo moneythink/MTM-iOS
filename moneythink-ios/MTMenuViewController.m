@@ -187,21 +187,21 @@
         {
             switch (row) {
                 case 0:
-                    CellIdentifier = @"Notifications";
+                    CellIdentifier = @"Challenges";
                     break;
                   
                 case 1:
-                    CellIdentifier = @"Challenges";
-                    break;
-
-                case 2:
                     CellIdentifier = @"Leaderboard";
                     break;
 
-                case 3:
-                    CellIdentifier = [self conversationsEnabled] ? @"Conversations" : @"Edit Profile";
+                case 2:
+                    CellIdentifier = [self conversationsEnabled] ? @"Conversations" : @"Notifications";
                     break;
-
+                    
+                case 3:
+                    CellIdentifier = [self conversationsEnabled] ? @"Notifications" : @"Edit Profile";
+                    break;
+                    
                 case 4:
                     CellIdentifier = [self conversationsEnabled] ? @"Edit Profile" : @"Talk to Moneythink";
                     break;
@@ -236,7 +236,7 @@
         cell.signupCode.text = code;
     }
     
-    if (indexPath.section == 0 && indexPath.row == 2) {
+    if ([CellIdentifier isEqualToString:@"Notifications"]) {
         cell.unreadCountLabel.text = [NSString stringWithFormat:@"%ld", (long)((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount];
         if (((AppDelegate *)[MTUtil getAppDelegate]).currentUnreadCount > 0) {
             cell.unreadCountView.hidden = NO;
