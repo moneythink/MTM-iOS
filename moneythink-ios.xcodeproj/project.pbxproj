@@ -355,7 +355,7 @@
 		58676B1E1974273E0070F604 /* MTLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTLoginViewController.m; sourceTree = "<group>"; };
 		5869D458199446D20037B517 /* MTExplorePostCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTExplorePostCollectionView.h; sourceTree = "<group>"; };
 		5869D459199446D20037B517 /* MTExplorePostCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MTExplorePostCollectionView.m; sourceTree = "<group>"; };
-		5876E2A5196F2C1F00C176EC /* Moneythink.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moneythink.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5876E2A5196F2C1F00C176EC /* MoneythinkMobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoneythinkMobile.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5876E2A8196F2C1F00C176EC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5876E2AA196F2C1F00C176EC /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		5876E2AC196F2C1F00C176EC /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -810,7 +810,7 @@
 		5876E2A6196F2C1F00C176EC /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5876E2A5196F2C1F00C176EC /* Moneythink.app */,
+				5876E2A5196F2C1F00C176EC /* MoneythinkMobile.app */,
 				3B902B581C2B21FC008A0FF3 /* moneythink-iosTests.xctest */,
 			);
 			name = Products;
@@ -1397,7 +1397,7 @@
 			);
 			name = "moneythink-ios";
 			productName = "moneythink-ios";
-			productReference = 5876E2A5196F2C1F00C176EC /* Moneythink.app */;
+			productReference = 5876E2A5196F2C1F00C176EC /* MoneythinkMobile.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1929,7 +1929,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2246,7 +2246,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2382,7 +2382,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "e0cafe8d-cbdb-43c2-9029-20d14c356388";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -2473,7 +2473,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2565,7 +2565,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2656,7 +2656,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "0f53ee89-2f5e-4497-b2d8-acbf536f59d8";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -2747,7 +2747,7 @@
 					"$(PROJECT_DIR)/libs",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = org.moneythink.app;
-				PRODUCT_NAME = Moneythink;
+				PRODUCT_NAME = MoneythinkMobile;
 				PROVISIONING_PROFILE = "f1ff5972-ad89-4062-b7e9-376f066c0533";
 				SWIFT_OBJC_BRIDGING_HEADER = "moneythink-ios/moneythink-ios-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
